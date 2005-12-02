@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># XXX For now, this script requires proxy manager\n
+\n
+# user_folder: NuxUserGroups or PluggableAuthService at the root of the ERP5Site.\n
+user_folder = context.portal_url.getPortalObject()[\'acl_users\']\n
+\n
+# This script must work with NuxUserGroup and PAS\n
+PAS_installed = 0\n
+if user_folder.meta_type == \'Pluggable Auth Service\':\n
+  PAS_installed = 1\n
+\n
+# get the current logged in user\n
+if PAS_installed:\n
+  user_id = context.portal_membership.getAuthenticatedMember().getId()\n
+else:\n
+  user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
+person = context.person[user_id]\n
+\n
+assignment_list = person.contentValues(filter={\'portal_type\': \'Assignment\'})\n
+\n
+if len(assignment_list) == 0:\n
+  return []\n
+\n
+valid_assignment_list = []\n
+\n
+for a in assignment_list:\n
+  if a.getValidationState() == \'open\':\n
+    valid_assignment_list.append(a)\n
+\n
+return valid_assignment_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAwAAAAXAAAAQwAA
+AHNMAQAAdAAAdAEAdAEAdAIAZAEAgwIAZAIAgwIAgwAAZAMAgwIAfQMAZAQAfQQAdAEAfAMAZAUA
+gwIAZAYAagIAbwoAAWQHAH0EAG4BAAF8BABvKwABdAEAdAEAdAEAdAIAZAgAgwIAZAkAgwIAgwAA
+ZAoAgwIAgwAAfQUAbigAAXQBAHQBAHQBAHQCAGQIAIMCAGQJAIMCAIMAAGQLAIMCAIMAAH0FAHQA
+AHQBAHQCAGQMAIMCAHwFAIMCAH0GAHQBAHwGAGQNAIMCAGQOAGgAAARkDwBkEAADPIMAAX0HAHQI
+AHwHAIMBAGQEAGoCAG8IAAFnAABTbgEAAWcAAH0JAHhEAHQKAHwHAIMBAERdNgB9CwB0AQB8CwBk
+EQCDAgCDAABkEgBqAgBvFwABdAEAfAkAZBMAgwIAfAsAgwEAAXEKAQFxCgFXfAkAU2QAAFMoFAAA
+AE5zCgAAAHBvcnRhbF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHMJAAAAYWNsX3VzZXJzaQAAAABz
+CQAAAG1ldGFfdHlwZXMWAAAAUGx1Z2dhYmxlIEF1dGggU2VydmljZWkBAAAAcxEAAABwb3J0YWxf
+bWVtYmVyc2hpcHMWAAAAZ2V0QXV0aGVudGljYXRlZE1lbWJlcnMFAAAAZ2V0SWRzCwAAAGdldFVz
+ZXJOYW1lcwYAAABwZXJzb25zDQAAAGNvbnRlbnRWYWx1ZXNzBgAAAGZpbHRlcnMLAAAAcG9ydGFs
+X3R5cGVzCgAAAEFzc2lnbm1lbnRzEgAAAGdldFZhbGlkYXRpb25TdGF0ZXMEAAAAb3BlbnMGAAAA
+YXBwZW5kKAwAAABzCQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAAB1
+c2VyX2ZvbGRlcnMNAAAAUEFTX2luc3RhbGxlZHMHAAAAdXNlcl9pZHMGAAAAcGVyc29ucw8AAABh
+c3NpZ25tZW50X2xpc3RzAwAAAGxlbnMVAAAAdmFsaWRfYXNzaWdubWVudF9saXN0cwkAAABfZ2V0
+aXRlcl9zAQAAAGEoDAAAAHMJAAAAX2dldGl0ZW1fcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
+CwAAAHVzZXJfZm9sZGVycw0AAABQQVNfaW5zdGFsbGVkcwcAAAB1c2VyX2lkcwYAAABwZXJzb25z
+DwAAAGFzc2lnbm1lbnRfbGlzdHMDAAAAbGVucxUAAAB2YWxpZF9hc3NpZ25tZW50X2xpc3RzCQAA
+AF9nZXRpdGVyX3MBAAAAYSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMaAAAAQmFzZV9n
+ZXRVc2VyQXNzaWdubWVudExpc3QBAAAAcyIAAAAAAyQDBgEWAQoDBwErAicBGAIhAhMBCAIGAg0A
+BgEcARgCKAEAAABzGgAAAEJhc2VfZ2V0VXNlckFzc2lnbm1lbnRMaXN0KAEAAABzGgAAAEJhc2Vf
+Z2V0VXNlckFzc2lnbm1lbnRMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8
+bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_getUserAssignmentList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>user_folder</string>
+                            <string>PAS_installed</string>
+                            <string>user_id</string>
+                            <string>person</string>
+                            <string>assignment_list</string>
+                            <string>len</string>
+                            <string>valid_assignment_list</string>
+                            <string>_getiter_</string>
+                            <string>a</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getUserAssignmentList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

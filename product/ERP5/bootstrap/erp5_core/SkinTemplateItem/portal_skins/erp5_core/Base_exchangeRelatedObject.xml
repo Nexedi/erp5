@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># this script is intended to repair errors.\n
+# Let\'s say you use 2 objects, but this is the same one duplicated.\n
+# So you want to keep only one object, so you have to remove\n
+# all links to this old object and set the link on the new object.\n
+from_object = context.organisation[\'314\']\n
+to_object = context.person[\'121\']\n
+\n
+from_object_related_object_list = context.portal_categories.getRelatedValueList(from_object)\n
+for object in from_object_related_object_list:\n
+  print object.getDestinationSection()\n
+  object.setDestinationSectionValue(to_object)\n
+  object.recursiveImmediateReindexObject()\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAoAAAAKAAAAQwAA
+AHOyAAAAdAAAgwAAfQEAdAIAdAMAdAQAZAEAgwIAZAIAgwIAfQUAdAIAdAMAdAQAZAMAgwIAZAQA
+gwIAfQYAdAMAdAMAdAQAZAUAgwIAZAYAgwIAfAUAgwEAfQcAeE0AdAgAfAcAgwEARF0/AH0JAHwB
+AAR0AwB8CQBkBwCDAgCDAAACSUp0AwB8CQBkCACDAgB8BgCDAQABdAMAfAkAZAkAgwIAgwAAAXFk
+AFd8AQCDAABTZAAAUygKAAAATnMMAAAAb3JnYW5pc2F0aW9ucwMAAAAzMTRzBgAAAHBlcnNvbnMD
+AAAAMTIxcxEAAABwb3J0YWxfY2F0ZWdvcmllc3MTAAAAZ2V0UmVsYXRlZFZhbHVlTGlzdHMVAAAA
+Z2V0RGVzdGluYXRpb25TZWN0aW9ucxoAAABzZXREZXN0aW5hdGlvblNlY3Rpb25WYWx1ZXMfAAAA
+cmVjdXJzaXZlSW1tZWRpYXRlUmVpbmRleE9iamVjdCgKAAAAcwcAAABfcHJpbnRfcwYAAABfcHJp
+bnRzCQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAABmcm9tX29iamVj
+dHMJAAAAdG9fb2JqZWN0cx8AAABmcm9tX29iamVjdF9yZWxhdGVkX29iamVjdF9saXN0cwkAAABf
+Z2V0aXRlcl9zBgAAAG9iamVjdCgKAAAAcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzCQAAAF9nZXRp
+dGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAABmcm9tX29iamVjdHMJAAAAdG9fb2Jq
+ZWN0cx8AAABmcm9tX29iamVjdF9yZWxhdGVkX29iamVjdF9saXN0cwkAAABfZ2V0aXRlcl9zBgAA
+AG9iamVjdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMaAAAAQmFzZV9leGNoYW5nZVJl
+bGF0ZWRPYmplY3QBAAAAcxIAAAAJBBgBGAIeAQ0ABgEZARMBEQEoAQAAAHMaAAAAQmFzZV9leGNo
+YW5nZVJlbGF0ZWRPYmplY3QoAQAAAHMaAAAAQmFzZV9leGNoYW5nZVJlbGF0ZWRPYmplY3QoAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_exchangeRelatedObject</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>from_object</string>
+                            <string>to_object</string>
+                            <string>from_object_related_object_list</string>
+                            <string>_getiter_</string>
+                            <string>object</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_exchangeRelatedObject</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

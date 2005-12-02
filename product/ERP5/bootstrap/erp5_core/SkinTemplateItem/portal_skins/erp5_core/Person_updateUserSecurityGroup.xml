@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# XXX This script might also need proxy Manager\n
+# XXX This script could be deleted after the full transition to PAS (don\'t forget to update assignment workflow too)\n
+\n
+# user_folder: NuxUserGroups or PluggableAuthService at the root of the ERP5Site.\n
+user_folder = context.portal_url.getPortalObject()[\'acl_users\']\n
+\n
+# This script can be bypassed in the context of PAS use because user groups are\n
+#   automaticcaly managed and set by ERP5Security/ERP5GroupManage.py\n
+if user_folder.meta_type == \'Pluggable Auth Service\':\n
+  return\n
+\n
+# base_category_list : list of category values we want to retrieve\n
+# XXX Keep the same order as in the Portal Types Roles Definitions.\n
+#  -> No longer true since this list is always sorted by the ERP5Type_asSecurityGroupId script.\n
+base_category_list = context.getPortalObject().getPortalAssignmentBaseCategoryList()\n
+\n
+# user_name : string representing the user whom we want to modify the groups membership\n
+user_name = context.getId()\n
+\n
+# Verify the existence of the user\n
+# XXX Note : sometimes, you don\'t want to update security for users who don\'t belong to your organisation.\n
+#            You can then add code in the assignment_workflow script to skip those (if role != internal for instance)\n
+if user_name not in user_folder.getUserNames():\n
+  raise RuntimeError, "Error: Zope user \'%s\' doesn\'t exist in the acl_users folder"  % (user_name)\n
+\n
+category_list = []\n
+security_group_list = []\n
+\n
+# Fetch category values from assignment\n
+category_list.extend(context.ERP5Type_getSecurityCategoryFromAssignment(base_category_list, user_name, context, \'\'))\n
+\n
+# Get group names from category values\n
+for c_dict in category_list:\n
+  security_group_list.append(context.ERP5Type_asSecurityGroupId(category_order=base_category_list, **c_dict))\n
+\n
+# Get the id list of existing groups\n
+existing_group_list = user_folder.getGroupNames()\n
+\n
+# Create groups if they don\'t exist\n
+for group in security_group_list:\n
+  if group not in existing_group_list:\n
+    user_folder.userFolderAddGroup(group)\n
+\n
+# Proceed with group assignment\n
+user_folder.setGroupsOfUser(security_group_list, user_name)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA4AAAAWAAAAQwAA
+AHN8AQAAdAAAdAEAdAEAdAIAZAEAgwIAZAIAgwIAgwAAZAMAgwIAfQMAdAEAfAMAZAQAgwIAZAUA
+agIAbwgAAWQAAFNuAQABdAEAdAEAdAIAZAIAgwIAgwAAZAYAgwIAgwAAfQQAdAEAdAIAZAcAgwIA
+gwAAfQUAfAUAdAEAfAMAZAgAgwIAgwAAagcAbxEAAXQGAGQJAHwFABaCAgBuAQABZwAAfQcAZwAA
+fQgAdAEAfAcAZAoAgwIAdAEAdAIAZAsAgwIAfAQAfAUAdAIAZAwAgwQAgwEAAXg/AHQJAHwHAIMB
+AERdMQB9CgB0AQB8CABkDQCDAgB0CwB0AQB0AgBkDgCDAgBkDwB8BAB8CgCNAQGDAQABceAAV3QB
+AHwDAGQQAIMCAIMAAH0MAHg4AHQJAHwIAIMBAERdKgB9DQB8DQB8DABqBwBvFwABdAEAfAMAZBEA
+gwIAfA0AgwEAAXE0AQFxNAFXdAEAfAMAZBIAgwIAfAgAfAUAgwIAAWQAAFMoEwAAAE5zCgAAAHBv
+cnRhbF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHMJAAAAYWNsX3VzZXJzcwkAAABtZXRhX3R5cGVz
+FgAAAFBsdWdnYWJsZSBBdXRoIFNlcnZpY2VzIwAAAGdldFBvcnRhbEFzc2lnbm1lbnRCYXNlQ2F0
+ZWdvcnlMaXN0cwUAAABnZXRJZHMMAAAAZ2V0VXNlck5hbWVzczsAAABFcnJvcjogWm9wZSB1c2Vy
+ICclcycgZG9lc24ndCBleGlzdCBpbiB0aGUgYWNsX3VzZXJzIGZvbGRlcnMGAAAAZXh0ZW5kcyoA
+AABFUlA1VHlwZV9nZXRTZWN1cml0eUNhdGVnb3J5RnJvbUFzc2lnbm1lbnRzAAAAAHMGAAAAYXBw
+ZW5kcxoAAABFUlA1VHlwZV9hc1NlY3VyaXR5R3JvdXBJZHMOAAAAY2F0ZWdvcnlfb3JkZXJzDQAA
+AGdldEdyb3VwTmFtZXNzEgAAAHVzZXJGb2xkZXJBZGRHcm91cHMPAAAAc2V0R3JvdXBzT2ZVc2Vy
+KA4AAABzCQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAAB1c2VyX2Zv
+bGRlcnMSAAAAYmFzZV9jYXRlZ29yeV9saXN0cwkAAAB1c2VyX25hbWVzDAAAAFJ1bnRpbWVFcnJv
+cnMNAAAAY2F0ZWdvcnlfbGlzdHMTAAAAc2VjdXJpdHlfZ3JvdXBfbGlzdHMJAAAAX2dldGl0ZXJf
+cwYAAABjX2RpY3RzBwAAAF9hcHBseV9zEwAAAGV4aXN0aW5nX2dyb3VwX2xpc3RzBQAAAGdyb3Vw
+KA4AAABzCQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAAB1c2VyX2Zv
+bGRlcnMSAAAAYmFzZV9jYXRlZ29yeV9saXN0cwkAAAB1c2VyX25hbWVzDAAAAFJ1bnRpbWVFcnJv
+cnMNAAAAY2F0ZWdvcnlfbGlzdHMTAAAAc2VjdXJpdHlfZ3JvdXBfbGlzdHMJAAAAX2dldGl0ZXJf
+cwYAAABjX2RpY3RzBwAAAF9hcHBseV9zEwAAAGV4aXN0aW5nX2dyb3VwX2xpc3RzBQAAAGdyb3Vw
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcx4AAABQZXJzb25fdXBkYXRlVXNlclNlY3Vy
+aXR5R3JvdXABAAAAcyYAAAAABCQEFgEIBR4DEgUZARECBgEJAygDDQAJASwDEgMNAAYBEAEbAygB
+AAAAcx4AAABQZXJzb25fdXBkYXRlVXNlclNlY3VyaXR5R3JvdXAoAQAAAHMeAAAAUGVyc29uX3Vw
+ZGF0ZVVzZXJTZWN1cml0eUdyb3VwKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8
+bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Person_updateUserSecurityGroup</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>user_folder</string>
+                            <string>base_category_list</string>
+                            <string>user_name</string>
+                            <string>RuntimeError</string>
+                            <string>category_list</string>
+                            <string>security_group_list</string>
+                            <string>_getiter_</string>
+                            <string>c_dict</string>
+                            <string>_apply_</string>
+                            <string>existing_group_list</string>
+                            <string>group</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Person_updateUserSecurityGroup</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

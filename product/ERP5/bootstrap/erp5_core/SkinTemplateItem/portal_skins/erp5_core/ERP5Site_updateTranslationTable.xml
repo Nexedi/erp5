@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>supported_languages = context.Localizer.get_supported_languages()\n
+translated_keys = {} # This dict prevents entering the same key twice\n
+\n
+context.Translation_delete()\n
+\n
+# Translate every workflow state in the context of the state variable\n
+for wf in context.portal_workflow.objectValues():\n
+  state_var = wf.variables.getStateVar()\n
+  if wf.states:\n
+    for state_id, state in wf.states.items():\n
+      for lang in supported_languages:\n
+        key = (lang, state_var, state_id)\n
+        if not translated_keys.has_key(key):\n
+          translated_keys[key] = None # mark as translated\n
+          context.Translation_addMessage(language=lang, message_context=state_var,\n
+                                       original_message = state_id,\n
+                                       translated_message = context.translation_service.translate(\'ui\', state_id, target_language=lang).encode(\'utf-8\'))\n
+\n
+        # translate state title as well\n
+        if state.title != \'\' :\n
+          state_var_title = \'%s_title\' % state_var\n
+          translated_message = context.translation_service.translate(\'ui\', state.title, target_language=lang).encode(\'utf-8\')\n
+          key = (lang, state_var_title, translated_message)\n
+          if not translated_keys.has_key(key):\n
+             translated_keys[key] = None # mark as translated\n
+             context.Translation_addMessage(language=lang, message_context=state_var_title,\n
+                                          original_message = state_id, translated_message = translated_message )\n
+\n
+# Translate every portal type in the context of the portal type \n
+for ptype in context.portal_types.objectValues():\n
+  title = ptype.title\n
+  if not title: title = ptype.id\n
+  for lang in supported_languages:\n
+    key = (lang, \'portal_type\', title)\n
+    if not translated_keys.has_key(key):\n
+      translated_keys[key] = None # mark as translated\n
+      context.Translation_addMessage(language=lang, message_context="portal_type",\n
+                                   original_message = title,\n
+                                   translated_message = context.translation_service.translate(\'ui\', title, target_language=lang).encode(\'utf-8\'))\n
+\n
+print \'Done\'\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABMAAAAiAAAAQwAA
+AHNQAwAAdAAAgwAAfQEAdAIAdAIAdAMAZAEAgwIAZAIAgwIAgwAAfQQAaAAAfQUAdAIAdAMAZAMA
+gwIAgwAAAXj/AXQGAHQCAHQCAHQDAGQEAIMCAGQFAIMCAIMAAIMBAERd3AF9BwB0AgB0AgB8BwBk
+BgCDAgBkBwCDAgCDAAB9CAB0AgB8BwBkCACDAgBvqwEBeKgBdAYAdAIAdAIAfAcAZAgAgwIAZAkA
+gwIAgwAAgwEARF2BAXQGAAKDAQBcAgB9CQB9CgB4awF0BgB8BACDAQBEXV0BfQsAfAsAfAgAfAkA
+ZgMAfQwAdAIAfAUAZAoAgwIAfAwAgwEADG9sAAF0DQB0DgB8BQCDAQB8DAA8dAIAdAMAZAsAgwIA
+ZAwAfAsAZA0AfAgAZA4AfAkAZA8AdAIAdAIAdAIAdAMAZBAAgwIAZBEAgwIAZBIAfAkAZBMAfAsA
+gwIBZBQAgwIAZBUAgwEAgwAEAW4BAAF0AgB8CgBkFgCDAgBkFwBqAwBvrwABZBgAfAgAFn0PAHQC
+AHQCAHQCAHQDAGQQAIMCAGQRAIMCAGQSAHQCAHwKAGQWAIMCAGQTAHwLAIMCAWQUAIMCAGQVAIMB
+AH0QAHwLAHwPAHwQAGYDAH0MAHQCAHwFAGQKAIMCAHwMAIMBAAxvPAABdA0AdA4AfAUAgwEAfAwA
+PHQCAHQDAGQLAIMCAGQMAHwLAGQNAHwPAGQOAHwJAGQPAHwQAIMABAFxLAIBcc8AAXHPAFdxrwBX
+cVwAAXFcAFd4/AB0BgB0AgB0AgB0AwBkGQCDAgBkBQCDAgCDAACDAQBEXdkAfREAdAIAfBEAZBYA
+gwIAfRIAfBIADG8TAAF0AgB8EQBkGgCDAgB9EgBuAQABeKYAdAYAfAQAgwEARF2YAH0LAHwLAGQb
+AHwSAGYDAH0MAHQCAHwFAGQKAIMCAHwMAIMBAAxvbAABdA0AdA4AfAUAgwEAfAwAPHQCAHQDAGQL
+AIMCAGQMAHwLAGQNAGQbAGQOAHwSAGQPAHQCAHQCAHQCAHQDAGQQAIMCAGQRAIMCAGQSAHwSAGQT
+AHwLAIMCAWQUAIMCAGQVAIMBAIMABAFxmwIBcZsCV3FeAld8AQAEZBwAAklKfAEAgwAAU2QAAFMo
+HQAAAE5zCQAAAExvY2FsaXplcnMXAAAAZ2V0X3N1cHBvcnRlZF9sYW5ndWFnZXNzEgAAAFRyYW5z
+bGF0aW9uX2RlbGV0ZXMPAAAAcG9ydGFsX3dvcmtmbG93cwwAAABvYmplY3RWYWx1ZXNzCQAAAHZh
+cmlhYmxlc3MLAAAAZ2V0U3RhdGVWYXJzBgAAAHN0YXRlc3MFAAAAaXRlbXNzBwAAAGhhc19rZXlz
+FgAAAFRyYW5zbGF0aW9uX2FkZE1lc3NhZ2VzCAAAAGxhbmd1YWdlcw8AAABtZXNzYWdlX2NvbnRl
+eHRzEAAAAG9yaWdpbmFsX21lc3NhZ2VzEgAAAHRyYW5zbGF0ZWRfbWVzc2FnZXMTAAAAdHJhbnNs
+YXRpb25fc2VydmljZXMJAAAAdHJhbnNsYXRlcwIAAAB1aXMPAAAAdGFyZ2V0X2xhbmd1YWdlcwYA
+AABlbmNvZGVzBQAAAHV0Zi04cwUAAAB0aXRsZXMAAAAAcwgAAAAlc190aXRsZXMMAAAAcG9ydGFs
+X3R5cGVzcwIAAABpZHMLAAAAcG9ydGFsX3R5cGVzBAAAAERvbmUoEwAAAHMHAAAAX3ByaW50X3MG
+AAAAX3ByaW50cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzEwAAAHN1cHBvcnRlZF9sYW5ndWFn
+ZXNzDwAAAHRyYW5zbGF0ZWRfa2V5c3MJAAAAX2dldGl0ZXJfcwIAAAB3ZnMJAAAAc3RhdGVfdmFy
+cwgAAABzdGF0ZV9pZHMFAAAAc3RhdGVzBAAAAGxhbmdzAwAAAGtleXMEAAAATm9uZXMHAAAAX3dy
+aXRlX3MPAAAAc3RhdGVfdmFyX3RpdGxlcxIAAAB0cmFuc2xhdGVkX21lc3NhZ2VzBQAAAHB0eXBl
+cwUAAAB0aXRsZSgTAAAAcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzCQAAAF9nZXRhdHRyX3MHAAAA
+Y29udGV4dHMTAAAAc3VwcG9ydGVkX2xhbmd1YWdlc3MPAAAAdHJhbnNsYXRlZF9rZXlzcwkAAABf
+Z2V0aXRlcl9zAgAAAHdmcwkAAABzdGF0ZV92YXJzCAAAAHN0YXRlX2lkcwUAAABzdGF0ZXMEAAAA
+bGFuZ3MDAAAAa2V5cwQAAABOb25lcwcAAABfd3JpdGVfcw8AAABzdGF0ZV92YXJfdGl0bGVzEgAA
+AHRyYW5zbGF0ZWRfbWVzc2FnZXMFAAAAcHR5cGVzBQAAAHRpdGxlKAAAAAAoAAAAAHMPAAAAU2Ny
+aXB0IChQeXRob24pcx8AAABFUlA1U2l0ZV91cGRhdGVUcmFuc2xhdGlvblRhYmxlAQAAAHNMAAAA
+JAEJAg0DIgAGAR4BDQEiABMBDQAGAQ8BFwETARgBDwEyAxYBCgE/AQ8BFwETARgBJQMiAAYBDwEb
+AQ0ABgEPARcBEwEYAQ8BOgIKASgBAAAAcx8AAABFUlA1U2l0ZV91cGRhdGVUcmFuc2xhdGlvblRh
+YmxlKAEAAABzHwAAAEVSUDVTaXRlX3VwZGF0ZVRyYW5zbGF0aW9uVGFibGUoAAAAACgAAAAAcw8A
+AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Site_updateTranslationTable</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>supported_languages</string>
+                            <string>translated_keys</string>
+                            <string>_getiter_</string>
+                            <string>wf</string>
+                            <string>state_var</string>
+                            <string>state_id</string>
+                            <string>state</string>
+                            <string>lang</string>
+                            <string>key</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                            <string>state_var_title</string>
+                            <string>translated_message</string>
+                            <string>ptype</string>
+                            <string>title</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_updateTranslationTable</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

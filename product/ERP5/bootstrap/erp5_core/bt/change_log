@@ -1,0 +1,320 @@
+2005-11-25 Jérome
+* hook manage_afterClone in rule_interraction workflow,  as "Later Script" (ie activity) because it is called too soon and some scripts are not available yet.
+
+2005-11-30 yo
+* portal_assignment_base_category_list is removed.
+* Portal Types are modified for groups.
+
+2005-11-30 yo
+* BaseCategory_view supports category types.
+
+2005-11-30 yo
+* AccountingPreferences_view uses my_preferred_accounting_transaction_gap instead of my_gap.
+
+2005-11-25 Jérome
+* hook manage_afterClone in rule_interraction workflow, so that matrix is updated on installation
+
+2005-11-23 Romain
+* added getPortalSupplyTypeList to the acquisition portal type of the base category resource.
+
+2005-11-22 Alex
+* use getDefaultModule() in a script instead of statically using a module id.
+
+2005-11-22 Jérome
+* added proxy roles in simulation_movement_interaction_workflow/SimulationMovement_editDeliveryValue
+* bug fix rule_interaction_workflow, it was hooking manage_delObject (without s)
+
+2005-11-21 yo
+* breadcrumbs translates the first two titles with ui instead of content. Disable the translation of the rest for now.
+
+2005-11-18 yo
+* ERP5Type_getSecurityCategoryFromAssignment should not return None
+
+2005-11-16 Seb
+* Removed the limit of 1000 in
+Resource_zGetInventoryList
+
+2005-11-16 Aurélien
+* Correct naming convention
+
+2005-11-15 Kevin
+* In InventoryModule_reindexMovementList script, change portal_catalog() sort_on parameter from [('start_date','ascending')] to [('movement.start_date','ascending')]
+
+2005-11-15 Romain
+* remove some useless/not implemented actions on some portal types.
+
+2005-11-15 Aurélien
+* added action diff on portal_type Template_Tool
+* added form TemplateTool_diffBusinessTemplate in erp5_core
+
+2005-11-15 Jérome
+* renamed person, organisation and currency module
+* added comment on CurrencyModule_getCurrencyItemList to explain why it uses id and not title
+
+2005-11-10 Alex
+* added mapping base_category
+
+2005-11-08 Romain
+* replace Base_viewHistory template by a erp5 report.
+* modify Base_edit in order to display multiples matrixbox on the same form.
+
+2005-11-08 Kevin
+* Replace 'self' by 'context' in Person_updateUserSecurityGroup.
+
+2005-11-07 Kevin
+* Delete Base_assignLocalRole.
+
+2005-11-07 Alex
+* Added source_trade and destination_trade categories
+
+2005-11-05 yo
+* Modify erp5.js and login_form to set a focus automatically.
+
+2005-11-05 Kevin
+* Add portal_assignment_base_category_list site property.
+* Use getPortalAssignmentBaseCategoryList() in Person_updateUserSecurityGroup to get the list of base categories used on assignments to create security groups.
+* Bypass Person_updateUserSecurityGroup if PAS is used.
+
+2005-11-04 Kevin
+* Update Base_getUserAssignmentList, ERP5Type_getSecurityCategoryFromAssignment and Person_updateUserSecurityGroup to support both NuxUserGroup and PluggableAuthService.
+* Add User Login & Password on Person_viewDetails form.
+* Add role/internal category because it's absolutely necessary to make ERP5Security product working.
+* Add Male and Female gender categories.
+
+2005-11-03 Kevin
+* Change some object's title to respect ERP5 naming conventions.
+
+2005-11-02 Romain
+* make erp5_html_style a bit more generic.
+
+2005-10-31 Kevin
+* ERP5Site_checkNamingConventions now check Portal Types
+
+2005-10-31 Jérome
+* bug fix in ERP5Site_getModuleItemList, cache was rebuilt on each request
+* remove all bare except:
+* (yo) remove calls to flushActivity in Base_edit
+
+2005-10-28 Kevin
+* take care of form titles and workflow state titles in ERP5Site_checkNamingConventions
+* check characters validity in ERP5Site_checkNamingConventions
+
+2005-10-27 Kevin
+* change bank_account_workflow variable state to validation_state
+* (Guy) add
+ERP5Site_viewCreateModuleScribusDialog and ERP5Site_createModuleScribus
+
+2005-10-27 Romain
+* correct OrderBuilder_view
+
+2005-10-24 Seb
+* Fixed acquisition on base category
+variation
+
+2005-10-17 Jérome
+* added Base_getFormViewDialogActionButtonTitle,  mainly for workflow validation dialog
+
+2005-10-20 Alex
+* added Credit Card
+* renamed Entity_viewBankAccount to Entity_viewFinancialInformationList
+
+2005-10-18 Kevin
+* Klaus: re-update of Folder_create
+
+2005-10-17 Jérome
+* added Simulation Tool portal type and set allowed content types for this.
+
+2005-10-17 Kevin
+* cleaning of Currency module: add history/metadate/print action, add edit_worflow
+* Klaus: update Folder_create to catch NoAllowedContentTypesError exception
+* Klaus: delete modifications of Folder_create
+
+2005-10-15 Kevin
+* change acquisition setup of function category to follow budget module needs
+
+2005-10-14 yo
+* Folder_delete is fixed to prevent a potential infinite loop
+* TemplateTool_viewBusinessTemplateList uses objectValues instead of portal_catalog
+
+2005-10-10 yo
+* Remove the portal type Business Template and the workflows business_template_building_workflow and business_template_installatoin_workflow. You *must not* include them in erp5_core.
+
+2005-10-08 Jérome
+* call ERP5Site_updateTranslationTable in ERP5Site_reindexAll
+
+2005-10-07 Romain
+* add workflows business_template_building_workflow and business_template_installation_workflow
+
+2005-10-07 Seb
+* Changed the alias of movement in Resource_zGetInventoryList to make sure there is no conflict with an alias made by buildSqlQuery
+
+2005-10-07 Kevin
+* Add missing Translation_addMessage and Translation_delete ZSQLMethods
+
+2005-10-07 Romain
+* on portal type Organisation, remove property sheet Organisation.
+* on portal type Product, remove property sheet Reference.
+* change variable names in business_template_installation_workflow and business_template_building_workflow.
+
+2005-10-05 Seb
+* Changed the alias of movement in Resource_zGetInventory to make sure there is no conflict with an alias made by buildSqlQuery
+
+2005-10-05 Kevin
+* add ERP5Site_updateTranslationTable script
+
+2005-09-28 Jérome
+* allow to filter the list of module in the main page and the drop down list
+
+2005-09-28 Kevin
+* Exclude "--" string from translation in drop-down menus
+
+2005-09-28 Jérome
+* bug fix in CurrencyModule_getCurrencyItemList
+
+2005-09-27 Seb
+* modified simulation_movement_interaction_workflow
+
+2005-09-27 kevin
+* Add cash icons.
+
+2005-09-27 yo
+* ERP5Site_reindexAll does not use specify activate directly.
+
+2005-09-20 Kevin
+* Update call of security scripts in Person_updateUserSecurityGroup.
+
+2005-09-19 Kevin
+* Update ERP5TypeSecurity_asGroupId to raise an exception when category used to generate local securoty roles doesn't exist.
+* Automatical sort of categories during the creation of security group, in order to have coherent group id.
+* Rename security scripts to follow ERP5 naming convention.
+* Raise RuntimeError instead of ValidationFailed in security related scripts.
+
+2005-09-13 Romain
+* Added new view to BusinessTemplate: BusinessTemplate_viewDiff
+
+2005-09-10 Seb
+* Added Business Template Portal Type
+
+2005-09-08 Jérome
+* fix Base_callDialogMethod to edit selection params in search dialogs
+
+2005-09-07 Jérome
+* remove calls to flushActivity in Base_edit. WARNING: this can cause reindexing problems.
+
+2005-09-02 Jérome
+* Add rule_interaction_workflow for predicate
+
+2005-09-01 Kevin
+* Add a workflow on Assignments
+
+2005-08-31 Kevin
+* Fix some (not all) Career related problems
+
+2005-08-29 Seb
+* Fixed small problem in Resource_zGetInventory thanks to Guillaume
+
+2005-08-26 Kevin
+* Change Base_callDialogMethod to include Moussa's modification against Bug #38
+
+2005-08-26 Romain
+* ERP5Site_reindexAll now index portal_deliveries and portal_orders.
+* Remove my_id field in Organisation_view.
+* Replace on portal type Category Tool the action List Folder_list by Folder_viewContentList.
+
+2005-08-25 Romain
+* Move category industrial_phase to erp5_pdm
+
+2005-08-23 Kevin
+* Sort salary_level categories by "int_index"
+
+2005-08-23 Romain
+* Move category industrial_phase from erp5_apparel
+
+2005-08-18 Jérome
+* Add portal_preference and all dependencies
+
+2005-08-17 Romain
+* Add form for OrderBuilder.
+
+2005-08-16 Kevin
+* Add Person Birth Name.
+
+2005-08-12 Kevin
+* Set acquisition of Function base category from Sync Value to Mask Value.
+* Update acquisition of Skill base category to make it working on Career.
+* Update some Person forms to make getSubordination(), getGrade(), getRole() and so on working through default career acquisition.
+
+2005-08-10 Kevin
+* Re-add function on Careers.
+* Make first-level aquisition on Career working.
+* Salary-level on Careers is now a category.
+
+2005-08-09 Jérome
+* work on CSV style: fix utf8 problems, set the correct Content-Type and add a simple form_view that renders only the ListBox called 'listbox' (this can be improved, but at least it "works" for most simple cases).
+
+2005-08-09 Kevin
+* add career_workflow.
+
+2005-08-05 Jérome
+* provide user a nice error message when  he cannot delete an object.
+* remove portal_type limitation to Mail Message in Base_viewSearchResultList/listbox , in order to make worklist work.
+
+2005-08-03 Jérome
+* take care of accounting module renaming.
+
+2005-07-28 Kevin
+* Importation of category trees using OOo now support unicode.
+
+2005-07-27 Romain
+* Added Order Builder portal type.
+* Modified Order Tool portal type.
+
+2005-26-07 Sébastien
+* updates Resource_zGetInventoryList.
+
+2005-13-07 Sébastien
+* disable simulation_movement_interaction_workflow until it works well.
+
+2005-10-07 Jérome
+* security workaround in Base_edit (quick fix to be removed).
+* moved simulation_movement_interaction_workflow from erp5_trade, because of wf chains.
+
+2005-06-30, Kevin
+* add signature image on Bank Account Agent.
+* update person details view.
+
+2005-06-23, Kevin
+* bank_account_workflow added from baobab project.
+
+2005-06-20, Kevin
+* Bugs eradicated in the core script used by the portal_categories fast input.
+* Add the full region classification.
+
+2005-06-08
+* Add the script  Resource_hashVariationCategoryItemList in erp5_core.
+* Modify variables name in validation workflow.
+* Modify Base_edit for SupplyLine.
+* Move SupplyCell to erp5_trade.
+
+2005-06-07
+* Add a fast input for portal_categories.
+* Change Person_viewDetails to add partners & children.
+
+2005-05-05
+* Modify DeliveryBuilder_view.
+
+2005-04-29
+* Updated logo.
+
+2005-04-20
+* Little improvements of ERP5Site_createModule.
+
+2005-04-18
+* Add portal type: DeliveryBuilder, DeliveryTool, OrderTool, RouteTool.
+* Add ZSQLMethod: Delivery_zIsDivergent.
+
+2005-04-06
+* Add base categorie from erp5_apparel_depend: origin.
+
+2005-04-06
+* Add base categories from erp5_trade, erp5_accounting: destination_administration, destination_decision, destination_payment, source_administration, source_decision, source_payment.

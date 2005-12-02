@@ -1,0 +1,552 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+\n
+request=context.REQUEST\n
+\n
+#### Workaround for bug #21\n
+if not request.AUTHENTICATED_USER.has_permission(\'Modify portal content\', context) :\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % ( context.absolute_url()\n
+     , form_id, selection_index, selection_name, \'portal_status_message=You+don\\\'t+have+the+permissions+to+edit+the+object.\')\n
+  request[ \'RESPONSE\' ].redirect( redirect_url )\n
+  return\n
+\n
+MARKER = []\n
+\n
+try:\n
+  # Define form basic fields\n
+  if dialog_id==\'\' or dialog_id is None:\n
+    form = getattr(context,form_id)\n
+  else:\n
+    form = getattr(context,dialog_id)\n
+  # Validate\n
+  form.validate_all_to_request(request)\n
+  # Basic attributes\n
+  kw = {}\n
+  # Parse attributes\n
+  for f in form.get_fields():\n
+    k = f.id\n
+    v = getattr(request, k, MARKER)\n
+    if hasattr(v, \'edit\'):\n
+      # This is an encapsulated editor\n
+      # call it\n
+      v.edit(context)\n
+      pass\n
+    elif v is not MARKER:\n
+      if k[0:3] == \'my_\':\n
+        # We only take into account\n
+        # the object attributes\n
+        k = k[3:]\n
+        # XXXX The formulate is badly designed, no value should be None.\n
+        if v == \'\':\n
+          v = None\n
+        kw[k] = v\n
+\n
+  # Update matrix attributes\n
+  # It is possible to display multiples matrixbox on the same form,\n
+  # if they are named matrixbox, matrixbox1, matrixbox2, ...\n
+#   matrixbox = request.get(\'matrixbox\')\n
+  matrixbox_field_id = \'matrixbox\'\n
+  matrixbox_number = 0\n
+  matrixbox = request.get(matrixbox_field_id)\n
+#   if matrixbox is not None:\n
+  while matrixbox is not None:\n
+    matrixbox_field = form.get_field(\'matrixbox\')\n
+    cell_base_id = matrixbox_field.get_value(\'cell_base_id\')\n
+    portal_type = matrixbox_field.get_value(\'cell_portal_type\')\n
+    getter_method = matrixbox_field.get_value(\'getter_method\')\n
+    if getter_method not in (None,\'\'):\n
+      matrix_context = getattr(context,getter_method)()\n
+    else:\n
+      matrix_context = context\n
+      \n
+    if matrix_context is not None:\n
+      kd = {}\n
+      kd[\'portal_type\'] = portal_type\n
+      kd[\'base_id\'] = cell_base_id\n
+      gv = {}\n
+      if matrixbox_field.has_value(\'global_attributes\'):\n
+        hidden_attributes = map(lambda x:x[0], matrixbox_field.get_value(\'global_attributes\'))\n
+        for k in hidden_attributes:\n
+          gv[k] = getattr(request, k,None)\n
+\n
+\n
+      if matrixbox_field.get_value(\'update_cell_range\'):\n
+        # Update cell range each time it is modified\n
+        lines = matrixbox_field.get_value(\'lines\')\n
+        columns = matrixbox_field.get_value(\'columns\')\n
+        tabs = matrixbox_field.get_value(\'tabs\')\n
+\n
+        column_ids = map(lambda x: x[0], columns)\n
+        line_ids = map(lambda x: x[0], lines)\n
+        tab_ids = map(lambda x: x[0], tabs)\n
+\n
+        # There are 3 cases\n
+        # Case 1: we do 1 dimensional matrices\n
+        # Case 2: we do 2 dimensional matrices\n
+        # Case 3: we do 2 dimensinal matrices + tabs\n
+\n
+        cell_range = matrix_context.getCellRange(base_id = cell_base_id)\n
+\n
+        if (len(column_ids) == 0) or (column_ids[0] == None):\n
+          matrixbox_cell_range = [line_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, base_id=cell_base_id)\n
+\n
+        elif (len(tab_ids) == 0) or (tab_ids[0] == None):\n
+          matrixbox_cell_range = [line_ids, column_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, column_ids, base_id=cell_base_id)\n
+\n
+        else:\n
+          matrixbox_cell_range = [line_ids, column_ids, tab_ids]\n
+          if cell_range != matrixbox_cell_range:\n
+            matrix_context.setCellRange(line_ids, column_ids, tab_ids, base_id=cell_base_id)\n
+\n
+\n
+      for k,v in matrixbox.items():\n
+          # Only update cells which still exist\n
+          if matrix_context.hasInRange(*k, **kd):\n
+            c = matrix_context.newCell(*k, **kd)\n
+            if c is not None:\n
+              c.edit(**gv)  # First update globals which include the def. of property_list\n
+              if v.has_key(\'variated_property\'):\n
+                # For Variated Properties\n
+                value = v[\'variated_property\']\n
+                del v[\'variated_property\']\n
+                if gv.has_key(\'mapped_value_property_list\'):\n
+                  # Change the property which is defined by the\n
+                  # first element of mapped_value_property_list\n
+                  # XXX May require some changes with Sets\n
+                  key = gv[\'mapped_value_property_list\'][0]\n
+                  v[key] = value\n
+              c.edit(**v) # and update the cell specific values\n
+            else:\n
+              return "Could not create cell %s" % str(k)\n
+          else:\n
+            return "Cell %s does not exist" % str(k)\n
+\n
+    matrixbox_number += 1\n
+    matrixbox_field_id = \'matrixbox%s\' % matrixbox_number\n
+    matrixbox = request.get(matrixbox_field_id)\n
+\n
+  # Update listbox attributes\n
+  list_block_error=[]\n
+  planning_box = request.get(\'planning_box\')\n
+  listbox = request.get(\'listbox\')\n
+  request_selection_name = request.get(\'selection_name\')\n
+\n
+  # XXX XXX XXX don t remove. It prevent to delete listbox object property after a selection for a RelationField...\n
+  # must really improve !!!\n
+  #if listbox is not None and request_selection_name==selection_name:\n
+  if listbox is not None:\n
+    listbox_field = form.get_field(\'listbox\')\n
+    gv = {}\n
+    if listbox_field.has_value(\'global_attributes\'):\n
+      hidden_attributes = map(lambda x:x[0], listbox_field.get_value(\'global_attributes\'))\n
+      for k in hidden_attributes:\n
+        gv[k] = getattr(request, k,None)\n
+    for url, v in listbox.items():\n
+      o = context.restrictedTraverse(url)\n
+      v.update(gv)\n
+      o.edit(**v)\n
+      # This below was disabled by yo. Do not use flushActivity. It is forbidden.\n
+      # If you want to reactivate this, ask yo before doing.\n
+      #o.flushActivity(method_id="immediateReindexObject",\n
+      #                   invoke = 1) # This is required if we wish to provide immediate display\n
+      #o.flushActivity(method_id="recursiveImmediateReindexObject",\n
+      #                         invoke = 1) # Requires if we want to display indexed subobject data... but long\n
+      # However it seems it reindexed many many times... XXX\n
+      # Maybe we should build a list of objects we need\n
+\n
+  if planning_box is not None:\n
+    planning_box_field = form.get_field(\'planning_box\')\n
+    gv = {}\n
+\n
+    for url, v in planning_box.items():\n
+      o = context.restrictedTraverse(url)\n
+      v.update(gv)\n
+      o.edit(**v)\n
+      # This below was disabled by yo. Do not use flushActivity. It is forbidden.\n
+      # If you want to reactivate this, ask yo before doing.\n
+      #o.flushActivity(method_id="immediateReindexObject",\n
+      #                   invoke = 1) # This is required if we wish to provide immediate display\n
+      #o.flushActivity(method_id="recursiveImmediateReindexObject",\n
+      #                         invoke = 1) # Requires if we want to display indexed subobject data... but long\n
+      # However it seems it reindexed many many times... XXX\n
+    \n
+  # Maybe we should build a list of objects we need\n
+  # Update basic attributes\n
+  context.edit(REQUEST=request,**kw)\n
+\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  # Make sure editors are pushed back as values into the REQUEST object\n
+  for f in form.get_fields():\n
+    field_id = f.id\n
+    if request.has_key(field_id):\n
+      value = request.get(field_id)\n
+      if callable(value):\n
+        value(request)\n
+  return form(request)\n
+\n
+else:\n
+  if not selection_index:\n
+    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , form_id\n
+                              , \'portal_status_message=Data+Updated.\'\n
+                              )\n
+  else:\n
+    redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % ( context.absolute_url()\n
+                              , form_id\n
+                              , selection_index\n
+                              , selection_name\n
+                              , \'portal_status_message=Data+Updated.\'\n
+                              )\n
+\n
+\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+# vim: syntax=python\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+gwIAZB0AgwEAgwIAfSIAeDQAdBEAfCIAgwEARF0iAH0TAHQOAHwJAHwTAHQNAIMDAHQWAHwgAIMB
+AHwTADxx6gZXbgEAAXhvAHQRAHQDAHwzAGQoAIMCAIMAAIMBAERdUQB0EQACgwEAXAIAfTYAfRQA
+dAMAdAQAZDYAgwIAfDYAgwEAfTcAdAMAfBQAZDcAgwIAfCAAgwEAAXQsAHQDAHw3AGQPAIMCAHwU
+AI0BAAFxLQdXbgEAAXwyAHQNAGoJAG+NAAF0AwB8DwBkFQCDAgBkMgCDAQB9OABoAAB9IAB4bwB0
+EQB0AwB8MgBkKACDAgCDAACDAQBEXVEAdBEAAoMBAFwCAH02AH0UAHQDAHQEAGQ2AIMCAHw2AIMB
+AH03AHQDAHwUAGQ3AIMCAHwgAIMBAAF0LAB0AwB8NwBkDwCDAgB8FACNAQABcccHV24BAAF0LAB0
+AwB0BABkDwCDAgBkAgB8CQB8EACNAQEBV27GAAR8BgBqCgBvugABAX05AAF0AwB8DwBkOACDAgB8
+OQCDAQB9OgB0AwB8CQBkOQCDAgBkOgB8OgCDAgABeHkAdBEAdAMAfA8AZA0AgwIAgwAAgwEARF1f
+AH0SAHQDAHwSAGQOAIMCAH07AHQDAHwJAGQrAIMCAHw7AIMBAG80AAF0AwB8CQBkFACDAgB8OwCD
+AQB9LgB0PAB8LgCDAQBvDgABfC4AfAkAgwEAAXHzCAFxlAgBcZQIV3wPAHwJAIMBAFNuUgABWHwB
+AAxvIwABZDsAdAMAdAQAZAcAgwIAgwAAfAAAZDwAZgMAFn0KAG4mAAFkBgB0AwB0BABkBwCDAgCD
+AAB8AAB8AQB8AgBkPABmBQAWfQoAdAMAdAoAfAkAZAkAgwIAZAoAgwIAfAoAgwEAAWQAAFMoPQAA
+AE4oAgAAAHMPAAAAVmFsaWRhdGlvbkVycm9ycxMAAABGb3JtVmFsaWRhdGlvbkVycm9ycwcAAABS
+RVFVRVNUcxIAAABBVVRIRU5USUNBVEVEX1VTRVJzDgAAAGhhc19wZXJtaXNzaW9ucxUAAABNb2Rp
+ZnkgcG9ydGFsIGNvbnRlbnRzLQAAACVzLyVzP3NlbGVjdGlvbl9pbmRleD0lcyZzZWxlY3Rpb25f
+bmFtZT0lcyYlc3MMAAAAYWJzb2x1dGVfdXJsc0gAAABwb3J0YWxfc3RhdHVzX21lc3NhZ2U9WW91
+K2Rvbid0K2hhdmUrdGhlK3Blcm1pc3Npb25zK3RvK2VkaXQrdGhlK29iamVjdC5zCAAAAFJFU1BP
+TlNFcwgAAAByZWRpcmVjdHMAAAAAcxcAAAB2YWxpZGF0ZV9hbGxfdG9fcmVxdWVzdHMKAAAAZ2V0
+X2ZpZWxkc3MCAAAAaWRzBAAAAGVkaXRpAAAAAGkDAAAAcwMAAABteV9zCQAAAG1hdHJpeGJveHMD
+AAAAZ2V0cwkAAABnZXRfZmllbGRzCQAAAGdldF92YWx1ZXMMAAAAY2VsbF9iYXNlX2lkcxAAAABj
+ZWxsX3BvcnRhbF90eXBlcw0AAABnZXR0ZXJfbWV0aG9kcwsAAABwb3J0YWxfdHlwZXMHAAAAYmFz
+ZV9pZHMJAAAAaGFzX3ZhbHVlcxEAAABnbG9iYWxfYXR0cmlidXRlc2MBAAAAAgAAAAMAAABDAAAA
+cw0AAAB0AAB8AABkAQCDAgBTKAIAAABOaQAAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwEAAAB4KAIA
+AABzAQAAAHhzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMLAAAA
+PGxhbWJkYS4zNT5DAAAAcwAAAABzEQAAAHVwZGF0ZV9jZWxsX3JhbmdlcwUAAABsaW5lc3MHAAAA
+Y29sdW1uc3MEAAAAdGFic2MBAAAAAgAAAAMAAABDAAAAcw0AAAB0AAB8AABkAQCDAgBTKAIAAABO
+aQAAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwEAAAB4KAIAAABzAQAAAHhzCQAAAF9nZXRpdGVtXygA
+AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMLAAAAPGxhbWJkYS4zNj5OAAAAcwAAAABjAQAA
+AAIAAAADAAAAQwAAAHMNAAAAdAAAfAAAZAEAgwIAUygCAAAATmkAAAAAKAIAAABzCQAAAF9nZXRp
+dGVtX3MBAAAAeCgCAAAAcwEAAAB4cwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzCwAAADxsYW1iZGEuMzc+TwAAAHMAAAAAYwEAAAACAAAAAwAAAEMAAABzDQAAAHQA
+AHwAAGQBAIMCAFMoAgAAAE5pAAAAACgCAAAAcwkAAABfZ2V0aXRlbV9zAQAAAHgoAgAAAHMBAAAA
+eHMJAAAAX2dldGl0ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwsAAAA8bGFtYmRh
+LjM4PlAAAABzAAAAAHMMAAAAZ2V0Q2VsbFJhbmdlcwwAAABzZXRDZWxsUmFuZ2VzBQAAAGl0ZW1z
+cwoAAABoYXNJblJhbmdlcwcAAABuZXdDZWxscwcAAABoYXNfa2V5cxEAAAB2YXJpYXRlZF9wcm9w
+ZXJ0eXMaAAAAbWFwcGVkX3ZhbHVlX3Byb3BlcnR5X2xpc3RzGAAAAENvdWxkIG5vdCBjcmVhdGUg
+Y2VsbCAlc3MWAAAAQ2VsbCAlcyBkb2VzIG5vdCBleGlzdGkBAAAAcwsAAABtYXRyaXhib3glc3MM
+AAAAcGxhbm5pbmdfYm94cwcAAABsaXN0Ym94cw4AAABzZWxlY3Rpb25fbmFtZWMBAAAAAgAAAAMA
+AABDAAAAcw0AAAB0AAB8AABkAQCDAgBTKAIAAABOaQAAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwEA
+AAB4KAIAAABzAQAAAHhzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMLAAAAPGxhbWJkYS4zOT6QAAAAcwAAAABzEgAAAHJlc3RyaWN0ZWRUcmF2ZXJzZXMGAAAAdXBk
+YXRlcwsAAABFcnJvckZpZWxkc3MDAAAAc2V0cwwAAABmaWVsZF9lcnJvcnNzCAAAACVzLyVzPyVz
+cyMAAABwb3J0YWxfc3RhdHVzX21lc3NhZ2U9RGF0YStVcGRhdGVkLig9AAAAcxoAAABQcm9kdWN0
+cy5Gb3JtdWxhdG9yLkVycm9yc3MPAAAAVmFsaWRhdGlvbkVycm9ycxMAAABGb3JtVmFsaWRhdGlv
+bkVycm9ycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzBwAAAGZvcm1faWRz
+DwAAAHNlbGVjdGlvbl9pbmRleHMOAAAAc2VsZWN0aW9uX25hbWVzDAAAAHJlZGlyZWN0X3VybHMJ
+AAAAX2dldGl0ZW1fcwYAAABNQVJLRVJzCQAAAGRpYWxvZ19pZHMEAAAATm9uZXMHAAAAZ2V0YXR0
+cnMEAAAAZm9ybXMCAAAAa3dzCQAAAF9nZXRpdGVyX3MBAAAAZnMBAAAAa3MBAAAAdnMHAAAAaGFz
+YXR0cnMHAAAAX3dyaXRlX3MSAAAAbWF0cml4Ym94X2ZpZWxkX2lkcxAAAABtYXRyaXhib3hfbnVt
+YmVycwkAAABtYXRyaXhib3hzDwAAAG1hdHJpeGJveF9maWVsZHMMAAAAY2VsbF9iYXNlX2lkcwsA
+AABwb3J0YWxfdHlwZXMNAAAAZ2V0dGVyX21ldGhvZHMOAAAAbWF0cml4X2NvbnRleHRzAgAAAGtk
+cwIAAABndnMDAAAAbWFwcxEAAABoaWRkZW5fYXR0cmlidXRlc3MFAAAAbGluZXNzBwAAAGNvbHVt
+bnNzBAAAAHRhYnNzCgAAAGNvbHVtbl9pZHNzCAAAAGxpbmVfaWRzcwcAAAB0YWJfaWRzcwoAAABj
+ZWxsX3JhbmdlcwMAAABsZW5zFAAAAG1hdHJpeGJveF9jZWxsX3JhbmdlcwcAAABfYXBwbHlfcwEA
+AABjcwUAAAB2YWx1ZXMDAAAAa2V5cwMAAABzdHJzEAAAAGxpc3RfYmxvY2tfZXJyb3JzDAAAAHBs
+YW5uaW5nX2JveHMHAAAAbGlzdGJveHMWAAAAcmVxdWVzdF9zZWxlY3Rpb25fbmFtZXMNAAAAbGlz
+dGJveF9maWVsZHMDAAAAdXJscwEAAABvcxIAAABwbGFubmluZ19ib3hfZmllbGRzEQAAAHZhbGlk
+YXRpb25fZXJyb3JzcwwAAABmaWVsZF9lcnJvcnNzCAAAAGZpZWxkX2lkcwgAAABjYWxsYWJsZSg9
+AAAAcwcAAABmb3JtX2lkcw8AAABzZWxlY3Rpb25faW5kZXhzDgAAAHNlbGVjdGlvbl9uYW1lcwkA
+AABkaWFsb2dfaWRzGgAAAFByb2R1Y3RzLkZvcm11bGF0b3IuRXJyb3Jzcw8AAABWYWxpZGF0aW9u
+RXJyb3JzEwAAAEZvcm1WYWxpZGF0aW9uRXJyb3JzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMH
+AAAAcmVxdWVzdHMMAAAAcmVkaXJlY3RfdXJscwkAAABfZ2V0aXRlbV9zBgAAAE1BUktFUnMEAAAA
+Tm9uZXMHAAAAZ2V0YXR0cnMEAAAAZm9ybXMCAAAAa3dzCQAAAF9nZXRpdGVyX3MBAAAAZnMBAAAA
+a3MBAAAAdnMHAAAAaGFzYXR0cnMHAAAAX3dyaXRlX3MSAAAAbWF0cml4Ym94X2ZpZWxkX2lkcxAA
+AABtYXRyaXhib3hfbnVtYmVycwkAAABtYXRyaXhib3hzDwAAAG1hdHJpeGJveF9maWVsZHMMAAAA
+Y2VsbF9iYXNlX2lkcwsAAABwb3J0YWxfdHlwZXMNAAAAZ2V0dGVyX21ldGhvZHMOAAAAbWF0cml4
+X2NvbnRleHRzAgAAAGtkcwIAAABndnMDAAAAbWFwcxEAAABoaWRkZW5fYXR0cmlidXRlc3MFAAAA
+bGluZXNzBwAAAGNvbHVtbnNzBAAAAHRhYnNzCgAAAGNvbHVtbl9pZHNzCAAAAGxpbmVfaWRzcwcA
+AAB0YWJfaWRzcwoAAABjZWxsX3JhbmdlcwMAAABsZW5zFAAAAG1hdHJpeGJveF9jZWxsX3Jhbmdl
+cwcAAABfYXBwbHlfcwEAAABjcwUAAAB2YWx1ZXMDAAAAa2V5cwMAAABzdHJzEAAAAGxpc3RfYmxv
+Y2tfZXJyb3JzDAAAAHBsYW5uaW5nX2JveHMHAAAAbGlzdGJveHMWAAAAcmVxdWVzdF9zZWxlY3Rp
+b25fbmFtZXMNAAAAbGlzdGJveF9maWVsZHMDAAAAdXJscwEAAABvcxIAAABwbGFubmluZ19ib3hf
+ZmllbGRzEQAAAHZhbGlkYXRpb25fZXJyb3JzcwwAAABmaWVsZF9lcnJvcnNzCAAAAGZpZWxkX2lk
+cwgAAABjYWxsYWJsZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMJAAAAQmFzZV9lZGl0
+AQAAAHMEAQAAEwIPAyMBEgEZARYBCAIGAgMCGgETAhICEAIGAhkABgEPARIBEwMQAQQBDQEcAxUC
+DQEKARwGBgEGARUCAwANARUBFQEVARUBEwEWAgYCDQEGARABEAEJARMBIQENAAYBJwMTAhUBFQEV
+AhIBEgESBxgCKQEJARABHgIpAQwBEAEhAw8BEAEkAxkAGQIWARsBEwETARMCEgENARMEGAEeARQC
+EgIWAgoBCgEaAwYBFQEVARUFDQEVAQkBEwEhAQ0ABgEkARkAEwEYARYBGAoNARUBBgIZABMBGAEW
+AR4LGgIQAhgBEwIZAAYBEgETARUBDQEWAQ8DCAESAREEEgEDAQMBEwYoAQAAAHMJAAAAQmFzZV9l
+ZGl0KAEAAABzCQAAAEJhc2VfZWRpdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAA
+PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, selection_index=0, selection_name=\'\',dialog_id=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>dialog_id</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>redirect_url</string>
+                            <string>_getitem_</string>
+                            <string>MARKER</string>
+                            <string>None</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>kw</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>hasattr</string>
+                            <string>_write_</string>
+                            <string>matrixbox_field_id</string>
+                            <string>matrixbox_number</string>
+                            <string>matrixbox</string>
+                            <string>matrixbox_field</string>
+                            <string>cell_base_id</string>
+                            <string>portal_type</string>
+                            <string>getter_method</string>
+                            <string>matrix_context</string>
+                            <string>kd</string>
+                            <string>gv</string>
+                            <string>map</string>
+                            <string>hidden_attributes</string>
+                            <string>lines</string>
+                            <string>columns</string>
+                            <string>tabs</string>
+                            <string>column_ids</string>
+                            <string>line_ids</string>
+                            <string>tab_ids</string>
+                            <string>cell_range</string>
+                            <string>len</string>
+                            <string>matrixbox_cell_range</string>
+                            <string>_apply_</string>
+                            <string>c</string>
+                            <string>value</string>
+                            <string>key</string>
+                            <string>str</string>
+                            <string>list_block_error</string>
+                            <string>planning_box</string>
+                            <string>listbox</string>
+                            <string>request_selection_name</string>
+                            <string>listbox_field</string>
+                            <string>url</string>
+                            <string>o</string>
+                            <string>planning_box_field</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>field_id</string>
+                            <string>callable</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <string></string>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

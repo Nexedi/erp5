@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Updates attributes of an Zope document\n
+# which is in a class inheriting from ERP5 Base\n
+\n
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+\n
+request=context.REQUEST\n
+o = context.portal_catalog.getObject(object_uid)\n
+\n
+if o is None:\n
+  return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"\n
+\n
+if listbox_uid is not None:\n
+  selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
+  uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+\n
+if request.has_key(\'previous_form_id\'):\n
+  previous_form_id = request.get(\'previous_form_id\')\n
+  if previous_form_id != \'\':\n
+    form_id = previous_form_id\n
+\n
+form = getattr(context, form_id)\n
+field = form.get_field(field_id)\n
+\n
+base_category = field.get_value(\'base_category\')\n
+relation_setter_id = field.get_value(\'relation_setter_id\')\n
+if relation_setter_id: relation_setter = getattr(o, relation_setter_id)\n
+portal_type = map(lambda x:x[0],field.get_value(\'portal_type\'))\n
+\n
+# \n
+old_request = context.portal_selections.getObjectFromPickleAndSignature(request.form_pickle, request.form_signature)\n
+\n
+if old_request.has_key(\'sub_index\'):\n
+  if len(uids) > 0:\n
+    old_request[\'relation_field_%s_%s\' % (field_id, old_request[\'sub_index\'] )] = str(uids[0]) # XXX Hardwired\n
+else:\n
+  old_request[\'relation_field_%s\' % field_id] = uids # XXX Hardwired\n
+\n
+# Purge the REQUEST from relation form input\n
+static_dict = {\n
+  \'PATH_INFO\':1, \n
+  \'AUTHENTICATION_PATH\':1,\n
+  \'AUTHENTICATED_USER\':1,\n
+  \'USER_PREF_LANGUAGES\':1,\n
+  \'SERVER_URL\':1,\n
+  \'URL\':1,\n
+  \'PUBLISHED\':1,\n
+  \'RESPONSE\':1,\n
+  \'PARENTS\':1,\n
+  \'AcceptLanguage\':1\n
+}\n
+\n
+for k in request.other.keys():\n
+  if not static_dict.has_key(k):\n
+    del request.other[k]\n
+for k in request.form.keys():\n
+  del request.form[k]\n
+\n
+request.form.update(old_request) # Create a fake request with nothing like form or ...\n
+\n
+\n
+return context.Base_edit(form_id, selection_index=old_request.get(\'selection_index\',0), selection_name=old_request.get(\'selection_name\', \'\'))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMIAAAAIgAA
+ACcAAABDAAAAc4MDAABkAQBrAABsAQB9CQBsAgB9CgABdAMAdAQAZAIAgwIAfQ0AdAMAdAMAdAQA
+ZAMAgwIAZAQAgwIAfAUAgwEAfQ4AfA4AdAgAaggAbwgAAWQFAFNuAQABfAYAdAgAagkAb0YAAXQD
+AHQDAHQEAGQGAIMCAGQHAIMCAHwDAHwGAHwEAIMDAH0QAHQDAHQDAHQEAGQGAIMCAGQIAIMCAHwD
+AIMBAH0EAG4BAAF0AwB8DQBkCQCDAgBkCgCDAQBvMAABdAMAfA0AZAsAgwIAZAoAgwEAfREAfBEA
+ZAwAagMAbwoAAXwRAH0AAHHuAAFuAQABdA8AdAQAfAAAgwIAfRMAdAMAfBMAZA0AgwIAfAEAgwEA
+fRQAdAMAfBQAZA4AgwIAZA8AgwEAfRUAdAMAfBQAZA4AgwIAZBAAgwEAfRYAfBYAbxMAAXQPAHwO
+AHwWAIMCAH0XAG4BAAF0FgBkEQCEAAB0AwB8FABkDgCDAgBkEgCDAQCDAgB9GQB0AwB0AwB0BABk
+BgCDAgBkEwCDAgB0AwB8DQBkFACDAgB0AwB8DQBkFQCDAgCDAgB9GgB0AwB8GgBkCQCDAgBkFgCD
+AQBvTQABdBkAfAQAgwEAZBcAagQAbzYAAXQaAHQbAHwEAGQXAIMCAIMBAHQcAHwaAIMBAGQYAHwB
+AHQbAHwaAGQWAIMCAGYCABY8cSECAW4VAAF8BAB0HAB8GgCDAQBkGQB8AQAWPGgAAARkGgBkGwAD
+PARkHABkGwADPARkHQBkGwADPARkHgBkGwADPARkHwBkGwADPARkIABkGwADPARkIQBkGwADPARk
+IgBkGwADPARkIwBkGwADPARkJABkGwADPH0fAHhaAHQeAHQDAHQDAHwNAGQlAIMCAGQmAIMCAIMA
+AIMBAERdNwB9IQB0AwB8HwBkCQCDAgB8IQCDAQAMbxoAAXQcAHQDAHwNAGQlAIMCAIMBAHwhAD1x
+owIBcaMCV3g/AHQeAHQDAHQDAHwNAGQnAIMCAGQmAIMCAIMAAIMBAERdHAB9IQB0HAB0AwB8DQBk
+JwCDAgCDAQB8IQA9cQADV3QDAHQDAHwNAGQnAIMCAGQoAIMCAHwaAIMBAAF0AwB0BABkKQCDAgB8
+AABkKgB0AwB8GgBkCwCDAgBkKgBkFwCDAgBkKwB0AwB8GgBkCwCDAgBkKwBkDACDAgCDAQJTZAAA
+UygsAAAATigCAAAAcw8AAABWYWxpZGF0aW9uRXJyb3JzEwAAAEZvcm1WYWxpZGF0aW9uRXJyb3Jz
+BwAAAFJFUVVFU1RzDgAAAHBvcnRhbF9jYXRhbG9ncwkAAABnZXRPYmplY3RzTQAAAFNvcnJyeSwg
+RXJyb3IsIHRoZSBjYWxsaW5nIG9iamVjdCB3YXMgbm90IGNhdGFsb2d1ZWQuIERvIG5vdCBrbm93
+IGhvdyB0byBkbyA/cxEAAABwb3J0YWxfc2VsZWN0aW9uc3MdAAAAdXBkYXRlU2VsZWN0aW9uQ2hl
+Y2tlZFVpZExpc3RzGgAAAGdldFNlbGVjdGlvbkNoZWNrZWRVaWRzRm9ycwcAAABoYXNfa2V5cxAA
+AABwcmV2aW91c19mb3JtX2lkcwMAAABnZXRzAAAAAHMJAAAAZ2V0X2ZpZWxkcwkAAABnZXRfdmFs
+dWVzDQAAAGJhc2VfY2F0ZWdvcnlzEgAAAHJlbGF0aW9uX3NldHRlcl9pZGMBAAAAAgAAAAMAAABD
+AAAAcw0AAAB0AAB8AABkAQCDAgBTKAIAAABOaQAAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwEAAAB4
+KAIAAABzAQAAAHhzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXML
+AAAAPGxhbWJkYS4xNj4bAAAAcwAAAABzCwAAAHBvcnRhbF90eXBlcx8AAABnZXRPYmplY3RGcm9t
+UGlja2xlQW5kU2lnbmF0dXJlcwsAAABmb3JtX3BpY2tsZXMOAAAAZm9ybV9zaWduYXR1cmVzCQAA
+AHN1Yl9pbmRleGkAAAAAcxQAAAByZWxhdGlvbl9maWVsZF8lc18lc3MRAAAAcmVsYXRpb25fZmll
+bGRfJXNzCQAAAFBBVEhfSU5GT2kBAAAAcxMAAABBVVRIRU5USUNBVElPTl9QQVRIcxIAAABBVVRI
+RU5USUNBVEVEX1VTRVJzEwAAAFVTRVJfUFJFRl9MQU5HVUFHRVNzCgAAAFNFUlZFUl9VUkxzAwAA
+AFVSTHMJAAAAUFVCTElTSEVEcwgAAABSRVNQT05TRXMHAAAAUEFSRU5UU3MOAAAAQWNjZXB0TGFu
+Z3VhZ2VzBQAAAG90aGVycwQAAABrZXlzcwQAAABmb3JtcwYAAAB1cGRhdGVzCQAAAEJhc2VfZWRp
+dHMPAAAAc2VsZWN0aW9uX2luZGV4cw4AAABzZWxlY3Rpb25fbmFtZSggAAAAcxoAAABQcm9kdWN0
+cy5Gb3JtdWxhdG9yLkVycm9yc3MPAAAAVmFsaWRhdGlvbkVycm9ycxMAAABGb3JtVmFsaWRhdGlv
+bkVycm9ycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzCgAAAG9iamVjdF91
+aWRzAQAAAG9zBAAAAE5vbmVzCwAAAGxpc3Rib3hfdWlkcw4AAABzZWxlY3Rpb25fbmFtZXMEAAAA
+dWlkc3MNAAAAc2VsZWN0ZWRfdWlkc3MQAAAAcHJldmlvdXNfZm9ybV9pZHMHAAAAZm9ybV9pZHMH
+AAAAZ2V0YXR0cnMEAAAAZm9ybXMIAAAAZmllbGRfaWRzBQAAAGZpZWxkcw0AAABiYXNlX2NhdGVn
+b3J5cxIAAAByZWxhdGlvbl9zZXR0ZXJfaWRzDwAAAHJlbGF0aW9uX3NldHRlcnMDAAAAbWFwcwsA
+AABwb3J0YWxfdHlwZXMLAAAAb2xkX3JlcXVlc3RzAwAAAGxlbnMDAAAAc3RycwkAAABfZ2V0aXRl
+bV9zBwAAAF93cml0ZV9zCwAAAHN0YXRpY19kaWN0cwkAAABfZ2V0aXRlcl9zAQAAAGsoIgAAAHMH
+AAAAZm9ybV9pZHMIAAAAZmllbGRfaWRzDwAAAHNlbGVjdGlvbl9pbmRleHMOAAAAc2VsZWN0aW9u
+X25hbWVzBAAAAHVpZHNzCgAAAG9iamVjdF91aWRzCwAAAGxpc3Rib3hfdWlkcwoAAABiYXRjaF9t
+b2RlcxoAAABQcm9kdWN0cy5Gb3JtdWxhdG9yLkVycm9yc3MPAAAAVmFsaWRhdGlvbkVycm9ycxMA
+AABGb3JtVmFsaWRhdGlvbkVycm9ycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVl
+c3RzAQAAAG9zBAAAAE5vbmVzDQAAAHNlbGVjdGVkX3VpZHNzEAAAAHByZXZpb3VzX2Zvcm1faWRz
+BwAAAGdldGF0dHJzBAAAAGZvcm1zBQAAAGZpZWxkcw0AAABiYXNlX2NhdGVnb3J5cxIAAAByZWxh
+dGlvbl9zZXR0ZXJfaWRzDwAAAHJlbGF0aW9uX3NldHRlcnMDAAAAbWFwcwsAAABwb3J0YWxfdHlw
+ZXMLAAAAb2xkX3JlcXVlc3RzAwAAAGxlbnMDAAAAc3RycwkAAABfZ2V0aXRlbV9zBwAAAF93cml0
+ZV9zCwAAAHN0YXRpY19kaWN0cwkAAABfZ2V0aXRlcl9zAQAAAGsoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzEQAAAEJhc2VfZWRpdFJlbGF0aW9uAQAAAHNCAAAAAAMTAg8BHgINAQgCDQEk
+ASUCEwEVAQ0BDgIPARUCFQEVARoBIQM2AhMBEwE6AhQDYA0iAAYBHQEYASIADAEaAhYDKAEAAABz
+EQAAAEJhc2VfZWRpdFJlbGF0aW9uKAEAAABzEQAAAEJhc2VfZWRpdFJlbGF0aW9uKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_editRelation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, field_id, selection_index, selection_name, uids, object_uid, listbox_uid, batch_mode=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>8</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>field_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>uids</string>
+                            <string>object_uid</string>
+                            <string>listbox_uid</string>
+                            <string>batch_mode</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>o</string>
+                            <string>None</string>
+                            <string>selected_uids</string>
+                            <string>previous_form_id</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>field</string>
+                            <string>base_category</string>
+                            <string>relation_setter_id</string>
+                            <string>relation_setter</string>
+                            <string>map</string>
+                            <string>portal_type</string>
+                            <string>old_request</string>
+                            <string>len</string>
+                            <string>str</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>static_dict</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_editRelation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

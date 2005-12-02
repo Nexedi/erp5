@@ -1,0 +1,387 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Updates attributes of an Zope document\n
+# which is in a class inheriting from ERP5 Base\n
+\n
+\n
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+from string import join\n
+from ZTUtils import make_query\n
+\n
+request=context.REQUEST\n
+\n
+\n
+\n
+#Exceptions for Base_edit\n
+if dialog_method == \'Base_edit\':\n
+  return context.Base_edit( form_id=form_id\n
+                                       , dialog_id=dialog_id\n
+                                       , selection_name=selection_name\n
+                                       )\n
+#Exceptions for Workflow\n
+if dialog_method == \'Workflow_statusModify\':\n
+  return context.Workflow_statusModify( form_id=form_id\n
+                                       , dialog_id=dialog_id\n
+                                       )\n
+if dialog_method == \'Base_configureUI\':\n
+  return context.Base_configureUI( form_id=form_id\n
+                             , selection_name=selection_name\n
+                             , field_columns=getattr(request,\'field_columns\')\n
+                             , stat_columns=getattr(request,\'stat_columns\')\n
+                             )\n
+if dialog_method == \'Base_configureSortOn\':\n
+  return context.Base_configureSortOn( form_id=form_id\n
+                             , selection_name=selection_name\n
+                             , field_sort_on=getattr(request,\'field_sort_on\')\n
+                             , field_sort_order=getattr(request,\'field_sort_order\')\n
+                             )\n
+\n
+error_message = \'\'\n
+MARKER = \'marker\'\n
+try:\n
+  # Validate the form\n
+  form = getattr(context,dialog_id)\n
+  form.validate_all_to_request(request)\n
+  kw =  { \'form_id\'             : form_id\n
+        , \'selection_name\'      : selection_name \n
+        , \'selection_index\'     : None\n
+        , \'dialog_id\'           : dialog_id\n
+        } # Missing selection_index\n
+  has_listbox = 0   \n
+  for f in form.get_fields():\n
+    k = f.id\n
+    v = getattr(request,k, MARKER)\n
+    if v is not MARKER:\n
+      if k[0:3] == \'my_\':\n
+        k = k[3:]\n
+        kw[k] = v\n
+      elif k in (\'import_file\', \'listbox\'):\n
+        if f.meta_type == \'ListBox\': has_listbox = 1\n
+        kw[k] = v\n
+  # Add some properties required by UI\n
+  kw[\'cancel_url\'] = cancel_url\n
+  # Redirect if possible, or call directly else\n
+  if kw.has_key(\'import_file\'):\n
+    # We can not redirect if we do an import\n
+    import_file = kw[\'import_file\']\n
+    return getattr(context,dialog_method)(**kw)\n
+  if has_listbox:\n
+    listbox_line_list = []\n
+    listbox = getattr(request,\'listbox\',None)\n
+    listbox_keys = listbox.keys()\n
+    listbox_keys.sort()\n
+    for key in listbox_keys:\n
+      listbox_line = listbox[key]\n
+      listbox_line[\'listbox_key\'] = key\n
+      listbox_line_list.append(listbox[key])\n
+    listbox_line_list = tuple(listbox_line_list)\n
+    kw[\'listbox\'] = listbox_line_list\n
+    return getattr(context,dialog_method)(**kw)\n
+  url_params_string = make_query(kw)\n
+  # Check if the selection did not changed\n
+  if previous_md5_object_uid_list is not None:\n
+    selection_list = context.portal_selections.callSelectionFor(selection_name, context=context)\n
+    if selection_list is not None:\n
+      object_uid_list = map(lambda x:x.getObject().getUid(),selection_list)\n
+      error = context.portal_selections.selectionHasChanged(previous_md5_object_uid_list,object_uid_list)\n
+      if error:\n
+        error_message = \'Sorry+your+selection+has+changed\'\n
+  url_params_string = make_query(**kw)\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
+\n
+if error_message != \'\':\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                , \'portal_status_message=%s\' % error_message\n
+                                )\n
+elif url_params_string != \'\':\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                            , dialog_method\n
+                            , url_params_string\n
+                            )\n
+else:\n
+  redirect_url = \'%s/%s\' % ( context.absolute_url()\n
+                            , dialog_method\n
+                            )\n
+\n
+return request.RESPONSE.redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jBgAAAC0AAAAeAAAA
+QwAAAHMfBQAAZAEAawAAbAEAfQcAbAIAfQgAAWQCAGsDAGwEAH0KAAFkAwBrBQBsBgB9DAABdAcA
+dAgAZAQAgwIAfQ8AfAIAZAUAagIAbyYAAXQHAHQIAGQFAIMCAGQGAHwAAGQHAHwEAGQIAHwDAIMA
+A1NuAQABfAIAZAkAagIAbyAAAXQHAHQIAGQJAIMCAGQGAHwAAGQHAHwEAIMAAlNuAQABfAIAZAoA
+agIAbz4AAXQHAHQIAGQKAIMCAGQGAHwAAGQIAHwDAGQLAHQOAHwPAGQLAIMCAGQMAHQOAHwPAGQM
+AIMCAIMABFNuAQABfAIAZA0AagIAbz4AAXQHAHQIAGQNAIMCAGQGAHwAAGQIAHwDAGQOAHQOAHwP
+AGQOAIMCAGQPAHQOAHwPAGQPAIMCAIMABFNuAQABZBAAfREAZBEAfRIAefQCdA4AdAgAfAQAgwIA
+fRMAdAcAfBMAZBIAgwIAfA8AgwEAAWgAAARkBgB8AAADPARkCAB8AwADPARkEwB0EgADPARkBwB8
+BAADPH0VAGQUAH0WAHjeAHQVAHQHAHwTAGQVAIMCAIMAAIMBAERdxAB9GAB0BwB8GABkFgCDAgB9
+GQB0DgB8DwB8GQB8EgCDAwB9GgB8GgB8EgBqCQBvkAABdBkAfBkAZBQAZBcAhQIAgwIAZBgAagIA
+bykAAXQZAHwZAGQXAGQAAIUCAIMCAH0ZAHwaAHQaAHwVAIMBAHwZADxxcAIBfBkAZBkAZBoAZgIA
+agYAbzQAAXQHAHwYAGQbAIMCAGQcAGoCAG8KAAFkHQB9FgBuAQABfBoAdBoAfBUAgwEAfBkAPHFw
+AgFxrAEBcawBV3wBAHQaAHwVAIMBAGQeADx0BwB8FQBkHwCDAgBkGQCDAQBvKQABdBkAfBUAZBkA
+gwIAfR0AdB0AdA4AdAgAfAIAgwIAfBUAjQEAU24BAAF8FgBvwgABZwAAfR8AdA4AfA8AZBoAdBIA
+gwMAfSAAdAcAfCAAZCAAgwIAgwAAfSEAdAcAfCEAZCEAgwIAgwAAAXhPAHQVAHwhAIMBAERdQQB9
+IgB0GQB8IAB8IgCDAgB9IwB8IgB0GgB8IwCDAQBkIgA8dAcAfB8AZCMAgwIAdBkAfCAAfCIAgwIA
+gwEAAXERA1d0IwB8HwCDAQB9HwB8HwB0GgB8FQCDAQBkGgA8dB0AdA4AdAgAfAIAgwIAfBUAjQEA
+U24BAAF8DAB8FQCDAQB9JQB8BQB0EgBqCQBvfQABdAcAdAcAdAgAZCQAgwIAZCUAgwIAfAMAZCYA
+dAgAgwEBfSYAfCYAdBIAagkAb0gAAXQnAGQnAIQAAHwmAIMCAH0oAHQHAHQHAHQIAGQkAIMCAGQo
+AIMCAHwFAHwoAIMCAH0pAHwpAG8KAAFkKQB9EQBxHgQBcSIEAW4BAAF0HQB8DAB8FQCNAQB9JQBX
+bkoABHwIAGoKAG8+AAEBfSoAAXQHAHwTAGQqAIMCAHwqAIMBAH0rAHQHAHwPAGQrAIMCAGQsAHwr
+AIMCAAF8EwB8DwCDAQBTbgIAAVh8EQBkEABqAwBvJwABZC0AdAcAdAgAZC4AgwIAgwAAfAAAZC8A
+fBEAFmYDABZ9LABuTQABfCUAZBAAagMAbyMAAWQtAHQHAHQIAGQuAIMCAIMAAHwCAHwlAGYDABZ9
+LABuHQABZDAAdAcAdAgAZC4AgwIAgwAAfAIAZgIAFn0sAHQHAHQHAHwPAGQxAIMCAGQyAIMCAHws
+AIMBAFNkAABTKDMAAABOKAIAAABzDwAAAFZhbGlkYXRpb25FcnJvcnMTAAAARm9ybVZhbGlkYXRp
+b25FcnJvcigBAAAAcwQAAABqb2luKAEAAABzCgAAAG1ha2VfcXVlcnlzBwAAAFJFUVVFU1RzCQAA
+AEJhc2VfZWRpdHMHAAAAZm9ybV9pZHMJAAAAZGlhbG9nX2lkcw4AAABzZWxlY3Rpb25fbmFtZXMV
+AAAAV29ya2Zsb3dfc3RhdHVzTW9kaWZ5cxAAAABCYXNlX2NvbmZpZ3VyZVVJcw0AAABmaWVsZF9j
+b2x1bW5zcwwAAABzdGF0X2NvbHVtbnNzFAAAAEJhc2VfY29uZmlndXJlU29ydE9ucw0AAABmaWVs
+ZF9zb3J0X29ucxAAAABmaWVsZF9zb3J0X29yZGVycwAAAABzBgAAAG1hcmtlcnMXAAAAdmFsaWRh
+dGVfYWxsX3RvX3JlcXVlc3RzDwAAAHNlbGVjdGlvbl9pbmRleGkAAAAAcwoAAABnZXRfZmllbGRz
+cwIAAABpZGkDAAAAcwMAAABteV9zCwAAAGltcG9ydF9maWxlcwcAAABsaXN0Ym94cwkAAABtZXRh
+X3R5cGVzBwAAAExpc3RCb3hpAQAAAHMKAAAAY2FuY2VsX3VybHMHAAAAaGFzX2tleXMEAAAAa2V5
+c3MEAAAAc29ydHMLAAAAbGlzdGJveF9rZXlzBgAAAGFwcGVuZHMRAAAAcG9ydGFsX3NlbGVjdGlv
+bnNzEAAAAGNhbGxTZWxlY3Rpb25Gb3JzBwAAAGNvbnRleHRjAQAAAAIAAAAEAAAAQwAAAHMcAAAA
+dAAAdAAAfAAAZAEAgwIAgwAAZAIAgwIAgwAAUygDAAAATnMJAAAAZ2V0T2JqZWN0cwYAAABnZXRV
+aWQoAgAAAHMJAAAAX2dldGF0dHJfcwEAAAB4KAIAAABzAQAAAHhzCQAAAF9nZXRhdHRyXygAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS43PlMAAABzAAAAAHMTAAAAc2Vs
+ZWN0aW9uSGFzQ2hhbmdlZHMgAAAAU29ycnkreW91citzZWxlY3Rpb24raGFzK2NoYW5nZWRzCwAA
+AEVycm9yRmllbGRzcwMAAABzZXRzDAAAAGZpZWxkX2Vycm9yc3MIAAAAJXMvJXM/JXNzDAAAAGFi
+c29sdXRlX3VybHMYAAAAcG9ydGFsX3N0YXR1c19tZXNzYWdlPSVzcwUAAAAlcy8lc3MIAAAAUkVT
+UE9OU0VzCAAAAHJlZGlyZWN0KC0AAABzGgAAAFByb2R1Y3RzLkZvcm11bGF0b3IuRXJyb3Jzcw8A
+AABWYWxpZGF0aW9uRXJyb3JzEwAAAEZvcm1WYWxpZGF0aW9uRXJyb3JzBgAAAHN0cmluZ3MEAAAA
+am9pbnMHAAAAWlRVdGlsc3MKAAAAbWFrZV9xdWVyeXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0
+cwcAAAByZXF1ZXN0cw0AAABkaWFsb2dfbWV0aG9kcwcAAABmb3JtX2lkcwkAAABkaWFsb2dfaWRz
+DgAAAHNlbGVjdGlvbl9uYW1lcwcAAABnZXRhdHRycw0AAABlcnJvcl9tZXNzYWdlcwYAAABNQVJL
+RVJzBAAAAGZvcm1zBAAAAE5vbmVzAgAAAGt3cwsAAABoYXNfbGlzdGJveHMJAAAAX2dldGl0ZXJf
+cwEAAABmcwEAAABrcwEAAAB2cwkAAABfZ2V0aXRlbV9zBwAAAF93cml0ZV9zCgAAAGNhbmNlbF91
+cmxzCwAAAGltcG9ydF9maWxlcwcAAABfYXBwbHlfcxEAAABsaXN0Ym94X2xpbmVfbGlzdHMHAAAA
+bGlzdGJveHMMAAAAbGlzdGJveF9rZXlzcwMAAABrZXlzDAAAAGxpc3Rib3hfbGluZXMFAAAAdHVw
+bGVzEQAAAHVybF9wYXJhbXNfc3RyaW5ncxwAAABwcmV2aW91c19tZDVfb2JqZWN0X3VpZF9saXN0
+cw4AAABzZWxlY3Rpb25fbGlzdHMDAAAAbWFwcw8AAABvYmplY3RfdWlkX2xpc3RzBQAAAGVycm9y
+cxEAAAB2YWxpZGF0aW9uX2Vycm9yc3MMAAAAZmllbGRfZXJyb3JzcwwAAAByZWRpcmVjdF91cmwo
+LQAAAHMHAAAAZm9ybV9pZHMKAAAAY2FuY2VsX3VybHMNAAAAZGlhbG9nX21ldGhvZHMOAAAAc2Vs
+ZWN0aW9uX25hbWVzCQAAAGRpYWxvZ19pZHMcAAAAcHJldmlvdXNfbWQ1X29iamVjdF91aWRfbGlz
+dHMaAAAAUHJvZHVjdHMuRm9ybXVsYXRvci5FcnJvcnNzDwAAAFZhbGlkYXRpb25FcnJvcnMTAAAA
+Rm9ybVZhbGlkYXRpb25FcnJvcnMGAAAAc3RyaW5ncwQAAABqb2lucwcAAABaVFV0aWxzcwoAAABt
+YWtlX3F1ZXJ5cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzBwAAAGdldGF0
+dHJzDQAAAGVycm9yX21lc3NhZ2VzBgAAAE1BUktFUnMEAAAAZm9ybXMEAAAATm9uZXMCAAAAa3dz
+CwAAAGhhc19saXN0Ym94cwkAAABfZ2V0aXRlcl9zAQAAAGZzAQAAAGtzAQAAAHZzCQAAAF9nZXRp
+dGVtX3MHAAAAX3dyaXRlX3MLAAAAaW1wb3J0X2ZpbGVzBwAAAF9hcHBseV9zEQAAAGxpc3Rib3hf
+bGluZV9saXN0cwcAAABsaXN0Ym94cwwAAABsaXN0Ym94X2tleXNzAwAAAGtleXMMAAAAbGlzdGJv
+eF9saW5lcwUAAAB0dXBsZXMRAAAAdXJsX3BhcmFtc19zdHJpbmdzDgAAAHNlbGVjdGlvbl9saXN0
+cwMAAABtYXBzDwAAAG9iamVjdF91aWRfbGlzdHMFAAAAZXJyb3JzEQAAAHZhbGlkYXRpb25fZXJy
+b3JzcwwAAABmaWVsZF9lcnJvcnNzDAAAAHJlZGlyZWN0X3VybCgAAAAAKAAAAABzDwAAAFNjcmlw
+dCAoUHl0aG9uKXMZAAAAQmFzZV9jYWxsVmlld0RpYWxvZ01ldGhvZAEAAABzpAAAAAAEEwENAQ0C
+DwUNARUBBgELAw0BFQELAg0BFQEGAQ8BFAINARUBBgEPARQDBgEGAQMCEgEQARABCQEJAQgCBgEZ
+AAYBDwESAQ0BHAEVARQBEwEgARwCEwITAg8BGgEHAQYBEgEVAQ0BDQAGAQ8BEwEdAQwBEAEaAQwC
+DQEkAQ0BEgEhAQcBEgETARACGAETAQ8CDQEYAQ8CDQESAQMBDgMSAQoDKAIAAABzBAAAAE5vbmVz
+GQAAAEJhc2VfY2FsbFZpZXdEaWFsb2dNZXRob2QoAgAAAHMEAAAATm9uZXMZAAAAQmFzZV9jYWxs
+Vmlld0RpYWxvZ01ldGhvZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVs
+ZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_callViewDialogMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id,cancel_url,dialog_method,selection_name,dialog_id,previous_md5_object_uid_list=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>6</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>cancel_url</string>
+                            <string>dialog_method</string>
+                            <string>selection_name</string>
+                            <string>dialog_id</string>
+                            <string>previous_md5_object_uid_list</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
+                            <string>string</string>
+                            <string>join</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>error_message</string>
+                            <string>MARKER</string>
+                            <string>form</string>
+                            <string>None</string>
+                            <string>kw</string>
+                            <string>has_listbox</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>import_file</string>
+                            <string>_apply_</string>
+                            <string>listbox_line_list</string>
+                            <string>listbox</string>
+                            <string>listbox_keys</string>
+                            <string>key</string>
+                            <string>listbox_line</string>
+                            <string>tuple</string>
+                            <string>url_params_string</string>
+                            <string>selection_list</string>
+                            <string>map</string>
+                            <string>object_uid_list</string>
+                            <string>error</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_callViewDialogMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

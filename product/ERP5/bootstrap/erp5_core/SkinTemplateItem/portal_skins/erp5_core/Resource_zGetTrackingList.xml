@@ -1,0 +1,452 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>at_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>node_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>portal_type_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>section_uid_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>simulation_state_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>variation_text_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+<string>node_uid</string>
+<string>at_date</string>
+<string>section_uid_list</string>
+<string>portal_type_list</string>
+<string>variation_text_list</string>
+<string>simulation_state_list</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>10</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>path</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>27</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>resource_title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>16</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>resource_relative_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>13</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>resource_uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>8</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>section_uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>node_uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>10</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>variation_text</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>d</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>19</int> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>node_uid\r\n
+at_date\r\n
+section_uid_list\r\n
+portal_type_list\r\n
+variation_text_list\r\n
+simulation_state_list</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>InventoryBrain.py</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>InventoryListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Resource_zGetTrackingList</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT \n
+  item.aggregate_uid AS uid,\n
+  catalog.path AS path,\n
+  item.date AS date,\n
+  item.node_uid AS node_uid,\n
+  item.section_uid AS section_uid,\n
+  item.resource_uid AS resource_uid,\n
+  item.variation_text AS variation_text\n
+FROM\n
+  catalog, item\n
+LEFT JOIN \n
+  item AS next_item\n
+ON\n
+  (next_item.date <= <dtml-sqlvar at_date type="string">\n
+AND \n
+   next_item.aggregate_uid = item.aggregate_uid\n
+AND\n
+   next_item.date > item.date\n
+  )\n
+WHERE\n
+  catalog.uid = item.aggregate_uid\n
+AND\n
+  next_item.uid IS NULL\n
+AND\n
+  item.node_uid = <dtml-sqlvar node_uid type="int">\n
+AND\n
+  item.date <= <dtml-sqlvar at_date type="string">\n
+<dtml-if section_uid_list>\n
+AND (<dtml-in section_uid_list><dtml-unless sequence-start> OR </dtml-unless>item.section_uid=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+<dtml-if portal_type_list>\n
+AND (<dtml-in portal_type_list><dtml-unless sequence-start> OR </dtml-unless>item.portal_type=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+<dtml-if variation_text_list>\n
+AND (<dtml-in variation_text_list><dtml-unless sequence-start> OR </dtml-unless>item.variation_text=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+<dtml-if simulation_state_list>\n
+AND (<dtml-in simulation_state_list><dtml-unless sequence-start> OR </dtml-unless>item.simulation_state=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT \n
+  item.aggregate_uid AS uid,\n
+  catalog.path AS path,\n
+  item.date AS date,\n
+  item.node_uid AS node_uid,\n
+  item.section_uid AS section_uid,\n
+  item.resource_uid AS resource_uid,\n
+  item.variation_text AS variation_text\n
+FROM\n
+  catalog, item\n
+LEFT JOIN \n
+  item AS next_item\n
+ON\n
+  (next_item.date <= <dtml-sqlvar at_date type="string">\n
+AND \n
+   next_item.aggregate_uid = item.aggregate_uid\n
+AND\n
+   next_item.date > item.date\n
+  )\n
+WHERE\n
+  catalog.uid = item.aggregate_uid\n
+AND\n
+  next_item.uid IS NULL\n
+AND\n
+  item.node_uid = <dtml-sqlvar node_uid type="int">\n
+AND\n
+  item.date <= <dtml-sqlvar at_date type="string">\n
+<dtml-if section_uid_list>\n
+AND (<dtml-in section_uid_list><dtml-unless sequence-start> OR </dtml-unless>item.section_uid=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+<dtml-if portal_type_list>\n
+AND (<dtml-in portal_type_list><dtml-unless sequence-start> OR </dtml-unless>item.portal_type=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+<dtml-if variation_text_list>\n
+AND (<dtml-in variation_text_list><dtml-unless sequence-start> OR </dtml-unless>item.variation_text=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+<dtml-if simulation_state_list>\n
+AND (<dtml-in simulation_state_list><dtml-unless sequence-start> OR </dtml-unless>item.simulation_state=\'<dtml-var sequence-item>\'</dtml-in>)\n
+</dtml-if>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

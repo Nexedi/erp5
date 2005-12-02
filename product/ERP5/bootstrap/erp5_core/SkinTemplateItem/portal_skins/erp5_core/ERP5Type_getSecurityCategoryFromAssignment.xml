@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># XXX For now, this script requires proxy manager\n
+\n
+# base_category_list : list of category values we need to retrieve\n
+# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
+#                               or getSecurityManager().getUser().getId()       [PluggableAuthService]\n
+# object : object which we want to assign roles to.\n
+# portal_type : portal type of object\n
+\n
+category_list = []\n
+\n
+person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
+person_object = getattr(person_module, user_name, None)\n
+\n
+# if a person_object was not found in the module, we do nothing more\n
+# this happens for example when a manager creates a person_object for a new user\n
+if person_object is None:\n
+  return []\n
+\n
+# We look for valid assignments of this user\n
+for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignment\'}):\n
+  if assignment.getValidationState() == \'open\':\n
+    category_dict = {}\n
+    for base_category in base_category_list:\n
+      category_value = assignment.getProperty(base_category)\n
+      if category_value not in (None, \'\'):\n
+        category_dict[base_category] = category_value\n
+      else:\n
+        raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
+    category_list.append(category_dict)\n
+\n
+return category_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBAAAABIAAAAVAAAAQwAA
+AHMnAQAAZwAAfQQAdAEAdAEAdAEAdAIAZAEAgwIAZAIAgwIAgwAAZAMAgwIAZAQAgwEAfQcAdAQA
+fAcAfAEAdAYAgwMAfQoAfAoAdAYAaggAbwgAAWcAAFNuAQABeMUAdAgAdAEAfAoAZAUAgwIAZAYA
+aAAABGQHAGQIAAM8gwABgwEARF2cAH0MAHQBAHwMAGQJAIMCAIMAAGQKAGoCAG99AAFoAAB9DQB4
+XQB0CAB8AACDAQBEXU8AfQ4AdAEAfAwAZAsAgwIAfA4AgwEAfQ8AfA8AdAYAZAwAZgIAagcAbxQA
+AXwPAHQOAHwNAIMBAHwOADxxsQABdA8AZA0AfA4AFoICAHGxAFd0AQB8BABkDgCDAgB8DQCDAQAB
+cX8AAXF/AFd8BABTZAAAUygPAAAATnMKAAAAcG9ydGFsX3VybHMPAAAAZ2V0UG9ydGFsT2JqZWN0
+cxAAAABnZXREZWZhdWx0TW9kdWxlcwYAAABQZXJzb25zDQAAAGNvbnRlbnRWYWx1ZXNzBgAAAGZp
+bHRlcnMLAAAAcG9ydGFsX3R5cGVzCgAAAEFzc2lnbm1lbnRzEgAAAGdldFZhbGlkYXRpb25TdGF0
+ZXMEAAAAb3BlbnMLAAAAZ2V0UHJvcGVydHlzAAAAAHNJAAAARXJyb3I6ICclcycgcHJvcGVydHkg
+aXMgcmVxdWlyZWQgaW4gb3JkZXIgdG8gdXBkYXRlIHBlcnNvbiBzZWN1cml0eSBncm91cHMGAAAA
+YXBwZW5kKBAAAABzDQAAAGNhdGVnb3J5X2xpc3RzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMN
+AAAAcGVyc29uX21vZHVsZXMHAAAAZ2V0YXR0cnMJAAAAdXNlcl9uYW1lcwQAAABOb25lcw0AAABw
+ZXJzb25fb2JqZWN0cwkAAABfZ2V0aXRlcl9zCgAAAGFzc2lnbm1lbnRzDQAAAGNhdGVnb3J5X2Rp
+Y3RzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMNAAAAYmFzZV9jYXRlZ29yeXMOAAAAY2F0ZWdvcnlf
+dmFsdWVzBwAAAF93cml0ZV9zDAAAAFJ1bnRpbWVFcnJvcigSAAAAcxIAAABiYXNlX2NhdGVnb3J5
+X2xpc3RzCQAAAHVzZXJfbmFtZXMGAAAAb2JqZWN0cwsAAABwb3J0YWxfdHlwZXMNAAAAY2F0ZWdv
+cnlfbGlzdHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw0AAABwZXJzb25fbW9kdWxlcwcAAABn
+ZXRhdHRycwQAAABOb25lcw0AAABwZXJzb25fb2JqZWN0cwkAAABfZ2V0aXRlcl9zCgAAAGFzc2ln
+bm1lbnRzDQAAAGNhdGVnb3J5X2RpY3RzDQAAAGJhc2VfY2F0ZWdvcnlzDgAAAGNhdGVnb3J5X3Zh
+bHVlcwcAAABfd3JpdGVfcwwAAABSdW50aW1lRXJyb3IoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
+dGhvbilzKgAAAEVSUDVUeXBlX2dldFNlY3VyaXR5Q2F0ZWdvcnlGcm9tQXNzaWdubWVudAEAAABz
+IgAAAAAIBgIqARIEDQEIAygABgEZAQYBDQAGARUBEwEUAhQBGAIoAQAAAHMqAAAARVJQNVR5cGVf
+Z2V0U2VjdXJpdHlDYXRlZ29yeUZyb21Bc3NpZ25tZW50KAEAAABzKgAAAEVSUDVUeXBlX2dldFNl
+Y3VyaXR5Q2F0ZWdvcnlGcm9tQXNzaWdubWVudCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Type_getSecurityCategoryFromAssignment</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>base_category_list</string>
+                            <string>user_name</string>
+                            <string>object</string>
+                            <string>portal_type</string>
+                            <string>category_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>person_module</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>person_object</string>
+                            <string>_getiter_</string>
+                            <string>assignment</string>
+                            <string>category_dict</string>
+                            <string>base_category</string>
+                            <string>category_value</string>
+                            <string>_write_</string>
+                            <string>RuntimeError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Type_getSecurityCategoryFromAssignment</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

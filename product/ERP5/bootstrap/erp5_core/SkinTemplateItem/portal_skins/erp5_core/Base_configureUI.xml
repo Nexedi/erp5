@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Updates attributes of an Zope document\n
+# which is in a class inheriting from ERP5 Base\n
+\n
+\n
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+\n
+\n
+request=context.REQUEST\n
+\n
+\n
+# Columns which occure more than once are replace by \'None\'\n
+# We do this because this causes problems everywhere and because\n
+# in most cases, it is meaningless. \'None\' elements will then be moved\n
+# to the end of the list.\n
+\n
+for x in range(len(field_columns)):\n
+  if field_columns.count(field_columns[x]) > 1:\n
+    field_columns[x] = \'None\'\n
+    stat_columns[x] = \' \'\n
+\n
+\n
+# The file named "form_list_ui.pt" displays first, columns in selection and then, those\n
+# which are defined by default in the corresponding listbox properties. So field_columns\n
+# and stat_columns may not be ordered the same way. So the script below sort the\n
+# field_column list so as to have every \'None\' at the end of the list\n
+\n
+\n
+liste_none = []\n
+\n
+def maj_liste_none():\n
+  for x in range(len(field_columns)):\n
+    if field_columns[x] == \'None\':\n
+      liste_none.append(x)\n
+\n
+\n
+maj_liste_none()\n
+\n
+for x in range(len(field_columns)):\n
+  if len(liste_none) > 0 and field_columns[x] != \'None\' and liste_none[0] < x:\n
+    field_columns[liste_none[0]] = field_columns[x]\n
+    stat_columns[liste_none[0]] = stat_columns[x]\n
+    field_columns[x] = \'None\'\n
+    stat_columns[x] = \' \'\n
+    liste_none.pop(0)\n
+    maj_liste_none()\n
+\n
+# Now, we can try to save the selection\n
+\n
+\n
+context.portal_selections.setSelectionStats(selection_name, stat_columns, REQUEST=request)\n
+\n
+try:\n
+  # No validation for now\n
+  # Direct access to field (BAD)\n
+  form = getattr(context,form_id)\n
+  groups = form.get_groups()\n
+  columns_dict = {}\n
+\n
+  for (k, v) in [(\'None\',\'None\')] + form.get_fields_in_group(groups[0])[0].get_value(\'all_columns\'):\n
+    if k in field_columns and k != \'None\':\n
+      columns_dict[k] = v\n
+  columns = []\n
+  for k in field_columns:\n
+    if k != \'None\':\n
+      columns += [(k ,  columns_dict[k])]\n
+  context.portal_selections.setSelectionColumns(selection_name, columns, REQUEST=request)\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
+else:\n
+  redirect_url = context.portal_selections.getSelectionListUrlFor(selection_name)\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBAAAABwAAAAgAAAAAwAA
+AHNnAwAAZAEAawAAbAEAfQUAbAIAfQYAAXQDAHQEAGQCAIMCAH0JAHhpAHQGAHQHAHQIAIgAAIMB
+AIMBAIMBAERdTwB9DQB0AwCIAABkAwCDAgB0CwCIAAB8DQCDAgCDAQBkBABqBABvJAABZAUAdAwA
+iAAAgwEAfA0APGQGAHQMAHwDAIMBAHwNADxxOwABcTsAV2cAAIkBAIcBAIcAAGQHAIYAAH0RAHwR
+AIMAAAF44QB0BgB0BwB0CACIAACDAQCDAQCDAQBEXccAfQ0AdAgAiAEAgwEAZAgAagQAbykAAXQL
+AIgAAHwNAIMCAGQFAGoDAG8TAAF0CwCIAQBkCACDAgB8DQBqAABvggABdAsAiAAAfA0AgwIAdAwA
+iAAAgwEAdAsAiAEAZAgAgwIAPHQLAHwDAHwNAIMCAHQMAHwDAIMBAHQLAIgBAGQIAIMCADxkBQB0
+DACIAACDAQB8DQA8ZAYAdAwAfAMAgwEAfA0APHQDAIgBAGQJAIMCAGQIAIMBAAF8EQCDAAABccMA
+AXHDAFd0AwB0AwB0BABkCgCDAgBkCwCDAgB8AQB8AwBkAgB8CQCDAgEBeSkBdBEAdAQAfAAAgwIA
+fRMAdAMAfBMAZAwAgwIAgwAAfRQAaAAAfRUAeIwAdAYAZAUAZAUAZgIAZwEAdAMAdAsAdAMAfBMA
+ZA0AgwIAdAsAfBQAZAgAgwIAgwEAZAgAgwIAZA4AgwIAZA8AgwEAF4MBAERdQQB0BgACgwEAXAIA
+fRYAfRcAfBYAiAAAagYAbwoAAXwWAGQFAGoDAG8UAAF8FwB0DAB8FQCDAQB8FgA8cScCAXEnAldn
+AAB9GAB4QQB0BgCIAACDAQBEXTMAfRYAfBYAZAUAagMAbyAAAXwYAHwWAHQLAHwVAHwWAIMCAGYC
+AGcBADd9GABxfwIBcX8CV3QDAHQDAHQEAGQKAIMCAGQQAIMCAHwBAHwYAGQCAHwJAIMCAQFXbkoA
+BHwGAGoKAG8+AAEBfRkAAXQDAHwTAGQRAIMCAHwZAIMBAH0aAHQDAHwJAGQSAIMCAGQTAHwaAIMC
+AAF8EwB8CQCDAQBTbiAAAVh0AwB0AwB0BABkCgCDAgBkFACDAgB8AQCDAQB9GwB0AwB0CwB8CQBk
+FQCDAgBkFgCDAgB8GwCDAQABZAAAUygXAAAATigCAAAAcw8AAABWYWxpZGF0aW9uRXJyb3JzEwAA
+AEZvcm1WYWxpZGF0aW9uRXJyb3JzBwAAAFJFUVVFU1RzBQAAAGNvdW50aQEAAABzBAAAAE5vbmVz
+AQAAACBjAAAAAAgAAAAJAAAAAwAAAHNUAAAAeE0AdAAAdAEAdAIAiAEAgwEAgwEAgwEARF0zAH0E
+AHQFAIgBAHwEAIMCAGQBAGoCAG8XAAF0BgCIAABkAgCDAgB8BACDAQABcRkAAXEZAFdkAABTKAMA
+AABOcwQAAABOb25lcwYAAABhcHBlbmQoCAAAAHMJAAAAX2dldGl0ZXJfcwUAAAByYW5nZXMDAAAA
+bGVucw0AAABmaWVsZF9jb2x1bW5zcwEAAAB4cwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MK
+AAAAbGlzdGVfbm9uZSgIAAAAcwkAAABfZ2V0aXRlcl9zBQAAAHJhbmdlcwMAAABsZW5zDQAAAGZp
+ZWxkX2NvbHVtbnNzAQAAAHhzCQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwoAAABsaXN0ZV9u
+b25lKAIAAABzCgAAAGxpc3RlX25vbmVzDQAAAGZpZWxkX2NvbHVtbnMoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcw4AAABtYWpfbGlzdGVfbm9uZR4AAABzCAAAAAABGQAGARkBaQAAAABzAwAAAHBv
+cHMRAAAAcG9ydGFsX3NlbGVjdGlvbnNzEQAAAHNldFNlbGVjdGlvblN0YXRzcwoAAABnZXRfZ3Jv
+dXBzcxMAAABnZXRfZmllbGRzX2luX2dyb3VwcwkAAABnZXRfdmFsdWVzCwAAAGFsbF9jb2x1bW5z
+cxMAAABzZXRTZWxlY3Rpb25Db2x1bW5zcwsAAABFcnJvckZpZWxkc3MDAAAAc2V0cwwAAABmaWVs
+ZF9lcnJvcnNzFgAAAGdldFNlbGVjdGlvbkxpc3RVcmxGb3JzCAAAAFJFU1BPTlNFcwgAAAByZWRp
+cmVjdCgcAAAAcxoAAABQcm9kdWN0cy5Gb3JtdWxhdG9yLkVycm9yc3MPAAAAVmFsaWRhdGlvbkVy
+cm9ycxMAAABGb3JtVmFsaWRhdGlvbkVycm9ycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAA
+AHJlcXVlc3RzCQAAAF9nZXRpdGVyX3MFAAAAcmFuZ2VzAwAAAGxlbnMNAAAAZmllbGRfY29sdW1u
+c3MBAAAAeHMJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfcwwAAABzdGF0X2NvbHVtbnNzCgAAAGxp
+c3RlX25vbmVzDgAAAG1hal9saXN0ZV9ub25lcw4AAABzZWxlY3Rpb25fbmFtZXMHAAAAZ2V0YXR0
+cnMHAAAAZm9ybV9pZHMEAAAAZm9ybXMGAAAAZ3JvdXBzcwwAAABjb2x1bW5zX2RpY3RzAQAAAGtz
+AQAAAHZzBwAAAGNvbHVtbnNzEQAAAHZhbGlkYXRpb25fZXJyb3JzcwwAAABmaWVsZF9lcnJvcnNz
+DAAAAHJlZGlyZWN0X3VybCgcAAAAcwcAAABmb3JtX2lkcw4AAABzZWxlY3Rpb25fbmFtZXMNAAAA
+ZmllbGRfY29sdW1uc3MMAAAAc3RhdF9jb2x1bW5zcxoAAABQcm9kdWN0cy5Gb3JtdWxhdG9yLkVy
+cm9yc3MPAAAAVmFsaWRhdGlvbkVycm9ycxMAAABGb3JtVmFsaWRhdGlvbkVycm9ycwkAAABfZ2V0
+YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzCQAAAF9nZXRpdGVyX3MFAAAAcmFuZ2VzAwAA
+AGxlbnMBAAAAeHMJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfcwoAAABsaXN0ZV9ub25lcw4AAABt
+YWpfbGlzdGVfbm9uZXMHAAAAZ2V0YXR0cnMEAAAAZm9ybXMGAAAAZ3JvdXBzcwwAAABjb2x1bW5z
+X2RpY3RzAQAAAGtzAQAAAHZzBwAAAGNvbHVtbnNzEQAAAHZhbGlkYXRpb25fZXJyb3JzcwwAAABm
+aWVsZF9lcnJvcnNzDAAAAHJlZGlyZWN0X3VybCgAAAAAKAIAAABzDQAAAGZpZWxkX2NvbHVtbnNz
+CgAAAGxpc3RlX25vbmVzDwAAAFNjcmlwdCAoUHl0aG9uKXMQAAAAQmFzZV9jb25maWd1cmVVSQEA
+AABzUAAAAAAEEwMPCBkABgElARABGAkGAg8GBwIZAAYBPwEiASIBEAETARABFQUfAgMDDwESAQYC
+SgATARoBGAEGAQ0ABgENASoBIwEQAhgBEwEPAiQCKAEAAABzEAAAAEJhc2VfY29uZmlndXJlVUko
+AQAAAHMQAAAAQmFzZV9jb25maWd1cmVVSSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMI
+AAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_configureUI</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id,selection_name,field_columns,stat_columns</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_name</string>
+                            <string>field_columns</string>
+                            <string>stat_columns</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>request</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>len</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>liste_none</string>
+                            <string>maj_liste_none</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>groups</string>
+                            <string>columns_dict</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>columns</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_configureUI</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

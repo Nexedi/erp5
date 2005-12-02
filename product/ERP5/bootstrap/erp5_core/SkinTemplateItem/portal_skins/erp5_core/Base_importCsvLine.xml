@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>object = context.portal_catalog.getObject(object_property_dict[\'uid\'])\n
+\n
+if object == None:\n
+  object = context.newContent()\n
+\n
+  # activity doesn t support security rights yet...\n
+  for key in [\'uid\',\'id\']:\n
+    if object_property_dict.has_key(key):\n
+      object_property_dict.pop(key)\n
+\n
+\n
+object.edit(**object_property_dict)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAkAAAALAAAAQwAA
+AHOuAAAAdAAAdAAAdAEAZAEAgwIAZAIAgwIAdAIAfAAAZAMAgwIAgwEAfQQAfAQAdAUAagIAb2AA
+AXQAAHQBAGQEAIMCAIMAAH0EAHhLAHQGAGQDAGQFAGcCAIMBAERdMwB9BwB0AAB8AABkBgCDAgB8
+BwCDAQBvFwABdAAAfAAAZAcAgwIAfAcAgwEAAXFZAAFxWQBXbgEAAXQIAHQAAHwEAGQIAIMCAHwA
+AI0BAAFkAABTKAkAAABOcw4AAABwb3J0YWxfY2F0YWxvZ3MJAAAAZ2V0T2JqZWN0cwMAAAB1aWRz
+CgAAAG5ld0NvbnRlbnRzAgAAAGlkcwcAAABoYXNfa2V5cwMAAABwb3BzBAAAAGVkaXQoCQAAAHMJ
+AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwkAAABfZ2V0aXRlbV9zFAAAAG9iamVjdF9wcm9wZXJ0
+eV9kaWN0cwYAAABvYmplY3RzBAAAAE5vbmVzCQAAAF9nZXRpdGVyX3MDAAAAa2V5cwcAAABfYXBw
+bHlfKAkAAABzFAAAAG9iamVjdF9wcm9wZXJ0eV9kaWN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
+eHRzCQAAAF9nZXRpdGVtX3MGAAAAb2JqZWN0cwQAAABOb25lcwkAAABfZ2V0aXRlcl9zAwAAAGtl
+eXMHAAAAX2FwcGx5XygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMSAAAAQmFzZV9pbXBv
+cnRDc3ZMaW5lAQAAAHMOAAAAJwINARIDEwAJARYBIgMoAQAAAHMSAAAAQmFzZV9pbXBvcnRDc3ZM
+aW5lKAEAAABzEgAAAEJhc2VfaW1wb3J0Q3N2TGluZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_importCsvLine</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>object_property_dict</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>object_property_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>_getitem_</string>
+                            <string>object</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_importCsvLine</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+if not favorite_select : return\n
+\n
+import string\n
+\n
+#Base_doAction = favorite_select.split() Previous implementation\n
+if favorite_select.find(\'local_roles=\') > 0:\n
+  # Some local roles are defined\n
+  url_items = favorite_select.split(\'&\') # split parameters\n
+  new_items = []\n
+  for item in url_items:\n
+    if item.find(\'local_roles=\') >= 0:\n
+      local_roles = item[item.find(\'local_roles=\'):].split(\';\')\n
+      for role in local_roles:\n
+        role = role.split(\'=\')\n
+        if len(role[len(role)-1]) > 0:\n
+          new_items.append("local_roles:list=%s" % role[len(role)-1])\n
+    else:\n
+      new_items.append(item)\n
+      \n
+  favorite_select = \'&\'.join(new_items)\n
+\n
+Base_doAction = (favorite_select,)\n
+doAction0 = Base_doAction[0]\n
+request = context.REQUEST\n
+\n
+return request.RESPONSE.redirect(doAction0)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGQBAGQCAIQCAFoBAGQAAFMoAwAAAE5zAAAAAGMCAAAA
+EAAAABgAAABDAAAAc60BAAB8AAAMbwgAAWQAAFNuAQABZAAAawEAfQIAdAIAfAAAZAEAgwIAZAIA
+gwEAZAMAagQAbzEBAXQCAHwAAGQEAIMCAGQFAIMBAH0EAGcAAH0FAHj6AHQFAHwEAIMBAERd7AB9
+BwB0AgB8BwBkAQCDAgBkAgCDAQBkAwBqBQBvtwABdAIAdAcAfAcAdAIAfAcAZAEAgwIAZAIAgwEA
+ZAAAhQIAgwIAZAQAgwIAZAYAgwEAfQkAeJQAdAUAfAkAgwEARF1vAH0KAHQCAHwKAGQEAIMCAGQH
+AIMBAH0KAHQKAHQHAHwKAHQKAHwKAIMBAGQIABiDAgCDAQBkAwBqBABvLgABdAIAfAUAZAkAgwIA
+ZAoAdAcAfAoAdAoAfAoAgwEAZAgAGIMCABaDAQABcb8AAXG/AFdxXQABdAIAfAUAZAkAgwIAfAcA
+gwEAAXFdAFd0AgBkBQBkCwCDAgB8BQCDAQB9AABuAQABfAAAZgEAfQwAdAcAfAwAZAMAgwIAfQ0A
+dAIAdA0AZAwAgwIAfQ8AdAIAdAIAfA8AZA0AgwIAZA4AgwIAfA0AgwEAU2QAAFMoDwAAAE5zBAAA
+AGZpbmRzDAAAAGxvY2FsX3JvbGVzPWkAAAAAcwUAAABzcGxpdHMBAAAAJnMBAAAAO3MBAAAAPWkB
+AAAAcwYAAABhcHBlbmRzEwAAAGxvY2FsX3JvbGVzOmxpc3Q9JXNzBAAAAGpvaW5zBwAAAFJFUVVF
+U1RzCAAAAFJFU1BPTlNFcwgAAAByZWRpcmVjdCgPAAAAcw8AAABmYXZvcml0ZV9zZWxlY3RzBgAA
+AHN0cmluZ3MJAAAAX2dldGF0dHJfcwkAAAB1cmxfaXRlbXNzCQAAAG5ld19pdGVtc3MJAAAAX2dl
+dGl0ZXJfcwQAAABpdGVtcwkAAABfZ2V0aXRlbV9zCwAAAGxvY2FsX3JvbGVzcwQAAAByb2xlcwMA
+AABsZW5zDQAAAEJhc2VfZG9BY3Rpb25zCQAAAGRvQWN0aW9uMHMHAAAAY29udGV4dHMHAAAAcmVx
+dWVzdCgQAAAAcw8AAABmYXZvcml0ZV9zZWxlY3RzBwAAAGZvcm1faWRzBgAAAHN0cmluZ3MJAAAA
+X2dldGF0dHJfcwkAAAB1cmxfaXRlbXNzCQAAAG5ld19pdGVtc3MJAAAAX2dldGl0ZXJfcwQAAABp
+dGVtcwkAAABfZ2V0aXRlbV9zCwAAAGxvY2FsX3JvbGVzcwQAAAByb2xlcwMAAABsZW5zDQAAAEJh
+c2VfZG9BY3Rpb25zCQAAAGRvQWN0aW9uMHMHAAAAY29udGV4dHMHAAAAcmVxdWVzdCgAAAAAKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMPAAAAQmFzZV9kb0Zhdm9yaXRlAQAAAHMmAAAAEAIJAxwC
+FQEGAQ0ABgEcATMBDQAGARUBKQE2AhQCGQIJAQ8BDwIoAgAAAHMEAAAATm9uZXMPAAAAQmFzZV9k
+b0Zhdm9yaXRlKAIAAABzBAAAAE5vbmVzDwAAAEJhc2VfZG9GYXZvcml0ZSgAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_doFavorite</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>favorite_select=None, form_id=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>favorite_select</string>
+                            <string>form_id</string>
+                            <string>string</string>
+                            <string>_getattr_</string>
+                            <string>url_items</string>
+                            <string>new_items</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>_getitem_</string>
+                            <string>local_roles</string>
+                            <string>role</string>
+                            <string>len</string>
+                            <string>Base_doAction</string>
+                            <string>doAction0</string>
+<string>context</string>
+                            <string>request</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_doFavorite</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+request = context.REQUEST\n
+\n
+list_actions = context.portal_actions.listFilteredActionsFor(context)\n
+print_actions = list_actions[\'object_print\']\n
+url = print_actions[0][\'url\']\n
+\n
+context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
+url += \'?selection_name=%s&dialog_category=%s&form_id=%s\' % (selection_name , \'object_print\', form_id) \n
+request.RESPONSE.redirect(url)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABQAAAEAAAABzGQAAAGQBAGQBAGcAAGcAAGQCAIQEAFoAAGQAAFMoAwAAAE5zAAAA
+AGMEAAAACwAAAAYAAABDAAAAc60AAAB0AAB0AQBkAQCDAgB9BgB0AAB0AAB0AQBkAgCDAgBkAwCD
+AgB0AQCDAQB9BwB0BAB8BwBkBACDAgB9CQB0BAB0BAB8CQBkBQCDAgBkBgCDAgB9CgB0AAB0AAB0
+AQBkBwCDAgBkCACDAgB8AAB8AwB8AgCDAwABfAoAZAkAfAAAZAQAfAEAZgMAFjd9CgB0AAB0AAB8
+BgBkCgCDAgBkCwCDAgB8CgCDAQABZAAAUygMAAAATnMHAAAAUkVRVUVTVHMOAAAAcG9ydGFsX2Fj
+dGlvbnNzFgAAAGxpc3RGaWx0ZXJlZEFjdGlvbnNGb3JzDAAAAG9iamVjdF9wcmludGkAAAAAcwMA
+AAB1cmxzEQAAAHBvcnRhbF9zZWxlY3Rpb25zcx0AAAB1cGRhdGVTZWxlY3Rpb25DaGVja2VkVWlk
+TGlzdHMwAAAAP3NlbGVjdGlvbl9uYW1lPSVzJmRpYWxvZ19jYXRlZ29yeT0lcyZmb3JtX2lkPSVz
+cwgAAABSRVNQT05TRXMIAAAAcmVkaXJlY3QoCwAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0
+cwcAAAByZXF1ZXN0cwwAAABsaXN0X2FjdGlvbnNzCQAAAF9nZXRpdGVtX3MNAAAAcHJpbnRfYWN0
+aW9uc3MDAAAAdXJscw4AAABzZWxlY3Rpb25fbmFtZXMLAAAAbGlzdGJveF91aWRzBAAAAHVpZHNz
+BwAAAGZvcm1faWQoCwAAAHMOAAAAc2VsZWN0aW9uX25hbWVzBwAAAGZvcm1faWRzBAAAAHVpZHNz
+CwAAAGxpc3Rib3hfdWlkcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzDAAA
+AGxpc3RfYWN0aW9uc3MJAAAAX2dldGl0ZW1fcw0AAABwcmludF9hY3Rpb25zcwMAAAB1cmwoAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzDAAAAEZvbGRlcl9wcmludAEAAABzDAAAAA8CHgEP
+AR4CHAEdASgBAAAAcwwAAABGb2xkZXJfcHJpbnQoAQAAAHMMAAAARm9sZGVyX3ByaW50KAAAAAAo
+AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Folder_print</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection_name=\'\',form_id=\'\',uids=[],listbox_uid=[]</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection_name</string>
+                            <string>form_id</string>
+                            <string>uids</string>
+                            <string>listbox_uid</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>request</string>
+                            <string>list_actions</string>
+                            <string>_getitem_</string>
+                            <string>print_actions</string>
+                            <string>url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <string></string>
+                <list/>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_print</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>print "#### Indexing translations ####"\n
+context.ERP5Site_updateTranslationTable()\n
+\n
+print "#### Indexing categories ####"\n
+context.portal_categories.reindexObject(tag=\'module\')\n
+for o in list(context.portal_categories.objectValues()):\n
+  o.recursiveReindexObject(after_tag=\'module\',tag=\'category\')\n
+\n
+print "#### Indexing preferences ####"\n
+context.portal_preferences.reindexObject(tag=\'module\')\n
+for o in list(context.portal_preferences.objectValues(tag=\'module\')):\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2)\n
+\n
+# We index simulation first to make sure we can calculate tests (ie. related quantity)\n
+print "#### Indexing simulation ####"\n
+context.portal_simulation.reindexObject(tag=\'module\')\n
+for o in list(context.portal_simulation.objectValues()):\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\',\'document\'),tag=\'simulation\',priority=3)\n
+\n
+# We index templates secondly\n
+print "#### Indexing templates ####"\n
+context.portal_templates.reindexObject(tag=\'module\')\n
+for o in list(context.portal_templates.objectValues()):\n
+  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2)\n
+\n
+# Next we index applied rules\n
+print "#### Indexing applied rules ####"\n
+context.portal_rules.reindexObject(tag=\'module\')\n
+for o in list(context.portal_rules.objectValues()):\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2)\n
+\n
+# Next we index delivery builders\n
+print "#### Indexing delivery builders ####"\n
+context.portal_deliveries.reindexObject(tag=\'module\')\n
+for o in list(context.portal_deliveries.objectValues()):\n
+  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2)\n
+\n
+# Next we index order builders\n
+print "#### Indexing order builders ####"\n
+context.portal_orders.reindexObject(tag=\'module\')\n
+for o in list(context.portal_orders.objectValues()):\n
+  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2)\n
+\n
+# Then we index everything except inventories\n
+for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):\n
+  print "#### Indexing contents inside folder %s ####" % folder.id\n
+  if folder.getId() not in (\'inventory_module\',):\n
+    folder.reindexObject(tag=\'module\')\n
+    for o in list(folder.objectValues()):\n
+      try:\n
+        o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2)\n
+      except:\n
+        #raise RuntimeError, o.getRelativeUrl()\n
+        raise\n
+        raise RuntimeError, \'error: folder=%s, o=%s\'  % (repr(folder.getId()), repr(o))\n
+\n
+# Then we index inventories\n
+for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):\n
+  if folder.getId() in (\'inventory_module\',):\n
+    print "#### Indexing contents inside folder %s ####" % folder.id\n
+    folder.reindexObject(tag=\'module\')\n
+    for o in list(folder.objectValues()):\n
+      o.recursiveReindexObject(after_tag=(\'module\',\'document\',\'category\'),tag=\'inventory\',priority=2)\n
+\n
+# start activty from simulation because the erp5site is not an active object\n
+context.portal_simulation.activate(after_tag=(\'inventory\',\'simulation\'),priority=3).InventoryModule_reindexMovementList()\n
+\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAoAAABfAAAAQwAA
+AHPuBQAAdAAAgwAAfQEAfAEABGQBAAJJSnQCAHQDAGQCAIMCAIMAAAF8AQAEZAMAAklKdAIAdAIA
+dAMAZAQAgwIAZAUAgwIAZAYAZAcAgwABAXhLAHQEAHQFAHQCAHQCAHQDAGQEAIMCAGQIAIMCAIMA
+AIMBAIMBAERdIgB9BgB0AgB8BgBkCQCDAgBkCgBkBwBkBgBkCwCDAAIBcXQAV3wBAARkDAACSUp0
+AgB0AgB0AwBkDQCDAgBkBQCDAgBkBgBkBwCDAAEBeF0AdAQAdAUAdAIAdAIAdAMAZA0AgwIAZAgA
+gwIAZAYAZAcAgwABgwEAgwEARF0uAH0GAHQCAHwGAGQJAIMCAGQKAGQHAGQLAGYCAGQGAGQOAGQP
+AGQQAIMAAwFx8QBXfAEABGQRAAJJSnQCAHQCAHQDAGQSAIMCAGQFAIMCAGQGAGQHAIMAAQF4WgB0
+BAB0BQB0AgB0AgB0AwBkEgCDAgBkCACDAgCDAACDAQCDAQBEXTEAfQYAdAIAfAYAZAkAgwIAZAoA
+ZAcAZAsAZA4AZgMAZAYAZBMAZA8AZBQAgwADAXF0AVd8AQAEZBUAAklKdAIAdAIAdAMAZBYAgwIA
+ZAUAgwIAZAYAZAcAgwABAXhXAHQEAHQFAHQCAHQCAHQDAGQWAIMCAGQIAIMCAIMAAIMBAIMBAERd
+LgB9BgB0AgB8BgBkBQCDAgBkCgBkBwBkCwBmAgBkBgBkDgBkDwBkEACDAAMBcfoBV3wBAARkFwAC
+SUp0AgB0AgB0AwBkGACDAgBkBQCDAgBkBgBkBwCDAAEBeFcAdAQAdAUAdAIAdAIAdAMAZBgAgwIA
+ZAgAgwIAgwAAgwEAgwEARF0uAH0GAHQCAHwGAGQJAIMCAGQKAGQHAGQLAGYCAGQGAGQOAGQPAGQQ
+AIMAAwFxfQJXfAEABGQZAAJJSnQCAHQCAHQDAGQaAIMCAGQFAIMCAGQGAGQHAIMAAQF4VwB0BAB0
+BQB0AgB0AgB0AwBkGgCDAgBkCACDAgCDAACDAQCDAQBEXS4AfQYAdAIAfAYAZAUAgwIAZAoAZAcA
+ZAsAZgIAZAYAZA4AZA8AZBAAgwADAXEAA1d8AQAEZBsAAklKdAIAdAIAdAMAZBwAgwIAZAUAgwIA
+ZAYAZAcAgwABAXhXAHQEAHQFAHQCAHQCAHQDAGQcAIMCAGQIAIMCAIMAAIMBAIMBAERdLgB9BgB0
+AgB8BgBkBQCDAgBkCgBkBwBkCwBmAgBkBgBkDgBkDwBkEACDAAMBcYMDV3gVAXQEAHQCAHQCAHQC
+AHQDAGQdAIMCAGQeAIMCAIMAAGQIAIMCAGQfAGYBAIMBAIMBAERd4AB9BwB8AQAEZCAAdAIAfAcA
+ZCEAgwIAFgJJSnQCAHwHAGQiAIMCAIMAAGQjAGYBAGoHAG+nAAF0AgB8BwBkBQCDAgBkBgBkBwCD
+AAEBeI4AdAQAdAUAdAIAfAcAZAgAgwIAgwAAgwEAgwEARF1qAH0GAHksAHQCAHwGAGQJAIMCAGQK
+AGQHAGQLAGYCAGQGAGQOAGQPAGQQAIMAAwFXcVcEAQEBggAAdAgAZCQAdAkAdAIAfAcAZCIAgwIA
+gwAAgwEAdAkAfAYAgwEAZgIAFoICAHFXBFhxVwRXcekDAXHpA1d43AB0BAB0AgB0AgB0AgB0AwBk
+HQCDAgBkHgCDAgCDAABkCACDAgBkHwBmAQCDAQCDAQBEXacAfQcAdAIAfAcAZCIAgwIAgwAAZCMA
+ZgEAagYAb4UAAXwBAARkIAB0AgB8BwBkIQCDAgAWAklKdAIAfAcAZAUAgwIAZAYAZAcAgwABAXhV
+AHQEAHQFAHQCAHwHAGQIAIMCAIMAAIMBAIMBAERdMQB9BgB0AgB8BgBkCQCDAgBkCgBkBwBkDgBk
+CwBmAwBkBgBkJQBkDwBkEACDAAMBcW8FV3EBBQFxAQVXdAIAdAIAdAIAdAMAZBIAgwIAZCYAgwIA
+ZAoAZCUAZBMAZgIAZA8AZBQAgwACZCcAgwIAgwAAAXwBAIMAAFNkAABTKCgAAABOcx8AAAAjIyMj
+IEluZGV4aW5nIHRyYW5zbGF0aW9ucyAjIyMjcx8AAABFUlA1U2l0ZV91cGRhdGVUcmFuc2xhdGlv
+blRhYmxlcx0AAAAjIyMjIEluZGV4aW5nIGNhdGVnb3JpZXMgIyMjI3MRAAAAcG9ydGFsX2NhdGVn
+b3JpZXNzDQAAAHJlaW5kZXhPYmplY3RzAwAAAHRhZ3MGAAAAbW9kdWxlcwwAAABvYmplY3RWYWx1
+ZXNzFgAAAHJlY3Vyc2l2ZVJlaW5kZXhPYmplY3RzCQAAAGFmdGVyX3RhZ3MIAAAAY2F0ZWdvcnlz
+HgAAACMjIyMgSW5kZXhpbmcgcHJlZmVyZW5jZXMgIyMjI3MSAAAAcG9ydGFsX3ByZWZlcmVuY2Vz
+cwgAAABkb2N1bWVudHMIAAAAcHJpb3JpdHlpAgAAAHMdAAAAIyMjIyBJbmRleGluZyBzaW11bGF0
+aW9uICMjIyNzEQAAAHBvcnRhbF9zaW11bGF0aW9ucwoAAABzaW11bGF0aW9uaQMAAABzHAAAACMj
+IyMgSW5kZXhpbmcgdGVtcGxhdGVzICMjIyNzEAAAAHBvcnRhbF90ZW1wbGF0ZXNzIAAAACMjIyMg
+SW5kZXhpbmcgYXBwbGllZCBydWxlcyAjIyMjcwwAAABwb3J0YWxfcnVsZXNzJAAAACMjIyMgSW5k
+ZXhpbmcgZGVsaXZlcnkgYnVpbGRlcnMgIyMjI3MRAAAAcG9ydGFsX2RlbGl2ZXJpZXNzIQAAACMj
+IyMgSW5kZXhpbmcgb3JkZXIgYnVpbGRlcnMgIyMjI3MNAAAAcG9ydGFsX29yZGVyc3MKAAAAcG9y
+dGFsX3VybHMPAAAAZ2V0UG9ydGFsT2JqZWN0cwsAAABFUlA1IEZvbGRlcnMsAAAAIyMjIyBJbmRl
+eGluZyBjb250ZW50cyBpbnNpZGUgZm9sZGVyICVzICMjIyNzAgAAAGlkcwUAAABnZXRJZHMQAAAA
+aW52ZW50b3J5X21vZHVsZXMWAAAAZXJyb3I6IGZvbGRlcj0lcywgbz0lc3MJAAAAaW52ZW50b3J5
+cwgAAABhY3RpdmF0ZXMjAAAASW52ZW50b3J5TW9kdWxlX3JlaW5kZXhNb3ZlbWVudExpc3QoCgAA
+AHMHAAAAX3ByaW50X3MGAAAAX3ByaW50cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCQAAAF9n
+ZXRpdGVyX3MEAAAAbGlzdHMBAAAAb3MGAAAAZm9sZGVycwwAAABSdW50aW1lRXJyb3JzBAAAAHJl
+cHIoCgAAAHMHAAAAX3ByaW50X3MGAAAAX3ByaW50cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
+CQAAAF9nZXRpdGVyX3MEAAAAbGlzdHMBAAAAb3MGAAAAZm9sZGVycwwAAABSdW50aW1lRXJyb3Jz
+BAAAAHJlcHIoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzEwAAAEVSUDVTaXRlX3JlaW5k
+ZXhBbGwBAAAAc3IAAAAWAQ0CEAEZASgACQEdAhABGQEuAAkBKQMQARkBKAAJASwDEAEZASgACQEp
+AxABGQEoAAkBKQMQARkBKAAJASkDEAEZASgACQEpAzQABgEXAR8BEwEfAAYBBgEsAwMBOwM0AAYB
+HAEaARMBHwAJAT0DLgIoAQAAAHMTAAAARVJQNVNpdGVfcmVpbmRleEFsbCgBAAAAcxMAAABFUlA1
+U2l0ZV9yZWluZGV4QWxsKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxl
+PgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/ERP5Site_reindexAll</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>_getiter_</string>
+                            <string>list</string>
+                            <string>o</string>
+                            <string>folder</string>
+                            <string>RuntimeError</string>
+                            <string>repr</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_reindexAll</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

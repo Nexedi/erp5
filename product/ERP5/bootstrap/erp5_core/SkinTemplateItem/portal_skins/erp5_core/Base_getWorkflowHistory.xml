@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from ZODB.POSException import ConflictError\n
+\n
+history_name_list = [\'building_history\', \' installation_history\', \'history\']\n
+\n
+history = {}\n
+\n
+\n
+for history_name in history_name_list:\n
+  \n
+  for wf_id in context.getWorkflowIds():\n
+    \n
+    list_history_item = None\n
+    try:\n
+      list_history_item = context.portal_workflow.getInfoFor(ob=context, name=history_name, wf_id=wf_id)\n
+    except ConflictError:\n
+      raise\n
+    except:\n
+      pass\n
+\n
+    if list_history_item not in ((), None):\n
+      \n
+      history_element_title_list = []\n
+      for history_element_title in list_history_item[-1].keys():\n
+        if history_element_title <> history_name:\n
+          new_title = history_element_title.replace(\'_\', \' \').title()\n
+          history_element_title_list.append(new_title)\n
+\n
+      history_item_list = []\n
+      for history_item in list_history_item:\n
+        history_item_info = ()\n
+        for history_element_title in list_history_item[-1].keys():\n
+          if history_element_title <> history_name:\n
+            history_item_info += (history_item.get(history_element_title),)\n
+        history_item_list.append(history_item_info)\n
+      history_item_list.reverse()\n
+\n
+      wf_history = {}\n
+      wf_history[\'title_list\'] = history_element_title_list\n
+      wf_history[\'item_list\']  = history_item_list\n
+      history[wf_id] = wf_history\n
+\n
+\n
+return history\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABQAAAAfAAAAQwAA
+AHMiAgAAZAEAawAAbAEAfQEAAWQCAGQDAGQEAGcDAH0CAGgAAH0DAHj1AXQEAHwCAIMBAERd5wF9
+BQB43gF0BAB0BgB0BwBkBQCDAgCDAACDAQBEXcQBfQgAdAkAfQoAeTEAdAYAdAYAdAcAZAYAgwIA
+ZAcAgwIAZAgAdAcAZAkAfAUAZAoAfAgAgwADfQoAV24cAAR8AQBqCgBvCgABAQEBggAAbggAAQEB
+AW4BAFh8CgBmAAB0CQBmAgBqBwBvVQEBZwAAfQsAeHIAdAQAdAYAdAwAfAoAZAsAC4MCAGQMAIMC
+AIMAAIMBAERdTgB9DQB8DQB8BQBqAwBvOwABdAYAdAYAfA0AZA0AgwIAZA4AZA8AgwIAZBAAgwIA
+gwAAfQ4AdAYAfAsAZBEAgwIAfA4AgwEAAXHmAAFx5gBXZwAAfQ8AeIcAdAQAfAoAgwEARF15AH0Q
+AGYAAH0RAHhXAHQEAHQGAHQMAHwKAGQLAAuDAgBkDACDAgCDAACDAQBEXTMAfQ0AfA0AfAUAagMA
+byAAAXwRAHQGAHwQAGQSAIMCAHwNAIMBAGYBADd9EQBxegEBcXoBV3QGAHwPAGQRAIMCAHwRAIMB
+AAFxSwFXdAYAfA8AZBMAgwIAgwAAAWgAAH0SAHwLAHQTAHwSAIMBAGQUADx8DwB0EwB8EgCDAQBk
+FQA8fBIAdBMAfAMAgwEAfAgAPHFOAAFxTgBXcS8AV3wDAFNkAABTKBYAAABOKAEAAABzDQAAAENv
+bmZsaWN0RXJyb3JzEAAAAGJ1aWxkaW5nX2hpc3RvcnlzFQAAACBpbnN0YWxsYXRpb25faGlzdG9y
+eXMHAAAAaGlzdG9yeXMOAAAAZ2V0V29ya2Zsb3dJZHNzDwAAAHBvcnRhbF93b3JrZmxvd3MKAAAA
+Z2V0SW5mb0ZvcnMCAAAAb2JzBAAAAG5hbWVzBQAAAHdmX2lkaQEAAABzBAAAAGtleXNzBwAAAHJl
+cGxhY2VzAQAAAF9zAQAAACBzBQAAAHRpdGxlcwYAAABhcHBlbmRzAwAAAGdldHMHAAAAcmV2ZXJz
+ZXMKAAAAdGl0bGVfbGlzdHMJAAAAaXRlbV9saXN0KBQAAABzEQAAAFpPREIuUE9TRXhjZXB0aW9u
+cw0AAABDb25mbGljdEVycm9ycxEAAABoaXN0b3J5X25hbWVfbGlzdHMHAAAAaGlzdG9yeXMJAAAA
+X2dldGl0ZXJfcwwAAABoaXN0b3J5X25hbWVzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAA
+d2ZfaWRzBAAAAE5vbmVzEQAAAGxpc3RfaGlzdG9yeV9pdGVtcxoAAABoaXN0b3J5X2VsZW1lbnRf
+dGl0bGVfbGlzdHMJAAAAX2dldGl0ZW1fcxUAAABoaXN0b3J5X2VsZW1lbnRfdGl0bGVzCQAAAG5l
+d190aXRsZXMRAAAAaGlzdG9yeV9pdGVtX2xpc3RzDAAAAGhpc3RvcnlfaXRlbXMRAAAAaGlzdG9y
+eV9pdGVtX2luZm9zCgAAAHdmX2hpc3RvcnlzBwAAAF93cml0ZV8oFAAAAHMRAAAAWk9EQi5QT1NF
+eGNlcHRpb25zDQAAAENvbmZsaWN0RXJyb3JzEQAAAGhpc3RvcnlfbmFtZV9saXN0cwcAAABoaXN0
+b3J5cwkAAABfZ2V0aXRlcl9zDAAAAGhpc3RvcnlfbmFtZXMJAAAAX2dldGF0dHJfcwcAAABjb250
+ZXh0cwUAAAB3Zl9pZHMEAAAATm9uZXMRAAAAbGlzdF9oaXN0b3J5X2l0ZW1zGgAAAGhpc3Rvcnlf
+ZWxlbWVudF90aXRsZV9saXN0cwkAAABfZ2V0aXRlbV9zFQAAAGhpc3RvcnlfZWxlbWVudF90aXRs
+ZXMJAAAAbmV3X3RpdGxlcxEAAABoaXN0b3J5X2l0ZW1fbGlzdHMMAAAAaGlzdG9yeV9pdGVtcxEA
+AABoaXN0b3J5X2l0ZW1faW5mb3MKAAAAd2ZfaGlzdG9yeXMHAAAAX3dyaXRlXygAAAAAKAAAAABz
+DwAAAFNjcmlwdCAoUHl0aG9uKXMXAAAAQmFzZV9nZXRXb3JrZmxvd0hpc3RvcnkBAAAAc0QAAAAN
+Ag8CBgMNAAYCGQAGAgYBAwExAQ4BCgIEAhMCBgEjAAYBDQEnARgCBgENAAYBBgEjAAYBDQEnARcB
+DQIGARABEAEcAygBAAAAcxcAAABCYXNlX2dldFdvcmtmbG93SGlzdG9yeSgBAAAAcxcAAABCYXNl
+X2dldFdvcmtmbG93SGlzdG9yeSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1v
+ZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_getWorkflowHistory</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>history_name_list</string>
+                            <string>history</string>
+                            <string>_getiter_</string>
+                            <string>history_name</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>wf_id</string>
+                            <string>None</string>
+                            <string>list_history_item</string>
+                            <string>history_element_title_list</string>
+                            <string>_getitem_</string>
+                            <string>history_element_title</string>
+                            <string>new_title</string>
+                            <string>history_item_list</string>
+                            <string>history_item</string>
+                            <string>history_item_info</string>
+                            <string>wf_history</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getWorkflowHistory</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

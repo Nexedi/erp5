@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
+ "DTD/xhtml1-strict.dtd">\n
+<?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
+\n
+<span tal:replace="nothing">\n
+<!--\n
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Thierry Faucher     <tf@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+-->\n
+</span>\n
+\n
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"\n
+    xml:lang="en"\n
+    xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+    xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+    metal:use-macro="here/view_master/macros/master">\n
+\n
+  <head>\n
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\n
+      <title tal:content="template/title_or_id">The title</title>\n
+      <link href="erp5.css" rel="stylesheet" type="text/css"/>\n
+  </head>\n
+\n
+  <body><div metal:fill-slot="main">\n
+          <div class="Main">\n
+\n
+\n
+<strong>Consistency Repair Report</strong><br><br>\n
+\n
+<table border=1>\n
+  <tr align=center>\n
+    <td><b>Url</b></td><td><b>Error</b></td><td><b>Severity</b></td><td><b>Message</b></td>\n
+  </tr>\n
+  <span tal:repeat="error_item python:here.fixConsistency()">\n
+\n
+  <tr>\n
+    <td>\n
+      <span tal:replace="python: error_item[0]"/>\n
+    </td>\n
+    <td>\n
+      <span tal:replace="python: error_item[1]"/>\n
+    </td>\n
+    <td>\n
+      <span tal:replace="python: error_item[2]"/>\n
+    </td>\n
+    <td>\n
+      <span tal:replace="python: error_item[3]"/>\n
+    </td>\n
+  </tr>\n
+\n
+  </span>\n
+</table>\n
+\n
+          </div>\n
+      </div>\n
+  </body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_viewConsistencyRepairReport</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

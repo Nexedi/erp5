@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+if not action_select : return\n
+\n
+is_list = int(is_list)\n
+\n
+Base_doAction = action_select.split()\n
+doAction0 = Base_doAction[0]\n
+request = context.REQUEST\n
+\n
+# First, update checked uids if uids is not None.\n
+context.portal_selections.updateSelectionCheckedUidList(selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
+\n
+# If this is an object, a workflow or a folder, then jump to that view\n
+if doAction0 in (\'object\', \'workflow\', \'folder\'):\n
+  uri = \' \'.join(Base_doAction[1:])\n
+  if uri.find(\'?\') >= 0:\n
+    uri += \'&\'\n
+  else:\n
+    uri += \'?\'\n
+  uri += \'form_id=%s&selection_index=%s&selection_name=%s\' % (form_id, selection_index, selection_name)\n
+  if md5_object_uid_list is not None and is_list == 1:\n
+    uri += \'&previous_md5_object_uid_list=%s\' % md5_object_uid_list\n
+  if doAction0 == \'object\':\n
+    uri += \'&dialog_category=object_action\'\n
+  return request.RESPONSE.redirect(uri)\n
+# Otherwise, check if this is an automatic menu (add)\n
+elif doAction0 == \'add\':\n
+  new_id = context.generateNewId()\n
+  type_name = \' \'.join(Base_doAction[1:])\n
+  new_content = context.newContent(portal_type=type_name,\n
+                                   container=context,\n
+                                   id=str(new_id))\n
+  redirect_url = \'%s/%s?%s\' % ( new_content.absolute_url()  \n
+                            , \'view\'\n
+                            , \'portal_status_message=Object+Created.\')\n
+  return request.RESPONSE.redirect( redirect_url )\n
+\n
+return getattr(context,form_id)(request)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAACQAAAEAAAABzJQAAAGUAAGQBAGQBAGQBAGUAAGUAAGUAAGQCAGQDAIQIAFoBAGQA
+AFMoBAAAAE5zAAAAAGkAAAAAYwgAAAAXAAAAGQAAAEMAAABzKQIAAHwAAAxvCAABZAAAU24BAAF0
+AQB8BwCDAQB9BwB0AwB8AABkAQCDAgCDAAB9CgB0BQB8CgBkAgCDAgB9DAB0AwB0BwBkAwCDAgB9
+DgB0AwB0AwB0BwBkBACDAgBkBQCDAgB8AwBkBgB8BABkBwB8BQBkAwB8DgCDAQMBfAwAZAgAZAkA
+ZAoAZgMAagYAb9YAAXQDAGQLAGQMAIMCAHQFAHwKAGQNAGQAAIUCAIMCAIMBAH0PAHQDAHwPAGQO
+AIMCAGQPAIMBAGQCAGoFAG8OAAF8DwBkEAA3fQ8AbgsAAXwPAGQPADd9DwB8DwBkEQB8AQB8AgB8
+AwBmAwAWN30PAHwGAHQQAGoJAG8KAAF8BwBkDQBqAgBvEgABfA8AZBIAfAYAFjd9DwBuAQABfAwA
+ZAgAagIAbw4AAXwPAGQTADd9DwBuAQABdAMAdAMAfA4AZBQAgwIAZBUAgwIAfA8AgwEAU26tAAF8
+DABkFgBqAgBvnwABdAMAdAcAZBcAgwIAgwAAfREAdAMAZAsAZAwAgwIAdAUAfAoAZA0AZAAAhQIA
+gwIAgwEAfRIAdAMAdAcAZBgAgwIAZBkAfBIAZBoAdAcAZBsAdBMAfBEAgwEAgwADfRQAZBwAdAMA
+fBQAZB0AgwIAgwAAZB4AZB8AZgMAFn0VAHQDAHQDAHwOAGQUAIMCAGQVAIMCAHwVAIMBAFNuAQAB
+dBYAdAcAfAEAgwIAfA4AgwEAU2QAAFMoIAAAAE5zBQAAAHNwbGl0aQAAAABzBwAAAFJFUVVFU1Rz
+EQAAAHBvcnRhbF9zZWxlY3Rpb25zcx0AAAB1cGRhdGVTZWxlY3Rpb25DaGVja2VkVWlkTGlzdHME
+AAAAdWlkc3MLAAAAbGlzdGJveF91aWRzBgAAAG9iamVjdHMIAAAAd29ya2Zsb3dzBgAAAGZvbGRl
+cnMBAAAAIHMEAAAAam9pbmkBAAAAcwQAAABmaW5kcwEAAAA/cwEAAAAmcy8AAABmb3JtX2lkPSVz
+JnNlbGVjdGlvbl9pbmRleD0lcyZzZWxlY3Rpb25fbmFtZT0lc3MgAAAAJnByZXZpb3VzX21kNV9v
+YmplY3RfdWlkX2xpc3Q9JXNzHgAAACZkaWFsb2dfY2F0ZWdvcnk9b2JqZWN0X2FjdGlvbnMIAAAA
+UkVTUE9OU0VzCAAAAHJlZGlyZWN0cwMAAABhZGRzDQAAAGdlbmVyYXRlTmV3SWRzCgAAAG5ld0Nv
+bnRlbnRzCwAAAHBvcnRhbF90eXBlcwkAAABjb250YWluZXJzAgAAAGlkcwgAAAAlcy8lcz8lc3MM
+AAAAYWJzb2x1dGVfdXJscwQAAAB2aWV3cyUAAABwb3J0YWxfc3RhdHVzX21lc3NhZ2U9T2JqZWN0
+K0NyZWF0ZWQuKBcAAABzDQAAAGFjdGlvbl9zZWxlY3RzAwAAAGludHMHAAAAaXNfbGlzdHMJAAAA
+X2dldGF0dHJfcw0AAABCYXNlX2RvQWN0aW9ucwkAAABfZ2V0aXRlbV9zCQAAAGRvQWN0aW9uMHMH
+AAAAY29udGV4dHMHAAAAcmVxdWVzdHMOAAAAc2VsZWN0aW9uX25hbWVzBAAAAHVpZHNzCwAAAGxp
+c3Rib3hfdWlkcwMAAAB1cmlzBwAAAGZvcm1faWRzDwAAAHNlbGVjdGlvbl9pbmRleHMTAAAAbWQ1
+X29iamVjdF91aWRfbGlzdHMEAAAATm9uZXMGAAAAbmV3X2lkcwkAAAB0eXBlX25hbWVzAwAAAHN0
+cnMLAAAAbmV3X2NvbnRlbnRzDAAAAHJlZGlyZWN0X3VybHMHAAAAZ2V0YXR0cigXAAAAcw0AAABh
+Y3Rpb25fc2VsZWN0cwcAAABmb3JtX2lkcw8AAABzZWxlY3Rpb25faW5kZXhzDgAAAHNlbGVjdGlv
+bl9uYW1lcwQAAAB1aWRzcwsAAABsaXN0Ym94X3VpZHMTAAAAbWQ1X29iamVjdF91aWRfbGlzdHMH
+AAAAaXNfbGlzdHMDAAAAaW50cwkAAABfZ2V0YXR0cl9zDQAAAEJhc2VfZG9BY3Rpb25zCQAAAF9n
+ZXRpdGVtX3MJAAAAZG9BY3Rpb24wcwcAAABjb250ZXh0cwcAAAByZXF1ZXN0cwMAAAB1cmlzBAAA
+AE5vbmVzBgAAAG5ld19pZHMJAAAAdHlwZV9uYW1lcwMAAABzdHJzCwAAAG5ld19jb250ZW50cwwA
+AAByZWRpcmVjdF91cmxzBwAAAGdldGF0dHIoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
+DQAAAEJhc2VfZG9BY3Rpb24BAAAAczIAAAAQAgwCEgEPARUDKAMWASQBHAEOAgoBFwEaARIBDQEO
+ASACDQESASQBFQEGAQ8BHwMgAigCAAAAcwQAAABOb25lcw0AAABCYXNlX2RvQWN0aW9uKAIAAABz
+BAAAAE5vbmVzDQAAAEJhc2VfZG9BY3Rpb24oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
+CAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_doAction</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>action_select=None, form_id=\'\', selection_index=\'\', selection_name=\'\', uids=None, listbox_uid=None, md5_object_uid_list=None, is_list=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>8</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>action_select</string>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>uids</string>
+                            <string>listbox_uid</string>
+                            <string>md5_object_uid_list</string>
+                            <string>is_list</string>
+                            <string>int</string>
+                            <string>_getattr_</string>
+                            <string>Base_doAction</string>
+                            <string>_getitem_</string>
+                            <string>doAction0</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>uri</string>
+                            <string>None</string>
+                            <string>new_id</string>
+                            <string>type_name</string>
+                            <string>str</string>
+                            <string>new_content</string>
+                            <string>redirect_url</string>
+                            <string>getattr</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <string></string>
+                <string></string>
+                <string></string>
+                <none/>
+                <none/>
+                <none/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_doAction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

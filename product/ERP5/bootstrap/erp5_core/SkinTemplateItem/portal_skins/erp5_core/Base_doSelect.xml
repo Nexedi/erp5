@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from ZTUtils import make_query\n
+from ZODB.POSException import ConflictError\n
+\n
+request = context.REQUEST\n
+\n
+#return request\n
+\n
+if list_method_id:\n
+  kw = { \'selection_index\': selection_index,\n
+         \'selection_name\': selection_name,\n
+         \'list_method_id\': list_method_id,\n
+        }\n
+else:\n
+  kw = { \'selection_index\': selection_index,\n
+         \'selection_name\': selection_name,\n
+        }\n
+\n
+if list_method_id:\n
+  try:\n
+    # Define form basic fields\n
+    form = getattr(context,form_id)\n
+    listbox_field = None\n
+    # Search listbox\n
+    for f in form.get_fields():\n
+      if f.meta_type == "ListBox":\n
+        listbox_field = f\n
+        break\n
+    # Lookup listbox Base_viewSearchResultList cols\n
+    for col_id, col_title in listbox_field.get_value(\'search_columns\'):\n
+      # Left is col_id\n
+      v = request.form.get(col_id, \'\')\n
+      kw[col_id] = v\n
+    # Redirect\n
+    request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
+  except ConflictError:\n
+    raise\n
+  except:\n
+    # Default behaviour is not as great but returns something\n
+    return getattr(context,form_id)(request)\n
+else:\n
+  # Default behaviour is not as great but returns something\n
+  kw.update(request.form)\n
+  if kw.has_key(\'listbox_uid\'): del kw[\'listbox_uid\']\n
+  if kw.has_key(\'list_start\'): del kw[\'list_start\']\n
+  request.RESPONSE.redirect(\'%s/%s?%s\' % (context.absolute_url(), form_id, make_query(kw)))\n
+  #return getattr(context,form_id)(request)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABQAAAEAAAABzGQAAAGQBAGQBAGQBAGUAAGQCAIQEAFoBAGQAAFMoAwAAAE5zAAAA
+AGMEAAAAFgAAABcAAABDAAAAc08CAABkAQBrAABsAQB9BQABZAIAawIAbAMAfQcAAXQEAHQFAGQD
+AIMCAH0KAHwDAG8lAAFoAAAEZAQAfAEAAzwEZAUAfAIAAzwEZAYAfAMAAzx9CwBuGQABaAAABGQE
+AHwBAAM8BGQFAHwCAAM8fQsAfAMAbzIBAXn8AHQLAHQFAHwAAIMCAH0NAHQOAH0PAHhBAHQQAHQE
+AHwNAGQHAIMCAIMAAIMBAERdJwB9EQB0BAB8EQBkCACDAgBkCQBqAgBvCwABfBEAfQ8AUHGlAAFx
+pQBXeGEAdBAAdAQAfA8AZAoAgwIAZAsAgwEAgwEARF1EAHQQAAKDAQBcAgB9EgB9EwB0BAB0BAB8
+CgBkDACDAgBkDQCDAgB8EgBkDgCDAgB9FAB8FAB0FQB8CwCDAQB8EgA8cewAV3QEAHQEAHwKAGQP
+AIMCAGQQAIMCAGQRAHQEAHQFAGQSAIMCAIMAAHwAAHwFAHwLAIMBAGYDABaDAQABV3FLAgR8BwBq
+CgBvCgABAQEBggAAcUsCAQEBAXQLAHQFAHwAAIMCAHwKAIMBAFNxSwJYbqYAAXQEAHwLAGQTAIMC
+AHQEAHwKAGQMAIMCAIMBAAF0BAB8CwBkFACDAgBkFQCDAQBvEQABdBUAfAsAgwEAZBUAPW4BAAF0
+BAB8CwBkFACDAgBkFgCDAQBvEQABdBUAfAsAgwEAZBYAPW4BAAF0BAB0BAB8CgBkDwCDAgBkEACD
+AgBkEQB0BAB0BQBkEgCDAgCDAAB8AAB8BQB8CwCDAQBmAwAWgwEAAWQAAFMoFwAAAE4oAQAAAHMK
+AAAAbWFrZV9xdWVyeSgBAAAAcw0AAABDb25mbGljdEVycm9ycwcAAABSRVFVRVNUcw8AAABzZWxl
+Y3Rpb25faW5kZXhzDgAAAHNlbGVjdGlvbl9uYW1lcw4AAABsaXN0X21ldGhvZF9pZHMKAAAAZ2V0
+X2ZpZWxkc3MJAAAAbWV0YV90eXBlcwcAAABMaXN0Qm94cwkAAABnZXRfdmFsdWVzDgAAAHNlYXJj
+aF9jb2x1bW5zcwQAAABmb3JtcwMAAABnZXRzAAAAAHMIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0
+cwgAAAAlcy8lcz8lc3MMAAAAYWJzb2x1dGVfdXJscwYAAAB1cGRhdGVzBwAAAGhhc19rZXlzCwAA
+AGxpc3Rib3hfdWlkcwoAAABsaXN0X3N0YXJ0KBYAAABzBwAAAFpUVXRpbHNzCgAAAG1ha2VfcXVl
+cnlzEQAAAFpPREIuUE9TRXhjZXB0aW9ucw0AAABDb25mbGljdEVycm9ycwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzDgAAAGxpc3RfbWV0aG9kX2lkcw8AAABzZWxlY3Rpb25f
+aW5kZXhzDgAAAHNlbGVjdGlvbl9uYW1lcwIAAABrd3MHAAAAZ2V0YXR0cnMHAAAAZm9ybV9pZHME
+AAAAZm9ybXMEAAAATm9uZXMNAAAAbGlzdGJveF9maWVsZHMJAAAAX2dldGl0ZXJfcwEAAABmcwYA
+AABjb2xfaWRzCQAAAGNvbF90aXRsZXMBAAAAdnMHAAAAX3dyaXRlXygWAAAAcwcAAABmb3JtX2lk
+cw8AAABzZWxlY3Rpb25faW5kZXhzDgAAAHNlbGVjdGlvbl9uYW1lcw4AAABsaXN0X21ldGhvZF9p
+ZHMHAAAAWlRVdGlsc3MKAAAAbWFrZV9xdWVyeXMRAAAAWk9EQi5QT1NFeGNlcHRpb25zDQAAAENv
+bmZsaWN0RXJyb3JzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMCAAAAa3dz
+BwAAAGdldGF0dHJzBAAAAGZvcm1zBAAAAE5vbmVzDQAAAGxpc3Rib3hfZmllbGRzCQAAAF9nZXRp
+dGVyX3MBAAAAZnMGAAAAY29sX2lkcwkAAABjb2xfdGl0bGVzAQAAAHZzBwAAAF93cml0ZV8oAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzDQAAAEJhc2VfZG9TZWxlY3QBAAAAczoAAAANAQ0C
+DwQHARABCQEMAxABCAMHAQMCDwEGAhkABgEWAQYBCQIcABMCIQEaAjkBDgEKAx4DHAEnASoBKAIA
+AABzBAAAAE5vbmVzDQAAAEJhc2VfZG9TZWxlY3QoAgAAAHMEAAAATm9uZXMNAAAAQmFzZV9kb1Nl
+bGVjdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_doSelect</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'\', selection_index=\'\', selection_name=\'\', list_method_id=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>list_method_id</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>kw</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>None</string>
+                            <string>listbox_field</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
+                            <string>col_id</string>
+                            <string>col_title</string>
+                            <string>v</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <string></string>
+                <string></string>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_doSelect</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

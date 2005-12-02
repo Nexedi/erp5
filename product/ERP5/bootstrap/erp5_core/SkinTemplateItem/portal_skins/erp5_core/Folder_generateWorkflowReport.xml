@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>listbox = []\n
+\n
+portal_workflow = context.portal_workflow\n
+content_type_list = context.allowedContentTypes()\n
+\n
+# XXX better implementation is required, but I do not know how to get workflows related to a portal type\n
+possible_state_name_list = ["validation_state", "simulation_state"]\n
+\n
+for content_type in content_type_list:\n
+  content_type_id = content_type.id\n
+\n
+  for state_name in possible_state_name_list:\n
+    result_list = context.Base_zCountByWorkflowState(portal_type=content_type_id, state_name=state_name)\n
+\n
+    if not ((len(result_list) == 1) and (result_list[0][0] is None)):\n
+      for result in result_list:\n
+\n
+        listbox.append({"portal_type":content_type_id,\n
+                        "state":result[0],\n
+                        "count":result[1] })\n
+\n
+context.Base_updateDialogForm(listbox = listbox,\n
+                              empty_line_number = 0)\n
+\n
+return context.Folder_viewWorkflowReport()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA8AAAATAAAAQwAA
+AHNMAQAAZwAAfQAAdAEAdAIAZAEAgwIAfQMAdAEAdAIAZAIAgwIAgwAAfQQAZAMAZAQAZwIAfQUA
+eOYAdAYAfAQAgwEARF3YAH0HAHQBAHwHAGQFAIMCAH0IAHjAAHQGAHwFAIMBAERdsgB9CQB0AQB0
+AgBkBgCDAgBkBwB8CABkCAB8CQCDAAJ9CgB0CwB8CgCDAQBkCQBqAgBvHAABdAwAdAwAfAoAZAoA
+gwIAZAoAgwIAdA0AaggADG9bAAF4WAB0BgB8CgCDAQBEXUYAfQ4AdAEAfAAAZAsAgwIAaAAABGQH
+AHwIAAM8BGQMAHQMAHwOAGQKAIMCAAM8BGQNAHQMAHwOAGQJAIMCAAM8gwEAAXHGAFdxYgABcWIA
+V3FAAFd0AQB0AgBkDgCDAgBkDwB8AABkEABkCgCDAAIBdAEAdAIAZBEAgwIAgwAAU2QAAFMoEgAA
+AE5zDwAAAHBvcnRhbF93b3JrZmxvd3MTAAAAYWxsb3dlZENvbnRlbnRUeXBlc3MQAAAAdmFsaWRh
+dGlvbl9zdGF0ZXMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMCAAAAaWRzGgAAAEJhc2VfekNvdW50QnlX
+b3JrZmxvd1N0YXRlcwsAAABwb3J0YWxfdHlwZXMKAAAAc3RhdGVfbmFtZWkBAAAAaQAAAABzBgAA
+AGFwcGVuZHMFAAAAc3RhdGVzBQAAAGNvdW50cxUAAABCYXNlX3VwZGF0ZURpYWxvZ0Zvcm1zBwAA
+AGxpc3Rib3hzEQAAAGVtcHR5X2xpbmVfbnVtYmVycxkAAABGb2xkZXJfdmlld1dvcmtmbG93UmVw
+b3J0KA8AAABzBwAAAGxpc3Rib3hzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMPAAAAcG9ydGFs
+X3dvcmtmbG93cxEAAABjb250ZW50X3R5cGVfbGlzdHMYAAAAcG9zc2libGVfc3RhdGVfbmFtZV9s
+aXN0cwkAAABfZ2V0aXRlcl9zDAAAAGNvbnRlbnRfdHlwZXMPAAAAY29udGVudF90eXBlX2lkcwoA
+AABzdGF0ZV9uYW1lcwsAAAByZXN1bHRfbGlzdHMDAAAAbGVucwkAAABfZ2V0aXRlbV9zBAAAAE5v
+bmVzBgAAAHJlc3VsdCgPAAAAcwcAAABsaXN0Ym94cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
+DwAAAHBvcnRhbF93b3JrZmxvd3MRAAAAY29udGVudF90eXBlX2xpc3RzGAAAAHBvc3NpYmxlX3N0
+YXRlX25hbWVfbGlzdHMJAAAAX2dldGl0ZXJfcwwAAABjb250ZW50X3R5cGVzDwAAAGNvbnRlbnRf
+dHlwZV9pZHMKAAAAc3RhdGVfbmFtZXMLAAAAcmVzdWx0X2xpc3RzAwAAAGxlbnMJAAAAX2dldGl0
+ZW1fcwQAAABOb25lcwYAAAByZXN1bHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzHQAA
+AEZvbGRlcl9nZW5lcmF0ZVdvcmtmbG93UmVwb3J0AQAAAHMiAAAABgIPARIDDAINAAYBDwINAAYB
+HgIzAQ0ACQIcARIBIgIZAygBAAAAcx0AAABGb2xkZXJfZ2VuZXJhdGVXb3JrZmxvd1JlcG9ydCgB
+AAAAcx0AAABGb2xkZXJfZ2VuZXJhdGVXb3JrZmxvd1JlcG9ydCgAAAAAKAAAAABzDwAAAFNjcmlw
+dCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Folder_generateWorkflowReport</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_workflow</string>
+                            <string>content_type_list</string>
+                            <string>possible_state_name_list</string>
+                            <string>_getiter_</string>
+                            <string>content_type</string>
+                            <string>content_type_id</string>
+                            <string>state_name</string>
+                            <string>result_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>result</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_generateWorkflowReport</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>REQUEST=context.REQUEST\n
+error_message = \'\'\n
+if context.cb_dataValid:\n
+  # We first look if the content of objects to paste is allowed\n
+  # inside this folder\n
+  object_list = context.cb_dataItems()\n
+  portal_type_list = map(lambda x: x.getPortalType(),object_list)\n
+  allowed_type_list = map(lambda x: x.id, context.allowedContentTypes())\n
+  for portal_type in portal_type_list:\n
+    if portal_type not in allowed_type_list:\n
+      error_message = \'Sorry+you+can+not+paste+theses+Items+here\'\n
+if context.cb_dataValid and error_message==\'\':\n
+  new_item_list = context.manage_pasteObjects(REQUEST[\'__cp\'])\n
+  new_id_list = map(lambda i: i[\'new_id\'],new_item_list)\n
+  for my_id in new_id_list:\n
+    context[my_id].flushActivity(invoke=0, method_id=\'immediateReindexObject\')\n
+    context[my_id].recursiveImmediateReindexObject()\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Pasted.\')\n
+elif context.cb_dataValid and error_message!=\'\':\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
+else:\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Copy+or+cut+one+or+more+items+to+paste+first.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAA8AAAAOAAAAQwAA
+AHMEAgAAdAAAdAEAZAEAgwIAfQMAZAIAfQQAdAAAdAEAZAMAgwIAb3QAAXQAAHQBAGQEAIMCAIMA
+AH0FAHQFAGQFAIQAAHwFAIMCAH0HAHQFAGQGAIQAAHQAAHQBAGQHAIMCAIMAAIMCAH0IAHgvAHQI
+AHwHAIMBAERdHQB9CgB8CgB8CABqBwBvCgABZAgAfQQAcXQAAXF0AFduAQABdAAAdAEAZAMAgwIA
+bwoAAXwEAGQCAGoCAG+9AAF0AAB0AQBkCQCDAgB0CgB8AwBkCgCDAgCDAQB9DAB0BQBkCwCEAAB8
+DACDAgB9DQB4UgB0CAB8DQCDAQBEXUQAfQ4AdAAAdAoAdAEAfA4AgwIAZAwAgwIAZA0AZA4AZA8A
+ZBAAgwACAXQAAHQKAHQBAHwOAIMCAGQRAIMCAIMAAAFx8wBXdAAAdAAAfAMAZBIAgwIAZBMAgwIA
+dAAAdAEAZBQAgwIAgwAAZBUAF3wAABdkFgAXgwEAU26OAAF0AAB0AQBkAwCDAgBvCgABfAQAZAIA
+agMAbzwAAXQAAHQAAHwDAGQSAIMCAGQTAIMCAHQAAHQBAGQUAIMCAIMAAGQVABd8AAAXZBcAfAQA
+FheDAQBTbjUAAXQAAHQAAHwDAGQSAIMCAGQTAIMCAHQAAHQBAGQUAIMCAIMAAGQVABd8AAAXZBgA
+F4MBAFNkAABTKBkAAABOcwcAAABSRVFVRVNUcwAAAABzDAAAAGNiX2RhdGFWYWxpZHMMAAAAY2Jf
+ZGF0YUl0ZW1zYwEAAAACAAAAAwAAAEMAAABzEAAAAHQAAHwAAGQBAIMCAIMAAFMoAgAAAE5zDQAA
+AGdldFBvcnRhbFR5cGUoAgAAAHMJAAAAX2dldGF0dHJfcwEAAAB4KAIAAABzAQAAAHhzCQAAAF9n
+ZXRhdHRyXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS42PgcAAABz
+AAAAAGMBAAAAAgAAAAMAAABDAAAAcw0AAAB0AAB8AABkAQCDAgBTKAIAAABOcwIAAABpZCgCAAAA
+cwkAAABfZ2V0YXR0cl9zAQAAAHgoAgAAAHMBAAAAeHMJAAAAX2dldGF0dHJfKAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcwoAAAA8bGFtYmRhLjc+CAAAAHMAAAAAcxMAAABhbGxvd2VkQ29u
+dGVudFR5cGVzcykAAABTb3JyeSt5b3UrY2FuK25vdCtwYXN0ZSt0aGVzZXMrSXRlbXMraGVyZXMT
+AAAAbWFuYWdlX3Bhc3RlT2JqZWN0c3MEAAAAX19jcGMBAAAAAgAAAAMAAABDAAAAcw0AAAB0AAB8
+AABkAQCDAgBTKAIAAABOcwYAAABuZXdfaWQoAgAAAHMJAAAAX2dldGl0ZW1fcwEAAABpKAIAAABz
+AQAAAGlzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxh
+bWJkYS44Pg4AAABzAAAAAHMNAAAAZmx1c2hBY3Rpdml0eXMGAAAAaW52b2tlaQAAAABzCQAAAG1l
+dGhvZF9pZHMWAAAAaW1tZWRpYXRlUmVpbmRleE9iamVjdHMfAAAAcmVjdXJzaXZlSW1tZWRpYXRl
+UmVpbmRleE9iamVjdHMIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0cwwAAABhYnNvbHV0ZV91cmxz
+AQAAAC9zJgAAAD9wb3J0YWxfc3RhdHVzX21lc3NhZ2U9SXRlbShzKStQYXN0ZWQucxkAAAA/cG9y
+dGFsX3N0YXR1c19tZXNzYWdlPSVzc0QAAAA/cG9ydGFsX3N0YXR1c19tZXNzYWdlPUNvcHkrb3Ir
+Y3V0K29uZStvcittb3JlK2l0ZW1zK3RvK3Bhc3RlK2ZpcnN0LigPAAAAcwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzBwAAAFJFUVVFU1RzDQAAAGVycm9yX21lc3NhZ2VzCwAAAG9iamVjdF9saXN0
+cwMAAABtYXBzEAAAAHBvcnRhbF90eXBlX2xpc3RzEQAAAGFsbG93ZWRfdHlwZV9saXN0cwkAAABf
+Z2V0aXRlcl9zCwAAAHBvcnRhbF90eXBlcwkAAABfZ2V0aXRlbV9zDQAAAG5ld19pdGVtX2xpc3Rz
+CwAAAG5ld19pZF9saXN0cwUAAABteV9pZHMHAAAAZm9ybV9pZCgPAAAAcwcAAABmb3JtX2lkcwkA
+AABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAFJFUVVFU1RzDQAAAGVycm9yX21lc3NhZ2VzCwAA
+AG9iamVjdF9saXN0cwMAAABtYXBzEAAAAHBvcnRhbF90eXBlX2xpc3RzEQAAAGFsbG93ZWRfdHlw
+ZV9saXN0cwkAAABfZ2V0aXRlcl9zCwAAAHBvcnRhbF90eXBlcwkAAABfZ2V0aXRlbV9zDQAAAG5l
+d19pdGVtX2xpc3RzCwAAAG5ld19pZF9saXN0cwUAAABteV9pZCgAAAAAKAAAAABzDwAAAFNjcmlw
+dCAoUHl0aG9uKXMMAAAARm9sZGVyX3Bhc3RlAQAAAHMoAAAADwEJAQ0DEgESAR4BDQAGAQ0BFQEa
+AR4BEgENAAwBJQEXATsBGgE8AigBAAAAcwwAAABGb2xkZXJfcGFzdGUoAQAAAHMMAAAARm9sZGVy
+X3Bhc3RlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAA
+AA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Folder_paste</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>REQUEST</string>
+                            <string>error_message</string>
+                            <string>object_list</string>
+                            <string>map</string>
+                            <string>portal_type_list</string>
+                            <string>allowed_type_list</string>
+                            <string>_getiter_</string>
+                            <string>portal_type</string>
+                            <string>_getitem_</string>
+                            <string>new_item_list</string>
+                            <string>new_id_list</string>
+                            <string>my_id</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_paste</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Paste objects to a folder from the clipboard</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

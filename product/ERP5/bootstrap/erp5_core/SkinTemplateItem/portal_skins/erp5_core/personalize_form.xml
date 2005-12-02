@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># make default CMF personalize_form redirect to the preference tool\n
+\n
+from ZTUtils import make_query\n
+args = {}\n
+if portal_status_message is not None :\n
+  args[\'portal_status_message\'] = portal_status_message\n
+\n
+context.REQUEST.RESPONSE.redirect(\n
+   "%s/portal_preferences/view?%s" % ( context.getPortalObject().absolute_url(), make_query(args)))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABAAAAEAAAABzFgAAAGUAAGUAAGUAAGQBAIQDAFoBAGQAAFMoAgAAAE5jAwAAAAsA
+AAAJAAAASwAAAHOFAAAAZAEAawAAbAEAfQUAAWgAAH0GAHwCAHQEAGoJAG8UAAF8AgB0BQB8BgCD
+AQBkAgA8bgEAAXQGAHQGAHQGAHQHAGQDAIMCAGQEAIMCAGQFAIMCAGQGAHQGAHQGAHQHAGQHAIMC
+AIMAAGQIAIMCAIMAAHwFAHwGAIMBAGYCABaDAQABZAAAUygJAAAATigBAAAAcwoAAABtYWtlX3F1
+ZXJ5cxUAAABwb3J0YWxfc3RhdHVzX21lc3NhZ2VzBwAAAFJFUVVFU1RzCAAAAFJFU1BPTlNFcwgA
+AAByZWRpcmVjdHMdAAAAJXMvcG9ydGFsX3ByZWZlcmVuY2VzL3ZpZXc/JXNzDwAAAGdldFBvcnRh
+bE9iamVjdHMMAAAAYWJzb2x1dGVfdXJsKAgAAABzBwAAAFpUVXRpbHNzCgAAAG1ha2VfcXVlcnlz
+BAAAAGFyZ3NzFQAAAHBvcnRhbF9zdGF0dXNfbWVzc2FnZXMEAAAATm9uZXMHAAAAX3dyaXRlX3MJ
+AAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAsAAABzBAAAAGZvcm1zBwAAAG1lc3NhZ2VzFQAAAHBv
+cnRhbF9zdGF0dXNfbWVzc2FnZXMCAAAAa3dzBwAAAFpUVXRpbHNzCgAAAG1ha2VfcXVlcnlzBAAA
+AGFyZ3NzBAAAAE5vbmVzBwAAAF93cml0ZV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMQAAAAcGVyc29uYWxpemVfZm9ybQEAAABzDAAAAAAC
+DQEGAQ0BHQIYASgCAAAAcwQAAABOb25lcxAAAABwZXJzb25hbGl6ZV9mb3JtKAIAAABzBAAAAE5v
+bmVzEAAAAHBlcnNvbmFsaXplX2Zvcm0oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
+ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/personalize_form</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form=None, message=None, portal_status_message=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form</string>
+                            <string>message</string>
+                            <string>portal_status_message</string>
+                            <string>kw</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>args</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>personalize_form</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

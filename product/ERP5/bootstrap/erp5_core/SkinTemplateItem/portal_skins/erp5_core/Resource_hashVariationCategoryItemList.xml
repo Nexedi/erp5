@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Remove empty items\n
+item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']], \n
+                   item_list)\n
+\n
+sub_field_dict = {}\n
+split_depth = 1\n
+\n
+for item in item_list:\n
+  # Get value of the item\n
+  item_value = item[int(not is_right_display)]\n
+  \n
+  # Hash key from item_value\n
+  item_split = string.split(item_value, \'/\')\n
+  item_key = string.join(item_split[:split_depth] , \'/\' )\n
+\n
+  if not sub_field_dict.has_key(item_key):\n
+    # Create property dict\n
+    sub_field_property_dict = default_sub_field_property_dict.copy()\n
+    sub_field_property_dict[\'key\'] = item_key\n
+    sub_field_property_dict[\'required\'] = 1\n
+    sub_field_property_dict[\'field_type\'] = \'ListField\'\n
+    sub_field_property_dict[\'size\'] = 1\n
+    sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
+    sub_field_dict[item_key] = sub_field_property_dict\n
+\n
+  sub_field_dict[item_key][\'item_list\'] =\\\n
+     sub_field_dict[item_key][\'item_list\'] + [item]\n
+  if item_value in value_list:\n
+    sub_field_dict[item_key][\'value\'] = item_value\n
+\n
+return sub_field_dict.values()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGgAAGQBAGQCAIQCAFoAAGQAAFMoAwAAAE5pAAAAAGMEAAAA
+EgAAABEAAABDAAAAc5ABAAB0AABkAQCEAAB8AACDAgB9AABoAAB9BQBkAgB9BgB4WwF0BAB8AACD
+AQBEXU0BfQgAdAYAfAgAdAcAfAMADIMBAIMCAH0LAHQKAHQLAGQDAIMCAHwLAGQEAIMCAH0OAHQK
+AHQLAGQFAIMCAHQGAHwOAGQAAHwGAIUCAIMCAGQEAIMCAH0PAHQKAHwFAGQGAIMCAHwPAIMBAAxv
+fwABdAoAfAIAZAcAgwIAgwAAfRAAfA8AdBAAfBAAgwEAZAgAPGQCAHQQAHwQAIMBAGQJADxkCgB0
+EAB8EACDAQBkCwA8ZAIAdBAAfBAAgwEAZAwAPGQNAGQNAGYCAGcBAHQQAHwQAIMBAGQOADx8EAB0
+EAB8BQCDAQB8DwA8bgEAAXQGAHQGAHwFAHwPAIMCAGQOAIMCAHwIAGcBABd0EAB0BgB8BQB8DwCD
+AgCDAQBkDgA8fAsAfAEAagYAbx0AAXwLAHQQAHQGAHwFAHwPAIMCAIMBAGQPADxxKwABcSsAV3QK
+AHwFAGQQAIMCAIMAAFNkAABTKBEAAABOYwEAAAABAAAABAAAAEMAAABzHAAAAHwAAGQBAGQBAGYC
+AGQBAGQBAGcCAGcCAGoHAFMoAgAAAE5zAAAAACgBAAAAcwEAAAB4KAEAAABzAQAAAHgoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxsYW1iZGEuMT4CAAAAcwAAAABpAQAAAHMFAAAA
+c3BsaXRzAQAAAC9zBAAAAGpvaW5zBwAAAGhhc19rZXlzBAAAAGNvcHlzAwAAAGtleXMIAAAAcmVx
+dWlyZWRzCQAAAExpc3RGaWVsZHMKAAAAZmllbGRfdHlwZXMEAAAAc2l6ZXMAAAAAcwkAAABpdGVt
+X2xpc3RzBQAAAHZhbHVlcwYAAAB2YWx1ZXMoEgAAAHMGAAAAZmlsdGVycwkAAABpdGVtX2xpc3Rz
+DgAAAHN1Yl9maWVsZF9kaWN0cwsAAABzcGxpdF9kZXB0aHMJAAAAX2dldGl0ZXJfcwQAAABpdGVt
+cwkAAABfZ2V0aXRlbV9zAwAAAGludHMQAAAAaXNfcmlnaHRfZGlzcGxheXMKAAAAaXRlbV92YWx1
+ZXMJAAAAX2dldGF0dHJfcwYAAABzdHJpbmdzCgAAAGl0ZW1fc3BsaXRzCAAAAGl0ZW1fa2V5cx8A
+AABkZWZhdWx0X3N1Yl9maWVsZF9wcm9wZXJ0eV9kaWN0cxcAAABzdWJfZmllbGRfcHJvcGVydHlf
+ZGljdHMHAAAAX3dyaXRlX3MKAAAAdmFsdWVfbGlzdCgSAAAAcwkAAABpdGVtX2xpc3RzCgAAAHZh
+bHVlX2xpc3RzHwAAAGRlZmF1bHRfc3ViX2ZpZWxkX3Byb3BlcnR5X2RpY3RzEAAAAGlzX3JpZ2h0
+X2Rpc3BsYXlzBgAAAGZpbHRlcnMOAAAAc3ViX2ZpZWxkX2RpY3RzCwAAAHNwbGl0X2RlcHRocwkA
+AABfZ2V0aXRlcl9zBAAAAGl0ZW1zCQAAAF9nZXRpdGVtX3MDAAAAaW50cwoAAABpdGVtX3ZhbHVl
+cwkAAABfZ2V0YXR0cl9zBgAAAHN0cmluZ3MKAAAAaXRlbV9zcGxpdHMIAAAAaXRlbV9rZXlzFwAA
+AHN1Yl9maWVsZF9wcm9wZXJ0eV9kaWN0cwcAAABfd3JpdGVfKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcyYAAABSZXNvdXJjZV9oYXNoVmFyaWF0aW9uQ2F0ZWdvcnlJdGVtTGlzdAEAAABz
+LAAAAAABCQEJAgYBBgINAAYCFgMYAScCFwISARABEAEQARABGQEUAgYBLAENASECKAEAAABzJgAA
+AFJlc291cmNlX2hhc2hWYXJpYXRpb25DYXRlZ29yeUl0ZW1MaXN0KAEAAABzJgAAAFJlc291cmNl
+X2hhc2hWYXJpYXRpb25DYXRlZ29yeUl0ZW1MaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
+b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Resource_hashVariationCategoryItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>item_list</string>
+                            <string>value_list</string>
+                            <string>default_sub_field_property_dict</string>
+                            <string>is_right_display</string>
+                            <string>filter</string>
+                            <string>sub_field_dict</string>
+                            <string>split_depth</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>_getitem_</string>
+                            <string>int</string>
+                            <string>item_value</string>
+                            <string>_getattr_</string>
+                            <string>string</string>
+                            <string>item_split</string>
+                            <string>item_key</string>
+                            <string>sub_field_property_dict</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <dictionary/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Resource_hashVariationCategoryItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

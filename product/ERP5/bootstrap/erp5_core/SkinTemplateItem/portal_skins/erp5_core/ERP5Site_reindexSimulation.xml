@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>error_list = []\n
+return_list = []\n
+\n
+for object in context.portal_simulation.objectValues():\n
+  # Reexpand to propagate new rules\n
+  object.expand()\n
+\n
+for object in context.portal_simulation.objectValues():\n
+  #print "#### Indexing inside the folder %s ####" % \'portal_simulation\'\n
+  # Reindex\n
+  error_list += context.reindexAll(object=object,request=context)\n
+\n
+nb_types = {}\n
+\n
+for error in error_list:\n
+  # We count the number of each portal type\n
+  if error[1]==\'portal_type\':\n
+    type = error[3]\n
+    if nb_types.has_key(type):\n
+      nb_types[type] = nb_types[type] + 1\n
+    else:\n
+      nb_types[type] = 1\n
+  else:\n
+    #print error\n
+    return_list.append(error)\n
+\n
+for type in nb_types.keys():\n
+  # Find the number of each portal type in the catalog\n
+  count_result = context.portal_catalog.countResults(portal_type=type)\n
+  nb_catalog = count_result[0][0]\n
+  if nb_types[type] != nb_catalog:\n
+    message = "XXX Warning for %s: there is %i lines in the catalog instead of %i" % \\\n
+      (type,nb_catalog,nb_types[type])\n
+    return_list.append((\'Count Error\', \'PortalRoot_reindexAll\',1,message))\n
+  #else: print "%s: %i" % (type,nb_types[type])\n
+\n
+return return_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAA8AAAAZAAAA
+QwAAAHPvAQAAZwAAfQEAZwAAfQIAeDkAdAIAdAMAdAMAdAQAZAEAgwIAZAIAgwIAgwAAgwEARF0W
+AH0GAHQDAHwGAGQDAIMCAIMAAAFxLgBXeEsAdAIAdAMAdAMAdAQAZAEAgwIAZAIAgwIAgwAAgwEA
+RF0oAH0GAHwBAHQDAHQEAGQEAIMCAGQFAHwGAGQGAHQEAIMAAjd9AQBxagBXaAAAfQcAeJcAdAIA
+fAEAgwEARF2JAH0IAHQIAHwIAGQHAIMCAGQIAGoCAG9aAAF0CAB8CABkCQCDAgB9CgB0AwB8BwBk
+CgCDAgB8CgCDAQBvIQABdAgAfAcAfAoAgwIAZAcAF3QKAHwHAIMBAHwKADxxMgEBZAcAdAoAfAcA
+gwEAfAoAPHGpAAF0AwB8AgBkCwCDAgB8CACDAQABcakAV3iuAHQCAHQDAHwHAGQMAIMCAIMAAIMB
+AERdlAB9CgB0AwB0AwB0BABkDQCDAgBkDgCDAgBkCAB8CgCDAAF9DAB0CAB0CAB8DABkDwCDAgBk
+DwCDAgB9DQB0CAB8BwB8CgCDAgB8DQBqAwBvPwABZBAAfAoAfA0AdAgAfAcAfAoAgwIAZgMAFn0O
+AHQDAHwCAGQLAIMCAGQRAGQSAGQHAHwOAGYEAIMBAAFxTwEBcU8BV3wCAFNkAABTKBMAAABOcxEA
+AABwb3J0YWxfc2ltdWxhdGlvbnMMAAAAb2JqZWN0VmFsdWVzcwYAAABleHBhbmRzCgAAAHJlaW5k
+ZXhBbGxzBgAAAG9iamVjdHMHAAAAcmVxdWVzdGkBAAAAcwsAAABwb3J0YWxfdHlwZWkDAAAAcwcA
+AABoYXNfa2V5cwYAAABhcHBlbmRzBAAAAGtleXNzDgAAAHBvcnRhbF9jYXRhbG9ncwwAAABjb3Vu
+dFJlc3VsdHNpAAAAAHNCAAAAWFhYIFdhcm5pbmcgZm9yICVzOiB0aGVyZSBpcyAlaSBsaW5lcyBp
+biB0aGUgY2F0YWxvZyBpbnN0ZWFkIG9mICVpcwsAAABDb3VudCBFcnJvcnMVAAAAUG9ydGFsUm9v
+dF9yZWluZGV4QWxsKA4AAABzCgAAAGVycm9yX2xpc3RzCwAAAHJldHVybl9saXN0cwkAAABfZ2V0
+aXRlcl9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMGAAAAb2JqZWN0cwgAAABuYl90eXBlc3MF
+AAAAZXJyb3JzCQAAAF9nZXRpdGVtX3MEAAAAdHlwZXMHAAAAX3dyaXRlX3MMAAAAY291bnRfcmVz
+dWx0cwoAAABuYl9jYXRhbG9ncwcAAABtZXNzYWdlKA8AAABzBwAAAHJlcXVlc3RzCgAAAGVycm9y
+X2xpc3RzCwAAAHJldHVybl9saXN0cwkAAABfZ2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MHAAAAY29u
+dGV4dHMGAAAAb2JqZWN0cwgAAABuYl90eXBlc3MFAAAAZXJyb3JzCQAAAF9nZXRpdGVtX3MEAAAA
+dHlwZXMHAAAAX3dyaXRlX3MMAAAAY291bnRfcmVzdWx0cwoAAABuYl9jYXRhbG9ncwcAAABtZXNz
+YWdlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxoAAABFUlA1U2l0ZV9yZWluZGV4U2lt
+dWxhdGlvbgEAAABzMgAAAAYBBgIiAAkCEQIiAAYDJgIGAg0ABgIWARIBEwEhAhcDFAIZAAYCIQEY
+ARYBAwEcASQDKAIAAABzBAAAAE5vbmVzGgAAAEVSUDVTaXRlX3JlaW5kZXhTaW11bGF0aW9uKAIA
+AABzBAAAAE5vbmVzGgAAAEVSUDVTaXRlX3JlaW5kZXhTaW11bGF0aW9uKAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/ERP5Site_reindexSimulation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>request=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>request</string>
+                            <string>error_list</string>
+                            <string>return_list</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>object</string>
+                            <string>nb_types</string>
+                            <string>error</string>
+                            <string>_getitem_</string>
+                            <string>type</string>
+                            <string>_write_</string>
+                            <string>count_result</string>
+                            <string>nb_catalog</string>
+                            <string>message</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_reindexSimulation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

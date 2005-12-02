@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Updates attributes of an Zope document\n
+# which is in a class inheriting from ERP5 Base\n
+\n
+request=context.REQUEST\n
+\n
+o = context.portal_catalog.getObject(object_uid)\n
+\n
+form = getattr(context,dialog_id)\n
+form.validate_all_to_request(request)\n
+my_field = form.get_fields()[0]\n
+k = my_field.id\n
+values = getattr(request,k,None)\n
+module = context.restrictedTraverse(default_module)\n
+\n
+ref_list = []\n
+\n
+for v in values:\n
+  if catalog_index == \'id\':\n
+    # We should not edit the id field\n
+    # because the object which is created is not attached to a\n
+    # module yet\n
+    id = v\n
+  else:\n
+    id=str(module.generateNewId())\n
+  module.invokeFactory(type_name=portal_type,id=id)\n
+  new_ob = module.get(id)\n
+  kw = {}\n
+  if catalog_index != \'id\':\n
+    kw[catalog_index] = v\n
+    new_ob.edit(**kw)\n
+  ref_list.append(new_ob)\n
+  new_ob.flushActivity(invoke=1)\n
+\n
+o.setValue(base_category, ref_list, portal_type=[portal_type])\n
+\n
+return request[ \'RESPONSE\' ].redirect( return_url )\n
+\n
+\n
+try:\n
+  # Validate the form\n
+  form = getattr(context,form_id)\n
+  form.validate_all_to_request(request)\n
+  my_field = None\n
+  # Find out which field defines the relation\n
+  for f in form.get_fields():\n
+    if f.has_value( \'base_category\'):\n
+      if f.get_value(\'base_category\') == base_category:\n
+        k = f.id\n
+        v = getattr(request,k,None)\n
+        if v != context.getProperty(k[3:]):\n
+          my_field = f\n
+  if my_field:\n
+    kw ={}\n
+    kw[my_field.get_value(\'catalog_index\')] = request.get( my_field.id, None)\n
+    context.portal_selections.setSelectionParamsFor(\'Base_viewRelatedObjectList\', kw.copy())\n
+    kw[\'base_category\'] = base_category\n
+    kw[\'portal_type\'] = my_field.get_value(\'portal_type\')\n
+    request.set(\'base_category\', base_category)\n
+    request.set(\'portal_type\', my_field.get_value(\'portal_type\'))\n
+    request.set(\'form_id\', \'Base_viewRelatedObjectList\')\n
+    request.set(my_field.get_value(\'catalog_index\'), request.get( my_field.id, None))\n
+    relation_list = context.portal_catalog(**kw)\n
+    if len(relation_list) > 0:\n
+      return context.Base_viewRelatedObjectList( REQUEST=request )\n
+    else:\n
+      request.set(\'catalog_index\', my_field.get_value(\'catalog_index\'))\n
+      request.set(\'relation_values\', request.get( my_field.id, None))\n
+      return context.Base_viewCreateRelationDialog( REQUEST=request )\n
+      pass\n
+      # context.newRelation(base_category, my_field.get_value(\'portal_type\'))\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
+else:\n
+  message = \'Relation+Unchanged.\'\n
+\n
+if not selection_index:\n
+  redirect_url = \'%s/%s?%s\' % ( o.absolute_url()\n
+                            , form_id\n
+                            , \'portal_status_message=%s\' % message\n
+                            )\n
+else:\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % ( o.absolute_url()\n
+                            , form_id\n
+                            , selection_index\n
+                            , selection_name\n
+                            , \'portal_status_message=%s\' % message\n
+                            )\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jCgAAACcAAAAYAAAAQwAA
+AHNPBQAAdAAAdAEAZAEAgwIAfQwAdAAAdAAAdAEAZAIAgwIAZAMAgwIAfAQAgwEAfQ0AdAUAdAEA
+fAEAgwIAfQ8AdAAAfA8AZAQAgwIAfAwAgwEAAXQIAHQAAHwPAGQFAIMCAIMAAGQGAIMCAH0RAHQA
+AHwRAGQHAIMCAH0SAHQFAHwMAHwSAHQLAIMDAH0UAHQAAHQBAGQIAIMCAHwIAIMBAH0VAGcAAH0W
+AHjaAHQQAHwUAIMBAERdzAB9GAB8BgBkBwBqAgBvCgABfBgAfRkAbhkAAXQUAHQAAHwVAGQJAIMC
+AIMAAIMBAH0ZAHQAAHwVAGQKAIMCAGQLAHwHAGQHAHwZAIMAAgF0AAB8FQBkDACDAgB8GQCDAQB9
+GwBoAAB9HAB8BgBkBwBqAwBvKgABfBgAdBgAfBwAgwEAfAYAPHQZAHQAAHwbAGQNAIMCAHwcAI0B
+AAFuAQABdAAAfBYAZA4AgwIAfBsAgwEAAXQAAHwbAGQPAIMCAGQQAGQRAIMAAQFxswBXdAAAfA0A
+ZBIAgwIAfAUAfBYAZBMAfAcAZwEAgwIBAXQAAHQIAHwMAGQUAIMCAGQVAIMCAHwJAIMBAFN5xgJ0
+BQB0AQB8AACDAgB9DwB0AAB8DwBkBACDAgB8DACDAQABdAsAfREAeLAAdBAAdAAAfA8AZAUAgwIA
+gwAAgwEARF2WAH0fAHQAAHwfAGQWAIMCAGQXAIMBAG96AAF0AAB8HwBkGACDAgBkFwCDAQB8BQBq
+AgBvWgABdAAAfB8AZAcAgwIAfRIAdAUAfAwAfBIAdAsAgwMAfRgAfBgAdAAAdAEAZBkAgwIAdAgA
+fBIAZBoAZAAAhQIAgwIAgwEAagMAbwoAAXwfAH0RAHGUAgFxmAIBcQICAXECAld8EQBv4AEBaAAA
+fRwAdAAAfAwAZAwAgwIAdAAAfBEAZAcAgwIAdAsAgwIAdBgAfBwAgwEAdAAAfBEAZBgAgwIAZBsA
+gwEAPHQAAHQAAHQBAGQcAIMCAGQdAIMCAGQeAHQAAHwcAGQfAIMCAIMAAIMCAAF8BQB0GAB8HACD
+AQBkFwA8dAAAfBEAZBgAgwIAZBMAgwEAdBgAfBwAgwEAZBMAPHQAAHwMAGQgAIMCAGQXAHwFAIMC
+AAF0AAB8DABkIACDAgBkEwB0AAB8EQBkGACDAgBkEwCDAQCDAgABdAAAfAwAZCAAgwIAZCEAZB4A
+gwIAAXQAAHwMAGQgAIMCAHQAAHwRAGQYAIMCAGQbAIMBAHQAAHwMAGQMAIMCAHQAAHwRAGQHAIMC
+AHQLAIMCAIMCAAF0GQB0AAB0AQBkAgCDAgB8HACNAQB9IAB0HwB8IACDAQBkBgBqBABvGgABdAAA
+dAEAZB4AgwIAZAEAfAwAgwABU3GDBAF0AAB8DABkIACDAgBkGwB0AAB8EQBkGACDAgBkGwCDAQCD
+AgABdAAAfAwAZCAAgwIAZCIAdAAAfAwAZAwAgwIAdAAAfBEAZAcAgwIAdAsAgwIAgwIAAXQAAHQB
+AGQjAIMCAGQBAHwMAIMAAVNuAQABV25KAAR0IABqCgBvPgABAX0jAAF0AAB8DwBkJACDAgB8IwCD
+AQB9JAB0AAB8DABkIACDAgBkJQB8JACDAgABfA8AfAwAgwEAU24IAAFYZCYAfSUAfAIADG8nAAFk
+JwB0AAB8DQBkKACDAgCDAAB8AABkKQB8JQAWZgMAFn0mAG4qAAFkKgB0AAB8DQBkKACDAgCDAAB8
+AAB8AgB8AwBkKQB8JQAWZgUAFn0mAHQAAHQIAHwMAGQUAIMCAGQVAIMCAHwmAIMBAAFkAABTKCsA
+AABOcwcAAABSRVFVRVNUcw4AAABwb3J0YWxfY2F0YWxvZ3MJAAAAZ2V0T2JqZWN0cxcAAAB2YWxp
+ZGF0ZV9hbGxfdG9fcmVxdWVzdHMKAAAAZ2V0X2ZpZWxkc2kAAAAAcwIAAABpZHMSAAAAcmVzdHJp
+Y3RlZFRyYXZlcnNlcw0AAABnZW5lcmF0ZU5ld0lkcw0AAABpbnZva2VGYWN0b3J5cwkAAAB0eXBl
+X25hbWVzAwAAAGdldHMEAAAAZWRpdHMGAAAAYXBwZW5kcw0AAABmbHVzaEFjdGl2aXR5cwYAAABp
+bnZva2VpAQAAAHMIAAAAc2V0VmFsdWVzCwAAAHBvcnRhbF90eXBlcwgAAABSRVNQT05TRXMIAAAA
+cmVkaXJlY3RzCQAAAGhhc192YWx1ZXMNAAAAYmFzZV9jYXRlZ29yeXMJAAAAZ2V0X3ZhbHVlcwsA
+AABnZXRQcm9wZXJ0eWkDAAAAcw0AAABjYXRhbG9nX2luZGV4cxEAAABwb3J0YWxfc2VsZWN0aW9u
+c3MVAAAAc2V0U2VsZWN0aW9uUGFyYW1zRm9ycxoAAABCYXNlX3ZpZXdSZWxhdGVkT2JqZWN0TGlz
+dHMEAAAAY29weXMDAAAAc2V0cwcAAABmb3JtX2lkcw8AAAByZWxhdGlvbl92YWx1ZXNzHQAAAEJh
+c2Vfdmlld0NyZWF0ZVJlbGF0aW9uRGlhbG9ncwsAAABFcnJvckZpZWxkc3MMAAAAZmllbGRfZXJy
+b3JzcxMAAABSZWxhdGlvbitVbmNoYW5nZWQucwgAAAAlcy8lcz8lc3MMAAAAYWJzb2x1dGVfdXJs
+cxgAAABwb3J0YWxfc3RhdHVzX21lc3NhZ2U9JXNzLQAAACVzLyVzP3NlbGVjdGlvbl9pbmRleD0l
+cyZzZWxlY3Rpb25fbmFtZT0lcyYlcygnAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAA
+AHJlcXVlc3RzCgAAAG9iamVjdF91aWRzAQAAAG9zBwAAAGdldGF0dHJzCQAAAGRpYWxvZ19pZHME
+AAAAZm9ybXMJAAAAX2dldGl0ZW1fcwgAAABteV9maWVsZHMBAAAAa3MEAAAATm9uZXMGAAAAdmFs
+dWVzcw4AAABkZWZhdWx0X21vZHVsZXMGAAAAbW9kdWxlcwgAAAByZWZfbGlzdHMJAAAAX2dldGl0
+ZXJfcwEAAAB2cw0AAABjYXRhbG9nX2luZGV4cwIAAABpZHMDAAAAc3RycwsAAABwb3J0YWxfdHlw
+ZXMGAAAAbmV3X29icwIAAABrd3MHAAAAX3dyaXRlX3MHAAAAX2FwcGx5X3MNAAAAYmFzZV9jYXRl
+Z29yeXMKAAAAcmV0dXJuX3VybHMHAAAAZm9ybV9pZHMBAAAAZnMNAAAAcmVsYXRpb25fbGlzdHMD
+AAAAbGVucxMAAABGb3JtVmFsaWRhdGlvbkVycm9ycxEAAAB2YWxpZGF0aW9uX2Vycm9yc3MMAAAA
+ZmllbGRfZXJyb3JzcwcAAABtZXNzYWdlcw8AAABzZWxlY3Rpb25faW5kZXhzDAAAAHJlZGlyZWN0
+X3VybHMOAAAAc2VsZWN0aW9uX25hbWUoJwAAAHMHAAAAZm9ybV9pZHMJAAAAZGlhbG9nX2lkcw8A
+AABzZWxlY3Rpb25faW5kZXhzDgAAAHNlbGVjdGlvbl9uYW1lcwoAAABvYmplY3RfdWlkcw0AAABi
+YXNlX2NhdGVnb3J5cw0AAABjYXRhbG9nX2luZGV4cwsAAABwb3J0YWxfdHlwZXMOAAAAZGVmYXVs
+dF9tb2R1bGVzCgAAAHJldHVybl91cmxzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVx
+dWVzdHMBAAAAb3MHAAAAZ2V0YXR0cnMEAAAAZm9ybXMJAAAAX2dldGl0ZW1fcwgAAABteV9maWVs
+ZHMBAAAAa3MEAAAATm9uZXMGAAAAdmFsdWVzcwYAAABtb2R1bGVzCAAAAHJlZl9saXN0cwkAAABf
+Z2V0aXRlcl9zAQAAAHZzAgAAAGlkcwMAAABzdHJzBgAAAG5ld19vYnMCAAAAa3dzBwAAAF93cml0
+ZV9zBwAAAF9hcHBseV9zAQAAAGZzDQAAAHJlbGF0aW9uX2xpc3RzAwAAAGxlbnMTAAAARm9ybVZh
+bGlkYXRpb25FcnJvcnMRAAAAdmFsaWRhdGlvbl9lcnJvcnNzDAAAAGZpZWxkX2Vycm9yc3MHAAAA
+bWVzc2FnZXMMAAAAcmVkaXJlY3RfdXJsKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxMA
+AABCYXNlX2NyZWF0ZVJlbGF0aW9uAQAAAHOIAAAAAAMPAh4CEgEQARsBDwESARUCBgINAAYBDQQK
+AhsBGQEVAQYBDQEWARcBEwEaAhwCHAMDAhIBEAEGAhkACQETARwBDwESASsBFgEHAQYBQAElARAB
+IgEWASUBFgE9ARgBEwEdAiUBLgEWAQgCEAIYARMBDwIGAggBEgEGAQ8DEgEDAQMBBgERAygBAAAA
+cxMAAABCYXNlX2NyZWF0ZVJlbGF0aW9uKAEAAABzEwAAAEJhc2VfY3JlYXRlUmVsYXRpb24oAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_createRelation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, dialog_id, selection_index, selection_name, object_uid, base_category, catalog_index, portal_type, default_module, return_url</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>10</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>dialog_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>object_uid</string>
+                            <string>base_category</string>
+                            <string>catalog_index</string>
+                            <string>portal_type</string>
+                            <string>default_module</string>
+                            <string>return_url</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>request</string>
+                            <string>o</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>_getitem_</string>
+                            <string>my_field</string>
+                            <string>k</string>
+                            <string>None</string>
+                            <string>values</string>
+                            <string>module</string>
+                            <string>ref_list</string>
+                            <string>_getiter_</string>
+                            <string>v</string>
+                            <string>id</string>
+                            <string>str</string>
+                            <string>new_ob</string>
+                            <string>kw</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>f</string>
+                            <string>relation_list</string>
+                            <string>len</string>
+                            <string>FormValidationError</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>message</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key>                             <string>id</string> </key>
+            <value> <string>Base_createRelation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

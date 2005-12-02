@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This scripts allows to update a list so that it\n
+# can be displayed correctly in a graph\n
+# The list given have to be of the forme:\n
+#  list = [[Datetime(),value (,value)*],([Datetime(),value (,value)*])*]\n
+\n
+list.sort()\n
+\n
+# Check if there is any none value, and replace it by 0\n
+\n
+formated_list = []\n
+if len(list) >= 1:\n
+  for i in range(len(list)):\n
+    for index_value in range(1,len(list[0])):\n
+      if list[i][index_value]==None:\n
+        list[i][index_value]=0\n
+  formated_list.append(list[0])\n
+  for i in range(1,len(list)):\n
+    nb_days = int(list[i][0]-list[i-1][0])\n
+    for day in range(1,nb_days):\n
+      formated_list.append([list[i-1][0]+day])\n
+      for nb_value in range(1,len(list[i-1])):\n
+        formated_list[len(formated_list)-1].append(list[i-1][nb_value])\n
+    formated_list.append(list[i])\n
+\n
+return formated_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGcAAGQBAIQBAFoAAGQAAFMoAgAAAE5jAQAAAA8AAAAgAAAA
+QwAAAHMYAgAAdAAAfAAAZAEAgwIAgwAAAWcAAH0CAHQDAHwAAIMBAGQCAGoFAG/nAQF4iwB0BAB0
+BQB0AwB8AACDAQCDAQCDAQBEXXEAfQYAeGgAdAQAdAUAZAIAdAMAdAcAfAAAZAMAgwIAgwEAgwIA
+gwEARF1CAH0IAHQHAHQHAHwAAHwGAIMCAHwIAIMCAHQJAGoCAG8dAAFkAwB0CgB0BwB8AAB8BgCD
+AgCDAQB8CAA8cW0AAXFtAFdxQgBXdAAAfAIAZAQAgwIAdAcAfAAAZAMAgwIAgwEAAXg6AXQEAHQF
+AGQCAHQDAHwAAIMBAIMCAIMBAERdGQF9BgB0CwB0BwB0BwB8AAB8BgCDAgBkAwCDAgB0BwB0BwB8
+AAB8BgBkAgAYgwIAZAMAgwIAGIMBAH0MAHi8AHQEAHQFAGQCAHwMAIMCAIMBAERdpQB9DQB0AAB8
+AgBkBACDAgB0BwB0BwB8AAB8BgBkAgAYgwIAZAMAgwIAfA0AF2cBAIMBAAF4bAB0BAB0BQBkAgB0
+AwB0BwB8AAB8BgBkAgAYgwIAgwEAgwIAgwEARF1CAH0OAHQAAHQHAHwCAHQDAHwCAIMBAGQCABiD
+AgBkBACDAgB0BwB0BwB8AAB8BgBkAgAYgwIAfA4AgwIAgwEAAXGiAVdxQwFXdAAAfAIAZAQAgwIA
+dAcAfAAAfAYAgwIAgwEAAXHvAFduAQABfAIAU2QAAFMoBQAAAE5zBAAAAHNvcnRpAQAAAGkAAAAA
+cwYAAABhcHBlbmQoDwAAAHMJAAAAX2dldGF0dHJfcwQAAABsaXN0cw0AAABmb3JtYXRlZF9saXN0
+cwMAAABsZW5zCQAAAF9nZXRpdGVyX3MFAAAAcmFuZ2VzAQAAAGlzCQAAAF9nZXRpdGVtX3MLAAAA
+aW5kZXhfdmFsdWVzBAAAAE5vbmVzBwAAAF93cml0ZV9zAwAAAGludHMHAAAAbmJfZGF5c3MDAAAA
+ZGF5cwgAAABuYl92YWx1ZSgPAAAAcwQAAABsaXN0cwkAAABfZ2V0YXR0cl9zDQAAAGZvcm1hdGVk
+X2xpc3RzAwAAAGxlbnMJAAAAX2dldGl0ZXJfcwUAAAByYW5nZXMBAAAAaXMJAAAAX2dldGl0ZW1f
+cwsAAABpbmRleF92YWx1ZXMEAAAATm9uZXMHAAAAX3dyaXRlX3MDAAAAaW50cwcAAABuYl9kYXlz
+cwMAAABkYXlzCAAAAG5iX3ZhbHVlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcx8AAABC
+YXNlX2NvbnZlcnREYXRlTGlzdFRvQ2hhcnRMaXN0AQAAAHMqAAAAAwUNBAYBEwEZAAYBJQAGAR8B
+KAEZARwABgE4ARYACQEtASkADAFBASECKAEAAABzHwAAAEJhc2VfY29udmVydERhdGVMaXN0VG9D
+aGFydExpc3QoAQAAAHMfAAAAQmFzZV9jb252ZXJ0RGF0ZUxpc3RUb0NoYXJ0TGlzdCgAAAAAKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_convertDateListToChartList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>list=[]</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>list</string>
+                            <string>_getattr_</string>
+                            <string>formated_list</string>
+                            <string>len</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>_getitem_</string>
+                            <string>index_value</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                            <string>int</string>
+                            <string>nb_days</string>
+                            <string>day</string>
+                            <string>nb_value</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_convertDateListToChartList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

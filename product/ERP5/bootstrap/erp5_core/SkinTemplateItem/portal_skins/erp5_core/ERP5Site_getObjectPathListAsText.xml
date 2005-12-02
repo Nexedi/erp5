@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>site = context.portal_url.getPortalObject()\n
+object_list = []\n
+for o in site.objectValues():\n
+  if hasattr(o,\'getMetaType\'):\n
+    if o.getMetaType()==\'ERP5 Folder\':\n
+      path = o.getPhysicalPath()\n
+      object_ids = o.objectIds()\n
+      for id in object_ids:\n
+        object_list += [path + (id,)]\n
+path = site.portal_simulation.getPhysicalPath()\n
+for id in site.portal_simulation.objectIds():\n
+  object_list += [path + (id,)]\n
+object_list.sort()\n
+for path in object_list:\n
+  print \'/\'.join(path)\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAwAAAARAAAAQwAA
+AHNzAQAAdAAAgwAAfQEAdAIAdAIAdAMAZAEAgwIAZAIAgwIAgwAAfQQAZwAAfQUAeKAAdAYAdAIA
+fAQAZAMAgwIAgwAAgwEARF2GAH0HAHQIAHwHAGQEAIMCAG9wAAF0AgB8BwBkBACDAgCDAABkBQBq
+AgBvUwABdAIAfAcAZAYAgwIAgwAAfQkAdAIAfAcAZAcAgwIAgwAAfQoAeCwAdAYAfAoAgwEARF0a
+AH0LAHwFAHwJAHwLAGYBABdnAQA3fQUAcaMAV3HJAAFxQwABcUMAV3QCAHQCAHwEAGQIAIMCAGQG
+AIMCAIMAAH0JAHg9AHQGAHQCAHQCAHwEAGQIAIMCAGQHAIMCAIMAAIMBAERdGgB9CwB8BQB8CQB8
+CwBmAQAXZwEAN30FAHEKAVd0AgB8BQBkCQCDAgCDAAABeC0AdAYAfAUAgwEARF0fAH0JAHwBAAR0
+AgBkCgBkCwCDAgB8CQCDAQACSUpxRQFXfAEAgwAAU2QAAFMoDAAAAE5zCgAAAHBvcnRhbF91cmxz
+DwAAAGdldFBvcnRhbE9iamVjdHMMAAAAb2JqZWN0VmFsdWVzcwsAAABnZXRNZXRhVHlwZXMLAAAA
+RVJQNSBGb2xkZXJzDwAAAGdldFBoeXNpY2FsUGF0aHMJAAAAb2JqZWN0SWRzcxEAAABwb3J0YWxf
+c2ltdWxhdGlvbnMEAAAAc29ydHMBAAAAL3MEAAAAam9pbigMAAAAcwcAAABfcHJpbnRfcwYAAABf
+cHJpbnRzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMEAAAAc2l0ZXMLAAAAb2JqZWN0X2xpc3Rz
+CQAAAF9nZXRpdGVyX3MBAAAAb3MHAAAAaGFzYXR0cnMEAAAAcGF0aHMKAAAAb2JqZWN0X2lkc3MC
+AAAAaWQoDAAAAHMHAAAAX3ByaW50X3MGAAAAX3ByaW50cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
+eHRzBAAAAHNpdGVzCwAAAG9iamVjdF9saXN0cwkAAABfZ2V0aXRlcl9zAQAAAG9zBwAAAGhhc2F0
+dHJzBAAAAHBhdGhzCgAAAG9iamVjdF9pZHNzAgAAAGlkKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcyAAAABFUlA1U2l0ZV9nZXRPYmplY3RQYXRoTGlzdEFzVGV4dAEAAABzJgAAACQBBgEZ
+AAYBEAEZARIBEgENAAYBJAEbASIABgEbAQ0BDQAGAR0BKAEAAABzIAAAAEVSUDVTaXRlX2dldE9i
+amVjdFBhdGhMaXN0QXNUZXh0KAEAAABzIAAAAEVSUDVTaXRlX2dldE9iamVjdFBhdGhMaXN0QXNU
+ZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/ERP5Site_getObjectPathListAsText</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>site</string>
+                            <string>object_list</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>hasattr</string>
+                            <string>path</string>
+                            <string>object_ids</string>
+                            <string>id</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key>                             <string>id</string> </key>
+            <value> <string>ERP5Site_getObjectPathListAsText</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

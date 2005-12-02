@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>base_value = context.Base_edit(form_id, selection_index=selection_index, selection_name=selection_name, dialog_id=dialog_id)\n
+\n
+base_id = \'path\'\n
+kwd = {\'base_id\': base_id}\n
+\n
+context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
+cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
+\n
+if cell_range_key_list != [[None, None]] :\n
+  i = 0\n
+  for k in cell_range_key_list:\n
+    category_list = filter(lambda k_item: k_item is not None, k)\n
+    c = context.newCell(*k, **kwd)\n
+    c.edit(mapped_value_property_list = (\'base_price\',\'discount\'),\n
+           force_update = 1,\n
+           membership_criterion_base_category_list = [x.split(\'/\')[0] for x in category_list],\n
+           membership_criterion_category_list = category_list,\n
+           category_list = category_list,\n
+    )\n
+    c.setCriterion(\'stop_date\', min=context.getStartDate(), max=context.getStopDate())\n
+\n
+return base_value\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABAAAAEAAAABzFgAAAGQBAGQCAGQCAGQDAIQDAFoAAGQAAFMoBAAAAE5pAAAAAHMA
+AAAAYwQAAAAWAAAAFwAAAEMAAABzhgEAAHQAAHQBAGQBAIMCAHwAAGQCAHwBAGQDAHwCAGQEAHwD
+AIMBA30GAGQFAH0HAGgAAARkBgB8BwADPH0IAHQAAHQBAGQHAIMCAGQIAGQJAGQGAHwHAIMAAgF0
+AAB0AQBkCgCDAgBkBgB8BwCDAAF9CQB8CQB0CgB0CgBnAgBnAQBqAwBv+AABZAsAfQsAeO8AdAwA
+fAkAgwEARF3dAH0NAHQOAGQMAIQAAHwNAIMCAH0PAHQQAHQAAHQBAGQNAIMCAHwNAHwIAI4BAH0R
+AHQAAHwRAGQOAIMCAGQPAGQQAGQRAGYCAGQSAGQTAGQUAGcAAARpEgB9EwB0DAB8DwCDAQBEXSgA
+fRQAfBMAdBUAdAAAfBQAZBUAgwIAZBYAgwEAZAsAgwIAgwEAAXEBAX4TAGQXAHwPAGQYAHwPAIMA
+BQF0AAB8EQBkGQCDAgBkGgBkGwB0AAB0AQBkHACDAgCDAABkHQB0AAB0AQBkHgCDAgCDAACDAQIB
+cZkAV24BAAF8BgBTZAAAUygfAAAATnMJAAAAQmFzZV9lZGl0cw8AAABzZWxlY3Rpb25faW5kZXhz
+DgAAAHNlbGVjdGlvbl9uYW1lcwkAAABkaWFsb2dfaWRzBAAAAHBhdGhzBwAAAGJhc2VfaWRzDwAA
+AHVwZGF0ZUNlbGxSYW5nZXMJAAAAc2NyaXB0X2lkcyAAAABDdXJyZW5jeUV4Y2hhbmdlTGluZV9h
+c0NlbGxSYW5nZXMTAAAAZ2V0Q2VsbFJhbmdlS2V5TGlzdGkAAAAAYwEAAAACAAAAAgAAAEMAAABz
+CgAAAHwAAHQBAGoJAFMoAQAAAE4oAgAAAHMGAAAAa19pdGVtcwQAAABOb25lKAIAAABzBgAAAGtf
+aXRlbXMEAAAATm9uZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMLAAAAPGxhbWJkYS41
+ND4MAAAAcwAAAABzBwAAAG5ld0NlbGxzBAAAAGVkaXRzGgAAAG1hcHBlZF92YWx1ZV9wcm9wZXJ0
+eV9saXN0cwoAAABiYXNlX3ByaWNlcwgAAABkaXNjb3VudHMMAAAAZm9yY2VfdXBkYXRlaQEAAABz
+JwAAAG1lbWJlcnNoaXBfY3JpdGVyaW9uX2Jhc2VfY2F0ZWdvcnlfbGlzdHMFAAAAc3BsaXRzAQAA
+AC9zIgAAAG1lbWJlcnNoaXBfY3JpdGVyaW9uX2NhdGVnb3J5X2xpc3RzDQAAAGNhdGVnb3J5X2xp
+c3RzDAAAAHNldENyaXRlcmlvbnMJAAAAc3RvcF9kYXRlcwMAAABtaW5zDAAAAGdldFN0YXJ0RGF0
+ZXMDAAAAbWF4cwsAAABnZXRTdG9wRGF0ZSgWAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
+BwAAAGZvcm1faWRzDwAAAHNlbGVjdGlvbl9pbmRleHMOAAAAc2VsZWN0aW9uX25hbWVzCQAAAGRp
+YWxvZ19pZHMKAAAAYmFzZV92YWx1ZXMHAAAAYmFzZV9pZHMDAAAAa3dkcxMAAABjZWxsX3Jhbmdl
+X2tleV9saXN0cwQAAABOb25lcwEAAABpcwkAAABfZ2V0aXRlcl9zAQAAAGtzBgAAAGZpbHRlcnMN
+AAAAY2F0ZWdvcnlfbGlzdHMHAAAAX2FwcGx5X3MBAAAAY3MGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
+MHMBAAAAeHMJAAAAX2dldGl0ZW1fKBYAAABzBwAAAGZvcm1faWRzDwAAAHNlbGVjdGlvbl9pbmRl
+eHMOAAAAc2VsZWN0aW9uX25hbWVzCQAAAGRpYWxvZ19pZHMJAAAAX2dldGF0dHJfcwcAAABjb250
+ZXh0cwoAAABiYXNlX3ZhbHVlcwcAAABiYXNlX2lkcwMAAABrd2RzEwAAAGNlbGxfcmFuZ2Vfa2V5
+X2xpc3RzBAAAAE5vbmVzAQAAAGlzCQAAAF9nZXRpdGVyX3MBAAAAa3MGAAAAZmlsdGVycw0AAABj
+YXRlZ29yeV9saXN0cwcAAABfYXBwbHlfcwEAAABjcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwEA
+AAB4cwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGQAAAEN1cnJl
+bmN5RXhjaGFuZ2VMaW5lX2VkaXQBAAAAcyIAAAAnAgYBEgIZARgCFgEGAQ0ABgESAR4BHgIUADEB
+BgEKAjwCKAEAAABzGQAAAEN1cnJlbmN5RXhjaGFuZ2VMaW5lX2VkaXQoAQAAAHMZAAAAQ3VycmVu
+Y3lFeGNoYW5nZUxpbmVfZWRpdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1v
+ZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/CurrencyExchangeLine_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, selection_index=0, selection_name=\'\',dialog_id=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>dialog_id</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>base_value</string>
+                            <string>base_id</string>
+                            <string>kwd</string>
+                            <string>cell_range_key_list</string>
+                            <string>None</string>
+                            <string>i</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>filter</string>
+                            <string>category_list</string>
+                            <string>_apply_</string>
+                            <string>c</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <string></string>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CurrencyExchangeLine_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

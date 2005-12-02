@@ -1,0 +1,543 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>at_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>closed_summary</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>from_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>from_table_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_input</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_output</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_simulation</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>query</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>resource_uid</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>section_category</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_domain</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_report</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_uids</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>to_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+<string>query</string>
+<string>resource_uid</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>omit_simulation</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>simulation_state</string>
+<string>section_category</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>closed_summary</string>
+<string>where_expression</string>
+<string>from_table_list</string>
+<string>selection_uids</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>query\r\n
+resource_uid:list\r\n
+from_date\r\n
+at_date\r\n
+to_date\r\n
+omit_simulation\r\n
+omit_input\r\n
+omit_output\r\n
+simulation_state:list\r\n
+section_category\r\n
+selection_domain\r\n
+selection_report\r\n
+closed_summary\r\n
+where_expression\r\n
+from_table_list\r\n
+selection_uids:list</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Resource_zStatInventory</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  IFNULL(COUNT(DISTINCT stock.uid), 0) AS count,\n
+  IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
+\n
+FROM\n
+ <dtml-unless from_table_list>\n
+  catalog,\n
+ </dtml-unless>\n
+  catalog AS child,\n
+  movement,\n
+  stock,\n
+  catalog AS node\n
+  <dtml-if section_category>\n
+    , catalog AS section_c\n
+    , catalog AS section_bc\n
+    , category AS section_membership\n
+    , catalog AS section\n
+  </dtml-if>\n
+  <dtml-if query>\n
+    , category\n
+  </dtml-if>\n
+  <dtml-if from_table_list>\n
+     <dtml-in from_table_list>\n
+     , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
+     </dtml-in>\n
+  </dtml-if>  \n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+\n
+WHERE\n
+  movement.source_uid = catalog.uid\n
+  <dtml-if where_expression> AND <dtml-var where_expression></dtml-if>\n
+  AND child.uid = movement.uid\n
+  AND stock.uid = movement.uid\n
+  <dtml-if resource_uid>\n
+    AND\n
+      (\n
+        <dtml-in resource_uid>\n
+          movement.resource_uid = <dtml-sqlvar sequence-item type="int">\n
+          <dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+        </dtml-in>\n
+      )\n
+  </dtml-if>\n
+  AND movement.is_accountable = 1\n
+  AND node.uid = stock.node_uid\n
+  <dtml-if from_date>\n
+    AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if at_date>\n
+    AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if to_date>\n
+    AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if omit_simulation>\n
+    AND child.portal_type != "Simulation Movement"\n
+  </dtml-if>\n
+  <dtml-if omit_input>\n
+    AND stock.quantity > 0\n
+    AND (movement.source_uid <> movement.destination_uid \n
+     OR  stock.section_uid <> stock.mirror_section_uid\n
+     OR  movement.destination_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL \n
+    )\n
+  </dtml-if>\n
+  <dtml-if omit_output>\n
+    AND stock.quantity < 0\n
+    AND (movement.source_uid <> movement.destination_uid \n
+     OR  stock.section_uid <> stock.mirror_section_uid\n
+     OR  movement.destination_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL \n
+    )\n
+  </dtml-if>\n
+  <dtml-if simulation_state>\n
+    AND\n
+      (\n
+        <dtml-in simulation_state>\n
+          child.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+          <dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>\n
+      )\n
+  </dtml-if>\n
+  <dtml-if section_category>\n
+    AND section.uid = stock.section_uid\n
+    AND section_c.relative_url = <dtml-sqlvar section_category type="string">\n
+    AND section_membership.category_uid =  section_c.uid\n
+    AND section_membership.base_category_uid = section_bc.uid\n
+    AND section_membership.uid = section.uid\n
+  </dtml-if>\n
+  <dtml-if query>\n
+    AND category.uid = node.uid\n
+    AND <dtml-var query>\n
+  </dtml-if>\n
+\n
+<dtml-if selection_domain>\n
+  AND <dtml-var "selection_domain.asSqlExpression()">\n
+</dtml-if>\n
+<dtml-if selection_report>\n
+  AND <dtml-var "selection_report.asSqlExpression()">\n
+</dtml-if>\n
+<dtml-if selection_uids>\n
+  AND\n
+      (\n
+        <dtml-in selection_uids>\n
+          node.uid = <dtml-sqlvar sequence-item type="int">\n
+          <dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>\n
+      )\n
+</dtml-if>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  IFNULL(COUNT(DISTINCT stock.uid), 0) AS count,\n
+  IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
+\n
+FROM\n
+ <dtml-unless from_table_list>\n
+  catalog,\n
+ </dtml-unless>\n
+  catalog AS child,\n
+  movement,\n
+  stock,\n
+  catalog AS node\n
+  <dtml-if section_category>\n
+    , catalog AS section_c\n
+    , catalog AS section_bc\n
+    , category AS section_membership\n
+    , catalog AS section\n
+  </dtml-if>\n
+  <dtml-if query>\n
+    , category\n
+  </dtml-if>\n
+  <dtml-if from_table_list>\n
+     <dtml-in from_table_list>\n
+     , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
+     </dtml-in>\n
+  </dtml-if>  \n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+\n
+WHERE\n
+  movement.source_uid = catalog.uid\n
+  <dtml-if where_expression> AND <dtml-var where_expression></dtml-if>\n
+  AND child.uid = movement.uid\n
+  AND stock.uid = movement.uid\n
+  <dtml-if resource_uid>\n
+    AND\n
+      (\n
+        <dtml-in resource_uid>\n
+          movement.resource_uid = <dtml-sqlvar sequence-item type="int">\n
+          <dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+        </dtml-in>\n
+      )\n
+  </dtml-if>\n
+  AND movement.is_accountable = 1\n
+  AND node.uid = stock.node_uid\n
+  <dtml-if from_date>\n
+    AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if at_date>\n
+    AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if to_date>\n
+    AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  </dtml-if>\n
+  <dtml-if omit_simulation>\n
+    AND child.portal_type != "Simulation Movement"\n
+  </dtml-if>\n
+  <dtml-if omit_input>\n
+    AND stock.quantity > 0\n
+    AND (movement.source_uid <> movement.destination_uid \n
+     OR  stock.section_uid <> stock.mirror_section_uid\n
+     OR  movement.destination_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL \n
+    )\n
+  </dtml-if>\n
+  <dtml-if omit_output>\n
+    AND stock.quantity < 0\n
+    AND (movement.source_uid <> movement.destination_uid \n
+     OR  stock.section_uid <> stock.mirror_section_uid\n
+     OR  movement.destination_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL \n
+    )\n
+  </dtml-if>\n
+  <dtml-if simulation_state>\n
+    AND\n
+      (\n
+        <dtml-in simulation_state>\n
+          child.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+          <dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>\n
+      )\n
+  </dtml-if>\n
+  <dtml-if section_category>\n
+    AND section.uid = stock.section_uid\n
+    AND section_c.relative_url = <dtml-sqlvar section_category type="string">\n
+    AND section_membership.category_uid =  section_c.uid\n
+    AND section_membership.base_category_uid = section_bc.uid\n
+    AND section_membership.uid = section.uid\n
+  </dtml-if>\n
+  <dtml-if query>\n
+    AND category.uid = node.uid\n
+    AND <dtml-var query>\n
+  </dtml-if>\n
+\n
+<dtml-if selection_domain>\n
+  AND <dtml-var "selection_domain.asSqlExpression()">\n
+</dtml-if>\n
+<dtml-if selection_report>\n
+  AND <dtml-var "selection_report.asSqlExpression()">\n
+</dtml-if>\n
+<dtml-if selection_uids>\n
+  AND\n
+      (\n
+        <dtml-in selection_uids>\n
+          node.uid = <dtml-sqlvar sequence-item type="int">\n
+          <dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>\n
+      )\n
+</dtml-if>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

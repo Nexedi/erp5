@@ -1,0 +1,529 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5.Tool.Category</string>
+          <string>BaseCategory</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Local ID of the object in its enclosing container</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Unique ID of the object in the ZSQLCatalog</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>catalog_index</string> </key>
+                      <value>
+                        <tuple>
+                          <string>COUNT</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>catalog_metadata</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>description</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>text</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if acquired value should be copied</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_copy_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if the local value have priority</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_mask_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if the acquired value should be appended</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_append_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if the acquired value should be synced</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_sync_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>acquisition_object_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>The default contained object id to look up</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_object_id_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>acquisition_base_category</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>The base categories to browse</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_base_category_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>tokens</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>acquisition_portal_type</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>The portal types to browse</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_portal_type_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>multivalued</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>tales</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>fallback_base_category</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>another base category to get if everything else fails</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>fallback_base_category_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>tokens</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_append_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>delivery</string>
+                <string>order</string>
+                <string>parent</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>delivery</string>
+                <string>order</string>
+                <string>parent</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_copy_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_mask_value</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id_list</string> </key>
+            <value>
+              <tuple>
+<string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList())</string> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type_list</string> </key>
+            <value>
+              <tuple>
+                <string>Delivery Line</string>
+                <string>Sales Invoice</string>
+                <string>Purchase Order Line</string>
+                <string>Movement PF Line</string>
+                <string>Pay Sheet Transaction</string>
+                <string>Production Order</string>
+                <string>Inventory MP Line</string>
+                <string>Production Packing List Line</string>
+                <string>Pay Sheet Line</string>
+                <string>Production Packing List</string>
+                <string>Production Order Line</string>
+                <string>Inventory PF</string>
+                <string>Purchase Invoice Transaction Line</string>
+                <string>Sale Order Line</string>
+                <string>Sale Invoice</string>
+                <string>Purchase Packing List</string>
+                <string>Sale Packing List</string>
+                <string>Sale Invoice Transaction Line</string>
+                <string>Accounting Transaction</string>
+                <string>Inventory MP</string>
+                <string>Delivery</string>
+                <string>Delivery Cell</string>
+                <string>Production Report Component</string>
+                <string>Sales Packing List Line</string>
+                <string>Production Report</string>
+                <string>Purchase Packing List Line</string>
+                <string>Production Report Cell</string>
+                <string>Piece Tissu</string>
+                <string>Pay Sheet Cell</string>
+                <string>Production Report Operation</string>
+                <string>Transaction</string>
+                <string>Inventory Line</string>
+                <string>Packing Order Line</string>
+                <string>Purchase Invoice Transaction</string>
+                <string>Sale Order</string>
+                <string>Purchase Order</string>
+                <string>Project</string>
+                <string>Inventory PF Line</string>
+                <string>Movement MP Line</string>
+                <string>Sale Invoice Transaction</string>
+                <string>Order</string>
+                <string>Packing Order</string>
+                <string>Sample Order Line</string>
+                <string>Invoice Cell</string>
+                <string>Accounting Transaction Line</string>
+                <string>Invoice Line</string>
+                <string>Inventory Cell</string>
+                <string>Packing List</string>
+                <string>Movement PF</string>
+                <string>Container Line</string>
+                <string>Samples Order</string>
+                <string>Invoice</string>
+                <string>Container Cell</string>
+                <string>Sales Packing List</string>
+                <string>Sales Order</string>
+                <string>Movement MP</string>
+                <string>Sales Order Line</string>
+                <string>Payment Transaction</string>
+                <string>Balance Transaction</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_sync_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>destination_section</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>destination_section</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.Length</string>
+          <string>Length</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

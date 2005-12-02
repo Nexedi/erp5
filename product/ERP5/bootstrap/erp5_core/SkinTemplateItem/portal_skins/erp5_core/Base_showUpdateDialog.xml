@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This script is only used in order to add a third button on\n
+# dialog pages wich is only used for udpates\n
+\n
+dialog_method = update_method\n
+return context.Base_callDialogMethod(cancel_url,dialog_method,selection_name,dialog_id,form_id,enable_pickle=1)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBgAAAAgAAAAJAAAAQwAA
+AHMvAAAAfAUAfQIAdAIAdAMAZAEAgwIAfAEAfAIAfAMAfAQAfAAAZAIAZAMAgwUBU2QAAFMoBAAA
+AE5zFQAAAEJhc2VfY2FsbERpYWxvZ01ldGhvZHMNAAAAZW5hYmxlX3BpY2tsZWkBAAAAKAgAAABz
+DQAAAHVwZGF0ZV9tZXRob2RzDQAAAGRpYWxvZ19tZXRob2RzCQAAAF9nZXRhdHRyX3MHAAAAY29u
+dGV4dHMKAAAAY2FuY2VsX3VybHMOAAAAc2VsZWN0aW9uX25hbWVzCQAAAGRpYWxvZ19pZHMHAAAA
+Zm9ybV9pZCgIAAAAcwcAAABmb3JtX2lkcwoAAABjYW5jZWxfdXJscw0AAABkaWFsb2dfbWV0aG9k
+cw4AAABzZWxlY3Rpb25fbmFtZXMJAAAAZGlhbG9nX2lkcw0AAAB1cGRhdGVfbWV0aG9kcwkAAABf
+Z2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFQAAAEJh
+c2Vfc2hvd1VwZGF0ZURpYWxvZwEAAABzBAAAAAADBgEoAQAAAHMVAAAAQmFzZV9zaG93VXBkYXRl
+RGlhbG9nKAEAAABzFQAAAEJhc2Vfc2hvd1VwZGF0ZURpYWxvZygAAAAAKAAAAABzDwAAAFNjcmlw
+dCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_showUpdateDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id,cancel_url,dialog_method,selection_name,dialog_id,update_method</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>6</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>cancel_url</string>
+                            <string>dialog_method</string>
+                            <string>selection_name</string>
+                            <string>dialog_id</string>
+                            <string>update_method</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_showUpdateDialog</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

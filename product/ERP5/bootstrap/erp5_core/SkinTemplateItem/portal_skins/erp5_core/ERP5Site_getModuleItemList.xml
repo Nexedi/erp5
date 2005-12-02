@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod, clearCache\n
+from ZODB.POSException import ConflictError\n
+\n
+user = context.portal_membership.getAuthenticatedMember().getUserName()\n
+\n
+portal = context.getPortalObject()\n
+\n
+# (BIG) HACK : we invalidate cache if we are call without filter\n
+#   (ie when we are editing the PreferredVisibleModuleList)\n
+if not filter : \n
+  clearCache()\n
+\n
+## do not filter when there is no visible module selected\n
+try : \n
+  if len(portal.portal_preferences.getPreferredVisibleModuleList()) == 0 : \n
+    filter = 0\n
+except ConflictError : raise\n
+except : filter = 0\n
+\n
+def getModuleItemList(user=None, portal_path=None, filter=filter):\n
+  translate = context.translation_service.translate\n
+\n
+  item_list = []\n
+  try :\n
+    for module_id in portal.objectIds(\'ERP5 Folder\'):\n
+      try:\n
+        module = portal[module_id]\n
+        url = module.getPath()\n
+        label = module.getTitleOrId()\n
+        label = translate(\'ui\', label, default=label)\n
+        if not filter or url in portal.portal_preferences.getPreferredVisibleModuleList() : \n
+          item_list.append((label, url))\n
+      except ConflictError : raise\n
+      except: pass\n
+  except ConflictError : raise\n
+  except: pass\n
+\n
+  def compareModules(a, b): return cmp(a[0], b[0])\n
+  item_list.sort(compareModules)\n
+  return item_list\n
+\n
+getModuleItemList = CachingMethod(getModuleItemList, id=\'ERP5Site_getModuleItemList\')\n
+portal_path = context.getPortalObject().getPhysicalPath()\n
+return getModuleItemList(user=user, portal_path=portal_path, filter=filter)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAQAAAGMBAAAADgAA
+ABUAAAADAAAAcywBAABkAQBrAABsAQB9AgBsAgB9AwABZAIAawMAbAQAiQAAAXQFAHQFAHQFAHQG
+AGQDAIMCAGQEAIMCAIMAAGQFAIMCAIMAAH0IAHQFAHQGAGQGAIMCAIMAAIkBAHwAAAxvCwABfAMA
+gwAAAW4BAAF5NgB0CgB0BQB0BQCIAQBkBwCDAgBkCACDAgCDAACDAQBkCQBqAgBvCgABZAkAfQAA
+bgEAAVduIgAEiAAAagoAbwoAAQEBAYIAAG4OAAEBAQFkCQB9AABuAQBYdAsAdAsAfAAAhwAAhwEA
+ZAoAhgMAfQwAfAIAfAwAZAsAZAwAgwEBfQwAdAUAdAUAdAYAZAYAgwIAgwAAZA0AgwIAgwAAfQ0A
+fAwAZA4AfAgAZA8AfA0AZBAAfAAAgwADU2QAAFMoEQAAAE4oAgAAAHMNAAAAQ2FjaGluZ01ldGhv
+ZHMKAAAAY2xlYXJDYWNoZSgBAAAAcw0AAABDb25mbGljdEVycm9ycxEAAABwb3J0YWxfbWVtYmVy
+c2hpcHMWAAAAZ2V0QXV0aGVudGljYXRlZE1lbWJlcnMLAAAAZ2V0VXNlck5hbWVzDwAAAGdldFBv
+cnRhbE9iamVjdHMSAAAAcG9ydGFsX3ByZWZlcmVuY2Vzcx0AAABnZXRQcmVmZXJyZWRWaXNpYmxl
+TW9kdWxlTGlzdGkAAAAAYwMAAAAQAAAAFAAAAAMAAABzPQEAAHQAAHQAAHQBAGQBAIMCAGQCAIMC
+AH0FAGcAAH0GAHncAHjVAHQEAHQAAIgBAGQDAIMCAGQEAIMBAIMBAERduAB9CQB5kwB0BwCIAQB8
+CQCDAgB9CwB0AAB8CwBkBQCDAgCDAAB9DAB0AAB8CwBkBgCDAgCDAAB9DQB8BQBkBwB8DQBkCAB8
+DQCDAgF9DQB8AgAMcB8AAXwMAHQAAHQAAIgBAGQJAIMCAGQKAIMCAIMAAGoGAG8dAAF0AAB8BgBk
+CwCDAgB8DQB8DABmAgCDAQABbgEAAVdxPQAEiAAAagoAbwoAAQEBAYIAAHE9AAEBAQFxPQBYcT0A
+V1duHAAEiAAAagoAbwoAAQEBAYIAAG4IAAEBAQFuAQBYZAwAhAAAfQ8AdAAAfAYAZA0AgwIAfA8A
+gwEAAXwGAFNkAABTKA4AAABOcxMAAAB0cmFuc2xhdGlvbl9zZXJ2aWNlcwkAAAB0cmFuc2xhdGVz
+CQAAAG9iamVjdElkc3MLAAAARVJQNSBGb2xkZXJzBwAAAGdldFBhdGhzDAAAAGdldFRpdGxlT3JJ
+ZHMCAAAAdWlzBwAAAGRlZmF1bHRzEgAAAHBvcnRhbF9wcmVmZXJlbmNlc3MdAAAAZ2V0UHJlZmVy
+cmVkVmlzaWJsZU1vZHVsZUxpc3RzBgAAAGFwcGVuZGMCAAAABAAAAAYAAABDAAAAcyMAAAB0AAB0
+AQB8AABkAQCDAgB0AQB8AQBkAQCDAgCDAgBTZAAAUygCAAAATmkAAAAAKAQAAABzAwAAAGNtcHMJ
+AAAAX2dldGl0ZW1fcwEAAABhcwEAAABiKAQAAABzAQAAAGFzAQAAAGJzAwAAAGNtcHMJAAAAX2dl
+dGl0ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcw4AAABjb21wYXJlTW9kdWxlcyYA
+AABzAAAAAHMEAAAAc29ydCgOAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCQAAAHRyYW5z
+bGF0ZXMJAAAAaXRlbV9saXN0cwkAAABfZ2V0aXRlcl9zBgAAAHBvcnRhbHMJAAAAbW9kdWxlX2lk
+cwkAAABfZ2V0aXRlbV9zBgAAAG1vZHVsZXMDAAAAdXJscwUAAABsYWJlbHMGAAAAZmlsdGVycw0A
+AABDb25mbGljdEVycm9ycw4AAABjb21wYXJlTW9kdWxlcygQAAAAcwQAAAB1c2VycwsAAABwb3J0
+YWxfcGF0aHMGAAAAZmlsdGVycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCQAAAHRyYW5zbGF0
+ZXMJAAAAaXRlbV9saXN0cwkAAABfZ2V0aXRlcl9zBgAAAHBvcnRhbHMJAAAAbW9kdWxlX2lkcwkA
+AABfZ2V0aXRlbV9zBgAAAG1vZHVsZXMDAAAAdXJscwUAAABsYWJlbHMNAAAAQ29uZmxpY3RFcnJv
+cnMOAAAAY29tcGFyZU1vZHVsZXMoAgAAAHMNAAAAQ29uZmxpY3RFcnJvcnMGAAAAcG9ydGFsKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMRAAAAZ2V0TW9kdWxlSXRlbUxpc3QUAAAAcyYAAAAAARgC
+BgEDARwABgEDAQ8BEgESARUBLQEeARgBDAEYAQQCDAEQAXMCAAAAaWRzGgAAAEVSUDVTaXRlX2dl
+dE1vZHVsZUl0ZW1MaXN0cw8AAABnZXRQaHlzaWNhbFBhdGhzBAAAAHVzZXJzCwAAAHBvcnRhbF9w
+YXRocwYAAABmaWx0ZXIoDgAAAHMXAAAAUHJvZHVjdHMuRVJQNVR5cGUuQ2FjaGVzDQAAAENhY2hp
+bmdNZXRob2RzCgAAAGNsZWFyQ2FjaGVzEQAAAFpPREIuUE9TRXhjZXB0aW9ucw0AAABDb25mbGlj
+dEVycm9ycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBAAAAHVzZXJzBgAAAHBvcnRhbHMGAAAA
+ZmlsdGVycwMAAABsZW5zBAAAAE5vbmVzEQAAAGdldE1vZHVsZUl0ZW1MaXN0cwsAAABwb3J0YWxf
+cGF0aCgOAAAAcwYAAABmaWx0ZXJzFwAAAFByb2R1Y3RzLkVSUDVUeXBlLkNhY2hlcw0AAABDYWNo
+aW5nTWV0aG9kcwoAAABjbGVhckNhY2hlcxEAAABaT0RCLlBPU0V4Y2VwdGlvbnMNAAAAQ29uZmxp
+Y3RFcnJvcnMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwQAAAB1c2VycwYAAABwb3J0YWxzAwAA
+AGxlbnMEAAAATm9uZXMRAAAAZ2V0TW9kdWxlSXRlbUxpc3RzCwAAAHBvcnRhbF9wYXRoKAAAAAAo
+AgAAAHMNAAAAQ29uZmxpY3RFcnJvcnMGAAAAcG9ydGFscw8AAABTY3JpcHQgKFB5dGhvbilzGgAA
+AEVSUDVTaXRlX2dldE1vZHVsZUl0ZW1MaXN0AQAAAHMcAAAAEwENAicCEgQIAQsDAwEoAQ4BGAEK
+AhgWEgEeASgBAAAAcxoAAABFUlA1U2l0ZV9nZXRNb2R1bGVJdGVtTGlzdCgBAAAAcxoAAABFUlA1
+U2l0ZV9nZXRNb2R1bGVJdGVtTGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAA
+PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/ERP5Site_getModuleItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>filter=1</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>filter</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>clearCache</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>user</string>
+                            <string>portal</string>
+                            <string>len</string>
+                            <string>None</string>
+                            <string>getModuleItemList</string>
+                            <string>portal_path</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>1</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_getModuleItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

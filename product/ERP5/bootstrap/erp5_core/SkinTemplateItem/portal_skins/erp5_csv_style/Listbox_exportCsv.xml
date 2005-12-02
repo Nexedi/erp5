@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# export_only : allow to disable the uid column and the id of columns\n
+result = \'\'\n
+request = context.REQUEST\n
+\n
+translate = context.portal_url.getPortalObject().translation_service.translate\n
+\n
+listboxline_list = context.get_value(\'default\', render_format=\'list\', REQUEST=request)\n
+\n
+for listboxline in listboxline_list:\n
+  if listboxline.isTitleLine():\n
+    line_result = \'\'\n
+    line_result2 = \'\'\n
+\n
+    if not export_only:\n
+      listboxline.setListboxLineDisplayListMode([\'uid\'])  #XXX do not display uid column\n
+\n
+    for column_item in listboxline.getColumnItemList():\n
+\n
+      column_id = column_item[0]\n
+      column_property = column_item[1]\n
+\n
+      if column_id is not None:\n
+        if same_type(column_id,\'\'):\n
+          column_id = column_id.replace(\'"\',\'""\')\n
+          line_result += \'"%s"\' % column_id.decode(\'utf-8\')\n
+        else:\n
+          line_result += str(column_id)\n
+\n
+      line_result += str(\',\')\n
+\n
+      if column_property is not None:\n
+        if same_type(column_property,\'\'):\n
+          column_property = translate(\'ui\', column_property.decode(\'utf-8\'))\n
+          column_property = column_property.replace(\'"\',\'""\')\n
+          line_result2 += \'"%s"\' % column_property\n
+        else:\n
+          line_result2 += str(column_property)\n
+\n
+      line_result2 += str(\',\')\n
+\n
+    if len(line_result) > 1:\n
+      line_result = line_result[:-1]\n
+\n
+    if len(line_result2) > 1:\n
+      line_result2 = line_result2[:-1]\n
+\n
+    if not export_only:\n
+      result += line_result+\'\\n\' #XXX do not display id\n
+    result += line_result2+\'\\n\' \n
+\n
+\n
+\n
+\n
+  if listboxline.isDataLine():\n
+    line_result = \'\'\n
+ \n
+    if not export_only:\n
+      listboxline.setListboxLineDisplayListMode([\'uid\'])  #XXX do not display uid column\n
+    \n
+    for column_property in listboxline.getColumnPropertyList():\n
+\n
+      if column_property is not None:\n
+        if same_type(column_property,\'\'):\n
+          column_property = column_property.replace(\'"\',\'""\')\n
+          line_result += \'"%s"\' % column_property.decode(\'utf-8\')\n
+        elif same_type(column_property,1.0):\n
+          column_property = str(column_property).replace(\'.\',\',\')\n
+          line_result += \'"%s"\' % column_property\n
+        else:\n
+          line_result += str(column_property)\n
+\n
+      line_result += str(\',\')\n
+\n
+    if len(line_result) > 1:\n
+      line_result = line_result[:-1]\n
+\n
+    result += line_result+\'\\n\'\n
+\n
+return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMBAAAAFAAA
+ABkAAABLAAAAc+QDAABkAQB9AgB0AQB0AgBkAgCDAgB9BQB0AQB0AQB0AQB0AQB0AgBkAwCDAgBk
+BACDAgCDAABkBQCDAgBkBgCDAgB9BgB0AQB0AgBkBwCDAgBkCABkCQBkCgBkAgB8BQCDAQJ9BwB4
+dgN0BgB8BwCDAQBEXWgDfQkAdAEAfAkAZAsAgwIAgwAAb/gBAWQBAH0KAGQBAH0LAHwAAAxvGgAB
+dAEAfAkAZAwAgwIAZA0AZwEAgwEAAW4BAAF4QQF0BgB0AQB8CQBkDgCDAgCDAACDAQBEXScBfQwA
+dAwAfAwAZA8AgwIAfQ4AdAwAfAwAZBAAgwIAfQ8AfA4AdA8AagkAb10AAXQQAHwOAGQBAIMCAG85
+AAF0AQB8DgBkEQCDAgBkEgBkEwCDAgB9DgB8CgBkFAB0AQB8DgBkFQCDAgBkFgCDAQAWN30KAHFe
+AQF8CgB0EQB8DgCDAQA3fQoAbgEAAXwKAHQRAGQXAIMBADd9CgB8DwB0DwBqCQBvbAABdBAAfA8A
+ZAEAgwIAb0gAAXwGAGQYAHQBAHwPAGQVAIMCAGQWAIMBAIMCAH0PAHQBAHwPAGQRAIMCAGQSAGQT
+AIMCAH0PAHwLAGQUAHwPABY3fQsAcecBAXwLAHQRAHwPAIMBADd9CwBuAQABfAsAdBEAZBcAgwEA
+N30LAHHQAFd0EgB8CgCDAQBkEABqBABvGgABdAwAfAoAZAAAZBAAC4UCAIMCAH0KAG4BAAF0EgB8
+CwCDAQBkEABqBABvGgABdAwAfAsAZAAAZBAAC4UCAIMCAH0LAG4BAAF8AAAMbxIAAXwCAHwKAGQZ
+ABc3fQIAbgEAAXwCAHwLAGQZABc3fQIAbgEAAXQBAHwJAGQaAIMCAIMAAG9EAQFkAQB9CgB8AAAM
+bxoAAXQBAHwJAGQMAIMCAGQNAGcBAIMBAAFuAQABeNoAdAYAdAEAfAkAZBsAgwIAgwAAgwEARF3A
+AH0PAHwPAHQPAGoJAG+dAAF0EAB8DwBkAQCDAgBvOQABdAEAfA8AZBEAgwIAZBIAZBMAgwIAfQ8A
+fAoAZBQAdAEAfA8AZBUAgwIAZBYAgwEAFjd9CgBxhQMBdBAAfA8AZBwAgwIAbzAAAXQBAHQRAHwP
+AIMBAGQRAIMCAGQdAGQXAIMCAH0PAHwKAGQUAHwPABY3fQoAcYUDAXwKAHQRAHwPAIMBADd9CgBu
+AQABfAoAdBEAZBcAgwEAN30KAHHVAld0EgB8CgCDAQBkEABqBABvGgABdAwAfAoAZAAAZBAAC4UC
+AIMCAH0KAG4BAAF8AgB8CgBkGQAXN30CAHFwAAFxcABXfAIAU2QAAFMoHgAAAE5zAAAAAHMHAAAA
+UkVRVUVTVHMKAAAAcG9ydGFsX3VybHMPAAAAZ2V0UG9ydGFsT2JqZWN0cxMAAAB0cmFuc2xhdGlv
+bl9zZXJ2aWNlcwkAAAB0cmFuc2xhdGVzCQAAAGdldF92YWx1ZXMHAAAAZGVmYXVsdHMNAAAAcmVu
+ZGVyX2Zvcm1hdHMEAAAAbGlzdHMLAAAAaXNUaXRsZUxpbmVzHQAAAHNldExpc3Rib3hMaW5lRGlz
+cGxheUxpc3RNb2RlcwMAAAB1aWRzEQAAAGdldENvbHVtbkl0ZW1MaXN0aQAAAABpAQAAAHMHAAAA
+cmVwbGFjZXMBAAAAInMCAAAAIiJzBAAAACIlcyJzBgAAAGRlY29kZXMFAAAAdXRmLThzAQAAACxz
+AgAAAHVpcwEAAAAKcwoAAABpc0RhdGFMaW5lcxUAAABnZXRDb2x1bW5Qcm9wZXJ0eUxpc3RmAzEu
+MHMBAAAALigTAAAAcwYAAAByZXN1bHRzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVx
+dWVzdHMJAAAAdHJhbnNsYXRlcxAAAABsaXN0Ym94bGluZV9saXN0cwkAAABfZ2V0aXRlcl9zCwAA
+AGxpc3Rib3hsaW5lcwsAAABsaW5lX3Jlc3VsdHMMAAAAbGluZV9yZXN1bHQycwsAAABleHBvcnRf
+b25seXMLAAAAY29sdW1uX2l0ZW1zCQAAAF9nZXRpdGVtX3MJAAAAY29sdW1uX2lkcw8AAABjb2x1
+bW5fcHJvcGVydHlzBAAAAE5vbmVzCQAAAHNhbWVfdHlwZXMDAAAAc3RycwMAAABsZW4oFAAAAHML
+AAAAZXhwb3J0X29ubHlzAgAAAGt3cwYAAAByZXN1bHRzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4
+dHMHAAAAcmVxdWVzdHMJAAAAdHJhbnNsYXRlcxAAAABsaXN0Ym94bGluZV9saXN0cwkAAABfZ2V0
+aXRlcl9zCwAAAGxpc3Rib3hsaW5lcwsAAABsaW5lX3Jlc3VsdHMMAAAAbGluZV9yZXN1bHQycwsA
+AABjb2x1bW5faXRlbXMJAAAAX2dldGl0ZW1fcwkAAABjb2x1bW5faWRzDwAAAGNvbHVtbl9wcm9w
+ZXJ0eXMEAAAATm9uZXMJAAAAc2FtZV90eXBlcwMAAABzdHJzAwAAAGxlbigAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMRAAAATGlzdGJveF9leHBvcnRDc3YBAAAAc2wAAAAAAQYBDwItAiEC
+DQAJARABBgEGAgsBFwIZAAYCDwEPAg0BEAEYASECFAIQAg0BEAEeARgBEgIUAhQCEwEaAhMBGgII
+ARIBFQUQAQYCCwEXAhkABgINARABGAEhARABHgESAhQCFAITARoCFgIoAQAAAHMRAAAATGlzdGJv
+eF9leHBvcnRDc3YoAQAAAHMRAAAATGlzdGJveF9leHBvcnRDc3YoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/apparel5/portal_skins/erp5_csv_style/Listbox_exportCsv</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>export_only=0,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>export_only</string>
+                            <string>kw</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>translate</string>
+                            <string>listboxline_list</string>
+                            <string>_getiter_</string>
+                            <string>listboxline</string>
+                            <string>line_result</string>
+                            <string>line_result2</string>
+                            <string>column_item</string>
+                            <string>_getitem_</string>
+                            <string>column_id</string>
+                            <string>column_property</string>
+                            <string>None</string>
+                            <string>same_type</string>
+                            <string>str</string>
+                            <string>len</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Listbox_exportCsv</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

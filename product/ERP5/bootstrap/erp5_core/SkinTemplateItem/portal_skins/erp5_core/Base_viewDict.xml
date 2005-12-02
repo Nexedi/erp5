@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+def escape(data):\n
+  """\n
+    Escape &, <, and > in a string of data.\n
+    This is a copy of the xml.sax.saxutils.escape function.\n
+  """\n
+  # must do ampersand first\n
+  data = data.replace("&", "&amp;")\n
+  data = data.replace(">", "&gt;")\n
+  data = data.replace("<", "&lt;")\n
+  return data\n
+\n
+ret = \'<html><body><table width=100%>\\n\'\n
+\n
+dict = context.showDict().items()\n
+dict.sort()\n
+i = 0\n
+for k,v in dict:\n
+  if (i % 2) == 0:\n
+    c = \'#88dddd\'\n
+  else:\n
+    c = \'#dddd88\'\n
+  i += 1\n
+  ret += \'<tr bgcolor="%s"><td >%s</td><td>%s</td></tr>\\n\' % (escape(c), escape(k), escape(repr(v)))\n
+\n
+ret += \'</table></body></html>\\n\'\n
+\n
+return ret\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAsAAAAOAAAAQwAA
+AHPTAAAAZAEAhAAAfQAAZAIAfQEAdAIAdAIAdAMAZAMAgwIAgwAAZAQAgwIAgwAAfQQAdAIAfAQA
+ZAUAgwIAgwAAAWQGAH0FAHh7AHQGAHwEAIMBAERdbQB0BgACgwEAXAIAfQcAfQgAfAUAZAcAFmQG
+AGoCAG8KAAFkCAB9CQBuBwABZAkAfQkAfAUAZAoAN30FAHwBAGQLAHwAAHwJAIMBAHwAAHwHAIMB
+AHwAAHQKAHwIAIMBAIMBAGYDABY3fQEAcVAAV3wBAGQMADd9AQB8AQBTZA0AUygOAAAAc2sAAAAK
+ICAgIEVzY2FwZSAmLCA8LCBhbmQgPiBpbiBhIHN0cmluZyBvZiBkYXRhLgogICAgVGhpcyBpcyBh
+IGNvcHkgb2YgdGhlIHhtbC5zYXguc2F4dXRpbHMuZXNjYXBlIGZ1bmN0aW9uLgogIGMBAAAAAgAA
+AAQAAABDAAAAc1AAAAB0AAB8AABkAQCDAgBkAgBkAwCDAgB9AAB0AAB8AABkAQCDAgBkBABkBQCD
+AgB9AAB0AAB8AABkAQCDAgBkBgBkBwCDAgB9AAB8AABTZAgAUygJAAAAc2sAAAAKICAgIEVzY2Fw
+ZSAmLCA8LCBhbmQgPiBpbiBhIHN0cmluZyBvZiBkYXRhLgogICAgVGhpcyBpcyBhIGNvcHkgb2Yg
+dGhlIHhtbC5zYXguc2F4dXRpbHMuZXNjYXBlIGZ1bmN0aW9uLgogIHMHAAAAcmVwbGFjZXMBAAAA
+JnMFAAAAJmFtcDtzAQAAAD5zBAAAACZndDtzAQAAADxzBAAAACZsdDtOKAIAAABzCQAAAF9nZXRh
+dHRyX3MEAAAAZGF0YSgCAAAAcwQAAABkYXRhcwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzBgAAAGVzY2FwZQEAAABzCAAAAAAGGAEYARgBcx8AAAA8aHRtbD48Ym9k
+eT48dGFibGUgd2lkdGg9MTAwJT4KcwgAAABzaG93RGljdHMFAAAAaXRlbXNzBAAAAHNvcnRpAAAA
+AGkCAAAAcwcAAAAjODhkZGRkcwcAAAAjZGRkZDg4aQEAAABzLgAAADx0ciBiZ2NvbG9yPSIlcyI+
+PHRkID4lczwvdGQ+PHRkPiVzPC90ZD48L3RyPgpzFwAAADwvdGFibGU+PC9ib2R5PjwvaHRtbD4K
+TigLAAAAcwYAAABlc2NhcGVzAwAAAHJldHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwQAAABk
+aWN0cwEAAABpcwkAAABfZ2V0aXRlcl9zAQAAAGtzAQAAAHZzAQAAAGNzBAAAAHJlcHIoCwAAAHMG
+AAAAZXNjYXBlcwMAAAByZXRzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMEAAAAZGljdHMBAAAA
+aXMJAAAAX2dldGl0ZXJfcwEAAABrcwEAAAB2cwEAAABjcwQAAAByZXByKAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcw0AAABCYXNlX3ZpZXdEaWN0AQAAAHMaAAAACQsGAiEBDQEGAQ0AEwER
+AQoCBgEKATMCCgIoAQAAAHMNAAAAQmFzZV92aWV3RGljdCgBAAAAcw0AAABCYXNlX3ZpZXdEaWN0
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_viewDict</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>escape</string>
+                            <string>ret</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>dict</string>
+                            <string>i</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>c</string>
+                            <string>repr</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_viewDict</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

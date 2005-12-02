@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+result = []\n
+\n
+history_dict = context.Base_getWorkflowHistory()\n
+for workflow_id, workflow_history in history_dict.items():\n
+  result.append(\n
+    ReportSection(\n
+      path=context.getPhysicalPath(),\n
+      title=workflow_id,\n
+      level=1,\n
+      form_id=\'Base_viewWorkflowHistory\',\n
+      selection_params={\'workflow_id\': workflow_id},\n
+      listbox_display_mode=\'FlatListMode\')\n
+  )\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAATAAAAQwAA
+AHOsAAAAZAEAawAAbAEAfQEAAWcAAH0CAHQDAHQEAGQCAIMCAIMAAH0FAHh8AHQGAHQDAHwFAGQD
+AIMCAIMAAIMBAERdYgB0BgACgwEAXAIAfQcAfQgAdAMAfAIAZAQAgwIAfAEAZAUAdAMAdAQAZAYA
+gwIAgwAAZAcAfAcAZAgAZAkAZAoAZAsAZAwAaAAABGQNAHwHAAM8ZA4AZA8AgwAGgwEAAXE+AFd8
+AgBTZAAAUygQAAAATigBAAAAcw0AAABSZXBvcnRTZWN0aW9ucxcAAABCYXNlX2dldFdvcmtmbG93
+SGlzdG9yeXMFAAAAaXRlbXNzBgAAAGFwcGVuZHMEAAAAcGF0aHMPAAAAZ2V0UGh5c2ljYWxQYXRo
+cwUAAAB0aXRsZXMFAAAAbGV2ZWxpAQAAAHMHAAAAZm9ybV9pZHMYAAAAQmFzZV92aWV3V29ya2Zs
+b3dIaXN0b3J5cxAAAABzZWxlY3Rpb25fcGFyYW1zcwsAAAB3b3JrZmxvd19pZHMUAAAAbGlzdGJv
+eF9kaXNwbGF5X21vZGVzDAAAAEZsYXRMaXN0TW9kZSgJAAAAcxgAAABQcm9kdWN0cy5FUlA1Rm9y
+bS5SZXBvcnRzDQAAAFJlcG9ydFNlY3Rpb25zBgAAAHJlc3VsdHMJAAAAX2dldGF0dHJfcwcAAABj
+b250ZXh0cwwAAABoaXN0b3J5X2RpY3RzCQAAAF9nZXRpdGVyX3MLAAAAd29ya2Zsb3dfaWRzEAAA
+AHdvcmtmbG93X2hpc3RvcnkoCQAAAHMYAAAAUHJvZHVjdHMuRVJQNUZvcm0uUmVwb3J0cw0AAABS
+ZXBvcnRTZWN0aW9ucwYAAAByZXN1bHRzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMMAAAAaGlz
+dG9yeV9kaWN0cwkAAABfZ2V0aXRlcl9zCwAAAHdvcmtmbG93X2lkcxAAAAB3b3JrZmxvd19oaXN0
+b3J5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyIAAABCYXNlX2dldFdvcmtmbG93SGlz
+dG9yeVNlY3Rpb25MaXN0AQAAAHMUAAAADQEGAhIBGQAWAQkBCQEPARIDHQQoAQAAAHMiAAAAQmFz
+ZV9nZXRXb3JrZmxvd0hpc3RvcnlTZWN0aW9uTGlzdCgBAAAAcyIAAABCYXNlX2dldFdvcmtmbG93
+SGlzdG9yeVNlY3Rpb25MaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9k
+dWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_getWorkflowHistorySectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>history_dict</string>
+                            <string>_getiter_</string>
+                            <string>workflow_id</string>
+                            <string>workflow_history</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getWorkflowHistorySectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

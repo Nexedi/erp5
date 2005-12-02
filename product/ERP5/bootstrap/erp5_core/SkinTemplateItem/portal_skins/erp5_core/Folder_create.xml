@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>REQUEST=context.REQUEST\n
+\n
+# Add an object of the same type as the container\n
+# or if allowed content types is 1 add that type\n
+\n
+try:\n
+  new_object = context.newContent() # We do not reindex in order to prevent conflicts\n
+except IndexError:\n
+  # return only a portal_status_message if the IndexError is raised because\n
+  # there are no elemnts in context.allowedContentTypes()\n
+  if not context.allowedContentTypes():\n
+    return REQUEST.RESPONSE.redirect(\'%s?portal_status_message=You are not allowed to add new content in this context.\' %context.absolute_url())\n
+  else:\n
+    raise\n
+url = new_object.absolute_url()\n
+url = url + \'/view\'\n
+\n
+return REQUEST.RESPONSE.redirect(url)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAAKAAAAQwAA
+AHO+AAAAdAAAdAEAZAEAgwIAfQIAeRYAdAAAdAEAZAIAgwIAgwAAfQMAV25aAAR0BABqCgBvTgAB
+AQEBdAAAdAEAZAMAgwIAgwAADG8wAAF0AAB0AAB8AgBkBACDAgBkBQCDAgBkBgB0AAB0AQBkBwCD
+AgCDAAAWgwEAU3GCAAGCAABuAgABWHQAAHwDAGQHAIMCAIMAAH0FAHwFAGQIABd9BQB0AAB0AAB8
+AgBkBACDAgBkBQCDAgB8BQCDAQBTZAAAUygJAAAATnMHAAAAUkVRVUVTVHMKAAAAbmV3Q29udGVu
+dHMTAAAAYWxsb3dlZENvbnRlbnRUeXBlc3MIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0c1AAAAAl
+cz9wb3J0YWxfc3RhdHVzX21lc3NhZ2U9WW91IGFyZSBub3QgYWxsb3dlZCB0byBhZGQgbmV3IGNv
+bnRlbnQgaW4gdGhpcyBjb250ZXh0LnMMAAAAYWJzb2x1dGVfdXJscwUAAAAvdmlldygGAAAAcwkA
+AABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAFJFUVVFU1RzCgAAAG5ld19vYmplY3RzCgAAAElu
+ZGV4RXJyb3JzAwAAAHVybCgGAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAFJFUVVF
+U1RzCgAAAG5ld19vYmplY3RzCgAAAEluZGV4RXJyb3JzAwAAAHVybCgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMNAAAARm9sZGVyX2NyZWF0ZQEAAABzEgAAAA8FAwEWAQ4DFAEwAggBEgEK
+AigBAAAAcw0AAABGb2xkZXJfY3JlYXRlKAEAAABzDQAAAEZvbGRlcl9jcmVhdGUoAAAAACgAAAAA
+cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Folder_create</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>REQUEST</string>
+                            <string>new_object</string>
+                            <string>IndexError</string>
+                            <string>url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_create</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

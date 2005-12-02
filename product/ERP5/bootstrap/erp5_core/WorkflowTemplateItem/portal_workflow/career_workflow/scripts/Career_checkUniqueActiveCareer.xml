@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+# Get the career object and its parent\n
+career_object = state_change.object\n
+person_object = career_object.aq_parent\n
+\n
+active_careers = []\n
+\n
+# Count the number of opened career\n
+for career in person_object.contentValues(filter={\'portal_type\': \'Career\'}):\n
+  if career.getState() == \'open\':\n
+    active_careers.append(career.getTitleOrId())\n
+\n
+# There is at least one open career, so we can\'t open a new one until the current one is inactive (closed or cancelled)\n
+if len(active_careers) > 0:\n
+  raise ValidationFailed, "Error : current active career (\'" + "\', \'".join(active_careers) + "\') must be inactive"\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAoAAAANAAAAQwAA
+AHPaAAAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQCAHwEAGQDAIMCAH0FAGcAAH0GAHhr
+AHQHAHQCAHwFAGQEAIMCAGQFAGgAAARkBgBkBwADPIMAAYMBAERdQgB9CAB0AgB8CABkCACDAgCD
+AABkCQBqAgBvIwABdAIAfAYAZAoAgwIAdAIAfAgAZAsAgwIAgwAAgwEAAXFZAAFxWQBXdAkAfAYA
+gwEAZAwAagQAbyQAAXwCAGQNAHQCAGQOAGQPAIMCAHwGAIMBABdkEAAXggIAbgEAAWQAAFMoEQAA
+AE4oAQAAAHMQAAAAVmFsaWRhdGlvbkZhaWxlZHMGAAAAb2JqZWN0cwkAAABhcV9wYXJlbnRzDQAA
+AGNvbnRlbnRWYWx1ZXNzBgAAAGZpbHRlcnMLAAAAcG9ydGFsX3R5cGVzBgAAAENhcmVlcnMIAAAA
+Z2V0U3RhdGVzBAAAAG9wZW5zBgAAAGFwcGVuZHMMAAAAZ2V0VGl0bGVPcklkaQAAAABzIAAAAEVy
+cm9yIDogY3VycmVudCBhY3RpdmUgY2FyZWVyICgncwQAAAAnLCAncwQAAABqb2lucxMAAAAnKSBt
+dXN0IGJlIGluYWN0aXZlKAoAAABzHgAAAFByb2R1Y3RzLkRDV29ya2Zsb3cuRENXb3JrZmxvd3MQ
+AAAAVmFsaWRhdGlvbkZhaWxlZHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzDQAAAGNh
+cmVlcl9vYmplY3RzDQAAAHBlcnNvbl9vYmplY3RzDgAAAGFjdGl2ZV9jYXJlZXJzcwkAAABfZ2V0
+aXRlcl9zBgAAAGNhcmVlcnMDAAAAbGVuKAoAAABzDAAAAHN0YXRlX2NoYW5nZXMeAAAAUHJvZHVj
+dHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0
+cl9zDQAAAGNhcmVlcl9vYmplY3RzDQAAAHBlcnNvbl9vYmplY3RzDgAAAGFjdGl2ZV9jYXJlZXJz
+cwkAAABfZ2V0aXRlcl9zBgAAAGNhcmVlcnMDAAAAbGVuKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcx4AAABDYXJlZXJfY2hlY2tVbmlxdWVBY3RpdmVDYXJlZXIBAAAAcxIAAAANAw8BDwIG
+AygABgEcASQDEwEoAQAAAHMeAAAAQ2FyZWVyX2NoZWNrVW5pcXVlQWN0aXZlQ2FyZWVyKAEAAABz
+HgAAAENhcmVlcl9jaGVja1VuaXF1ZUFjdGl2ZUNhcmVlcigAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_workflow/career_workflow/scripts/Career_checkUniqueActiveCareer</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>career_object</string>
+                            <string>person_object</string>
+                            <string>active_careers</string>
+                            <string>_getiter_</string>
+                            <string>career</string>
+                            <string>len</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Career_checkUniqueActiveCareer</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

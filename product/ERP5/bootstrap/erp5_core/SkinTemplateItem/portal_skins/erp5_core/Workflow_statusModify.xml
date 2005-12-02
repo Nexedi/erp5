@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.Formulator.Errors import ValidationError, FormValidationError\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+request=context.REQUEST\n
+\n
+try:\n
+  # Validate the form\n
+  form = getattr(context,dialog_id)\n
+  form.validate_all_to_request(request)\n
+  kw = {}\n
+  for f in form.get_fields():\n
+    k = f.id\n
+    v = getattr(request,k,None)\n
+    if v is not None:\n
+      k = k[3:]\n
+      kw[k] = v\n
+  context.portal_workflow.doActionFor(\n
+      context,\n
+      kw[\'workflow_action\'],\n
+      **kw)\n
+\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
+except ValueError, value_error:\n
+  # Pack errors into the request\n
+  redirect_url = \'%s/%s?%s%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=\',value_error\n
+                                  )\n
+\n
+  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+\n
+else:\n
+  # We will check if there\'s an error_message\n
+  history_data = None\n
+  try : \n
+    history_data = context.portal_workflow.getInfoFor(ob=context.getObject(), name=\'history\')\n
+  except AttributeError : \n
+    pass\n
+  redirect_url = None\n
+  if history_data:\n
+    last_history_data = history_data[-1]\n
+    error_message = last_history_data.get(\'error_message\')\n
+    if error_message != None and error_message != \'\':\n
+      redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=%s\' % error_message\n
+                                  )\n
+      pass\n
+  if redirect_url is None:\n
+    redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=Status+changed.\'\n
+                                  )\n
+\n
+  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAB4AAAAUAAAAQwAA
+AHPOAgAAZAEAawAAbAEAfQMAbAIAfQQAAWQCAGsDAGwEAH0GAAF0BQB0BgBkAwCDAgB9CQB51AB0
+CAB0BgB8AQCDAgB9CwB0BQB8CwBkBACDAgB8CQCDAQABaAAAfQwAeHcAdAwAdAUAfAsAZAUAgwIA
+gwAAgwEARF1dAH0OAHQFAHwOAGQGAIMCAH0PAHQIAHwJAHwPAHQPAIMDAH0RAHwRAHQPAGoJAG8p
+AAF0EQB8DwBkBwBkAACFAgCDAgB9DwB8EQB0EgB8DACDAQB8DwA8cXMAAXFzAFd0EwB0BQB0BQB0
+BgBkCACDAgBkCQCDAgB0BgB0EQB8DABkCgCDAgB8DACNAwABV26lAAR8BABqCgBvPgABAX0VAAF0
+BQB8CwBkCwCDAgB8FQCDAQB9FgB0BQB8CQBkDACDAgBkDQB8FgCDAgABfAsAfAkAgwEAU258AQEE
+dBYAagoAb1AAAQF9GAABZA4AdAUAdAYAZA8AgwIAgwAAfAAAZBAAfBgAZgQAFn0ZAHQFAHQRAHQF
+AHQGAGQDAIMCAGQRAIMCAGQSAIMCAHwZAIMBAAFuIQEBWHQPAH0aAHk3AHQFAHQFAHQGAGQIAIMC
+AGQTAIMCAGQUAHQFAHQGAGQVAIMCAIMAAGQWAGQXAIMAAn0aAFduEwAEdBsAagoAbwcAAQEBAW4C
+AAFYdA8AfRkAfBoAb2oAAXQRAHwaAGQYAAuDAgB9HAB0BQB8HABkGQCDAgBkGgCDAQB9HQB8HQB0
+DwBqAwBvCgABfB0AZBsAagMAbycAAWQcAHQFAHQGAGQPAIMCAIMAAHwAAGQdAHwdABZmAwAWfRkA
+cXUCAW4BAAF8GQB0DwBqCABvIwABZBwAdAUAdAYAZA8AgwIAgwAAfAAAZB4AZgMAFn0ZAG4BAAF0
+BQB0EQB0BQB0BgBkAwCDAgBkEQCDAgBkEgCDAgB8GQCDAQABZAAAUygfAAAATigCAAAAcw8AAABW
+YWxpZGF0aW9uRXJyb3JzEwAAAEZvcm1WYWxpZGF0aW9uRXJyb3IoAQAAAHMQAAAAVmFsaWRhdGlv
+bkZhaWxlZHMHAAAAUkVRVUVTVHMXAAAAdmFsaWRhdGVfYWxsX3RvX3JlcXVlc3RzCgAAAGdldF9m
+aWVsZHNzAgAAAGlkaQMAAABzDwAAAHBvcnRhbF93b3JrZmxvd3MLAAAAZG9BY3Rpb25Gb3JzDwAA
+AHdvcmtmbG93X2FjdGlvbnMLAAAARXJyb3JGaWVsZHNzAwAAAHNldHMMAAAAZmllbGRfZXJyb3Jz
+cwoAAAAlcy8lcz8lcyVzcwwAAABhYnNvbHV0ZV91cmxzFgAAAHBvcnRhbF9zdGF0dXNfbWVzc2Fn
+ZT1zCAAAAFJFU1BPTlNFcwgAAAByZWRpcmVjdHMKAAAAZ2V0SW5mb0ZvcnMCAAAAb2JzCQAAAGdl
+dE9iamVjdHMEAAAAbmFtZXMHAAAAaGlzdG9yeWkBAAAAcwMAAABnZXRzDQAAAGVycm9yX21lc3Nh
+Z2VzAAAAAHMIAAAAJXMvJXM/JXNzGAAAAHBvcnRhbF9zdGF0dXNfbWVzc2FnZT0lc3MlAAAAcG9y
+dGFsX3N0YXR1c19tZXNzYWdlPVN0YXR1cytjaGFuZ2VkLigeAAAAcxoAAABQcm9kdWN0cy5Gb3Jt
+dWxhdG9yLkVycm9yc3MPAAAAVmFsaWRhdGlvbkVycm9ycxMAAABGb3JtVmFsaWRhdGlvbkVycm9y
+cx4AAABQcm9kdWN0cy5EQ1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRz
+CQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMHAAAAZ2V0YXR0cnMJAAAAZGlh
+bG9nX2lkcwQAAABmb3JtcwIAAABrd3MJAAAAX2dldGl0ZXJfcwEAAABmcwEAAABrcwQAAABOb25l
+cwEAAAB2cwkAAABfZ2V0aXRlbV9zBwAAAF93cml0ZV9zBwAAAF9hcHBseV9zEQAAAHZhbGlkYXRp
+b25fZXJyb3JzcwwAAABmaWVsZF9lcnJvcnNzCgAAAFZhbHVlRXJyb3JzCwAAAHZhbHVlX2Vycm9y
+cwcAAABmb3JtX2lkcwwAAAByZWRpcmVjdF91cmxzDAAAAGhpc3RvcnlfZGF0YXMOAAAAQXR0cmli
+dXRlRXJyb3JzEQAAAGxhc3RfaGlzdG9yeV9kYXRhcw0AAABlcnJvcl9tZXNzYWdlKB4AAABzBwAA
+AGZvcm1faWRzCQAAAGRpYWxvZ19pZHMaAAAAUHJvZHVjdHMuRm9ybXVsYXRvci5FcnJvcnNzDwAA
+AFZhbGlkYXRpb25FcnJvcnMTAAAARm9ybVZhbGlkYXRpb25FcnJvcnMeAAAAUHJvZHVjdHMuRENX
+b3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0cl9zBwAA
+AGNvbnRleHRzBwAAAHJlcXVlc3RzBwAAAGdldGF0dHJzBAAAAGZvcm1zAgAAAGt3cwkAAABfZ2V0
+aXRlcl9zAQAAAGZzAQAAAGtzBAAAAE5vbmVzAQAAAHZzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRl
+X3MHAAAAX2FwcGx5X3MRAAAAdmFsaWRhdGlvbl9lcnJvcnNzDAAAAGZpZWxkX2Vycm9yc3MKAAAA
+VmFsdWVFcnJvcnMLAAAAdmFsdWVfZXJyb3JzDAAAAHJlZGlyZWN0X3VybHMMAAAAaGlzdG9yeV9k
+YXRhcw4AAABBdHRyaWJ1dGVFcnJvcnMRAAAAbGFzdF9oaXN0b3J5X2RhdGFzDQAAAGVycm9yX21l
+c3NhZ2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFQAAAFdvcmtmbG93X3N0YXR1c01v
+ZGlmeQEAAABzUgAAABMBDQIPAgMCEgEQAQYBGQAGAQ8BEgENARUBIQEPAQYBCQELAhACGAETAQ4B
+EAIYARMDIQQGAQMBNwEOAQUBBgEHARABFQEaARgBCwIIAQ0BLAQoAQAAAHMVAAAAV29ya2Zsb3df
+c3RhdHVzTW9kaWZ5KAEAAABzFQAAAFdvcmtmbG93X3N0YXR1c01vZGlmeSgAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Workflow_statusModify</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, dialog_id</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>dialog_id</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>kw</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
+                            <string>k</string>
+                            <string>None</string>
+                            <string>v</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>ValueError</string>
+                            <string>value_error</string>
+                            <string>redirect_url</string>
+                            <string>history_data</string>
+                            <string>AttributeError</string>
+                            <string>last_history_data</string>
+                            <string>error_message</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Workflow_statusModify</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

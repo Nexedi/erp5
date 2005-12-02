@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+  <head>\n
+    <title tal:content="template/title">The title</title>\n
+  </head>\n
+  <body>\n
+    \n
+    <img src="logo.png" />\n
+\n
+    <h2 align="center"><span tal:condition="template/title"\n
+              tal:replace="template/title">optional template id</span></h2>\n
+   \n
+    <table width="100%" border="1">\n
+     <tr>\n
+          <th>Nom</th>\n
+          <th>Date Naissance</th>\n
+          <th>Nationalit\xc3\xa9</th>\n
+          <th>Sexe</th>\n
+          <th>Comp\xc3\xa9tences</th>\n
+          <th>Affectation</th>\n
+          <th>Arriv\xc3\xa9e</th>\n
+          <th>D\xc3\xa9part</th>\n
+          <th>Description</th>\n
+     </tr>\n
+      <tr tal:repeat="item python:here.Base_sortObjectListLikeSQL(here.Person_zGetPersonCareerLog(),((\'start_date\',\'ASC\'),))">\n
+         <span tal:define="my_assignment python:item.getObject();\n
+                                   my_person python:my_assignment.aq_parent"\n
+                    >\n
+          <td valign="top"><a tal:content="my_person/getTitle" \n
+                       tal:attributes="href python:\'%s/Person_viewProfile\' % my_person.getRelativeUrl()" /></td>\n
+          <td valign="top" ><font size="-2" tal:content="my_assignment/getBirthday"/></td>\n
+          <td valign="top" ><font size="-2" tal:content="my_assignment/getDefaultNationality"/></td>\n
+          <td valign="top" ><font size="-2" tal:content="my_assignment/getGender"/></td>\n
+          <td valign="top"><font size="-2"><ul><li tal:repeat="skill my_assignment/getSkillList"\n
+                            tal:content="skill"></li></ul></font></td>\n
+          <td valign="top"><a tal:content="item/getTitle" tal:attributes="href item/getPath"/></td>\n
+          <td valign="top"><font size="-2" tal:content="my_assignment/getStartDate"/></td>\n
+          <td valign="top"><font size="-2" tal:content="my_assignment/getStopDate"/></td>\n
+          <td valign="top"><font size="-2" tal:content="item/Description"/></td>\n
+        </span>\n
+      </tr>\n
+    </table>\n
+  </body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PersonModule_viewCareerLogAsHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

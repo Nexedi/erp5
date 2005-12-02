@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># category_order : list of base_categories we want to use to generate the group id\n
+# kw : keys should be base categories,\n
+#      values should be value of corresponding relative urls (obtained by getBaseCategory())\n
+#\n
+# Example call : context.ERP5TypeSecurity_asGroupId(category_order=(\'site\', \'group\', \'function\'),\n
+#                    site=\'france/lille\', group=\'nexedi\', function=\'accounting/accountant\')\n
+# This will generate a string like \'LIL_NXD_ACT\' where "LIL", "NXD" and "ACT" are the codification\n
+#   of respecively "france/lille", "nexedi" and "accounting/accountant" categories\n
+\n
+code_list = []\n
+\n
+# sort the category list lexicographically\n
+# this prevents us to choose the exact order we want,\n
+# but also prevents some human mistake to f*ck everything up by creating site_function instead of function_site\n
+category_order.sort()\n
+\n
+for base_category in category_order:\n
+  category        = kw[base_category]\n
+  category_path   = \'%s/%s\' % (base_category, category)\n
+  category_object = context.portal_categories.getCategoryValue(category_path)\n
+  if category_object in (None, \'\'):\n
+    raise "SecurityRoleDefinitionError", "Category \'%s\' doesn\'t exist" % (category_path)\n
+  category_code   = category_object.getCodification() or category_object.getId()\n
+  code_list.append(category_code)\n
+\n
+return \'_\'.join(code_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAA0AAAAMAAAASwAA
+AHPdAAAAZwAAfQIAdAEAfAAAZAEAgwIAgwAAAXitAHQDAHwAAIMBAERdnwB9BQB0BQB8AQB8BQCD
+AgB9BwBkAgB8BQB8BwBmAgAWfQgAdAEAdAEAdAkAZAMAgwIAZAQAgwIAfAgAgwEAfQoAfAoAdAsA
+ZAUAZgIAagYAbxEAAWQGAGQHAHwIABaCAgBuAQABdAEAfAoAZAgAgwIAgwAAcBAAAXQBAHwKAGQJ
+AIMCAIMAAH0MAHQBAHwCAGQKAIMCAHwMAIMBAAFxIwBXdAEAZAsAZAwAgwIAfAIAgwEAU2QAAFMo
+DQAAAE5zBAAAAHNvcnRzBQAAACVzLyVzcxEAAABwb3J0YWxfY2F0ZWdvcmllc3MQAAAAZ2V0Q2F0
+ZWdvcnlWYWx1ZXMAAAAAcxsAAABTZWN1cml0eVJvbGVEZWZpbml0aW9uRXJyb3JzGwAAAENhdGVn
+b3J5ICclcycgZG9lc24ndCBleGlzdHMPAAAAZ2V0Q29kaWZpY2F0aW9ucwUAAABnZXRJZHMGAAAA
+YXBwZW5kcwEAAABfcwQAAABqb2luKA0AAABzCQAAAGNvZGVfbGlzdHMJAAAAX2dldGF0dHJfcw4A
+AABjYXRlZ29yeV9vcmRlcnMJAAAAX2dldGl0ZXJfcw0AAABiYXNlX2NhdGVnb3J5cwkAAABfZ2V0
+aXRlbV9zAgAAAGt3cwgAAABjYXRlZ29yeXMNAAAAY2F0ZWdvcnlfcGF0aHMHAAAAY29udGV4dHMP
+AAAAY2F0ZWdvcnlfb2JqZWN0cwQAAABOb25lcw0AAABjYXRlZ29yeV9jb2RlKA0AAABzDgAAAGNh
+dGVnb3J5X29yZGVycwIAAABrd3MJAAAAY29kZV9saXN0cwkAAABfZ2V0YXR0cl9zCQAAAF9nZXRp
+dGVyX3MNAAAAYmFzZV9jYXRlZ29yeXMJAAAAX2dldGl0ZW1fcwgAAABjYXRlZ29yeXMNAAAAY2F0
+ZWdvcnlfcGF0aHMHAAAAY29udGV4dHMPAAAAY2F0ZWdvcnlfb2JqZWN0cwQAAABOb25lcw0AAABj
+YXRlZ29yeV9jb2RlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxoAAABFUlA1VHlwZV9h
+c1NlY3VyaXR5R3JvdXBJZAEAAABzGAAAAAAJCQUNAg0ABgEPARABHgETAREBKAEUAigBAAAAcxoA
+AABFUlA1VHlwZV9hc1NlY3VyaXR5R3JvdXBJZCgBAAAAcxoAAABFUlA1VHlwZV9hc1NlY3VyaXR5
+R3JvdXBJZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAA
+AAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Type_asSecurityGroupId</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>category_order, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>category_order</string>
+                            <string>kw</string>
+                            <string>code_list</string>
+                            <string>_getattr_</string>
+                            <string>_getiter_</string>
+                            <string>base_category</string>
+                            <string>_getitem_</string>
+                            <string>category</string>
+                            <string>category_path</string>
+                            <string>context</string>
+                            <string>category_object</string>
+                            <string>None</string>
+                            <string>category_code</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Type_asSecurityGroupId</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

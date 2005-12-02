@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>result = getattr(context, context.REQUEST.previous_form_id, None).get_field( context.REQUEST.field_id ).get_value(\'columns\')\n
+\n
+if result in [ [], (), None, \'\']:\n
+  result = getattr(context, \'Base_viewRelatedObjectList\', None).get_field( \'listbox\' ).get_value(\'columns\')\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAANAAAAQwAA
+AHOpAAAAdAAAdAAAdAEAdAIAdAAAdAAAdAIAZAEAgwIAZAIAgwIAdAMAgwMAZAMAgwIAdAAAdAAA
+dAIAZAEAgwIAZAQAgwIAgwEAZAUAgwIAZAYAgwEAfQQAfAQAZwAAZgAAdAMAZAcAZwQAagYAbzQA
+AXQAAHQAAHQBAHQCAGQIAHQDAIMDAGQDAIMCAGQJAIMBAGQFAIMCAGQGAIMBAH0EAG4BAAF8BABT
+ZAAAUygKAAAATnMHAAAAUkVRVUVTVHMQAAAAcHJldmlvdXNfZm9ybV9pZHMJAAAAZ2V0X2ZpZWxk
+cwgAAABmaWVsZF9pZHMJAAAAZ2V0X3ZhbHVlcwcAAABjb2x1bW5zcwAAAABzGgAAAEJhc2Vfdmll
+d1JlbGF0ZWRPYmplY3RMaXN0cwcAAABsaXN0Ym94KAUAAABzCQAAAF9nZXRhdHRyX3MHAAAAZ2V0
+YXR0cnMHAAAAY29udGV4dHMEAAAATm9uZXMGAAAAcmVzdWx0KAUAAABzCQAAAF9nZXRhdHRyX3MH
+AAAAZ2V0YXR0cnMHAAAAY29udGV4dHMEAAAATm9uZXMGAAAAcmVzdWx0KAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcx8AAABCYXNlX2dldFJlbGF0ZWRPYmplY3RDb2x1bW5MaXN0AQAAAHMG
+AAAAVAIZATQCKAEAAABzHwAAAEJhc2VfZ2V0UmVsYXRlZE9iamVjdENvbHVtbkxpc3QoAQAAAHMf
+AAAAQmFzZV9nZXRSZWxhdGVkT2JqZWN0Q29sdW1uTGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_getRelatedObjectColumnList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>result</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getRelatedObjectColumnList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

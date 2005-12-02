@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>import string\n
+if module_select :\n
+  Base_doAction = module_select.split()\n
+  doAction0 = Base_doAction[0]\n
+  doAction0 += \'/view\'\n
+  request = context.REQUEST\n
+  \n
+  return request.RESPONSE.redirect(doAction0)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGQBAGQCAIQCAFoBAGQAAFMoAwAAAE5zAAAAAGMCAAAA
+CQAAAAUAAABDAAAAc24AAABkAABrAAB9AgB8AABvWgABdAIAfAAAZAEAgwIAgwAAfQQAdAQAfAQA
+ZAIAgwIAfQYAfAYAZAMAN30GAHQCAHQGAGQEAIMCAH0IAHQCAHQCAHwIAGQFAIMCAGQGAIMCAHwG
+AIMBAFNuAQABZAAAUygHAAAATnMFAAAAc3BsaXRpAAAAAHMFAAAAL3ZpZXdzBwAAAFJFUVVFU1Rz
+CAAAAFJFU1BPTlNFcwgAAAByZWRpcmVjdCgIAAAAcwYAAABzdHJpbmdzDQAAAG1vZHVsZV9zZWxl
+Y3RzCQAAAF9nZXRhdHRyX3MNAAAAQmFzZV9kb0FjdGlvbnMJAAAAX2dldGl0ZW1fcwkAAABkb0Fj
+dGlvbjBzBwAAAGNvbnRleHRzBwAAAHJlcXVlc3QoCQAAAHMNAAAAbW9kdWxlX3NlbGVjdHMHAAAA
+Zm9ybV9pZHMGAAAAc3RyaW5ncwkAAABfZ2V0YXR0cl9zDQAAAEJhc2VfZG9BY3Rpb25zCQAAAF9n
+ZXRpdGVtX3MJAAAAZG9BY3Rpb24wcwcAAABjb250ZXh0cwcAAAByZXF1ZXN0KAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcw0AAABCYXNlX2RvTW9kdWxlAQAAAHMMAAAACQEHARIBDwEKAQ8C
+KAIAAABzBAAAAE5vbmVzDQAAAEJhc2VfZG9Nb2R1bGUoAgAAAHMEAAAATm9uZXMNAAAAQmFzZV9k
+b01vZHVsZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAA
+AAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_doModule</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>module_select=None, form_id=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>module_select</string>
+                            <string>form_id</string>
+                            <string>string</string>
+                            <string>_getattr_</string>
+                            <string>Base_doAction</string>
+                            <string>_getitem_</string>
+                            <string>doAction0</string>
+<string>context</string>
+                            <string>request</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_doModule</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>from_table_list</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>group_by_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>ignore_variation</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>input_simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_input</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_output</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_simulation</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>order_by_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>output_simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_domain</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_report</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>standardize</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>ignore_variation</string>
+<string>standardize</string>
+<string>omit_simulation</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>input_simulation_state</string>
+<string>output_simulation_state</string>
+<string>group_by_expression</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>from_table_list:list\r\n
+where_expression\r\n
+order_by_expression\r\n
+selection_domain\r\n
+selection_report\r\n
+ignore_variation\r\n
+standardize\r\n
+omit_simulation\r\n
+omit_input\r\n
+omit_output\r\n
+input_simulation_state:list\r\n
+output_simulation_state:list\r\n
+group_by_expression</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Resource_zGetInventory</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  SUM(stock.quantity) AS inventory,\n
+  SUM(stock.quantity) AS total_quantity,\n
+  SUM(stock.price * stock.quantity) AS total_price,\n
+  AVG(stock.price) AS average_price,\n
+  COUNT(DISTINCT node.title) AS node_title,\n
+  COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
+  COUNT(DISTINCT section.title) AS section_title,\n
+  COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
+  COUNT(DISTINCT resource.title) AS resource_title,\n
+  COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
+  COUNT(DISTINCT stock.variation_text) AS variation_text,\n
+  MAX(stock.resource_uid) AS resource_uid,\n
+  COUNT(DISTINCT stock.uid) AS stock_uid,\n
+  MAX(stock.date) AS date\n
+\n
+FROM\n
+  <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+  , catalog as node, catalog as resource, movement as inventory_movement\n
+  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+\n
+WHERE\n
+  1 = 1\n
+<dtml-if where_expression>\n
+  AND <dtml-var where_expression>\n
+</dtml-if>\n
+\n
+  AND node.uid = stock.node_uid\n
+  AND resource.uid = stock.resource_uid\n
+  AND inventory_movement.uid = stock.uid\n
+\n
+<dtml-comment>\n
+XXX Do we want or need this ?\n
+  AND  inventory_movement.is_accountable = 1\n
+XXX How to deal with standardize ?\n
+</dtml-comment>\n
+\n
+<dtml-if omit_simulation>\n
+  AND catalog.portal_type != "Simulation Movement"\n
+</dtml-if>\n
+<dtml-if omit_input>\n
+  AND stock.quantity < 0\n
+  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL )\n
+</dtml-if>\n
+<dtml-if omit_output>\n
+  AND stock.quantity > 0\n
+  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL )\n
+</dtml-if>\n
+\n
+<dtml-if input_simulation_state>\n
+  <dtml-if output_simulation_state>\n
+    <dtml-if "input_simulation_state == output_simulation_state">\n
+      AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
+    <dtml-else>\n
+      AND ((stock.quantity>0\n
+        AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>))\n
+      OR (stock.quantity<0\n
+        AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)))\n
+    </dtml-if>\n
+  <dtml-else>\n
+    AND stock.quantity>0\n
+    AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
+  </dtml-if>\n
+<dtml-elif output_simulation_state>\n
+  AND stock.quantity<0\n
+  AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
+</dtml-if>\n
+\n
+<dtml-if selection_domain>\n
+  AND <dtml-var "selection_domain.asSqlExpression()">\n
+</dtml-if>\n
+<dtml-if selection_report>\n
+  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
+</dtml-if>\n
+<dtml-if group_by_expression>\n
+GROUP BY <dtml-var group_by_expression>\n
+</dtml-if>\n
+<dtml-if order_by_expression>\n
+ORDER BY\n
+  <dtml-var order_by_expression>\n
+</dtml-if>\n
+\n
+<dtml-comment>\n
+XXX still have to sort this one out\n
+<dtml-unless ignore_variation>\n
+GROUP BY\n
+  stock.resource_uid, stock.variation_text\n
+</dtml-unless>\n
+</dtml-comment>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  SUM(stock.quantity) AS inventory,\n
+  SUM(stock.quantity) AS total_quantity,\n
+  SUM(stock.price * stock.quantity) AS total_price,\n
+  AVG(stock.price) AS average_price,\n
+  COUNT(DISTINCT node.title) AS node_title,\n
+  COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
+  COUNT(DISTINCT section.title) AS section_title,\n
+  COUNT(DISTINCT section.relative_url) AS section_relative_url,\n
+  COUNT(DISTINCT resource.title) AS resource_title,\n
+  COUNT(DISTINCT resource.relative_url) AS resource_relative_url,\n
+  COUNT(DISTINCT stock.variation_text) AS variation_text,\n
+  MAX(stock.resource_uid) AS resource_uid,\n
+  COUNT(DISTINCT stock.uid) AS stock_uid,\n
+  MAX(stock.date) AS date\n
+\n
+FROM\n
+  <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+  , catalog as node, catalog as resource, movement as inventory_movement\n
+  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+\n
+WHERE\n
+  1 = 1\n
+<dtml-if where_expression>\n
+  AND <dtml-var where_expression>\n
+</dtml-if>\n
+\n
+  AND node.uid = stock.node_uid\n
+  AND resource.uid = stock.resource_uid\n
+  AND inventory_movement.uid = stock.uid\n
+\n
+<dtml-comment>\n
+XXX Do we want or need this ?\n
+  AND  inventory_movement.is_accountable = 1\n
+XXX How to deal with standardize ?\n
+</dtml-comment>\n
+\n
+<dtml-if omit_simulation>\n
+  AND catalog.portal_type != "Simulation Movement"\n
+</dtml-if>\n
+<dtml-if omit_input>\n
+  AND stock.quantity < 0\n
+  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL )\n
+</dtml-if>\n
+<dtml-if omit_output>\n
+  AND stock.quantity > 0\n
+  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL )\n
+</dtml-if>\n
+\n
+<dtml-if input_simulation_state>\n
+  <dtml-if output_simulation_state>\n
+    <dtml-if "input_simulation_state == output_simulation_state">\n
+      AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
+    <dtml-else>\n
+      AND ((stock.quantity>0\n
+        AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>))\n
+      OR (stock.quantity<0\n
+        AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)))\n
+    </dtml-if>\n
+  <dtml-else>\n
+    AND stock.quantity>0\n
+    AND (<dtml-in input_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
+  </dtml-if>\n
+<dtml-elif output_simulation_state>\n
+  AND stock.quantity<0\n
+  AND (<dtml-in output_simulation_state>stock.simulation_state = \'<dtml-var sequence-item>\'<dtml-unless sequence-end> OR </dtml-unless></dtml-in>)\n
+</dtml-if>\n
+\n
+<dtml-if selection_domain>\n
+  AND <dtml-var "selection_domain.asSqlExpression()">\n
+</dtml-if>\n
+<dtml-if selection_report>\n
+  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
+</dtml-if>\n
+<dtml-if group_by_expression>\n
+GROUP BY <dtml-var group_by_expression>\n
+</dtml-if>\n
+<dtml-if order_by_expression>\n
+ORDER BY\n
+  <dtml-var order_by_expression>\n
+</dtml-if>\n
+\n
+<dtml-comment>\n
+XXX still have to sort this one out\n
+<dtml-unless ignore_variation>\n
+GROUP BY\n
+  stock.resource_uid, stock.variation_text\n
+</dtml-unless>\n
+</dtml-comment>
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

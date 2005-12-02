@@ -1,0 +1,10 @@
+<site_property>
+ <property>
+  <id>portal_assignment_base_category_list</id>
+  <type>lines</type>
+  <value>
+   <item>function</item>
+   <item>group</item>
+  </value>
+ </property>
+</site_property>

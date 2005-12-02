@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from string import zfill\n
+request = context.REQUEST\n
+\n
+from string import zfill\n
+\n
+for k in kw.keys():\n
+  v = kw[k]\n
+  if k == \'listbox\':\n
+    listbox = {}\n
+    if v is not None:\n
+      i = 1\n
+      for line in v:\n
+        if line.has_key(\'listbox_key\'):\n
+          key = \'%s\' % line[\'listbox_key\']\n
+        else:\n
+          key = str(zfill(i,3))\n
+        listbox[key] = line\n
+        i+=1\n
+      request.set(\'listbox\',listbox)\n
+  else:\n
+    request.set(\'my_%s\' % k, v)\n
+    request.set(\'%s\' % k, v)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABEAAAASAAAASwAA
+AHNKAQAAZAEAawAAbAEAfQIAAXQCAHQDAGQCAIMCAH0FAGQBAGsAAGwBAH0CAAF4GgF0BQB0AgB8
+AABkAwCDAgCDAACDAQBEXQABfQcAdAgAfAAAfAcAgwIAfQkAfAcAZAQAagIAb6oAAWgAAH0KAHwJ
+AHQLAGoJAG+TAAFkBQB9DAB4cAB0BQB8CQCDAQBEXWIAfQ0AdAIAfA0AZAYAgwIAZAcAgwEAbxcA
+AWQIAHQIAHwNAGQHAIMCABZ9DgBuFgABdA8AfAIAfAwAZAkAgwIAgwEAfQ4AfA0AdBAAfAoAgwEA
+fA4APHwMAGQFADd9DABxigBXdAIAfAUAZAoAgwIAZAQAfAoAgwIAAXFCAQFxQgABdAIAfAUAZAoA
+gwIAZAsAfAcAFnwJAIMCAAF0AgB8BQBkCgCDAgBkCAB8BwAWfAkAgwIAAXFCAFdkAABTKAwAAABO
+KAEAAABzBQAAAHpmaWxscwcAAABSRVFVRVNUcwQAAABrZXlzcwcAAABsaXN0Ym94aQEAAABzBwAA
+AGhhc19rZXlzCwAAAGxpc3Rib3hfa2V5cwIAAAAlc2kDAAAAcwMAAABzZXRzBQAAAG15XyVzKBEA
+AABzBgAAAHN0cmluZ3MFAAAAemZpbGxzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVx
+dWVzdHMJAAAAX2dldGl0ZXJfcwIAAABrd3MBAAAAa3MJAAAAX2dldGl0ZW1fcwEAAAB2cwcAAABs
+aXN0Ym94cwQAAABOb25lcwEAAABpcwQAAABsaW5lcwMAAABrZXlzAwAAAHN0cnMHAAAAX3dyaXRl
+XygRAAAAcwIAAABrd3MGAAAAc3RyaW5ncwUAAAB6ZmlsbHMJAAAAX2dldGF0dHJfcwcAAABjb250
+ZXh0cwcAAAByZXF1ZXN0cwkAAABfZ2V0aXRlcl9zAQAAAGtzCQAAAF9nZXRpdGVtX3MBAAAAdnMH
+AAAAbGlzdGJveHMEAAAATm9uZXMBAAAAaXMEAAAAbGluZXMDAAAAa2V5cwMAAABzdHJzBwAAAF93
+cml0ZV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFQAAAEJhc2VfdXBkYXRlRGlhbG9n
+Rm9ybQEAAABzJgAAAA0BDwINAhkABgEPAQ0BBgENAQYBDQAJARMBFwIVARABEQEeAhoBKAEAAABz
+FQAAAEJhc2VfdXBkYXRlRGlhbG9nRm9ybSgBAAAAcxUAAABCYXNlX3VwZGF0ZURpYWxvZ0Zvcm0o
+AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_updateDialogForm</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>request</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>_getitem_</string>
+                            <string>v</string>
+                            <string>listbox</string>
+                            <string>None</string>
+                            <string>i</string>
+                            <string>line</string>
+                            <string>key</string>
+                            <string>str</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_updateDialogForm</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

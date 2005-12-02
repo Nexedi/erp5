@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>for local_role in context.get_local_roles():\n
+  context.manage_delLocalRoles((local_role[0],))\n
+\n
+for subobj in context.objectValues():\n
+  subobj.Base_recursiveResetLocalRoles()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAALAAAAQwAA
+AHN5AAAAeD8AdAAAdAEAdAIAZAEAgwIAgwAAgwEARF0lAH0DAHQBAHQCAGQCAIMCAHQEAHwDAGQD
+AIMCAGYBAIMBAAFxGQBXeDAAdAAAdAEAdAIAZAQAgwIAgwAAgwEARF0WAH0FAHQBAHwFAGQFAIMC
+AIMAAAFxWwBXZAAAUygGAAAATnMPAAAAZ2V0X2xvY2FsX3JvbGVzcxQAAABtYW5hZ2VfZGVsTG9j
+YWxSb2xlc2kAAAAAcwwAAABvYmplY3RWYWx1ZXNzHQAAAEJhc2VfcmVjdXJzaXZlUmVzZXRMb2Nh
+bFJvbGVzKAYAAABzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwoAAABs
+b2NhbF9yb2xlcwkAAABfZ2V0aXRlbV9zBgAAAHN1Ym9iaigGAAAAcwkAAABfZ2V0aXRlcl9zCQAA
+AF9nZXRhdHRyX3MHAAAAY29udGV4dHMKAAAAbG9jYWxfcm9sZXMJAAAAX2dldGl0ZW1fcwYAAABz
+dWJvYmooAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzHQAAAEJhc2VfcmVjdXJzaXZlUmVz
+ZXRMb2NhbFJvbGVzAQAAAHMKAAAAGQAJASACGQAJASgBAAAAcx0AAABCYXNlX3JlY3Vyc2l2ZVJl
+c2V0TG9jYWxSb2xlcygBAAAAcx0AAABCYXNlX3JlY3Vyc2l2ZVJlc2V0TG9jYWxSb2xlcygAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_recursiveResetLocalRoles</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>local_role</string>
+                            <string>_getitem_</string>
+                            <string>subobj</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_recursiveResetLocalRoles</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

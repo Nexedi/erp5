@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from ZODB.POSException import ConflictError\n
+selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
+uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+\n
+error = context.portal_selections.selectionHasChanged(md5_object_uid_list,uids)\n
+\n
+REQUEST=context.REQUEST\n
+qs = \'\'\n
+ret_url = \'\'\n
+\n
+def Object_hasRelation(object):\n
+  # Check if there is some related objets.\n
+  result = 0\n
+  for o in object.getIndexableChildValueList():\n
+    for related in object.portal_categories.getRelatedValueList(object):\n
+      if related.getRelativeUrl().startswith(object.getRelativeUrl()):\n
+        continue\n
+      elif related.getRelativeUrl().startswith(\'portal_simulation\') :\n
+        continue\n
+      else:\n
+        result = 1\n
+        break\n
+  return result\n
+\n
+ret_url = context.absolute_url() + \'/\' + form_id\n
+if error:\n
+  qs = \'?portal_status_message=Sorry+your+selection+has+changed\'\n
+elif uids is not None:\n
+  # Check if there is some related objets.\n
+  object_used = 0\n
+  for uid in uids:\n
+    object = context.portal_catalog(uid=uid)[0].getObject()\n
+    if Object_hasRelation(object):\n
+      object_used += 1\n
+  if object_used>0:\n
+      if object_used == 1:   \n
+        qs = \'?portal_status_message=Sorry,+1+Item+Is+In+Use.\'\n
+      else:\n
+        qs = \'?portal_status_message=Sorry,+%s+Items+Are+In+Use.\' % repr(object_used)\n
+  else:\n
+    try : \n
+      context.manage_delObjects(uids=uids, REQUEST=REQUEST)\n
+      qs = \'?portal_status_message=Deleted.\'\n
+    except ConflictError : raise\n
+    except Exception, message : \n
+      qs = \'?portal_status_message=%s\' % message\n
+else:\n
+  qs = \'?portal_status_message=Please+select+one+or+more+items+first.\'\n
+\n
+return REQUEST.RESPONSE.redirect( ret_url + qs )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAACgAAAEAAAABzKAAAAGQBAGUAAGUAAGUAAGUAAGUAAGQBAGcAAGQBAGQCAIQJAFoB
+AGQAAFMoAwAAAE5zAAAAAGMJAAAAHAAAAA8AAABDAAAAc/QBAABkAQBrAABsAQB9CgABdAIAdAIA
+dAMAZAIAgwIAZAMAgwIAfAMAfAcAfAUAgwMAfQ0AdAIAdAIAdAMAZAIAgwIAZAQAgwIAfAMAgwEA
+fQUAdAIAdAIAdAMAZAIAgwIAZAUAgwIAfAgAfAUAgwIAfQ4AdAIAdAMAZAYAgwIAfQ8AZAcAfRAA
+ZAcAfREAZAgAhAAAfRIAdAIAdAMAZAkAgwIAgwAAZAoAF3wAABd9EQB8DgBvCgABZAsAfRAAbhIB
+AXwFAHQPAGoJAG/+AAFkDAB9FAB4XAB0EQB8BQCDAQBEXU4AfRYAdAIAdBMAdAIAdAMAZA0AgwIA
+ZA4AfBYAgwABZAwAgwIAZA8AgwIAgwAAfRgAfBIAfBgAgwEAbw4AAXwUAGQQADd9FABx3wABcd8A
+V3wUAGQMAGoEAG8rAAF8FABkEABqAgBvCgABZBEAfRAAccYBAWQSAHQVAHwUAIMBABZ9EABx0AEB
+eSYAdAIAdAMAZBMAgwIAZBQAfAUAZAYAfA8AgwACAWQVAH0QAFdx0AEEfAoAagoAbwoAAQEBAYIA
+AHHQAQEEdBYAagoAbxMAAQF9GwABZBYAfBsAFn0QAHHQAQFYbgcAAWQXAH0QAHQCAHQCAHwPAGQY
+AIMCAGQZAIMCAHwRAHwQABeDAQBTZAAAUygaAAAATigBAAAAcw0AAABDb25mbGljdEVycm9ycxEA
+AABwb3J0YWxfc2VsZWN0aW9uc3MdAAAAdXBkYXRlU2VsZWN0aW9uQ2hlY2tlZFVpZExpc3RzGgAA
+AGdldFNlbGVjdGlvbkNoZWNrZWRVaWRzRm9ycxMAAABzZWxlY3Rpb25IYXNDaGFuZ2VkcwcAAABS
+RVFVRVNUcwAAAABjAQAAAAYAAAAQAAAAQwAAAHPFAAAAZAEAfQEAeLQAdAEAdAIAfAAAZAIAgwIA
+gwAAgwEARF2aAH0EAHiRAHQBAHQCAHQCAHwAAGQDAIMCAGQEAIMCAHwAAIMBAIMBAERdawB9BQB0
+AgB0AgB8BQBkBQCDAgCDAABkBgCDAgB0AgB8AABkBQCDAgCDAACDAQBvBwABcUoAcUoAAXQCAHQC
+AHwFAGQFAIMCAIMAAGQGAIMCAGQHAIMBAG8HAAFxSgBxSgABZAgAfQEAUHFKAFdxHwBXfAEAU2QA
+AFMoCQAAAE5pAAAAAHMaAAAAZ2V0SW5kZXhhYmxlQ2hpbGRWYWx1ZUxpc3RzEQAAAHBvcnRhbF9j
+YXRlZ29yaWVzcxMAAABnZXRSZWxhdGVkVmFsdWVMaXN0cw4AAABnZXRSZWxhdGl2ZVVybHMKAAAA
+c3RhcnRzd2l0aHMRAAAAcG9ydGFsX3NpbXVsYXRpb25pAQAAACgGAAAAcwYAAAByZXN1bHRzCQAA
+AF9nZXRpdGVyX3MJAAAAX2dldGF0dHJfcwYAAABvYmplY3RzAQAAAG9zBwAAAHJlbGF0ZWQoBgAA
+AHMGAAAAb2JqZWN0cwYAAAByZXN1bHRzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0dHJfcwEAAABv
+cwcAAAByZWxhdGVkKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxIAAABPYmplY3RfaGFz
+UmVsYXRpb24LAAAAcxgAAAAAAgYBGQAGASUADAEoAQ0BHAEHAgYBCQFzDAAAAGFic29sdXRlX3Vy
+bHMBAAAAL3M3AAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1Tb3JyeSt5b3VyK3NlbGVjdGlvbito
+YXMrY2hhbmdlZGkAAAAAcw4AAABwb3J0YWxfY2F0YWxvZ3MDAAAAdWlkcwkAAABnZXRPYmplY3Rp
+AQAAAHMvAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1Tb3JyeSwrMStJdGVtK0lzK0luK1VzZS5z
+MgAAAD9wb3J0YWxfc3RhdHVzX21lc3NhZ2U9U29ycnksKyVzK0l0ZW1zK0FyZStJbitVc2UucxEA
+AABtYW5hZ2VfZGVsT2JqZWN0c3MEAAAAdWlkc3MfAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1E
+ZWxldGVkLnMZAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT0lc3M9AAAAP3BvcnRhbF9zdGF0dXNf
+bWVzc2FnZT1QbGVhc2Urc2VsZWN0K29uZStvcittb3JlK2l0ZW1zK2ZpcnN0LnMIAAAAUkVTUE9O
+U0VzCAAAAHJlZGlyZWN0KBgAAABzEQAAAFpPREIuUE9TRXhjZXB0aW9ucw0AAABDb25mbGljdEVy
+cm9ycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDgAAAHNlbGVjdGlvbl9uYW1lcwsAAABsaXN0
+Ym94X3VpZHMEAAAAdWlkc3MNAAAAc2VsZWN0ZWRfdWlkc3MTAAAAbWQ1X29iamVjdF91aWRfbGlz
+dHMFAAAAZXJyb3JzBwAAAFJFUVVFU1RzAgAAAHFzcwcAAAByZXRfdXJscxIAAABPYmplY3RfaGFz
+UmVsYXRpb25zBwAAAGZvcm1faWRzBAAAAE5vbmVzCwAAAG9iamVjdF91c2VkcwkAAABfZ2V0aXRl
+cl9zAwAAAHVpZHMJAAAAX2dldGl0ZW1fcwYAAABvYmplY3RzBAAAAHJlcHJzCQAAAEV4Y2VwdGlv
+bnMHAAAAbWVzc2FnZSgcAAAAcwcAAABmb3JtX2lkcw8AAABzZWxlY3Rpb25faW5kZXhzCgAAAG9i
+amVjdF91aWRzDgAAAHNlbGVjdGlvbl9uYW1lcwgAAABmaWVsZF9pZHMEAAAAdWlkc3MKAAAAY2Fu
+Y2VsX3VybHMLAAAAbGlzdGJveF91aWRzEwAAAG1kNV9vYmplY3RfdWlkX2xpc3RzEQAAAFpPREIu
+UE9TRXhjZXB0aW9ucw0AAABDb25mbGljdEVycm9ycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
+DQAAAHNlbGVjdGVkX3VpZHNzBQAAAGVycm9ycwcAAABSRVFVRVNUcwIAAABxc3MHAAAAcmV0X3Vy
+bHMSAAAAT2JqZWN0X2hhc1JlbGF0aW9ucwQAAABOb25lcwsAAABvYmplY3RfdXNlZHMJAAAAX2dl
+dGl0ZXJfcwMAAAB1aWRzCQAAAF9nZXRpdGVtX3MGAAAAb2JqZWN0cwQAAAByZXBycwkAAABFeGNl
+cHRpb25zBwAAAG1lc3NhZ2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzDQAAAEZvbGRl
+cl9kZWxldGUBAAAAczoAAAANASQBHgIhAg8BBgEGAgkOGgEHAQoBDQIGAQ0ABgEtAQ0BEgENAQ0B
+CgIUAgYBGQEKARUBEAETAgYCKAIAAABzBAAAAE5vbmVzDQAAAEZvbGRlcl9kZWxldGUoAgAAAHME
+AAAATm9uZXMNAAAARm9sZGVyX2RlbGV0ZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMI
+AAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Folder_delete</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,uids=None,cancel_url=\'\',listbox_uid=[],md5_object_uid_list=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>9</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>object_uid</string>
+                            <string>selection_name</string>
+                            <string>field_id</string>
+                            <string>uids</string>
+                            <string>cancel_url</string>
+                            <string>listbox_uid</string>
+                            <string>md5_object_uid_list</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>selected_uids</string>
+                            <string>error</string>
+                            <string>REQUEST</string>
+                            <string>qs</string>
+                            <string>ret_url</string>
+                            <string>Object_hasRelation</string>
+                            <string>None</string>
+                            <string>object_used</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>_getitem_</string>
+                            <string>object</string>
+                            <string>repr</string>
+                            <string>Exception</string>
+                            <string>message</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <string></string>
+                <list/>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_delete</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Delete objects from a folder</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

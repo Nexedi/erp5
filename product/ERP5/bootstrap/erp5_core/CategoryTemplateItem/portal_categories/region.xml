@@ -1,0 +1,639 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5.Tool.Category</string>
+          <string>BaseCategory</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Local ID of the object in its enclosing container</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Unique ID of the object in the ZSQLCatalog</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>catalog_index</string> </key>
+                      <value>
+                        <tuple>
+                          <string>COUNT</string>
+                        </tuple>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>catalog_metadata</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>description</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>text</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if acquired value should be copied</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_copy_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if the local value have priority</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_mask_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if the acquired value should be appended</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_append_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>Determines if the acquired value should be synced</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_sync_value</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>acquisition_object_id</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>The default contained object id to look up</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_object_id_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>acquisition_base_category</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>The base categories to browse</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_base_category_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>tokens</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>acquisition_portal_type</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>The portal types to browse</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>acquisition_portal_type_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>multivalued</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>tales</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>base_id</string> </key>
+                      <value> <string>fallback_base_category</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>default</string> </key>
+                      <value>
+                        <list/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>description</string> </key>
+                      <value> <string>another base category to get if everything else fails</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>fallback_base_category_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>mode</string> </key>
+                      <value> <string>w</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>tokens</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_append_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>subordination</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>subordination</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_copy_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_mask_value</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple>
+                <string>default_address</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id_list</string> </key>
+            <value>
+              <tuple>
+                <string>default_address</string>
+                <string>default_career</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: [\'Address\', \'Organisation\', \'Person\']</string> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type_list</string> </key>
+            <value>
+              <tuple>
+                <string>Organisation</string>
+                <string>Career</string>
+                <string>Person</string>
+                <string>Address</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_sync_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>base_category</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAE=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>region</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Region</unicode> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.Length</string>
+          <string>Length</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <tuple>
+                        <dictionary>
+                          <item>
+                              <key> <string>action</string> </key>
+                              <value> <string>\'edit\'</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>actor</string> </key>
+                              <value> <string>zope</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>comment</string> </key>
+                              <value> <string>Object copied from /nexedi/portal_workflow/order_workflow</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>state</string> </key>
+                              <value> <string>current</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>time</string> </key>
+                              <value>
+                                <object>
+                                  <klass>
+                                    <global name="DateTime" module="DateTime.DateTime"/>
+                                  </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Fri</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Jun</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38160.4030506</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>24</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Friday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>June</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1119606023569</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>40</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>6</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>23.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Fri.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>am</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>June</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>23.569</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1119606023.57</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.403050567133</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

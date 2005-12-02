@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+  <head>\n
+    <title tal:content="template/title">Listbox PDF Macro</title>\n
+  </head>\n
+<body> \n
+\n
+\n
+    ***** ########### listbox: must define the field listbox before calling this macro ! ########### *****\n
+  <tal:block metal:define-macro="listbox"> \n
+\n
+  <tal:block tal:define="listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
+                 selection_name python:listbox.get_value(\'selection_name\', REQUEST=request);\n
+                 selection python:here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
+                 is_domain_tree_mode python:selection.domain_tree_mode;\n
+                 is_report_tree_mode python:selection.report_tree_mode;" >\n
+\n
+\n
+    <tal:block tal:condition="python: len(listboxline_list) > 1" >\n
+\n
+      <tal:block tal:condition="python: is_domain_tree_mode == 1" tal:define="domain_list python: selection.getDomainList()">\n
+        <tal:block tal:condition="python: len(domain_list) > 0" >\n
+        <table style="StandardTableWithGrid">\n
+          <tr>\n
+            <td tal:attributes="colwidth python:\'%.2fcm\' % float(frame_width)">\n
+              <para  style="TableHeader" tal:content="python: domain_list[-1]" />\n
+            </td>\n
+          </tr>\n
+        </table>\n
+        </tal:block>\n
+      </tal:block>\n
+\n
+\n
+      <tal:block tal:define="global column_width python:here.ListBox_getColumnWithDict(listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width=frame_width)"/>\n
+\n
+      <tal:block tal:content="python:str(column_width)"/>\n
+      \n
+      <table  splitbyrow="1" repeatrows="1" repeatcols="0"  style="StandardTableWithGrid">\n
+\n
+        <tal:block tal:repeat="listboxline python: listboxline_list">\n
+          <tr>\n
+\n
+            <tal:block tal:condition="python: is_report_tree_mode">\n
+\n
+              <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[\'section_name\'])">\n
+                <tal:block tal:condition="listboxline/getSectionName">\n
+                  <para style="TableHeader" tal:content="listboxline/getSectionName" \n
+                        tal:attributes="style python:\'Section%s\' % listboxline.getSectionDepth()" />\n
+                </tal:block>\n
+              </td>\n
+            </tal:block>\n
+\n
+            <tal:block tal:condition="python: listboxline.isTitleLine()">\n
+              <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
+                <tal:block tal:define="column_property python: column_item[1];\n
+                                       column_id python: column_item[0]">                 \n
+                  <tal:block tal:condition="python: column_property is not None">\n
+                    <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
+                      <para  style="TableHeader" tal:content="python: str(column_property)" i18n:translate=""/>\n
+                    </td>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: column_property is None">\n
+                    <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
+                      <para  style="TableHeader" tal:content="python: \'\'" />\n
+                    </td>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+\n
+\n
+            <tal:block tal:condition="python: listboxline.isDataLine() ">\n
+              <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
+                <tal:block tal:define="column_property python: column_item[1];\n
+                                       column_id python: column_item[0]">                 \n
+                  <tal:block tal:condition="python: column_property is not None">\n
+                    <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
+                      <para  style="TableStandard" tal:content="python: str(column_property)" />\n
+                    </td>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: column_property is None">\n
+                    <td>\n
+                      <para  style="TableStandard" tal:content="python: \'\'" />\n
+                    </td>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+\n
+            <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">\n
+              <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
+                <tal:block tal:define="column_property python: column_item[1];\n
+                                       column_id python: column_item[0]">                    \n
+                  <tal:block tal:condition="python: column_property is not None">\n
+                    <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
+                      <para  style="TableLastLine" tal:content="python: str(column_property)" />\n
+                    </td>\n
+                  </tal:block>\n
+                  <tal:block tal:condition="python: column_property is None">\n
+                    <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
+                      <para style="TableLastLine"> </para>\n
+                    </td>\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
+\n
+          </tr>\n
+        </tal:block>\n
+\n
+ \n
+      </table>\n
+    </tal:block>\n
+\n
+\n
+\n
+  </tal:block>\n
+  </tal:block>  \n
+\n
+\n
+   </body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox_pdf_macro</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

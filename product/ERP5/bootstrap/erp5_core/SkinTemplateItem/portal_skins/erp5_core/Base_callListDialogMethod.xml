@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Updates attributes of an Zope document\n
+# which is in a class inheriting from ERP5 Base\n
+\n
+\n
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+from string import join\n
+\n
+request=context.REQUEST\n
+\n
+#Exceptions for UI and Sort\n
+if dialog_method == \'Base_configureUI\':\n
+  return context.Base_configureUI(form_id=form_id,\n
+                              selection_name=selection_name,\n
+                              field_columns=getattr(request,\'field_columns\'),\n
+                              stat_columns=getattr(request,\'stat_columns\'))\n
+if dialog_method == \'Base_configureSortOn\':\n
+  return context.Base_configureSortOn(form_id=form_id,\n
+                              selection_name=selection_name,\n
+                              field_sort_on=getattr(request,\'field_sort_on\'),\n
+                              field_sort_order=getattr(request,\'field_sort_order\'))\n
+if dialog_method == \'Base_editRelation\':\n
+  return context.Base_editRelation(form_id=form_id,\n
+                              field_id=request.get(\'field_id\'),\n
+                              selection_name=selection_name,\n
+                              selection_index=request.get(\'selection_index\'),\n
+                              object_uid=request.get(\'object_uid\'),\n
+                              uids=request.get(\'uids\'),\n
+                              listbox_uid=request.get(\'listbox_uid\'))\n
+if dialog_method == \'Base_createRelation\':\n
+  return context.Base_createRelation(form_id=form_id,\n
+                              selection_name=selection_name,\n
+                              selection_index=request.get(\'selection_index\'),\n
+                              base_category=request.get(\'base_category\'),\n
+                              object_uid=request.get(\'object_uid\'),\n
+                              catalog_index=request.get(\'catalog_index\'),\n
+                              default_module=request.get(\'default_module\'),\n
+                              dialog_id=dialog_id,\n
+                              portal_type=request.get(\'portal_type\'),\n
+                              return_url=request.get(\'cancel_url\'))\n
+if dialog_method == \'Folder_delete\':\n
+  return context.Folder_delete(form_id=form_id,\n
+                              field_id=request.get(\'field_id\'),\n
+                              selection_name=selection_name,\n
+                              selection_index=request.get(\'selection_index\'),\n
+                              object_uid=request.get(\'object_uid\'),\n
+                              uids=request.get(\'listbox_uid\'),\n
+                              md5_object_uid_list=request.get(\'md5_object_uid_list\'),\n
+                              cancel_url=request.get(\'cancel_url\'))\n
+\n
+try:\n
+  MARKER = \'marker\'\n
+  # Validate the form\n
+  form = getattr(context,dialog_id)\n
+  form.validate_all_to_request(request)\n
+  kw = {}\n
+  for f in form.get_fields():\n
+    k = f.id\n
+    v = getattr(request, k, MARKER)\n
+    if v is not MARKER:\n
+      k = k[3:]\n
+      kw[k] = v\n
+  url_params = []\n
+  for (k,v) in kw.items():\n
+    url_params += [\'%s=%s\' % (k,v)]\n
+  url_params_string = join(url_params, \'&\')\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
+\n
+if url_params_string != \'\':\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                            , dialog_method\n
+                            , url_params_string\n
+                            )\n
+else:\n
+  redirect_url = \'%s/%s\' % ( context.absolute_url()\n
+                            , dialog_method\n
+                            )\n
+\n
+return request.RESPONSE.redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBQAAABwAAAAfAAAAQwAA
+AHONBAAAZAEAawAAbAEAfQYAbAIAfQcAAWQCAGsDAGwEAH0JAAF0BQB0BgBkAwCDAgB9DAB8AgBk
+BABqAgBvPgABdAUAdAYAZAQAgwIAZAUAfAAAZAYAfAMAZAcAdAsAfAwAZAcAgwIAZAgAdAsAfAwA
+ZAgAgwIAgwAEU24BAAF8AgBkCQBqAgBvPgABdAUAdAYAZAkAgwIAZAUAfAAAZAYAfAMAZAoAdAsA
+fAwAZAoAgwIAZAsAdAsAfAwAZAsAgwIAgwAEU24BAAF8AgBkDABqAgBviQABdAUAdAYAZAwAgwIA
+ZAUAfAAAZA0AdAUAfAwAZA4AgwIAZA0AgwEAZAYAfAMAZA8AdAUAfAwAZA4AgwIAZA8AgwEAZBAA
+dAUAfAwAZA4AgwIAZBAAgwEAZBEAdAUAfAwAZA4AgwIAZBEAgwEAZBIAdAUAfAwAZA4AgwIAZBIA
+gwEAgwAHU24BAAF8AgBkEwBqAgBvuQABdAUAdAYAZBMAgwIAZAUAfAAAZAYAfAMAZA8AdAUAfAwA
+ZA4AgwIAZA8AgwEAZBQAdAUAfAwAZA4AgwIAZBQAgwEAZBAAdAUAfAwAZA4AgwIAZBAAgwEAZBUA
+dAUAfAwAZA4AgwIAZBUAgwEAZBYAdAUAfAwAZA4AgwIAZBYAgwEAZBcAfAQAZBgAdAUAfAwAZA4A
+gwIAZBgAgwEAZBkAdAUAfAwAZA4AgwIAZBoAgwEAgwAKU24BAAF8AgBkGwBqAgBvngABdAUAdAYA
+ZBsAgwIAZAUAfAAAZA0AdAUAfAwAZA4AgwIAZA0AgwEAZAYAfAMAZA8AdAUAfAwAZA4AgwIAZA8A
+gwEAZBAAdAUAfAwAZA4AgwIAZBAAgwEAZBEAdAUAfAwAZA4AgwIAZBIAgwEAZBwAdAUAfAwAZA4A
+gwIAZBwAgwEAZBoAdAUAfAwAZA4AgwIAZBoAgwEAgwAIU24BAAF5CAFkHQB9DgB0CwB0BgB8BACD
+AgB9DwB0BQB8DwBkHgCDAgB8DACDAQABaAAAfRAAeHcAdBAAdAUAfA8AZB8AgwIAgwAAgwEARF1d
+AH0SAHQFAHwSAGQgAIMCAH0TAHQLAHwMAHwTAHwOAIMDAH0UAHwUAHwOAGoJAG8pAAF0FAB8EwBk
+IQBkAACFAgCDAgB9EwB8FAB0FQB8EACDAQB8EwA8cRYDAXEWA1dnAAB9FwB4RAB0EAB0BQB8EABk
+IgCDAgCDAACDAQBEXSoAdBAAAoMBAFwCAH0TAH0UAHwXAGQjAHwTAHwUAGYCABZnAQA3fRcAcZYD
+V3wJAHwXAGQkAIMCAH0YAFduSgAEfAcAagoAbz4AAQF9GQABdAUAfA8AZCUAgwIAfBkAgwEAfRoA
+dAUAfAwAZCYAgwIAZCcAfBoAgwIAAXwPAHwMAIMBAFNuAgABWHwYAGQoAGoDAG8jAAFkKQB0BQB0
+BgBkKgCDAgCDAAB8AgB8GABmAwAWfRsAbh0AAWQrAHQFAHQGAGQqAIMCAIMAAHwCAGYCABZ9GwB0
+BQB0BQB8DABkLACDAgBkLQCDAgB8GwCDAQBTZAAAUyguAAAATigCAAAAcw8AAABWYWxpZGF0aW9u
+RXJyb3JzEwAAAEZvcm1WYWxpZGF0aW9uRXJyb3IoAQAAAHMEAAAAam9pbnMHAAAAUkVRVUVTVHMQ
+AAAAQmFzZV9jb25maWd1cmVVSXMHAAAAZm9ybV9pZHMOAAAAc2VsZWN0aW9uX25hbWVzDQAAAGZp
+ZWxkX2NvbHVtbnNzDAAAAHN0YXRfY29sdW1uc3MUAAAAQmFzZV9jb25maWd1cmVTb3J0T25zDQAA
+AGZpZWxkX3NvcnRfb25zEAAAAGZpZWxkX3NvcnRfb3JkZXJzEQAAAEJhc2VfZWRpdFJlbGF0aW9u
+cwgAAABmaWVsZF9pZHMDAAAAZ2V0cw8AAABzZWxlY3Rpb25faW5kZXhzCgAAAG9iamVjdF91aWRz
+BAAAAHVpZHNzCwAAAGxpc3Rib3hfdWlkcxMAAABCYXNlX2NyZWF0ZVJlbGF0aW9ucw0AAABiYXNl
+X2NhdGVnb3J5cw0AAABjYXRhbG9nX2luZGV4cw4AAABkZWZhdWx0X21vZHVsZXMJAAAAZGlhbG9n
+X2lkcwsAAABwb3J0YWxfdHlwZXMKAAAAcmV0dXJuX3VybHMKAAAAY2FuY2VsX3VybHMNAAAARm9s
+ZGVyX2RlbGV0ZXMTAAAAbWQ1X29iamVjdF91aWRfbGlzdHMGAAAAbWFya2VycxcAAAB2YWxpZGF0
+ZV9hbGxfdG9fcmVxdWVzdHMKAAAAZ2V0X2ZpZWxkc3MCAAAAaWRpAwAAAHMFAAAAaXRlbXNzBQAA
+ACVzPSVzcwEAAAAmcwsAAABFcnJvckZpZWxkc3MDAAAAc2V0cwwAAABmaWVsZF9lcnJvcnNzAAAA
+AHMIAAAAJXMvJXM/JXNzDAAAAGFic29sdXRlX3VybHMFAAAAJXMvJXNzCAAAAFJFU1BPTlNFcwgA
+AAByZWRpcmVjdCgbAAAAcxoAAABQcm9kdWN0cy5Gb3JtdWxhdG9yLkVycm9yc3MPAAAAVmFsaWRh
+dGlvbkVycm9ycxMAAABGb3JtVmFsaWRhdGlvbkVycm9ycwYAAABzdHJpbmdzBAAAAGpvaW5zCQAA
+AF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMNAAAAZGlhbG9nX21ldGhvZHMHAAAA
+Zm9ybV9pZHMOAAAAc2VsZWN0aW9uX25hbWVzBwAAAGdldGF0dHJzCQAAAGRpYWxvZ19pZHMGAAAA
+TUFSS0VScwQAAABmb3JtcwIAAABrd3MJAAAAX2dldGl0ZXJfcwEAAABmcwEAAABrcwEAAAB2cwkA
+AABfZ2V0aXRlbV9zBwAAAF93cml0ZV9zCgAAAHVybF9wYXJhbXNzEQAAAHVybF9wYXJhbXNfc3Ry
+aW5ncxEAAAB2YWxpZGF0aW9uX2Vycm9yc3MMAAAAZmllbGRfZXJyb3JzcwwAAAByZWRpcmVjdF91
+cmwoHAAAAHMHAAAAZm9ybV9pZHMKAAAAY2FuY2VsX3VybHMNAAAAZGlhbG9nX21ldGhvZHMOAAAA
+c2VsZWN0aW9uX25hbWVzCQAAAGRpYWxvZ19pZHMaAAAAUHJvZHVjdHMuRm9ybXVsYXRvci5FcnJv
+cnNzDwAAAFZhbGlkYXRpb25FcnJvcnMTAAAARm9ybVZhbGlkYXRpb25FcnJvcnMGAAAAc3RyaW5n
+cwQAAABqb2lucwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzBwAAAGdldGF0
+dHJzBgAAAE1BUktFUnMEAAAAZm9ybXMCAAAAa3dzCQAAAF9nZXRpdGVyX3MBAAAAZnMBAAAAa3MB
+AAAAdnMJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfcwoAAAB1cmxfcGFyYW1zcxEAAAB1cmxfcGFy
+YW1zX3N0cmluZ3MRAAAAdmFsaWRhdGlvbl9lcnJvcnNzDAAAAGZpZWxkX2Vycm9yc3MMAAAAcmVk
+aXJlY3RfdXJsKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxkAAABCYXNlX2NhbGxMaXN0
+RGlhbG9nTWV0aG9kAQAAAHOKAAAAAAQTAQ0CDwMNARUBBgEPARQBDQEVAQYBDwEUAQ0BGAESAQkB
+FQEVARUBFwENARUBCQEVARUBFQEVARIBCQEVARcBDQEYARIBCQEVARUBFQEVARcCAwEGAhIBEAEG
+ARkABgEPARIBDQEVARgBBgEZABMBGwETARACGAETAQ8CDQESAQMBDgMSAQoDKAEAAABzGQAAAEJh
+c2VfY2FsbExpc3REaWFsb2dNZXRob2QoAQAAAHMZAAAAQmFzZV9jYWxsTGlzdERpYWxvZ01ldGhv
+ZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_callListDialogMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id,cancel_url,dialog_method,selection_name,dialog_id</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>cancel_url</string>
+                            <string>dialog_method</string>
+                            <string>selection_name</string>
+                            <string>dialog_id</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
+                            <string>string</string>
+                            <string>join</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>MARKER</string>
+                            <string>form</string>
+                            <string>kw</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>url_params</string>
+                            <string>url_params_string</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_callListDialogMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

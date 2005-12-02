@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>membership_base_list = context.getMembershipCriterionBaseCategoryList()\n
+multimembership_base_list = context.getMultimembershipCriterionBaseCategoryList()\n
+mixed_list = membership_base_list\n
+\n
+for item in multimembership_base_list :\n
+  if item not in mixed_list :\n
+    mixed_list.append(item)\n
+\n
+category_list = []\n
+\n
+\n
+for item in mixed_list:\n
+  if item==\'destination_region\':\n
+    item = \'region\'\n
+    category_list += [\'destination_region/\' + x for x in context.portal_categories[item].getCategoryChildRelativeUrlList()]\n
+  else:\n
+    category_list += context.portal_categories[item].getCategoryChildRelativeUrlList()\n
+\n
+return category_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAwAAAARAAAAQwAA
+AHMcAQAAdAAAdAEAZAEAgwIAgwAAfQIAdAAAdAEAZAIAgwIAgwAAfQMAfAIAfQQAeDgAdAUAfAMA
+gwEARF0qAH0GAHwGAHwEAGoHAG8XAAF0AAB8BABkAwCDAgB8BgCDAQABcTcAAXE3AFdnAAB9BwB4
+pgB0BQB8BACDAQBEXZgAfQYAfAYAZAQAagIAb10AAWQFAH0GAHwHAGcAAARpCAB9CQB0BQB0AAB0
+CgB0AAB0AQBkBgCDAgB8BgCDAgBkBwCDAgCDAACDAQBEXRQAfQsAfAkAZAgAfAsAF4MBAAFxxgB+
+CQA3fQcAcXgAAXwHAHQAAHQKAHQAAHQBAGQGAIMCAHwGAIMCAGQHAIMCAIMAADd9BwBxeABXfAcA
+U2QAAFMoCQAAAE5zJgAAAGdldE1lbWJlcnNoaXBDcml0ZXJpb25CYXNlQ2F0ZWdvcnlMaXN0cysA
+AABnZXRNdWx0aW1lbWJlcnNoaXBDcml0ZXJpb25CYXNlQ2F0ZWdvcnlMaXN0cwYAAABhcHBlbmRz
+EgAAAGRlc3RpbmF0aW9uX3JlZ2lvbnMGAAAAcmVnaW9ucxEAAABwb3J0YWxfY2F0ZWdvcmllc3Mf
+AAAAZ2V0Q2F0ZWdvcnlDaGlsZFJlbGF0aXZlVXJsTGlzdHMTAAAAZGVzdGluYXRpb25fcmVnaW9u
+LygMAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzFAAAAG1lbWJlcnNoaXBfYmFzZV9saXN0
+cxkAAABtdWx0aW1lbWJlcnNoaXBfYmFzZV9saXN0cwoAAABtaXhlZF9saXN0cwkAAABfZ2V0aXRl
+cl9zBAAAAGl0ZW1zDQAAAGNhdGVnb3J5X2xpc3RzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAA
+AF9nZXRpdGVtX3MBAAAAeCgMAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzFAAAAG1lbWJl
+cnNoaXBfYmFzZV9saXN0cxkAAABtdWx0aW1lbWJlcnNoaXBfYmFzZV9saXN0cwoAAABtaXhlZF9s
+aXN0cwkAAABfZ2V0aXRlcl9zBAAAAGl0ZW1zDQAAAGNhdGVnb3J5X2xpc3RzBgAAAGFwcGVuZHMI
+AAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVtX3MBAAAAeCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMsAAAAUHJlZGljYXRlX2dldE1lbWJlcnNoaXBDcml0ZXJpb25DYXRlZ29yeUxpc3QBAAAA
+cx4AAAASARIBBgINAAYBEAEYAgYDDQAGAQ0BBgE1ACICLAIoAQAAAHMsAAAAUHJlZGljYXRlX2dl
+dE1lbWJlcnNoaXBDcml0ZXJpb25DYXRlZ29yeUxpc3QoAQAAAHMsAAAAUHJlZGljYXRlX2dldE1l
+bWJlcnNoaXBDcml0ZXJpb25DYXRlZ29yeUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Predicate_getMembershipCriterionCategoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>membership_base_list</string>
+                            <string>multimembership_base_list</string>
+                            <string>mixed_list</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>category_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getitem_</string>
+                            <string>x</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Predicate_getMembershipCriterionCategoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

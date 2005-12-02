@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Immediatly invoke a workflow action. Usefull do put as in action box\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from ZTUtils import make_query\n
+request = context.REQUEST\n
+\n
+url_params = { }\n
+if request.get(\'selection_name\') :\n
+  url_params[\'selection_name\'] = request[\'selection_name\']\n
+if request.get(\'selection_index\') :\n
+  url_params[\'selection_index\'] = request[\'selection_index\']\n
+\n
+try :\n
+  context.portal_workflow.doActionFor(\n
+    context,\n
+    action_name,\n
+    wf_id = wf_id)\n
+except ValidationFailed, message:\n
+  url_params[\'portal_status_message\'] = message\n
+  context.REQUEST.RESPONSE.redirect(\n
+    "%s/view?%s" % (context.absolute_url(), make_query(url_params)))\n
+\n
+context.REQUEST.RESPONSE.redirect( "%s/view?%s" % (context.absolute_url(),\n
+  make_query(url_params)))\n
+\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAA0AAAARAAAAQwAA
+AHNsAQAAZAEAawAAbAEAfQMAAWQCAGsCAGwDAH0FAAF0BAB0BQBkAwCDAgB9CABoAAB9CQB0BAB8
+CABkBACDAgBkBQCDAQBvHQABdAgAfAgAZAUAgwIAdAkAfAkAgwEAZAUAPG4BAAF0BAB8CABkBACD
+AgBkBgCDAQBvHQABdAgAfAgAZAYAgwIAdAkAfAkAgwEAZAYAPG4BAAF5KQB0BAB0BAB0BQBkBwCD
+AgBkCACDAgB0BQB8AABkCQB8AQCDAgEBV25mAAR8AwBqCgBvWgABAX0MAAF8DAB0CQB8CQCDAQBk
+CgA8dAQAdAQAdAQAdAUAZAMAgwIAZAsAgwIAZAwAgwIAZA0AdAQAdAUAZA4AgwIAgwAAfAUAfAkA
+gwEAZgIAFoMBAAFuAgABWHQEAHQEAHQEAHQFAGQDAIMCAGQLAIMCAGQMAIMCAGQNAHQEAHQFAGQO
+AIMCAIMAAHwFAHwJAIMBAGYCABaDAQABZAAAUygPAAAATigBAAAAcxAAAABWYWxpZGF0aW9uRmFp
+bGVkKAEAAABzCgAAAG1ha2VfcXVlcnlzBwAAAFJFUVVFU1RzAwAAAGdldHMOAAAAc2VsZWN0aW9u
+X25hbWVzDwAAAHNlbGVjdGlvbl9pbmRleHMPAAAAcG9ydGFsX3dvcmtmbG93cwsAAABkb0FjdGlv
+bkZvcnMFAAAAd2ZfaWRzFQAAAHBvcnRhbF9zdGF0dXNfbWVzc2FnZXMIAAAAUkVTUE9OU0VzCAAA
+AHJlZGlyZWN0cwoAAAAlcy92aWV3PyVzcwwAAABhYnNvbHV0ZV91cmwoDQAAAHMeAAAAUHJvZHVj
+dHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwcAAABaVFV0aWxz
+cwoAAABtYWtlX3F1ZXJ5cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzCgAA
+AHVybF9wYXJhbXNzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlX3MLAAAAYWN0aW9uX25hbWVzBQAA
+AHdmX2lkcwcAAABtZXNzYWdlKA0AAABzCwAAAGFjdGlvbl9uYW1lcwUAAAB3Zl9pZHMeAAAAUHJv
+ZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwcAAABaVFV0
+aWxzcwoAAABtYWtlX3F1ZXJ5cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3Rz
+CgAAAHVybF9wYXJhbXNzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlX3MHAAAAbWVzc2FnZSgAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMVAAAAQmFzZV9Eb1dvcmtmbG93QWN0aW9uAQAAAHMm
+AAAAAAENAQ0BDwIJARMBIAETAR0CCQEPAQMBBgELARABGQEYAS4CJwEoAQAAAHMVAAAAQmFzZV9E
+b1dvcmtmbG93QWN0aW9uKAEAAABzFQAAAEJhc2VfRG9Xb3JrZmxvd0FjdGlvbigAAAAAKAAAAABz
+DwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_DoWorkflowAction</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>action_name, wf_id</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>action_name</string>
+                            <string>wf_id</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>url_params</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>message</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_DoWorkflowAction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

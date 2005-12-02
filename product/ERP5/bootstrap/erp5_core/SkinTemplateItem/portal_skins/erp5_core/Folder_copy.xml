@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
+uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+# make sure nothing is checked after\n
+context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
+\n
+\n
+REQUEST=context.REQUEST\n
+# Do we still needs ids ???\n
+#if REQUEST.has_key(\'ids\'):\n
+#  context.manage_copyObjects(ids=REQUEST[\'ids\'], REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
+#  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Copied.\')\n
+#elif REQUEST.has_key(\'uids\'):\n
+if uids != []:\n
+  #context.manage_copyObjects(uids=REQUEST[\'uids\'], REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
+  context.manage_copyObjects(uids=uids, REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Copied.\')\n
+else:\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Please+select+one+or+more+items+to+copy+first.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABAAAAEAAAABzFgAAAGcAAGcAAGQBAGQCAIQDAFoAAGQAAFMoAwAAAE5zAAAAAGME
+AAAACAAAAAwAAABDAAAAcxgBAAB0AAB0AAB0AQBkAQCDAgBkAgCDAgB8AwB8AgB8AQCDAwB9BgB0
+AAB0AAB0AQBkAQCDAgBkAwCDAgB8AwCDAQB9AQB0AAB0AAB0AQBkAQCDAgBkBACDAgB8AwBnAACD
+AgABdAAAdAEAZAUAgwIAfQcAfAEAZwAAagMAb2MAAXQAAHQBAGQGAIMCAGQHAHwBAGQFAHwHAGQI
+AHQAAHwHAGQIAIMCAIMAAwF0AAB0AAB8BwBkCACDAgBkCQCDAgB0AAB0AQBkCgCDAgCDAABkCwAX
+fAAAF2QMABeDAQBTbjUAAXQAAHQAAHwHAGQIAIMCAGQJAIMCAHQAAHQBAGQKAIMCAIMAAGQLABd8
+AAAXZA0AF4MBAFNkAABTKA4AAABOcxEAAABwb3J0YWxfc2VsZWN0aW9uc3MdAAAAdXBkYXRlU2Vs
+ZWN0aW9uQ2hlY2tlZFVpZExpc3RzGgAAAGdldFNlbGVjdGlvbkNoZWNrZWRVaWRzRm9ycxoAAABz
+ZXRTZWxlY3Rpb25DaGVja2VkVWlkc0ZvcnMHAAAAUkVRVUVTVHMSAAAAbWFuYWdlX2NvcHlPYmpl
+Y3RzcwQAAAB1aWRzcwgAAABSRVNQT05TRXMIAAAAcmVkaXJlY3RzDAAAAGFic29sdXRlX3VybHMB
+AAAAL3MmAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1JdGVtKHMpK0NvcGllZC5zRQAAAD9wb3J0
+YWxfc3RhdHVzX21lc3NhZ2U9UGxlYXNlK3NlbGVjdCtvbmUrb3IrbW9yZStpdGVtcyt0bytjb3B5
+K2ZpcnN0LigIAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDgAAAHNlbGVjdGlvbl9uYW1l
+cwsAAABsaXN0Ym94X3VpZHMEAAAAdWlkc3MNAAAAc2VsZWN0ZWRfdWlkc3MHAAAAUkVRVUVTVHMH
+AAAAZm9ybV9pZCgIAAAAcwcAAABmb3JtX2lkcwQAAAB1aWRzcwsAAABsaXN0Ym94X3VpZHMOAAAA
+c2VsZWN0aW9uX25hbWVzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMNAAAAc2VsZWN0ZWRfdWlk
+c3MHAAAAUkVRVUVTVCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMLAAAARm9sZGVyX2Nv
+cHkBAAAAcw4AAAAkASQCGQMPBhACKAE4AigBAAAAcwsAAABGb2xkZXJfY29weSgBAAAAcwsAAABG
+b2xkZXJfY29weSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAA
+cwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Folder_copy</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>uids</string>
+                            <string>listbox_uid</string>
+                            <string>selection_name</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>selected_uids</string>
+                            <string>REQUEST</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+                <list/>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_copy</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
