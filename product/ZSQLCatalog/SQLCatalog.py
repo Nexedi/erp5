@@ -84,7 +84,7 @@ def manage_addSQLCatalog(self, id, title,
 class UidBuffer(TM):
   """Uid Buffer class caches a list of reserved uids in a transaction-safe way."""
   
-  def __init__(self):
+  def __init__(self, catalog):
     """Initialize some variables.
     
       temporary_buffer is used to hold reserved uids created by non-committed transactions.
@@ -101,6 +101,7 @@ class UidBuffer(TM):
     self.temporary_buffer = {}
     self.finished_buffer = []
     self.allocated_buffer = {}
+    self.catalog = catalog
     
   def _begin(self, *ignored):
     # In Zope 2.8 (ZODB 3.4), use beforeCommitHook instead of
@@ -116,8 +117,8 @@ class UidBuffer(TM):
     tid = get_ident()
     try:
       uid_list = self.allocated_buffer[tid]
-      method_id = self.sql_catalog_reserve_uid
-      method = getattr(self, method_id)
+      method_id = self.catalog.sql_catalog_reserve_uid
+      method = getattr(self.catalog, method_id)
       method(uid = uid_list)
       del self.allocated_buffer[tid]
     except KeyError:
@@ -826,10 +827,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     # This checks if the list of local reserved uids was cleared after clearReserved
     # had been called.
     if klass._local_clear_reserved_time != self._last_clear_reserved_time:
-      self._v_uid_buffer = UidBuffer()
+      self._v_uid_buffer = UidBuffer(self)
       klass._local_clear_reserved_time = self._last_clear_reserved_time
     elif not hasattr(self, '_v_uid_buffer'):
-      self._v_uid_buffer = UidBuffer()
+      self._v_uid_buffer = UidBuffer(self)
     if len(self._v_uid_buffer) == 0:
       method_id = self.sql_catalog_produce_reserved
       method = getattr(self, method_id)
