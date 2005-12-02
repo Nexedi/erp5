@@ -84,7 +84,7 @@ def manage_addSQLCatalog(self, id, title,
 class UidBuffer(TM):
   """Uid Buffer class caches a list of reserved uids in a transaction-safe way."""
   
-  def __init__(self, catalog):
+  def __init__(self):
     """Initialize some variables.
     
       temporary_buffer is used to hold reserved uids created by non-committed transactions.
@@ -92,37 +92,9 @@ class UidBuffer(TM):
       finished_buffer is used to hold reserved uids created by committed-transactions.
       
       This distinction is important, because uids by non-committed transactions might become
-      invalid afterwards, so they may not be used by other transactions.
-      
-      allocated_buffer is used to hold reserved uids consumed by non-committed transactions.
-      
-      This buffer is used to mark uids as already consumed to prevent the same uids from being
-      selected by produceUid again."""
+      invalid afterwards, so they may not be used by other transactions."""
     self.temporary_buffer = {}
     self.finished_buffer = []
-    self.allocated_buffer = {}
-    self.catalog = catalog
-    
-  def _begin(self, *ignored):
-    # In Zope 2.8 (ZODB 3.4), use beforeCommitHook instead of
-    # patching Trasaction.
-    transaction = get_transaction()
-    try:
-      transaction.beforeCommitHook(self.tpc_prepare, transaction)
-    except AttributeError:
-      pass
-    
-  def tpc_prepare(self, transaction, sub=None):
-    """Mark used uids."""
-    tid = get_ident()
-    try:
-      uid_list = self.allocated_buffer[tid]
-      method_id = self.catalog.sql_catalog_reserve_uid
-      method = getattr(self.catalog, method_id)
-      method(uid = uid_list)
-      del self.allocated_buffer[tid]
-    except KeyError:
-      pass
     
   def _finish(self):
     """Move the uids in the temporary buffer to the finished buffer."""
@@ -132,20 +104,12 @@ class UidBuffer(TM):
       del self.temporary_buffer[tid]
     except KeyError:
       pass
-    try:
-      del self.allocated_buffer[tid]
-    except KeyError:
-      pass
     
   def _abort(self):
     """Erase the uids in the temporary buffer."""
     tid = get_ident()
     try:
       del self.temporary_buffer[tid]
-    except KeyError:
-      pass
-    try:
-      del self.allocated_buffer[tid]
     except KeyError:
       pass
       
@@ -165,11 +129,6 @@ class UidBuffer(TM):
         uid_list.remove(value)
       except ValueError:
         pass
-    for uid_list in self.allocated_buffer.values():
-      try:
-        uid_list.remove(value)
-      except ValueError:
-        pass
     try:
       self.finished_buffer.remove(value)
     except ValueError:
@@ -182,21 +141,12 @@ class UidBuffer(TM):
       uid = self.temporary_buffer[tid].pop()
     except (KeyError, IndexError):
       uid = self.finished_buffer.pop()
-    self.allocated_buffer.setdefault(tid, []).append(uid)
     return uid
       
   def extend(self, iterable):
     self._register()
     tid = get_ident()
-    try:
-      allocated_buffer = self.allocated_buffer[tid]
-      uid_list = []
-      for uid in iterable:
-        if uid not in allocated_buffer:
-          uid_list.append(uid)
-    except KeyError:
-      uid_list = iterable
-    self.temporary_buffer.setdefault(tid, []).extend(uid_list)
+    self.temporary_buffer.setdefault(tid, []).extend(iterable)
 
 class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   """ An Object Catalog
@@ -827,24 +777,21 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     # This checks if the list of local reserved uids was cleared after clearReserved
     # had been called.
     if klass._local_clear_reserved_time != self._last_clear_reserved_time:
-      self._v_uid_buffer = UidBuffer(self)
+      self._v_uid_buffer = UidBuffer()
       klass._local_clear_reserved_time = self._last_clear_reserved_time
     elif not hasattr(self, '_v_uid_buffer'):
-      self._v_uid_buffer = UidBuffer(self)
+      self._v_uid_buffer = UidBuffer()
     if len(self._v_uid_buffer) == 0:
       method_id = self.sql_catalog_produce_reserved
       method = getattr(self, method_id)
-      instance_id = klass._instance_id
-      if instance_id is None:
-        # Generate an instance id randomly. Note that there is a small possibility that this
-        # would conflict with others.
-        random_factor_list = [time.time(), os.getpid(), os.times()]
-        try:
-          random_factor_list.append(os.getloadavg())
-        except (OSError, AttributeError): # AttributeError is required under cygwin
-          pass
-        instance_id = md5.new(str(random_factor_list)).hexdigest()[:30]
-        klass._instance_id = instance_id
+      # Generate an instance id randomly. Note that there is a small possibility that this
+      # would conflict with others.
+      random_factor_list = [time.time(), os.getpid(), os.times()]
+      try:
+        random_factor_list.append(os.getloadavg())
+      except (OSError, AttributeError): # AttributeError is required under cygwin
+        pass
+      instance_id = md5.new(str(random_factor_list)).hexdigest()
       uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
       self._v_uid_buffer.extend(uid_list)
 
