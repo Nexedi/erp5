@@ -102,6 +102,15 @@ class UidBuffer(TM):
     self.finished_buffer = []
     self.allocated_buffer = {}
     
+  def _begin(self, *ignored):
+    # In Zope 2.8 (ZODB 3.4), use beforeCommitHook instead of
+    # patching Trasaction.
+    transaction = get_transaction()
+    try:
+      transaction.beforeCommitHook(self.tpc_prepare, transaction)
+    except AttributeError:
+      pass
+    
   def tpc_prepare(self, transaction, sub=None):
     """Mark used uids."""
     tid = get_ident()
