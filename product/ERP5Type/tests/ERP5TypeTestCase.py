@@ -343,8 +343,12 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
                 portal_activities.tic()
                 get_transaction().commit()
             # Reset aq dynamic, so all unit tests will start again
+            # Also, the cache must be invalidated, because portal methods
+            # must return current information
             from Products.ERP5Type.Base import _aq_reset
+            from Products.ERP5Type.Cache import clearCache
             _aq_reset()
+            clearCache()
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
