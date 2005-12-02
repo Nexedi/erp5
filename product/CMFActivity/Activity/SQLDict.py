@@ -239,8 +239,6 @@ class SQLDict(RAMDict):
             if m.hasExpandMethod():
               try:
                 count = len(m.getObjectList(activity_tool))
-              except ConflictError:
-                raise
               except:
                 # Here, simply ignore an exception. The same exception should be handled later.
                 LOG('SQLDict', 0, 'ignoring an exception from getObjectList', error=sys.exc_info())
@@ -272,8 +270,6 @@ class SQLDict(RAMDict):
                   if m.hasExpandMethod():
                     try:
                       count += len(m.getObjectList(activity_tool))
-                    except ConflictError:
-                      raise
                     except:
                       # Here, simply ignore an exception. The same exception should be handled later.
                       LOG('SQLDict', 0, 'ignoring an exception from getObjectList', error=sys.exc_info())
@@ -322,7 +318,12 @@ class SQLDict(RAMDict):
                   # No more activity
                   m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
             else:
-              if priority > MAX_PRIORITY:
+              if issubclass(m.exc_type, ConflictError):
+                # If this is a conflict error, do not lower the priority but only delay.
+                activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
+                                                  retry = 1)
+                get_transaction().commit() # Release locks before starting a potentially long calculation
+              elif priority > MAX_PRIORITY:
                 # This is an error
                 if len(uid_list) > 0:
                   activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)

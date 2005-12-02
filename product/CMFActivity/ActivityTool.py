@@ -93,24 +93,23 @@ class Message:
     self.args = args
     self.kw = kw
     self.is_executed = 0
+    self.exc_type = None
     self.user_name = str(_getAuthenticatedUser(self))
-    self.object_list = None
     # Store REQUEST Info ?
 
   def getObject(self, activity_tool):
     return activity_tool.unrestrictedTraverse(self.object_path)
     
   def getObjectList(self, activity_tool):
-    if getattr(self, 'object_list', None) is None:
-      try:
-        expand_method_id = self.activity_kw['expand_method_id']
-        obj = self.getObject(activity_tool)
-        # FIXME: how to pass parameters?
-        self.object_list = getattr(obj, expand_method_id)()
-      except KeyError:
-        self.object_list = [self.getObject(activity_tool)]
+    try:
+      expand_method_id = self.activity_kw['expand_method_id']
+      obj = self.getObject(activity_tool)
+      # FIXME: how to pass parameters?
+      object_list = getattr(obj, expand_method_id)()
+    except KeyError:
+      object_list = [self.getObject(activity_tool)]
       
-    return self.object_list
+    return object_list
       
   def hasExpandMethod(self):
     return self.activity_kw.has_key('expand_method_id')
@@ -148,10 +147,9 @@ class Message:
         self.changeUser(current_user, activity_tool)
       self.activateResult(activity_tool, result, object)
       self.is_executed = 1
-    except ConflictError:
-      raise
     except:
       self.is_executed = 0
+      self.exc_type = sys.exc_info()[0]
       LOG('WARNING ActivityTool', 0,
           'Could not call method %s on object %s' % (self.method_id, self.object_path), error=sys.exc_info())
 
@@ -593,10 +591,9 @@ class ActivityTool (Folder, UniqueObject):
               expanded_object_list.append(obj)
           object_list.append(obj)
           new_message_list.append(m)
-        except ConflictError:
-          raise
         except:
           m.is_executed = 0
+          m.exc_type = sys.exc_info()[0]
           LOG('WARNING ActivityTool', 0,
               'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
               
@@ -608,12 +605,11 @@ class ActivityTool (Folder, UniqueObject):
           # NOTE: expanded_object_list must be set to failed objects by the callee.
           #       If it fully succeeds, expanded_object_list must be empty when returning.
           result = method(expanded_object_list)
-        except ConflictError:
-          raise
         except:
           # In this case, the group method completely failed.
           for m in new_message_list:
             m.is_executed = 0
+            m.exc_type = sys.exc_info()[0]
           LOG('WARNING ActivityTool', 0,
               'Could not call method %s on objects %s' % (method_id, expanded_object_list), error=sys.exc_info())
         else:
@@ -636,10 +632,9 @@ class ActivityTool (Folder, UniqueObject):
               try:
                 m.activateResult(self, result, object)
                 m.is_executed = 1
-              except ConflictError:
-                raise
               except:
                 m.is_executed = 0
+                m.exc_type = sys.exc_info()[0]
                 LOG('WARNING ActivityTool', 0,
                     'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
             
