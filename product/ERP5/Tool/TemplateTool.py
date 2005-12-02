@@ -234,8 +234,9 @@ class TemplateTool (BaseTool):
       if os.path.isdir(name): # new version of business template in plain format (folder)
         file_list = []
         def callback(arg, directory, files):
-          for file in files:
-            file_list.append(os.path.join(directory, file))
+          if 'CVS' not in directory:
+            for file in files:
+              file_list.append(os.path.join(directory, file))
 
         os.path.walk(name, callback, None)        
         file_list.sort()
