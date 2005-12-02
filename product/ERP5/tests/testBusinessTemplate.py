@@ -437,6 +437,15 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     portal_categories = self.getCategoryTool()
     self.failUnless(base_category_id in portal_categories.contentIds())
 
+  def stepCheckIfBaseCategoryIsNotInstalled(self, sequence=None, 
+                                         sequence_list=None, **kw):
+    """
+    Check if a base category is not installed.
+    """
+    base_category_id = sequence.get('installed_base_cat_id')
+    portal_categories = self.getCategoryTool()
+    self.failIf(base_category_id in portal_categories.contentIds())
+
   def test_03_update(self, quiet=0, run=run_all_test):
     """
     Update BT
@@ -537,7 +546,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       Tic \
                       InstallNewBT \
                       CheckNoEmptyDiff \
-                      CheckIfBaseCategoryIsInstalled \
+                      CheckIfBaseCategoryIsNotInstalled \
                       SwitchBT \
                       '
     sequence_list.addSequenceString(sequence_string)
