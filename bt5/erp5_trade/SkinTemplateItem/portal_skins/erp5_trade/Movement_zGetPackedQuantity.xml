@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>explanation_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>resource_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>variation_text</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>explanation_uid</string>
+                            <string>resource_uid</string>
+                            <string>variation_text</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>explanation_uid\r\n
+resource_uid\r\n
+variation_text</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>zsqlbrain.py</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>ZSQLBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Movement_zGetPackedQuantity</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+\tSUM(movement.quantity) AS quantity\n
+FROM\n
+\tcatalog AS container_cell, movement\n
+WHERE\n
+\tmovement.explanation_uid = <dtml-sqlvar explanation_uid type="int">\n
+  AND container_cell.has_cell_content = 0\n
+  AND container_cell.uid = movement.uid\n
+  AND\t(container_cell.portal_type = "Container Cell" \n
+      OR container_cell.portal_type = "Container Line")\n
+\n
+<dtml-if resource_uid>\n
+  AND movement.resource_uid = <dtml-sqlvar resource_uid type="int">\n
+</dtml-if>\n
+<dtml-if variation_text>\n
+  AND movement.variation_text = "<dtml-var variation_text>"\n
+</dtml-if>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+\tSUM(movement.quantity) AS quantity\n
+FROM\n
+\tcatalog AS container_cell, movement\n
+WHERE\n
+\tmovement.explanation_uid = <dtml-sqlvar explanation_uid type="int">\n
+  AND container_cell.has_cell_content = 0\n
+  AND container_cell.uid = movement.uid\n
+  AND\t(container_cell.portal_type = "Container Cell" \n
+      OR container_cell.portal_type = "Container Line")\n
+\n
+<dtml-if resource_uid>\n
+  AND movement.resource_uid = <dtml-sqlvar resource_uid type="int">\n
+</dtml-if>\n
+<dtml-if variation_text>\n
+  AND movement.variation_text = "<dtml-var variation_text>"\n
+</dtml-if>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

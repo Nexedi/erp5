@@ -1,0 +1,46 @@
+<workflow_chain>
+ <chain>
+  <type>Component</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Component Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Product</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Product Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Service</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Service Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Transformation</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Transformation Operation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Optional Resource</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Transformed Resource</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

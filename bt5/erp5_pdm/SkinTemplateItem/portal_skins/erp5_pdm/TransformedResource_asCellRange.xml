@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# base_cell_id possible value: \'quantity\', \'variation\'\n
+\n
+get_variation_base_category_method_dict = {\n
+  \'quantity\': \'getQVariationBaseCategoryList\',\n
+  \'variation\': \'getVVariationBaseCategoryList\'\n
+}\n
+\n
+cell_range = []\n
+transformation = context.aq_parent\n
+\n
+# Those value are define on property sheet of portal type\n
+line_base_category = transformation.getVariationBaseCategoryLine()\n
+column_base_category = transformation.getVariationBaseCategoryColumn()\n
+\n
+base_category_list = transformation.getVariationBaseCategoryList()\n
+tab_base_category_list = filter(lambda x: x not in [line_base_category, \n
+                                     column_base_category], base_category_list)\n
+\n
+for c in ([line_base_category, column_base_category] + tab_base_category_list):\n
+  # try to display line first, then column, and finally others\n
+  if c in getattr(context, \n
+                  get_variation_base_category_method_dict[base_cell_id])():\n
+    # base category was selected by user\n
+    if matrixbox == 1:\n
+      # XXX matrixbox is right_display (not as listfield) \n
+      # => invert display and value in item\n
+      cell_range.append(map(lambda x: (x[1],x[0]), \n
+                        transformation.getVariationCategoryItemList\n
+                                (base_category_list=(c,))))\n
+    else:\n
+      cell_range.append(transformation.getVariationCategoryList(\n
+                                             base_category_list=(c,)))\n
+\n
+# Remove empty range\n
+cell_range = filter(lambda x: x != [], cell_range)\n
+\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGUAAGQCAIQCAFoBAGQAAFMoAwAAAE5pAAAAAGMDAAAA
+EgAAABMAAAADAAAAc0kBAABoAAAEZAEAZAIAAzwEZAMAZAQAAzx9AwBnAAB9BAB0AgB0AwBkBQCD
+AgB9BwB0AgB8BwBkBgCDAgCDAACJAAB0AgB8BwBkBwCDAgCDAACJAQB0AgB8BwBkCACDAgCDAAB9
+CgB0CACHAACHAQBkCQCGAAB8CgCDAgB9DAB4sQB0CgCIAACIAQBnAgB8DAAXgwEARF2ZAH0OAHwO
+AHQMAHQDAHQNAHwDAHwAAIMCAIMCAIMAAGoGAG9xAAF8AQBkCgBqAgBvOAABdAIAfAQAZAsAgwIA
+dBAAZAwAhAAAdAIAfAcAZA0AgwIAZA4AfA4AZgEAgwABgwIAgwEAAXErAQF0AgB8BABkCwCDAgB0
+AgB8BwBkDwCDAgBkDgB8DgBmAQCDAAGDAQABcZIAAXGSAFd0CABkEACEAAB8BACDAgB9BAB8BABT
+ZAAAUygRAAAATnMIAAAAcXVhbnRpdHlzHQAAAGdldFFWYXJpYXRpb25CYXNlQ2F0ZWdvcnlMaXN0
+cwkAAAB2YXJpYXRpb25zHQAAAGdldFZWYXJpYXRpb25CYXNlQ2F0ZWdvcnlMaXN0cwkAAABhcV9w
+YXJlbnRzHAAAAGdldFZhcmlhdGlvbkJhc2VDYXRlZ29yeUxpbmVzHgAAAGdldFZhcmlhdGlvbkJh
+c2VDYXRlZ29yeUNvbHVtbnMcAAAAZ2V0VmFyaWF0aW9uQmFzZUNhdGVnb3J5TGlzdGMBAAAAAwAA
+AAMAAAADAAAAcxAAAAB8AACIAACIAQBnAgBqBwBTKAEAAABOKAMAAABzAQAAAHhzEgAAAGxpbmVf
+YmFzZV9jYXRlZ29yeXMUAAAAY29sdW1uX2Jhc2VfY2F0ZWdvcnkoAwAAAHMBAAAAeHMSAAAAbGlu
+ZV9iYXNlX2NhdGVnb3J5cxQAAABjb2x1bW5fYmFzZV9jYXRlZ29yeSgCAAAAcxIAAABsaW5lX2Jh
+c2VfY2F0ZWdvcnlzFAAAAGNvbHVtbl9iYXNlX2NhdGVnb3J5KAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMKAAAAPGxhbWJkYS40PhAAAABzAgAAAAYBaQEAAABzBgAAAGFwcGVuZGMBAAAAAgAAAAQA
+AABDAAAAcxwAAAB0AAB8AABkAQCDAgB0AAB8AABkAgCDAgBmAgBTKAMAAABOaQEAAABpAAAAACgC
+AAAAcwkAAABfZ2V0aXRlbV9zAQAAAHgoAgAAAHMBAAAAeHMJAAAAX2dldGl0ZW1fKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcwoAAAA8bGFtYmRhLjU+GwAAAHMAAAAAcxwAAABnZXRWYXJp
+YXRpb25DYXRlZ29yeUl0ZW1MaXN0cxIAAABiYXNlX2NhdGVnb3J5X2xpc3RzGAAAAGdldFZhcmlh
+dGlvbkNhdGVnb3J5TGlzdGMBAAAAAQAAAAIAAABDAAAAcwoAAAB8AABnAABqAwBTKAEAAABOKAEA
+AABzAQAAAHgoAQAAAHMBAAAAeCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxh
+bWJkYS42PiMAAABzAAAAACgRAAAAcycAAABnZXRfdmFyaWF0aW9uX2Jhc2VfY2F0ZWdvcnlfbWV0
+aG9kX2RpY3RzCgAAAGNlbGxfcmFuZ2VzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMOAAAAdHJh
+bnNmb3JtYXRpb25zEgAAAGxpbmVfYmFzZV9jYXRlZ29yeXMUAAAAY29sdW1uX2Jhc2VfY2F0ZWdv
+cnlzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMGAAAAZmlsdGVycxYAAAB0YWJfYmFzZV9jYXRlZ29y
+eV9saXN0cwkAAABfZ2V0aXRlcl9zAQAAAGNzBwAAAGdldGF0dHJzCQAAAF9nZXRpdGVtX3MMAAAA
+YmFzZV9jZWxsX2lkcwkAAABtYXRyaXhib3hzAwAAAG1hcCgSAAAAcwwAAABiYXNlX2NlbGxfaWRz
+CQAAAG1hdHJpeGJveHMHAAAAYmFzZV9pZHMnAAAAZ2V0X3ZhcmlhdGlvbl9iYXNlX2NhdGVnb3J5
+X21ldGhvZF9kaWN0cwoAAABjZWxsX3JhbmdlcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDgAA
+AHRyYW5zZm9ybWF0aW9ucxIAAABsaW5lX2Jhc2VfY2F0ZWdvcnlzFAAAAGNvbHVtbl9iYXNlX2Nh
+dGVnb3J5cxIAAABiYXNlX2NhdGVnb3J5X2xpc3RzBgAAAGZpbHRlcnMWAAAAdGFiX2Jhc2VfY2F0
+ZWdvcnlfbGlzdHMJAAAAX2dldGl0ZXJfcwEAAABjcwcAAABnZXRhdHRycwkAAABfZ2V0aXRlbV9z
+AwAAAG1hcCgAAAAAKAIAAABzEgAAAGxpbmVfYmFzZV9jYXRlZ29yeXMUAAAAY29sdW1uX2Jhc2Vf
+Y2F0ZWdvcnlzDwAAAFNjcmlwdCAoUHl0aG9uKXMfAAAAVHJhbnNmb3JtZWRSZXNvdXJjZV9hc0Nl
+bGxSYW5nZQEAAABzKAAAAAACGAUGAQ8DEgESAhIBDwEJAhcABgIMARYCEAMVAQwBFwIYARUDEgIo
+AgAAAHMEAAAATm9uZXMfAAAAVHJhbnNmb3JtZWRSZXNvdXJjZV9hc0NlbGxSYW5nZSgCAAAAcwQA
+AABOb25lcx8AAABUcmFuc2Zvcm1lZFJlc291cmNlX2FzQ2VsbFJhbmdlKAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_pdm/TransformedResource_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_cell_id, matrixbox=0, base_id=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>base_cell_id</string>
+                            <string>matrixbox</string>
+                            <string>base_id</string>
+                            <string>get_variation_base_category_method_dict</string>
+                            <string>cell_range</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>transformation</string>
+                            <string>line_base_category</string>
+                            <string>column_base_category</string>
+                            <string>base_category_list</string>
+                            <string>filter</string>
+                            <string>tab_base_category_list</string>
+                            <string>_getiter_</string>
+                            <string>c</string>
+                            <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>map</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TransformedResource_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

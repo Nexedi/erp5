@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  This script is called automatically every time a delivery (Packing List, Invoice, etc)\n
+is edited.\n
+It is responsible of updating the applied rule\n
+\n
+"""\n
+\n
+delivery = sci[\'object\']\n
+delivery_portal_type = delivery.getPortalType()\n
+portal = sci.getPortal()\n
+LOG = lambda msg:delivery.log("delivery_edit_workflow.Delivery_UpdateSimulation (%s)\\n" % (delivery.getPath()), msg)\n
+LOG = lambda msg:None\n
+\n
+LOG(\'BEGIN\')\n
+\n
+\n
+rule_by_ptype = {\n
+  \'Sale Invoice Transaction\' : \'default_invoice_rule\',\n
+  \'Pay Sheet Transaction\' : \'default_invoice_rule\',\n
+  \'Purchase Invoice Transaction\' : \'default_invoice_rule\',\n
+  \'Sale Packing List\' : \'default_delivery_rule\',\n
+  \'Purchase Packing List\' : \'default_delivery_rule\',\n
+}\n
+\n
+if rule_by_ptype.has_key(delivery_portal_type) : \n
+  delivery.activate(\n
+           queue="SQLQueue",\n
+           after_method_id = [ \'immediateReindexObject\',\n
+                               \'recursiveImmediateReindexObject\',\n
+                               \'expand\']\n
+          ).updateAppliedRule(rule_id = rule_by_ptype[delivery_portal_type])\n
+else : \n
+  LOG("no rule_id for %s, don\'t know how to updateAppliedRule" % delivery_portal_type)\n
+\n
+LOG(\'END\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAgAAAANAAAAAwAA
+AHP7AAAAdAAAfAAAZAEAgwIAiQAAdAMAiAAAZAIAgwIAgwAAfQQAdAMAfAAAZAMAgwIAgwAAfQUA
+hwAAZAQAhgAAfQYAZAUAhAAAfQYAfAYAZAYAgwEAAWgAAARkBwBkCAADPARkCQBkCAADPARkCgBk
+CAADPARkCwBkDAADPARkDQBkDAADPH0HAHQDAHwHAGQOAIMCAHwEAIMBAG9EAAF0AwB0AwCIAABk
+DwCDAgBkEABkEQBkEgBkEwBkFABkFQBnAwCDAAJkFgCDAgBkFwB0AAB8BwB8BACDAgCDAAEBbg8A
+AXwGAGQYAHwEABaDAQABfAYAZBkAgwEAAWQAAFMoGgAAAE5zBgAAAG9iamVjdHMNAAAAZ2V0UG9y
+dGFsVHlwZXMJAAAAZ2V0UG9ydGFsYwEAAAADAAAABQAAAAMAAABzJgAAAHQAAIgAAGQBAIMCAGQC
+AHQAAIgAAGQDAIMCAIMAABZ8AACDAgBTKAQAAABOcwMAAABsb2dzNgAAAGRlbGl2ZXJ5X2VkaXRf
+d29ya2Zsb3cuRGVsaXZlcnlfVXBkYXRlU2ltdWxhdGlvbiAoJXMpCnMHAAAAZ2V0UGF0aCgDAAAA
+cwkAAABfZ2V0YXR0cl9zCAAAAGRlbGl2ZXJ5cwMAAABtc2coAwAAAHMDAAAAbXNncwkAAABfZ2V0
+YXR0cl9zCAAAAGRlbGl2ZXJ5KAEAAABzCAAAAGRlbGl2ZXJ5KAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMLAAAAPGxhbWJkYS4xMD4LAAAAcwAAAABjAQAAAAIAAAABAAAAQwAAAHMEAAAAdAAAUygB
+AAAATigBAAAAcwQAAABOb25lKAIAAABzAwAAAG1zZ3MEAAAATm9uZSgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMLAAAAPGxhbWJkYS4xMT4MAAAAcwAAAABzBQAAAEJFR0lOcxgAAABTYWxl
+IEludm9pY2UgVHJhbnNhY3Rpb25zFAAAAGRlZmF1bHRfaW52b2ljZV9ydWxlcxUAAABQYXkgU2hl
+ZXQgVHJhbnNhY3Rpb25zHAAAAFB1cmNoYXNlIEludm9pY2UgVHJhbnNhY3Rpb25zEQAAAFNhbGUg
+UGFja2luZyBMaXN0cxUAAABkZWZhdWx0X2RlbGl2ZXJ5X3J1bGVzFQAAAFB1cmNoYXNlIFBhY2tp
+bmcgTGlzdHMHAAAAaGFzX2tleXMIAAAAYWN0aXZhdGVzBQAAAHF1ZXVlcwgAAABTUUxRdWV1ZXMP
+AAAAYWZ0ZXJfbWV0aG9kX2lkcxYAAABpbW1lZGlhdGVSZWluZGV4T2JqZWN0cx8AAAByZWN1cnNp
+dmVJbW1lZGlhdGVSZWluZGV4T2JqZWN0cwYAAABleHBhbmRzEQAAAHVwZGF0ZUFwcGxpZWRSdWxl
+cwcAAABydWxlX2lkczYAAABubyBydWxlX2lkIGZvciAlcywgZG9uJ3Qga25vdyBob3cgdG8gdXBk
+YXRlQXBwbGllZFJ1bGVzAwAAAEVORCgIAAAAcwkAAABfZ2V0aXRlbV9zAwAAAHNjaXMIAAAAZGVs
+aXZlcnlzCQAAAF9nZXRhdHRyX3MUAAAAZGVsaXZlcnlfcG9ydGFsX3R5cGVzBgAAAHBvcnRhbHMD
+AAAATE9Hcw0AAABydWxlX2J5X3B0eXBlKAgAAABzAwAAAHNjaXMJAAAAX2dldGl0ZW1fcwgAAABk
+ZWxpdmVyeXMJAAAAX2dldGF0dHJfcxQAAABkZWxpdmVyeV9wb3J0YWxfdHlwZXMGAAAAcG9ydGFs
+cwMAAABMT0dzDQAAAHJ1bGVfYnlfcHR5cGUoAAAAACgBAAAAcwgAAABkZWxpdmVyeXMPAAAAU2Ny
+aXB0IChQeXRob24pcxkAAABEZWxpdmVyeV9VcGRhdGVTaW11bGF0aW9uAQAAAHMaAAAAAAcPARIB
+EgEMAQkCCgM2CBkBEgIbAxECDgIoAQAAAHMZAAAARGVsaXZlcnlfVXBkYXRlU2ltdWxhdGlvbigB
+AAAAcxkAAABEZWxpdmVyeV9VcGRhdGVTaW11bGF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_workflow/delivery_edit_workflow/scripts/Delivery_UpdateSimulation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>sci</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>sci</string>
+                            <string>_getitem_</string>
+                            <string>delivery</string>
+                            <string>_getattr_</string>
+                            <string>delivery_portal_type</string>
+                            <string>portal</string>
+                            <string>LOG</string>
+                            <string>rule_by_ptype</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_UpdateSimulation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

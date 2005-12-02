@@ -1,0 +1,10 @@
+internal_packing_list_module
+inventory_module
+purchase_order_module
+purchase_packing_list_module
+purchase_supply_module
+purchase_trade_condition_module
+sale_order_module
+sale_packing_list_module
+sale_supply_module
+sale_trade_condition_module

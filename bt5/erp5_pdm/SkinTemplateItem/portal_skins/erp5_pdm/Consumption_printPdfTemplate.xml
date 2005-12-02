@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8" ?>\n
+<template filename="default.pdf"\n
+          pagesize="A4"\n
+          landscape="1"\n
+          showboundary="1"\n
+          leftmargin="1cm"\n
+          rightmargin="1cm"\n
+          topmargin="1cm"\n
+          bottommargin="1cm"\n
+          allowsplitting="1">\n
+\n
+ <stylesheet>\n
+\n
+    <paragraphstyle name="Normal" fontname="Helvetica" fontsize="12" align="LEFT" firstLineIndent="0"/>\n
+    <paragraphstyle name="Bullet" fontname="Helvetica" fontsize="12" bulletFontName="Symbol" bulletFontSize="14" leftIndent="20"  firstLineIndent="0" parent="Normal"/>\n
+    <paragraphstyle name="Heading1" parent="Normal" fontname="Helvetica-Bold" fontsize="16"/>\n
+    <paragraphstyle name="Heading2" parent="Normal" fontname="Helvetica-Bold" fontsize="15"/>\n
+    <paragraphstyle name="Heading3" parent="Normal" fontname="Helvetica-Bold" fontsize="14"/>\n
+    <paragraphstyle name="Heading4" parent="Normal" fontname="Helvetica-Bold" fontsize="13"/>\n
+    <paragraphstyle name="Heading5" parent="Normal" fontname="Helvetica-Bold" fontsize="12"/>\n
+    <paragraphstyle name="Heading6" parent="Normal" fontname="Helvetica-Bold" fontsize="11"/>\n
+    <paragraphstyle name="Heading7" parent="Normal" fontname="Helvetica-Bold" fontsize="10"/>\n
+\n
+    <paragraphstyle name="Small" parent="Normal" fontname="Helvetica-Bold" fontsize="7"/>\n
+    <paragraphstyle name="Cell" parent="Normal" fontname="Helvetica-Bold" fontsize="12" alignment="center" />\n
+    <paragraphstyle name="CellHeading" parent="Normal" fontname="Helvetica-Bold" fontsize="13" alignment="center"/>\n
+\n
+    <paragraphstyle name="Example" fontname="Courier-Oblique" fontsize="10" parent="Normal"/>\n
+    <paragraphstyle name="ParaHeadLine" fontname="Helvetica" fontsize="8" parent="Normal"/>\n
+    <paragraphstyle name="ParaHeadLine2" fontname="Helvetica" fontsize="6" parent="Normal"/>\n
+    <paragraphstyle name="ParaHeadLine3" align="RIGHT" fontname="Helvetica" fontsize="6"/>\n
+ \n
+    <paragraphstyle name="TableStandard" parent="Normal" fontname="Helvetica" fontsize="8" alignment="left" />\n
+    <paragraphstyle name="TableHeader" parent="Normal" fontname="Helvetica-Oblique" fontsize="9" alignment="left" />\n
+    <paragraphstyle name="TableLastLine" parent="Normal" fontname="Helvetica-Oblique" fontsize="11" alignment="left" />\n
+      \n
+    <tablestyle name="StandardTable">\n
+      <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
+      <stylecmd expr="(\'BOX\', (0,0), (-1,0), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BOX\', (0,1), (-1,-1), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,0), (-1,0), (0.9,0.9,0.9))"/>\n
+      <stylecmd expr="(\'ALIGN\', (0,0), (-1,-1), \'CENTER\')"/>\n
+      <stylecmd expr="(\'VALIGN\', (0,0), (-1,-1), \'TOP\')"/>\n
+    </tablestyle>\n
+    <tablestyle name="StandardTableWithGrid">\n
+      <stylecmd expr="(\'INNERGRID\', (0,1), (-1,-1), 1, (0.5,0.5,0.5))"/>\n
+      <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
+      <stylecmd expr="(\'BOX\', (0,0), (-1,0), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BOX\', (0,1), (-1,-1), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,0), (-1,0), (0.9,0.9,0.9))"/>\n
+      <stylecmd expr="(\'ALIGN\', (0,0), (-1,-1), \'CENTER\')"/>\n
+      <stylecmd expr="(\'VALIGN\', (0,0), (-1,-1), \'TOP\')"/>\n
+    </tablestyle>\n
+    <tablestyle name="MatrixBoxWithGrid">\n
+      <stylecmd expr="(\'INNERGRID\', (0,0), (-1,-1), 1, (0.5,0.5,0.5))"/>\n
+      <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
+      <stylecmd expr="(\'BOX\', (0,0), (-1,0), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BOX\', (0,1), (-1,-1), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BOX\', (0,0), (0,-1), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,0), (-1,0), (0.9,0.9,0.9))"/>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,0), (0,-1), (0.9,0.9,0.9))"/>\n
+      <stylecmd expr="(\'ALIGN\', (0,0), (-1,-1), \'CENTER\')"/>\n
+      <stylecmd expr="(\'VALIGN\', (0,0), (-1,-1), \'TOP\')"/>\n
+    </tablestyle>\n
+    <tablestyle name="AttributesTable">\n
+      <stylecmd expr="(\'INNERGRID\', (0,0), (-1,-1), 1, (0.5,0.5,0.5))"/>\n
+      <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
+      <stylecmd expr="(\'BOX\', (0,0), (-1,-1), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,0), (0,-1), (0.9,0.9,0.9))"/>\n
+      <stylecmd expr="(\'ALIGN\', (0,0), (-1,-1), \'CENTER\')"/>\n
+      <stylecmd expr="(\'VALIGN\', (0,0), (-1,-1), \'TOP\')"/>\n
+    </tablestyle>\n
+\n
+  </stylesheet>\n
+\n
+\n
+  <pagetemplate id="FirstPage" nextid="FirstPage" startframe="content">\n
+    <static>\n
+      <infostring align="left" x="28cm" y= "1cm" size="10" font="Helvetica" color="(0,0,0)" >Page %(page)s</infostring>\n
+    </static>\n
+\n
+    <frame id="content"\n
+           nextid="content"\n
+           x="1.8cm"\n
+           y="0.6cm"\n
+           width="26cm"\n
+           height="19.5cm"\n
+           leftpadding="0.1cm"\n
+           rightpadding="0.1cm"\n
+           toppadding="0.2cm"\n
+           bottompadding="0.5cm"\n
+           showBoundary="1"/>\n
+ \n
+  </pagetemplate>\n
+\n
+</template>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Consumption_printPdfTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Remove empty items\n
+item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
+                   item_list)\n
+\n
+sub_field_dict = {}\n
+split_depth = 1\n
+resource = context.getResourceValue()\n
+if resource is not None:\n
+  not_option_base_category_list = resource.getVariationBaseCategoryList(\n
+                                                 omit_option_base_category=1)\n
+\n
+for item in item_list:\n
+  # Get value of the item\n
+  item_value = item[int(not is_right_display)]\n
+\n
+  # Hash key from item_value\n
+  item_split = string.split(item_value, \'/\')\n
+  item_key = string.join(item_split[:split_depth] , \'/\' )\n
+  base_category = item_split[0]\n
+\n
+  if not sub_field_dict.has_key(item_key):\n
+    # Create property dict\n
+    sub_field_property_dict = default_sub_field_property_dict.copy()\n
+    sub_field_property_dict[\'key\'] = item_key\n
+    required_value = 0\n
+    if base_category in not_option_base_category_list:\n
+      required_value = 1\n
+    sub_field_property_dict[\'required\'] = required_value\n
+    sub_field_property_dict[\'field_type\'] = \'MultiListField\'\n
+    sub_field_property_dict[\'size\'] = 5\n
+    sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
+    sub_field_property_dict[\'value\'] = []\n
+    sub_field_dict[item_key] = sub_field_property_dict\n
+\n
+  sub_field_dict[item_key][\'item_list\'] =\\\n
+     sub_field_dict[item_key][\'item_list\'] + [item]\n
+  if item_value in value_list:\n
+    sub_field_dict[item_key][\'value\'] =\\\n
+      sub_field_dict[item_key][\'value\'] + [item_value]\n
+\n
+return sub_field_dict.values()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGgAAGQBAGQCAIQCAFoAAGQAAFMoAwAAAE5pAAAAAGMEAAAA
+GAAAABMAAABDAAAAcyACAAB0AABkAQCEAAB8AACDAgB9AABoAAB9BQBkAgB9BgB0BAB0BQBkAwCD
+AgCDAAB9CQB8CQB0BwBqCQBvHAABdAQAfAkAZAQAgwIAZAUAZAIAgwABfQsAbgEAAXiwAXQJAHwA
+AIMBAERdogF9DQB0CwB8DQB0DAB8AwAMgwEAgwIAfRAAdAQAdA8AZAYAgwIAfBAAZAcAgwIAfRIA
+dAQAdA8AZAgAgwIAdAsAfBIAZAAAfAYAhQIAgwIAZAcAgwIAfRMAdAsAfBIAZAkAgwIAfRQAdAQA
+fAUAZAoAgwIAfBMAgwEADG+sAAF0BAB8AgBkCwCDAgCDAAB9FQB8EwB0FQB8FQCDAQBkDAA8ZAkA
+fRcAfBQAfAsAagYAbwoAAWQCAH0XAG4BAAF8FwB0FQB8FQCDAQBkDQA8ZA4AdBUAfBUAgwEAZA8A
+PGQQAHQVAHwVAIMBAGQRADxkEgBkEgBmAgBnAQB0FQB8FQCDAQBkEwA8ZwAAdBUAfBUAgwEAZBQA
+PHwVAHQVAHwFAIMBAHwTADxuAQABdAsAdAsAfAUAfBMAgwIAZBMAgwIAfA0AZwEAF3QVAHQLAHwF
+AHwTAIMCAIMBAGQTADx8EAB8AQBqBgBvNgABdAsAdAsAfAUAfBMAgwIAZBQAgwIAfBAAZwEAF3QV
+AHQLAHwFAHwTAIMCAIMBAGQUADxxZgABcWYAV3QEAHwFAGQVAIMCAIMAAFNkAABTKBYAAABOYwEA
+AAABAAAABAAAAEMAAABzHAAAAHwAAGQBAGQBAGYCAGQBAGQBAGcCAGcCAGoHAFMoAgAAAE5zAAAA
+ACgBAAAAcwEAAAB4KAEAAABzAQAAAHgoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAA
+ADxsYW1iZGEuND4CAAAAcwAAAABpAQAAAHMQAAAAZ2V0UmVzb3VyY2VWYWx1ZXMcAAAAZ2V0VmFy
+aWF0aW9uQmFzZUNhdGVnb3J5TGlzdHMZAAAAb21pdF9vcHRpb25fYmFzZV9jYXRlZ29yeXMFAAAA
+c3BsaXRzAQAAAC9zBAAAAGpvaW5pAAAAAHMHAAAAaGFzX2tleXMEAAAAY29weXMDAAAAa2V5cwgA
+AAByZXF1aXJlZHMOAAAATXVsdGlMaXN0RmllbGRzCgAAAGZpZWxkX3R5cGVpBQAAAHMEAAAAc2l6
+ZXMAAAAAcwkAAABpdGVtX2xpc3RzBQAAAHZhbHVlcwYAAAB2YWx1ZXMoGAAAAHMGAAAAZmlsdGVy
+cwkAAABpdGVtX2xpc3RzDgAAAHN1Yl9maWVsZF9kaWN0cwsAAABzcGxpdF9kZXB0aHMJAAAAX2dl
+dGF0dHJfcwcAAABjb250ZXh0cwgAAAByZXNvdXJjZXMEAAAATm9uZXMdAAAAbm90X29wdGlvbl9i
+YXNlX2NhdGVnb3J5X2xpc3RzCQAAAF9nZXRpdGVyX3MEAAAAaXRlbXMJAAAAX2dldGl0ZW1fcwMA
+AABpbnRzEAAAAGlzX3JpZ2h0X2Rpc3BsYXlzCgAAAGl0ZW1fdmFsdWVzBgAAAHN0cmluZ3MKAAAA
+aXRlbV9zcGxpdHMIAAAAaXRlbV9rZXlzDQAAAGJhc2VfY2F0ZWdvcnlzHwAAAGRlZmF1bHRfc3Vi
+X2ZpZWxkX3Byb3BlcnR5X2RpY3RzFwAAAHN1Yl9maWVsZF9wcm9wZXJ0eV9kaWN0cwcAAABfd3Jp
+dGVfcw4AAAByZXF1aXJlZF92YWx1ZXMKAAAAdmFsdWVfbGlzdCgYAAAAcwkAAABpdGVtX2xpc3Rz
+CgAAAHZhbHVlX2xpc3RzHwAAAGRlZmF1bHRfc3ViX2ZpZWxkX3Byb3BlcnR5X2RpY3RzEAAAAGlz
+X3JpZ2h0X2Rpc3BsYXlzBgAAAGZpbHRlcnMOAAAAc3ViX2ZpZWxkX2RpY3RzCwAAAHNwbGl0X2Rl
+cHRocwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCAAAAHJlc291cmNlcwQAAABOb25lcx0AAABu
+b3Rfb3B0aW9uX2Jhc2VfY2F0ZWdvcnlfbGlzdHMJAAAAX2dldGl0ZXJfcwQAAABpdGVtcwkAAABf
+Z2V0aXRlbV9zAwAAAGludHMKAAAAaXRlbV92YWx1ZXMGAAAAc3RyaW5ncwoAAABpdGVtX3NwbGl0
+cwgAAABpdGVtX2tleXMNAAAAYmFzZV9jYXRlZ29yeXMXAAAAc3ViX2ZpZWxkX3Byb3BlcnR5X2Rp
+Y3RzBwAAAF93cml0ZV9zDgAAAHJlcXVpcmVkX3ZhbHVlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcyoAAABEZWxpdmVyeUxpbmVfaGFzaFZhcmlhdGlvbkNhdGVnb3J5SXRlbUxpc3QBAAAA
+cz4AAAAAAQkBCQIGAQYBEgENARwDDQAGAhYDGAEnAQ8CFwISARABBgENAQoBEAEQARABGQEQARQC
+BgEsAQ0BBgE0AigBAAAAcyoAAABEZWxpdmVyeUxpbmVfaGFzaFZhcmlhdGlvbkNhdGVnb3J5SXRl
+bUxpc3QoAQAAAHMqAAAARGVsaXZlcnlMaW5lX2hhc2hWYXJpYXRpb25DYXRlZ29yeUl0ZW1MaXN0
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/DeliveryLine_hashVariationCategoryItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>item_list</string>
+                            <string>value_list</string>
+                            <string>default_sub_field_property_dict</string>
+                            <string>is_right_display</string>
+                            <string>filter</string>
+                            <string>sub_field_dict</string>
+                            <string>split_depth</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>resource</string>
+                            <string>None</string>
+                            <string>not_option_base_category_list</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>_getitem_</string>
+                            <string>int</string>
+                            <string>item_value</string>
+                            <string>string</string>
+                            <string>item_split</string>
+                            <string>item_key</string>
+                            <string>base_category</string>
+                            <string>sub_field_property_dict</string>
+                            <string>_write_</string>
+                            <string>required_value</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <dictionary/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DeliveryLine_hashVariationCategoryItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script search a trade condition matching to the order\n
+# and try to complete some fields\n
+order = context\n
+trade_condition_list = []\n
+\n
+trade_condition_portal_type = \'Purchase Trade Condition\'\n
+trade_condition_list = order.getSpecialiseValueList(portal_type=(\n
+                                             trade_condition_portal_type,))\n
+\n
+if len(trade_condition_list)==0:\n
+  # Search a matching Trade Condition\n
+  trade_condition_list = context.portal_domains.searchPredicateList(order,portal_type=(\'Purchase Trade Condition\',),test=0)\n
+  \n
+# Results\n
+if len(trade_condition_list ) == 0 :\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=No+Trade+Condition.\')\n
+elif len(trade_condition_list ) > 1 :\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=Too+many+Trade+Condition.\')\n
+else : \n
+  trade_condition=trade_condition_list[0].getObject()\n
+\n
+  # Update Order Profile\n
+  categories = order.getCategoryList()\n
+  # Destination\n
+  if order.getDestinationValue() == None and trade_condition.getDestinationValue() is not None :\n
+    categories += (\'destination/\'+trade_condition.getDestinationRelativeUrl(),)\n
+  # destination_decision\n
+  if (order.getDestinationDecisionValue() is None) and \\\n
+     (trade_condition.getDestinationDecisionValue() is not None) :\n
+    categories += (\'destination_decision/\'+trade_condition.getDestinationDecisionRelativeUrl(),)\n
+  # destination_administration\n
+  if (order.getDestinationAdministrationValue() is None) and \\\n
+     (trade_condition.getDestinationAdministrationValue() is not None) :\n
+    categories += (\'destination_administration/\'+trade_condition.getDestinationAdministrationRelativeUrl(),)\n
+  # destination_payment\n
+  if (order.getDestinationPaymentValue() is None) and \\\n
+     (trade_condition.getDestinationPaymentValue() is not None) :\n
+    categories += (\'destination_payment/\'+trade_condition.getDestinationPaymentRelativeUrl(),)\n
+\n
+  # SOURCE_section\n
+  if order.getSourceSectionValue() is None :\n
+    # if source_section is not defined on TradeCondition, use Order source\n
+    if trade_condition.getSourceSectionValue() is not None :\n
+      categories += (\'source_section/\'+trade_condition.getSourceSectionRelativeUrl(),)\n
+    elif trade_condition.getSourceValue() is not None:\n
+      categories += (\'source_section/\'+order.getSourceRelativeUrl(),)\n
+#     else :\n
+#       categories += (\'source_section/\'+order.getSourceRelativeUrl(),)\n
+  # source_decision\n
+  if order.getSourceDecisionValue(portal_type=\'Organisation\') is None :\n
+    # if source_decision is not defined on TradeCondition, use Order source\n
+    if trade_condition.getSourceDecisionValue(portal_type=\'Organisation\')\\\n
+       is not None :\n
+      categories += (\'source_decision/\'+trade_condition.getSourceDecisionValue(portal_type=\'Organisation\').getRelativeUrl(),)\n
+#     else :\n
+#       categories += (\'source_decision/\'+order.getSourceValue().getRelativeUrl(),)\n
+    elif order.getSourceValue() is not None:\n
+      categories += (\'source_decision/\'+order.getSourceRelativeUrl(),)\n
+  # source_administration\n
+  if order.getSourceAdministrationValue() is None :\n
+    # if source_administration is not defined on TradeCondition, use Order source\n
+    if trade_condition.getSourceAdministrationValue() is not None :\n
+      categories += (\'source_administration/\'+trade_condition.getSourceAdministrationValue().getRelativeUrl(),)\n
+#     else :\n
+#       categories += (\'source_administration/\'+order.getSourceRelativeUrl(),)\n
+    elif order.getSourceValue() is not None:\n
+      categories += (\'source_administration/\'+order.getSourceRelativeUrl(),)\n
+  # source_payment\n
+  if order.getSourcePaymentValue() is None :\n
+    # if source_payment is not defined on TradeCondition, use Order source\n
+    if trade_condition.getSourcePaymentValue() is not None :\n
+      categories += (\'source_payment/\'+trade_condition.getSourcePaymentRelativeUrl(),)\n
+#     else :\n
+    elif order.getSourceValue() is not None:\n
+      categories += (\'source_payment/\'+order.getSourceRelativeUrl(),)\n
+\n
+  # Copy of devise\n
+  if (order.getResourceValue() is None) and \\\n
+     (trade_condition.getResourceValue() is not None) :\n
+    categories += (\'resource/\'+trade_condition.getResourceRelativeUrl(),)\n
+\n
+  # Update Order Payment\n
+#   payment_term=\'\'\n
+#   if order.hasPaymentTerm() :\n
+#     payment_term = order.getPaymentTerm()\n
+#   elif trade_condition.hasPaymentTerm() :\n
+#     payment_term = trade_condition.getPaymentTerm()\n
+# \n
+#   payment_end_of_month=\'\'\n
+#   if order.hasPaymentEndOfMonth() :\n
+#     payment_end_of_month = order.getPaymentEndOfMonth()\n
+#   elif trade_condition.hasPaymentTerm() :\n
+#     payment_end_of_month = trade_condition.getPaymentEndOfMonth()\n
+# \n
+#   payment_additional_term=\'\'\n
+#   if order.hasPaymentAdditionalTerm() :\n
+#     payment_additional_term = order.getPaymentAdditionalTerm()\n
+#   elif trade_condition.hasPaymentAdditionalTerm() :\n
+#     payment_additional_term = trade_condition.getPaymentAdditionalTerm()\n
+# \n
+#   if (order.getPaymentModeValue() is None) and \\\n
+#      (trade_condition.getPaymentModeValue() is not None) :\n
+#     categories += (trade_condition.getPaymentModeValue().getRelativeUrl(),)\n
+# \n
+#   if (order.getTradeDateValue() is None) and \\\n
+#      (trade_condition.getTradeDateValue() is not None) :\n
+#     categories += (trade_condition.getTradeDateValue().getRelativeUrl(),)\n
+\n
+  # Copy Incoterm\n
+  if (order.getIncotermValue() is None) and \\\n
+     (trade_condition.getIncotermValue() is not None) :\n
+    categories += (trade_condition.getIncotermValue().getRelativeUrl(),)\n
+\n
+  if (order.getDeliveryModeValue() is None) and \\\n
+     (trade_condition.getDeliveryModeValue() is not None) :\n
+    categories += (trade_condition.getDeliveryModeValue().getRelativeUrl(),)\n
+\n
+  destination_decision_source_reference = \'\'\n
+  if order.hasDestinationDecisionSourceReference() :\n
+    destination_decision_source_reference = order.getDestinationDecisionSourceReference()\n
+  elif trade_condition.hasDestinationDecisionSourceReference() :\n
+    destination_decision_source_reference = trade_condition.getDestinationDecisionSourceReference()\n
+\n
+  # copy PaymentCondition if no one is defined on Order\n
+  payment_condition_portal_type = \'Payment Condition\'\n
+  if len(order.contentIds(filter={\'portal_type\':payment_condition_portal_type})) == 0 :\n
+    to_copy=[]\n
+    to_copy=trade_condition.contentIds(filter={\'portal_type\':payment_condition_portal_type})\n
+    if len(to_copy)>0 :\n
+     copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+     new_id_list = order.manage_pasteObjects(copy_data)\n
+\n
+  # copy Discount if no one is defined on Order\n
+  discount_portal_type = \'Discount\'\n
+  if len(order.contentIds(filter={\'portal_type\':discount_portal_type})) == 0 :\n
+    to_copy=[]\n
+    to_copy=trade_condition.contentIds(filter={\'portal_type\':discount_portal_type})\n
+    if len(to_copy)>0 :\n
+     copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+     new_id_list = order.manage_pasteObjects(copy_data)\n
+\n
+  # Update specialise value of Order\n
+  final_categories = ()\n
+  for category_item in categories :\n
+    if category_item.find(\'specialise/\') == (-1):\n
+      final_categories += (category_item,)\n
+\n
+  final_categories += (\'specialise/\'+trade_condition.getRelativeUrl(),)\n
+\n
+  order.edit(categories=final_categories, # payment_term=payment_term,\n
+#              payment_end_of_month=payment_end_of_month,\n
+#              payment_additional_term=payment_additional_term,\n
+             destination_decision_source_reference = destination_decision_source_reference)\n
+\n
+  redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
+                               \'portal_status_message=Order+updated.\')\n
+\n
+if batch_mode:\n
+  return None\n
+else:\n
+  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+AIMCAGQzAGgAAARkAwB8EgADPIMAAYMBAGQEAGoCAG9vAAFnAAB9DwB0BAB8CgBkMgCDAgBkMwBo
+AAAEZAMAfBIAAzyDAAF9DwB0BQB8DwCDAQBkBABqBABvMQABdAQAfAoAZDQAgwIAZDUAfA8AgwAB
+fRAAdAQAfAMAZDYAgwIAfBAAgwEAfREAcWsHAW4BAAFmAAB9EwB4QgB0EwB8CwCDAQBEXTQAfRUA
+dAQAfBUAZDgAgwIAZDkAgwEAZAsAC2oCAG8RAAF8EwB8FQBmAQA3fRMAcX4HAXF+B1d8EwBkOQB0
+BAB8CgBkIwCDAgCDAAAXZgEAN30TAHQEAHwDAGQ6AIMCAGQ7AHwTAGQ8AHwNAIMAAgFkCAB0BAB0
+AABkCQCDAgCDAAB8AABkPQBmAwAWfQgAfAEAbwgAAXQLAFNuJgABdAQAdAgAdAQAdAAAZD4AgwIA
+ZD8AgwIAZEAAgwIAfAgAgwEAAWQAAFMoQQAAAE5zGAAAAFB1cmNoYXNlIFRyYWRlIENvbmRpdGlv
+bnMWAAAAZ2V0U3BlY2lhbGlzZVZhbHVlTGlzdHMLAAAAcG9ydGFsX3R5cGVpAAAAAHMOAAAAcG9y
+dGFsX2RvbWFpbnNzEwAAAHNlYXJjaFByZWRpY2F0ZUxpc3RzBAAAAHRlc3RzCAAAACVzLyVzPyVz
+cwwAAABhYnNvbHV0ZV91cmxzKQAAAHBvcnRhbF9zdGF0dXNfbWVzc2FnZT1ObytUcmFkZStDb25k
+aXRpb24uaQEAAABzLwAAAHBvcnRhbF9zdGF0dXNfbWVzc2FnZT1Ub28rbWFueStUcmFkZStDb25k
+aXRpb24ucwkAAABnZXRPYmplY3RzDwAAAGdldENhdGVnb3J5TGlzdHMTAAAAZ2V0RGVzdGluYXRp
+b25WYWx1ZXMMAAAAZGVzdGluYXRpb24vcxkAAABnZXREZXN0aW5hdGlvblJlbGF0aXZlVXJscxsA
+AABnZXREZXN0aW5hdGlvbkRlY2lzaW9uVmFsdWVzFQAAAGRlc3RpbmF0aW9uX2RlY2lzaW9uL3Mh
+AAAAZ2V0RGVzdGluYXRpb25EZWNpc2lvblJlbGF0aXZlVXJscyEAAABnZXREZXN0aW5hdGlvbkFk
+bWluaXN0cmF0aW9uVmFsdWVzGwAAAGRlc3RpbmF0aW9uX2FkbWluaXN0cmF0aW9uL3MnAAAAZ2V0
+RGVzdGluYXRpb25BZG1pbmlzdHJhdGlvblJlbGF0aXZlVXJscxoAAABnZXREZXN0aW5hdGlvblBh
+eW1lbnRWYWx1ZXMUAAAAZGVzdGluYXRpb25fcGF5bWVudC9zIAAAAGdldERlc3RpbmF0aW9uUGF5
+bWVudFJlbGF0aXZlVXJscxUAAABnZXRTb3VyY2VTZWN0aW9uVmFsdWVzDwAAAHNvdXJjZV9zZWN0
+aW9uL3MbAAAAZ2V0U291cmNlU2VjdGlvblJlbGF0aXZlVXJscw4AAABnZXRTb3VyY2VWYWx1ZXMU
+AAAAZ2V0U291cmNlUmVsYXRpdmVVcmxzFgAAAGdldFNvdXJjZURlY2lzaW9uVmFsdWVzDAAAAE9y
+Z2FuaXNhdGlvbnMQAAAAc291cmNlX2RlY2lzaW9uL3MOAAAAZ2V0UmVsYXRpdmVVcmxzHAAAAGdl
+dFNvdXJjZUFkbWluaXN0cmF0aW9uVmFsdWVzFgAAAHNvdXJjZV9hZG1pbmlzdHJhdGlvbi9zFQAA
+AGdldFNvdXJjZVBheW1lbnRWYWx1ZXMPAAAAc291cmNlX3BheW1lbnQvcxsAAABnZXRTb3VyY2VQ
+YXltZW50UmVsYXRpdmVVcmxzEAAAAGdldFJlc291cmNlVmFsdWVzCQAAAHJlc291cmNlL3MWAAAA
+Z2V0UmVzb3VyY2VSZWxhdGl2ZVVybHMQAAAAZ2V0SW5jb3Rlcm1WYWx1ZXMUAAAAZ2V0RGVsaXZl
+cnlNb2RlVmFsdWVzAAAAAHMlAAAAaGFzRGVzdGluYXRpb25EZWNpc2lvblNvdXJjZVJlZmVyZW5j
+ZXMlAAAAZ2V0RGVzdGluYXRpb25EZWNpc2lvblNvdXJjZVJlZmVyZW5jZXMRAAAAUGF5bWVudCBD
+b25kaXRpb25zCgAAAGNvbnRlbnRJZHNzBgAAAGZpbHRlcnMSAAAAbWFuYWdlX2NvcHlPYmplY3Rz
+cwMAAABpZHNzEwAAAG1hbmFnZV9wYXN0ZU9iamVjdHNzCAAAAERpc2NvdW50cwQAAABmaW5kcwsA
+AABzcGVjaWFsaXNlL3MEAAAAZWRpdHMKAAAAY2F0ZWdvcmllc3MlAAAAZGVzdGluYXRpb25fZGVj
+aXNpb25fc291cmNlX3JlZmVyZW5jZXMkAAAAcG9ydGFsX3N0YXR1c19tZXNzYWdlPU9yZGVyK3Vw
+ZGF0ZWQucwcAAABSRVFVRVNUcwgAAABSRVNQT05TRXMIAAAAcmVkaXJlY3QoFgAAAHMHAAAAY29u
+dGV4dHMFAAAAb3JkZXJzFAAAAHRyYWRlX2NvbmRpdGlvbl9saXN0cxsAAAB0cmFkZV9jb25kaXRp
+b25fcG9ydGFsX3R5cGVzCQAAAF9nZXRhdHRyX3MDAAAAbGVucwcAAABmb3JtX2lkcwwAAAByZWRp
+cmVjdF91cmxzCQAAAF9nZXRpdGVtX3MPAAAAdHJhZGVfY29uZGl0aW9ucwoAAABjYXRlZ29yaWVz
+cwQAAABOb25lcyUAAABkZXN0aW5hdGlvbl9kZWNpc2lvbl9zb3VyY2VfcmVmZXJlbmNlcx0AAABw
+YXltZW50X2NvbmRpdGlvbl9wb3J0YWxfdHlwZXMHAAAAdG9fY29weXMJAAAAY29weV9kYXRhcwsA
+AABuZXdfaWRfbGlzdHMUAAAAZGlzY291bnRfcG9ydGFsX3R5cGVzEAAAAGZpbmFsX2NhdGVnb3Jp
+ZXNzCQAAAF9nZXRpdGVyX3MNAAAAY2F0ZWdvcnlfaXRlbXMKAAAAYmF0Y2hfbW9kZSgWAAAAcwcA
+AABmb3JtX2lkcwoAAABiYXRjaF9tb2RlcwcAAABjb250ZXh0cwUAAABvcmRlcnMUAAAAdHJhZGVf
+Y29uZGl0aW9uX2xpc3RzGwAAAHRyYWRlX2NvbmRpdGlvbl9wb3J0YWxfdHlwZXMJAAAAX2dldGF0
+dHJfcwMAAABsZW5zDAAAAHJlZGlyZWN0X3VybHMJAAAAX2dldGl0ZW1fcw8AAAB0cmFkZV9jb25k
+aXRpb25zCgAAAGNhdGVnb3JpZXNzBAAAAE5vbmVzJQAAAGRlc3RpbmF0aW9uX2RlY2lzaW9uX3Nv
+dXJjZV9yZWZlcmVuY2VzHQAAAHBheW1lbnRfY29uZGl0aW9uX3BvcnRhbF90eXBlcwcAAAB0b19j
+b3B5cwkAAABjb3B5X2RhdGFzCwAAAG5ld19pZF9saXN0cxQAAABkaXNjb3VudF9wb3J0YWxfdHlw
+ZXMQAAAAZmluYWxfY2F0ZWdvcmllc3MJAAAAX2dldGl0ZXJfcw0AAABjYXRlZ29yeV9pdGVtKAAA
+AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcykAAABQdXJjaGFzZU9yZGVyX2FwcGx5UHVyY2hh
+c2VUcmFkZUNvbmRpdGlvbgEAAABzqgAAAAACBgEGAgYBDwEMAhMCMQMTASMCEwEjAxsDFQIvASQC
+GQEWASQCGQEWASQCGQEWASEDGQIZASEBGQElBB8DFQAKATMDGQElAhkCGQEtAxkBJQIZAhkBIQIZ
+ASgDGQEWASQeGQEWASwCGQEWASkCCQEQARkBEAEWAwYBLgEGASEBEwEYAR0DBgEuAQYBIQETARgB
+HQMGAQ0ABgEdARUCIAISAwcCHwMHARECKAEAAABzKQAAAFB1cmNoYXNlT3JkZXJfYXBwbHlQdXJj
+aGFzZVRyYWRlQ29uZGl0aW9uKAEAAABzKQAAAFB1cmNoYXNlT3JkZXJfYXBwbHlQdXJjaGFzZVRy
+YWRlQ29uZGl0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEA
+AABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/PurchaseOrder_applyPurchaseTradeCondition</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id,batch_mode=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>batch_mode</string>
+                            <string>context</string>
+                            <string>order</string>
+                            <string>trade_condition_list</string>
+                            <string>trade_condition_portal_type</string>
+                            <string>_getattr_</string>
+                            <string>len</string>
+                            <string>redirect_url</string>
+                            <string>_getitem_</string>
+                            <string>trade_condition</string>
+                            <string>categories</string>
+                            <string>None</string>
+                            <string>destination_decision_source_reference</string>
+                            <string>payment_condition_portal_type</string>
+                            <string>to_copy</string>
+                            <string>copy_data</string>
+                            <string>new_id_list</string>
+                            <string>discount_portal_type</string>
+                            <string>final_categories</string>
+                            <string>_getiter_</string>
+                            <string>category_item</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PurchaseOrder_applyPurchaseTradeCondition</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

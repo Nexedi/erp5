@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>packing_list = context\n
+ \n
+# First, copy Order properties\n
+packing_list.PackingList_copyOrderProperties()\n
+\n
+# Then, modify state\n
+packing_list_state = packing_list.getSimulationState()\n
+\n
+if packing_list_state == "draft":\n
+  packing_list.portal_workflow.doActionFor(\n
+                                  packing_list,\n
+                                  \'confirm_action\',\n
+                                  wf_id=\'packing_list_workflow\',\n
+                                  comment="Initialized by Delivery Builder")\n
+\n
+# First set the packing_list in the building state\n
+packing_list.startBuilding()\n
+# Then an activity should put the causality state in diverged or solved\n
+# XXX after_method_id is not good, it should be after_group_id, but not yet implemented\n
+packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImmediateReindexObject\',\'Delivery_confirm\')).updateCausalityState()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAKAAAAQwAA
+AHOjAAAAdAAAfQEAdAIAfAEAZAEAgwIAgwAAAXQCAHwBAGQCAIMCAIMAAH0DAHwDAGQDAGoCAG8v
+AAF0AgB0AgB8AQBkBACDAgBkBQCDAgB8AQBkBgBkBwBkCABkCQBkCgCDAgIBbgEAAXQCAHwBAGQL
+AIMCAIMAAAF0AgB0AgB8AQBkDACDAgBkDQBkDgBkDwBkEABmAwCDAAFkEQCDAgCDAAABZAAAUygS
+AAAATnMfAAAAUGFja2luZ0xpc3RfY29weU9yZGVyUHJvcGVydGllc3MSAAAAZ2V0U2ltdWxhdGlv
+blN0YXRlcwUAAABkcmFmdHMPAAAAcG9ydGFsX3dvcmtmbG93cwsAAABkb0FjdGlvbkZvcnMOAAAA
+Y29uZmlybV9hY3Rpb25zBQAAAHdmX2lkcxUAAABwYWNraW5nX2xpc3Rfd29ya2Zsb3dzBwAAAGNv
+bW1lbnRzHwAAAEluaXRpYWxpemVkIGJ5IERlbGl2ZXJ5IEJ1aWxkZXJzDQAAAHN0YXJ0QnVpbGRp
+bmdzCAAAAGFjdGl2YXRlcw8AAABhZnRlcl9tZXRob2RfaWRzFgAAAGltbWVkaWF0ZVJlaW5kZXhP
+YmplY3RzHwAAAHJlY3Vyc2l2ZUltbWVkaWF0ZVJlaW5kZXhPYmplY3RzEAAAAERlbGl2ZXJ5X2Nv
+bmZpcm1zFAAAAHVwZGF0ZUNhdXNhbGl0eVN0YXRlKAQAAABzBwAAAGNvbnRleHRzDAAAAHBhY2tp
+bmdfbGlzdHMJAAAAX2dldGF0dHJfcxIAAABwYWNraW5nX2xpc3Rfc3RhdGUoBAAAAHMHAAAAY29u
+dGV4dHMMAAAAcGFja2luZ19saXN0cwkAAABfZ2V0YXR0cl9zEgAAAHBhY2tpbmdfbGlzdF9zdGF0
+ZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMjAAAAU2FsZVBhY2tpbmdMaXN0X2NvcHlP
+cmRlclByb3BlcnRpZXMBAAAAcw4AAAAJAw0DEgITAQ8BHQYTAygBAAAAcyMAAABTYWxlUGFja2lu
+Z0xpc3RfY29weU9yZGVyUHJvcGVydGllcygBAAAAcyMAAABTYWxlUGFja2luZ0xpc3RfY29weU9y
+ZGVyUHJvcGVydGllcygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4B
+AAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/SalePackingList_copyOrderProperties</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>context</string>
+                            <string>packing_list</string>
+                            <string>_getattr_</string>
+                            <string>packing_list_state</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SalePackingList_copyOrderProperties</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

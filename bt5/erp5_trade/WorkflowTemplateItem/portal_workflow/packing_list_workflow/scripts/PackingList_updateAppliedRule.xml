@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>LOG=lambda msg:context.log("PackingList_updateAppliedRule", msg)\n
+LOG=lambda msg:\'DISABLED\'\n
+\n
+packing_list = state_change.object\n
+\n
+packing_list.updateAppliedRule(rule_id = "default_delivery_rule")\n
+\n
+# Make sure to reindex related simulation movement if we are already\n
+# simulated\n
+packing_list.activate().applyToDeliveryRelatedMovement(method_id=\'recursiveReindexObject\')\n
+\n
+packing_list.startBuilding()\n
+packing_list.activate(\n
+  after_method_id = (\'immediateReindexObject\', \'recursiveImmediateReindexObject\', \'expand\'),\n
+).updateCausalityState()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAHAAAASwAA
+AHOYAAAAZAEAhAAAfQIAZAIAhAAAfQIAdAEAfAAAZAMAgwIAfQQAdAEAfAQAZAQAgwIAZAUAZAYA
+gwABAXQBAHQBAHwEAGQHAIMCAIMAAGQIAIMCAGQJAGQKAIMAAQF0AQB8BABkCwCDAgCDAAABdAEA
+dAEAfAQAZAcAgwIAZAwAZA0AZA4AZA8AZgMAgwABZBAAgwIAgwAAAWQAAFMoEQAAAE5jAQAAAAMA
+AAADAAAAQwAAAHMWAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwIAUygDAAAATnMDAAAAbG9ncx0AAABQ
+YWNraW5nTGlzdF91cGRhdGVBcHBsaWVkUnVsZSgDAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
+eHRzAwAAAG1zZygDAAAAcwMAAABtc2dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS4yPgEAAABzAAAAAGMBAAAAAQAAAAEA
+AABDAAAAcwQAAABkAQBTKAIAAABOcwgAAABESVNBQkxFRCgAAAAAKAEAAABzAwAAAG1zZygAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS4zPgIAAABzAAAAAHMGAAAAb2Jq
+ZWN0cxEAAAB1cGRhdGVBcHBsaWVkUnVsZXMHAAAAcnVsZV9pZHMVAAAAZGVmYXVsdF9kZWxpdmVy
+eV9ydWxlcwgAAABhY3RpdmF0ZXMeAAAAYXBwbHlUb0RlbGl2ZXJ5UmVsYXRlZE1vdmVtZW50cwkA
+AABtZXRob2RfaWRzFgAAAHJlY3Vyc2l2ZVJlaW5kZXhPYmplY3RzDQAAAHN0YXJ0QnVpbGRpbmdz
+DwAAAGFmdGVyX21ldGhvZF9pZHMWAAAAaW1tZWRpYXRlUmVpbmRleE9iamVjdHMfAAAAcmVjdXJz
+aXZlSW1tZWRpYXRlUmVpbmRleE9iamVjdHMGAAAAZXhwYW5kcxQAAAB1cGRhdGVDYXVzYWxpdHlT
+dGF0ZSgEAAAAcwMAAABMT0dzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwwAAABwYWNr
+aW5nX2xpc3QoBQAAAHMMAAAAc3RhdGVfY2hhbmdlcwIAAABrd3MDAAAATE9HcwkAAABfZ2V0YXR0
+cl9zDAAAAHBhY2tpbmdfbGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMdAAAAUGFj
+a2luZ0xpc3RfdXBkYXRlQXBwbGllZFJ1bGUBAAAAcw4AAAAJAQkCEgIZBB8CEwEMASgBAAAAcx0A
+AABQYWNraW5nTGlzdF91cGRhdGVBcHBsaWVkUnVsZSgBAAAAcx0AAABQYWNraW5nTGlzdF91cGRh
+dGVBcHBsaWVkUnVsZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4B
+AAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_workflow/packing_list_workflow/scripts/PackingList_updateAppliedRule</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>kw</string>
+                            <string>LOG</string>
+                            <string>_getattr_</string>
+                            <string>packing_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PackingList_updateAppliedRule</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

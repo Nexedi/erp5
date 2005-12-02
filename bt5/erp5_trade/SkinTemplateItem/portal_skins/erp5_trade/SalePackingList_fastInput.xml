@@ -1,0 +1,415 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# first we build a dict of desired container lines\n
+# key of dict : id of resource\n
+# item of dict : tuples (resource_value, variation_category_list, quantity)\n
+from ZTUtils import make_query\n
+\n
+delivery = context\n
+next_container_number = next_container_int_index\n
+\n
+desired_lines = {}\n
+quantity_unit_dict = {}\n
+\n
+for listitem in listbox :\n
+  movement_relative_url = listitem[\'listbox_key\']\n
+  container_quantity = listitem[\'container_quantity\']\n
+  if container_quantity :\n
+    movement = context.restrictedTraverse(movement_relative_url)\n
+    if movement is not None:\n
+      resource = movement.getResourceValue()\n
+      if resource is not None:\n
+        quantity_unit_dict[resource.getRelativeUrl()] =\\\n
+                                                movement.getQuantityUnit()\n
+        if resource.getRelativeUrl() in desired_lines.keys():\n
+          desired_lines[resource.getRelativeUrl()].append(\n
+                                  (movement.getVariationCategoryList(),\n
+                                  container_quantity))\n
+        else :\n
+          desired_lines[resource.getRelativeUrl()] = [\n
+                                  (movement.getVariationCategoryList(), \n
+                                  container_quantity)]\n
+\n
+# we build \'container_count\' containers \n
+for container_number in range(container_count) :\n
+\n
+  new_container_id = \'c\'+str(next_container_number)\n
+  # we use container_type to know which are the resource (and variation) \n
+  # of the container\n
+  container = delivery.newContent(\n
+                          portal_type="Container",\n
+                          title=new_container_id,\n
+                          int_index=next_container_number,\n
+                          serial_number="%06d%04d" % (int(delivery.getId()), \n
+                                                      next_container_number),\n
+                          resource = container_type,\n
+                          gross_weight = gross_weight,\n
+  )\n
+\n
+  next_container_number += 1\n
+\n
+  # now build container_lines\n
+  for resource_url in desired_lines.keys():\n
+\n
+    # compute variation_base_category_list and variation_category_list for this line\n
+    line_variation_base_category_dict = {}\n
+    line_variation_category_list = []\n
+\n
+    for variation_category_list, quantity in desired_lines[resource_url]:\n
+\n
+      for variation_item in variation_category_list:\n
+        if not variation_item in line_variation_category_list :\n
+          line_variation_category_list.append(variation_item)\n
+          variation_base_category_items = variation_item.split(\'/\')\n
+          if len(variation_base_category_items) > 0 :\n
+            line_variation_base_category_dict[variation_base_category_items[0]] = 1\n
+\n
+      line_variation_base_category_list = line_variation_base_category_dict.keys()\n
+\n
+    # construct new content (container_line)\n
+    resource_url = resource_url\n
+    new_container_line_id = str(container.generateNewId())\n
+    container_line = container.newContent(\n
+                portal_type="Container Line",\n
+                title=new_container_line_id,\n
+                resource=resource_url,\n
+                quantity_unit=quantity_unit_dict[resource_url],\n
+                variation_category_list=line_variation_category_list\n
+    )\n
+\n
+    for cell_key, quantity in desired_lines[resource_url]:\n
+      if variation_category_list == []:\n
+        container_line.edit(quantity=quantity)\n
+      else:\n
+        # create a new cell\n
+        base_id = \'movement\'\n
+        if not container_line.hasCell(base_id=base_id, *cell_key):\n
+          cell = container_line.newCell(\n
+                     base_id=base_id,\n
+                     portal_type="Container Cell",\n
+                     *cell_key\n
+          )\n
+          cell.setCategoryList(cell_key)\n
+          cell.setMappedValuePropertyList([\'quantity\'])\n
+          cell.setMembershipCriterionCategoryList(cell_key)\n
+          cell.setMembershipCriterionBaseCategoryList(\n
+                                          line_variation_base_category_list)\n
+          cell.edit(quantity=quantity)\n
+\n
+# Container must be immediately reindexed, \n
+# in order to see good packed quantity in fast input form\n
+container.recursiveImmediateReindexObject()\n
+\n
+url_params = make_query(selection_name=selection_name, \n
+                        dialog_category=dialog_category, \n
+                        form_id=form_id, \n
+                        cancel_url=cancel_url,\n
+                        portal_status_message=\'%s container(s) created.\' %\\\n
+                                                                container_count)\n
+\n
+redirect_url = \'%s/SalePackingList_fastInputForm?%s\' %\\\n
+                            (context.absolute_url(), url_params)\n
+\n
+context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAACwAAAEAAAABzKwAAAGQBAGUAAGQBAGQCAGQDAGQBAGQDAGUAAGQBAGQEAGQFAIQK
+AFoBAGQAAFMoBgAAAE5zAAAAAHMPAAAAb2JqZWN0X2V4Y2hhbmdlaQAAAABpAQAAAGMKAAAAMwAA
+AC0AAABLAAAAc8AEAABkAQBrAABsAQB9DAABdAIAfQ4AfAkAfQ8AaAAAfRAAaAAAfREAeEIBdAgA
+fAcAgwEARF00AX0TAHQLAHwTAGQCAIMCAH0VAHQLAHwTAGQDAIMCAH0WAHwWAG8JAQF0DgB0AgBk
+BACDAgB8FQCDAQB9GAB8GAB0EABqCQBv4wABdA4AfBgAZAUAgwIAgwAAfRoAfBoAdBAAagkAb8AA
+AXQOAHwYAGQGAIMCAIMAAHQSAHwRAIMBAHQOAHwaAGQHAIMCAIMAADx0DgB8GgBkBwCDAgCDAAB0
+DgB8EABkCACDAgCDAABqBgBvPgABdA4AdAsAfBAAdA4AfBoAZAcAgwIAgwAAgwIAZAkAgwIAdA4A
+fBgAZAoAgwIAgwAAfBYAZgIAgwEAAXFeAQF0DgB8GABkCgCDAgCDAAB8FgBmAgBnAQB0EgB8EACD
+AQB0DgB8GgBkBwCDAgCDAAA8cWIBAXFmAQFxMgABcTIAV3jTAnQIAHQTAHwEAIMBAIMBAERdvwJ9
+HQBkCwB0FgB8DwCDAQAXfR8AdA4AfA4AZAwAgwIAZA0AZA4AZA8AfB8AZBAAfA8AZBEAZBIAdBgA
+dA4AfA4AZBMAgwIAgwAAgwEAfA8AZgIAFmQUAHwFAGQVAHwGAIMABmEbAHwPAGQWADd9DwB4SgJ0
+CAB0DgB8EABkCACDAgCDAACDAQBEXTACfSIAaAAAfSMAZwAAfSQAeL0AdAgAdAsAfBAAfCIAgwIA
+gwEARF2mAHQIAAKDAQBcAgB9JQB9JgB4fgB0CAB8JQCDAQBEXXAAfScAfCcAfCQAagYADG9cAAF0
+DgB8JABkCQCDAgB8JwCDAQABdA4AfCcAZBcAgwIAZBgAgwEAfSgAdCMAfCgAgwEAZBkAagQAbx0A
+AWQWAHQSAHwjAIMBAHQLAHwoAGQZAIMCADxxwAIBcVACAXFQAld0DgB8IwBkCACDAgCDAAB9KgBx
+MAJXfCIAfSIAdBYAdA4AdBsAZBoAgwIAgwAAgwEAfSsAdA4AdBsAZAwAgwIAZA0AZBsAZA8AfCsA
+ZBQAfCIAZBwAdAsAfBEAfCIAgwIAZB0AfCQAgwAFfSwAeAQBdAgAdAsAfBAAfCIAgwIAgwEARF3t
+AHQIAAKDAQBcAgB9LQB9JgB8JQBnAABqAgBvGgABdA4AfCwAZB4AgwIAZB8AfCYAgwABAXFHAwFk
+IAB9LgB0KQB0DgB8LABkIQCDAgBkIgB8LgB8LQCMAQEMb40AAXQpAHQOAHwsAGQjAIMCAGQiAHwu
+AGQNAGQkAHwtAIwBAn0wAHQOAHwwAGQlAIMCAHwtAIMBAAF0DgB8MABkJgCDAgBkHwBnAQCDAQAB
+dA4AfDAAZCcAgwIAfC0AgwEAAXQOAHwwAGQoAIMCAHwqAIMBAAF0DgB8MABkHgCDAgBkHwB8JgCD
+AAEBcUcDAXFHA1dxCAJXcX0BV3QOAHQbAGQpAIMCAIMAAAF8DABkKgB8AgBkKwB8AwBkLAB8AABk
+LQB8CABkLgBkLwB8BAAWgwAFfTEAZDAAdA4AdAIAZDEAgwIAgwAAfDEAZgIAFn0yAHQOAHQLAHQO
+AHQCAGQyAIMCAGQzAIMCAGQ0AIMCAHwyAIMBAAFkAABTKDUAAABOKAEAAABzCgAAAG1ha2VfcXVl
+cnlzCwAAAGxpc3Rib3hfa2V5cxIAAABjb250YWluZXJfcXVhbnRpdHlzEgAAAHJlc3RyaWN0ZWRU
+cmF2ZXJzZXMQAAAAZ2V0UmVzb3VyY2VWYWx1ZXMPAAAAZ2V0UXVhbnRpdHlVbml0cw4AAABnZXRS
+ZWxhdGl2ZVVybHMEAAAAa2V5c3MGAAAAYXBwZW5kcxgAAABnZXRWYXJpYXRpb25DYXRlZ29yeUxp
+c3RzAQAAAGNzCgAAAG5ld0NvbnRlbnRzCwAAAHBvcnRhbF90eXBlcwkAAABDb250YWluZXJzBQAA
+AHRpdGxlcwkAAABpbnRfaW5kZXhzDQAAAHNlcmlhbF9udW1iZXJzCAAAACUwNmQlMDRkcwUAAABn
+ZXRJZHMIAAAAcmVzb3VyY2VzDAAAAGdyb3NzX3dlaWdodGkBAAAAcwUAAABzcGxpdHMBAAAAL2kA
+AAAAcw0AAABnZW5lcmF0ZU5ld0lkcw4AAABDb250YWluZXIgTGluZXMNAAAAcXVhbnRpdHlfdW5p
+dHMXAAAAdmFyaWF0aW9uX2NhdGVnb3J5X2xpc3RzBAAAAGVkaXRzCAAAAHF1YW50aXR5cwgAAABt
+b3ZlbWVudHMHAAAAaGFzQ2VsbHMHAAAAYmFzZV9pZHMHAAAAbmV3Q2VsbHMOAAAAQ29udGFpbmVy
+IENlbGxzDwAAAHNldENhdGVnb3J5TGlzdHMaAAAAc2V0TWFwcGVkVmFsdWVQcm9wZXJ0eUxpc3Rz
+IgAAAHNldE1lbWJlcnNoaXBDcml0ZXJpb25DYXRlZ29yeUxpc3RzJgAAAHNldE1lbWJlcnNoaXBD
+cml0ZXJpb25CYXNlQ2F0ZWdvcnlMaXN0cx8AAAByZWN1cnNpdmVJbW1lZGlhdGVSZWluZGV4T2Jq
+ZWN0cw4AAABzZWxlY3Rpb25fbmFtZXMPAAAAZGlhbG9nX2NhdGVnb3J5cwcAAABmb3JtX2lkcwoA
+AABjYW5jZWxfdXJscxUAAABwb3J0YWxfc3RhdHVzX21lc3NhZ2VzGAAAACVzIGNvbnRhaW5lcihz
+KSBjcmVhdGVkLnMjAAAAJXMvU2FsZVBhY2tpbmdMaXN0X2Zhc3RJbnB1dEZvcm0/JXNzDAAAAGFi
+c29sdXRlX3VybHMHAAAAUkVRVUVTVHMIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0KDEAAABzBwAA
+AFpUVXRpbHNzCgAAAG1ha2VfcXVlcnlzBwAAAGNvbnRleHRzCAAAAGRlbGl2ZXJ5cxgAAABuZXh0
+X2NvbnRhaW5lcl9pbnRfaW5kZXhzFQAAAG5leHRfY29udGFpbmVyX251bWJlcnMNAAAAZGVzaXJl
+ZF9saW5lc3MSAAAAcXVhbnRpdHlfdW5pdF9kaWN0cwkAAABfZ2V0aXRlcl9zBwAAAGxpc3Rib3hz
+CAAAAGxpc3RpdGVtcwkAAABfZ2V0aXRlbV9zFQAAAG1vdmVtZW50X3JlbGF0aXZlX3VybHMSAAAA
+Y29udGFpbmVyX3F1YW50aXR5cwkAAABfZ2V0YXR0cl9zCAAAAG1vdmVtZW50cwQAAABOb25lcwgA
+AAByZXNvdXJjZXMHAAAAX3dyaXRlX3MFAAAAcmFuZ2VzDwAAAGNvbnRhaW5lcl9jb3VudHMQAAAA
+Y29udGFpbmVyX251bWJlcnMDAAAAc3RycxAAAABuZXdfY29udGFpbmVyX2lkcwMAAABpbnRzDgAA
+AGNvbnRhaW5lcl90eXBlcwwAAABncm9zc193ZWlnaHRzCQAAAGNvbnRhaW5lcnMMAAAAcmVzb3Vy
+Y2VfdXJscyEAAABsaW5lX3ZhcmlhdGlvbl9iYXNlX2NhdGVnb3J5X2RpY3RzHAAAAGxpbmVfdmFy
+aWF0aW9uX2NhdGVnb3J5X2xpc3RzFwAAAHZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwgAAABxdWFu
+dGl0eXMOAAAAdmFyaWF0aW9uX2l0ZW1zHQAAAHZhcmlhdGlvbl9iYXNlX2NhdGVnb3J5X2l0ZW1z
+cwMAAABsZW5zIQAAAGxpbmVfdmFyaWF0aW9uX2Jhc2VfY2F0ZWdvcnlfbGlzdHMVAAAAbmV3X2Nv
+bnRhaW5lcl9saW5lX2lkcw4AAABjb250YWluZXJfbGluZXMIAAAAY2VsbF9rZXlzBwAAAGJhc2Vf
+aWRzBwAAAF9hcHBseV9zBAAAAGNlbGxzDgAAAHNlbGVjdGlvbl9uYW1lcw8AAABkaWFsb2dfY2F0
+ZWdvcnlzBwAAAGZvcm1faWRzCgAAAGNhbmNlbF91cmxzCgAAAHVybF9wYXJhbXNzDAAAAHJlZGly
+ZWN0X3VybCgzAAAAcwcAAABmb3JtX2lkcw8AAABzZWxlY3Rpb25faW5kZXhzDgAAAHNlbGVjdGlv
+bl9uYW1lcw8AAABkaWFsb2dfY2F0ZWdvcnlzDwAAAGNvbnRhaW5lcl9jb3VudHMOAAAAY29udGFp
+bmVyX3R5cGVzDAAAAGdyb3NzX3dlaWdodHMHAAAAbGlzdGJveHMKAAAAY2FuY2VsX3VybHMYAAAA
+bmV4dF9jb250YWluZXJfaW50X2luZGV4cwIAAABrd3MHAAAAWlRVdGlsc3MKAAAAbWFrZV9xdWVy
+eXMHAAAAY29udGV4dHMIAAAAZGVsaXZlcnlzFQAAAG5leHRfY29udGFpbmVyX251bWJlcnMNAAAA
+ZGVzaXJlZF9saW5lc3MSAAAAcXVhbnRpdHlfdW5pdF9kaWN0cwkAAABfZ2V0aXRlcl9zCAAAAGxp
+c3RpdGVtcwkAAABfZ2V0aXRlbV9zFQAAAG1vdmVtZW50X3JlbGF0aXZlX3VybHMSAAAAY29udGFp
+bmVyX3F1YW50aXR5cwkAAABfZ2V0YXR0cl9zCAAAAG1vdmVtZW50cwQAAABOb25lcwgAAAByZXNv
+dXJjZXMHAAAAX3dyaXRlX3MFAAAAcmFuZ2VzEAAAAGNvbnRhaW5lcl9udW1iZXJzAwAAAHN0cnMQ
+AAAAbmV3X2NvbnRhaW5lcl9pZHMDAAAAaW50cwkAAABjb250YWluZXJzDAAAAHJlc291cmNlX3Vy
+bHMhAAAAbGluZV92YXJpYXRpb25fYmFzZV9jYXRlZ29yeV9kaWN0cxwAAABsaW5lX3ZhcmlhdGlv
+bl9jYXRlZ29yeV9saXN0cxcAAAB2YXJpYXRpb25fY2F0ZWdvcnlfbGlzdHMIAAAAcXVhbnRpdHlz
+DgAAAHZhcmlhdGlvbl9pdGVtcx0AAAB2YXJpYXRpb25fYmFzZV9jYXRlZ29yeV9pdGVtc3MDAAAA
+bGVucyEAAABsaW5lX3ZhcmlhdGlvbl9iYXNlX2NhdGVnb3J5X2xpc3RzFQAAAG5ld19jb250YWlu
+ZXJfbGluZV9pZHMOAAAAY29udGFpbmVyX2xpbmVzCAAAAGNlbGxfa2V5cwcAAABiYXNlX2lkcwcA
+AABfYXBwbHlfcwQAAABjZWxscwoAAAB1cmxfcGFyYW1zcwwAAAByZWRpcmVjdF91cmwoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGQAAAFNhbGVQYWNraW5nTGlzdF9mYXN0SW5wdXQBAAAA
+c54AAAAAAw0CBgEGAgYBBgINAAYBDwEPAQcBFQENARIBDQEDASUBKwEbAQ8BDgIAAQ8BMgMTAAYC
+EAMVAgYBCQEVAQoBBgEJAwoDGQAGAwYBBgIWABMCDQAGAREBEAEVARMBJQIWAwYBGAEVAgYBCQEM
+AQkDFgATARABFwMGASABEgEJAgwCEwEWARMBCQEKASYEDQIMAQYBBgEJAgoCAwEiAigCAAAAcwQA
+AABOb25lcxkAAABTYWxlUGFja2luZ0xpc3RfZmFzdElucHV0KAIAAABzBAAAAE5vbmVzGQAAAFNh
+bGVQYWNraW5nTGlzdF9mYXN0SW5wdXQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
+ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/SalePackingList_fastInput</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'\',selection_index=None,selection_name=\'\',dialog_category=\'object_exchange\',container_count=0,container_type=\'\',gross_weight=0,listbox=None,cancel_url=\'\',next_container_int_index=1,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>10</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>dialog_category</string>
+                            <string>container_count</string>
+                            <string>container_type</string>
+                            <string>gross_weight</string>
+                            <string>listbox</string>
+                            <string>cancel_url</string>
+                            <string>next_container_int_index</string>
+                            <string>kw</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>context</string>
+                            <string>delivery</string>
+                            <string>next_container_number</string>
+                            <string>desired_lines</string>
+                            <string>quantity_unit_dict</string>
+                            <string>_getiter_</string>
+                            <string>listitem</string>
+                            <string>_getitem_</string>
+                            <string>movement_relative_url</string>
+                            <string>container_quantity</string>
+                            <string>_getattr_</string>
+                            <string>movement</string>
+                            <string>None</string>
+                            <string>resource</string>
+                            <string>_write_</string>
+                            <string>range</string>
+                            <string>container_number</string>
+                            <string>str</string>
+                            <string>new_container_id</string>
+                            <string>int</string>
+                            <string>container</string>
+                            <string>resource_url</string>
+                            <string>line_variation_base_category_dict</string>
+                            <string>line_variation_category_list</string>
+                            <string>variation_category_list</string>
+                            <string>quantity</string>
+                            <string>variation_item</string>
+                            <string>variation_base_category_items</string>
+                            <string>len</string>
+                            <string>line_variation_base_category_list</string>
+                            <string>new_container_line_id</string>
+                            <string>container_line</string>
+                            <string>cell_key</string>
+                            <string>base_id</string>
+                            <string>_apply_</string>
+                            <string>cell</string>
+                            <string>url_params</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+                <none/>
+                <string></string>
+                <string>object_exchange</string>
+                <int>0</int>
+                <string></string>
+                <int>0</int>
+                <none/>
+                <string></string>
+                <int>1</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SalePackingList_fastInput</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

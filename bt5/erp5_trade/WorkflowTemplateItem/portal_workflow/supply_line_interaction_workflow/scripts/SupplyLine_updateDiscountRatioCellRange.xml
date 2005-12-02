@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>supply_line = state_change.object\n
+price_parameter = \'discount_ratio\'\n
+base_id = \'path_discount_ratio\'\n
+supply_line.updateQuantityPredicate(price_parameter)\n
+supply_line.updateCellRange(base_id=base_id)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAEAAAAQwAA
+AHNIAAAAdAAAfAAAZAEAgwIAfQIAZAIAfQMAZAMAfQQAdAAAfAIAZAQAgwIAfAMAgwEAAXQAAHwC
+AGQFAIMCAGQGAHwEAIMAAQFkAABTKAcAAABOcwYAAABvYmplY3RzDgAAAGRpc2NvdW50X3JhdGlv
+cxMAAABwYXRoX2Rpc2NvdW50X3JhdGlvcxcAAAB1cGRhdGVRdWFudGl0eVByZWRpY2F0ZXMPAAAA
+dXBkYXRlQ2VsbFJhbmdlcwcAAABiYXNlX2lkKAUAAABzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVf
+Y2hhbmdlcwsAAABzdXBwbHlfbGluZXMPAAAAcHJpY2VfcGFyYW1ldGVycwcAAABiYXNlX2lkKAUA
+AABzDAAAAHN0YXRlX2NoYW5nZXMJAAAAX2dldGF0dHJfcwsAAABzdXBwbHlfbGluZXMPAAAAcHJp
+Y2VfcGFyYW1ldGVycwcAAABiYXNlX2lkKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcycA
+AABTdXBwbHlMaW5lX3VwZGF0ZURpc2NvdW50UmF0aW9DZWxsUmFuZ2UBAAAAcwgAAAAPAQYBCQET
+ASgBAAAAcycAAABTdXBwbHlMaW5lX3VwZGF0ZURpc2NvdW50UmF0aW9DZWxsUmFuZ2UoAQAAAHMn
+AAAAU3VwcGx5TGluZV91cGRhdGVEaXNjb3VudFJhdGlvQ2VsbFJhbmdlKAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_workflow/supply_line_interaction_workflow/scripts/SupplyLine_updateDiscountRatioCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getattr_</string>
+                            <string>supply_line</string>
+                            <string>price_parameter</string>
+                            <string>base_id</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SupplyLine_updateDiscountRatioCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># XXX need to implement this part in the catalog\n
+# portal type causality of root applied rule\n
+# XXX kw[\'orderType\'] = \'Sale Order\'\n
+\n
+def test(movement):\n
+  root_applied_rule = movement.getRootAppliedRule()\n
+  root_rule = root_applied_rule.getSpecialiseValue()\n
+  root_movement = movement.getRootSimulationMovement()\n
+  parent_applied_rule = movement.getParent()\n
+  parent_rule = parent_applied_rule.getSpecialiseValue()\n
+  return (\n
+    root_rule.getPortalType() == "Production Order Rule" and\\\n
+    parent_rule.getPortalType() == "Transformation Rule" and\\\n
+    root_movement.getSimulationState() == "confirmed"\n
+  )\n
+\n
+kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+\n
+if src__==0:\n
+  movement_list = [x.getObject() for x in context.ProductionOrder_zSelectMovement(**kw)]\n
+  movement_list = [x for x in movement_list if test(x)]\n
+  return movement_list\n
+else:\n
+  return context.ProductionOrder_zSelectMovement(src__=1, **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMBAAAACwAA
+ABAAAABLAAAAc/UAAABkAQCEAAB9AgB0AQB8AQBkAgCDAgB0AwB0AQB0AQB0BABkAwCDAgBkBACD
+AgB8AQCNAQCDAQABfAAAZAUAagIAb5EAAWcAAARpBgB9BwB0CAB0AwB0AQB0BABkBgCDAgB8AQCN
+AQCDAQBEXRwAfQkAfAcAdAEAfAkAZAcAgwIAgwAAgwEAAXFqAH4HAH0KAGcAAARpBgB9BwB0CAB8
+CgCDAQBEXSEAfQkAfAIAfAkAgwEAbw4AAXwHAHwJAIMBAAFxowABcaMAfgcAfQoAfAoAU24dAAF0
+AwB0AQB0BABkBgCDAgBkCABkCQB8AQCNAQFTZAAAUygKAAAATmMBAAAABwAAAAcAAABDAAAAc6YA
+AAB0AAB8AABkAQCDAgCDAAB9AgB0AAB8AgBkAgCDAgCDAAB9AwB0AAB8AABkAwCDAgCDAAB9BAB0
+AAB8AABkBACDAgCDAAB9BQB0AAB8BQBkAgCDAgCDAAB9BgB0AAB8AwBkBQCDAgCDAABkBgBqAgBv
+LwABdAAAfAYAZAUAgwIAgwAAZAcAagIAbxYAAXQAAHwEAGQIAIMCAIMAAGQJAGoCAFNkAABTKAoA
+AABOcxIAAABnZXRSb290QXBwbGllZFJ1bGVzEgAAAGdldFNwZWNpYWxpc2VWYWx1ZXMZAAAAZ2V0
+Um9vdFNpbXVsYXRpb25Nb3ZlbWVudHMJAAAAZ2V0UGFyZW50cw0AAABnZXRQb3J0YWxUeXBlcxUA
+AABQcm9kdWN0aW9uIE9yZGVyIFJ1bGVzEwAAAFRyYW5zZm9ybWF0aW9uIFJ1bGVzEgAAAGdldFNp
+bXVsYXRpb25TdGF0ZXMJAAAAY29uZmlybWVkKAcAAABzCQAAAF9nZXRhdHRyX3MIAAAAbW92ZW1l
+bnRzEQAAAHJvb3RfYXBwbGllZF9ydWxlcwkAAAByb290X3J1bGVzDQAAAHJvb3RfbW92ZW1lbnRz
+EwAAAHBhcmVudF9hcHBsaWVkX3J1bGVzCwAAAHBhcmVudF9ydWxlKAcAAABzCAAAAG1vdmVtZW50
+cwkAAABfZ2V0YXR0cl9zEQAAAHJvb3RfYXBwbGllZF9ydWxlcwkAAAByb290X3J1bGVzDQAAAHJv
+b3RfbW92ZW1lbnRzEwAAAHBhcmVudF9hcHBsaWVkX3J1bGVzCwAAAHBhcmVudF9ydWxlKAAAAAAo
+AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwQAAAB0ZXN0BQAAAHMSAAAAAAESARIBEgESARIBAwEZ
+ARkBcwYAAAB1cGRhdGVzDgAAAHBvcnRhbF9jYXRhbG9ncw0AAABidWlsZFNRTFF1ZXJ5aQAAAABz
+HwAAAFByb2R1Y3Rpb25PcmRlcl96U2VsZWN0TW92ZW1lbnRzCQAAAGdldE9iamVjdHMFAAAAc3Jj
+X19pAQAAACgLAAAAcwQAAAB0ZXN0cwkAAABfZ2V0YXR0cl9zAgAAAGt3cwcAAABfYXBwbHlfcwcA
+AABjb250ZXh0cwUAAABzcmNfX3MGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJf
+cwEAAAB4cw0AAABtb3ZlbWVudF9saXN0KAsAAABzBQAAAHNyY19fcwIAAABrd3MEAAAAdGVzdHMJ
+AAAAX2dldGF0dHJfcwcAAABfYXBwbHlfcwcAAABjb250ZXh0cwYAAABhcHBlbmRzCAAAACRhcHBl
+bmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhzDQAAAG1vdmVtZW50X2xpc3QoAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzIQAAAFRyYW5zZm9ybWF0aW9uUnVsZV9zZWxlY3RNb3ZlbWVudAEAAABz
+FAAAAAAEDAwrAg0BJgAlARQABgAkAQgCKAEAAABzIQAAAFRyYW5zZm9ybWF0aW9uUnVsZV9zZWxl
+Y3RNb3ZlbWVudCgBAAAAcyEAAABUcmFuc2Zvcm1hdGlvblJ1bGVfc2VsZWN0TW92ZW1lbnQoAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_manufacturing/TransformationRule_selectMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>src__=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>src__</string>
+                            <string>kw</string>
+                            <string>test</string>
+                            <string>_getattr_</string>
+                            <string>_apply_</string>
+                            <string>context</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>movement_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TransformationRule_selectMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

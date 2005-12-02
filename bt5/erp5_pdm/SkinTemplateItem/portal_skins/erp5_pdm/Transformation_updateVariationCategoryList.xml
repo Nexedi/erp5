@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+import string \n
+\n
+request = context.REQUEST\n
+\n
+context.updateVariationCategoryList()\n
+\n
+portal_status_message = \'portal_status_message=\'+string.replace(context.getPortalType(), \' \', \'+\')+\'+Updated.\'\n
+\n
+if not selection_index:\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                            , form_id\n
+                            , portal_status_message\n
+                            )\n
+else:\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % ( context.absolute_url()\n
+                            , form_id\n
+                            , selection_index\n
+                            , selection_name\n
+                            , portal_status_message\n
+                            )\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQCAGQDAIQCAFoAAGQAAFMoBAAAAE5pAAAAAHMAAAAA
+YwMAAAAKAAAADwAAAEMAAABzxwAAAGQAAGsAAH0DAHQBAHQCAGQBAIMCAH0GAHQBAHQCAGQCAIMC
+AIMAAAFkAwB0AQB8AwBkBACDAgB0AQB0AgBkBQCDAgCDAABkBgBkBwCDAwAXZAgAF30HAHwBAAxv
+IwABZAkAdAEAdAIAZAoAgwIAgwAAfAAAfAcAZgMAFn0IAG4mAAFkCwB0AQB0AgBkCgCDAgCDAAB8
+AAB8AQB8AgB8BwBmBQAWfQgAdAEAdAkAfAYAZAwAgwIAZA0AgwIAfAgAgwEAAWQAAFMoDgAAAE5z
+BwAAAFJFUVVFU1RzGwAAAHVwZGF0ZVZhcmlhdGlvbkNhdGVnb3J5TGlzdHMWAAAAcG9ydGFsX3N0
+YXR1c19tZXNzYWdlPXMHAAAAcmVwbGFjZXMNAAAAZ2V0UG9ydGFsVHlwZXMBAAAAIHMBAAAAK3MJ
+AAAAK1VwZGF0ZWQucwgAAAAlcy8lcz8lc3MMAAAAYWJzb2x1dGVfdXJscy0AAAAlcy8lcz9zZWxl
+Y3Rpb25faW5kZXg9JXMmc2VsZWN0aW9uX25hbWU9JXMmJXNzCAAAAFJFU1BPTlNFcwgAAAByZWRp
+cmVjdCgKAAAAcwYAAABzdHJpbmdzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVz
+dHMVAAAAcG9ydGFsX3N0YXR1c19tZXNzYWdlcw8AAABzZWxlY3Rpb25faW5kZXhzBwAAAGZvcm1f
+aWRzDAAAAHJlZGlyZWN0X3VybHMOAAAAc2VsZWN0aW9uX25hbWVzCQAAAF9nZXRpdGVtXygKAAAA
+cwcAAABmb3JtX2lkcw8AAABzZWxlY3Rpb25faW5kZXhzDgAAAHNlbGVjdGlvbl9uYW1lcwYAAABz
+dHJpbmdzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMVAAAAcG9ydGFsX3N0
+YXR1c19tZXNzYWdlcwwAAAByZWRpcmVjdF91cmxzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMqAAAAVHJhbnNmb3JtYXRpb25fdXBkYXRlVmFyaWF0aW9uQ2F0ZWdv
+cnlMaXN0AQAAAHMaAAAACQISAg0CLwIIARIBAwEOAxIBAwEDAQMBEAMoAQAAAHMqAAAAVHJhbnNm
+b3JtYXRpb25fdXBkYXRlVmFyaWF0aW9uQ2F0ZWdvcnlMaXN0KAEAAABzKgAAAFRyYW5zZm9ybWF0
+aW9uX3VwZGF0ZVZhcmlhdGlvbkNhdGVnb3J5TGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_pdm/Transformation_updateVariationCategoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, selection_index=0, selection_name=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>string</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>portal_status_message</string>
+                            <string>redirect_url</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Transformation_updateVariationCategoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

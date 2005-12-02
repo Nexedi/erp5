@@ -1,0 +1,29 @@
+2005-12-01 Seb
+* Started to update production_order_workflow in order to add tags and priority
+* updated ProductionOrder_zSelectMovement, added alias on table movement
+
+2005-11-25 Seb
+* Removed the limit to 1000 for ProductionOrder_zSelectMovement
+
+2005-11-05 Romain
+* Correct naming convention.
+
+2005-10-20 Romain
+* Correct naming convention.
+
+2005-10-19 Seb
+* added Production * Cell portal type
+* updated production_packing_list_builder
+* updated TransformationSourcingRule_selectMovement
+* use more activities in production_order_workflow
+
+2005-08-26 Seb
+* Set default security setting for all
+production modules
+
+2005-08-26 Romain
+* add condition object/hasCellContent to  all portal type used as a line for form *Line_view[Price|Quantity|Option].
+
+2005-07-26 Romain
+
+First version.

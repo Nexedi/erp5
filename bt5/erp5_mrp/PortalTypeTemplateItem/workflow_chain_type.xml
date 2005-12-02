@@ -1,0 +1,78 @@
+<workflow_chain>
+ <chain>
+  <type>Production Order</type>
+  <workflow>production_order_workflow, edit_workflow, production_order_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Order Cell</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Production Order Line</type>
+  <workflow>production_matrix_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Order Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Production Order Rule</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Production Packing List</type>
+  <workflow>production_packing_list_workflow, production_packing_list_causality_workflow, production_packing_list_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Packing List Cell</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Production Packing List Line</type>
+  <workflow>production_matrix_workflow, production_packing_list_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Packing List Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Production Report</type>
+  <workflow>production_packing_list_workflow, production_packing_list_causality_workflow, production_packing_list_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Report Cell</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Production Report Line</type>
+  <workflow>production_matrix_workflow, production_packing_list_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Report Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Supply Chain</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Supply Chain Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>Supply Link</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Supply Node</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Rule</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Sourcing Rule</type>
+  <workflow>(Default)</workflow>
+ </chain>
+</workflow_chain>

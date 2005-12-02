@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Form.PDFTemplate</string>
+          <string>PDFTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="iso-8859-1" ?>\n
+<document filename="erp5_list.pdf"\n
+   xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+   xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+   metal:define-macro="master">\n
+  <title>List Print</title>\n
+  <author>Nexedi</author>\n
+  <subject>Print Example</subject>\n
+  <content tal:define="translate python: here.portal_url.getPortalObject().translation_service.translate; ">\n
+\n
+    <table splitbyrow="1" repeatrows="0" repeatcols="0"  style="AttributesTable" >\n
+      <tr>\n
+        <td tal:attributes="colwidth python: \'5cm\'" >\n
+          <para  style="TableHeader" tal:content="python: translate(\'ui\', here.getPortalType() )" />\n
+        </td>\n
+\n
+        <td tal:attributes="colwidth python: None">\n
+          <para  style="TableStandard" tal:content="python: here.getTitle()" />\n
+        </td>\n
+      </tr>\n
+    </table>\n
+\n
+    <table><tr><td tal:content="python: \' \'"></td></tr></table>\n
+\n
+    <tal:block  tal:define="variation_category_item_list python: here.getVariationCategoryItemList()" >\n
+        <table  splitbyrow="1" repeatrows="1" repeatcols="0"  style="MatrixBoxWithGrid">\n
+\n
+          ***** First line: column name *****\n
+          <tr>\n
+            ***** First column: no name *****\n
+            <td>\n
+              <para  style="TableStandard" tal:content="python: None" />\n
+            </td>\n
+            ***** Others columns: display name *****\n
+            <tal:block  tal:repeat="column_item variation_category_item_list">\n
+              <td>\n
+                ***** Item is left display *****\n
+                <para  style="TableStandard" tal:content="python: column_item[0] " />\n
+              </td>\n
+            </tal:block>\n
+          </tr>\n
+\n
+          ***** Others lines: display quantity ratio *****\n
+          <tal:block  tal:repeat="line_item variation_category_item_list">\n
+            <tr>\n
+              ***** First column: display line name *****\n
+              <td>\n
+                ***** Item is left display *****\n
+                <para  style="TableStandard" tal:content="python: line_item[0]" />\n
+              </td>\n
+              ***** Others columns: display quantity ratio *****\n
+              <tal:block  tal:repeat="column_item variation_category_item_list">\n
+                <td>\n
+                  ***** Item is right value *****\n
+                  <para  style="TableStandard" tal:content="python: here.getQuantityRatio(line_item[1], column_item[1])" />\n
+                </td>\n
+              </tal:block>\n
+            </tr>\n
+          </tal:block>\n
+\n
+        </table>\n
+      </tal:block>\n
+\n
+  </content>\n
+</document>\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Consumption_print</string> </value>
+        </item>
+        <item>
+            <key> <string>pdf_stylesheet</string> </key>
+            <value> <string>Consumption_printPdfTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

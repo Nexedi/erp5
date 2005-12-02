@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+\n
+if reference_variation_category_list == []:\n
+  reference_variation_category_list = context.getVariationCategoryList()\n
+\n
+result = []\n
+\n
+#  from Products.ERP5Type.Utils import cartesianProduct\n
+# XXX unable to import cartesianProduct, so, I copied the code (Romain)\n
+def cartesianProduct(list_of_list):\n
+  if len(list_of_list) == 0:\n
+    return [[]]\n
+  result = []\n
+  head = list_of_list[0]\n
+  tail = list_of_list[1:]\n
+  product = cartesianProduct(tail)\n
+  for v in head:\n
+    for p in product:\n
+      result += [[v] + p]\n
+  return result\n
+\n
+# Separate reference_variation_category_list by base category\n
+variation_category_dict = {}\n
+for variation_category in reference_variation_category_list:\n
+  base_category = variation_category.split(\'/\',1)[0]\n
+  if variation_category_dict.has_key( base_category ):\n
+    variation_category_dict[base_category].append( variation_category )\n
+  else:\n
+    variation_category_dict[base_category] = [variation_category]\n
+\n
+variation_key_list = cartesianProduct( variation_category_dict.values() )\n
+        \n
+        \n
+portal = context.portal_url.getPortalObject()\n
+\n
+for variation_key in variation_key_list:\n
+  params =  { \n
+    \'reference_variation_category_list\' : variation_key,\n
+  }\n
+\n
+  result.append(\n
+    # Context is report form\n
+    ReportSection(path=context.getPhysicalPath(), \n
+                  title=\'Resource variation\',   \n
+                  level=1,\n
+                  form_id=\'Transformation_viewExpanded\',\n
+                  selection_name=\'transformation_expanded_selection\',\n
+                  selection_params=params,\n
+#                  selection_columns="Id",\n
+                  listbox_display_mode=\'FlatListMode\'\n
+    )             \n
+  )\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGcAAGQBAIQBAFoAAGQAAFMoAgAAAE5jAQAAABEAAAAaAAAA
+AwAAAHN2AQAAZAEAawAAbAEAfQIAAXwAAGcAAGoCAG8WAAF0AwB0BABkAgCDAgCDAAB9AABuAQAB
+ZwAAfQUAhwAAZAMAhgAAiQAAaAAAfQcAeH4AdAgAfAAAgwEARF1wAH0JAHQKAHQDAHwJAGQEAIMC
+AGQFAGQGAIMCAGQHAIMCAH0LAHQDAHwHAGQIAIMCAHwLAIMBAG8gAAF0AwB0CgB8BwB8CwCDAgBk
+CQCDAgB8CQCDAQABcVUAAXwJAGcBAHQMAHwHAIMBAHwLADxxVQBXiAAAdAMAfAcAZAoAgwIAgwAA
+gwEAfQ0AdAMAdAMAdAQAZAsAgwIAZAwAgwIAgwAAfQ4AeG8AdAgAfA0AgwEARF1hAH0PAGgAAARk
+DQB8DwADPH0QAHQDAHwFAGQJAIMCAHwCAGQOAHQDAHQEAGQPAIMCAIMAAGQQAGQRAGQSAGQGAGQT
+AGQUAGQVAGQWAGQXAHwQAGQYAGQZAIMAB4MBAAFxCQFXfAUAU2QAAFMoGgAAAE4oAQAAAHMNAAAA
+UmVwb3J0U2VjdGlvbnMYAAAAZ2V0VmFyaWF0aW9uQ2F0ZWdvcnlMaXN0YwEAAAALAAAACwAAAAMA
+AABzngAAAHQAAHwAAIMBAGQBAGoCAG8LAAFnAABnAQBTbgEAAWcAAH0CAHQDAHwAAGQBAIMCAH0E
+AHQDAHwAAGQCAGQAAIUCAIMCAH0FAIgAAHwFAIMBAH0HAHg/AHQIAHwEAIMBAERdMQB9CQB4KAB0
+CAB8BwCDAQBEXRoAfQoAfAIAfAkAZwEAfAoAF2cBADd9AgBxdABXcWEAV3wCAFNkAABTKAMAAABO
+aQAAAABpAQAAACgLAAAAcwMAAABsZW5zDAAAAGxpc3Rfb2ZfbGlzdHMGAAAAcmVzdWx0cwkAAABf
+Z2V0aXRlbV9zBAAAAGhlYWRzBAAAAHRhaWxzEAAAAGNhcnRlc2lhblByb2R1Y3RzBwAAAHByb2R1
+Y3RzCQAAAF9nZXRpdGVyX3MBAAAAdnMBAAAAcCgLAAAAcwwAAABsaXN0X29mX2xpc3RzAwAAAGxl
+bnMGAAAAcmVzdWx0cwkAAABfZ2V0aXRlbV9zBAAAAGhlYWRzBAAAAHRhaWxzEAAAAGNhcnRlc2lh
+blByb2R1Y3RzBwAAAHByb2R1Y3RzCQAAAF9nZXRpdGVyX3MBAAAAdnMBAAAAcCgBAAAAcxAAAABj
+YXJ0ZXNpYW5Qcm9kdWN0KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMQAAAAY2FydGVzaWFuUHJv
+ZHVjdAoAAABzGAAAAAABEwELAQYBDwEVAQwBDQAGAQ0ABgEcAXMFAAAAc3BsaXRzAQAAAC9pAQAA
+AGkAAAAAcwcAAABoYXNfa2V5cwYAAABhcHBlbmRzBgAAAHZhbHVlc3MKAAAAcG9ydGFsX3VybHMP
+AAAAZ2V0UG9ydGFsT2JqZWN0cyEAAAByZWZlcmVuY2VfdmFyaWF0aW9uX2NhdGVnb3J5X2xpc3Rz
+BAAAAHBhdGhzDwAAAGdldFBoeXNpY2FsUGF0aHMFAAAAdGl0bGVzEgAAAFJlc291cmNlIHZhcmlh
+dGlvbnMFAAAAbGV2ZWxzBwAAAGZvcm1faWRzGwAAAFRyYW5zZm9ybWF0aW9uX3ZpZXdFeHBhbmRl
+ZHMOAAAAc2VsZWN0aW9uX25hbWVzIQAAAHRyYW5zZm9ybWF0aW9uX2V4cGFuZGVkX3NlbGVjdGlv
+bnMQAAAAc2VsZWN0aW9uX3BhcmFtc3MUAAAAbGlzdGJveF9kaXNwbGF5X21vZGVzDAAAAEZsYXRM
+aXN0TW9kZSgRAAAAcxgAAABQcm9kdWN0cy5FUlA1Rm9ybS5SZXBvcnRzDQAAAFJlcG9ydFNlY3Rp
+b25zIQAAAHJlZmVyZW5jZV92YXJpYXRpb25fY2F0ZWdvcnlfbGlzdHMJAAAAX2dldGF0dHJfcwcA
+AABjb250ZXh0cwYAAAByZXN1bHRzEAAAAGNhcnRlc2lhblByb2R1Y3RzFwAAAHZhcmlhdGlvbl9j
+YXRlZ29yeV9kaWN0cwkAAABfZ2V0aXRlcl9zEgAAAHZhcmlhdGlvbl9jYXRlZ29yeXMJAAAAX2dl
+dGl0ZW1fcw0AAABiYXNlX2NhdGVnb3J5cwcAAABfd3JpdGVfcxIAAAB2YXJpYXRpb25fa2V5X2xp
+c3RzBgAAAHBvcnRhbHMNAAAAdmFyaWF0aW9uX2tleXMGAAAAcGFyYW1zKBEAAABzIQAAAHJlZmVy
+ZW5jZV92YXJpYXRpb25fY2F0ZWdvcnlfbGlzdHMYAAAAUHJvZHVjdHMuRVJQNUZvcm0uUmVwb3J0
+cw0AAABSZXBvcnRTZWN0aW9ucwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBgAAAHJlc3VsdHMQ
+AAAAY2FydGVzaWFuUHJvZHVjdHMXAAAAdmFyaWF0aW9uX2NhdGVnb3J5X2RpY3RzCQAAAF9nZXRp
+dGVyX3MSAAAAdmFyaWF0aW9uX2NhdGVnb3J5cwkAAABfZ2V0aXRlbV9zDQAAAGJhc2VfY2F0ZWdv
+cnlzBwAAAF93cml0ZV9zEgAAAHZhcmlhdGlvbl9rZXlfbGlzdHMGAAAAcG9ydGFscw0AAAB2YXJp
+YXRpb25fa2V5cwYAAABwYXJhbXMoAAAAACgBAAAAcxAAAABjYXJ0ZXNpYW5Qcm9kdWN0cw8AAABT
+Y3JpcHQgKFB5dGhvbilzIwAAAFRyYW5zZm9ybWF0aW9uX2dldFJlcG9ydFNlY3Rpb25MaXN0AQAA
+AHMqAAAADQINARYCBgQMDQYBDQAGASQBGQEaAhcCGAMbAg0ABgEHAQsDCQIwBRQGKAEAAABzIwAA
+AFRyYW5zZm9ybWF0aW9uX2dldFJlcG9ydFNlY3Rpb25MaXN0KAEAAABzIwAAAFRyYW5zZm9ybWF0
+aW9uX2dldFJlcG9ydFNlY3Rpb25MaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgA
+AAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_pdm/Transformation_getReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>reference_variation_category_list=[]</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>reference_variation_category_list</string>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>result</string>
+                            <string>cartesianProduct</string>
+                            <string>variation_category_dict</string>
+                            <string>_getiter_</string>
+                            <string>variation_category</string>
+                            <string>_getitem_</string>
+                            <string>base_category</string>
+                            <string>_write_</string>
+                            <string>variation_key_list</string>
+                            <string>portal</string>
+                            <string>variation_key</string>
+                            <string>params</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Transformation_getReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script check that necessary data exists on Order\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+order = state_change.object\n
+error_message = \'\'\n
+message_list = []\n
+\n
+if order.getSource() is None:\n
+  message_list.append(\'No Source\')\n
+if order.getStartDate() is None and order.getStopDate() is not None:\n
+  order.setStartDate(order.getStopDate())\n
+if order.getStartDate() is None:\n
+  message_list.append("No Date")\n
+if order.getDestination() is None:\n
+  message_list.append(\'No Destination\')\n
+for line in order.objectValues(portal_type=order.getPortalOrderMovementTypeList()):\n
+  if line.getResourceValue() is None:\n
+    message_list.append("No Resource for line with id: %s" % line.getId())\n
+\n
+if len(message_list) > 0:\n
+  raise ValidationFailed, "Warning: " + " --- ".join(message_list)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAwAAAAZAAAASwAA
+AHO5AQAAZAEAawAAbAEAfQMAAXQCAHwAAGQCAIMCAH0FAGQDAH0GAGcAAH0HAHQCAHwFAGQEAIMC
+AIMAAHQHAGoIAG8XAAF0AgB8BwBkBQCDAgBkBgCDAQABbgEAAXQCAHwFAGQHAIMCAIMAAHQHAGoI
+AG8WAAF0AgB8BQBkCACDAgCDAAB0BwBqCQBvIwABdAIAfAUAZAkAgwIAdAIAfAUAZAgAgwIAgwAA
+gwEAAW4BAAF0AgB8BQBkBwCDAgCDAAB0BwBqCABvFwABdAIAfAcAZAUAgwIAZAoAgwEAAW4BAAF0
+AgB8BQBkCwCDAgCDAAB0BwBqCABvFwABdAIAfAcAZAUAgwIAZAwAgwEAAW4BAAF4cgB0CAB0AgB8
+BQBkDQCDAgBkDgB0AgB8BQBkDwCDAgCDAACDAAGDAQBEXUYAfQoAdAIAfAoAZBAAgwIAgwAAdAcA
+aggAbycAAXQCAHwHAGQFAIMCAGQRAHQCAHwKAGQSAIMCAIMAABaDAQABcTgBAXE4AVd0CgB8BwCD
+AQBkEwBqBABvIAABfAMAZBQAdAIAZBUAZBYAgwIAfAcAgwEAF4ICAG4BAAFkAABTKBcAAABOKAEA
+AABzEAAAAFZhbGlkYXRpb25GYWlsZWRzBgAAAG9iamVjdHMAAAAAcwkAAABnZXRTb3VyY2VzBgAA
+AGFwcGVuZHMJAAAATm8gU291cmNlcwwAAABnZXRTdGFydERhdGVzCwAAAGdldFN0b3BEYXRlcwwA
+AABzZXRTdGFydERhdGVzBwAAAE5vIERhdGVzDgAAAGdldERlc3RpbmF0aW9ucw4AAABObyBEZXN0
+aW5hdGlvbnMMAAAAb2JqZWN0VmFsdWVzcwsAAABwb3J0YWxfdHlwZXMeAAAAZ2V0UG9ydGFsT3Jk
+ZXJNb3ZlbWVudFR5cGVMaXN0cxAAAABnZXRSZXNvdXJjZVZhbHVlcyAAAABObyBSZXNvdXJjZSBm
+b3IgbGluZSB3aXRoIGlkOiAlc3MFAAAAZ2V0SWRpAAAAAHMJAAAAV2FybmluZzogcwUAAAAgLS0t
+IHMEAAAAam9pbigLAAAAcx4AAABQcm9kdWN0cy5EQ1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZh
+bGlkYXRpb25GYWlsZWRzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwUAAABvcmRlcnMN
+AAAAZXJyb3JfbWVzc2FnZXMMAAAAbWVzc2FnZV9saXN0cwQAAABOb25lcwkAAABfZ2V0aXRlcl9z
+BAAAAGxpbmVzAwAAAGxlbigMAAAAcwwAAABzdGF0ZV9jaGFuZ2VzAgAAAGt3cx4AAABQcm9kdWN0
+cy5EQ1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzCQAAAF9nZXRhdHRy
+X3MFAAAAb3JkZXJzDQAAAGVycm9yX21lc3NhZ2VzDAAAAG1lc3NhZ2VfbGlzdHMEAAAATm9uZXMJ
+AAAAX2dldGl0ZXJfcwQAAABsaW5lcwMAAABsZW4oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzEgAAAE9yZGVyX3ZhbGlkYXRlRGF0YQEAAABzJAAAAAABDQEPAQYBBgIcARcBMgEgARwBFAEc
+ARQBKwAGARwBKAITASgBAAAAcxIAAABPcmRlcl92YWxpZGF0ZURhdGEoAQAAAHMSAAAAT3JkZXJf
+dmFsaWRhdGVEYXRhKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEA
+AABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_workflow/order_workflow/scripts/Order_validateData</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>order</string>
+                            <string>error_message</string>
+                            <string>message_list</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>len</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Order_validateData</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

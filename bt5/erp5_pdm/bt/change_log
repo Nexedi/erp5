@@ -1,0 +1,36 @@
+2005-11-05 Romain
+* correct naming conventions
+
+2005-10-18 Romain
+* correct naming conventions
+
+2005-09-28 Romain
+* Added option base category.
+
+2005-09-20 Romain 1.0rc5
+* Added TransformationOptionalResource
+
+2005-09-15 Romain
+* Hide TransformationOperation_viewQuantity,
+TransformationTransformedResource_viewPrice,
+TransformationTransformedResource_viewQuantity, when no variation.
+
+2005-08-26 Romain
+* Product has industrial_phase as option.
+* Associated Transformation (line) to validation workflow.
+
+2005-08-25 Romain
+* modify Component_* form.
+* associate Component to validation_workflow
+
+2005-08-25 Romain (v1.0rc4)
+* added all needed for transformation_module.
+* added all needed for component_module.
+* move skin folder erp5_apparel_core from BT erp5_apparel.
+* added lot of categories from erp5_apparel.
+
+2005-08-23 kevin
+* Update Service_view to support 'grade' as Variation Base Category (this is required for paysheets).
+
+2005-06-23 yo
+* Rename modules, appended _module.

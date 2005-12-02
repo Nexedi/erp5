@@ -1,0 +1,325 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+cell_range = []\n
+add_predicate = 1\n
+\n
+\n
+# Get base category list\n
+if option_variation==1:\n
+  # Get option base category list\n
+  add_predicate = 0\n
+  no_option_base_category_list = context.getVariationRangeBaseCategoryList(\n
+                                                 omit_option_base_category=1)\n
+  base_category_list = context.getVariationRangeBaseCategoryList()\n
+  option_base_category_list = [x for x in base_category_list \\\n
+                               if x not in no_option_base_category_list]\n
+  if option_base_category_list == []:\n
+    base_category_list_list = []\n
+  else:\n
+    base_category_list_list = [option_base_category_list]\n
+else:\n
+  # Compatibility with ERP5 Shop\n
+  if base_id == \'reference\':\n
+    add_predicate = 0\n
+  # Get base categories selected by the user\n
+  if base_id in (\'path\', \'reference\'):\n
+    # XXX Compatibility\n
+    selected_base_category_list = context.getPVariationBaseCategoryList()\n
+    if selected_base_category_list == []:\n
+      # XXX Compatibility...\n
+      if context.getParent().getPortalType() in \\\n
+                                  context.getPortalResourceTypeList():\n
+        selected_base_category_list = context.getParent().\\\n
+                                        getPVariationBaseCategoryList()\n
+  else:\n
+    property_id = \'%s_variation_base_category_list\' % base_id[len(\'path_\'):]\n
+    selected_base_category_list = context.getProperty(property_id)\n
+  base_category_list_list = [[x] for x in selected_base_category_list]\n
+\n
+# Generate cell range\n
+for base_category_list in base_category_list_list:\n
+  if matrixbox==1:\n
+    # XXX matrixbox is right_display (not as listfield) \n
+    # => invert display and value in item\n
+    cell_range.append(map(lambda x: (x[1], x[0]),\n
+                          context.getVariationRangeCategoryItemList(\n
+                                 base_category_list=base_category_list,\n
+                                 display_base_category=display_base_category,\n
+                                 sort_id=\'id\')))\n
+  else:\n
+    cell_range.append(\n
+              context.getVariationRangeCategoryList(\n
+                                     base_category_list=base_category_list,\n
+                                     sort_id=\'id\'))\n
+# If no option, don\'t display quantity range\n
+if option_variation == 1:\n
+  if cell_range != []:\n
+    add_predicate = 1\n
+# Do we need to add predicate ?\n
+if add_predicate == 1:\n
+  # Get quantity step\n
+  # XXX Dirty, use the same quantity range for option/no option matrix\n
+  if base_id == \'path\':\n
+    # XXX Compatibility\n
+    price_parameter = \'base_price\'\n
+  else:\n
+    price_parameter = base_id[len(\'path_\'):]\n
+    option_base_id_begin_with = \'optional_\'\n
+    if price_parameter.startswith(option_base_id_begin_with):\n
+      price_parameter = price_parameter[len(option_base_id_begin_with):]\n
+  predicate_list = context.getQuantityPredicateValueList(price_parameter)\n
+  if matrixbox == 1:\n
+    pred_ids = [(x.getRelativeUrl(), x.getTitle()) for x in predicate_list]\n
+  else:\n
+    pred_ids = [x.getRelativeUrl() for x in predicate_list]\n
+  # Insert predicat list for display in columns\n
+  cell_range.insert(1, pred_ids)\n
+# Remove empty range\n
+cell_range = [x for x in cell_range if x!=[]]\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABQAAAEAAAABzGQAAAGQBAGQCAGQDAGQCAGQEAIQEAFoAAGQAAFMoBQAAAE5zBAAA
+AHBhdGhpAAAAAGkBAAAAYwQAAAAaAAAAIgAAAEsAAABz7wMAAGcAAH0FAGQBAH0GAHwDAGQBAGoC
+AG+SAAFkAgB9BgB0AwB0BABkAwCDAgBkBABkAQCDAAF9CQB0AwB0BABkAwCDAgCDAAB9CgBnAAAE
+aQcAfQwAdAkAfAoAgwEARF0hAH0OAHwOAHwJAGoHAG8OAAF8DAB8DgCDAQABcV0AAXFdAH4MAH0P
+AHwPAGcAAGoCAG8KAAFnAAB9EABxswEBfA8AZwEAfRAAbgkBAXwAAGQFAGoCAG8KAAFkAgB9BgBu
+AQABfAAAZAYAZAUAZgIAagYAb3oAAXQDAHQEAGQHAIMCAIMAAH0RAHwRAGcAAGoCAG9XAAF0AwB0
+AwB0BABkCACDAgCDAABkCQCDAgCDAAB0AwB0BABkCgCDAgCDAABqBgBvIgABdAMAdAMAdAQAZAgA
+gwIAgwAAZAcAgwIAgwAAfREAcUsBAXGDAQFuNQABZAsAdA8AfAAAdBAAZAwAgwEAZAAAhQIAgwIA
+Fn0UAHQDAHQEAGQNAIMCAHwUAIMBAH0RAGcAAARpBwB9DAB0CQB8EQCDAQBEXRMAfQ4AfAwAfA4A
+ZwEAgwEAAXGXAX4MAH0QAHiNAHQJAHwQAIMBAERdfwB9CgB8AQBkAQBqAgBvQQABdAMAfAUAZA4A
+gwIAdBMAZA8AhAAAdAMAdAQAZBAAgwIAZBEAfAoAZBIAfAIAZBMAZBQAgwADgwIAgwEAAXHAAQF0
+AwB8BQBkDgCDAgB0AwB0BABkFQCDAgBkEQB8CgBkEwBkFACDAAKDAQABccABV3wDAGQBAGoCAG8b
+AAF8BQBnAABqAwBvCgABZAEAfQYAcWsCAW4BAAF8BgBkAQBqAgBvMQEBfAAAZAYAagIAbwoAAWQW
+AH0WAG5XAAF0DwB8AAB0EABkDACDAQBkAACFAgCDAgB9FgBkFwB9FwB0AwB8FgBkGACDAgB8FwCD
+AQBvHwABdA8AfBYAdBAAfBcAgwEAZAAAhQIAgwIAfRYAbgEAAXQDAHQEAGQZAIMCAHwWAIMBAH0Y
+AHwBAGQBAGoCAG9PAAFnAAAEaQcAfQwAdAkAfBgAgwEARF0uAH0OAHwMAHQDAHwOAGQaAIMCAIMA
+AHQDAHwOAGQbAIMCAIMAAGYCAIMBAAFxGwN+DAB9GQBuOgABZwAABGkHAH0MAHQJAHwYAIMBAERd
+HAB9DgB8DAB0AwB8DgBkGgCDAgCDAACDAQABcWoDfgwAfRkAdAMAfAUAZBwAgwIAZAEAfBkAgwIA
+AW4BAAFnAAAEaQcAfQwAdAkAfAUAgwEARF0hAH0OAHwOAGcAAGoDAG8OAAF8DAB8DgCDAQABcb0D
+AXG9A34MAH0FAHwFAFNkAABTKB0AAABOaQEAAABpAAAAAHMhAAAAZ2V0VmFyaWF0aW9uUmFuZ2VC
+YXNlQ2F0ZWdvcnlMaXN0cxkAAABvbWl0X29wdGlvbl9iYXNlX2NhdGVnb3J5cwkAAAByZWZlcmVu
+Y2VzBAAAAHBhdGhzHQAAAGdldFBWYXJpYXRpb25CYXNlQ2F0ZWdvcnlMaXN0cwkAAABnZXRQYXJl
+bnRzDQAAAGdldFBvcnRhbFR5cGVzGQAAAGdldFBvcnRhbFJlc291cmNlVHlwZUxpc3RzHwAAACVz
+X3ZhcmlhdGlvbl9iYXNlX2NhdGVnb3J5X2xpc3RzBQAAAHBhdGhfcwsAAABnZXRQcm9wZXJ0eXMG
+AAAAYXBwZW5kYwEAAAACAAAABAAAAEMAAABzHAAAAHQAAHwAAGQBAIMCAHQAAHwAAGQCAIMCAGYC
+AFMoAwAAAE5pAQAAAGkAAAAAKAIAAABzCQAAAF9nZXRpdGVtX3MBAAAAeCgCAAAAcwEAAAB4cwkA
+AABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCwAAADxsYW1iZGEuMjk+
+KgAAAHMAAAAAcyEAAABnZXRWYXJpYXRpb25SYW5nZUNhdGVnb3J5SXRlbUxpc3RzEgAAAGJhc2Vf
+Y2F0ZWdvcnlfbGlzdHMVAAAAZGlzcGxheV9iYXNlX2NhdGVnb3J5cwcAAABzb3J0X2lkcwIAAABp
+ZHMdAAAAZ2V0VmFyaWF0aW9uUmFuZ2VDYXRlZ29yeUxpc3RzCgAAAGJhc2VfcHJpY2VzCQAAAG9w
+dGlvbmFsX3MKAAAAc3RhcnRzd2l0aHMdAAAAZ2V0UXVhbnRpdHlQcmVkaWNhdGVWYWx1ZUxpc3Rz
+DgAAAGdldFJlbGF0aXZlVXJscwgAAABnZXRUaXRsZXMGAAAAaW5zZXJ0KBkAAABzCgAAAGNlbGxf
+cmFuZ2VzDQAAAGFkZF9wcmVkaWNhdGVzEAAAAG9wdGlvbl92YXJpYXRpb25zCQAAAF9nZXRhdHRy
+X3MHAAAAY29udGV4dHMcAAAAbm9fb3B0aW9uX2Jhc2VfY2F0ZWdvcnlfbGlzdHMSAAAAYmFzZV9j
+YXRlZ29yeV9saXN0cwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhz
+GQAAAG9wdGlvbl9iYXNlX2NhdGVnb3J5X2xpc3RzFwAAAGJhc2VfY2F0ZWdvcnlfbGlzdF9saXN0
+cwcAAABiYXNlX2lkcxsAAABzZWxlY3RlZF9iYXNlX2NhdGVnb3J5X2xpc3RzCQAAAF9nZXRpdGVt
+X3MDAAAAbGVucwsAAABwcm9wZXJ0eV9pZHMJAAAAbWF0cml4Ym94cwMAAABtYXBzFQAAAGRpc3Bs
+YXlfYmFzZV9jYXRlZ29yeXMPAAAAcHJpY2VfcGFyYW1ldGVycxkAAABvcHRpb25fYmFzZV9pZF9i
+ZWdpbl93aXRocw4AAABwcmVkaWNhdGVfbGlzdHMIAAAAcHJlZF9pZHMoGgAAAHMHAAAAYmFzZV9p
+ZHMJAAAAbWF0cml4Ym94cxUAAABkaXNwbGF5X2Jhc2VfY2F0ZWdvcnlzEAAAAG9wdGlvbl92YXJp
+YXRpb25zAgAAAGt3cwoAAABjZWxsX3Jhbmdlcw0AAABhZGRfcHJlZGljYXRlcwkAAABfZ2V0YXR0
+cl9zBwAAAGNvbnRleHRzHAAAAG5vX29wdGlvbl9iYXNlX2NhdGVnb3J5X2xpc3RzEgAAAGJhc2Vf
+Y2F0ZWdvcnlfbGlzdHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwEAAAB4
+cxkAAABvcHRpb25fYmFzZV9jYXRlZ29yeV9saXN0cxcAAABiYXNlX2NhdGVnb3J5X2xpc3RfbGlz
+dHMbAAAAc2VsZWN0ZWRfYmFzZV9jYXRlZ29yeV9saXN0cwkAAABfZ2V0aXRlbV9zAwAAAGxlbnML
+AAAAcHJvcGVydHlfaWRzAwAAAG1hcHMPAAAAcHJpY2VfcGFyYW1ldGVycxkAAABvcHRpb25fYmFz
+ZV9pZF9iZWdpbl93aXRocw4AAABwcmVkaWNhdGVfbGlzdHMIAAAAcHJlZF9pZHMoAAAAACgAAAAA
+cw8AAABTY3JpcHQgKFB5dGhvbilzFgAAAFN1cHBseUxpbmVfYXNDZWxsUmFuZ2UBAAAAc2wAAAAG
+AQYEDQIGARgCEgEUAAYBJAENAQoCDQMNAQoCEwISAQ0CHgETASoDHwEVARQAHAMNAAYBEAMVAQwB
+BgEaAwwBDAEUAw0BDQEOAg0DDQIKAhsBCQETAR8BFQENARQAOwIUACgCFwIUAAYAJAEoAQAAAHMW
+AAAAU3VwcGx5TGluZV9hc0NlbGxSYW5nZSgBAAAAcxYAAABTdXBwbHlMaW5lX2FzQ2VsbFJhbmdl
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_trade/SupplyLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_id=\'path\', matrixbox=0, display_base_category=1, option_variation=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>base_id</string>
+                            <string>matrixbox</string>
+                            <string>display_base_category</string>
+                            <string>option_variation</string>
+                            <string>kw</string>
+                            <string>cell_range</string>
+                            <string>add_predicate</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>no_option_base_category_list</string>
+                            <string>base_category_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>option_base_category_list</string>
+                            <string>base_category_list_list</string>
+                            <string>selected_base_category_list</string>
+                            <string>_getitem_</string>
+                            <string>len</string>
+                            <string>property_id</string>
+                            <string>map</string>
+                            <string>price_parameter</string>
+                            <string>option_base_id_begin_with</string>
+                            <string>predicate_list</string>
+                            <string>pred_ids</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string>path</string>
+                <int>0</int>
+                <int>1</int>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SupplyLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

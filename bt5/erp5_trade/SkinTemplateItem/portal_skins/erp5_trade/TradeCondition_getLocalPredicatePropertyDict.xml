@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>property_dict = {}\n
+property_dict[\'multimembership_criterion_base_category_list\'] = (\'resource\',\'source\',\'destination\',\'group\',\'source_section\',\'destination_section\')\n
+property_dict[\'criterion_property_list\'] = (\'start_date\',\'stop_date\')\n
+return  property_dict\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAHAAAATwAA
+AHNGAAAAaAAAfQIAZAEAZAIAZAMAZAQAZAUAZAYAZgYAdAEAfAIAgwEAZAcAPGQIAGQJAGYCAHQB
+AHwCAIMBAGQKADx8AgBTZAAAUygLAAAATnMIAAAAcmVzb3VyY2VzBgAAAHNvdXJjZXMLAAAAZGVz
+dGluYXRpb25zBQAAAGdyb3Vwcw4AAABzb3VyY2Vfc2VjdGlvbnMTAAAAZGVzdGluYXRpb25fc2Vj
+dGlvbnMsAAAAbXVsdGltZW1iZXJzaGlwX2NyaXRlcmlvbl9iYXNlX2NhdGVnb3J5X2xpc3RzCgAA
+AHN0YXJ0X2RhdGVzCQAAAHN0b3BfZGF0ZXMXAAAAY3JpdGVyaW9uX3Byb3BlcnR5X2xpc3QoAgAA
+AHMNAAAAcHJvcGVydHlfZGljdHMHAAAAX3dyaXRlXygEAAAAcwQAAABhcmdzcwIAAABrd3MNAAAA
+cHJvcGVydHlfZGljdHMHAAAAX3dyaXRlXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMw
+AAAAU2FsZVRyYWRlQ29uZGl0aW9uX2dldExvY2FsUHJlZGljYXRlUHJvcGVydHlEaWN0AQAAAHMG
+AAAABgEiARYBKAEAAABzMAAAAFNhbGVUcmFkZUNvbmRpdGlvbl9nZXRMb2NhbFByZWRpY2F0ZVBy
+b3BlcnR5RGljdCgBAAAAczAAAABTYWxlVHJhZGVDb25kaXRpb25fZ2V0TG9jYWxQcmVkaWNhdGVQ
+cm9wZXJ0eURpY3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAA
+AHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/TradeCondition_getLocalPredicatePropertyDict</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>*args,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>property_dict</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TradeCondition_getLocalPredicatePropertyDict</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

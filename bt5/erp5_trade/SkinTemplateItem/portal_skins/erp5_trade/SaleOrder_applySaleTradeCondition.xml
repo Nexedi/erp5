@@ -1,0 +1,424 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Look if there is a corresponding trade conditions and then copy all values\n
+\n
+order = context\n
+trade_condition_list = []\n
+\n
+trade_condition_portal_type = \'Sale Trade Condition\'\n
+trade_condition_list = order.getSpecialiseValueList(portal_type=(trade_condition_portal_type,))\n
+\n
+if len(trade_condition_list) == 0 :\n
+  trade_condition_list = context.portal_domains.searchPredicateList(order,portal_type=(trade_condition_portal_type,),test=0)\n
+  context.log(\'trade_condition_list,\',trade_condition_list)\n
+# Results\n
+if len(trade_condition_list ) == 0 :\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=No+Trade+Condition.\')\n
+elif len(trade_condition_list ) > 1 :\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=Too+many+Trade+Condition.\')\n
+else : \n
+  trade_condition=trade_condition_list[0].getObject()\n
+\n
+  # Update Order Profile\n
+  categories = order.getCategoryList()\n
+  # Date\n
+  if order.getReceivedDate() is None :\n
+    context.setReceivedDate(DateTime())\n
+\n
+  # Source\n
+  if ((order.getSourceValue() == None) or force == 1) and trade_condition.getSourceValue() is not None :\n
+    order.setSourceList((trade_condition.getSourceRelativeUrl(),))\n
+  # source_section\n
+  if ((order.getSourceSectionValue() is None) or force == 1) and \\\n
+     (trade_condition.getSourceSectionValue() is not None) :\n
+    order.setSourceSectionList((trade_condition.getSourceSectionRelativeUrl(),))\n
+  # source_decision\n
+  if ((order.getSourceDecisionValue() is None) or force == 1) and \\\n
+     (trade_condition.getSourceDecisionValue() is not None) :\n
+    order.setSourceDecisionList( (trade_condition.getSourceDecisionRelativeUrl(),))\n
+  # source_administration\n
+  if ((order.getSourceAdministrationValue() is None) or force == 1) and \\\n
+     (trade_condition.getSourceAdministrationValue() is not None) :\n
+    order.setSourceAdministrationList((trade_condition.getSourceAdministrationRelativeUrl(),))\n
+  # source_payment\n
+  if ((order.getSourcePaymentValue() is None) or force == 1) and \\\n
+     (trade_condition.getSourcePaymentValue() is not None) :\n
+    order.setSourcePaymentList(trade_condition.getSourcePaymentRelativeUrl(),)\n
+\n
+  # DESTINATION_section\n
+  if (order.getDestinationSectionValue() is None) or force == 1 :\n
+    # if destination_section is not defined on TradeCondition, use Order destination\n
+    if trade_condition.getDestinationSectionValue() is not None :\n
+      order.setDestinationSectionList((trade_condition.getDestinationSectionRelativeUrl(),))\n
+    elif trade_condition.getDestinationValue() is not None :\n
+      order.setDestinationSectionList((order.getDestinationRelativeUrl(),))\n
+  # Destination\n
+  if (order.getDestinationValue() is None) or force == 1 :\n
+    # if destination is not defined on TradeCondition, use Order destination_section\n
+    if trade_condition.getDestinationValue() is not None :\n
+      order.setDestinationList( (trade_condition.getDestinationRelativeUrl(),))\n
+    elif order.getDestinationSectionValue() is not None:\n
+      order.setDestinationList((order.getDestinationRelativeUrl(),))\n
+  # destination_decision\n
+  if (len(order.getDestinationDecisionValueList()) == 0) or force == 1 :\n
+    # if destination_decision is not defined on TradeCondition, use Order destination\n
+    if len(trade_condition.getDestinationDecisionValueList()) >0 :\n
+      for object in trade_condition.getDestinationDecisionValueList():\n
+        order.setDestinationDecisionList( (object.getRelativeUrl(),))\n
+    elif order.getDestinationValue() is not None:\n
+      order.setDestinationDecisionList((order.getDestinationRelativeUrl(),))\n
+  # destination_administration\n
+  if (order.getDestinationAdministrationValue() is None) or force == 1 :\n
+    # if destination_administration is not defined on TradeCondition, use Order destination\n
+    if trade_condition.getDestinationAdministrationValue() is not None :\n
+      order.setDestinationAdministrationList((trade_condition.getDestinationAdministrationValue().getRelativeUrl(),))\n
+    elif order.getDestinationValue() is not None:\n
+      order.setDestinationAdministrationList( (order.getDestinationRelativeUrl(),))\n
+  # destination_payment\n
+  if (order.getDestinationPaymentValue() is None) or force == 1 :\n
+    # if destination_payment is not defined on TradeCondition, use Order destination\n
+    if trade_condition.getDestinationPaymentValue() is not None :\n
+      order.setDestinationPaymentList((trade_condition.getDestinationPaymentRelativeUrl(),))\n
+    elif order.getDestinationValue() is not None:\n
+      order.setDestinationPaymentList((order.getDestinationRelativeUrl(),))\n
+\n
+  # Devise\n
+  if ((order.getPriceCurrencyValue() is None) or force == 1) and \\\n
+     (trade_condition.getPriceCurrencyValue() is not None) :\n
+    order.setPriceCurrencyList((trade_condition.getPriceCurrencyValue().getRelativeUrl(),))\n
+\n
+\n
+  if ((order.getDeliveryModeValue() is None) or force == 1) and \\\n
+     (trade_condition.getDeliveryModeValue() is not None) :\n
+    order.setDeliveryModeList((trade_condition.getDeliveryModeValue().getRelativeUrl(),))\n
+\n
+  # copy PaymentCondition if no one is defined on Order\n
+  payment_condition_portal_type = \'Payment Condition\'\n
+  context.Base_connectAsSuperUser()\n
+  if (len(order.contentIds(filter={\'portal_type\':payment_condition_portal_type})) == 0) or force == 1 :\n
+    if force ==1:\n
+      to_delete=order.contentIds(filter={\'portal_type\':payment_condition_portal_type})\n
+      order.manage_delObjects(to_delete)\n
+    to_copy=[]\n
+    to_copy=trade_condition.contentIds(filter={\'portal_type\':payment_condition_portal_type})\n
+    if len(to_copy)>0 :\n
+     copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+     new_id_list = order.manage_pasteObjects(copy_data)\n
+\n
+  # Incoterm\n
+  if ((order.getIncotermValue() is None) or force == 1) and \\\n
+     (trade_condition.getIncotermValue() is not None) :\n
+    order.setIncotermList( (trade_condition.getIncotermValue().getRelativeUrl(),))\n
+\n
+  # copy Discount if no one is defined on Order\n
+  discount_portal_type = \'Discount\'\n
+  if (len(order.contentIds(filter={\'portal_type\':discount_portal_type})) == 0) or force == 1 :\n
+    if force ==1:\n
+      to_delete=order.contentIds(filter={\'portal_type\':discount_portal_type})\n
+      order.manage_delObjects(to_delete)\n
+    to_copy=[]\n
+    to_copy=trade_condition.contentIds(filter={\'portal_type\':discount_portal_type})\n
+    if len(to_copy)>0 :\n
+     copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
+     new_id_list = order.manage_pasteObjects(copy_data)\n
+\n
+  # Update specialise value of Order\n
+  order.setSpecialiseList((trade_condition.getRelativeUrl(),))\n
+  order.recursiveReindexObject()\n
+\n
+  redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id, \n
+                               \'portal_status_message=Order+updated.\')\n
+\n
+if batch_mode:\n
+  return None\n
+else:\n
+  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+QQBmAwAWfQkAfAEAbwgAAXQLAFNuJgABdAQAdAgAdAQAdAAAZEIAgwIAZEMAgwIAZEQAgwIAfAkA
+gwEAAWQAAFMoRQAAAE5zFAAAAFNhbGUgVHJhZGUgQ29uZGl0aW9ucxYAAABnZXRTcGVjaWFsaXNl
+VmFsdWVMaXN0cwsAAABwb3J0YWxfdHlwZWkAAAAAcw4AAABwb3J0YWxfZG9tYWluc3MTAAAAc2Vh
+cmNoUHJlZGljYXRlTGlzdHMEAAAAdGVzdHMDAAAAbG9ncxUAAAB0cmFkZV9jb25kaXRpb25fbGlz
+dCxzCAAAACVzLyVzPyVzcwwAAABhYnNvbHV0ZV91cmxzKQAAAHBvcnRhbF9zdGF0dXNfbWVzc2Fn
+ZT1ObytUcmFkZStDb25kaXRpb24uaQEAAABzLwAAAHBvcnRhbF9zdGF0dXNfbWVzc2FnZT1Ub28r
+bWFueStUcmFkZStDb25kaXRpb24ucwkAAABnZXRPYmplY3RzDwAAAGdldENhdGVnb3J5TGlzdHMP
+AAAAZ2V0UmVjZWl2ZWREYXRlcw8AAABzZXRSZWNlaXZlZERhdGVzDgAAAGdldFNvdXJjZVZhbHVl
+cw0AAABzZXRTb3VyY2VMaXN0cxQAAABnZXRTb3VyY2VSZWxhdGl2ZVVybHMVAAAAZ2V0U291cmNl
+U2VjdGlvblZhbHVlcxQAAABzZXRTb3VyY2VTZWN0aW9uTGlzdHMbAAAAZ2V0U291cmNlU2VjdGlv
+blJlbGF0aXZlVXJscxYAAABnZXRTb3VyY2VEZWNpc2lvblZhbHVlcxUAAABzZXRTb3VyY2VEZWNp
+c2lvbkxpc3RzHAAAAGdldFNvdXJjZURlY2lzaW9uUmVsYXRpdmVVcmxzHAAAAGdldFNvdXJjZUFk
+bWluaXN0cmF0aW9uVmFsdWVzGwAAAHNldFNvdXJjZUFkbWluaXN0cmF0aW9uTGlzdHMiAAAAZ2V0
+U291cmNlQWRtaW5pc3RyYXRpb25SZWxhdGl2ZVVybHMVAAAAZ2V0U291cmNlUGF5bWVudFZhbHVl
+cxQAAABzZXRTb3VyY2VQYXltZW50TGlzdHMbAAAAZ2V0U291cmNlUGF5bWVudFJlbGF0aXZlVXJs
+cxoAAABnZXREZXN0aW5hdGlvblNlY3Rpb25WYWx1ZXMZAAAAc2V0RGVzdGluYXRpb25TZWN0aW9u
+TGlzdHMgAAAAZ2V0RGVzdGluYXRpb25TZWN0aW9uUmVsYXRpdmVVcmxzEwAAAGdldERlc3RpbmF0
+aW9uVmFsdWVzGQAAAGdldERlc3RpbmF0aW9uUmVsYXRpdmVVcmxzEgAAAHNldERlc3RpbmF0aW9u
+TGlzdHMfAAAAZ2V0RGVzdGluYXRpb25EZWNpc2lvblZhbHVlTGlzdHMaAAAAc2V0RGVzdGluYXRp
+b25EZWNpc2lvbkxpc3RzDgAAAGdldFJlbGF0aXZlVXJscyEAAABnZXREZXN0aW5hdGlvbkFkbWlu
+aXN0cmF0aW9uVmFsdWVzIAAAAHNldERlc3RpbmF0aW9uQWRtaW5pc3RyYXRpb25MaXN0cxoAAABn
+ZXREZXN0aW5hdGlvblBheW1lbnRWYWx1ZXMZAAAAc2V0RGVzdGluYXRpb25QYXltZW50TGlzdHMg
+AAAAZ2V0RGVzdGluYXRpb25QYXltZW50UmVsYXRpdmVVcmxzFQAAAGdldFByaWNlQ3VycmVuY3lW
+YWx1ZXMUAAAAc2V0UHJpY2VDdXJyZW5jeUxpc3RzFAAAAGdldERlbGl2ZXJ5TW9kZVZhbHVlcxMA
+AABzZXREZWxpdmVyeU1vZGVMaXN0cxEAAABQYXltZW50IENvbmRpdGlvbnMXAAAAQmFzZV9jb25u
+ZWN0QXNTdXBlclVzZXJzCgAAAGNvbnRlbnRJZHNzBgAAAGZpbHRlcnMRAAAAbWFuYWdlX2RlbE9i
+amVjdHNzEgAAAG1hbmFnZV9jb3B5T2JqZWN0c3MDAAAAaWRzcxMAAABtYW5hZ2VfcGFzdGVPYmpl
+Y3RzcxAAAABnZXRJbmNvdGVybVZhbHVlcw8AAABzZXRJbmNvdGVybUxpc3RzCAAAAERpc2NvdW50
+cxEAAABzZXRTcGVjaWFsaXNlTGlzdHMWAAAAcmVjdXJzaXZlUmVpbmRleE9iamVjdHMkAAAAcG9y
+dGFsX3N0YXR1c19tZXNzYWdlPU9yZGVyK3VwZGF0ZWQucwcAAABSRVFVRVNUcwgAAABSRVNQT05T
+RXMIAAAAcmVkaXJlY3QoFwAAAHMHAAAAY29udGV4dHMFAAAAb3JkZXJzFAAAAHRyYWRlX2NvbmRp
+dGlvbl9saXN0cxsAAAB0cmFkZV9jb25kaXRpb25fcG9ydGFsX3R5cGVzCQAAAF9nZXRhdHRyX3MD
+AAAAbGVucwcAAABmb3JtX2lkcwwAAAByZWRpcmVjdF91cmxzCQAAAF9nZXRpdGVtX3MPAAAAdHJh
+ZGVfY29uZGl0aW9ucwoAAABjYXRlZ29yaWVzcwQAAABOb25lcwgAAABEYXRlVGltZXMFAAAAZm9y
+Y2VzCQAAAF9nZXRpdGVyX3MGAAAAb2JqZWN0cx0AAABwYXltZW50X2NvbmRpdGlvbl9wb3J0YWxf
+dHlwZXMJAAAAdG9fZGVsZXRlcwcAAAB0b19jb3B5cwkAAABjb3B5X2RhdGFzCwAAAG5ld19pZF9s
+aXN0cxQAAABkaXNjb3VudF9wb3J0YWxfdHlwZXMKAAAAYmF0Y2hfbW9kZSgXAAAAcwcAAABmb3Jt
+X2lkcwoAAABiYXRjaF9tb2RlcwUAAABmb3JjZXMHAAAAY29udGV4dHMFAAAAb3JkZXJzFAAAAHRy
+YWRlX2NvbmRpdGlvbl9saXN0cxsAAAB0cmFkZV9jb25kaXRpb25fcG9ydGFsX3R5cGVzCQAAAF9n
+ZXRhdHRyX3MDAAAAbGVucwwAAAByZWRpcmVjdF91cmxzCQAAAF9nZXRpdGVtX3MPAAAAdHJhZGVf
+Y29uZGl0aW9ucwoAAABjYXRlZ29yaWVzcwQAAABOb25lcwgAAABEYXRlVGltZXMJAAAAX2dldGl0
+ZXJfcwYAAABvYmplY3RzHQAAAHBheW1lbnRfY29uZGl0aW9uX3BvcnRhbF90eXBlcwkAAAB0b19k
+ZWxldGVzBwAAAHRvX2NvcHlzCQAAAGNvcHlfZGF0YXMLAAAAbmV3X2lkX2xpc3RzFAAAAGRpc2Nv
+dW50X3BvcnRhbF90eXBlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyEAAABTYWxlT3Jk
+ZXJfYXBwbHlTYWxlVHJhZGVDb25kaXRpb24BAAAAc7gAAAAAAgYBBgIGARsCEwEwARcCEwEjAhMB
+IwMbAxICHAEaAz8BJgImARkBJgImARkBJgImARkBJgImARkBIwMjAhwBIwEcASoCIwIcASMBHAEn
+AiwCHwEZAAkBJwEcASoCIwIcAS8BHAEqAiMCHAEjARwBKgMmARkBMgMmARkBLwMJAQ0BOwENASQB
+FAEGASEBEwEYASADJgEZAS8DBgE7AQ0BJAEUAQYBIQETARgBIAMiAQ0CHwMHARECKAEAAABzIQAA
+AFNhbGVPcmRlcl9hcHBseVNhbGVUcmFkZUNvbmRpdGlvbigBAAAAcyEAAABTYWxlT3JkZXJfYXBw
+bHlTYWxlVHJhZGVDb25kaXRpb24oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxt
+b2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/SaleOrder_applySaleTradeCondition</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id,batch_mode=0,force=1</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>batch_mode</string>
+                            <string>force</string>
+                            <string>context</string>
+                            <string>order</string>
+                            <string>trade_condition_list</string>
+                            <string>trade_condition_portal_type</string>
+                            <string>_getattr_</string>
+                            <string>len</string>
+                            <string>redirect_url</string>
+                            <string>_getitem_</string>
+                            <string>trade_condition</string>
+                            <string>categories</string>
+                            <string>None</string>
+                            <string>DateTime</string>
+                            <string>_getiter_</string>
+                            <string>object</string>
+                            <string>payment_condition_portal_type</string>
+                            <string>to_delete</string>
+                            <string>to_copy</string>
+                            <string>copy_data</string>
+                            <string>new_id_list</string>
+                            <string>discount_portal_type</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>1</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleOrder_applySaleTradeCondition</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

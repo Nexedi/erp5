@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Sets the causality relation on a delivery from the order it comes from.\n
+This script should be called in the after generation script of the DeliveryBuilder.\n
+\n
+IMPORTANT WARNING: this script will not work if your simulation movements are not\n
+reindexed yet ()\n
+\n
+"""\n
+\n
+LOG = lambda msg:context.log(\n
+          "Delivery_setCausalityFromSimulation on %s" % context.getPath(), msg)\n
+LOG = lambda msg:\'DISABLED\'\n
+\n
+delivery = context\n
+\n
+# get the list of simulation movement which have built this delivery\n
+simulation_movement_list = []\n
+for movement in delivery.getMovementList() :\n
+  LOG("movement %s " % movement.getPath())\n
+  simulation_movement_list.extend(\n
+        movement.getDeliveryRelatedValueList(\n
+          portal_type = \'Simulation Movement\'))\n
+\n
+LOG("simulation_movement_list %s " % simulation_movement_list)\n
+\n
+causality_value_set = {}\n
+for simulation_movement in simulation_movement_list :\n
+  LOG("simulation_movement %s " % simulation_movement.getPath())\n
+  if simulation_movement.getParent() != simulation_movement.getRootAppliedRule():\n
+    explanation_value = simulation_movement.getParent().getParent().getExplanationValue()\n
+  else :\n
+    explanation_value = simulation_movement.getExplanationValue()\n
+  if explanation_value is not None :\n
+    causality_value_set[explanation_value] = 1\n
+\n
+LOG(\'setCausalityValueList %s\'%causality_value_set.keys())\n
+delivery.setCausalityValueList(causality_value_set.keys())\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAwAAAASAAAAQwAA
+AHOIAQAAZAEAhAAAfQAAZAIAhAAAfQAAdAEAfQIAZwAAfQMAeF8AdAQAdAUAfAIAZAMAgwIAgwAA
+gwEARF1FAH0GAHwAAGQEAHQFAHwGAGQFAIMCAIMAABaDAQABdAUAfAMAZAYAgwIAdAUAfAYAZAcA
+gwIAZAgAZAkAgwABgwEAAXE3AFd8AABkCgB8AwAWgwEAAWgAAH0HAHi0AHQEAHwDAIMBAERdpgB9
+CAB8AABkCwB0BQB8CABkBQCDAgCDAAAWgwEAAXQFAHwIAGQMAIMCAIMAAHQFAHwIAGQNAIMCAIMA
+AGoDAG8uAAF0BQB0BQB0BQB8CABkDACDAgCDAABkDACDAgCDAABkDgCDAgCDAAB9CQBuEwABdAUA
+fAgAZA4AgwIAgwAAfQkAfAkAdAoAagkAbxQAAWQPAHQLAHwHAIMBAHwJADxxoQABcaEAV3wAAGQQ
+AHQFAHwHAGQRAIMCAIMAABaDAQABdAUAfAIAZBIAgwIAdAUAfAcAZBEAgwIAgwAAgwEAAWQAAFMo
+EwAAAE5jAQAAAAMAAAAFAAAAQwAAAHMmAAAAdAAAdAEAZAEAgwIAZAIAdAAAdAEAZAMAgwIAgwAA
+FnwAAIMCAFMoBAAAAE5zAwAAAGxvZ3MpAAAARGVsaXZlcnlfc2V0Q2F1c2FsaXR5RnJvbVNpbXVs
+YXRpb24gb24gJXNzBwAAAGdldFBhdGgoAwAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwMA
+AABtc2coAwAAAHMDAAAAbXNncwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8A
+AABTY3JpcHQgKFB5dGhvbilzCwAAADxsYW1iZGEuMjk+CgAAAHMCAAAAEgFjAQAAAAEAAAABAAAA
+QwAAAHMEAAAAZAEAUygCAAAATnMIAAAARElTQUJMRUQoAAAAACgBAAAAcwMAAABtc2coAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCwAAADxsYW1iZGEuMzA+DAAAAHMAAAAAcw8AAABnZXRN
+b3ZlbWVudExpc3RzDAAAAG1vdmVtZW50ICVzIHMHAAAAZ2V0UGF0aHMGAAAAZXh0ZW5kcxsAAABn
+ZXREZWxpdmVyeVJlbGF0ZWRWYWx1ZUxpc3RzCwAAAHBvcnRhbF90eXBlcxMAAABTaW11bGF0aW9u
+IE1vdmVtZW50cxwAAABzaW11bGF0aW9uX21vdmVtZW50X2xpc3QgJXMgcxcAAABzaW11bGF0aW9u
+X21vdmVtZW50ICVzIHMJAAAAZ2V0UGFyZW50cxIAAABnZXRSb290QXBwbGllZFJ1bGVzEwAAAGdl
+dEV4cGxhbmF0aW9uVmFsdWVpAQAAAHMYAAAAc2V0Q2F1c2FsaXR5VmFsdWVMaXN0ICVzcwQAAABr
+ZXlzcxUAAABzZXRDYXVzYWxpdHlWYWx1ZUxpc3QoDAAAAHMDAAAATE9HcwcAAABjb250ZXh0cwgA
+AABkZWxpdmVyeXMYAAAAc2ltdWxhdGlvbl9tb3ZlbWVudF9saXN0cwkAAABfZ2V0aXRlcl9zCQAA
+AF9nZXRhdHRyX3MIAAAAbW92ZW1lbnRzEwAAAGNhdXNhbGl0eV92YWx1ZV9zZXRzEwAAAHNpbXVs
+YXRpb25fbW92ZW1lbnRzEQAAAGV4cGxhbmF0aW9uX3ZhbHVlcwQAAABOb25lcwcAAABfd3JpdGVf
+KAwAAABzAwAAAExPR3MHAAAAY29udGV4dHMIAAAAZGVsaXZlcnlzGAAAAHNpbXVsYXRpb25fbW92
+ZW1lbnRfbGlzdHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zCAAAAG1vdmVtZW50cxMAAABj
+YXVzYWxpdHlfdmFsdWVfc2V0cxMAAABzaW11bGF0aW9uX21vdmVtZW50cxEAAABleHBsYW5hdGlv
+bl92YWx1ZXMEAAAATm9uZXMHAAAAX3dyaXRlXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMjAAAARGVsaXZlcnlfc2V0Q2F1c2FsaXR5RnJvbVNpbXVsYXRpb24BAAAAcyoAAAAACQkCCQIG
+AwYBGQAGAR0BDAEaAw4CBgENAAYBGgElAS4CEgENARgCHQEoAQAAAHMjAAAARGVsaXZlcnlfc2V0
+Q2F1c2FsaXR5RnJvbVNpbXVsYXRpb24oAQAAAHMjAAAARGVsaXZlcnlfc2V0Q2F1c2FsaXR5RnJv
+bVNpbXVsYXRpb24oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAA
+AHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_trade/Delivery_setCausalityFromSimulation</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>LOG</string>
+<string>context</string>
+                            <string>delivery</string>
+                            <string>simulation_movement_list</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>movement</string>
+                            <string>causality_value_set</string>
+                            <string>simulation_movement</string>
+                            <string>explanation_value</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_setCausalityFromSimulation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

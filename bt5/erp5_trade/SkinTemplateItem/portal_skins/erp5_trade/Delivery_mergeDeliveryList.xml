@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+REQUEST=context.REQUEST\n
+selection_name = REQUEST[\'selection_name\']\n
+object_list = context.portal_selections.getSelectionValueList(selection_name, context=context, REQUEST=REQUEST)\n
+delivery_list = []\n
+for o in object_list:\n
+  delivery_list.append(o)\n
+\n
+if len(delivery_list) < 2:\n
+  ret_url = context.absolute_url() + \'/\' + form_id\n
+  qs = \'?portal_status_message=Please+select+more+than+one+items.\'\n
+else:\n
+  ret_url = context.absolute_url() + \'/\' + form_id\n
+  qs = \'?portal_status_message=Merged.\'\n
+  context.portal_simulation.mergeDeliveryList(delivery_list)\n
+\n
+return REQUEST.RESPONSE.redirect( ret_url + qs )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5zAAAAAGMBAAAADQAA
+ABAAAABDAAAAcw8BAAB0AAB0AQBkAQCDAgB9AwB0AwB8AwBkAgCDAgB9BQB0AAB0AAB0AQBkAwCD
+AgBkBACDAgB8BQBkBQB0AQBkAQB8AwCDAQJ9BgBnAAB9BwB4JwB0BwB8BgCDAQBEXRkAfQkAdAAA
+fAcAZAYAgwIAfAkAgwEAAXFbAFd0CQB8BwCDAQBkBwBqAABvJAABdAAAdAEAZAgAgwIAgwAAZAkA
+F3wAABd9CwBkCgB9DABuPQABdAAAdAEAZAgAgwIAgwAAZAkAF3wAABd9CwBkCwB9DAB0AAB0AAB0
+AQBkDACDAgBkDQCDAgB8BwCDAQABdAAAdAAAfAMAZA4AgwIAZA8AgwIAfAsAfAwAF4MBAFNkAABT
+KBAAAABOcwcAAABSRVFVRVNUcw4AAABzZWxlY3Rpb25fbmFtZXMRAAAAcG9ydGFsX3NlbGVjdGlv
+bnNzFQAAAGdldFNlbGVjdGlvblZhbHVlTGlzdHMHAAAAY29udGV4dHMGAAAAYXBwZW5kaQIAAABz
+DAAAAGFic29sdXRlX3VybHMBAAAAL3M5AAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1QbGVhc2Ur
+c2VsZWN0K21vcmUrdGhhbitvbmUraXRlbXMucx4AAAA/cG9ydGFsX3N0YXR1c19tZXNzYWdlPU1l
+cmdlZC5zEQAAAHBvcnRhbF9zaW11bGF0aW9ucxEAAABtZXJnZURlbGl2ZXJ5TGlzdHMIAAAAUkVT
+UE9OU0VzCAAAAHJlZGlyZWN0KA0AAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAUkVR
+VUVTVHMJAAAAX2dldGl0ZW1fcw4AAABzZWxlY3Rpb25fbmFtZXMLAAAAb2JqZWN0X2xpc3RzDQAA
+AGRlbGl2ZXJ5X2xpc3RzCQAAAF9nZXRpdGVyX3MBAAAAb3MDAAAAbGVucwcAAABmb3JtX2lkcwcA
+AAByZXRfdXJscwIAAABxcygNAAAAcwcAAABmb3JtX2lkcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
+eHRzBwAAAFJFUVVFU1RzCQAAAF9nZXRpdGVtX3MOAAAAc2VsZWN0aW9uX25hbWVzCwAAAG9iamVj
+dF9saXN0cw0AAABkZWxpdmVyeV9saXN0cwkAAABfZ2V0aXRlcl9zAQAAAG9zAwAAAGxlbnMHAAAA
+cmV0X3VybHMCAAAAcXMoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGgAAAERlbGl2ZXJ5
+X21lcmdlRGVsaXZlcnlMaXN0AQAAAHMaAAAADwEPASoBBgENAAkBFAITARoBCgIaAQwBFgIoAQAA
+AHMaAAAARGVsaXZlcnlfbWVyZ2VEZWxpdmVyeUxpc3QoAQAAAHMaAAAARGVsaXZlcnlfbWVyZ2VE
+ZWxpdmVyeUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAA
+AHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_trade/Delivery_mergeDeliveryList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>REQUEST</string>
+                            <string>_getitem_</string>
+                            <string>selection_name</string>
+                            <string>object_list</string>
+                            <string>delivery_list</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>len</string>
+                            <string>ret_url</string>
+                            <string>qs</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_mergeDeliveryList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Merge deliveries into one</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

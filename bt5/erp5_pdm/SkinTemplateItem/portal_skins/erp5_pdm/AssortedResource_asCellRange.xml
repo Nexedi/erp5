@@ -1,0 +1,512 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#  from Products.ERP5Type.Utils import cartesianProduct\n
+# XXX unable to import cartesianProduct, so, I copied the code (Romain)\n
+def cartesianProduct(list_of_list):\n
+  if len(list_of_list) == 0:\n
+    return [[]]\n
+  result = []\n
+  head = list_of_list[0]\n
+  tail = list_of_list[1:]\n
+  product = cartesianProduct(tail)\n
+  for v in head:\n
+    for p in product:\n
+      result += [[v] + p]\n
+  return result\n
+\n
+\n
+line = []\n
+column = []\n
+tab = []\n
+\n
+transformation = context.aq_parent\n
+\n
+\n
+\n
+\n
+\n
+#    security.declareProtected(Permissions.AccessContentsInformation, \'getQLineItemList\')\n
+#    def getQLineItemList(self, display_id=\'getTitle\', base=1, current_category=None):\n
+#      """\n
+#      """\n
+#      line_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[0]\n
+#      #LOG(\'getQLineItemList\', 0, "%s" % str(line_category))\n
+#      if line_category is None:\n
+#        result = [(None,\'\')]\n
+#      else:\n
+#        result = self.getVariationRangeCategoryItemList(base_category_list = [line_category],\n
+#                                                        display_id=display_id,\n
+#                                                        base=base,\n
+#                                                        current_category=current_category)\n
+#      #LOG(\'getQLineItemList\', 10, "%s" % str(result))\n
+#      return result\n
+\n
+#    security.declareProtected(Permissions.AccessContentsInformation, \'getQColumnItemList\')\n
+#    def getQColumnItemList(self, display_id=\'getTitle\', base=1, current_category=None):\n
+#      """\n
+#      """\n
+#      column_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[1]\n
+#      #LOG(\'getQColumnItemList\', 0, "%s" % str(column_category))\n
+#      if column_category is None:\n
+#        result = [(None,\'\')]\n
+#      else:\n
+#        result = self.getVariationRangeCategoryItemList(base_category_list = [column_category],\n
+#                                                        display_id=display_id,\n
+#                                                        base=base,\n
+#                                                        current_category=current_category)\n
+#      #LOG(\'getQColumnItemList\', 0, "%s" % str(result))\n
+#      return result\n
+\n
+#    security.declareProtected(Permissions.AccessContentsInformation, \'getQTabItemList\')\n
+#    def getQTabItemList(self, display_id=\'getTitle\', base=1, current_category=None):\n
+#      """\n
+#        Returns a list of items which can be used as index for\n
+#        each tab of a matrix or to define a cell range.\n
+#      """\n
+#      tab_category_list = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[2:]\n
+#      tab_category_item_list_list = []\n
+#      for tab_category in tab_category_list:\n
+#        tab_category_item_list = self.getVariationRangeCategoryItemList(base_category_list = [tab_category],\n
+#                                                                        display_id=display_id,\n
+#                                                                        base=base,\n
+#                                                                        current_category=current_category)\n
+#        tab_category_item_list_list.append(tab_category_item_list)\n
+#      transformation = self.aq_parent\n
+#      transformation_category_item_list = transformation.getVariationCategoryItemList(\n
+#                                                          display_id=display_id,\n
+#                                                          base=base,\n
+#                                                          current_category=current_category)\n
+#      tab_category_item_list_list.append(transformation_category_item_list)\n
+#      if len(tab_category_item_list_list) > 0:\n
+#        product_list = cartesianProduct(tab_category_item_list_list)\n
+#        result = []\n
+#        for item_list in product_list:\n
+#          value_list = []\n
+#          label_list = []\n
+#          for item in item_list:\n
+#            value_list.append(item[0])\n
+#            label_list.append(item[1])\n
+#          result.append((value_list, label_list))\n
+#      else:\n
+#        result = [(None,\'\')]\n
+#      return result\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+# base_cell_id possible value: \'quantity\', \'variation\'\n
+base_cell_id = \'quantity\'\n
+get_variation_base_category_method_dict = {\n
+  \'quantity\': \'getQVariationBaseCategoryList\',\n
+  \'variation\': \'getVVariationBaseCategoryList\'\n
+}\n
+\n
+\n
+#  from Products.ERP5Type.Utils import cartesianProduct\n
+# XXX unable to import cartesianProduct, so, I copied the code (Romain)\n
+def cartesianProduct(list_of_list):\n
+  if len(list_of_list) == 0:\n
+    return [[]]\n
+  result = []\n
+  head = list_of_list[0]\n
+  tail = list_of_list[1:]\n
+  product = cartesianProduct(tail)\n
+  for v in head:\n
+    for p in product:\n
+      result += [[v] + p]\n
+  return result\n
+\n
+\n
+line = []\n
+column = []\n
+tab = []\n
+\n
+transformation = context.aq_parent\n
+\n
+# Those value are define on property sheet of portal type\n
+line_base_category = transformation.getVariationBaseCategoryLine()\n
+column_base_category = transformation.getVariationBaseCategoryColumn()\n
+\n
+# Calculate line and column\n
+for axe, axe_base_category in [(line, line_base_category),(column, column_base_category)]:\n
+  clist = []\n
+  #if axe_base_category in context.getVVariationBaseCategoryList():\n
+  if axe_base_category in getattr(context, get_variation_base_category_method_dict[base_cell_id])():\n
+\n
+    if matrixbox == 1:\n
+      # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
+      axe += map(lambda x: (x[1],x[0]), transformation.getVariationCategoryItemList(base_category_list = (axe_base_category,) ) )\n
+    else:\n
+      axe += transformation.getVariationCategoryList(base_category_list = (axe_base_category,) )\n
+\n
+# Calculate tab\n
+# We can only display 3 dimension, so, we use a cartesian product to decrease matrix dimension\n
+base_category_list = transformation.getVariationBaseCategoryList()\n
+base_category = []\n
+\n
+for c in base_category_list:\n
+  if not c in (line_base_category, column_base_category):\n
+    #if c in context.getVVariationBaseCategoryList():\n
+    if c in getattr(context, get_variation_base_category_method_dict[base_cell_id])():\n
+      if matrixbox == 1:\n
+        # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
+        base_category += [ map(lambda x: (x[1],x[0]), transformation.getVariationCategoryItemList(base_category_list = (c,) )) ]\n
+      else:\n
+        base_category += [ transformation.getVariationCategoryList(base_category_list = (c,) ) ]\n
+\n
+if len(base_category) > 0:\n
+  # Then make a cartesian product\n
+  # to calculate all possible combinations\n
+  clist = cartesianProduct(base_category)\n
+  \n
+  # XXX is it possible to remove repr ?\n
+  for c in clist:\n
+    if matrixbox == 1:\n
+      # XXX matrixbox is right display\n
+      tab.append(  ( repr(map(lambda x: x[0], c)) , repr(map(lambda x: x[1], c)) ) )\n
+    else:\n
+      tab.append( repr(c) )\n
+\n
+# Try fill line first, then column, and after tab\n
+for i in range(2):\n
+  if line == []:\n
+    tmp = line \n
+    line = column\n
+    column = tmp\n
+    tmp = None\n
+\n
+  if column == []:\n
+    tmp = column\n
+    column = tab\n
+    tab = tmp\n
+    tmp = None\n
+\n
+cell_range = [line, column, tab]\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGUAAGQCAIQCAFoBAGQAAFMoAwAAAE5pAAAAAGMCAAAA
+HgAAABkAAAADAAAAc04DAACHAABkAQCGAACJAABnAAB9AwBnAAB9BABnAAB9BQB0BAB0BQBkAgCD
+AgB9CABkAwB9CQBoAAAEZAMAZAQAAzwEZAUAZAYAAzx9CgCHAABkAQCGAACJAABnAAB9AwBnAAB9
+BABnAAB9BQB0BAB0BQBkAgCDAgB9CAB0BAB8CABkBwCDAgCDAAB9CwB0BAB8CABkCACDAgCDAAB9
+DAB4ugB0CwB8AwB8CwBmAgB8BAB8DABmAgBnAgCDAQBEXZoAdAsAAoMBAFwCAH0OAH0PAGcAAH0Q
+AHwPAHQPAHQFAHQQAHwKAHwJAIMCAIMCAIMAAGoGAG9fAAF8AABkCQBqAgBvLwABfA4AdBIAZAoA
+hAAAdAQAfAgAZAsAgwIAZAwAfA8AZgEAgwABgwIAN30OAHFVAQF8DgB0BAB8CABkDQCDAgBkDAB8
+DwBmAQCDAAE3fQ4AcbsAAXG7AFd0BAB8CABkDgCDAgCDAAB9FABnAAB9FQB4swB0CwB8FACDAQBE
+XaUAfRYAfBYAfAsAfAwAZgIAagYADG+LAAF8FgB0DwB0BQB0EAB8CgB8CQCDAgCDAgCDAABqBgBv
+ZQABfAAAZAkAagIAbzIAAXwVAHQSAGQPAIQAAHQEAHwIAGQLAIMCAGQMAHwWAGYBAIMAAYMCAGcB
+ADd9FQBxHwIBfBUAdAQAfAgAZA0AgwIAZAwAfBYAZgEAgwABZwEAN30VAHEjAgFxfgEBcX4BV3QW
+AHwVAIMBAGQQAGoEAG+OAAGIAAB8FQCDAQB9EAB4fwB0CwB8EACDAQBEXW0AfRYAfAAAZAkAagIA
+b0EAAXQEAHwFAGQRAIMCAHQXAHQSAGQSAIQAAHwWAIMCAIMBAHQXAHQSAGQTAIQAAHwWAIMCAIMB
+AGYCAIMBAAFxUwIBdAQAfAUAZBEAgwIAdBcAfBYAgwEAgwEAAXFTAlduAQABeGwAdAsAdBgAZBQA
+gwEAgwEARF1YAH0aAHwDAGcAAGoCAG8cAAF8AwB9GwB8BAB9AwB8GwB9BAB0GwB9GwBuAQABfAQA
+ZwAAagIAbxwAAXwEAH0bAHwFAH0EAHwbAH0FAHQbAH0bAHHbAgFx2wJXfAMAfAQAfAUAZwMAfR0A
+fB0AU2QAAFMoFQAAAE5jAQAAAAsAAAALAAAAAwAAAHOeAAAAdAAAfAAAgwEAZAEAagIAbwsAAWcA
+AGcBAFNuAQABZwAAfQIAdAMAfAAAZAEAgwIAfQQAdAMAfAAAZAIAZAAAhQIAgwIAfQUAiAAAfAUA
+gwEAfQcAeD8AdAgAfAQAgwEARF0xAH0JAHgoAHQIAHwHAIMBAERdGgB9CgB8AgB8CQBnAQB8CgAX
+ZwEAN30CAHF0AFdxYQBXfAIAU2QAAFMoAwAAAE5pAAAAAGkBAAAAKAsAAABzAwAAAGxlbnMMAAAA
+bGlzdF9vZl9saXN0cwYAAAByZXN1bHRzCQAAAF9nZXRpdGVtX3MEAAAAaGVhZHMEAAAAdGFpbHMQ
+AAAAY2FydGVzaWFuUHJvZHVjdHMHAAAAcHJvZHVjdHMJAAAAX2dldGl0ZXJfcwEAAAB2cwEAAABw
+KAsAAABzDAAAAGxpc3Rfb2ZfbGlzdHMDAAAAbGVucwYAAAByZXN1bHRzCQAAAF9nZXRpdGVtX3ME
+AAAAaGVhZHMEAAAAdGFpbHMQAAAAY2FydGVzaWFuUHJvZHVjdHMHAAAAcHJvZHVjdHMJAAAAX2dl
+dGl0ZXJfcwEAAAB2cwEAAABwKAEAAABzEAAAAGNhcnRlc2lhblByb2R1Y3QoAAAAAHMPAAAAU2Ny
+aXB0IChQeXRob24pcxAAAABjYXJ0ZXNpYW5Qcm9kdWN0AwAAAHMYAAAAAAETAQsBBgEPARUBDAEN
+AAYBDQAGARwBcwkAAABhcV9wYXJlbnRzCAAAAHF1YW50aXR5cx0AAABnZXRRVmFyaWF0aW9uQmFz
+ZUNhdGVnb3J5TGlzdHMJAAAAdmFyaWF0aW9ucx0AAABnZXRWVmFyaWF0aW9uQmFzZUNhdGVnb3J5
+TGlzdHMcAAAAZ2V0VmFyaWF0aW9uQmFzZUNhdGVnb3J5TGluZXMeAAAAZ2V0VmFyaWF0aW9uQmFz
+ZUNhdGVnb3J5Q29sdW1uaQEAAABjAQAAAAIAAAAEAAAAQwAAAHMcAAAAdAAAfAAAZAEAgwIAdAAA
+fAAAZAIAgwIAZgIAUygDAAAATmkBAAAAaQAAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwEAAAB4KAIA
+AABzAQAAAHhzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAA
+PGxhbWJkYS4wPsUAAABzAAAAAHMcAAAAZ2V0VmFyaWF0aW9uQ2F0ZWdvcnlJdGVtTGlzdHMSAAAA
+YmFzZV9jYXRlZ29yeV9saXN0cxgAAABnZXRWYXJpYXRpb25DYXRlZ29yeUxpc3RzHAAAAGdldFZh
+cmlhdGlvbkJhc2VDYXRlZ29yeUxpc3RjAQAAAAIAAAAEAAAAQwAAAHMcAAAAdAAAfAAAZAEAgwIA
+dAAAfAAAZAIAgwIAZgIAUygDAAAATmkBAAAAaQAAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwEAAAB4
+KAIAAABzAQAAAHhzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMK
+AAAAPGxhbWJkYS4xPtQAAABzAAAAAGkAAAAAcwYAAABhcHBlbmRjAQAAAAIAAAADAAAAQwAAAHMN
+AAAAdAAAfAAAZAEAgwIAUygCAAAATmkAAAAAKAIAAABzCQAAAF9nZXRpdGVtX3MBAAAAeCgCAAAA
+cwEAAAB4cwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxs
+YW1iZGEuMj7hAAAAcwAAAABjAQAAAAIAAAADAAAAQwAAAHMNAAAAdAAAfAAAZAEAgwIAUygCAAAA
+TmkBAAAAKAIAAABzCQAAAF9nZXRpdGVtX3MBAAAAeCgCAAAAcwEAAAB4cwkAAABfZ2V0aXRlbV8o
+AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxsYW1iZGEuMz7hAAAAcwAAAABpAgAA
+ACgdAAAAcxAAAABjYXJ0ZXNpYW5Qcm9kdWN0cwQAAABsaW5lcwYAAABjb2x1bW5zAwAAAHRhYnMJ
+AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw4AAAB0cmFuc2Zvcm1hdGlvbnMMAAAAYmFzZV9jZWxs
+X2lkcycAAABnZXRfdmFyaWF0aW9uX2Jhc2VfY2F0ZWdvcnlfbWV0aG9kX2RpY3RzEgAAAGxpbmVf
+YmFzZV9jYXRlZ29yeXMUAAAAY29sdW1uX2Jhc2VfY2F0ZWdvcnlzCQAAAF9nZXRpdGVyX3MDAAAA
+YXhlcxEAAABheGVfYmFzZV9jYXRlZ29yeXMFAAAAY2xpc3RzBwAAAGdldGF0dHJzCQAAAF9nZXRp
+dGVtX3MJAAAAbWF0cml4Ym94cwMAAABtYXBzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMNAAAAYmFz
+ZV9jYXRlZ29yeXMBAAAAY3MDAAAAbGVucwQAAAByZXBycwUAAAByYW5nZXMBAAAAaXMDAAAAdG1w
+cwQAAABOb25lcwoAAABjZWxsX3JhbmdlKB4AAABzCQAAAG1hdHJpeGJveHMHAAAAYmFzZV9pZHMQ
+AAAAY2FydGVzaWFuUHJvZHVjdHMEAAAAbGluZXMGAAAAY29sdW1ucwMAAAB0YWJzCQAAAF9nZXRh
+dHRyX3MHAAAAY29udGV4dHMOAAAAdHJhbnNmb3JtYXRpb25zDAAAAGJhc2VfY2VsbF9pZHMnAAAA
+Z2V0X3ZhcmlhdGlvbl9iYXNlX2NhdGVnb3J5X21ldGhvZF9kaWN0cxIAAABsaW5lX2Jhc2VfY2F0
+ZWdvcnlzFAAAAGNvbHVtbl9iYXNlX2NhdGVnb3J5cwkAAABfZ2V0aXRlcl9zAwAAAGF4ZXMRAAAA
+YXhlX2Jhc2VfY2F0ZWdvcnlzBQAAAGNsaXN0cwcAAABnZXRhdHRycwkAAABfZ2V0aXRlbV9zAwAA
+AG1hcHMSAAAAYmFzZV9jYXRlZ29yeV9saXN0cw0AAABiYXNlX2NhdGVnb3J5cwEAAABjcwMAAABs
+ZW5zBAAAAHJlcHJzBQAAAHJhbmdlcwEAAABpcwMAAAB0bXBzBAAAAE5vbmVzCgAAAGNlbGxfcmFu
+Z2UoAAAAACgBAAAAcxAAAABjYXJ0ZXNpYW5Qcm9kdWN0cw8AAABTY3JpcHQgKFB5dGhvbilzHAAA
+AEFzc29ydGVkUmVzb3VyY2VfYXNDZWxsUmFuZ2UBAAAAc2YAAAAAAgwNBgEGAQYCD4kGARgIDA0G
+AQYBBgIPAxIBEgMfABMBBgIiAg0CLwInBBIBBgINAAYBFAIiAQ0CMgIuAhMDDAMNAAYBEAJBAh4D
+EwAGAQ0BBgEGAQYBCgINAQYBBgEGAQ4CDwEoAgAAAHMEAAAATm9uZXMcAAAAQXNzb3J0ZWRSZXNv
+dXJjZV9hc0NlbGxSYW5nZSgCAAAAcwQAAABOb25lcxwAAABBc3NvcnRlZFJlc291cmNlX2FzQ2Vs
+bFJhbmdlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAA
+AA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_pdm/AssortedResource_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, base_id=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>base_id</string>
+                            <string>cartesianProduct</string>
+                            <string>line</string>
+                            <string>column</string>
+                            <string>tab</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>transformation</string>
+                            <string>base_cell_id</string>
+                            <string>get_variation_base_category_method_dict</string>
+                            <string>line_base_category</string>
+                            <string>column_base_category</string>
+                            <string>_getiter_</string>
+                            <string>axe</string>
+                            <string>axe_base_category</string>
+                            <string>clist</string>
+                            <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>map</string>
+                            <string>base_category_list</string>
+                            <string>base_category</string>
+                            <string>c</string>
+                            <string>len</string>
+                            <string>repr</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>tmp</string>
+                            <string>None</string>
+                            <string>cell_range</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AssortedResource_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

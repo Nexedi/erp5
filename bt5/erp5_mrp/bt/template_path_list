@@ -1,0 +1,5 @@
+portal_rules/default_transformation_rule
+portal_deliveries/production_report_builder
+portal_deliveries/production_packing_list_builder
+portal_rules/default_production_order_rule
+portal_rules/default_transformation_sourcing_rule

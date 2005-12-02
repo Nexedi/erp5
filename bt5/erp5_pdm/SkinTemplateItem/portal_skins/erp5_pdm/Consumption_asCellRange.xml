@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>if matrixbox == 1:\n
+  line = [(x[1], x[0]) for x in context.getVariationCategoryItemList()]\n
+else:\n
+  line = context.getVariationCategoryList()\n
+\n
+cell_range = [line]\n
+return cell_range\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGUAAGQCAIQCAFoBAGQAAFMoAwAAAE5pAAAAAGMCAAAA
+CwAAAAsAAABDAAAAc4UAAAB8AABkAQBqAgBvVQABZwAABGkBAH0DAHQDAHQEAHQFAGQCAIMCAIMA
+AIMBAERdKAB9BwB8AwB0BwB8BwBkAQCDAgB0BwB8BwBkAwCDAgBmAgCDAQABcS0AfgMAfQkAbhMA
+AXQEAHQFAGQEAIMCAIMAAH0JAHwJAGcBAH0KAHwKAFNkAABTKAUAAABOaQEAAABzHAAAAGdldFZh
+cmlhdGlvbkNhdGVnb3J5SXRlbUxpc3RpAAAAAHMYAAAAZ2V0VmFyaWF0aW9uQ2F0ZWdvcnlMaXN0
+KAoAAABzCQAAAG1hdHJpeGJveHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJf
+cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzCQAAAF9nZXRpdGVtX3MEAAAAbGluZXMK
+AAAAY2VsbF9yYW5nZSgLAAAAcwkAAABtYXRyaXhib3hzBwAAAGJhc2VfaWRzBgAAAGFwcGVuZHMI
+AAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwEAAAB4
+cwkAAABfZ2V0aXRlbV9zBAAAAGxpbmVzCgAAAGNlbGxfcmFuZ2UoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzFwAAAENvbnN1bXB0aW9uX2FzQ2VsbFJhbmdlAQAAAHMKAAAADQEgADUCEgIJ
+ASgCAAAAcwQAAABOb25lcxcAAABDb25zdW1wdGlvbl9hc0NlbGxSYW5nZSgCAAAAcwQAAABOb25l
+cxcAAABDb25zdW1wdGlvbl9hc0NlbGxSYW5nZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_pdm/Consumption_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, base_id=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>base_id</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>line</string>
+                            <string>cell_range</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Consumption_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

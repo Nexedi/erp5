@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+resource = context.getResourceValue()\n
+cell_range = []\n
+if resource is not None:\n
+  base_category_list = resource.getVariationBaseCategoryList(\n
+                                          omit_option_base_category=1)\n
+\n
+  for base_category in base_category_list:\n
+    if matrixbox == 1:\n
+      # XXX matrixbox is right_display (not as listfield) => \n
+      # invert display and value in item\n
+      cell_range.append(map(lambda x: (x[1],x[0]),\\\n
+                        context.getVariationCategoryItemList(\n
+                                     base_category_list = (base_category,))))\n
+    else:\n
+      cell_range.append(context.getVariationCategoryList(\\\n
+                                 base_category_list=(base_category,)))\n
+\n
+  cell_range = filter(lambda x: x != [], cell_range)\n
+\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMBAAAADAAA
+AAwAAABLAAAAc98AAAB0AAB0AQBkAQCDAgCDAAB9BABnAAB9BQB8BAB0BABqCQBvsgABdAAAfAQA
+ZAIAgwIAZAMAZAQAgwABfQcAeIEAdAYAfAcAgwEARF1zAH0JAHwAAGQEAGoCAG84AAF0AAB8BQBk
+BQCDAgB0CQBkBgCEAAB0AAB0AQBkBwCDAgBkCAB8CQBmAQCDAAGDAgCDAQABcUoAAXQAAHwFAGQF
+AIMCAHQAAHQBAGQJAIMCAGQIAHwJAGYBAIMAAYMBAAFxSgBXdAoAZAoAhAAAfAUAgwIAfQUAbgEA
+AXwFAFNkAABTKAsAAABOcxAAAABnZXRSZXNvdXJjZVZhbHVlcxwAAABnZXRWYXJpYXRpb25CYXNl
+Q2F0ZWdvcnlMaXN0cxkAAABvbWl0X29wdGlvbl9iYXNlX2NhdGVnb3J5aQEAAABzBgAAAGFwcGVu
+ZGMBAAAAAgAAAAQAAABDAAAAcxwAAAB0AAB8AABkAQCDAgB0AAB8AABkAgCDAgBmAgBTKAMAAABO
+aQEAAABpAAAAACgCAAAAcwkAAABfZ2V0aXRlbV9zAQAAAHgoAgAAAHMBAAAAeHMJAAAAX2dldGl0
+ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwoAAAA8bGFtYmRhLjA+CwAAAHMAAAAA
+cxwAAABnZXRWYXJpYXRpb25DYXRlZ29yeUl0ZW1MaXN0cxIAAABiYXNlX2NhdGVnb3J5X2xpc3Rz
+GAAAAGdldFZhcmlhdGlvbkNhdGVnb3J5TGlzdGMBAAAAAQAAAAIAAABDAAAAcwoAAAB8AABnAABq
+AwBTKAEAAABOKAEAAABzAQAAAHgoAQAAAHMBAAAAeCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMKAAAAPGxhbWJkYS4xPhIAAABzAAAAACgLAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
+eHRzCAAAAHJlc291cmNlcwoAAABjZWxsX3JhbmdlcwQAAABOb25lcxIAAABiYXNlX2NhdGVnb3J5
+X2xpc3RzCQAAAF9nZXRpdGVyX3MNAAAAYmFzZV9jYXRlZ29yeXMJAAAAbWF0cml4Ym94cwMAAABt
+YXBzBgAAAGZpbHRlcigMAAAAcwkAAABtYXRyaXhib3hzAgAAAGt3cwkAAABfZ2V0YXR0cl9zBwAA
+AGNvbnRleHRzCAAAAHJlc291cmNlcwoAAABjZWxsX3JhbmdlcwQAAABOb25lcxIAAABiYXNlX2Nh
+dGVnb3J5X2xpc3RzCQAAAF9nZXRpdGVyX3MNAAAAYmFzZV9jYXRlZ29yeXMDAAAAbWFwcwYAAABm
+aWx0ZXIoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFQAAAE9yZGVyTGluZV9hc0NlbGxS
+YW5nZQEAAABzGgAAABIBBgENARgDDQAGARADFQEMARcCGAERAhYCKAEAAABzFQAAAE9yZGVyTGlu
+ZV9hc0NlbGxSYW5nZSgBAAAAcxUAAABPcmRlckxpbmVfYXNDZWxsUmFuZ2UoAAAAACgAAAAAcw8A
+AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_trade/OrderLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>resource</string>
+                            <string>cell_range</string>
+                            <string>None</string>
+                            <string>base_category_list</string>
+                            <string>_getiter_</string>
+                            <string>base_category</string>
+                            <string>map</string>
+                            <string>filter</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>OrderLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

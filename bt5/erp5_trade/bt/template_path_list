@@ -1,0 +1,7 @@
+portal_rules/default_delivery_rule
+portal_deliveries/sale_packing_list_builder
+portal_categories/order/supply
+portal_categories/resource/packing
+portal_rules/default_order_rule
+portal_deliveries/purchase_packing_list_builder
+portal_categories/origin/order
