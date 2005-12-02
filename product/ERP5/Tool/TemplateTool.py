@@ -130,7 +130,7 @@ class TemplateTool (BaseTool):
       business_template.export(path=path, local=1)
       if REQUEST is not None:
         ret_url = business_template.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        qs = '?portal_status_message=Saved+in+%s+.' % path
+        qs = '?portal_status_message=Saved+in+%s+.' % pathname2url(path)
         if RESPONSE is None: RESPONSE = REQUEST.RESPONSE
         return REQUEST.RESPONSE.redirect( ret_url + qs )
 
