@@ -1,0 +1,21 @@
+2005-11-11 Romain
+* Correct naming convention.
+
+2005-11-05 Romain
+* Correct naming convention.
+
+2005-10-20 Romain
+* Correct naming convention.
+
+2005-09-05 Romain (1.0rc5)
+* Change state variable to simulation_state for event_workflow and sale_opportunity_workflow.
+
+2005-09-02 Romain (1.0rc4)
+* Added all _action transitions in workflows.
+
+2005-08-29 Romain (1.0rc3)
+* Added missing forms.
+* Clean portal type definition.
+* Change module id (event->event_module, etc)
+* Move Project* skins to folder erp5_project (included in business template erp5_project).
+* Correct python script (where module ids are hardcoded).

@@ -1,0 +1,299 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>from_table_list</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>order_by_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+<string>from_table_list</string>
+<string>where_expression</string>
+<string>order_by_expression</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>from_table_list:list\r\n
+where_expression\r\n
+order_by_expression</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>zsqlbrain.py</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>ZSQLBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaymentTransaction_zSelectMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  catalog.uid,\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.id\n
+\n
+FROM\n
+    movement\n
+  , catalog as parent\n
+  , catalog as grandparent\n
+  , catalog as grandgrandparent\n
+  , catalog as grandgrandgrandparent\n
+<dtml-in from_table_list> \n
+  , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
+</dtml-in>\n
+   \n
+LEFT JOIN catalog AS base_category \n
+     ON base_category.relative_url = "delivery"\n
+     AND base_category.portal_type = "Base Category"\n
+LEFT JOIN category \n
+     ON catalog.uid=category.uid\n
+     AND base_category.uid=category.base_category_uid\n
+\n
+WHERE\n
+  1=1\n
+  <dtml-if where_expression>\n
+    AND <dtml-var where_expression> \n
+  </dtml-if>\n
+  AND parent.uid = catalog.parent_uid\n
+  AND grandparent.uid = parent.parent_uid\n
+  AND grandgrandparent.uid = grandparent.parent_uid\n
+  AND grandgrandgrandparent.uid = grandgrandparent.parent_uid\n
+  AND grandgrandgrandparent.simulation_state = "confirmed"\n
+\n
+  AND movement.source_uid is not NULL\n
+  AND movement.uid = catalog.uid\n
+  AND movement.resource_uid is not NULL\n
+  AND category.category_uid is NULL\n
+\n
+<dtml-if order_by_expression>\n
+ORDER BY <dtml-var order_by_expression>\n
+</dtml-if>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  catalog.uid,\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.id\n
+\n
+FROM\n
+    movement\n
+  , catalog as parent\n
+  , catalog as grandparent\n
+  , catalog as grandgrandparent\n
+  , catalog as grandgrandgrandparent\n
+<dtml-in from_table_list> \n
+  , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
+</dtml-in>\n
+   \n
+LEFT JOIN catalog AS base_category \n
+     ON base_category.relative_url = "delivery"\n
+     AND base_category.portal_type = "Base Category"\n
+LEFT JOIN category \n
+     ON catalog.uid=category.uid\n
+     AND base_category.uid=category.base_category_uid\n
+\n
+WHERE\n
+  1=1\n
+  <dtml-if where_expression>\n
+    AND <dtml-var where_expression> \n
+  </dtml-if>\n
+  AND parent.uid = catalog.parent_uid\n
+  AND grandparent.uid = parent.parent_uid\n
+  AND grandgrandparent.uid = grandparent.parent_uid\n
+  AND grandgrandgrandparent.uid = grandgrandparent.parent_uid\n
+  AND grandgrandgrandparent.simulation_state = "confirmed"\n
+\n
+  AND movement.source_uid is not NULL\n
+  AND movement.uid = catalog.uid\n
+  AND movement.resource_uid is not NULL\n
+  AND category.category_uid is NULL\n
+\n
+<dtml-if order_by_expression>\n
+ORDER BY <dtml-var order_by_expression>\n
+</dtml-if>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

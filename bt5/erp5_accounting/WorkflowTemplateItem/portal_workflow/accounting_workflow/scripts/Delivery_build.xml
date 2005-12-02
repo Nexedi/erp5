@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Builds the delivery.\n
+\n
+"""\n
+\n
+delivery = sci[\'object\']\n
+delivery_portal_type = delivery.getPortalType()\n
+portal_deliveries = sci.getPortal().portal_deliveries\n
+\n
+builder_by_ptype = {\n
+  \'Sale Invoice Transaction\' : \'sale_invoice_transaction_builder\',\n
+  \'Pay Sheet Transaction\' :  \'pay_sheet_transaction_builder\',\n
+}\n
+\n
+if builder_by_ptype.has_key(delivery_portal_type) : \n
+  builder = getattr(portal_deliveries, builder_by_ptype[delivery_portal_type], None)\n
+  if builder is None :\n
+    context.log(\'accounting_workflow/scripts/Delivery_build\', \n
+                \'unable to build : no builder in %s\' %builder_by_ptype[delivery_portal_type])\n
+    return\n
+\n
+  # build accounting line\n
+  builder.activate(\n
+      after_method_id=(\'expand\',\'edit\',\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
+      .build()\n
+\n
+  # build related payment transactions\n
+  portal_deliveries.payment_transaction_builder.activate(\n
+      after_method_id=(\'expand\',\'edit\',\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
+      .build()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAsAAAAPAAAAQwAA
+AHMqAQAAdAAAfAAAZAEAgwIAfQIAdAMAfAIAZAIAgwIAgwAAfQQAdAMAdAMAfAAAZAMAgwIAgwAA
+ZAQAgwIAfQUAaAAABGQFAGQGAAM8BGQHAGQIAAM8fQYAdAMAfAYAZAkAgwIAfAQAgwEAb7wAAXQH
+AHwFAHQAAHwGAHwEAIMCAHQIAIMDAH0JAHwJAHQIAGoIAG8rAAF0AwB0CgBkCgCDAgBkCwBkDAB0
+AAB8BgB8BACDAgAWgwIAAWQAAFNuAQABdAMAdAMAfAkAZA0AgwIAZA4AZA8AZBAAZBEAZBIAZgQA
+gwABZBMAgwIAgwAAAXQDAHQDAHQDAHwFAGQUAIMCAGQNAIMCAGQOAGQPAGQQAGQRAGQSAGYEAIMA
+AWQTAIMCAIMAAAFuAQABZAAAUygVAAAATnMGAAAAb2JqZWN0cw0AAABnZXRQb3J0YWxUeXBlcwkA
+AABnZXRQb3J0YWxzEQAAAHBvcnRhbF9kZWxpdmVyaWVzcxgAAABTYWxlIEludm9pY2UgVHJhbnNh
+Y3Rpb25zIAAAAHNhbGVfaW52b2ljZV90cmFuc2FjdGlvbl9idWlsZGVycxUAAABQYXkgU2hlZXQg
+VHJhbnNhY3Rpb25zHQAAAHBheV9zaGVldF90cmFuc2FjdGlvbl9idWlsZGVycwcAAABoYXNfa2V5
+cwMAAABsb2dzKgAAAGFjY291bnRpbmdfd29ya2Zsb3cvc2NyaXB0cy9EZWxpdmVyeV9idWlsZHMi
+AAAAdW5hYmxlIHRvIGJ1aWxkIDogbm8gYnVpbGRlciBpbiAlc3MIAAAAYWN0aXZhdGVzDwAAAGFm
+dGVyX21ldGhvZF9pZHMGAAAAZXhwYW5kcwQAAABlZGl0cx8AAAByZWN1cnNpdmVJbW1lZGlhdGVS
+ZWluZGV4T2JqZWN0cxYAAABpbW1lZGlhdGVSZWluZGV4T2JqZWN0cwUAAABidWlsZHMbAAAAcGF5
+bWVudF90cmFuc2FjdGlvbl9idWlsZGVyKAsAAABzCQAAAF9nZXRpdGVtX3MDAAAAc2NpcwgAAABk
+ZWxpdmVyeXMJAAAAX2dldGF0dHJfcxQAAABkZWxpdmVyeV9wb3J0YWxfdHlwZXMRAAAAcG9ydGFs
+X2RlbGl2ZXJpZXNzEAAAAGJ1aWxkZXJfYnlfcHR5cGVzBwAAAGdldGF0dHJzBAAAAE5vbmVzBwAA
+AGJ1aWxkZXJzBwAAAGNvbnRleHQoCwAAAHMDAAAAc2NpcwkAAABfZ2V0aXRlbV9zCAAAAGRlbGl2
+ZXJ5cwkAAABfZ2V0YXR0cl9zFAAAAGRlbGl2ZXJ5X3BvcnRhbF90eXBlcxEAAABwb3J0YWxfZGVs
+aXZlcmllc3MQAAAAYnVpbGRlcl9ieV9wdHlwZXMHAAAAZ2V0YXR0cnMEAAAATm9uZXMHAAAAYnVp
+bGRlcnMHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMOAAAARGVsaXZl
+cnlfYnVpbGQBAAAAcxwAAAAABQ8BEgEbAhsFEwEbARABEgEOAQ4DDAElBBIBKAEAAABzDgAAAERl
+bGl2ZXJ5X2J1aWxkKAEAAABzDgAAAERlbGl2ZXJ5X2J1aWxkKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/Delivery_build</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>sci</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>sci</string>
+                            <string>_getitem_</string>
+                            <string>delivery</string>
+                            <string>_getattr_</string>
+                            <string>delivery_portal_type</string>
+                            <string>portal_deliveries</string>
+                            <string>builder_by_ptype</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>builder</string>
+                            <string>context</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Delivery_build</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

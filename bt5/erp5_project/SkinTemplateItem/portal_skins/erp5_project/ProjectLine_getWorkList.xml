@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Returns the list of work, ordered by workers. \n
+# A work is a line without childs\n
+\n
+def getWorkLineList(line,worker):\n
+  child_list = line.objectValues()\n
+  result = []\n
+  if len(child_list)>0:\n
+    for child in child_list:\n
+      result.extend(getWorkLineList(child,worker))\n
+  else:\n
+    if worker in line.getSourceValueList():\n
+      result.append(line)\n
+  return result\n
+\n
+listbox = []\n
+worker_list = context.getParent().getSourceValueList()\n
+work_line_list = []\n
+for worker in worker_list:\n
+  work_line_list.extend(getWorkLineList(context,worker))\n
+\n
+return work_line_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAKAAAACwAA
+AHNxAAAAhwAAZAEAhgAAiQAAZwAAfQIAdAIAdAIAdAMAZAIAgwIAgwAAZAMAgwIAgwAAfQUAZwAA
+fQYAeDAAdAYAfAUAgwEARF0iAH0IAHQCAHwGAGQEAIMCAIgAAHQDAHwIAIMCAIMBAAFxQwBXfAYA
+U2QAAFMoBQAAAE5jAgAAAAkAAAAIAAAAAwAAAHOaAAAAdAAAfAAAZAEAgwIAgwAAfQMAZwAAfQQA
+dAQAfAMAgwEAZAIAagQAbzcAAXhkAHQFAHwDAIMBAERdIgB9BwB0AAB8BABkAwCDAgCIAAB8BwB8
+AQCDAgCDAQABcTgAV24xAAF8AQB0AAB8AABkBACDAgCDAABqBgBvFwABdAAAfAQAZAUAgwIAfAAA
+gwEAAW4BAAF8BABTZAAAUygGAAAATnMMAAAAb2JqZWN0VmFsdWVzaQAAAABzBgAAAGV4dGVuZHMS
+AAAAZ2V0U291cmNlVmFsdWVMaXN0cwYAAABhcHBlbmQoCQAAAHMJAAAAX2dldGF0dHJfcwQAAABs
+aW5lcwoAAABjaGlsZF9saXN0cwYAAAByZXN1bHRzAwAAAGxlbnMJAAAAX2dldGl0ZXJfcwUAAABj
+aGlsZHMPAAAAZ2V0V29ya0xpbmVMaXN0cwYAAAB3b3JrZXIoCQAAAHMEAAAAbGluZXMGAAAAd29y
+a2VycwkAAABfZ2V0YXR0cl9zCgAAAGNoaWxkX2xpc3RzBgAAAHJlc3VsdHMDAAAAbGVucwkAAABf
+Z2V0aXRlcl9zBQAAAGNoaWxkcw8AAABnZXRXb3JrTGluZUxpc3QoAQAAAHMPAAAAZ2V0V29ya0xp
+bmVMaXN0KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMPAAAAZ2V0V29ya0xpbmVMaXN0BAAAAHMS
+AAAAAAESAQYBEwENAAkBIQIcARQBcwkAAABnZXRQYXJlbnRzEgAAAGdldFNvdXJjZVZhbHVlTGlz
+dHMGAAAAZXh0ZW5kKAgAAABzDwAAAGdldFdvcmtMaW5lTGlzdHMHAAAAbGlzdGJveHMJAAAAX2dl
+dGF0dHJfcwcAAABjb250ZXh0cwsAAAB3b3JrZXJfbGlzdHMOAAAAd29ya19saW5lX2xpc3RzCQAA
+AF9nZXRpdGVyX3MGAAAAd29ya2VyKAkAAABzAgAAAGt3cw8AAABnZXRXb3JrTGluZUxpc3RzBwAA
+AGxpc3Rib3hzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMLAAAAd29ya2VyX2xpc3RzDgAAAHdv
+cmtfbGluZV9saXN0cwkAAABfZ2V0aXRlcl9zBgAAAHdvcmtlcigAAAAAKAEAAABzDwAAAGdldFdv
+cmtMaW5lTGlzdHMPAAAAU2NyaXB0IChQeXRob24pcxcAAABQcm9qZWN0TGluZV9nZXRXb3JrTGlz
+dAEAAABzEAAAAAADDAsGAR4BBgENAAkBHQIoAQAAAHMXAAAAUHJvamVjdExpbmVfZ2V0V29ya0xp
+c3QoAQAAAHMXAAAAUHJvamVjdExpbmVfZ2V0V29ya0xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_project/ProjectLine_getWorkList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>getWorkLineList</string>
+                            <string>listbox</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>worker_list</string>
+                            <string>work_line_list</string>
+                            <string>_getiter_</string>
+                            <string>worker</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ProjectLine_getWorkList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

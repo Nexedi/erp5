@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Returns a list of tuples (region, Folder) representing amortisation methods,\n
+# deducted from available methods\n
+return_list = []\n
+\n
+# Find the accounting regions\n
+skin_dir_list = context.portal_skins.objectValues()\n
+for skin_dir in skin_dir_list:\n
+  id = skin_dir.getId()\n
+  id_tokens = id.split(\'_\')\n
+  if len(id_tokens) == 3 and id_tokens[:2] == [\'erp5\',\'accounting\']:\n
+    region = id_tokens[2]\n
+    # Determine amortisation methods available in this region\n
+    for subfolder in skin_dir.objectValues():\n
+      if "ratioCalculation" in map(lambda o: o.getId(), subfolder.objectValues()):\n
+        return_list.append((region,subfolder))\n
+\n
+return return_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA0AAAASAAAAQwAA
+AHMUAQAAZwAAfQAAdAEAdAEAdAIAZAEAgwIAZAIAgwIAgwAAfQMAeOgAdAQAfAMAgwEARF3aAH0F
+AHQBAHwFAGQDAIMCAIMAAH0GAHQBAHwGAGQEAIMCAGQFAIMBAH0HAHQIAHwHAIMBAGQGAGoCAG8f
+AAF0CQB8BwBkAABkBwCFAgCDAgBkCABkCQBnAgBqAgBveAABdAkAfAcAZAcAgwIAfQoAeGYAdAQA
+dAEAfAUAZAIAgwIAgwAAgwEARF1IAH0LAGQKAHQMAGQLAIQAAHQBAHwLAGQCAIMCAIMAAIMCAGoG
+AG8dAAF0AQB8AABkDACDAgB8CgB8CwBmAgCDAQABcbgAAXG4AFdxLgABcS4AV3wAAFNkAABTKA0A
+AABOcwwAAABwb3J0YWxfc2tpbnNzDAAAAG9iamVjdFZhbHVlc3MFAAAAZ2V0SWRzBQAAAHNwbGl0
+cwEAAABfaQMAAABpAgAAAHMEAAAAZXJwNXMKAAAAYWNjb3VudGluZ3MQAAAAcmF0aW9DYWxjdWxh
+dGlvbmMBAAAAAgAAAAMAAABDAAAAcxAAAAB0AAB8AABkAQCDAgCDAABTKAIAAABOcwUAAABnZXRJ
+ZCgCAAAAcwkAAABfZ2V0YXR0cl9zAQAAAG8oAgAAAHMBAAAAb3MJAAAAX2dldGF0dHJfKAAAAAAo
+AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwsAAAA8bGFtYmRhLjE4Pg4AAABzAAAAAHMGAAAAYXBw
+ZW5kKA0AAABzCwAAAHJldHVybl9saXN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDQAAAHNr
+aW5fZGlyX2xpc3RzCQAAAF9nZXRpdGVyX3MIAAAAc2tpbl9kaXJzAgAAAGlkcwkAAABpZF90b2tl
+bnNzAwAAAGxlbnMJAAAAX2dldGl0ZW1fcwYAAAByZWdpb25zCQAAAHN1YmZvbGRlcnMDAAAAbWFw
+KA0AAABzCwAAAHJldHVybl9saXN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDQAAAHNraW5f
+ZGlyX2xpc3RzCQAAAF9nZXRpdGVyX3MIAAAAc2tpbl9kaXJzAgAAAGlkcwkAAABpZF90b2tlbnNz
+AwAAAGxlbnMJAAAAX2dldGl0ZW1fcwYAAAByZWdpb25zCQAAAHN1YmZvbGRlcnMDAAAAbWFwKAAA
+AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcygAAABJbW1vYmlsaXNhdGlvbl9nZXRBbW9ydGlz
+YXRpb25NZXRob2RMaXN0AQAAAHMaAAAAAAIGAxsBDQAGARIBFQE1AQ8CGQAGASgBJgIoAQAAAHMo
+AAAASW1tb2JpbGlzYXRpb25fZ2V0QW1vcnRpc2F0aW9uTWV0aG9kTGlzdCgBAAAAcygAAABJbW1v
+YmlsaXNhdGlvbl9nZXRBbW9ydGlzYXRpb25NZXRob2RMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Immobilisation_getAmortisationMethodList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>return_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>skin_dir_list</string>
+                            <string>_getiter_</string>
+                            <string>skin_dir</string>
+                            <string>id</string>
+                            <string>id_tokens</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>region</string>
+                            <string>subfolder</string>
+                            <string>map</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Immobilisation_getAmortisationMethodList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

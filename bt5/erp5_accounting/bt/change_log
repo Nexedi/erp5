@@ -1,0 +1,79 @@
+2005-11-30 yo
+* Use portal_preferences.getPreferredAccountingTransactionGap instead of getGap.
+
+2005-10-22 Jérome
+* check that [source|destination]_section are Person  or Organisation in accounting_workflow/scripts/validateTransaction to prevent validating accounting transaction with Categories
+
+2005-10-17 Jérome
+* remove invoice_edit_workflow from list of installed workflows (not used since a  few commits)
+
+2005-10-16 Jérome
+* integrate budget validation in accounting workflow
+* remove unnecessary related keys from last change
+* fix gap_id related key and add a preferred_gap related key
+* get VAT from simulation before printing invoice
+* support for portal types and simulation_state translation
+
+2005-10-15 Kevin
+* change acquisition setup of financial_section to follow budget module needs
+* add z_related_financial_section_category, z_related_function_category and z_related_group_category catalog methods from erp5_budget.bt5
+* add groupCategory, financialSectionCategory and functionCategory related keys from erp5_budget.bt5
+
+2005-10-05 Jérome
+* added initial invoice causality workflow
+
+2005-10-13 Jérome
+* added an invoice builder
+* update invoice transaction builder and related script to work with the invoice builder
+
+2005-10-04 Jérome
+* introduce a new category account_type to separate bank and cash Accounts. (account_type/asset/cash => account_type/asset/bank & account_type/asset/bank/cash )
+
+2005-10-03 Jérome
+* fix bug with gap in preferences
+
+2005-09-13 Jérome
+* add rule_interaction_workflow
+
+2005-09-07 Jérome
+* move invoice related portal types, scripts and forms from erp5_trade to erp5_accounting
+* fix validation for Balance Transaction
+
+2005-09-05 Jérome
+update for new catalog
+
+2005-08-24 Jérome
+* use preferences (for prefilling newly created transaction and for filtering various lists)
+* improve reports
+* XXX still use RessourcezGetInventory_old , some parts should be rewritten
+
+2005-08-18 Jérome
+* removed all deprecated/not used skins
+* make Organisation jump method optional
+
+2005-08-O2 Jérome
+* removed code duplication in stat scripts
+* removed all references to group/nexedi
+
+2005-22-07 Jérome
+* renamed account in account_module
+* renamed accounting in accounting_module
+
+2005-23-06 Jérome
+* bug fixes
+
+2005-23-06 Jérome
+* removed pcg base category (replaced by gap/france/pcg, which moved in accounting_l10n_fr)
+
+* Added (initial) support for grouping reference
+
+* Added standarts accounting reports (General ledger, Trial Balance, Journal)
+Added other reports (Other Parties, Bank Accounts)
+
+* Various bug fixes
+
+2005-04-06:
+
+* Move base_categories to erp5_core:
+destination_payment
+source_payment

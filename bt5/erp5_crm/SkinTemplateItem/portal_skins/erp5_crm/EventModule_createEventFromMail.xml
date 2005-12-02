@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from ZODB.POSException import ConflictError\n
+\n
+import string # XXX string module is deprecated\n
+\n
+mail_message = None\n
+\n
+try:\n
+  id = container.strip_punctuation(theMail[\'headers\'][\'message-id\'])\n
+  subject = theMail[\'headers\'].get(\'subject\')\n
+  attachments = theMail[\'attachments\']\n
+  if subject.find(\'PhoneCall:\') >= 0 or subject.find(\'j2 Voice Message\') >= 0:\n
+    message_portal_type = \'Phone Call\'\n
+  elif subject.find(\'Letter:\') >= 0:\n
+    message_portal_type = \'Incoming Letter\'\n
+  elif subject.find(\'j2 Fax\') >= 0 or subject.find(\'fax from\') >= 0:\n
+    message_portal_type = \'Incoming Fax\'\n
+  else:\n
+    message_portal_type = \'Mail Message\'\n
+  # XXX hardcoded value\n
+  mail_message = context.event_module.newContent(portal_type=message_portal_type,\n
+                                          id=id)\n
+\n
+  subject=str(string.join(theMail[\'headers\'].get(\'subject\')))\n
+\n
+  mail_message.edit(\n
+                  title = theMail[\'headers\'].get(\'subject\'),\n
+                  date = theMail[\'headers\'].get(\'date\'),\n
+                  to = theMail[\'headers\'].get(\'to\'),\n
+                  sender = theMail[\'headers\'].get(\'from\'),\n
+                  reply_to = theMail[\'headers\'].get(\'replyto\'),\n
+                  body = theMail[\'body\'],\n
+                  header = theMail[\'headers\'],\n
+                  other_info = theMail[\'localpart\'],\n
+                 )\n
+\n
+  for key, attachment_data in attachments.items():\n
+    try:\n
+      #portal_type = context.content_type_registry.findTypeName(key, \'//\', attachment_data)\n
+      portal_type = \'File\'\n
+      new_file = mail_message.newContent(portal_type = portal_type , id=key.replace(\'/\',\'_\'), file=attachment_data)  \n
+    except ConflictError: \n
+      raise\n
+    except:\n
+      mail_message.setDescription(\'Error in creating attachments\')\n
+     \n
+\n
+  # We should now try to guess the user who sent it\n
+  # Guess the mail address:\n
+  mail_from = theMail[\'headers\'].get(\'from\')\n
+  at_place = mail_from.find(\'@\')\n
+  mail_address = None\n
+  if at_place != -1:\n
+    begin = max(mail_from.rfind(\'<\',0,at_place),mail_from.rfind(\' \',0,at_place))\n
+    end = min(mail_from.rfind(\'>\',at_place),mail_from.rfind(\' \',at_place),len(mail_from))\n
+    mail_address = mail_from[begin+1:end]\n
+  # find the person with this mail\n
+  if mail_address is not None:\n
+    kw = {\'portal_type\':\'Email\',\n
+          \'query\':"SearchableText LIKE \'%%%s%%\'" % mail_address }\n
+    result = context.portal_catalog.searchResults(**kw)\n
+    for object in result:\n
+      object = object.getObject()\n
+      parent = object.aq_parent\n
+      if parent.getPortalType() == \'Person\':\n
+        organisation = parent.getSubordinationValue()\n
+        if organisation is None:\n
+          mail_message.setSourceValue(parent)\n
+        else:\n
+          mail_message.setSourceValueList([parent, organisation])\n
+      elif parent.getPortalType() == \'Organisation\':\n
+        mail_message.setSourceValue(parent)\n
+      break\n
+\n
+  # We should look if there\'s already a sale opportunity\n
+  # or a support wich can corresponds to this email\n
+  subject = mail_message.getTitle()\n
+  if subject != \'\' and subject is not None:\n
+    if subject.find(\'Re: \')==0:\n
+      subject = subject[len(\'Re: \'):]\n
+    kw = {\'portal_type\':\'Sale Opportunity\',\n
+          \'query\':"SearchableText LIKE \'%%%s%%\'" % subject }\n
+    result = context.portal_catalog.searchResults(**kw)\n
+    for object in result:\n
+      object = object.getObject()\n
+      # Check if this sale opportunity corresponds to this client\n
+      # If so, then we can assign this mail to the sale opportunity\n
+      if mail_message.getSourceValue() in object.getClientValueList():\n
+        mail_message.setFollowUpValue(object)\n
+        mail_message.assign()\n
+\n
+except ConflictError: \n
+  raise  \n
+except:\n
+  try:\n
+    if mail_message is not None and hasattr(mail_message, \'edit\'):\n
+      mail_message.edit(title=\'Bad mail message received\')\n
+  except ConflictError: \n
+    raise\n
+  except:\n
+    pass\n
+\n
+# the return of None indicates a success\n
+# The return of anything else assumes that you are returning an error message\n
+# and most MTA\'s will bounce that error message back to the mail sender\n
+return None\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAACMAAAA1AAAAQwAA
+AHONBgAAZAEAawAAbAEAfQIAAWQAAGsCAH0DAHQDAH0FAHnwBXQFAHQGAGQCAIMCAHQHAHQHAHwA
+AGQDAIMCAGQEAIMCAIMBAH0JAHQFAHQHAHwAAGQDAIMCAGQFAIMCAGQGAIMBAH0KAHQHAHwAAGQH
+AIMCAH0LAHQFAHwKAGQIAIMCAGQJAIMBAGQKAGoFAHAZAAF0BQB8CgBkCACDAgBkCwCDAQBkCgBq
+BQBvCgABZAwAfQwAbm8AAXQFAHwKAGQIAIMCAGQNAIMBAGQKAGoFAG8KAAFkDgB9DABuSQABdAUA
+fAoAZAgAgwIAZA8AgwEAZAoAagUAcBkAAXQFAHwKAGQIAIMCAGQQAIMBAGQKAGoFAG8KAAFkEQB9
+DABuBwABZBIAfQwAdAUAdAUAdA0AZBMAgwIAZBQAgwIAZBUAfAwAZBYAfAkAgwACfQUAdA4AdAUA
+fAMAZBcAgwIAdAUAdAcAfAAAZAMAgwIAZAUAgwIAZAYAgwEAgwEAgwEAfQoAdAUAfAUAZBgAgwIA
+ZBkAdAUAdAcAfAAAZAMAgwIAZAUAgwIAZAYAgwEAZBoAdAUAdAcAfAAAZAMAgwIAZAUAgwIAZBoA
+gwEAZBsAdAUAdAcAfAAAZAMAgwIAZAUAgwIAZBsAgwEAZBwAdAUAdAcAfAAAZAMAgwIAZAUAgwIA
+ZB0AgwEAZB4AdAUAdAcAfAAAZAMAgwIAZAUAgwIAZB8AgwEAZCAAdAcAfAAAZCAAgwIAZCEAdAcA
+fAAAZAMAgwIAZCIAdAcAfAAAZCMAgwIAgwAIAXifAHQPAHQFAHwLAGQkAIMCAIMAAIMBAERdhQB0
+DwACgwEAXAIAfRAAfREAeUAAZCUAfRIAdAUAfAUAZBQAgwIAZBUAfBIAZBYAdAUAfBAAZCYAgwIA
+ZCcAZCgAgwIAZCkAfBEAgwADfRMAV3FpAgR8AgBqCgBvCgABAQEBggAAcWkCAQEBAXQFAHwFAGQq
+AIMCAGQrAIMBAAFxaQJYcWkCV3QFAHQHAHwAAGQDAIMCAGQFAIMCAGQdAIMBAH0UAHQFAHwUAGQI
+AIMCAGQsAIMBAH0VAHQDAH0WAHwVAGQtAAtqAwBvkgABdBcAdAUAfBQAZC4AgwIAZC8AZAoAfBUA
+gwMAdAUAfBQAZC4AgwIAZDAAZAoAfBUAgwMAgwIAfRgAdBkAdAUAfBQAZC4AgwIAZDEAfBUAgwIA
+dAUAfBQAZC4AgwIAZDAAfBUAgwIAdBoAfBQAgwEAgwMAfRsAdAcAfBQAfBgAZC0AF3wbAIUCAIMC
+AH0WAG4BAAF8FgB0AwBqCQBvFgEBaAAABGQVAGQyAAM8BGQzAGQ0AHwWABYDPH0cAHQdAHQFAHQF
+AHQNAGQ1AIMCAGQ2AIMCAHwcAI0BAH0eAHjWAHQPAHweAIMBAERdxAB9HwB0BQB8HwBkNwCDAgCD
+AAB9HwB0BQB8HwBkOACDAgB9IAB0BQB8IABkOQCDAgCDAABkOgBqAgBvUwABdAUAfCAAZDsAgwIA
+gwAAfSEAfCEAdAMAaggAbxcAAXQFAHwFAGQ8AIMCAHwgAIMBAAFx5QQBdAUAfAUAZD0AgwIAfCAA
+fCEAZwIAgwEAAW4xAAF0BQB8IABkOQCDAgCDAABkPgBqAgBvFwABdAUAfAUAZDwAgwIAfCAAgwEA
+AW4BAAFQcSIEV24BAAF0BQB8BQBkPwCDAgCDAAB9CgB8CgBkQABqAwBvCgABfAoAdAMAagkAb/EA
+AXQFAHwKAGQIAIMCAGRBAIMBAGQKAGoCAG8fAAF0BwB8CgB0GgBkQQCDAQBkAACFAgCDAgB9CgBu
+AQABaAAABGQVAGRCAAM8BGQzAGQ0AHwKABYDPH0cAHQdAHQFAHQFAHQNAGQ1AIMCAGQ2AIMCAHwc
+AI0BAH0eAHh2AHQPAHweAIMBAERdZAB9HwB0BQB8HwBkNwCDAgCDAAB9HwB0BQB8BQBkQwCDAgCD
+AAB0BQB8HwBkRACDAgCDAABqBgBvJwABdAUAfAUAZEUAgwIAfB8AgwEAAXQFAHwFAGRGAIMCAIMA
+AAFxnwUBcZ8FV24BAAFXbnYABHwCAGoKAG8KAAEBAQGCAABuYgABAQEBeTsAfAUAdAMAagkAbw0A
+AXQiAHwFAGQYAIMCAG8aAAF0BQB8BQBkGACDAgBkGQBkRwCDAAEBbgEAAVdxhQYEfAIAagoAbwoA
+AQEBAYIAAHGFBgEBAQFxhQZYbgEAWHQDAFNkAABTKEgAAABOKAEAAABzDQAAAENvbmZsaWN0RXJy
+b3JzEQAAAHN0cmlwX3B1bmN0dWF0aW9ucwcAAABoZWFkZXJzcwoAAABtZXNzYWdlLWlkcwMAAABn
+ZXRzBwAAAHN1YmplY3RzCwAAAGF0dGFjaG1lbnRzcwQAAABmaW5kcwoAAABQaG9uZUNhbGw6aQAA
+AABzEAAAAGoyIFZvaWNlIE1lc3NhZ2VzCgAAAFBob25lIENhbGxzBwAAAExldHRlcjpzDwAAAElu
+Y29taW5nIExldHRlcnMGAAAAajIgRmF4cwgAAABmYXggZnJvbXMMAAAASW5jb21pbmcgRmF4cwwA
+AABNYWlsIE1lc3NhZ2VzDAAAAGV2ZW50X21vZHVsZXMKAAAAbmV3Q29udGVudHMLAAAAcG9ydGFs
+X3R5cGVzAgAAAGlkcwQAAABqb2lucwQAAABlZGl0cwUAAAB0aXRsZXMEAAAAZGF0ZXMCAAAAdG9z
+BgAAAHNlbmRlcnMEAAAAZnJvbXMIAAAAcmVwbHlfdG9zBwAAAHJlcGx5dG9zBAAAAGJvZHlzBgAA
+AGhlYWRlcnMKAAAAb3RoZXJfaW5mb3MJAAAAbG9jYWxwYXJ0cwUAAABpdGVtc3MEAAAARmlsZXMH
+AAAAcmVwbGFjZXMBAAAAL3MBAAAAX3MEAAAAZmlsZXMOAAAAc2V0RGVzY3JpcHRpb25zHQAAAEVy
+cm9yIGluIGNyZWF0aW5nIGF0dGFjaG1lbnRzcwEAAABAaQEAAABzBQAAAHJmaW5kcwEAAAA8cwEA
+AAAgcwEAAAA+cwUAAABFbWFpbHMFAAAAcXVlcnlzHAAAAFNlYXJjaGFibGVUZXh0IExJS0UgJyUl
+JXMlJSdzDgAAAHBvcnRhbF9jYXRhbG9ncw0AAABzZWFyY2hSZXN1bHRzcwkAAABnZXRPYmplY3Rz
+CQAAAGFxX3BhcmVudHMNAAAAZ2V0UG9ydGFsVHlwZXMGAAAAUGVyc29ucxUAAABnZXRTdWJvcmRp
+bmF0aW9uVmFsdWVzDgAAAHNldFNvdXJjZVZhbHVlcxIAAABzZXRTb3VyY2VWYWx1ZUxpc3RzDAAA
+AE9yZ2FuaXNhdGlvbnMIAAAAZ2V0VGl0bGVzAAAAAHMEAAAAUmU6IHMQAAAAU2FsZSBPcHBvcnR1
+bml0eXMOAAAAZ2V0U291cmNlVmFsdWVzEgAAAGdldENsaWVudFZhbHVlTGlzdHMQAAAAc2V0Rm9s
+bG93VXBWYWx1ZXMGAAAAYXNzaWducxkAAABCYWQgbWFpbCBtZXNzYWdlIHJlY2VpdmVkKCMAAABz
+EQAAAFpPREIuUE9TRXhjZXB0aW9ucw0AAABDb25mbGljdEVycm9ycwYAAABzdHJpbmdzBAAAAE5v
+bmVzDAAAAG1haWxfbWVzc2FnZXMJAAAAX2dldGF0dHJfcwkAAABjb250YWluZXJzCQAAAF9nZXRp
+dGVtX3MHAAAAdGhlTWFpbHMCAAAAaWRzBwAAAHN1YmplY3RzCwAAAGF0dGFjaG1lbnRzcxMAAABt
+ZXNzYWdlX3BvcnRhbF90eXBlcwcAAABjb250ZXh0cwMAAABzdHJzCQAAAF9nZXRpdGVyX3MDAAAA
+a2V5cw8AAABhdHRhY2htZW50X2RhdGFzCwAAAHBvcnRhbF90eXBlcwgAAABuZXdfZmlsZXMJAAAA
+bWFpbF9mcm9tcwgAAABhdF9wbGFjZXMMAAAAbWFpbF9hZGRyZXNzcwMAAABtYXhzBQAAAGJlZ2lu
+cwMAAABtaW5zAwAAAGxlbnMDAAAAZW5kcwIAAABrd3MHAAAAX2FwcGx5X3MGAAAAcmVzdWx0cwYA
+AABvYmplY3RzBgAAAHBhcmVudHMMAAAAb3JnYW5pc2F0aW9ucwcAAABoYXNhdHRyKCMAAABzBwAA
+AHRoZU1haWxzEQAAAFpPREIuUE9TRXhjZXB0aW9ucw0AAABDb25mbGljdEVycm9ycwYAAABzdHJp
+bmdzBAAAAE5vbmVzDAAAAG1haWxfbWVzc2FnZXMJAAAAX2dldGF0dHJfcwkAAABjb250YWluZXJz
+CQAAAF9nZXRpdGVtX3MCAAAAaWRzBwAAAHN1YmplY3RzCwAAAGF0dGFjaG1lbnRzcxMAAABtZXNz
+YWdlX3BvcnRhbF90eXBlcwcAAABjb250ZXh0cwMAAABzdHJzCQAAAF9nZXRpdGVyX3MDAAAAa2V5
+cw8AAABhdHRhY2htZW50X2RhdGFzCwAAAHBvcnRhbF90eXBlcwgAAABuZXdfZmlsZXMJAAAAbWFp
+bF9mcm9tcwgAAABhdF9wbGFjZXMMAAAAbWFpbF9hZGRyZXNzcwMAAABtYXhzBQAAAGJlZ2lucwMA
+AABtaW5zAwAAAGxlbnMDAAAAZW5kcwIAAABrd3MHAAAAX2FwcGx5X3MGAAAAcmVzdWx0cwYAAABv
+YmplY3RzBgAAAHBhcmVudHMMAAAAb3JnYW5pc2F0aW9ucwcAAABoYXNhdHRyKAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcx8AAABFdmVudE1vZHVsZV9jcmVhdGVFdmVudEZyb21NYWlsAQAA
+AHOcAAAADQIJAgYCAwEnAR4BEgE1AQoBHAENATUBCgIGAh4BCQI2AhIBHgEeAR4BHgEbAQ8BDwEN
+AxkAEwEDAgYBOgEOAQ0CGAUeARUBBgEOATkBPAEdAg0BEwEJASEBDQAGARIBDwEZARIBEAEXAhoB
+HAEUAQkEEgEaARwBHwETAQkBIQENAAYBEgMoARMBHQIOAQoCAwEgARsBDgEKAggFKAEAAABzHwAA
+AEV2ZW50TW9kdWxlX2NyZWF0ZUV2ZW50RnJvbU1haWwoAQAAAHMfAAAARXZlbnRNb2R1bGVfY3Jl
+YXRlRXZlbnRGcm9tTWFpbCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVs
+ZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_crm/EventModule_createEventFromMail</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>theMail</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>theMail</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>string</string>
+                            <string>None</string>
+                            <string>mail_message</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>_getitem_</string>
+                            <string>id</string>
+                            <string>subject</string>
+                            <string>attachments</string>
+                            <string>message_portal_type</string>
+                            <string>context</string>
+                            <string>str</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>attachment_data</string>
+                            <string>portal_type</string>
+                            <string>new_file</string>
+                            <string>mail_from</string>
+                            <string>at_place</string>
+                            <string>mail_address</string>
+                            <string>max</string>
+                            <string>begin</string>
+                            <string>min</string>
+                            <string>len</string>
+                            <string>end</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
+                            <string>result</string>
+                            <string>object</string>
+                            <string>parent</string>
+                            <string>organisation</string>
+                            <string>hasattr</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>EventModule_createEventFromMail</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

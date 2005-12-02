@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>if matrixbox == 1:\n
+  column = [  (\'apparel_morpho_type/\'+x[0],x[0]) for x in context.getApparelMorphoTypeItemList()]\n
+  line = [ (\'size/\'+x[0],x[0]) for x in context.getSizeItemList()]\n
+else:\n
+  column = [  \'apparel_morpho_type/\'+x[0] for x in context.getApparelMorphoTypeItemList()]\n
+  line = [ \'size/\'+x[0] for x in context.getSizeItemList()]\n
+\n
+tab = []\n
+\n
+cell_range = [line, column, tab]\n
+\n
+return cell_range\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGUAAGQCAIQCAFoBAGQAAFMoAwAAAE5pAAAAAGMCAAAA
+DQAAABAAAABDAAAAc2QBAAB8AABkAQBqAgBvrgABZwAABGkBAH0DAHQDAHQEAHQFAGQCAIMCAIMA
+AIMBAERdLAB9BwB8AwBkAwB0BwB8BwBkBACDAgAXdAcAfAcAZAQAgwIAZgIAgwEAAXEtAH4DAH0J
+AGcAAARpAQB9AwB0AwB0BAB0BQBkBQCDAgCDAACDAQBEXSwAfQcAfAMAZAYAdAcAfAcAZAQAgwIA
+F3QHAHwHAGQEAIMCAGYCAIMBAAFxggB+AwB9CgBujQABZwAABGkBAH0DAHQDAHQEAHQFAGQCAIMC
+AIMAAIMBAERdHQB9BwB8AwBkAwB0BwB8BwBkBACDAgAXgwEAAXHbAH4DAH0JAGcAAARpAQB9AwB0
+AwB0BAB0BQBkBQCDAgCDAACDAQBEXR0AfQcAfAMAZAYAdAcAfAcAZAQAgwIAF4MBAAFxIQF+AwB9
+CgBnAAB9CwB8CgB8CQB8CwBnAwB9DAB8DABTZAAAUygHAAAATmkBAAAAcxwAAABnZXRBcHBhcmVs
+TW9ycGhvVHlwZUl0ZW1MaXN0cxQAAABhcHBhcmVsX21vcnBob190eXBlL2kAAAAAcw8AAABnZXRT
+aXplSXRlbUxpc3RzBQAAAHNpemUvKAwAAABzCQAAAG1hdHJpeGJveHMGAAAAYXBwZW5kcwgAAAAk
+YXBwZW5kMHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzCQAA
+AF9nZXRpdGVtX3MGAAAAY29sdW1ucwQAAABsaW5lcwMAAAB0YWJzCgAAAGNlbGxfcmFuZ2UoDQAA
+AHMJAAAAbWF0cml4Ym94cwcAAABiYXNlX2lkcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABf
+Z2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMBAAAAeHMJAAAAX2dldGl0ZW1fcwYA
+AABjb2x1bW5zBAAAAGxpbmVzAwAAAHRhYnMKAAAAY2VsbF9yYW5nZSgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMXAAAAQXBwYXJlbFNpemVfYXNDZWxsUmFuZ2UBAAAAcxYAAAANASAANQEg
+ADkCIAAmASAAJgIGAg8CKAIAAABzBAAAAE5vbmVzFwAAAEFwcGFyZWxTaXplX2FzQ2VsbFJhbmdl
+KAIAAABzBAAAAE5vbmVzFwAAAEFwcGFyZWxTaXplX2FzQ2VsbFJhbmdlKAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/apparel/portal_skins/erp5_apparel/ApparelSize_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, base_id=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>base_id</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>column</string>
+                            <string>line</string>
+                            <string>tab</string>
+                            <string>cell_range</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ApparelSize_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

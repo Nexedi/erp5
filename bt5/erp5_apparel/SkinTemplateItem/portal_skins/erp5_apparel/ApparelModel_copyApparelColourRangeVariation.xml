@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+apparel_colour_range = context.getSpecialiseValue(portal_type=(\'Apparel Colour Range\',))\n
+\n
+if apparel_colour_range is None:\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , form_id\n
+                              , \'portal_status_message=No+Apparel+Colour+Range+defined.\'\n
+                              )\n
+\n
+else:\n
+\n
+  apparel_colour_range_variation_list = map( lambda x: x.getObject(), apparel_colour_range.searchFolder(portal_type=(\'Apparel Colour Range Variation\',)))\n
+\n
+  apparel_model_colour_variation_list  = context.searchFolder(portal_type=(\'Apparel Model Colour Variation\',))\n
+  apparel_model_colour_variation_title_list = map( lambda x: x.getObject().getTitle(), apparel_model_colour_variation_list)\n
+\n
+  count = 0\n
+\n
+  for apparel_colour_range_variation in apparel_colour_range_variation_list:\n
+    if apparel_colour_range_variation.getTitle() not in apparel_model_colour_variation_title_list:\n
+      count += 1\n
+      # Use portal activity for creating lot of variation\n
+      context.activate().newContent(\n
+        type_name = \'Apparel Model Colour Variation\',\n
+        title = apparel_colour_range_variation.getTitle(),\n
+        description = apparel_colour_range_variation.getDescription()\n
+      )\n
+\n
+  if count != 0:\n
+    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                                , form_id\n
+                                , \'portal_status_message=Creating+%s+Apparel+Model+Colour+Variation.\' % count\n
+                                )\n
+  else:\n
+\n
+    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                                , form_id\n
+                                , \'portal_status_message=No+new+Apparel+Colour+Range+Variation+defined.\'\n
+                                )\n
+\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5zAAAAAGMBAAAADwAA
+ABMAAABDAAAAc6sBAAB0AAB0AQBkAQCDAgB9AwB0AAB0AQBkAgCDAgBkAwBkBABmAQCDAAF9BAB8
+BAB0BABqCABvIwABZAUAdAAAdAEAZAYAgwIAgwAAfAAAZAcAZgMAFn0GAG4yAQF0BwBkCACEAAB0
+AAB8BABkCQCDAgBkAwBkCgBmAQCDAAGDAgB9CAB0AAB0AQBkCQCDAgBkAwBkCwBmAQCDAAF9CQB0
+BwBkDACEAAB8CQCDAgB9CgBkDQB9CwB4gQB0DAB8CACDAQBEXXMAfQ0AdAAAfA0AZA4AgwIAgwAA
+fAoAagcAb1QAAXwLAGQPADd9CwB0AAB0AAB0AQBkEACDAgCDAABkEQCDAgBkEgBkCwBkEwB0AAB8
+DQBkDgCDAgCDAABkFAB0AAB8DQBkFQCDAgCDAACDAAMBccEAAXHBAFd8CwBkDQBqAwBvJwABZAUA
+dAAAdAEAZAYAgwIAgwAAfAAAZBYAfAsAFmYDABZ9BgBuIAABZAUAdAAAdAEAZAYAgwIAgwAAfAAA
+ZBcAZgMAFn0GAHQAAHQOAHwDAGQYAIMCAGQZAIMCAHwGAIMBAAFkAABTKBoAAABOcwcAAABSRVFV
+RVNUcxIAAABnZXRTcGVjaWFsaXNlVmFsdWVzCwAAAHBvcnRhbF90eXBlcxQAAABBcHBhcmVsIENv
+bG91ciBSYW5nZXMIAAAAJXMvJXM/JXNzDAAAAGFic29sdXRlX3VybHM2AAAAcG9ydGFsX3N0YXR1
+c19tZXNzYWdlPU5vK0FwcGFyZWwrQ29sb3VyK1JhbmdlK2RlZmluZWQuYwEAAAACAAAAAwAAAEMA
+AABzEAAAAHQAAHwAAGQBAIMCAIMAAFMoAgAAAE5zCQAAAGdldE9iamVjdCgCAAAAcwkAAABfZ2V0
+YXR0cl9zAQAAAHgoAgAAAHMBAAAAeHMJAAAAX2dldGF0dHJfKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwoAAAA8bGFtYmRhLjA+DAAAAHMAAAAAcwwAAABzZWFyY2hGb2xkZXJzHgAAAEFw
+cGFyZWwgQ29sb3VyIFJhbmdlIFZhcmlhdGlvbnMeAAAAQXBwYXJlbCBNb2RlbCBDb2xvdXIgVmFy
+aWF0aW9uYwEAAAACAAAABAAAAEMAAABzHAAAAHQAAHQAAHwAAGQBAIMCAIMAAGQCAIMCAIMAAFMo
+AwAAAE5zCQAAAGdldE9iamVjdHMIAAAAZ2V0VGl0bGUoAgAAAHMJAAAAX2dldGF0dHJfcwEAAAB4
+KAIAAABzAQAAAHhzCQAAAF9nZXRhdHRyXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMK
+AAAAPGxhbWJkYS4xPg8AAABzAAAAAGkAAAAAcwgAAABnZXRUaXRsZWkBAAAAcwgAAABhY3RpdmF0
+ZXMKAAAAbmV3Q29udGVudHMJAAAAdHlwZV9uYW1lcwUAAAB0aXRsZXMLAAAAZGVzY3JpcHRpb25z
+DgAAAGdldERlc2NyaXB0aW9uc0EAAABwb3J0YWxfc3RhdHVzX21lc3NhZ2U9Q3JlYXRpbmcrJXMr
+QXBwYXJlbCtNb2RlbCtDb2xvdXIrVmFyaWF0aW9uLnNEAAAAcG9ydGFsX3N0YXR1c19tZXNzYWdl
+PU5vK25ldytBcHBhcmVsK0NvbG91citSYW5nZStWYXJpYXRpb24rZGVmaW5lZC5zCAAAAFJFU1BP
+TlNFcwgAAAByZWRpcmVjdCgPAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVl
+c3RzFAAAAGFwcGFyZWxfY29sb3VyX3JhbmdlcwQAAABOb25lcwcAAABmb3JtX2lkcwwAAAByZWRp
+cmVjdF91cmxzAwAAAG1hcHMjAAAAYXBwYXJlbF9jb2xvdXJfcmFuZ2VfdmFyaWF0aW9uX2xpc3Rz
+IwAAAGFwcGFyZWxfbW9kZWxfY29sb3VyX3ZhcmlhdGlvbl9saXN0cykAAABhcHBhcmVsX21vZGVs
+X2NvbG91cl92YXJpYXRpb25fdGl0bGVfbGlzdHMFAAAAY291bnRzCQAAAF9nZXRpdGVyX3MeAAAA
+YXBwYXJlbF9jb2xvdXJfcmFuZ2VfdmFyaWF0aW9ucwkAAABfZ2V0aXRlbV8oDwAAAHMHAAAAZm9y
+bV9pZHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAAByZXF1ZXN0cxQAAABhcHBhcmVsX2Nv
+bG91cl9yYW5nZXMEAAAATm9uZXMMAAAAcmVkaXJlY3RfdXJscwMAAABtYXBzIwAAAGFwcGFyZWxf
+Y29sb3VyX3JhbmdlX3ZhcmlhdGlvbl9saXN0cyMAAABhcHBhcmVsX21vZGVsX2NvbG91cl92YXJp
+YXRpb25fbGlzdHMpAAAAYXBwYXJlbF9tb2RlbF9jb2xvdXJfdmFyaWF0aW9uX3RpdGxlX2xpc3Rz
+BQAAAGNvdW50cwkAAABfZ2V0aXRlcl9zHgAAAGFwcGFyZWxfY29sb3VyX3JhbmdlX3ZhcmlhdGlv
+bnMJAAAAX2dldGl0ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcywAAABBcHBhcmVs
+TW9kZWxfY29weUFwcGFyZWxDb2xvdXJSYW5nZVZhcmlhdGlvbgEAAABzLAAAAA8BGwINARIBEQYn
+AhsBEgIGAg0ABgEZARACHgISARgDDQESAQYBDwQSARMFKAEAAABzLAAAAEFwcGFyZWxNb2RlbF9j
+b3B5QXBwYXJlbENvbG91clJhbmdlVmFyaWF0aW9uKAEAAABzLAAAAEFwcGFyZWxNb2RlbF9jb3B5
+QXBwYXJlbENvbG91clJhbmdlVmFyaWF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
+cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/apparel7/portal_skins/erp5_apparel/ApparelModel_copyApparelColourRangeVariation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>apparel_colour_range</string>
+                            <string>None</string>
+                            <string>redirect_url</string>
+                            <string>map</string>
+                            <string>apparel_colour_range_variation_list</string>
+                            <string>apparel_model_colour_variation_list</string>
+                            <string>apparel_model_colour_variation_title_list</string>
+                            <string>count</string>
+                            <string>_getiter_</string>
+                            <string>apparel_colour_range_variation</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ApparelModel_copyApparelColourRangeVariation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

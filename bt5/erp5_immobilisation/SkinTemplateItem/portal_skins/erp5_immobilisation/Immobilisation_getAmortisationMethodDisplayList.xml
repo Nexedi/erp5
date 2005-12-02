@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>return_list = []\n
+amortisation_method_list = context.Immobilisation_getAmortisationMethodList()\n
+for method in amortisation_method_list:\n
+  id = method[1].getId()\n
+  display = method[1].title or id\n
+  return_list.append( (\'(%s) %s\' % (method[0], display), \'%s/%s\' % (method[0], id) ) )\n
+    \n
+return [(\'\',\'\')] + return_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAMAAAAQwAA
+AHO9AAAAZwAAfQAAdAEAdAIAZAEAgwIAgwAAfQMAeI0AdAQAfAMAgwEARF1/AH0FAHQBAHQGAHwF
+AGQCAIMCAGQDAIMCAIMAAH0HAHQBAHQGAHwFAGQCAIMCAGQEAIMCAHAEAAF8BwB9CAB0AQB8AABk
+BQCDAgBkBgB0BgB8BQBkBwCDAgB8CABmAgAWZAgAdAYAfAUAZAcAgwIAfAcAZgIAFmYCAIMBAAFx
+JQBXZAkAZAkAZgIAZwEAfAAAF1NkAABTKAoAAABOcygAAABJbW1vYmlsaXNhdGlvbl9nZXRBbW9y
+dGlzYXRpb25NZXRob2RMaXN0aQEAAABzBQAAAGdldElkcwUAAAB0aXRsZXMGAAAAYXBwZW5kcwcA
+AAAoJXMpICVzaQAAAABzBQAAACVzLyVzcwAAAAAoCQAAAHMLAAAAcmV0dXJuX2xpc3RzCQAAAF9n
+ZXRhdHRyX3MHAAAAY29udGV4dHMYAAAAYW1vcnRpc2F0aW9uX21ldGhvZF9saXN0cwkAAABfZ2V0
+aXRlcl9zBgAAAG1ldGhvZHMJAAAAX2dldGl0ZW1fcwIAAABpZHMHAAAAZGlzcGxheSgJAAAAcwsA
+AAByZXR1cm5fbGlzdHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cxgAAABhbW9ydGlzYXRpb25f
+bWV0aG9kX2xpc3RzCQAAAF9nZXRpdGVyX3MGAAAAbWV0aG9kcwkAAABfZ2V0aXRlbV9zAgAAAGlk
+cwcAAABkaXNwbGF5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcy8AAABJbW1vYmlsaXNh
+dGlvbl9nZXRBbW9ydGlzYXRpb25NZXRob2REaXNwbGF5TGlzdAEAAABzDgAAAAYBEgENAAYBGwEi
+AUACKAEAAABzLwAAAEltbW9iaWxpc2F0aW9uX2dldEFtb3J0aXNhdGlvbk1ldGhvZERpc3BsYXlM
+aXN0KAEAAABzLwAAAEltbW9iaWxpc2F0aW9uX2dldEFtb3J0aXNhdGlvbk1ldGhvZERpc3BsYXlM
+aXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Immobilisation_getAmortisationMethodDisplayList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>return_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>amortisation_method_list</string>
+                            <string>_getiter_</string>
+                            <string>method</string>
+                            <string>_getitem_</string>
+                            <string>id</string>
+                            <string>display</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Immobilisation_getAmortisationMethodDisplayList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

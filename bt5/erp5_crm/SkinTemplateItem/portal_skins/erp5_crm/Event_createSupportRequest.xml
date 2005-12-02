@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># this script allow to create a new object from this current one\n
+\n
+current_object = context.getObject()\n
+module = context.getPortalObject().support_request_module\n
+\n
+# Create a new object\n
+new_id = str(module.generateNewId())\n
+context.portal_types.constructContent(type_name=\'Support Request\',\n
+        container=module,\n
+        id=new_id\n
+)\n
+new_object = module[new_id]\n
+\n
+\n
+# If we do this before, each added line will take 20 times more time\n
+# because of programmable acquisition\n
+new_object.edit(\n
+        title=current_object.getTitle(),\n
+        client_value_list = current_object.getSourceValueList()\n
+)\n
+# Now create the relation between the current object and the new one\n
+current_object.setFollowUpValueList([new_object])\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAIAAAAQwAA
+AHPNAAAAdAAAdAEAZAEAgwIAgwAAfQIAdAAAdAAAdAEAZAIAgwIAgwAAZAMAgwIAfQMAdAQAdAAA
+fAMAZAQAgwIAgwAAgwEAfQUAdAAAdAAAdAEAZAUAgwIAZAYAgwIAZAcAZAgAZAkAfAMAZAoAfAUA
+gwADAXQGAHwDAHwFAIMCAH0HAHQAAHwHAGQLAIMCAGQMAHQAAHwCAGQNAIMCAIMAAGQOAHQAAHwC
+AGQPAIMCAIMAAIMAAgF0AAB8AgBkEACDAgB8BwBnAQCDAQABZAAAUygRAAAATnMJAAAAZ2V0T2Jq
+ZWN0cw8AAABnZXRQb3J0YWxPYmplY3RzFgAAAHN1cHBvcnRfcmVxdWVzdF9tb2R1bGVzDQAAAGdl
+bmVyYXRlTmV3SWRzDAAAAHBvcnRhbF90eXBlc3MQAAAAY29uc3RydWN0Q29udGVudHMJAAAAdHlw
+ZV9uYW1lcw8AAABTdXBwb3J0IFJlcXVlc3RzCQAAAGNvbnRhaW5lcnMCAAAAaWRzBAAAAGVkaXRz
+BQAAAHRpdGxlcwgAAABnZXRUaXRsZXMRAAAAY2xpZW50X3ZhbHVlX2xpc3RzEgAAAGdldFNvdXJj
+ZVZhbHVlTGlzdHMUAAAAc2V0Rm9sbG93VXBWYWx1ZUxpc3QoCAAAAHMJAAAAX2dldGF0dHJfcwcA
+AABjb250ZXh0cw4AAABjdXJyZW50X29iamVjdHMGAAAAbW9kdWxlcwMAAABzdHJzBgAAAG5ld19p
+ZHMJAAAAX2dldGl0ZW1fcwoAAABuZXdfb2JqZWN0KAgAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29u
+dGV4dHMOAAAAY3VycmVudF9vYmplY3RzBgAAAG1vZHVsZXMDAAAAc3RycwYAAABuZXdfaWRzCQAA
+AF9nZXRpdGVtX3MKAAAAbmV3X29iamVjdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMa
+AAAARXZlbnRfY3JlYXRlU3VwcG9ydFJlcXVlc3QBAAAAcxYAAAAAAhIBGwMeARgBBgEHAhIFDwES
+ARMDKAEAAABzGgAAAEV2ZW50X2NyZWF0ZVN1cHBvcnRSZXF1ZXN0KAEAAABzGgAAAEV2ZW50X2Ny
+ZWF0ZVN1cHBvcnRSZXF1ZXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9k
+dWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_crm/Event_createSupportRequest</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>current_object</string>
+                            <string>module</string>
+                            <string>str</string>
+                            <string>new_id</string>
+                            <string>_getitem_</string>
+                            <string>new_object</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Event_createSupportRequest</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

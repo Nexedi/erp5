@@ -1,0 +1,347 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# The behavior is determined by the current item amortisation state\n
+# and the "immobilisation" property of the current immobilisation movement\n
+# - If both are not set, there is no immobilisation document to print\n
+# - If only "immobilisation" is true, we print this immobilisation movement\n
+# - If only item amortisation state is \'immobilised\', we print the previous\n
+#     immobilisation movement, with current immobilisation movement data to\n
+#     know the date of immobilisation end\n
+# - If both are set, we need to print previous immobilisation movement, and the current one\n
+\n
+\n
+def addMonthsToDate(date, months):\n
+  """\n
+  Add the given number of months to the given date\n
+  """\n
+  months += date.month()\n
+  years = months / 12\n
+  remaining = months % 12\n
+  return DateTime(\'%s/%s/%s\' % (repr(date.year() + years), repr(remaining), repr(date.day())))\n
+\n
+\n
+def getData(immo, item, next_immo=None):\n
+  """\n
+  Return a dictionary of necessited data about the given immobilisation movement\n
+  """\n
+  returned_value = {}\n
+  current_date = immo.getStopDate()\n
+  if next_immo is None:\n
+    immo_list = item.getFutureImmobilisationMovementValueList(at_date = current_date + .00001)\n
+    if len(immo_list) > 0:\n
+      next_immo = immo_list[0]\n
+\n
+  returned_value[\'immobilisation_date\']   = current_date\n
+  returned_value[\'movement_reference\']    = immo.getId()\n
+\n
+  amortisation_duration                   = immo.getAmortisationDuration()\n
+  returned_value[\'designation\']           = item.getTitle()\n
+  returned_value[\'reference\']             = item.getId()\n
+  returned_value[\'amortisation_duration\'] = str(amortisation_duration) + " months"\n
+\n
+  amortisation_type                       = immo.getAmortisationType()\n
+  returned_value[\'amortisation_type\']     = amortisation_type\n
+  returned_value[\'start_date\']            = current_date\n
+  returned_value[\'amortisation_price\']    = \'%.2f\' % immo.getAmortisationBeginningPrice()\n
+  returned_value[\'project\']               = immo.getDestinationProjectTitle()\n
+  returned_value[\'budget\']                = immo.getDestinationBudgetTitle()\n
+  returned_value[\'section\']               = immo.getDestinationSection()\n
+\n
+  # Find the invoice reference\n
+  delivery_line_list = item.getSectionChangeValueList(at_date = current_date)\n
+  if len(delivery_line_list) > 0:\n
+    delivery = delivery_line_list[-1].getParent()\n
+    invoice_id = delivery.getCausalityId()\n
+    returned_value[\'invoice_reference\'] = invoice_id\n
+  else:\n
+    returned_value[\'invoice_reference\'] = \'N/A\'\n
+\n
+\n
+  # End date\n
+  if next_immo is not None:\n
+    returned_value[\'end_date\'] = next_immo.getStopDate()\n
+  else:\n
+    if amortisation_type == \'linear\':\n
+      returned_value[\'end_date\'] = addMonthsToDate(current_date, amortisation_duration)\n
+    else: # degressive\n
+      # We need to know the latest financial year end date\n
+      financial_date = immo.getSectionValue().getFinancialYearStopDate()\n
+      financial_date = DateTime(\'%s/%s/%s\' % (repr(current_date.year()), repr(financial_date.month()), repr(financial_date.day())))\n
+      if financial_date - current_date > 0:\n
+        financial_date = DateTime(\'%s/%s/%s\' % (repr(financial_date.year()-1), repr(financial_date.month()), repr(financial_date.day())))\n
+\n
+      years = amortisation_duration / 12\n
+      if amortisation_duration % 12 != 0:\n
+        years += 1\n
+\n
+      returned_value[\'end_date\'] = addMonthsToDate(financial_date, years * 12)\n
+\n
+\n
+  return returned_value\n
+\n
+\n
+\n
+immo = context\n
+item = immo.getParent()\n
+returned_value = [0]\n
+\n
+# Return an error message if the current immobilisation movement is not valid :\n
+# We can\'t print an immobilisation document if the movement is not valid\n
+state = immo.checkImmobilisationConsistency()\n
+if state:\n
+  return ["\\n".join([item[3] for item in state])]\n
+\n
+\n
+\n
+# Determine the immobilisation movements to use\n
+current_date = immo.getStopDate()\n
+previous = item.isImmobilised(at_date = current_date - 0.00001) # 0.00001 to know the\n
+                                        # state before the current movement - not the\n
+                                        # state as it has been changed by the current movement\n
+next = immo.getImmobilisation()\n
+\n
+if (not previous) and (not next):\n
+  return ["Immobilisation movement does not start or stop an immobilisation period"]\n
+\n
+if previous:\n
+  current_immo = item.getLastImmobilisationMovementValue(at_date = current_date - 0.00001)\n
+  returned_value.append( getData(immo=current_immo, item=item, next_immo=immo) )\n
+\n
+if next:\n
+  returned_value.append( getData(immo=immo, item=item) )\n
+\n
+return returned_value\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABEAAAARAAAAAwAA
+AHN7AQAAZAEAhAAAiQAAdAEAhwAAZAIAhgEAfQIAdAMAfQQAdAUAfAQAZAMAgwIAgwAAfQYAZAQA
+ZwEAfQcAdAUAfAQAZAUAgwIAgwAAfQgAfAgAb0oAAXQFAGQGAGQHAIMCAGcAAARpCQB9CgB0CwB8
+CACDAQBEXRkAfQYAfAoAdAwAfAYAZAgAgwIAgwEAAXFyAH4KAIMBAGcBAFNuAQABdAUAfAQAZAkA
+gwIAgwAAfQ0AdAUAfAYAZAoAgwIAZAsAfA0AZAwAGIMAAX0OAHQFAHwEAGQNAIMCAIMAAH0PAHwO
+AAxvBQABfA8ADG8LAAFkDgBnAQBTbgEAAXwOAG9IAAF0BQB8BgBkDwCDAgBkCwB8DQBkDAAYgwAB
+fRAAdAUAfAcAZBAAgwIAfAIAZBEAfBAAZBIAfAYAZBMAfAQAgwADgwEAAW4BAAF8DwBvJgABdAUA
+fAcAZBAAgwIAfAIAZBEAfAQAZBIAfAYAgwACgwEAAW4BAAF8BwBTZBQAUygVAAAAc1QAAAAKICBS
+ZXR1cm4gYSBkaWN0aW9uYXJ5IG9mIG5lY2Vzc2l0ZWQgZGF0YSBhYm91dCB0aGUgZ2l2ZW4gaW1t
+b2JpbGlzYXRpb24gbW92ZW1lbnQKICBjAgAAAAcAAAAKAAAAQwAAAHNzAAAAfAEAdAEAfAAAZAEA
+gwIAgwAAN30BAHwBAGQCABV9AwB8AQBkAgAWfQQAdAUAZAMAdAYAdAEAfAAAZAQAgwIAgwAAfAMA
+F4MBAHQGAHwEAIMBAHQGAHQBAHwAAGQFAIMCAIMAAIMBAGYDABaDAQBTZAYAUygHAAAAczYAAAAK
+ICBBZGQgdGhlIGdpdmVuIG51bWJlciBvZiBtb250aHMgdG8gdGhlIGdpdmVuIGRhdGUKICBzBQAA
+AG1vbnRoaQwAAABzCAAAACVzLyVzLyVzcwQAAAB5ZWFycwMAAABkYXlOKAcAAABzBgAAAG1vbnRo
+c3MJAAAAX2dldGF0dHJfcwQAAABkYXRlcwUAAAB5ZWFyc3MJAAAAcmVtYWluaW5ncwgAAABEYXRl
+VGltZXMEAAAAcmVwcigHAAAAcwQAAABkYXRlcwYAAABtb250aHNzCQAAAF9nZXRhdHRyX3MFAAAA
+eWVhcnNzCQAAAHJlbWFpbmluZ3MIAAAARGF0ZVRpbWVzBAAAAHJlcHIoAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzDwAAAGFkZE1vbnRoc1RvRGF0ZQsAAABzCAAAAAAEFgEKAQoBYwMAAAAW
+AAAAGwAAAAMAAABzmAMAAGgAAH0DAHQBAHwAAGQBAIMCAIMAAH0FAHwCAHQFAGoIAG9GAAF0AQB8
+AQBkAgCDAgBkAwB8BQBkBAAXgwABfQcAdAgAfAcAgwEAZAUAagQAbxMAAXQJAHwHAGQFAIMCAH0C
+AHFrAAFuAQABfAUAdAoAfAMAgwEAZAYAPHQBAHwAAGQHAIMCAIMAAHQKAHwDAIMBAGQIADx0AQB8
+AABkCQCDAgCDAAB9CwB0AQB8AQBkCgCDAgCDAAB0CgB8AwCDAQBkCwA8dAEAfAEAZAcAgwIAgwAA
+dAoAfAMAgwEAZAwAPHQMAHwLAIMBAGQNABd0CgB8AwCDAQBkDgA8dAEAfAAAZA8AgwIAgwAAfQ0A
+fA0AdAoAfAMAgwEAZBAAPHwFAHQKAHwDAIMBAGQRADxkEgB0AQB8AABkEwCDAgCDAAAWdAoAfAMA
+gwEAZBQAPHQBAHwAAGQVAIMCAIMAAHQKAHwDAIMBAGQWADx0AQB8AABkFwCDAgCDAAB0CgB8AwCD
+AQBkGAA8dAEAfAAAZBkAgwIAgwAAdAoAfAMAgwEAZBoAPHQBAHwBAGQbAIMCAGQDAHwFAIMAAX0O
+AHQIAHwOAIMBAGQFAGoEAG9CAAF0AQB0CQB8DgBkHAALgwIAZB0AgwIAgwAAfQ8AdAEAfA8AZB4A
+gwIAgwAAfRAAfBAAdAoAfAMAgwEAZB8APG4RAAFkIAB0CgB8AwCDAQBkHwA8fAIAdAUAagkAbyAA
+AXQBAHwCAGQBAIMCAIMAAHQKAHwDAIMBAGQhADxuRgEBfA0AZCIAagIAbx0AAYgAAHwFAHwLAIMC
+AHQKAHwDAIMBAGQhADxuHAEBdAEAdAEAfAAAZCMAgwIAgwAAZCQAgwIAgwAAfRIAdBMAZCUAdBQA
+dAEAfAUAZCYAgwIAgwAAgwEAdBQAdAEAfBIAZCcAgwIAgwAAgwEAdBQAdAEAfBIAZCgAgwIAgwAA
+gwEAZgMAFoMBAH0SAHwSAHwFABhkBQBqBABvVwABdBMAZCUAdBQAdAEAfBIAZCYAgwIAgwAAZBwA
+GIMBAHQUAHQBAHwSAGQnAIMCAIMAAIMBAHQUAHQBAHwSAGQoAIMCAIMAAIMBAGYDABaDAQB9EgBu
+AQABfAsAZCkAFX0VAHwLAGQpABZkBQBqAwBvDgABfBUAZBwAN30VAG4BAAGIAAB8EgB8FQBkKQAU
+gwIAdAoAfAMAgwEAZCEAPHwDAFNkKgBTKCsAAABzVAAAAAogIFJldHVybiBhIGRpY3Rpb25hcnkg
+b2YgbmVjZXNzaXRlZCBkYXRhIGFib3V0IHRoZSBnaXZlbiBpbW1vYmlsaXNhdGlvbiBtb3ZlbWVu
+dAogIHMLAAAAZ2V0U3RvcERhdGVzKAAAAGdldEZ1dHVyZUltbW9iaWxpc2F0aW9uTW92ZW1lbnRW
+YWx1ZUxpc3RzBwAAAGF0X2RhdGVmFjEuMDAwMDAwMDAwMDAwMDAwMWUtMDVpAAAAAHMTAAAAaW1t
+b2JpbGlzYXRpb25fZGF0ZXMFAAAAZ2V0SWRzEgAAAG1vdmVtZW50X3JlZmVyZW5jZXMXAAAAZ2V0
+QW1vcnRpc2F0aW9uRHVyYXRpb25zCAAAAGdldFRpdGxlcwsAAABkZXNpZ25hdGlvbnMJAAAAcmVm
+ZXJlbmNlcwcAAAAgbW9udGhzcxUAAABhbW9ydGlzYXRpb25fZHVyYXRpb25zEwAAAGdldEFtb3J0
+aXNhdGlvblR5cGVzEQAAAGFtb3J0aXNhdGlvbl90eXBlcwoAAABzdGFydF9kYXRlcwQAAAAlLjJm
+cx0AAABnZXRBbW9ydGlzYXRpb25CZWdpbm5pbmdQcmljZXMSAAAAYW1vcnRpc2F0aW9uX3ByaWNl
+cxoAAABnZXREZXN0aW5hdGlvblByb2plY3RUaXRsZXMHAAAAcHJvamVjdHMZAAAAZ2V0RGVzdGlu
+YXRpb25CdWRnZXRUaXRsZXMGAAAAYnVkZ2V0cxUAAABnZXREZXN0aW5hdGlvblNlY3Rpb25zBwAA
+AHNlY3Rpb25zGQAAAGdldFNlY3Rpb25DaGFuZ2VWYWx1ZUxpc3RpAQAAAHMJAAAAZ2V0UGFyZW50
+cw4AAABnZXRDYXVzYWxpdHlJZHMRAAAAaW52b2ljZV9yZWZlcmVuY2VzAwAAAE4vQXMIAAAAZW5k
+X2RhdGVzBgAAAGxpbmVhcnMPAAAAZ2V0U2VjdGlvblZhbHVlcxgAAABnZXRGaW5hbmNpYWxZZWFy
+U3RvcERhdGVzCAAAACVzLyVzLyVzcwQAAAB5ZWFycwUAAABtb250aHMDAAAAZGF5aQwAAABOKBYA
+AABzDgAAAHJldHVybmVkX3ZhbHVlcwkAAABfZ2V0YXR0cl9zBAAAAGltbW9zDAAAAGN1cnJlbnRf
+ZGF0ZXMJAAAAbmV4dF9pbW1vcwQAAABOb25lcwQAAABpdGVtcwkAAABpbW1vX2xpc3RzAwAAAGxl
+bnMJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfcxUAAABhbW9ydGlzYXRpb25fZHVyYXRpb25zAwAA
+AHN0cnMRAAAAYW1vcnRpc2F0aW9uX3R5cGVzEgAAAGRlbGl2ZXJ5X2xpbmVfbGlzdHMIAAAAZGVs
+aXZlcnlzCgAAAGludm9pY2VfaWRzDwAAAGFkZE1vbnRoc1RvRGF0ZXMOAAAAZmluYW5jaWFsX2Rh
+dGVzCAAAAERhdGVUaW1lcwQAAAByZXBycwUAAAB5ZWFycygWAAAAcwQAAABpbW1vcwQAAABpdGVt
+cwkAAABuZXh0X2ltbW9zDgAAAHJldHVybmVkX3ZhbHVlcwkAAABfZ2V0YXR0cl9zDAAAAGN1cnJl
+bnRfZGF0ZXMEAAAATm9uZXMJAAAAaW1tb19saXN0cwMAAABsZW5zCQAAAF9nZXRpdGVtX3MHAAAA
+X3dyaXRlX3MVAAAAYW1vcnRpc2F0aW9uX2R1cmF0aW9ucwMAAABzdHJzEQAAAGFtb3J0aXNhdGlv
+bl90eXBlcxIAAABkZWxpdmVyeV9saW5lX2xpc3RzCAAAAGRlbGl2ZXJ5cwoAAABpbnZvaWNlX2lk
+cw8AAABhZGRNb250aHNUb0RhdGVzDgAAAGZpbmFuY2lhbF9kYXRlcwgAAABEYXRlVGltZXMEAAAA
+cmVwcnMFAAAAeWVhcnMoAQAAAHMPAAAAYWRkTW9udGhzVG9EYXRlKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMHAAAAZ2V0RGF0YRUAAABzTAAAAAAEBgESAQ0BHAETARcCEAEcAhIBHAEcARoCEgEQ
+ARABIAEcARwBHAMYARMBHAESARQCEAQNASACDQEdAx4BTwERAVcCCgERAQ4CHQNzCQAAAGdldFBh
+cmVudGkAAAAAcx4AAABjaGVja0ltbW9iaWxpc2F0aW9uQ29uc2lzdGVuY3lzAQAAAApzBAAAAGpv
+aW5pAwAAAHMLAAAAZ2V0U3RvcERhdGVzDQAAAGlzSW1tb2JpbGlzZWRzBwAAAGF0X2RhdGVmFjEu
+MDAwMDAwMDAwMDAwMDAwMWUtMDVzEQAAAGdldEltbW9iaWxpc2F0aW9uc0cAAABJbW1vYmlsaXNh
+dGlvbiBtb3ZlbWVudCBkb2VzIG5vdCBzdGFydCBvciBzdG9wIGFuIGltbW9iaWxpc2F0aW9uIHBl
+cmlvZHMiAAAAZ2V0TGFzdEltbW9iaWxpc2F0aW9uTW92ZW1lbnRWYWx1ZXMGAAAAYXBwZW5kcwQA
+AABpbW1vcwQAAABpdGVtcwkAAABuZXh0X2ltbW9OKBEAAABzDwAAAGFkZE1vbnRoc1RvRGF0ZXME
+AAAATm9uZXMHAAAAZ2V0RGF0YXMHAAAAY29udGV4dHMEAAAAaW1tb3MJAAAAX2dldGF0dHJfcwQA
+AABpdGVtcw4AAAByZXR1cm5lZF92YWx1ZXMFAAAAc3RhdGVzBgAAAGFwcGVuZHMIAAAAJGFwcGVu
+ZDBzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGl0ZW1fcwwAAABjdXJyZW50X2RhdGVzCAAAAHByZXZp
+b3VzcwQAAABuZXh0cwwAAABjdXJyZW50X2ltbW8oEQAAAHMPAAAAYWRkTW9udGhzVG9EYXRlcwQA
+AABOb25lcwcAAABnZXREYXRhcwcAAABjb250ZXh0cwQAAABpbW1vcwkAAABfZ2V0YXR0cl9zBAAA
+AGl0ZW1zDgAAAHJldHVybmVkX3ZhbHVlcwUAAABzdGF0ZXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
+MHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0aXRlbV9zDAAAAGN1cnJlbnRfZGF0ZXMIAAAAcHJldmlv
+dXNzBAAAAG5leHRzDAAAAGN1cnJlbnRfaW1tbygAAAAAKAEAAABzDwAAAGFkZE1vbnRoc1RvRGF0
+ZXMPAAAAU2NyaXB0IChQeXRob24pcx4AAABJbW1vYmlsaXNhdGlvbl9nZXREb2N1bWVudEluZm8B
+AAAAcygAAAAACgkKDz0GARIBCQQSAQcBIAAqBRIBHAMSAhABCwIHAR8BKQIKASMCKAEAAABzHgAA
+AEltbW9iaWxpc2F0aW9uX2dldERvY3VtZW50SW5mbygBAAAAcx4AAABJbW1vYmlsaXNhdGlvbl9n
+ZXREb2N1bWVudEluZm8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/local_immobilisation/Immobilisation_getDocumentInfo</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>addMonthsToDate</string>
+                            <string>None</string>
+                            <string>getData</string>
+                            <string>context</string>
+                            <string>immo</string>
+                            <string>_getattr_</string>
+                            <string>item</string>
+                            <string>returned_value</string>
+                            <string>state</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getitem_</string>
+                            <string>current_date</string>
+                            <string>previous</string>
+                            <string>next</string>
+                            <string>current_immo</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Immobilisation_getDocumentInfo</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

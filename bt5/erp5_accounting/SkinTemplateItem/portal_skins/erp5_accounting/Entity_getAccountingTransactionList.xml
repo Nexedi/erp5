@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>kwd = {}\n
+if kw.has_key(\'hide_grouping\'):\n
+  kwd[\'hide_grouping\'] = kw[\'hide_grouping\']\n
+\n
+LOG = lambda msg : context.log(\'Entity_getAccountingTransactionList\', msg)\n
+\n
+# read settings from user preference\n
+preference = context.getPortalObject().portal_preferences\n
+from_date = preference.getPreferredAccountingTransactionFromDate()\n
+if from_date :\n
+  kwd[\'from_date\'] = from_date\n
+at_date = preference.getPreferredAccountingTransactionAtDate()\n
+if at_date :\n
+  kwd[\'at_date\'] = at_date\n
+simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
+if simulation_state :\n
+  kwd[\'transaction_simulation_state\'] = simulation_state\n
+section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
+if section_category :\n
+  kwd[\'transaction_section_category\'] = section_category\n
+\n
+if kw.has_key(\'node_uid\'):\n
+  kwd[\'node_uid\'] = transaction_selection[\'node_uid\']\n
+if kw.has_key(\'transaction_portal_type\'):\n
+  kwd[\'transaction_portal_type\'] = transaction_selection[\'transaction_portal_type\']\n
+\n
+\n
+# FIXME: same problem as in BankAccount_getAccountingTransactionList\n
+\n
+#LOG("SQL used: %s" % context.Entity_zGetAccountingTransactionList(src__=1, **kwd))\n
+\n
+new_result = []\n
+result = context.Entity_zGetAccountingTransactionList(**kwd)\n
+if src__:\n
+  return result\n
+net_balance = 0.0\n
+for l in result:\n
+  o = l.getObject()\n
+  net_balance += l.source_balance or 0.0\n
+  if o is not None:\n
+    c = o.asContext(net_balance = net_balance,\n
+                    source_balance=l.source_balance,\n
+                    source_credit=l.source_credit,\n
+                    source_debit=l.source_debit,\n
+                    transaction_line_path = l.transaction_line_path )\n
+    new_result.append(c)\n
+\n
+return new_result\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMCAAAAGAAA
+AC0AAABLAAAAc20CAABoAAB9AwB0AQB8AgBkAQCDAgBkAgCDAQBvHQABdAMAfAIAZAIAgwIAdAQA
+fAMAgwEAZAIAPG4BAAFkAwCEAAB9BwB0AQB0AQB0BgBkBACDAgCDAABkBQCDAgB9CQB0AQB8CQBk
+BgCDAgCDAAB9CgB8CgBvFAABfAoAdAQAfAMAgwEAZAcAPG4BAAF0AQB8CQBkCACDAgCDAAB9CwB8
+CwBvFAABfAsAdAQAfAMAgwEAZAkAPG4BAAF0AQB8CQBkCgCDAgCDAAB9DAB8DABvFAABfAwAdAQA
+fAMAgwEAZAsAPG4BAAF0AQB8CQBkDACDAgCDAAB9DQB8DQBvFAABfA0AdAQAfAMAgwEAZA0APG4B
+AAF0AQB8AgBkAQCDAgBkDgCDAQBvHQABdAMAdAwAZA4AgwIAdAQAfAMAgwEAZA4APG4BAAF0AQB8
+AgBkAQCDAgBkDwCDAQBvHQABdAMAdAwAZA8AgwIAdAQAfAMAgwEAZA8APG4BAAFnAAB9DwB0DgB0
+AQB0BgBkEACDAgB8AwCNAQB9EQB8AQBvCAABfBEAU24BAAFkEQB9EgB4uAB0EgB8EQCDAQBEXaoA
+fRQAdAEAfBQAZBIAgwIAgwAAfRUAfBIAdAEAfBQAZBMAgwIAcAQAAWQRADd9EgB8FQB0FQBqCQBv
+awABdAEAfBUAZBQAgwIAZBUAfBIAZBMAdAEAfBQAZBMAgwIAZBYAdAEAfBQAZBYAgwIAZBcAdAEA
+fBQAZBcAgwIAZBgAdAEAfBQAZBgAgwIAgwAFfRcAdAEAfA8AZBkAgwIAfBcAgwEAAXG3AQFxtwFX
+fA8AU2QAAFMoGgAAAE5zBwAAAGhhc19rZXlzDQAAAGhpZGVfZ3JvdXBpbmdjAQAAAAMAAAADAAAA
+QwAAAHMWAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwIAUygDAAAATnMDAAAAbG9ncyMAAABFbnRpdHlf
+Z2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdCgDAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
+eHRzAwAAAG1zZygDAAAAcwMAAABtc2dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS42PgUAAABzAAAAAHMPAAAAZ2V0UG9y
+dGFsT2JqZWN0cxIAAABwb3J0YWxfcHJlZmVyZW5jZXNzKQAAAGdldFByZWZlcnJlZEFjY291bnRp
+bmdUcmFuc2FjdGlvbkZyb21EYXRlcwkAAABmcm9tX2RhdGVzJwAAAGdldFByZWZlcnJlZEFjY291
+bnRpbmdUcmFuc2FjdGlvbkF0RGF0ZXMHAAAAYXRfZGF0ZXM0AAAAZ2V0UHJlZmVycmVkQWNjb3Vu
+dGluZ1RyYW5zYWN0aW9uU2ltdWxhdGlvblN0YXRlTGlzdHMcAAAAdHJhbnNhY3Rpb25fc2ltdWxh
+dGlvbl9zdGF0ZXMwAAAAZ2V0UHJlZmVycmVkQWNjb3VudGluZ1RyYW5zYWN0aW9uU2VjdGlvbkNh
+dGVnb3J5cxwAAAB0cmFuc2FjdGlvbl9zZWN0aW9uX2NhdGVnb3J5cwgAAABub2RlX3VpZHMXAAAA
+dHJhbnNhY3Rpb25fcG9ydGFsX3R5cGVzJAAAAEVudGl0eV96R2V0QWNjb3VudGluZ1RyYW5zYWN0
+aW9uTGlzdGYDMC4wcwkAAABnZXRPYmplY3RzDgAAAHNvdXJjZV9iYWxhbmNlcwkAAABhc0NvbnRl
+eHRzCwAAAG5ldF9iYWxhbmNlcw0AAABzb3VyY2VfY3JlZGl0cwwAAABzb3VyY2VfZGViaXRzFQAA
+AHRyYW5zYWN0aW9uX2xpbmVfcGF0aHMGAAAAYXBwZW5kKBcAAABzAwAAAGt3ZHMJAAAAX2dldGF0
+dHJfcwIAAABrd3MJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfcwMAAABMT0dzBwAAAGNvbnRleHRz
+CgAAAHByZWZlcmVuY2VzCQAAAGZyb21fZGF0ZXMHAAAAYXRfZGF0ZXMQAAAAc2ltdWxhdGlvbl9z
+dGF0ZXMQAAAAc2VjdGlvbl9jYXRlZ29yeXMVAAAAdHJhbnNhY3Rpb25fc2VsZWN0aW9ucwoAAABu
+ZXdfcmVzdWx0cwcAAABfYXBwbHlfcwYAAAByZXN1bHRzBQAAAHNyY19fcwsAAABuZXRfYmFsYW5j
+ZXMJAAAAX2dldGl0ZXJfcwEAAABscwEAAABvcwQAAABOb25lcwEAAABjKBgAAABzCQAAAHNlbGVj
+dGlvbnMFAAAAc3JjX19zAgAAAGt3cwMAAABrd2RzCQAAAF9nZXRhdHRyX3MJAAAAX2dldGl0ZW1f
+cwcAAABfd3JpdGVfcwMAAABMT0dzBwAAAGNvbnRleHRzCgAAAHByZWZlcmVuY2VzCQAAAGZyb21f
+ZGF0ZXMHAAAAYXRfZGF0ZXMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMQAAAAc2VjdGlvbl9jYXRlZ29y
+eXMVAAAAdHJhbnNhY3Rpb25fc2VsZWN0aW9ucwoAAABuZXdfcmVzdWx0cwcAAABfYXBwbHlfcwYA
+AAByZXN1bHRzCwAAAG5ldF9iYWxhbmNlcwkAAABfZ2V0aXRlcl9zAQAAAGxzAQAAAG9zBAAAAE5v
+bmVzAQAAAGMoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIwAAAEVudGl0eV9nZXRBY2Nv
+dW50aW5nVHJhbnNhY3Rpb25MaXN0AQAAAHNKAAAACQETAR0CCQMbARIBBwEUARIBBwEUARIBBwEU
+ARIBBwEXAhMBIAETAR0HBgEYAQcBCAEGAQ0ABgESARoBDQEYAQ8BDwEPARIBGAIoAQAAAHMjAAAA
+RW50aXR5X2dldEFjY291bnRpbmdUcmFuc2FjdGlvbkxpc3QoAQAAAHMjAAAARW50aXR5X2dldEFj
+Y291bnRpbmdUcmFuc2FjdGlvbkxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
+ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getAccountingTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection, src__=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>src__</string>
+                            <string>kw</string>
+                            <string>kwd</string>
+                            <string>_getattr_</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>LOG</string>
+                            <string>context</string>
+                            <string>preference</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>simulation_state</string>
+                            <string>section_category</string>
+                            <string>transaction_selection</string>
+                            <string>new_result</string>
+                            <string>_apply_</string>
+                            <string>result</string>
+                            <string>net_balance</string>
+                            <string>_getiter_</string>
+                            <string>l</string>
+                            <string>o</string>
+                            <string>None</string>
+                            <string>c</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Entity_getAccountingTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

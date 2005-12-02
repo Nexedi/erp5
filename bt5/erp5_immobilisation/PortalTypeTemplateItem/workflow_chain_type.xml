@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Amortisation Rule</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Amortisation Transaction</type>
+  <workflow>amortisation_transaction_workflow, edit_workflow, amortisation_transaction_divergence_workflow, amortisation_transaction_edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Amortisation Transaction Line</type>
+  <workflow>edit_workflow, amortisation_transaction_edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Immobilisation</type>
+  <workflow>edit_workflow, immobilisation_edit_workflow</workflow>
+ </chain>
+</workflow_chain>

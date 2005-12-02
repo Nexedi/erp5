@@ -1,0 +1,70 @@
+2005-12-02 aurel
+* Removed site properties
+
+2005-12-01 Seb
+* Renamed apparel tint to apparel bath
+
+2005-11-30 aurel
+* update ApparelFabricItem_getFastInputList,
+ApparelFabricItem_fastInput
+
+2005-11-24 aurel
+* Added ApparelFabricItem_viewFastInput, ApparelFabricItem_fastInput, ApparelFabricItem_getFastInputList and action apparel_fabric_item_fast_input
+
+2005-11-24 Seb (v0.2)
+* Added Apparel Tint Item portal type and
+module and skins
+
+2005-11-05 Romain (v0.1.15)
+* Correct naming convention.
+
+2005-10-20 Romain
+* Correct naming convention.
+
+2005-08-25 Romain (v0.1.14)
+* Move all categories (except apparel_morpho_type) to erp5_pdm.
+* Move skin folder erp5_apparel_core to BT erp5_pdm (dependency added).
+
+2005-08-23 Romain
+* Move category industrial_phase to erp5_core
+
+2005-07-27: Seb
+Fixed the acquisition portal_type for composition
+visual_pattern
+and many others
+
+2005-07-21: Romain
+Modify _asCellRange scripts in order to make them compatible with updateCellRange.
+Add industrial_phase as a base_category of ApparelModel.
+
+Move skin folder erp5_apparel_core from bt erp5_apparel_depend.
+
+Move all base categories from bt erp5_apparel_depend.
+
+2005-07-19: Romain
+
+BugFix: correct Consumption_asCellRange,
+ApparelCloth_asCellRange, ApparelMeasurement_asCellRange
+
+Add parameter base_id to all _asCellRange script.
+
+Add field my_industrial_phase_list to ApparelModel_view.
+
+2005-06-20
+
+Add portal_transformation_type_list
+
+
+2005-06-13
+
+Add portal_item_type_list
+
+2005-06-09
+
+Add Apparel Fabric Item Module
+
+2005-04-22
+
+Modify security settings.
+Remove related object form.
+Add jump.

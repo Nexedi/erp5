@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+error_message = \'\'\n
+transaction = state_change.object\n
+portal = state_change.getPortal()\n
+\n
+# first of all, validate the transaction it self\n
+container.validateTransaction(state_change)\n
+\n
+# Get sections.\n
+source_section = transaction.getSourceSection()\n
+destination_section = transaction.getDestinationSection()\n
+\n
+# Check transaction lines.\n
+if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
+  accountingTransactionLineList = transaction.contentValues(\n
+                    filter={\'portal_type\': (\'Accounting Transaction Line\',\n
+                                            \'Sale Invoice Transaction Line\',\n
+                                            \'Pay Sheet Transaction Line\',\n
+                                            \'Purchase Invoice Transaction Line\' )})\n
+  sum = 0\n
+  for transaction_line in accountingTransactionLineList:\n
+    if source_section != destination_section :\n
+      quantity = transaction_line.getQuantity() or 0.0\n
+    else :\n
+      quantity = transaction_line.getSourceDebit() - transaction_line.getSourceCredit() + \\\n
+                 transaction_line.getDestinationDebit() - transaction_line.getDestinationCredit()\n
+    sum += int(round(quantity * 100))\n
+    if transaction_line.getSourceValue() is None : continue\n
+    if transaction_line.getSourceValue().getAccountTypeId() in ("receivable", "payable") \\\n
+          and transaction_line.getSourceSection() in (None, "") :\n
+       raise ValidationFailed, \'Action impossible : no source section defined for line %s where account type is "%s"\'%\\\n
+                                (transaction_line.getId(), transaction_line.getSource().getAccountTypeId())\n
+    if transaction_line.getSourceValue().getAccountTypeId() == "bank" \\\n
+          and transaction_line.getSourcePayment() in (None, "") :\n
+       raise ValidationFailed, \'Action impossible : no source payment defined for line %s where account type is "bank"\'%transaction_line.getId()\n
+\n
+  if sum > 0:\n
+    raise ValidationFailed, \'Action impossible : credit is greater than debit\' #: sum = %.2f\' % (sum/100.0)\n
+  elif sum < 0:\n
+    raise ValidationFailed, \'Action impossible : credit is smaller than debit\' #: sum = %.2f\' % (sum/100.0)\n
+\n
+if portal.portal_templates.getInstalledBusinessTemplate(\'erp5_budget\') is not None :\n
+  container.validateBudget(state_change)\n
+\n
+# delete empty transaction lines.\n
+DISABLED = 1\n
+if not DISABLED and not transaction.isSimulated() \\\n
+   and transaction.getSimulationState() in ("stopped", ) :\n
+  transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABMAAAAhAAAAQwAA
+AHMtAwAAZAEAawAAbAEAfQIAAWQCAH0DAHQDAHwAAGQDAIMCAH0FAHQDAHwAAGQEAIMCAIMAAH0G
+AHQDAHQHAGQFAIMCAHwAAIMBAAF0AwB8BQBkBgCDAgCDAAB9CAB0AwB8BQBkBwCDAgCDAAB9CQB0
+AwB8BQBkCACDAgCDAABkCQBmAQBqBwBvDgIBdAMAfAUAZAoAgwIAZAsAaAAABGQMAGQNAGQOAGQP
+AGQQAGYEAAM8gwABfQoAZBEAfQsAeKABdAwAfAoAgwEARF2SAX0NAHwIAHwJAGoDAG8dAAF0AwB8
+DQBkEgCDAgCDAABwBAABZBMAfQ4AbkMAAXQDAHwNAGQUAIMCAIMAAHQDAHwNAGQVAIMCAIMAABh0
+AwB8DQBkFgCDAgCDAAAXdAMAfA0AZBcAgwIAgwAAGH0OAHwLAHQPAHQQAHwOAGQYABSDAQCDAQA3
+fQsAdAMAfA0AZBkAgwIAgwAAdBEAaggAbwcAAXHHAG4BAAF0AwB0AwB8DQBkGQCDAgCDAABkGgCD
+AgCDAABkGwBkHABmAgBqBgBvHAABdAMAfA0AZAYAgwIAgwAAdBEAZAIAZgIAagYAbzsAAXwCAGQd
+AHQDAHwNAGQeAIMCAIMAAHQDAHQDAHwNAGQfAIMCAIMAAGQaAIMCAIMAAGYCABaCAgBuAQABdAMA
+dAMAfA0AZBkAgwIAgwAAZBoAgwIAgwAAZCAAagIAbxwAAXQDAHwNAGQhAIMCAIMAAHQRAGQCAGYC
+AGoGAG8dAAF8AgBkIgB0AwB8DQBkHgCDAgCDAAAWggIAcccAAXHHAFd8CwBkEQBqBABvDQABfAIA
+ZCMAggIAcZUCAXwLAGQRAGoAAG8NAAF8AgBkJACCAgBxlQIBbgEAAXQDAHQDAHwGAGQlAIMCAGQm
+AIMCAGQnAIMBAHQRAGoJAG8XAAF0AwB0BwBkKACDAgB8AACDAQABbgEAAWQpAH0SAHwSAAxvLQAB
+dAMAfAUAZCoAgwIAgwAADG8ZAAF0AwB8BQBkKwCDAgCDAABkLABmAQBqBgBvGgABdAMAfAUAZC0A
+gwIAZC4AZBEAgwABAW4BAAFkAABTKC8AAABOKAEAAABzEAAAAFZhbGlkYXRpb25GYWlsZWRzAAAA
+AHMGAAAAb2JqZWN0cwkAAABnZXRQb3J0YWxzEwAAAHZhbGlkYXRlVHJhbnNhY3Rpb25zEAAAAGdl
+dFNvdXJjZVNlY3Rpb25zFQAAAGdldERlc3RpbmF0aW9uU2VjdGlvbnMNAAAAZ2V0UG9ydGFsVHlw
+ZXMTAAAAQmFsYW5jZSBUcmFuc2FjdGlvbnMNAAAAY29udGVudFZhbHVlc3MGAAAAZmlsdGVycwsA
+AABwb3J0YWxfdHlwZXMbAAAAQWNjb3VudGluZyBUcmFuc2FjdGlvbiBMaW5lcx0AAABTYWxlIElu
+dm9pY2UgVHJhbnNhY3Rpb24gTGluZXMaAAAAUGF5IFNoZWV0IFRyYW5zYWN0aW9uIExpbmVzIQAA
+AFB1cmNoYXNlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZWkAAAAAcwsAAABnZXRRdWFudGl0eWYD
+MC4wcw4AAABnZXRTb3VyY2VEZWJpdHMPAAAAZ2V0U291cmNlQ3JlZGl0cxMAAABnZXREZXN0aW5h
+dGlvbkRlYml0cxQAAABnZXREZXN0aW5hdGlvbkNyZWRpdGlkAAAAcw4AAABnZXRTb3VyY2VWYWx1
+ZXMQAAAAZ2V0QWNjb3VudFR5cGVJZHMKAAAAcmVjZWl2YWJsZXMHAAAAcGF5YWJsZXNUAAAAQWN0
+aW9uIGltcG9zc2libGUgOiBubyBzb3VyY2Ugc2VjdGlvbiBkZWZpbmVkIGZvciBsaW5lICVzIHdo
+ZXJlIGFjY291bnQgdHlwZSBpcyAiJXMicwUAAABnZXRJZHMJAAAAZ2V0U291cmNlcwQAAABiYW5r
+cxAAAABnZXRTb3VyY2VQYXltZW50c1YAAABBY3Rpb24gaW1wb3NzaWJsZSA6IG5vIHNvdXJjZSBw
+YXltZW50IGRlZmluZWQgZm9yIGxpbmUgJXMgd2hlcmUgYWNjb3VudCB0eXBlIGlzICJiYW5rInMw
+AAAAQWN0aW9uIGltcG9zc2libGUgOiBjcmVkaXQgaXMgZ3JlYXRlciB0aGFuIGRlYml0czAAAABB
+Y3Rpb24gaW1wb3NzaWJsZSA6IGNyZWRpdCBpcyBzbWFsbGVyIHRoYW4gZGViaXRzEAAAAHBvcnRh
+bF90ZW1wbGF0ZXNzHAAAAGdldEluc3RhbGxlZEJ1c2luZXNzVGVtcGxhdGVzCwAAAGVycDVfYnVk
+Z2V0cw4AAAB2YWxpZGF0ZUJ1ZGdldGkBAAAAcwsAAABpc1NpbXVsYXRlZHMSAAAAZ2V0U2ltdWxh
+dGlvblN0YXRlcwcAAABzdG9wcGVkcyYAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25fZGVsZXRlRW1w
+dHlMaW5lc3MIAAAAcmVkaXJlY3QoEwAAAHMeAAAAUHJvZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtm
+bG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcw0AAABlcnJvcl9tZXNzYWdlcwkAAABfZ2V0YXR0cl9z
+DAAAAHN0YXRlX2NoYW5nZXMLAAAAdHJhbnNhY3Rpb25zBgAAAHBvcnRhbHMJAAAAY29udGFpbmVy
+cw4AAABzb3VyY2Vfc2VjdGlvbnMTAAAAZGVzdGluYXRpb25fc2VjdGlvbnMdAAAAYWNjb3VudGlu
+Z1RyYW5zYWN0aW9uTGluZUxpc3RzAwAAAHN1bXMJAAAAX2dldGl0ZXJfcxAAAAB0cmFuc2FjdGlv
+bl9saW5lcwgAAABxdWFudGl0eXMDAAAAaW50cwUAAAByb3VuZHMEAAAATm9uZXMIAAAARElTQUJM
+RUQoEwAAAHMMAAAAc3RhdGVfY2hhbmdlcx4AAABQcm9kdWN0cy5EQ1dvcmtmbG93LkRDV29ya2Zs
+b3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzDQAAAGVycm9yX21lc3NhZ2VzCQAAAF9nZXRhdHRyX3ML
+AAAAdHJhbnNhY3Rpb25zBgAAAHBvcnRhbHMJAAAAY29udGFpbmVycw4AAABzb3VyY2Vfc2VjdGlv
+bnMTAAAAZGVzdGluYXRpb25fc2VjdGlvbnMdAAAAYWNjb3VudGluZ1RyYW5zYWN0aW9uTGluZUxp
+c3RzAwAAAHN1bXMJAAAAX2dldGl0ZXJfcxAAAAB0cmFuc2FjdGlvbl9saW5lcwgAAABxdWFudGl0
+eXMDAAAAaW50cwUAAAByb3VuZHMEAAAATm9uZXMIAAAARElTQUJMRUQoAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzGAAAAHZhbGlkYXRlVHJhbnNhY3Rpb25MaW5lcwEAAABzRgAAAA0CBgEP
+ARUDEAMSARIDHAEPAR4EBgENAAYBDQEdAiIBIAEaASYBKAEcAQYBOwEiARwBIQINAQ0BDQERAigB
+FAMGAR8BHAEoAQAAAHMYAAAAdmFsaWRhdGVUcmFuc2FjdGlvbkxpbmVzKAEAAABzGAAAAHZhbGlk
+YXRlVHJhbnNhY3Rpb25MaW5lcygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1v
+ZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/validateTransactionLines</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>error_message</string>
+                            <string>_getattr_</string>
+                            <string>transaction</string>
+                            <string>portal</string>
+                            <string>container</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
+                            <string>accountingTransactionLineList</string>
+                            <string>sum</string>
+                            <string>_getiter_</string>
+                            <string>transaction_line</string>
+                            <string>quantity</string>
+                            <string>int</string>
+                            <string>round</string>
+                            <string>None</string>
+                            <string>DISABLED</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateTransactionLines</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

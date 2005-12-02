@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+paysheet      = context.getObject()\n
+paysheet_type = paysheet.getPortalType()\n
+employee      = paysheet.getDestinationSection()\n
+employer      = paysheet.getSourceSection()\n
+\n
+if paysheet.getGrossSalary() == None:\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Gross+salary+is+required\')\n
+\n
+if paysheet.getStartDate() == None:\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Start+date+is+required\')\n
+\n
+if employee in (\'\', None):\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employee+is+required\')\n
+\n
+if employer in (\'\', None):\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+is+required\')\n
+\n
+employee_obj = paysheet.getDestinationSectionValue()\n
+employer_obj = paysheet.getSourceSectionValue()\n
+\n
+if employee_obj.getCareerGrade() in (\'\', None):\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employee+must+have+a+career+grade\')\n
+\n
+if employee_obj.getMaritalStatusId() in (\'\', None):\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employee+must+have+a+marital+status\')\n
+\n
+if employer_obj.getCreationDate() in (\'\', None):\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+must+have+an+organisation+creation+date\')\n
+\n
+if employer_obj.getDefaultAddress().getZipCode() in (\'\', None):\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=The+employer+must+have+a+zip+code\')\n
+\n
+# parameters are OK, go to the pre-calculation form\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTransaction_viewPreview?selection_name=default&amp;dialog_category=object_action&amp;form_id=PaySheetTransaction_view")\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAfAAAAQwAA
+AHNNAwAAdAAAdAEAZAEAgwIAgwAAfQIAdAAAfAIAZAIAgwIAgwAAfQMAdAAAfAIAZAMAgwIAgwAA
+fQQAdAAAfAIAZAQAgwIAgwAAfQUAdAAAfAIAZAUAgwIAgwAAdAYAagIAbzkAAXQAAHQAAHQAAHQB
+AGQGAIMCAGQHAIMCAGQIAIMCAHQAAHQBAGQJAIMCAIMAAGQKABeDAQBTbgEAAXQAAHwCAGQLAIMC
+AIMAAHQGAGoCAG85AAF0AAB0AAB0AAB0AQBkBgCDAgBkBwCDAgBkCACDAgB0AAB0AQBkCQCDAgCD
+AABkDAAXgwEAU24BAAF8BABkDQB0BgBmAgBqBgBvOQABdAAAdAAAdAAAdAEAZAYAgwIAZAcAgwIA
+ZAgAgwIAdAAAdAEAZAkAgwIAgwAAZA4AF4MBAFNuAQABfAUAZA0AdAYAZgIAagYAbzkAAXQAAHQA
+AHQAAHQBAGQGAIMCAGQHAIMCAGQIAIMCAHQAAHQBAGQJAIMCAIMAAGQPABeDAQBTbgEAAXQAAHwC
+AGQQAIMCAIMAAH0HAHQAAHwCAGQRAIMCAIMAAH0IAHQAAHwHAGQSAIMCAIMAAGQNAHQGAGYCAGoG
+AG85AAF0AAB0AAB0AAB0AQBkBgCDAgBkBwCDAgBkCACDAgB0AAB0AQBkCQCDAgCDAABkEwAXgwEA
+U24BAAF0AAB8BwBkFACDAgCDAABkDQB0BgBmAgBqBgBvOQABdAAAdAAAdAAAdAEAZAYAgwIAZAcA
+gwIAZAgAgwIAdAAAdAEAZAkAgwIAgwAAZBUAF4MBAFNuAQABdAAAfAgAZBYAgwIAgwAAZA0AdAYA
+ZgIAagYAbzkAAXQAAHQAAHQAAHQBAGQGAIMCAGQHAIMCAGQIAIMCAHQAAHQBAGQJAIMCAIMAAGQX
+ABeDAQBTbgEAAXQAAHQAAHwIAGQYAIMCAIMAAGQZAIMCAIMAAGQNAHQGAGYCAGoGAG85AAF0AAB0
+AAB0AAB0AQBkBgCDAgBkBwCDAgBkCACDAgB0AAB0AQBkCQCDAgCDAABkGgAXgwEAU24BAAF0AAB0
+AAB0AAB0AQBkBgCDAgBkBwCDAgBkCACDAgB0AAB0AQBkCQCDAgCDAABkGwAXgwEAU2QAAFMoHAAA
+AE5zCQAAAGdldE9iamVjdHMNAAAAZ2V0UG9ydGFsVHlwZXMVAAAAZ2V0RGVzdGluYXRpb25TZWN0
+aW9ucxAAAABnZXRTb3VyY2VTZWN0aW9ucw4AAABnZXRHcm9zc1NhbGFyeXMHAAAAUkVRVUVTVHMI
+AAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0cwwAAABhYnNvbHV0ZV91cmxzLwAAAD9wb3J0YWxfc3Rh
+dHVzX21lc3NhZ2U9R3Jvc3Mrc2FsYXJ5K2lzK3JlcXVpcmVkcwwAAABnZXRTdGFydERhdGVzLQAA
+AD9wb3J0YWxfc3RhdHVzX21lc3NhZ2U9U3RhcnQrZGF0ZStpcytyZXF1aXJlZHMAAAAAcy8AAAA/
+cG9ydGFsX3N0YXR1c19tZXNzYWdlPVRoZStlbXBsb3llZStpcytyZXF1aXJlZHMvAAAAP3BvcnRh
+bF9zdGF0dXNfbWVzc2FnZT1UaGUrZW1wbG95ZXIraXMrcmVxdWlyZWRzGgAAAGdldERlc3RpbmF0
+aW9uU2VjdGlvblZhbHVlcxUAAABnZXRTb3VyY2VTZWN0aW9uVmFsdWVzDgAAAGdldENhcmVlckdy
+YWRlczwAAAA/cG9ydGFsX3N0YXR1c19tZXNzYWdlPVRoZStlbXBsb3llZSttdXN0K2hhdmUrYStj
+YXJlZXIrZ3JhZGVzEgAAAGdldE1hcml0YWxTdGF0dXNJZHM+AAAAP3BvcnRhbF9zdGF0dXNfbWVz
+c2FnZT1UaGUrZW1wbG95ZWUrbXVzdCtoYXZlK2ErbWFyaXRhbCtzdGF0dXNzDwAAAGdldENyZWF0
+aW9uRGF0ZXNLAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1UaGUrZW1wbG95ZXIrbXVzdCtoYXZl
+K2FuK29yZ2FuaXNhdGlvbitjcmVhdGlvbitkYXRlcxEAAABnZXREZWZhdWx0QWRkcmVzc3MKAAAA
+Z2V0WmlwQ29kZXM4AAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1UaGUrZW1wbG95ZXIrbXVzdCto
+YXZlK2EremlwK2NvZGVzfgAAAC9QYXlTaGVldFRyYW5zYWN0aW9uX3ZpZXdQcmV2aWV3P3NlbGVj
+dGlvbl9uYW1lPWRlZmF1bHQmYW1wO2RpYWxvZ19jYXRlZ29yeT1vYmplY3RfYWN0aW9uJmFtcDtm
+b3JtX2lkPVBheVNoZWV0VHJhbnNhY3Rpb25fdmlldygJAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNv
+bnRleHRzCAAAAHBheXNoZWV0cw0AAABwYXlzaGVldF90eXBlcwgAAABlbXBsb3llZXMIAAAAZW1w
+bG95ZXJzBAAAAE5vbmVzDAAAAGVtcGxveWVlX29ianMMAAAAZW1wbG95ZXJfb2JqKAkAAABzCQAA
+AF9nZXRhdHRyX3MHAAAAY29udGV4dHMIAAAAcGF5c2hlZXRzDQAAAHBheXNoZWV0X3R5cGVzCAAA
+AGVtcGxveWVlcwgAAABlbXBsb3llcnMEAAAATm9uZXMMAAAAZW1wbG95ZWVfb2JqcwwAAABlbXBs
+b3llcl9vYmooAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIwAAAFBheVNoZWV0VHJhbnNh
+Y3Rpb25fY2hlY2tQYXJhbWV0ZXJzAQAAAHMsAAAAEgESARIBEgIZATkCGQE5AhMBOQITATkCEgES
+Ah8BOQIfATkCHwE5AisBOQMoAQAAAHMjAAAAUGF5U2hlZXRUcmFuc2FjdGlvbl9jaGVja1BhcmFt
+ZXRlcnMoAQAAAHMjAAAAUGF5U2hlZXRUcmFuc2FjdGlvbl9jaGVja1BhcmFtZXRlcnMoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_checkParameters</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>paysheet</string>
+                            <string>paysheet_type</string>
+                            <string>employee</string>
+                            <string>employer</string>
+                            <string>None</string>
+                            <string>employee_obj</string>
+                            <string>employer_obj</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_checkParameters</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

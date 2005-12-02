@@ -1,0 +1,62 @@
+<workflow_chain>
+ <chain>
+  <type>Document Analysis</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Document Analysis Document</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Document Analysis Document Decision Item</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Document Analysis Document Item</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Document Analysis Lexicon</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Document Analysis Lexicon Item</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Document Analysis Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Feature</type>
+  <workflow>feature_analysis_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Feature Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Feature Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Use Case</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Use Case Actor</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Use Case Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Use Case Scenario</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Use Case Scenario Step</type>
+  <workflow>(Default)</workflow>
+ </chain>
+</workflow_chain>

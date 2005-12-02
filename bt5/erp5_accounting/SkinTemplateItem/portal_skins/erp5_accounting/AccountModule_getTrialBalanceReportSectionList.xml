@@ -1,0 +1,340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Trial balance.\n
+\n
+"""\n
+\n
+from Products.ERP5Form.Report import ReportSection\n
+\n
+request = context.REQUEST\n
+\n
+at_date                      = request[\'at_date\']\n
+transaction_section_category = request[\'transaction_section_category\']\n
+transaction_simulation_state = request[\'transaction_simulation_state\']\n
+gap_root                     = request[\'gap_root\']\n
+from_date                    = request.get(\'from_date\', None)\n
+\n
+# flat_mode is a boolean that indicate wether we should use a report tree \n
+# or a flat list of all accounts. \n
+tree_mode                    =  request.get(\'tree_mode\', 0)\n
+\n
+\n
+result = []\n
+params = {\n
+  \'at_date\'                              : at_date,\n
+  \'transaction_section_category\'         : transaction_section_category,\n
+  \'section_category\'                     : transaction_section_category,\n
+  \'transaction_simulation_state\'         : transaction_simulation_state,\n
+  \'accounting_transaction_line_currency\' : None,\n
+  \'is_report_opened\'                     : 1,\n
+  \'report_depth\'                         : 5,\n
+  \'gap_root\'                             : gap_root,\n
+}\n
+\n
+preferences = {\n
+  \'preferred_accounting_transaction_at_date\' : at_date,\n
+  \'preferred_accounting_transaction_section_category\' :\n
+                  transaction_section_category,\n
+  \'preferred_accounting_transaction_simulation_state\' :\n
+                  transaction_simulation_state,\n
+  \'preferred_accounting_transaction_gap_root\' : gap_root,\n
+}\n
+\n
+if from_date:\n
+  params[\'from_date\'] = from_date\n
+  preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
+\n
+portal = context.portal_url.getPortalObject()\n
+\n
+if tree_mode :\n
+  gap_id_line = (\'gap_id\', \'GAP\')\n
+else :\n
+  gap_id_line = (\'id\', \'GAP\')\n
+\n
+balance_columns = (\n
+  gap_id_line,\n
+  (\'title\', \'Account\'),\n
+  # TODO\n
+# (\'AccountModule_getAccountingTransactionCount\', \'Transaction Count\'),\n
+  (\'debit\', \'Debit\'),\n
+  (\'credit\', \'Credit\'),\n
+  (\'debit_balance\', \'Debit Balance\'),\n
+  (\'credit_balance\', \'Credit Balance\')\n
+)\n
+\n
+\n
+if not tree_mode :\n
+  result.append(\n
+                ReportSection(path=portal.account_module.getPhysicalPath(),\n
+                               title=\'Trial Balance\',\n
+                               level=1,\n
+                               form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
+                               selection_name=\'accounting_selection\',\n
+                               selection_params=params,\n
+                               listbox_display_mode=\'FlatListMode\',\n
+                               selection_columns=balance_columns,\n
+                               preferences = preferences\n
+                               )\n
+               )\n
+else :\n
+  selection_report_path = \'portal_categories/\' + gap_root\n
+  selection_report_list = context.restrictedTraverse(selection_report_path).getPathList()\n
+  params[\'report_list\'] = selection_report_list\n
+  params[\'report_path\'] = selection_report_list\n
+\n
+  result.append(\n
+                 ReportSection(path=portal.account_module.getPhysicalPath(),\n
+                               title=portal.translation_service.translate(\'ui\', \'Trial Balance\').encode(\'utf8\'),\n
+                               level=1,\n
+                               form_id=\'AccountModule_viewAccountList\',\n
+                               selection_name=\'account_selection\',\n
+                               selection_params=params,\n
+                               listbox_display_mode=\'ReportTreeMode\',\n
+                               selection_columns=balance_columns,\n
+                               selection_report_path=selection_report_path,\n
+                               selection_report_list=selection_report_list,\n
+                               preferences = preferences\n
+                               )\n
+               )\n
+\n
+return result\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABYAAAApAAAAQwAA
+AHP8AgAAZAEAawAAbAEAfQEAAXQCAHQDAGQCAIMCAH0EAHQFAHwEAGQDAIMCAH0GAHQFAHwEAGQE
+AIMCAH0HAHQFAHwEAGQFAIMCAH0IAHQFAHwEAGQGAIMCAH0JAHQCAHwEAGQHAIMCAGQIAHQKAIMC
+AH0LAHQCAHwEAGQHAIMCAGQJAGQKAIMCAH0MAGcAAH0NAGgAAARkAwB8BgADPARkBAB8BwADPARk
+CwB8BwADPARkBQB8CAADPARkDAB0CgADPARkDQBkDgADPARkDwBkEAADPARkBgB8CQADPH0OAGgA
+AARkEQB8BgADPARkEgB8BwADPARkEwB8CAADPARkFAB8CQADPH0PAHwLAG8kAAF8CwB0EAB8DgCD
+AQBkCAA8fAsAdBAAfA8AgwEAZBUAPG4BAAF0AgB0AgB0AwBkFgCDAgBkFwCDAgCDAAB9EQB8DABv
+EAABZBgAZBkAZgIAfRIAbg0AAWQaAGQZAGYCAH0SAHwSAGQbAGQcAGYCAGQdAGQeAGYCAGQfAGQg
+AGYCAGQhAGQiAGYCAGQjAGQkAGYCAGYGAH0TAHwMAAxvZQABdAIAfA0AZCUAgwIAfAEAZCYAdAIA
+dAIAfBEAZCcAgwIAZCgAgwIAgwAAZBsAZCkAZCoAZA4AZCsAZCwAZC0AZC4AZC8AfA4AZDAAZDEA
+ZDIAfBMAZDMAfA8AgwAJgwEAAW7jAAFkNAB8CQAXfRQAdAIAdAIAdAMAZDUAgwIAfBQAgwEAZDYA
+gwIAgwAAfRUAfBUAdBAAfA4AgwEAZDcAPHwVAHQQAHwOAIMBAGQ4ADx0AgB8DQBkJQCDAgB8AQBk
+JgB0AgB0AgB8EQBkJwCDAgBkKACDAgCDAABkGwB0AgB0AgB0AgB8EQBkOQCDAgBkOgCDAgBkOwBk
+KQCDAgBkPACDAgBkPQCDAQBkKgBkDgBkKwBkPgBkLQBkPwBkLwB8DgBkMABkQABkMgB8EwBkQQB8
+FABkQgB8FQBkMwB8DwCDAAuDAQABfA0AU2QAAFMoQwAAAE4oAQAAAHMNAAAAUmVwb3J0U2VjdGlv
+bnMHAAAAUkVRVUVTVHMHAAAAYXRfZGF0ZXMcAAAAdHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29y
+eXMcAAAAdHJhbnNhY3Rpb25fc2ltdWxhdGlvbl9zdGF0ZXMIAAAAZ2FwX3Jvb3RzAwAAAGdldHMJ
+AAAAZnJvbV9kYXRlcwkAAAB0cmVlX21vZGVpAAAAAHMQAAAAc2VjdGlvbl9jYXRlZ29yeXMkAAAA
+YWNjb3VudGluZ190cmFuc2FjdGlvbl9saW5lX2N1cnJlbmN5cxAAAABpc19yZXBvcnRfb3BlbmVk
+aQEAAABzDAAAAHJlcG9ydF9kZXB0aGkFAAAAcygAAABwcmVmZXJyZWRfYWNjb3VudGluZ190cmFu
+c2FjdGlvbl9hdF9kYXRlczEAAABwcmVmZXJyZWRfYWNjb3VudGluZ190cmFuc2FjdGlvbl9zZWN0
+aW9uX2NhdGVnb3J5czEAAABwcmVmZXJyZWRfYWNjb3VudGluZ190cmFuc2FjdGlvbl9zaW11bGF0
+aW9uX3N0YXRlcykAAABwcmVmZXJyZWRfYWNjb3VudGluZ190cmFuc2FjdGlvbl9nYXBfcm9vdHMq
+AAAAcHJlZmVycmVkX2FjY291bnRpbmdfdHJhbnNhY3Rpb25fZnJvbV9kYXRlcwoAAABwb3J0YWxf
+dXJscw8AAABnZXRQb3J0YWxPYmplY3RzBgAAAGdhcF9pZHMDAAAAR0FQcwIAAABpZHMFAAAAdGl0
+bGVzBwAAAEFjY291bnRzBQAAAGRlYml0cwUAAABEZWJpdHMGAAAAY3JlZGl0cwYAAABDcmVkaXRz
+DQAAAGRlYml0X2JhbGFuY2VzDQAAAERlYml0IEJhbGFuY2VzDgAAAGNyZWRpdF9iYWxhbmNlcw4A
+AABDcmVkaXQgQmFsYW5jZXMGAAAAYXBwZW5kcwQAAABwYXRocw4AAABhY2NvdW50X21vZHVsZXMP
+AAAAZ2V0UGh5c2ljYWxQYXRocw0AAABUcmlhbCBCYWxhbmNlcwUAAABsZXZlbHMHAAAAZm9ybV9p
+ZHMsAAAAQWNjb3VudE1vZHVsZV92aWV3QWNjb3VudExpc3RGb3JUcmlhbEJhbGFuY2VzDgAAAHNl
+bGVjdGlvbl9uYW1lcxQAAABhY2NvdW50aW5nX3NlbGVjdGlvbnMQAAAAc2VsZWN0aW9uX3BhcmFt
+c3MUAAAAbGlzdGJveF9kaXNwbGF5X21vZGVzDAAAAEZsYXRMaXN0TW9kZXMRAAAAc2VsZWN0aW9u
+X2NvbHVtbnNzCwAAAHByZWZlcmVuY2VzcxIAAABwb3J0YWxfY2F0ZWdvcmllcy9zEgAAAHJlc3Ry
+aWN0ZWRUcmF2ZXJzZXMLAAAAZ2V0UGF0aExpc3RzCwAAAHJlcG9ydF9saXN0cwsAAAByZXBvcnRf
+cGF0aHMTAAAAdHJhbnNsYXRpb25fc2VydmljZXMJAAAAdHJhbnNsYXRlcwIAAAB1aXMGAAAAZW5j
+b2RlcwQAAAB1dGY4cx0AAABBY2NvdW50TW9kdWxlX3ZpZXdBY2NvdW50TGlzdHMRAAAAYWNjb3Vu
+dF9zZWxlY3Rpb25zDgAAAFJlcG9ydFRyZWVNb2RlcxUAAABzZWxlY3Rpb25fcmVwb3J0X3BhdGhz
+FQAAAHNlbGVjdGlvbl9yZXBvcnRfbGlzdCgWAAAAcxgAAABQcm9kdWN0cy5FUlA1Rm9ybS5SZXBv
+cnRzDQAAAFJlcG9ydFNlY3Rpb25zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVz
+dHMJAAAAX2dldGl0ZW1fcwcAAABhdF9kYXRlcxwAAAB0cmFuc2FjdGlvbl9zZWN0aW9uX2NhdGVn
+b3J5cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRlcwgAAABnYXBfcm9vdHMEAAAATm9u
+ZXMJAAAAZnJvbV9kYXRlcwkAAAB0cmVlX21vZGVzBgAAAHJlc3VsdHMGAAAAcGFyYW1zcwsAAABw
+cmVmZXJlbmNlc3MHAAAAX3dyaXRlX3MGAAAAcG9ydGFscwsAAABnYXBfaWRfbGluZXMPAAAAYmFs
+YW5jZV9jb2x1bW5zcxUAAABzZWxlY3Rpb25fcmVwb3J0X3BhdGhzFQAAAHNlbGVjdGlvbl9yZXBv
+cnRfbGlzdCgWAAAAcxgAAABQcm9kdWN0cy5FUlA1Rm9ybS5SZXBvcnRzDQAAAFJlcG9ydFNlY3Rp
+b25zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMJAAAAX2dldGl0ZW1fcwcA
+AABhdF9kYXRlcxwAAAB0cmFuc2FjdGlvbl9zZWN0aW9uX2NhdGVnb3J5cxwAAAB0cmFuc2FjdGlv
+bl9zaW11bGF0aW9uX3N0YXRlcwgAAABnYXBfcm9vdHMEAAAATm9uZXMJAAAAZnJvbV9kYXRlcwkA
+AAB0cmVlX21vZGVzBgAAAHJlc3VsdHMGAAAAcGFyYW1zcwsAAABwcmVmZXJlbmNlc3MHAAAAX3dy
+aXRlX3MGAAAAcG9ydGFscwsAAABnYXBfaWRfbGluZXMPAAAAYmFsYW5jZV9jb2x1bW5zcxUAAABz
+ZWxlY3Rpb25fcmVwb3J0X3BhdGhzFQAAAHNlbGVjdGlvbl9yZXBvcnRfbGlzdCgAAAAAKAAAAABz
+DwAAAFNjcmlwdCAoUHl0aG9uKXMuAAAAQWNjb3VudE1vZHVsZV9nZXRUcmlhbEJhbGFuY2VSZXBv
+cnRTZWN0aW9uTGlzdAEAAABzbAAAAAAFDQIPAg8BDwEPAQ8BGAQYAwYBBwEJAQkBCQEJARsDCAMH
+AQkCCQIJAQgDBwEQARQCGwIHARACDAIAAQMBCQMJAQkBCQEPBAsBCQE5BQwCBgEOBAoBIQEQARMC
+CQEqATkEDAIGAQYBBgEKBCgBAAAAcy4AAABBY2NvdW50TW9kdWxlX2dldFRyaWFsQmFsYW5jZVJl
+cG9ydFNlY3Rpb25MaXN0KAEAAABzLgAAAEFjY291bnRNb2R1bGVfZ2V0VHJpYWxCYWxhbmNlUmVw
+b3J0U2VjdGlvbkxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getTrialBalanceReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>_getitem_</string>
+                            <string>at_date</string>
+                            <string>transaction_section_category</string>
+                            <string>transaction_simulation_state</string>
+                            <string>gap_root</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>tree_mode</string>
+                            <string>result</string>
+                            <string>params</string>
+                            <string>preferences</string>
+                            <string>_write_</string>
+                            <string>portal</string>
+                            <string>gap_id_line</string>
+                            <string>balance_columns</string>
+                            <string>selection_report_path</string>
+                            <string>selection_report_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getTrialBalanceReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

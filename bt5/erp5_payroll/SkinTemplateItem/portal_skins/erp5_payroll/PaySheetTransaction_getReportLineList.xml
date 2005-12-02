@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>report_items = context.PaySheetTransaction_zGetDetailedTotal()\n
+\n
+report_lines = []\n
+\n
+# scan every sql report item\n
+for item in report_items:\n
+    line =  { \'title\'               : None\n
+            , \'employer_totalbase\'  : None\n
+            , \'employer_rate\'       : None\n
+            , \'employer_total\'      : None\n
+            , \'employee_totalbase\'    : None\n
+            , \'employee_rate\'         : None\n
+            , \'employee_total\'        : None\n
+            , \'total\'               : None\n
+            }\n
+    # sort by employer/salary share\n
+    if item[\'variation_text\'].find(\'employee_share\') != -1:\n
+        line[\'title\']               = item[\'parent_title\']\n
+        line[\'employee_totalbase\']    = item[\'base\']\n
+        line[\'employee_rate\']         = item[\'rate\']\n
+        line[\'employee_total\']        = item[\'total_price\']\n
+    if item[\'variation_text\'].find(\'employer_share\') != -1:\n
+        line[\'title\']               = item[\'parent_title\']\n
+        line[\'employer_totalbase\']  = item[\'base\']\n
+        line[\'employer_rate\']       = item[\'rate\']\n
+        line[\'employer_total\']      = item[\'total_price\']\n
+    report_lines.append(line)\n
+\n
+# scan every line and group them\n
+\n
+#here.portal\n
+\n
+# first grouping:\n
+\n
+\n
+return report_lines\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAoAAAAOAAAAQwAA
+AHO0AQAAdAAAdAEAZAEAgwIAgwAAfQIAZwAAfQMAeJEBdAQAfAIAgwEARF2DAX0FAGgAAARkAgB0
+BgADPARkAwB0BgADPARkBAB0BgADPARkBQB0BgADPARkBgB0BgADPARkBwB0BgADPARkCAB0BgAD
+PARkCQB0BgADPH0HAHQAAHQIAHwFAGQKAIMCAGQLAIMCAGQMAIMBAGQNAAtqAwBvaAABdAgAfAUA
+ZA4AgwIAdAkAfAcAgwEAZAIAPHQIAHwFAGQPAIMCAHQJAHwHAIMBAGQGADx0CAB8BQBkEACDAgB0
+CQB8BwCDAQBkBwA8dAgAfAUAZBEAgwIAdAkAfAcAgwEAZAgAPG4BAAF0AAB0CAB8BQBkCgCDAgBk
+CwCDAgBkEgCDAQBkDQALagMAb2gAAXQIAHwFAGQOAIMCAHQJAHwHAIMBAGQCADx0CAB8BQBkDwCD
+AgB0CQB8BwCDAQBkAwA8dAgAfAUAZBAAgwIAdAkAfAcAgwEAZAQAPHQIAHwFAGQRAIMCAHQJAHwH
+AIMBAGQFADxuAQABdAAAfAMAZBMAgwIAfAcAgwEAAXElAFd8AwBTZAAAUygUAAAATnMlAAAAUGF5
+U2hlZXRUcmFuc2FjdGlvbl96R2V0RGV0YWlsZWRUb3RhbHMFAAAAdGl0bGVzEgAAAGVtcGxveWVy
+X3RvdGFsYmFzZXMNAAAAZW1wbG95ZXJfcmF0ZXMOAAAAZW1wbG95ZXJfdG90YWxzEgAAAGVtcGxv
+eWVlX3RvdGFsYmFzZXMNAAAAZW1wbG95ZWVfcmF0ZXMOAAAAZW1wbG95ZWVfdG90YWxzBQAAAHRv
+dGFscw4AAAB2YXJpYXRpb25fdGV4dHMEAAAAZmluZHMOAAAAZW1wbG95ZWVfc2hhcmVpAQAAAHMM
+AAAAcGFyZW50X3RpdGxlcwQAAABiYXNlcwQAAAByYXRlcwsAAAB0b3RhbF9wcmljZXMOAAAAZW1w
+bG95ZXJfc2hhcmVzBgAAAGFwcGVuZCgKAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDAAA
+AHJlcG9ydF9pdGVtc3MMAAAAcmVwb3J0X2xpbmVzcwkAAABfZ2V0aXRlcl9zBAAAAGl0ZW1zBAAA
+AE5vbmVzBAAAAGxpbmVzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlXygKAAAAcwkAAABfZ2V0YXR0
+cl9zBwAAAGNvbnRleHRzDAAAAHJlcG9ydF9pdGVtc3MMAAAAcmVwb3J0X2xpbmVzcwkAAABfZ2V0
+aXRlcl9zBAAAAGl0ZW1zBAAAAE5vbmVzBAAAAGxpbmVzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRl
+XygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMlAAAAUGF5U2hlZXRUcmFuc2FjdGlvbl9n
+ZXRSZXBvcnRMaW5lTGlzdAEAAABzLgAAABICBgMNAAYBEAEJAQkBCQEJAQkBCQEIAyYBGQEZARkB
+HQEmARkBGQEZASABFAkoAQAAAHMlAAAAUGF5U2hlZXRUcmFuc2FjdGlvbl9nZXRSZXBvcnRMaW5l
+TGlzdCgBAAAAcyUAAABQYXlTaGVldFRyYW5zYWN0aW9uX2dldFJlcG9ydExpbmVMaXN0KAAAAAAo
+AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_getReportLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>report_items</string>
+                            <string>report_lines</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>None</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_getReportLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

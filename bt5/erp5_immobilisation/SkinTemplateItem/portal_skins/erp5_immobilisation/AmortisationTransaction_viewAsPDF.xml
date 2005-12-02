@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Form.PDFTemplate</string>
+          <string>PDFTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="iso-8859-1"?>\n
+<document xmlns:tal="http://xml.zope.org/namespaces/tal" filename=\'report01.pdf\'>\n
+  <title>Title</title>\n
+  <author>Author</author>\n
+  <subject>Subject</subject>\n
+  <content tal:define="line1 python:\'(\\\'BACKGROUND\\\', (0.901960784314,0.901960784314,0.901960784314))\'">>\n
+    <table style=\'ttp0\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.762cm\'>\n
+        <td colwidth=\'7.009892cm\'>Date</td>\n
+        <td colwidth=\'7.62cm\' tal:content=\'here/getStopDate\'>(date)</td>\n
+      </tr>\n
+      <tr rowheight=\'0.762cm\'>\n
+        <td>Source section</td>\n
+        <td tal:content=\'here/getSourceSectionTitle\'>(source_section)</td>\n
+      </tr>\n
+      <tr rowheight=\'0.762cm\'>\n
+        <td>Destination section</td>\n
+        <td tal:content=\'here/getDestinationSectionTitle\'>(destination_section)</td>\n
+      </tr>\n
+    </table>\n
+\n
+    <tal:block tal:repeat=\'transaction_line here/contentValues\'>\n
+\n
+      <!-- Spacer -->\n
+      <table><tr rowheight=\'0.8cm\'><td> </td></tr></table>\n
+\n
+      <table style=\'ttp1\' splitbyrow=\'1\' repeatrows=\'2\' repeatcols=\'0\'>\n
+        <tr rowheight=\'0.475996cm\'>\n
+          <td colwidth=\'6.044946cm\'>Local account</td>\n
+          <td colwidth=\'6.044946cm\'>Third party account</td>\n
+          <td colwidth=\'3.81cm\'>Debit</td>\n
+          <td colwidth=\'3.81cm\'>Credit</td>\n
+        </tr>\n
+        <tr rowheight=\'0.426974cm\'>\n
+          <td tal:content=\'transaction_line/getSourceTitle\'>(source)</td>\n
+          <td tal:content=\'transaction_line/getDestinationTitle\'>(destination)</td>\n
+          <td> </td>\n
+          <td tal:content=\'transaction_line/getResourceTitle\'> </td>\n
+        </tr>\n
+        <tal:block repeat=\'data transaction_line/Immobilisation_getTransactionDeliveryRelatedInfo\'>\n
+          <tr rowheight=\'0.475996cm\' tal:condition="repeat/data/odd">\n
+            <td tal:content=\'python: data["item"]\'>(item title)</td>\n
+            <td tal:content=\'python: data["designation"]\'>(operation)</td>\n
+            <td tal:content=\'python: data["debit"]\'>(debit)</td>\n
+            <td tal:content=\'python: data["credit"]\'>(credit)</td>\n
+          </tr>\n
+          <tr rowheight=\'0.475996cm\' tal:attributes="stylecmd line1" tal:condition="repeat/data/even">\n
+            <td tal:content=\'python: data["item"]\'>(item title)</td>\n
+            <td tal:content=\'python: data["designation"]\'>(operation)</td>\n
+            <td tal:content=\'python: data["debit"]\'>(debit)</td>\n
+            <td tal:content=\'python: data["credit"]\'>(credit)</td>\n
+          </tr>\n
+        </tal:block>\n
+        <tr rowheight=\'0.475996cm\'>\n
+          <td>\n
+          </td>\n
+          <td>\n
+          </td>\n
+          <td tal:content=\'python: "%0.2f" % transaction_line.getSourceDebit()\'>(total_debit)</td>\n
+          <td tal:content=\'python: "%0.2f" % transaction_line.getSourceCredit()\'>(total_credit)</td>\n
+        </tr>\n
+      </table>\n
+    </tal:block>\n
+  </content>\n
+</document>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/pdf</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AmortisationTransaction_viewAsPDF</string> </value>
+        </item>
+        <item>
+            <key> <string>pdf_stylesheet</string> </key>
+            <value> <string>AmortisationTransaction_pdf_template</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

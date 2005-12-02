@@ -1,0 +1,13 @@
+2005-11-03 Kevin
+* Change some object's title to respect ERP5 naming conventions.
+* Clean Use Case scenarii UI.
+* Add "counts" in Document Analysis, Use Case and Feature listboxes.
+* Use translated states in Feature module.
+* Set good permissions on portal types actions.
+* Use Icons shortcut for fast input.
+* Rename module using '_module' suffix to respect ERP5 naming conventions.
+
+2005-07-28 Kevin
+* FastInput_initialize is now working.
+* Re-add portal classes property sheets.
+* UI cleaned.

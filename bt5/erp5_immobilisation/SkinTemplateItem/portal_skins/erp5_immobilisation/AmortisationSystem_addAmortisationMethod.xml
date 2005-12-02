@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script adds the needed actions in the Immobilisation portal_type, and\n
+# each amortisable portal_type\n
+\n
+from string import capitalize\n
+\n
+\n
+def addAction(portal_type, portal_type_type, country, amortisation_method):\n
+  print \'Adding UI tab "Amortisation Details" for method %s on portal_type %s... \' % (amortisation_method,portal_type),\n
+  id = "%s_%s_amortisation_details_view" % (country, amortisation_method)\n
+  if id in [x.id for x in portal_type.listActions()]:\n
+    print "Already exists"\n
+  else:\n
+    if portal_type_type == "Immobilisation":\n
+      action = "%s_Immobilisation_viewDetails" % amortisation_method\n
+    else:\n
+      action = "%s_Item_viewAmortisationDetails" % amortisation_method\n
+    portal_type.addAction(id = id,\n
+                          name = "Amortisation Details",\n
+                          action = action,\n
+                          condition = "object/IsUsing%s%sAmortisationMethod" % (\n
+                                           capitalize(country),\n
+                                           "".join([capitalize(x) for x in amortisation_method.split(\'_\')]) ),\n
+                          permission = (\'View\',),\n
+                          category = "object_view",\n
+                          visible = 1)\n
+    print "OK"\n
+  return printed\n
+\n
+\n
+if amortisation_method is None:\n
+  return "No amortisation method specified"\n
+\n
+tokens = amortisation_method.split(\'_\')\n
+if len(tokens) < 2:\n
+  return "Bad amortisation method"\n
+\n
+country = tokens[0]\n
+amortisation_method = "".join(tokens[1:])\n
+\n
+for portal_type in context.portal_types.objectValues():\n
+  # Check if the portal_type is Immobilisation\n
+  if portal_type.id == "Immobilisation":\n
+    print addAction(portal_type, "Immobilisation", country, amortisation_method),\n
+  else:\n
+    # Check if the portal_type is amortisable\n
+    if "immobilise" in [x.id for x in portal_type.listActions()]:\n
+      print addAction(portal_type, "Item", country, amortisation_method),\n
+\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAABIAAAAbAAAA
+AwAAAHNqAQAAdAAAgwAAfQIAZAEAawIAbAMAiQAAAYcAAGQCAIYAAH0FAHwAAHQGAGoIAG8IAAFk
+AwBTbgEAAXQHAHwAAGQEAIMCAGQFAIMBAH0IAHQJAHwIAIMBAGQGAGoAAG8IAAFkBwBTbgEAAXQK
+AHwIAGQIAIMCAH0LAHQHAGQJAGQKAIMCAHQKAHwIAGQLAGQAAIUCAIMCAIMBAH0AAHjCAHQMAHQH
+AHQHAHQNAGQMAIMCAGQNAIMCAIMAAIMBAERdnwB9DgB0BwB8DgBkDgCDAgBkDwBqAgBvHQABfAIA
+BHwFAHwOAGQPAHwLAHwAAIMEAAJJAXG8AAFkEABnAAAEaQ8AfRAAdAwAdAcAfA4AZBEAgwIAgwAA
+gwEARF0ZAH0RAHwQAHQHAHwRAGQOAIMCAIMBAAFxGAF+EABqBgBvHQABfAIABHwFAHwOAGQSAHwL
+AHwAAIMEAAJJAXG8AAFxvABXfAIAgwAAU2QAAFMoEwAAAE4oAQAAAHMKAAAAY2FwaXRhbGl6ZWME
+AAAADgAAACEAAAADAAAAc1YBAAB0AACDAAB9BQB8BQAEZAEAfAMAfAAAZgIAFgJJAWQCAHwCAHwD
+AGYCABZ9BgB8BgBnAAAEaQYAfQgAdAgAdAkAfAAAZAMAgwIAgwAAgwEARF0ZAH0LAHwIAHQJAHwL
+AGQEAIMCAIMBAAFxUAB+CABqBgBvDgABfAUABGQFAAJJSm7IAAF8AQBkBgBqAgBvDgABZAcAfAMA
+Fn0MAG4LAAFkCAB8AwAWfQwAdAkAfAAAZAkAgwIAZAQAfAYAZAoAZAsAZAwAfAwAZA0AZA4AiAAA
+fAIAgwEAdAkAZA8AZBAAgwIAZwAABGkGAH0IAHQIAHQJAHwDAGQRAIMCAGQSAIMBAIMBAERdFgB9
+CwB8CACIAAB8CwCDAQCDAQABcQUBfggAgwEAZgIAFmQTAGQUAGYBAGQVAGQWAGQXAGQYAIMABwF8
+BQAEZBkAAklKfAUAgwAAU2QAAFMoGgAAAE5zSAAAAEFkZGluZyBVSSB0YWIgIkFtb3J0aXNhdGlv
+biBEZXRhaWxzIiBmb3IgbWV0aG9kICVzIG9uIHBvcnRhbF90eXBlICVzLi4uIHMfAAAAJXNfJXNf
+YW1vcnRpc2F0aW9uX2RldGFpbHNfdmlld3MLAAAAbGlzdEFjdGlvbnNzAgAAAGlkcw4AAABBbHJl
+YWR5IGV4aXN0c3MOAAAASW1tb2JpbGlzYXRpb25zHQAAACVzX0ltbW9iaWxpc2F0aW9uX3ZpZXdE
+ZXRhaWxzcx8AAAAlc19JdGVtX3ZpZXdBbW9ydGlzYXRpb25EZXRhaWxzcwkAAABhZGRBY3Rpb25z
+BAAAAG5hbWVzFAAAAEFtb3J0aXNhdGlvbiBEZXRhaWxzcwYAAABhY3Rpb25zCQAAAGNvbmRpdGlv
+bnMkAAAAb2JqZWN0L0lzVXNpbmclcyVzQW1vcnRpc2F0aW9uTWV0aG9kcwAAAABzBAAAAGpvaW5z
+BQAAAHNwbGl0cwEAAABfcwoAAABwZXJtaXNzaW9ucwQAAABWaWV3cwgAAABjYXRlZ29yeXMLAAAA
+b2JqZWN0X3ZpZXdzBwAAAHZpc2libGVpAQAAAHMCAAAAT0soDgAAAHMHAAAAX3ByaW50X3MGAAAA
+X3ByaW50cxMAAABhbW9ydGlzYXRpb25fbWV0aG9kcwsAAABwb3J0YWxfdHlwZXMHAAAAY291bnRy
+eXMCAAAAaWRzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0
+dHJfcwEAAAB4cxAAAABwb3J0YWxfdHlwZV90eXBlcwYAAABhY3Rpb25zCgAAAGNhcGl0YWxpemUo
+DgAAAHMLAAAAcG9ydGFsX3R5cGVzEAAAAHBvcnRhbF90eXBlX3R5cGVzBwAAAGNvdW50cnlzEwAA
+AGFtb3J0aXNhdGlvbl9tZXRob2RzBwAAAF9wcmludF9zBgAAAF9wcmludHMCAAAAaWRzBgAAAGFw
+cGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0dHJfcwEAAAB4cwYAAABh
+Y3Rpb25zCgAAAGNhcGl0YWxpemUoAQAAAHMKAAAAY2FwaXRhbGl6ZSgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzCQAAAGFkZEFjdGlvbgcAAABzIgAAAAkBFAEQASMAJgEOAg0BDgINARgCCQEAARUB
+IwAmARYDCgFzIAAAAE5vIGFtb3J0aXNhdGlvbiBtZXRob2Qgc3BlY2lmaWVkcwUAAABzcGxpdHMB
+AAAAX2kCAAAAcxcAAABCYWQgYW1vcnRpc2F0aW9uIG1ldGhvZGkAAAAAcwAAAABzBAAAAGpvaW5p
+AQAAAHMMAAAAcG9ydGFsX3R5cGVzcwwAAABvYmplY3RWYWx1ZXNzAgAAAGlkcw4AAABJbW1vYmls
+aXNhdGlvbnMKAAAAaW1tb2JpbGlzZXMLAAAAbGlzdEFjdGlvbnNzBAAAAEl0ZW0oEgAAAHMHAAAA
+X3ByaW50X3MGAAAAX3ByaW50cwYAAABzdHJpbmdzCgAAAGNhcGl0YWxpemVzCQAAAGFkZEFjdGlv
+bnMTAAAAYW1vcnRpc2F0aW9uX21ldGhvZHMEAAAATm9uZXMJAAAAX2dldGF0dHJfcwYAAAB0b2tl
+bnNzAwAAAGxlbnMJAAAAX2dldGl0ZW1fcwcAAABjb3VudHJ5cwkAAABfZ2V0aXRlcl9zBwAAAGNv
+bnRleHRzCwAAAHBvcnRhbF90eXBlcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwEAAAB4KBIAAABz
+EwAAAGFtb3J0aXNhdGlvbl9tZXRob2RzBwAAAF9wcmludF9zBgAAAF9wcmludHMGAAAAc3RyaW5n
+cwoAAABjYXBpdGFsaXplcwkAAABhZGRBY3Rpb25zBAAAAE5vbmVzCQAAAF9nZXRhdHRyX3MGAAAA
+dG9rZW5zcwMAAABsZW5zCQAAAF9nZXRpdGVtX3MHAAAAY291bnRyeXMJAAAAX2dldGl0ZXJfcwcA
+AABjb250ZXh0cwsAAABwb3J0YWxfdHlwZXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMBAAAAeCgA
+AAAAKAEAAABzCgAAAGNhcGl0YWxpemVzDwAAAFNjcmlwdCAoUHl0aG9uKXMoAAAAQW1vcnRpc2F0
+aW9uU3lzdGVtX2FkZEFtb3J0aXNhdGlvbk1ldGhvZAEAAABzIgAAAAkDDQMMFw0BCAIVARMBCAIP
+ASQCIgAGAhYBHQMjACYBIQIoAgAAAHMEAAAATm9uZXMoAAAAQW1vcnRpc2F0aW9uU3lzdGVtX2Fk
+ZEFtb3J0aXNhdGlvbk1ldGhvZCgCAAAAcwQAAABOb25lcygAAABBbW9ydGlzYXRpb25TeXN0ZW1f
+YWRkQW1vcnRpc2F0aW9uTWV0aG9kKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8
+bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/AmortisationSystem_addAmortisationMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>amortisation_method=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>amortisation_method</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>string</string>
+                            <string>capitalize</string>
+                            <string>addAction</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>tokens</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>country</string>
+                            <string>_getiter_</string>
+                            <string>context</string>
+                            <string>portal_type</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AmortisationSystem_addAmortisationMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

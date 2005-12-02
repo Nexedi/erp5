@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.CMFCore.utils import getToolByName\n
+\n
+transaction = context\n
+preference_tool = getToolByName(context, \'portal_preferences\')\n
+\n
+try : \n
+  transaction.edit (\n
+    source_section = preference_tool.getPreferredAccountingTransactionSourceSection(),\n
+    resource = preference_tool.getPreferredAccountingTransactionCurrency())\n
+except AttributeError, e :\n
+  context.log(\'AccountingTransaction_InitFromPreferences\', \'error : %s\' % e)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAKAAAAQwAA
+AHOQAAAAZAEAawAAbAEAfQEAAXQCAH0DAHwBAHQCAGQCAIMCAH0EAHk4AHQFAHwDAGQDAIMCAGQE
+AHQFAHwEAGQFAIMCAIMAAGQGAHQFAHwEAGQHAIMCAIMAAIMAAgFXbi8ABHQGAGoKAG8jAAEBfQcA
+AXQFAHQCAGQIAIMCAGQJAGQKAHwHABaDAgABbgIAAVhkAABTKAsAAABOKAEAAABzDQAAAGdldFRv
+b2xCeU5hbWVzEgAAAHBvcnRhbF9wcmVmZXJlbmNlc3MEAAAAZWRpdHMOAAAAc291cmNlX3NlY3Rp
+b25zLgAAAGdldFByZWZlcnJlZEFjY291bnRpbmdUcmFuc2FjdGlvblNvdXJjZVNlY3Rpb25zCAAA
+AHJlc291cmNlcykAAABnZXRQcmVmZXJyZWRBY2NvdW50aW5nVHJhbnNhY3Rpb25DdXJyZW5jeXMD
+AAAAbG9ncykAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25fSW5pdEZyb21QcmVmZXJlbmNlc3MKAAAA
+ZXJyb3IgOiAlcygIAAAAcxYAAABQcm9kdWN0cy5DTUZDb3JlLnV0aWxzcw0AAABnZXRUb29sQnlO
+YW1lcwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlvbnMPAAAAcHJlZmVyZW5jZV90b29scwkAAABf
+Z2V0YXR0cl9zDgAAAEF0dHJpYnV0ZUVycm9ycwEAAABlKAgAAABzFgAAAFByb2R1Y3RzLkNNRkNv
+cmUudXRpbHNzDQAAAGdldFRvb2xCeU5hbWVzBwAAAGNvbnRleHRzCwAAAHRyYW5zYWN0aW9ucw8A
+AABwcmVmZXJlbmNlX3Rvb2xzCQAAAF9nZXRhdHRyX3MOAAAAQXR0cmlidXRlRXJyb3JzAQAAAGUo
+AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzKQAAAEFjY291bnRpbmdUcmFuc2FjdGlvbl9J
+bml0RnJvbVByZWZlcmVuY2VzAQAAAHMQAAAADQIGAQ8CBgEPARIBFAETASgBAAAAcykAAABBY2Nv
+dW50aW5nVHJhbnNhY3Rpb25fSW5pdEZyb21QcmVmZXJlbmNlcygBAAAAcykAAABBY2NvdW50aW5n
+VHJhbnNhY3Rpb25fSW5pdEZyb21QcmVmZXJlbmNlcygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransaction_InitFromPreferences</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
+<string>context</string>
+                            <string>transaction</string>
+                            <string>preference_tool</string>
+                            <string>_getattr_</string>
+                            <string>AttributeError</string>
+                            <string>e</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_InitFromPreferences</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

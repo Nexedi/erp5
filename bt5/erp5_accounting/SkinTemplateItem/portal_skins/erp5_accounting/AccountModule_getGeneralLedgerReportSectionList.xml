@@ -1,0 +1,419 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Get the report sections for general ledger\n
+"""\n
+from Products.ERP5Form.Report import ReportSection\n
+request = context.REQUEST\n
+\n
+at_date = request[\'at_date\']\n
+transaction_section_category = request[\'transaction_section_category\']\n
+transaction_simulation_state = request[\'transaction_simulation_state\']\n
+from_date = request.get(\'from_date\', None)\n
+gap = request.get(\'gap\', None)\n
+omit_empty_accounts = request.get(\'omit_empty_accounts\', 1)\n
+display_categories = request.get(\'display_categories\', 0)\n
+\n
+# TODO\n
+omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
+\n
+\n
+params = {\n
+  \'at_date\'                      : at_date,\n
+  \'section_category\'             : transaction_section_category,\n
+  \'transaction_section_category\' : transaction_section_category,\n
+  \'simulation_state\'             : transaction_simulation_state,\n
+  \'accounting_transaction_line_currency\' : None,\n
+  \'omit_grouping_reference\'      : omit_grouping_reference,\n
+}\n
+\n
+preferences = {\n
+  \'preferred_accounting_transaction_at_date\'          : at_date,\n
+  \'preferred_accounting_transaction_simulation_state\' :\n
+                    transaction_simulation_state,\n
+  \'preferred_accounting_transaction_section_category\' :\n
+                    transaction_section_category,\n
+  # XXX put omit_grouping_reference in preferences ?\n
+  \'preferred_accounting_omit_grouping_reference\' : omit_grouping_reference,\n
+}\n
+\n
+if from_date:\n
+  params[\'from_date\'] = from_date\n
+  preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
+\n
+result = []\n
+portal = context.portal_url.getPortalObject()\n
+\n
+account_columns = (\n
+  (\'source_reference\', \'Reference\'),\n
+  (\'delivery.stop_date\', \'Date\'),\n
+  (\'title\', \'Title\'),\n
+  (\'Type\', \'Type\'),\n
+  (\'third_party\', \'Third Party\'),\n
+  (\'simulation_state\', \'State\'),\n
+  (\'source_debit\', \'Debit\'),\n
+  (\'source_credit\', \'Credit\'),\n
+  (\'source_balance\', \'Balance\'),\n
+)\n
+\n
+if gap :\n
+  gap_root = [ portal.portal_categories.gap.restrictedTraverse(gap) ] +\\\n
+               portal.portal_categories.gap.restrictedTraverse(gap)\\\n
+                    .Category_getSortedCategoryChildValueList()\n
+else :\n
+  cat = context.portal_preferences.getPreferredAccountingTransactionGap() \\\n
+        or context.getPortalDefaultGapRoot()\n
+\n
+  gap_root = portal.portal_categories.resolveCategory(cat)\\\n
+                .Category_getSortedCategoryChildValueList()\n
+\n
+account_inventory_list_cache = {}\n
+\n
+for c in gap_root :\n
+  account_list = c.getGapRelatedValueList(portal_type="Account")\n
+  strict_account_list = c.getGapRelatedValueList(\n
+                          portal_type="Account", strict_membership = 1)\n
+  \n
+  skip_branch = 1\n
+  for account in account_list :\n
+    if account.getUid() not in account_inventory_list_cache :\n
+      account_inventory_list_cache[account.getUid()] = len(portal.\\\n
+          portal_simulation.getInventoryList(\n
+          node_uid = account.getUid(), **params))\n
+\n
+  if account_inventory_list_cache[account.getUid()] != 0 :\n
+    skip_branch = 0\n
+  \n
+  \n
+  if skip_branch :\n
+    continue\n
+\n
+  if display_categories and \\\n
+          len(account_list) and \\\n
+          len(strict_account_list) != 1 :\n
+    result.append(ReportSection(\n
+      path = c.getPhysicalPath(),\n
+      title = "%s: %s" % (c.getId(), c.getTitle()),\n
+      level = len(c.getPhysicalPath()) - 4,\n
+      form_id = None) )\n
+\n
+  # TODO: detail for account_type as in trial balance\n
+  if len(strict_account_list):\n
+    for account in strict_account_list:\n
+      if account.getAccountTypeId() in (\'payable\', \'receivable\') :\n
+        # Entities\n
+        result.append(ReportSection(\n
+          path = account.getPhysicalPath(),\n
+          title = "%s: %s" % (c.getId(), account.getTitle()),\n
+          level = 9,\n
+          form_id = \'Account_viewAccountingTransactionList\',\n
+          selection_name = \'acount_selection\',\n
+          selection_params = params,\n
+          selection_columns = account_columns,\n
+          listbox_display_mode = \'FlatListMode\',\n
+          selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
+          preferences = preferences ))\n
+\n
+      elif account.getAccountTypeId() == \'bank\' :\n
+        # Bank Account\n
+        result.append(ReportSection(\n
+          path = account.getPhysicalPath(),\n
+          title = "%s: %s" % (c.getId(), account.getTitle()),\n
+          level = 9,\n
+          form_id = \'Account_viewAccountingTransactionList\',\n
+          selection_name = \'acount_selection\',\n
+          selection_params = params,\n
+          selection_columns = account_columns,\n
+          listbox_display_mode = \'FlatListMode\',\n
+          selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
+          preferences = preferences ))\n
+      \n
+      else :\n
+        result.append(ReportSection(\n
+          path = account.getPhysicalPath(),\n
+          title = "%s: %s" % (c.getId(), account.getTitle()),\n
+          level = 9,\n
+          form_id = \'Account_viewAccountingTransactionList\',\n
+          selection_name = \'acount_selection\',\n
+          selection_params = params,\n
+          selection_columns = account_columns,\n
+          listbox_display_mode = \'FlatListMode\',\n
+          selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
+          preferences = preferences ))\n
+\n
+return result\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAACAAAABAAAAAQwAA
+AHNGBgAAZAEAawAAbAEAfQEAAXQCAHQDAGQCAIMCAH0EAHQFAHwEAGQDAIMCAH0GAHQFAHwEAGQE
+AIMCAH0HAHQFAHwEAGQFAIMCAH0IAHQCAHwEAGQGAIMCAGQHAHQJAIMCAH0KAHQCAHwEAGQGAIMC
+AGQIAHQJAIMCAH0LAHQCAHwEAGQGAIMCAGQJAGQKAIMCAH0MAHQCAHwEAGQGAIMCAGQLAGQMAIMC
+AH0NAHQCAHwEAGQGAIMCAGQNAGQMAIMCAH0OAGgAAARkAwB8BgADPARkDgB8BwADPARkBAB8BwAD
+PARkDwB8CAADPARkEAB0CQADPARkDQB8DgADPH0PAGgAAARkEQB8BgADPARkEgB8CAADPARkEwB8
+BwADPARkFAB8DgADPH0QAHwKAG8kAAF8CgB0EQB8DwCDAQBkBwA8fAoAdBEAfBAAgwEAZBUAPG4B
+AAFnAAB9EgB0AgB0AgB0AwBkFgCDAgBkFwCDAgCDAAB9EwBkGABkGQBmAgBkGgBkGwBmAgBkHABk
+HQBmAgBkHgBkHgBmAgBkHwBkIABmAgBkDwBkIQBmAgBkIgBkIwBmAgBkJABkJQBmAgBkJgBkJwBm
+AgBmCQB9FAB8CwBvXwABdAIAdAIAdAIAfBMAZCgAgwIAZAgAgwIAZCkAgwIAfAsAgwEAZwEAdAIA
+dAIAdAIAdAIAfBMAZCgAgwIAZAgAgwIAZCkAgwIAfAsAgwEAZCoAgwIAgwAAF30VAG5ZAAF0AgB0
+AgB0AwBkKwCDAgBkLACDAgCDAABwEAABdAIAdAMAZC0AgwIAgwAAfRYAdAIAdAIAdAIAfBMAZCgA
+gwIAZC4AgwIAfBYAgwEAZCoAgwIAgwAAfRUAaAAAfRcAeK0DdBgAfBUAgwEARF2fA30ZAHQCAHwZ
+AGQvAIMCAGQwAGQxAIMAAX0aAHQCAHwZAGQvAIMCAGQwAGQxAGQyAGQKAIMAAn0bAGQKAH0cAHiA
+AHQYAHwaAIMBAERdcgB9HQB0AgB8HQBkMwCDAgCDAAB8FwBqBwBvUwABdB4AdB8AdAIAdAIAfBMA
+ZDQAgwIAZDUAgwIAZDYAdAIAfB0AZDMAgwIAgwAAfA8AjQEBgwEAdBEAfBcAgwEAdAIAfB0AZDMA
+gwIAgwAAPHHqAgFx6gJXdAUAfBcAdAIAfB0AZDMAgwIAgwAAgwIAZAwAagMAbwoAAWQMAH0cAG4B
+AAF8HABvBwABcZsCbgEAAXwNAG8dAAF0HgB8GgCDAQBvEAABdB4AfBsAgwEAZAoAagMAb3YAAXQC
+AHwSAGQ3AIMCAHwBAGQ4AHQCAHwZAGQ5AIMCAIMAAGQcAGQ6AHQCAHwZAGQ7AIMCAIMAAHQCAHwZ
+AGQ8AIMCAIMAAGYCABZkPQB0HgB0AgB8GQBkOQCDAgCDAACDAQBkPgAYZD8AdAkAgwAEgwEAAW4B
+AAF0HgB8GwCDAQBv9gEBePMBdBgAfBsAgwEARF3hAX0dAHQCAHwdAGRAAIMCAIMAAGRBAGRCAGYC
+AGoGAG+NAAF0AgB8EgBkNwCDAgB8AQBkOAB0AgB8HQBkOQCDAgCDAABkHABkOgB0AgB8GQBkOwCD
+AgCDAAB0AgB8HQBkPACDAgCDAABmAgAWZD0AZEMAZD8AZEQAZEUAZEYAZEcAfA8AZEgAfBQAZEkA
+ZEoAZEsAZBoAZEwAZgIAZwEAZE0AfBAAgwAKgwEAAXFRBAF0AgB8HQBkQACDAgCDAABkTgBqAgBv
+jQABdAIAfBIAZDcAgwIAfAEAZDgAdAIAfB0AZDkAgwIAgwAAZBwAZDoAdAIAfBkAZDsAgwIAgwAA
+dAIAfB0AZDwAgwIAgwAAZgIAFmQ9AGRDAGQ/AGREAGRFAGRGAGRHAHwPAGRIAHwUAGRJAGRKAGRL
+AGQaAGRMAGYCAGcBAGRNAHwQAIMACoMBAAFxUQQBdAIAfBIAZDcAgwIAfAEAZDgAdAIAfB0AZDkA
+gwIAgwAAZBwAZDoAdAIAfBkAZDsAgwIAgwAAdAIAfB0AZDwAgwIAgwAAZgIAFmQ9AGRDAGQ/AGRE
+AGRFAGRGAGRHAHwPAGRIAHwUAGRJAGRKAGRLAGQaAGRMAGYCAGcBAGRNAHwQAIMACoMBAAFxUQRX
+cZsCAXGbAld8EgBTZAAAUyhPAAAATigBAAAAcw0AAABSZXBvcnRTZWN0aW9ucwcAAABSRVFVRVNU
+cwcAAABhdF9kYXRlcxwAAAB0cmFuc2FjdGlvbl9zZWN0aW9uX2NhdGVnb3J5cxwAAAB0cmFuc2Fj
+dGlvbl9zaW11bGF0aW9uX3N0YXRlcwMAAABnZXRzCQAAAGZyb21fZGF0ZXMDAAAAZ2FwcxMAAABv
+bWl0X2VtcHR5X2FjY291bnRzaQEAAABzEgAAAGRpc3BsYXlfY2F0ZWdvcmllc2kAAAAAcxcAAABv
+bWl0X2dyb3VwaW5nX3JlZmVyZW5jZXMQAAAAc2VjdGlvbl9jYXRlZ29yeXMQAAAAc2ltdWxhdGlv
+bl9zdGF0ZXMkAAAAYWNjb3VudGluZ190cmFuc2FjdGlvbl9saW5lX2N1cnJlbmN5cygAAABwcmVm
+ZXJyZWRfYWNjb3VudGluZ190cmFuc2FjdGlvbl9hdF9kYXRlczEAAABwcmVmZXJyZWRfYWNjb3Vu
+dGluZ190cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRlczEAAABwcmVmZXJyZWRfYWNjb3VudGlu
+Z190cmFuc2FjdGlvbl9zZWN0aW9uX2NhdGVnb3J5cywAAABwcmVmZXJyZWRfYWNjb3VudGluZ19v
+bWl0X2dyb3VwaW5nX3JlZmVyZW5jZXMqAAAAcHJlZmVycmVkX2FjY291bnRpbmdfdHJhbnNhY3Rp
+b25fZnJvbV9kYXRlcwoAAABwb3J0YWxfdXJscw8AAABnZXRQb3J0YWxPYmplY3RzEAAAAHNvdXJj
+ZV9yZWZlcmVuY2VzCQAAAFJlZmVyZW5jZXMSAAAAZGVsaXZlcnkuc3RvcF9kYXRlcwQAAABEYXRl
+cwUAAAB0aXRsZXMFAAAAVGl0bGVzBAAAAFR5cGVzCwAAAHRoaXJkX3BhcnR5cwsAAABUaGlyZCBQ
+YXJ0eXMFAAAAU3RhdGVzDAAAAHNvdXJjZV9kZWJpdHMFAAAARGViaXRzDQAAAHNvdXJjZV9jcmVk
+aXRzBgAAAENyZWRpdHMOAAAAc291cmNlX2JhbGFuY2VzBwAAAEJhbGFuY2VzEQAAAHBvcnRhbF9j
+YXRlZ29yaWVzcxIAAAByZXN0cmljdGVkVHJhdmVyc2VzKAAAAENhdGVnb3J5X2dldFNvcnRlZENh
+dGVnb3J5Q2hpbGRWYWx1ZUxpc3RzEgAAAHBvcnRhbF9wcmVmZXJlbmNlc3MkAAAAZ2V0UHJlZmVy
+cmVkQWNjb3VudGluZ1RyYW5zYWN0aW9uR2FwcxcAAABnZXRQb3J0YWxEZWZhdWx0R2FwUm9vdHMP
+AAAAcmVzb2x2ZUNhdGVnb3J5cxYAAABnZXRHYXBSZWxhdGVkVmFsdWVMaXN0cwsAAABwb3J0YWxf
+dHlwZXMHAAAAQWNjb3VudHMRAAAAc3RyaWN0X21lbWJlcnNoaXBzBgAAAGdldFVpZHMRAAAAcG9y
+dGFsX3NpbXVsYXRpb25zEAAAAGdldEludmVudG9yeUxpc3RzCAAAAG5vZGVfdWlkcwYAAABhcHBl
+bmRzBAAAAHBhdGhzDwAAAGdldFBoeXNpY2FsUGF0aHMGAAAAJXM6ICVzcwUAAABnZXRJZHMIAAAA
+Z2V0VGl0bGVzBQAAAGxldmVsaQQAAABzBwAAAGZvcm1faWRzEAAAAGdldEFjY291bnRUeXBlSWRz
+BwAAAHBheWFibGVzCgAAAHJlY2VpdmFibGVpCQAAAHMlAAAAQWNjb3VudF92aWV3QWNjb3VudGlu
+Z1RyYW5zYWN0aW9uTGlzdHMOAAAAc2VsZWN0aW9uX25hbWVzEAAAAGFjb3VudF9zZWxlY3Rpb25z
+EAAAAHNlbGVjdGlvbl9wYXJhbXNzEQAAAHNlbGVjdGlvbl9jb2x1bW5zcxQAAABsaXN0Ym94X2Rp
+c3BsYXlfbW9kZXMMAAAARmxhdExpc3RNb2RlcxQAAABzZWxlY3Rpb25fc29ydF9vcmRlcnMJAAAA
+YXNjZW5kaW5ncwsAAABwcmVmZXJlbmNlc3MEAAAAYmFuayggAAAAcxgAAABQcm9kdWN0cy5FUlA1
+Rm9ybS5SZXBvcnRzDQAAAFJlcG9ydFNlY3Rpb25zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMH
+AAAAcmVxdWVzdHMJAAAAX2dldGl0ZW1fcwcAAABhdF9kYXRlcxwAAAB0cmFuc2FjdGlvbl9zZWN0
+aW9uX2NhdGVnb3J5cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRlcwQAAABOb25lcwkA
+AABmcm9tX2RhdGVzAwAAAGdhcHMTAAAAb21pdF9lbXB0eV9hY2NvdW50c3MSAAAAZGlzcGxheV9j
+YXRlZ29yaWVzcxcAAABvbWl0X2dyb3VwaW5nX3JlZmVyZW5jZXMGAAAAcGFyYW1zcwsAAABwcmVm
+ZXJlbmNlc3MHAAAAX3dyaXRlX3MGAAAAcmVzdWx0cwYAAABwb3J0YWxzDwAAAGFjY291bnRfY29s
+dW1uc3MIAAAAZ2FwX3Jvb3RzAwAAAGNhdHMcAAAAYWNjb3VudF9pbnZlbnRvcnlfbGlzdF9jYWNo
+ZXMJAAAAX2dldGl0ZXJfcwEAAABjcwwAAABhY2NvdW50X2xpc3RzEwAAAHN0cmljdF9hY2NvdW50
+X2xpc3RzCwAAAHNraXBfYnJhbmNocwcAAABhY2NvdW50cwMAAABsZW5zBwAAAF9hcHBseV8oIAAA
+AHMYAAAAUHJvZHVjdHMuRVJQNUZvcm0uUmVwb3J0cw0AAABSZXBvcnRTZWN0aW9ucwkAAABfZ2V0
+YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzCQAAAF9nZXRpdGVtX3MHAAAAYXRfZGF0ZXMc
+AAAAdHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25fc2ltdWxhdGlv
+bl9zdGF0ZXMEAAAATm9uZXMJAAAAZnJvbV9kYXRlcwMAAABnYXBzEwAAAG9taXRfZW1wdHlfYWNj
+b3VudHNzEgAAAGRpc3BsYXlfY2F0ZWdvcmllc3MXAAAAb21pdF9ncm91cGluZ19yZWZlcmVuY2Vz
+BgAAAHBhcmFtc3MLAAAAcHJlZmVyZW5jZXNzBwAAAF93cml0ZV9zBgAAAHJlc3VsdHMGAAAAcG9y
+dGFscw8AAABhY2NvdW50X2NvbHVtbnNzCAAAAGdhcF9yb290cwMAAABjYXRzHAAAAGFjY291bnRf
+aW52ZW50b3J5X2xpc3RfY2FjaGVzCQAAAF9nZXRpdGVyX3MBAAAAY3MMAAAAYWNjb3VudF9saXN0
+cxMAAABzdHJpY3RfYWNjb3VudF9saXN0cwsAAABza2lwX2JyYW5jaHMHAAAAYWNjb3VudHMDAAAA
+bGVucwcAAABfYXBwbHlfKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcy8AAABBY2NvdW50
+TW9kdWxlX2dldEdlbmVyYWxMZWRnZXJSZXBvcnRTZWN0aW9uTGlzdAEAAABzugAAAAADDQEPAg8B
+DwEPARgBGAEYARgDGAMHAQkBCQEJAQkBCQEIAwcBCQIJAgkCCAMHARABFAIGARsCAAEJAQkBCQEJ
+AQkBCQEJAQkBDwMHATMBLAMfAQ8CKgMGAg0ABgEYAR4DBgENAAYBGQEhAjYCIgEKAwcBBwIHAQ0B
+FgESARIBJQEcAQ4DDQENAAYBIgISARIBNwQGAQwCDwEOAhwCEgESATcEBgEMAg8BEQMSARIBNwQG
+AQwCDwEWAigBAAAAcy8AAABBY2NvdW50TW9kdWxlX2dldEdlbmVyYWxMZWRnZXJSZXBvcnRTZWN0
+aW9uTGlzdCgBAAAAcy8AAABBY2NvdW50TW9kdWxlX2dldEdlbmVyYWxMZWRnZXJSZXBvcnRTZWN0
+aW9uTGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAA
+AAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getGeneralLedgerReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>_getitem_</string>
+                            <string>at_date</string>
+                            <string>transaction_section_category</string>
+                            <string>transaction_simulation_state</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>gap</string>
+                            <string>omit_empty_accounts</string>
+                            <string>display_categories</string>
+                            <string>omit_grouping_reference</string>
+                            <string>params</string>
+                            <string>preferences</string>
+                            <string>_write_</string>
+                            <string>result</string>
+                            <string>portal</string>
+                            <string>account_columns</string>
+                            <string>gap_root</string>
+                            <string>cat</string>
+                            <string>account_inventory_list_cache</string>
+                            <string>_getiter_</string>
+                            <string>c</string>
+                            <string>account_list</string>
+                            <string>strict_account_list</string>
+                            <string>skip_branch</string>
+                            <string>account</string>
+                            <string>len</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getGeneralLedgerReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

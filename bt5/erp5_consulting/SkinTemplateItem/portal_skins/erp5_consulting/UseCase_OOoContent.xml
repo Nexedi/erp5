@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<office:document-content xmlns:draw=\'http://openoffice.org/2000/drawing\' xmlns:office=\'http://openoffice.org/2000/office\' xmlns:text=\'http://openoffice.org/2000/text\' xmlns:number=\'http://openoffice.org/2000/datastyle\' xmlns:chart=\'http://openoffice.org/2000/chart\' xmlns:table=\'http://openoffice.org/2000/table\' xmlns:dr3d=\'http://openoffice.org/2000/dr3d\' xmlns:fo=\'http://www.w3.org/1999/XSL/Format\' xmlns:style=\'http://openoffice.org/2000/style\' xmlns:form=\'http://openoffice.org/2000/form\' xmlns:script=\'http://openoffice.org/2000/script\' xmlns:svg=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' office:class=\'text\' office:version=\'1.0\'>\n
+  <office:script/>\n
+  <office:font-decls>\n
+    <style:font-decl fo:font-family="Tahoma, Lucidasans, \'Lucida Sans\', \'Arial Unicode MS\'" style:name=\'Tahoma1\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="\'Bitstream Vera Sans\'" style:name=\'Bitstream Vera Sans1\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family=\'Mincho\' style:name=\'Mincho\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="Tahoma, Lucidasans, \'Lucida Sans\', \'Arial Unicode MS\'" style:name=\'Tahoma\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="\'Bitstream Vera Serif\'" style:font-family-generic=\'roman\' style:name=\'Bitstream Vera Serif\'/>\n
+    <style:font-decl style:font-pitch=\'variable\' fo:font-family="\'Bitstream Vera Sans\'" style:font-family-generic=\'swiss\' style:name=\'Bitstream Vera Sans\'/>\n
+  </office:font-decls>\n
+  <office:automatic-styles>\n
+    <style:style style:family=\'table\' style:name=\'Tableau1\'>\n
+      <style:properties style:width=\'16.999cm\' table:align=\'margins\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau1.A\'>\n
+      <style:properties style:rel-column-width=\'13107*\' style:column-width=\'3.399cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A1\'>\n
+      <style:properties fo:border-top=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-left=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.E1\'>\n
+      <style:properties fo:padding=\'0.097cm\' fo:border=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.A2\'>\n
+      <style:properties fo:border-top=\'none\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-left=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau1.E2\'>\n
+      <style:properties fo:border-top=\'none\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-right=\'0.002cm solid #000000\' fo:border-left=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table\' style:name=\'Tableau2\'>\n
+      <style:properties style:width=\'16.999cm\' table:align=\'margins\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-column\' style:name=\'Tableau2.A\'>\n
+      <style:properties style:rel-column-width=\'21845*\' style:column-width=\'5.666cm\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.A1\'>\n
+      <style:properties fo:border-top=\'0.002cm solid #000000\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-left=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.C1\'>\n
+      <style:properties fo:padding=\'0.097cm\' fo:border=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.A2\'>\n
+      <style:properties fo:border-top=\'none\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-right=\'none\' fo:border-left=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+    <style:style style:family=\'table-cell\' style:name=\'Tableau2.C2\'>\n
+      <style:properties fo:border-top=\'none\' fo:border-bottom=\'0.002cm solid #000000\' fo:padding=\'0.097cm\' fo:border-right=\'0.002cm solid #000000\' fo:border-left=\'0.002cm solid #000000\'/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+  <office:body>\n
+    <text:sequence-decls>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Illustration\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Table\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Text\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Drawing\'/>\n
+    </text:sequence-decls>\n
+    <text:p text:style-name=\'Text body\'>Nexedi SARL</text:p>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <text:h text:style-name=\'Heading 1\' text:level=\'1\'>Use Case : <span tal:replace=\'here/getTitle\'>Title</span></text:h>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <text:p text:style-name=\'Text body\' tal:content=\'here/getDescription\'>Use Case Description</text:p>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <text:h text:style-name=\'Heading 2\' text:level=\'2\'>Actors</text:h>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <table:table table:style-name=\'Tableau1\' table:name=\'Tableau1\'>\n
+      <table:table-column table:style-name=\'Tableau1.A\' table:number-columns-repeated=\'5\'/>\n
+      <table:table-header-rows>\n
+        <table:table-row>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Title</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Description</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Location</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Role</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.E1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Group</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+      </table:table-header-rows>\n
+      <table:table-row tal:repeat=\'actor python:here.contentValues(filter={"portal_type":"Use Case Actor"})\'>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'actor/getTitle\'>Title</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'actor/getDescription\'>Description</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'actor/getLocation\'>Location</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'python: ", ".join(actor.getUseCaseActorRoleList())\'>Role</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.E2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'actor/getGroup\'>Group</text:p>\n
+        </table:table-cell>\n
+      </table:table-row>\n
+    </table:table>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <text:h text:style-name=\'Heading 2\' text:level=\'2\'>Scenarii</text:h>\n
+    <div tal:omit-tag=\'\' tal:repeat=\'scenario  python:here.contentValues(filter={"portal_type":"Use Case Scenario"})\'>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <text:h text:style-name=\'Heading 3\' text:level=\'3\'>Scenario <span tal:replace=\'repeat/scenario/number\'>1</span> : <span tal:replace=\'scenario/getTitle\'>Scenario Title</span></text:h>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <text:p text:style-name=\'Text body\' tal:content=\'scenario/getDescription\'>Scenario Description</text:p>\n
+    <text:p text:style-name=\'Text body\'/>\n
+    <table:table table:style-name=\'Tableau2\' table:name=\'Tableau2\'>\n
+      <table:table-column table:style-name=\'Tableau2.A\' table:number-columns-repeated=\'3\'/>\n
+      <table:table-header-rows>\n
+        <table:table-row>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau2.A1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Title</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau2.A1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Description</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau2.C1\'>\n
+            <text:p text:style-name=\'Table Heading\'>Actor</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+      </table:table-header-rows>\n
+      <table:table-row tal:repeat="step scenario/contentValues">\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau2.A2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'step/getTitle\'>Title</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau2.A2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'step/getDescription\'>Description</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau2.C2\'>\n
+          <text:p text:style-name=\'Table Contents\' tal:content=\'step/getSourceSectionTitle\'>Actor</text:p>\n
+        </table:table-cell>\n
+      </table:table-row>\n
+    </table:table>\n
+    </div>\n
+    <text:p text:style-name=\'Text body\'/>\n
+  </office:body>\n
+</office:document-content>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>UseCase_OOoContent</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

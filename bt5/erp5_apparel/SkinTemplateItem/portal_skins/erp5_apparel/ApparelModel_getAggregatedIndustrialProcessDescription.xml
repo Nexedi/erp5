@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>apparel_model = context\n
+result = \'\'\n
+\n
+apparel_cloth_list = apparel_model.getValueList(\'specialise\',portal_type=[\'Apparel Cloth\'])\n
+apparel_shape = apparel_model.getDefaultValue(\'specialise\',portal_type=[\'Apparel Shape\'])\n
+\n
+object_list = []\n
+\n
+if apparel_shape != None:\n
+  object_list.append(apparel_shape)\n
+\n
+object_list += apparel_cloth_list\n
+\n
+for object in object_list:\n
+  procedure_tmp = object.getIndustrialProcessDescription(\'\')\n
+  if procedure_tmp != \'\':\n
+    result += procedure_tmp+\'\\n\'\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAsAAAAMAAAAQwAA
+AHPPAAAAdAAAfQEAZAEAfQIAdAMAfAEAZAIAgwIAZAMAZAQAZAUAZwEAgwEBfQQAdAMAfAEAZAYA
+gwIAZAMAZAQAZAcAZwEAgwEBfQUAZwAAfQYAfAUAdAcAagMAbxcAAXQDAHwGAGQIAIMCAHwFAIMB
+AAFuAQABfAYAfAQAN30GAHhIAHQIAHwGAIMBAERdOgB9CQB0AwB8CQBkCQCDAgBkAQCDAQB9CgB8
+CgBkAQBqAwBvEgABfAIAfAoAZAoAFzd9AgBxiQABcYkAV3wCAFNkAABTKAsAAABOcwAAAABzDAAA
+AGdldFZhbHVlTGlzdHMKAAAAc3BlY2lhbGlzZXMLAAAAcG9ydGFsX3R5cGVzDQAAAEFwcGFyZWwg
+Q2xvdGhzDwAAAGdldERlZmF1bHRWYWx1ZXMNAAAAQXBwYXJlbCBTaGFwZXMGAAAAYXBwZW5kcx8A
+AABnZXRJbmR1c3RyaWFsUHJvY2Vzc0Rlc2NyaXB0aW9ucwEAAAAKKAsAAABzBwAAAGNvbnRleHRz
+DQAAAGFwcGFyZWxfbW9kZWxzBgAAAHJlc3VsdHMJAAAAX2dldGF0dHJfcxIAAABhcHBhcmVsX2Ns
+b3RoX2xpc3RzDQAAAGFwcGFyZWxfc2hhcGVzCwAAAG9iamVjdF9saXN0cwQAAABOb25lcwkAAABf
+Z2V0aXRlcl9zBgAAAG9iamVjdHMNAAAAcHJvY2VkdXJlX3RtcCgLAAAAcwcAAABjb250ZXh0cw0A
+AABhcHBhcmVsX21vZGVscwYAAAByZXN1bHRzCQAAAF9nZXRhdHRyX3MSAAAAYXBwYXJlbF9jbG90
+aF9saXN0cw0AAABhcHBhcmVsX3NoYXBlcwsAAABvYmplY3RfbGlzdHMEAAAATm9uZXMJAAAAX2dl
+dGl0ZXJfcwYAAABvYmplY3RzDQAAAHByb2NlZHVyZV90bXAoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzNgAAAEFwcGFyZWxNb2RlbF9nZXRBZ2dyZWdhdGVkSW5kdXN0cmlhbFByb2Nlc3NE
+ZXNjcmlwdGlvbgEAAABzGgAAAAYBBgIeAR4CBgIQARQCCgINAAYBFQENARYCKAEAAABzNgAAAEFw
+cGFyZWxNb2RlbF9nZXRBZ2dyZWdhdGVkSW5kdXN0cmlhbFByb2Nlc3NEZXNjcmlwdGlvbigBAAAA
+czYAAABBcHBhcmVsTW9kZWxfZ2V0QWdncmVnYXRlZEluZHVzdHJpYWxQcm9jZXNzRGVzY3JpcHRp
+b24oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/apparel5/portal_skins/erp5_apparel/ApparelModel_getAggregatedIndustrialProcessDescription</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>context</string>
+                            <string>apparel_model</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
+                            <string>apparel_cloth_list</string>
+                            <string>apparel_shape</string>
+                            <string>object_list</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>object</string>
+                            <string>procedure_tmp</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ApparelModel_getAggregatedIndustrialProcessDescription</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+error_message = \'Aggregation in progress\'\n
+form_id = \'AccountingTransactionModule_viewAccountingTransactionList\'\n
+\n
+context.activate().AccountingTransactionModule_aggregateSimulationMovementsToAccounting(from_date=from_date, to_date=to_date)\n
+\n
+redirect_url = \'%s/%s?%s%s\' % ( context.absolute_url(),\n
+                                form_id,\n
+                                \'portal_status_message=\',\n
+                                error_message )\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAkAAAAG
+AAAAQwAAAHOFAAAAdAAAdAEAZAEAgwIAfQQAZAIAfQUAZAMAfQYAdAAAdAAAdAEAZAQAgwIAgwAA
+ZAUAgwIAZAYAfAAAZAcAfAEAgwACAWQIAHQAAHQBAGQJAIMCAIMAAHwGAGQKAHwFAGYEABZ9BwB0
+AAB0CAB8BABkCwCDAgBkDACDAgB8BwCDAQABZAAAUygNAAAATnMHAAAAUkVRVUVTVHMXAAAAQWdn
+cmVnYXRpb24gaW4gcHJvZ3Jlc3NzOQAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV92aWV3
+QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdHMIAAAAYWN0aXZhdGVzRAAAAEFjY291bnRpbmdUcmFu
+c2FjdGlvbk1vZHVsZV9hZ2dyZWdhdGVTaW11bGF0aW9uTW92ZW1lbnRzVG9BY2NvdW50aW5ncwkA
+AABmcm9tX2RhdGVzBwAAAHRvX2RhdGVzCgAAACVzLyVzPyVzJXNzDAAAAGFic29sdXRlX3VybHMW
+AAAAcG9ydGFsX3N0YXR1c19tZXNzYWdlPXMIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0KAkAAABz
+CQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMNAAAAZXJyb3JfbWVzc2FnZXMH
+AAAAZm9ybV9pZHMJAAAAZnJvbV9kYXRlcwcAAAB0b19kYXRlcwwAAAByZWRpcmVjdF91cmxzCQAA
+AF9nZXRpdGVtXygJAAAAcwkAAABmcm9tX2RhdGVzBwAAAHRvX2RhdGVzCQAAAF9nZXRhdHRyX3MH
+AAAAY29udGV4dHMHAAAAcmVxdWVzdHMNAAAAZXJyb3JfbWVzc2FnZXMHAAAAZm9ybV9pZHMMAAAA
+cmVkaXJlY3RfdXJscwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
+QAAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV9hY3RpdmF0ZUFnZ3JlZ2F0ZVNpbXVsYXRp
+b25Nb3ZlbWVudHMBAAAAcw4AAAAPAQYBDAIiAhIBBgIQAigCAAAAcwQAAABOb25lc0AAAABBY2Nv
+dW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfYWN0aXZhdGVBZ2dyZWdhdGVTaW11bGF0aW9uTW92ZW1l
+bnRzKAIAAABzBAAAAE5vbmVzQAAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV9hY3RpdmF0
+ZUFnZ3JlZ2F0ZVNpbXVsYXRpb25Nb3ZlbWVudHMoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/AccountingTransactionModule_activateAggregateSimulationMovements</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>from_date=None, to_date=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>error_message</string>
+                            <string>form_id</string>
+                            <string>redirect_url</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_activateAggregateSimulationMovements</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># this script allow to create a new object from this current one\n
+\n
+current_object = context.getObject()\n
+module = context.getPortalObject().sale_opportunity_module\n
+\n
+# Create a new object\n
+new_id = str(module.generateNewId())\n
+context.portal_types.constructContent(type_name=\'Sale Opportunity\',\n
+        container=module,\n
+        id=new_id\n
+)\n
+new_object = module[new_id]\n
+\n
+\n
+# If we do this before, each added line will take 20 times more time\n
+# because of programmable acquisition\n
+new_object.edit(\n
+        title=current_object.getTitle(),\n
+        client_value_list = current_object.getSourceValueList()\n
+)\n
+# Now create the relation between the current object and the new one\n
+current_object.setFollowUpValueList([new_object])\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAIAAAAQwAA
+AHPNAAAAdAAAdAEAZAEAgwIAgwAAfQIAdAAAdAAAdAEAZAIAgwIAgwAAZAMAgwIAfQMAdAQAdAAA
+fAMAZAQAgwIAgwAAgwEAfQUAdAAAdAAAdAEAZAUAgwIAZAYAgwIAZAcAZAgAZAkAfAMAZAoAfAUA
+gwADAXQGAHwDAHwFAIMCAH0HAHQAAHwHAGQLAIMCAGQMAHQAAHwCAGQNAIMCAIMAAGQOAHQAAHwC
+AGQPAIMCAIMAAIMAAgF0AAB8AgBkEACDAgB8BwBnAQCDAQABZAAAUygRAAAATnMJAAAAZ2V0T2Jq
+ZWN0cw8AAABnZXRQb3J0YWxPYmplY3RzFwAAAHNhbGVfb3Bwb3J0dW5pdHlfbW9kdWxlcw0AAABn
+ZW5lcmF0ZU5ld0lkcwwAAABwb3J0YWxfdHlwZXNzEAAAAGNvbnN0cnVjdENvbnRlbnRzCQAAAHR5
+cGVfbmFtZXMQAAAAU2FsZSBPcHBvcnR1bml0eXMJAAAAY29udGFpbmVycwIAAABpZHMEAAAAZWRp
+dHMFAAAAdGl0bGVzCAAAAGdldFRpdGxlcxEAAABjbGllbnRfdmFsdWVfbGlzdHMSAAAAZ2V0U291
+cmNlVmFsdWVMaXN0cxQAAABzZXRGb2xsb3dVcFZhbHVlTGlzdCgIAAAAcwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzDgAAAGN1cnJlbnRfb2JqZWN0cwYAAABtb2R1bGVzAwAAAHN0cnMGAAAAbmV3
+X2lkcwkAAABfZ2V0aXRlbV9zCgAAAG5ld19vYmplY3QoCAAAAHMJAAAAX2dldGF0dHJfcwcAAABj
+b250ZXh0cw4AAABjdXJyZW50X29iamVjdHMGAAAAbW9kdWxlcwMAAABzdHJzBgAAAG5ld19pZHMJ
+AAAAX2dldGl0ZW1fcwoAAABuZXdfb2JqZWN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
+cxsAAABFdmVudF9jcmVhdGVTYWxlT3Bwb3J0dW5pdHkBAAAAcxYAAAAAAhIBGwMeARgBBgEHAhIF
+DwESARMDKAEAAABzGwAAAEV2ZW50X2NyZWF0ZVNhbGVPcHBvcnR1bml0eSgBAAAAcxsAAABFdmVu
+dF9jcmVhdGVTYWxlT3Bwb3J0dW5pdHkoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
+ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_crm/Event_createSaleOpportunity</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>current_object</string>
+                            <string>module</string>
+                            <string>str</string>
+                            <string>new_id</string>
+                            <string>_getitem_</string>
+                            <string>new_object</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Event_createSaleOpportunity</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

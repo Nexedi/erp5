@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+source_section_title = context.getSourceSectionTitle()\n
+\n
+\n
+case = {\n
+  \'Coramy\': (\'Coramy\', \n
+             \'5 bis, rue Denis Cordonnier - 59820 Gravelines - T\xc3\xa9l. : 33(0)3 28 51 91 51 -  Fax : 33(0)3 28 23 34 96\',\n
+             \'MAILLOTS DE BAIN - GYM - SWIMSUITS - FITNESS\',\n
+             \'S.A.S. au capital de 435.200 \xc2\x80 - T.V.A. FR 67 611 750 274 - R.C. Dunkerque 611 750 274 - SIRET 611 750 274 00023  - CNUF 15971\',\n
+             \'40\'),\n
+  \'BLS\': (\'BLS\' ,\n
+          \'5 bis, rue Denis Cordonnier - 59820 Gravelines - T\xc3\xa9l. : 33(0)3 28 51 86 26 -  Fax : 33(0)3 28 23 34 96\', \n
+          \'LICENSE MAILLOTS DE BAIN DIM FEMME & HOMME\',\n
+          \'S.A.R.L. au capital de 10.000 \xc2\x80 - T.V.A. FR 51 442 959 243 - R.C. Dunkerque 442 959 243 - SIRET 442 959 243 00019\'\n
+          \'60\'),\n
+  \'Houvenaegel\':(\'Houvenaegel\' , \n
+                 \'5 bis, rue Denis Cordonnier - 59820 Gravelines - T\xc3\xa9l. : 33(0)3 28 51 91 55 -  Fax : 33(0)3 28 23 34 96\', \n
+                 \'MAILLOTS DE BAIN - GYM - SWIMSUITS - FITNESS\',\n
+                 \'S.A.R.L. au capital de 7.622,45 \xc2\x80 - T.V.A. FR 07 422 769 810 - R.C. Dunkerque 422 769 810 - SIRET 422 769 810 00025\',\n
+                 \'20\')\n
+}\n
+\n
+return case[ source_section_title ]\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAJAAAAQwAA
+AHNuAAAAdAAAdAEAZAEAgwIAgwAAfQIAaAAABGQCAGQCAGQDAGQEAGQFAGQGAGYFAAM8BGQHAGQH
+AGQIAGQJAGQKAGYEAAM8BGQLAGQLAGQMAGQEAGQNAGQOAGYFAAM8fQMAdAQAfAMAfAIAgwIAU2QA
+AFMoDwAAAE5zFQAAAGdldFNvdXJjZVNlY3Rpb25UaXRsZXMGAAAAQ29yYW15c2cAAAA1IGJpcywg
+cnVlIERlbmlzIENvcmRvbm5pZXIgLSA1OTgyMCBHcmF2ZWxpbmVzIC0gVMOpbC4gOiAzMygwKTMg
+MjggNTEgOTEgNTEgLSAgRmF4IDogMzMoMCkzIDI4IDIzIDM0IDk2cywAAABNQUlMTE9UUyBERSBC
+QUlOIC0gR1lNIC0gU1dJTVNVSVRTIC0gRklUTkVTU3N/AAAAUy5BLlMuIGF1IGNhcGl0YWwgZGUg
+NDM1LjIwMCDCgCAtIFQuVi5BLiBGUiA2NyA2MTEgNzUwIDI3NCAtIFIuQy4gRHVua2VycXVlIDYx
+MSA3NTAgMjc0IC0gU0lSRVQgNjExIDc1MCAyNzQgMDAwMjMgIC0gQ05VRiAxNTk3MXMCAAAANDBz
+AwAAAEJMU3NnAAAANSBiaXMsIHJ1ZSBEZW5pcyBDb3Jkb25uaWVyIC0gNTk4MjAgR3JhdmVsaW5l
+cyAtIFTDqWwuIDogMzMoMCkzIDI4IDUxIDg2IDI2IC0gIEZheCA6IDMzKDApMyAyOCAyMyAzNCA5
+NnMqAAAATElDRU5TRSBNQUlMTE9UUyBERSBCQUlOIERJTSBGRU1NRSAmIEhPTU1Fc3QAAABTLkEu
+Ui5MLiBhdSBjYXBpdGFsIGRlIDEwLjAwMCDCgCAtIFQuVi5BLiBGUiA1MSA0NDIgOTU5IDI0MyAt
+IFIuQy4gRHVua2VycXVlIDQ0MiA5NTkgMjQzIC0gU0lSRVQgNDQyIDk1OSAyNDMgMDAwMTk2MHML
+AAAASG91dmVuYWVnZWxzZwAAADUgYmlzLCBydWUgRGVuaXMgQ29yZG9ubmllciAtIDU5ODIwIEdy
+YXZlbGluZXMgLSBUw6lsLiA6IDMzKDApMyAyOCA1MSA5MSA1NSAtICBGYXggOiAzMygwKTMgMjgg
+MjMgMzQgOTZzdAAAAFMuQS5SLkwuIGF1IGNhcGl0YWwgZGUgNy42MjIsNDUgwoAgLSBULlYuQS4g
+RlIgMDcgNDIyIDc2OSA4MTAgLSBSLkMuIER1bmtlcnF1ZSA0MjIgNzY5IDgxMCAtIFNJUkVUIDQy
+MiA3NjkgODEwIDAwMDI1cwIAAAAyMCgFAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzFAAA
+AHNvdXJjZV9zZWN0aW9uX3RpdGxlcwQAAABjYXNlcwkAAABfZ2V0aXRlbV8oBQAAAHMJAAAAX2dl
+dGF0dHJfcwcAAABjb250ZXh0cxQAAABzb3VyY2Vfc2VjdGlvbl90aXRsZXMEAAAAY2FzZXMJAAAA
+X2dldGl0ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyQAAABJbnZvaWNlX3pHZXRT
+b3VyY2VTZWN0aW9uRGVzY3JpcHRpb24BAAAAcwoAAAASAwcBGAUVBRcHKAEAAABzJAAAAEludm9p
+Y2VfekdldFNvdXJjZVNlY3Rpb25EZXNjcmlwdGlvbigBAAAAcyQAAABJbnZvaWNlX3pHZXRTb3Vy
+Y2VTZWN0aW9uRGVzY3JpcHRpb24oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxt
+b2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_trade/Invoice_zGetSourceSectionDescription</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>source_section_title</string>
+                            <string>case</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Invoice_zGetSourceSectionDescription</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

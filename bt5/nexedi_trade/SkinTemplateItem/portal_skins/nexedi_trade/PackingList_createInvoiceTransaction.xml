@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>packing_list = context\n
+movement_list = []\n
+\n
+parent_movement_list = []\n
+for o in packing_list.objectValues():\n
+  parent_movement_list += [x for x in o.getDeliveryRelatedValueList() if x.getPortalType() == \'Simulation Movement\']\n
+for o in parent_movement_list:\n
+  for rule in o.objectValues():\n
+    movement_list += rule.objectValues()\n
+\n
+from Products.ERP5.MovementGroup import OrderMovementGroup\n
+from Products.ERP5.MovementGroup import PathMovementGroup\n
+from Products.ERP5.MovementGroup import DateMovementGroup\n
+from Products.ERP5.MovementGroup import ResourceMovementGroup\n
+class_list = [OrderMovementGroup,PathMovementGroup,DateMovementGroup,ResourceMovementGroup]\n
+root_group = self.portal_simulation.collectMovement(movement_list,class_list=class_list)\n
+\n
+delivery_list = context.portal_simulation.buildDeliveryList(root_group)\n
+\n
+for delivery in delivery_list :\n
+  delivery.confirm()\n
+\n
+return delivery_list\n
+\n
+#XXX OLD code\n
+#packing_list = context.getObject()\n
+#packing_list_type = packing_list.getPortalType()\n
+#packing_list_line_type = packing_list_type + \' Line\'\n
+#transaction_module = context.getPortalObject().accounting\n
+#transaction_type = packing_list_type.split(\' \')[0] + \' Invoice Transaction\'\n
+#transaction_line_type = transaction_type + \' Line\'\n
+#\n
+## Create a new transaction\n
+#new_id = str(transaction_module.generateNewId())\n
+#context.portal_types.constructContent(type_name=transaction_type,\n
+#        container=transaction_module,\n
+#        id=new_id,\n
+#        causality_title=context.getTitle(),\n
+#        title = packing_list.getTitle(),\n
+#        target_start_date = packing_list.getStartDate(),\n
+#        target_stop_date = packing_list.getStopDate(),\n
+#       )\n
+#transaction = transaction_module[new_id]\n
+#\n
+## Create each line\n
+## If we do this before, each added line will take 20 times more time\n
+## because of programmable acquisition\n
+#packing_list.edit(\n
+#        source = order.getSource(),\n
+#        destination = order.getDestination(),\n
+#        causality_value = packing_list\n
+#)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABUAAAAOAAAAQwAA
+AHOWAQAAdAAAfQEAZwAAfQIAZwAAfQMAeHoAdAQAdAUAfAEAZAEAgwIAgwAAgwEARF1gAH0GAHwD
+AGcAAARpBwB9CAB0BAB0BQB8BgBkAgCDAgCDAACDAQBEXS0AfQkAdAUAfAkAZAMAgwIAgwAAZAQA
+agIAbw4AAXwIAHwJAIMBAAFxVAABcVQAfggAN30DAHErAFd4TQB0BAB8AwCDAQBEXT8AfQYAeDYA
+dAQAdAUAfAYAZAEAgwIAgwAAgwEARF0cAH0KAHwCAHQFAHwKAGQBAIMCAIMAADd9AgBxuwBXcZwA
+V2QFAGsLAGwMAH0MAAFkBgBrCwBsDQB9DQABZAcAawsAbA4AfQ4AAWQIAGsLAGwPAH0PAAF8DAB8
+DQB8DgB8DwBnBAB9EAB0BQB0BQB0EQBkCQCDAgBkCgCDAgB8AgBkCwB8EACDAQF9EgB0BQB0BQB0
+AABkCQCDAgBkDACDAgB8EgCDAQB9EwB4JAB0BAB8EwCDAQBEXRYAfRQAdAUAfBQAZA0AgwIAgwAA
+AXF0AVd8EwBTZAAAUygOAAAATnMMAAAAb2JqZWN0VmFsdWVzcxsAAABnZXREZWxpdmVyeVJlbGF0
+ZWRWYWx1ZUxpc3RzDQAAAGdldFBvcnRhbFR5cGVzEwAAAFNpbXVsYXRpb24gTW92ZW1lbnQoAQAA
+AHMSAAAAT3JkZXJNb3ZlbWVudEdyb3VwKAEAAABzEQAAAFBhdGhNb3ZlbWVudEdyb3VwKAEAAABz
+EQAAAERhdGVNb3ZlbWVudEdyb3VwKAEAAABzFQAAAFJlc291cmNlTW92ZW1lbnRHcm91cHMRAAAA
+cG9ydGFsX3NpbXVsYXRpb25zDwAAAGNvbGxlY3RNb3ZlbWVudHMKAAAAY2xhc3NfbGlzdHMRAAAA
+YnVpbGREZWxpdmVyeUxpc3RzBwAAAGNvbmZpcm0oFQAAAHMHAAAAY29udGV4dHMMAAAAcGFja2lu
+Z19saXN0cw0AAABtb3ZlbWVudF9saXN0cxQAAABwYXJlbnRfbW92ZW1lbnRfbGlzdHMJAAAAX2dl
+dGl0ZXJfcwkAAABfZ2V0YXR0cl9zAQAAAG9zBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzAQAAAHhz
+BAAAAHJ1bGVzGwAAAFByb2R1Y3RzLkVSUDUuTW92ZW1lbnRHcm91cHMSAAAAT3JkZXJNb3ZlbWVu
+dEdyb3VwcxEAAABQYXRoTW92ZW1lbnRHcm91cHMRAAAARGF0ZU1vdmVtZW50R3JvdXBzFQAAAFJl
+c291cmNlTW92ZW1lbnRHcm91cHMKAAAAY2xhc3NfbGlzdHMEAAAAc2VsZnMKAAAAcm9vdF9ncm91
+cHMNAAAAZGVsaXZlcnlfbGlzdHMIAAAAZGVsaXZlcnkoFQAAAHMHAAAAY29udGV4dHMMAAAAcGFj
+a2luZ19saXN0cw0AAABtb3ZlbWVudF9saXN0cxQAAABwYXJlbnRfbW92ZW1lbnRfbGlzdHMJAAAA
+X2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zAQAAAG9zBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzAQAA
+AHhzBAAAAHJ1bGVzGwAAAFByb2R1Y3RzLkVSUDUuTW92ZW1lbnRHcm91cHMSAAAAT3JkZXJNb3Zl
+bWVudEdyb3VwcxEAAABQYXRoTW92ZW1lbnRHcm91cHMRAAAARGF0ZU1vdmVtZW50R3JvdXBzFQAA
+AFJlc291cmNlTW92ZW1lbnRHcm91cHMKAAAAY2xhc3NfbGlzdHMEAAAAc2VsZnMKAAAAcm9vdF9n
+cm91cHMNAAAAZGVsaXZlcnlfbGlzdHMIAAAAZGVsaXZlcnkoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzJAAAAFBhY2tpbmdMaXN0X2NyZWF0ZUludm9pY2VUcmFuc2FjdGlvbgEAAABzLgAA
+AAYBBgIGARkABgEjAAYANQENAAYBGQAGAR4CDQENAQ0BDQESASQCHgINAAkBEQIoAQAAAHMkAAAA
+UGFja2luZ0xpc3RfY3JlYXRlSW52b2ljZVRyYW5zYWN0aW9uKAEAAABzJAAAAFBhY2tpbmdMaXN0
+X2NyZWF0ZUludm9pY2VUcmFuc2FjdGlvbigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMI
+AAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_trade/PackingList_createInvoiceTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>context</string>
+                            <string>packing_list</string>
+                            <string>movement_list</string>
+                            <string>parent_movement_list</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>o</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>rule</string>
+                            <string>Products.ERP5.MovementGroup</string>
+                            <string>OrderMovementGroup</string>
+                            <string>PathMovementGroup</string>
+                            <string>DateMovementGroup</string>
+                            <string>ResourceMovementGroup</string>
+                            <string>class_list</string>
+                            <string>self</string>
+                            <string>root_group</string>
+                            <string>delivery_list</string>
+                            <string>delivery</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PackingList_createInvoiceTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

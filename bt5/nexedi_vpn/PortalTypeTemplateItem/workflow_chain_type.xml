@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Nexedi VPN</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Nexedi VPN Module</type>
+  <workflow></workflow>
+ </chain>
+</workflow_chain>

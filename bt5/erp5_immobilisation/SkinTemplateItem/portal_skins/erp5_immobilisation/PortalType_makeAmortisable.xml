@@ -1,0 +1,318 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from string import capitalize\n
+\n
+view_id_basis = "%s_%s_amortisation_details_view"\n
+view_action_basis = "%s_Item_viewAmortisationDetails"\n
+view_condition_basis = "object/isUsing%s%sAmortisationMethod"\n
+view_permissions_basis = (\'View\',)\n
+amortisation_method_view = \'amortisation_method_view\'\n
+\n
+\n
+print "Adding Action \'Immobilise\'... ",\n
+found = 0\n
+action_list = context.listActions()\n
+for action in action_list:\n
+  if getattr(action, \'id\', None) == \'immobilise\':\n
+    print \'already exists\'\n
+    found = 1\n
+if not found:\n
+  context.addAction(id = "immobilise",\n
+                    name = "Immobilise",\n
+                    action = "Immobilisation_changeItemImmobilisationState",\n
+                    condition = "object/isNotCurrentlyImmobilised",\n
+                    permission = (\'Modify portal content\',),\n
+                    category = "object_action",\n
+                    visible=1)\n
+  print "OK"\n
+\n
+print "Adding Action \'Unimmobilise\'... ",\n
+found = 0\n
+action_list = context.listActions()\n
+for action in action_list:\n
+  if getattr(action, \'id\', None) == \'unimmobilise\':\n
+    print \'already exists\'\n
+    found = 1\n
+if not found:\n
+  context.addAction(id = "unimmobilise",\n
+                    name = "Unimmobilise",\n
+                    action = "Immobilisation_changeItemImmobilisationState",\n
+                    condition = "object/isCurrentlyImmobilised",\n
+                    permission = (\'Modify portal content\',),\n
+                    category = "object_action",\n
+                    visible=1)\n
+  print "OK"\n
+\n
+\n
+print "Adding View \'Amortisation Method\'... ",\n
+found = 0\n
+for action in action_list:\n
+  if getattr(action, \'id\', None) == amortisation_method_view:\n
+    print \'already exists\'\n
+    found = 1\n
+if not found:\n
+  context.addAction(id = amortisation_method_view,\n
+                    name = "Amortisation Method",\n
+                    action = "Immobilisation_viewAmortisationMethod",\n
+                    condition = "",\n
+                    permission = view_permissions_basis,\n
+                    category = "object_view",\n
+                    visible=1)\n
+  print "OK"\n
+\n
+\n
+# Add a view for each amortisation method\n
+amortisation_method_list = context.Immobilisation_getAmortisationMethodList()\n
+for method in amortisation_method_list:\n
+  region = method[0]\n
+  id = method[1].getId()\n
+  title = method[1].title or id\n
+  action_id =  view_id_basis % (region, id)\n
+\n
+  print "Adding View for method \'%s\'... " % title,\n
+\n
+  # Check if the action already exists\n
+  exists = 0\n
+  for action in action_list:\n
+    if getattr(action, "id", None) == action_id:\n
+      print "already exists"\n
+      exists = 1\n
+  \n
+  if not exists:\n
+    action_action = view_action_basis % id\n
+    action_condition = view_condition_basis % (capitalize(region),\n
+              "".join([capitalize(o) for o in id.split("_")]))\n
+    context.addAction(id = action_id,\n
+                      name = "Amortisation Details",\n
+                      action = action_action,\n
+                      condition = action_condition,\n
+                      permission = view_permissions_basis,\n
+                      category = "object_view",\n
+                      visible=1)\n
+    print "OK"\n
+\n
+\n
+print\n
+print "Done ! Please don\'t forget to add \'Immobilisation\' to allowed content types"\n
+\n
+\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAB4AAAAvAAAAQwAA
+AHP7AwAAdAAAgwAAfQEAZAEAawIAbAMAfQMAAWQCAH0EAGQDAH0FAGQEAH0GAGQFAGYBAH0HAGQG
+AH0IAHwBAARkBwACSQFkCAB9CQB0CgB0CwBkCQCDAgCDAAB9DAB4QQB0DQB8DACDAQBEXTMAfQ4A
+dA8AfA4AZAoAdBAAgwMAZAsAagIAbxQAAXwBAARkDAACSUpkDQB9CQBxZgABcWYAV3wJAAxvSwAB
+dAoAdAsAZA4AgwIAZAoAZAsAZA8AZBAAZBEAZBIAZBMAZBQAZBUAZBYAZgEAZBcAZBgAZBkAZA0A
+gwAHAXwBAARkGgACSUpuAQABfAEABGQbAAJJAWQIAH0JAHQKAHQLAGQJAIMCAIMAAH0MAHhBAHQN
+AHwMAIMBAERdMwB9DgB0DwB8DgBkCgB0EACDAwBkHABqAgBvFAABfAEABGQMAAJJSmQNAH0JAHEf
+AQFxHwFXfAkADG9LAAF0CgB0CwBkDgCDAgBkCgBkHABkDwBkHQBkEQBkEgBkEwBkHgBkFQBkFgBm
+AQBkFwBkGABkGQBkDQCDAAcBfAEABGQaAAJJSm4BAAF8AQAEZB8AAkkBZAgAfQkAeEEAdA0AfAwA
+gwEARF0zAH0OAHQPAHwOAGQKAHQQAIMDAHwIAGoCAG8UAAF8AQAEZAwAAklKZA0AfQkAccYBAXHG
+AVd8CQAMb0gAAXQKAHQLAGQOAIMCAGQKAHwIAGQPAGQgAGQRAGQhAGQTAGQiAGQVAHwHAGQXAGQj
+AGQZAGQNAIMABwF8AQAEZBoAAklKbgEAAXQKAHQLAGQkAIMCAIMAAH0RAHiAAXQNAHwRAIMBAERd
+cgF9EgB0EwB8EgBkCACDAgB9FAB0CgB0EwB8EgBkDQCDAgBkJQCDAgCDAAB9FQB0CgB0EwB8EgBk
+DQCDAgBkJgCDAgBwBAABfBUAfRYAfAQAfBQAfBUAZgIAFn0XAHwBAARkJwB8FgAWAkkBZAgAfRgA
+eEEAdA0AfAwAgwEARF0zAH0OAHQPAHwOAGQKAHQQAIMDAHwXAGoCAG8UAAF8AQAEZAwAAklKZA0A
+fRgAcewCAXHsAld8GAAMb7MAAXwFAHwVABZ9GQB8BgB8AwB8FACDAQB0CgBkIgBkKACDAgBnAAAE
+aRoAfRsAdA0AdAoAfBUAZCkAgwIAZCoAgwEAgwEARF0WAH0cAHwbAHwDAHwcAIMBAIMBAAFxcAN+
+GwCDAQBmAgAWfR0AdAoAdAsAZA4AgwIAZAoAfBcAZA8AZCsAZBEAfBkAZBMAfB0AZBUAfAcAZBcA
+ZCMAZBkAZA0AgwAHAXwBAARkGgACSUpxbAIBcWwCV3wBAEp8AQAEZCwAAklKfAEAgwAAU2QAAFMo
+LQAAAE4oAQAAAHMKAAAAY2FwaXRhbGl6ZXMfAAAAJXNfJXNfYW1vcnRpc2F0aW9uX2RldGFpbHNf
+dmlld3MfAAAAJXNfSXRlbV92aWV3QW1vcnRpc2F0aW9uRGV0YWlsc3MkAAAAb2JqZWN0L2lzVXNp
+bmclcyVzQW1vcnRpc2F0aW9uTWV0aG9kcwQAAABWaWV3cxgAAABhbW9ydGlzYXRpb25fbWV0aG9k
+X3ZpZXdzHgAAAEFkZGluZyBBY3Rpb24gJ0ltbW9iaWxpc2UnLi4uIGkAAAAAcwsAAABsaXN0QWN0
+aW9uc3MCAAAAaWRzCgAAAGltbW9iaWxpc2VzDgAAAGFscmVhZHkgZXhpc3RzaQEAAABzCQAAAGFk
+ZEFjdGlvbnMEAAAAbmFtZXMKAAAASW1tb2JpbGlzZXMGAAAAYWN0aW9ucywAAABJbW1vYmlsaXNh
+dGlvbl9jaGFuZ2VJdGVtSW1tb2JpbGlzYXRpb25TdGF0ZXMJAAAAY29uZGl0aW9ucyAAAABvYmpl
+Y3QvaXNOb3RDdXJyZW50bHlJbW1vYmlsaXNlZHMKAAAAcGVybWlzc2lvbnMVAAAATW9kaWZ5IHBv
+cnRhbCBjb250ZW50cwgAAABjYXRlZ29yeXMNAAAAb2JqZWN0X2FjdGlvbnMHAAAAdmlzaWJsZXMC
+AAAAT0tzIAAAAEFkZGluZyBBY3Rpb24gJ1VuaW1tb2JpbGlzZScuLi4gcwwAAAB1bmltbW9iaWxp
+c2VzDAAAAFVuaW1tb2JpbGlzZXMdAAAAb2JqZWN0L2lzQ3VycmVudGx5SW1tb2JpbGlzZWRzJQAA
+AEFkZGluZyBWaWV3ICdBbW9ydGlzYXRpb24gTWV0aG9kJy4uLiBzEwAAAEFtb3J0aXNhdGlvbiBN
+ZXRob2RzJQAAAEltbW9iaWxpc2F0aW9uX3ZpZXdBbW9ydGlzYXRpb25NZXRob2RzAAAAAHMLAAAA
+b2JqZWN0X3ZpZXdzKAAAAEltbW9iaWxpc2F0aW9uX2dldEFtb3J0aXNhdGlvbk1ldGhvZExpc3Rz
+BQAAAGdldElkcwUAAAB0aXRsZXMfAAAAQWRkaW5nIFZpZXcgZm9yIG1ldGhvZCAnJXMnLi4uIHME
+AAAAam9pbnMFAAAAc3BsaXRzAQAAAF9zFAAAAEFtb3J0aXNhdGlvbiBEZXRhaWxzc0sAAABEb25l
+ICEgUGxlYXNlIGRvbid0IGZvcmdldCB0byBhZGQgJ0ltbW9iaWxpc2F0aW9uJyB0byBhbGxvd2Vk
+IGNvbnRlbnQgdHlwZXMoHgAAAHMHAAAAX3ByaW50X3MGAAAAX3ByaW50cwYAAABzdHJpbmdzCgAA
+AGNhcGl0YWxpemVzDQAAAHZpZXdfaWRfYmFzaXNzEQAAAHZpZXdfYWN0aW9uX2Jhc2lzcxQAAAB2
+aWV3X2NvbmRpdGlvbl9iYXNpc3MWAAAAdmlld19wZXJtaXNzaW9uc19iYXNpc3MYAAAAYW1vcnRp
+c2F0aW9uX21ldGhvZF92aWV3cwUAAABmb3VuZHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsA
+AABhY3Rpb25fbGlzdHMJAAAAX2dldGl0ZXJfcwYAAABhY3Rpb25zBwAAAGdldGF0dHJzBAAAAE5v
+bmVzGAAAAGFtb3J0aXNhdGlvbl9tZXRob2RfbGlzdHMGAAAAbWV0aG9kcwkAAABfZ2V0aXRlbV9z
+BgAAAHJlZ2lvbnMCAAAAaWRzBQAAAHRpdGxlcwkAAABhY3Rpb25faWRzBgAAAGV4aXN0c3MNAAAA
+YWN0aW9uX2FjdGlvbnMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMBAAAAb3MQAAAAYWN0aW9uX2Nv
+bmRpdGlvbigeAAAAcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzBgAAAHN0cmluZ3MKAAAAY2FwaXRh
+bGl6ZXMNAAAAdmlld19pZF9iYXNpc3MRAAAAdmlld19hY3Rpb25fYmFzaXNzFAAAAHZpZXdfY29u
+ZGl0aW9uX2Jhc2lzcxYAAAB2aWV3X3Blcm1pc3Npb25zX2Jhc2lzcxgAAABhbW9ydGlzYXRpb25f
+bWV0aG9kX3ZpZXdzBQAAAGZvdW5kcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCwAAAGFjdGlv
+bl9saXN0cwkAAABfZ2V0aXRlcl9zBgAAAGFjdGlvbnMHAAAAZ2V0YXR0cnMEAAAATm9uZXMYAAAA
+YW1vcnRpc2F0aW9uX21ldGhvZF9saXN0cwYAAABtZXRob2RzCQAAAF9nZXRpdGVtX3MGAAAAcmVn
+aW9ucwIAAABpZHMFAAAAdGl0bGVzCQAAAGFjdGlvbl9pZHMGAAAAZXhpc3Rzcw0AAABhY3Rpb25f
+YWN0aW9ucwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwEAAABvcxAAAABhY3Rpb25fY29uZGl0aW9u
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxoAAABQb3J0YWxUeXBlX21ha2VBbW9ydGlz
+YWJsZQEAAABzhgAAABYCBgEGAQYBCQEGAwoBBgESAQ0ABgEZAQoBDgELASQEFgMOAgoBBgESAQ0A
+BgEZAQoBDgELASQEFgMOAwoBBgENAAYBGQEKAQ4BCwEkBBMDDgQSAQ0ABgEPARsBHwEQAg4DBgEN
+AAYBGQEKAQ4CCAEKARgBIwApARgCBgEGARMDEgMEAQoDKAEAAABzGgAAAFBvcnRhbFR5cGVfbWFr
+ZUFtb3J0aXNhYmxlKAEAAABzGgAAAFBvcnRhbFR5cGVfbWFrZUFtb3J0aXNhYmxlKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/PortalType_makeAmortisable</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>string</string>
+                            <string>capitalize</string>
+                            <string>view_id_basis</string>
+                            <string>view_action_basis</string>
+                            <string>view_condition_basis</string>
+                            <string>view_permissions_basis</string>
+                            <string>amortisation_method_view</string>
+                            <string>found</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>action_list</string>
+                            <string>_getiter_</string>
+                            <string>action</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>amortisation_method_list</string>
+                            <string>method</string>
+                            <string>_getitem_</string>
+                            <string>region</string>
+                            <string>id</string>
+                            <string>title</string>
+                            <string>action_id</string>
+                            <string>exists</string>
+                            <string>action_action</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>o</string>
+                            <string>action_condition</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PortalType_makeAmortisable</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

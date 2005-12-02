@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+""" Calculates the VAT for this invoice. \n
+FIXME: it should support :\n
+    o multiple VAT lines (with differents ratio)\n
+    o other taxes that VAT\n
+"""\n
+\n
+vat_infos = {\n
+  \'total\' : 0,\n
+}\n
+\n
+invoice = context\n
+accounting_movement_type_list =  invoice.getPortalDefaultAccountingMovementTypeList()\n
+accounting_movement_list = [x.getObject() for x in invoice.searchFolder(portal_type = accounting_movement_type_list)]\n
+\n
+# 1) the invoice contains accounting lines.\n
+if len(accounting_movement_list) :\n
+  for movement in accounting_movement_list :\n
+    account = movement.getSourceValue()\n
+    if account is None : continue\n
+    if account.getAccountTypeId() == \'collected_vat\' : \n
+      #if vat_infos[\'title\'] is not None :\n
+      #  assert account.getTitle() == vat_infos[\'title\'] # TODO\n
+      #if vat_infos[\'ratio\'] != 0 :\n
+      #  assert 1 # TODO\n
+      vat_infos.setdefault(\'title\', account.getTitle())\n
+      vat_infos.setdefault(\'ratio\', movement.getTotalPrice() / float(invoice.getTotalPrice())) # XXX this calls catalog => bad & this does not suport multiple VAT lines either\n
+      vat_infos.update( { \'total\': vat_infos[\'total\'] + movement.getTotalPrice() } )\n
+\n
+# 2) no accounting lines => we must look in the simulation\n
+if not vat_infos.has_key(\'title\') :\n
+  for invoice_movement in invoice.getMovementList() :\n
+    aggregated_simulation_movements = {}\n
+    for simulation_movement in ( invoice_movement.getDeliveryRelatedValueList(portal_type = \'Simulation Movement\')  +\n
+                                 invoice_movement.getOrderRelatedValueList(portal_type = \'Simulation Movement\') ):\n
+      if aggregated_simulation_movements.has_key(simulation_movement.getPath()) : \n
+        continue  \n
+      aggregated_simulation_movements[simulation_movement.getPath()] = 1\n
+\n
+      applied_rule_list = simulation_movement.objectValues()\n
+      if len (applied_rule_list) == 0 : continue\n
+      applied_rule = applied_rule_list[0]\n
+\n
+      # inside we got accounting movements\n
+      for movement in applied_rule.objectValues() :\n
+        account = movement.getSourceValue()\n
+        if account is None : continue\n
+        if account.getAccountTypeId() == \'collected_vat\' : \n
+          context.log(\'added simulation movement from\', movement.getPath())\n
+          vat_infos.setdefault(\'title\', account.getTitle())\n
+          vat_infos.setdefault(\'ratio\', movement.getQuantity() / float(invoice_movement.getTotalPrice())) # XXX this does not suport multiple VAT lines \n
+          vat_infos.update( { \'total\': vat_infos[\'total\'] + movement.getQuantity() } )\n
+\n
+vat_infos.setdefault(\'title\', "")\n
+vat_infos.setdefault(\'ratio\', 0)\n
+return vat_infos\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABYAAAAsAAAAQwAA
+AHO6AwAAaAAABGQBAGQCAAM8fQAAdAEAfQIAdAMAfAIAZAMAgwIAgwAAfQQAZwAABGkFAH0GAHQH
+AHQDAHwCAGQEAIMCAGQFAHwEAIMAAYMBAERdHAB9CAB8BgB0AwB8CABkBgCDAgCDAACDAQABcU0A
+fgYAfQkAdAoAfAkAgwEAb+0AAXjqAHQHAHwJAIMBAERd2AB9CwB0AwB8CwBkBwCDAgCDAAB9DAB8
+DAB0DQBqCABvBwABcYwAbgEAAXQDAHwMAGQIAIMCAIMAAGQJAGoCAG+TAAF0AwB8AABkCgCDAgBk
+CwB0AwB8DABkDACDAgCDAACDAgABdAMAfAAAZAoAgwIAZA0AdAMAfAsAZA4AgwIAgwAAdA4AdAMA
+fAIAZA4AgwIAgwAAgwEAFYMCAAF0AwB8AABkDwCDAgBoAAAEZAEAdA8AfAAAZAEAgwIAdAMAfAsA
+ZA4AgwIAgwAAFwM8gwEAAXGMAAFxjABXbgEAAXQDAHwAAGQQAIMCAGQLAIMBAAxvAwIBeAACdAcA
+dAMAfAIAZBEAgwIAgwAAgwEARF3iAX0QAGgAAH0RAHjTAXQHAHQDAHwQAGQSAIMCAGQFAGQTAIMA
+AXQDAHwQAGQUAIMCAGQFAGQTAIMAAReDAQBEXZ0BfRIAdAMAfBEAZBAAgwIAdAMAfBIAZBUAgwIA
+gwAAgwEAbwcAAXHdAW4BAAFkFgB0EwB8EQCDAQB0AwB8EgBkFQCDAgCDAAA8dAMAfBIAZBcAgwIA
+gwAAfRQAdAoAfBQAgwEAZAIAagIAbwcAAXHdAW4BAAF0DwB8FABkAgCDAgB9FQB4FAF0BwB0AwB8
+FQBkFwCDAgCDAACDAQBEXfoAfQsAdAMAfAsAZAcAgwIAgwAAfQwAfAwAdA0AaggAbwcAAXF8Am4B
+AAF0AwB8DABkCACDAgCDAABkCQBqAgBvtQABdAMAdAEAZBgAgwIAZBkAdAMAfAsAZBUAgwIAgwAA
+gwIAAXQDAHwAAGQKAIMCAGQLAHQDAHwMAGQMAIMCAIMAAIMCAAF0AwB8AABkCgCDAgBkDQB0AwB8
+CwBkGgCDAgCDAAB0DgB0AwB8EABkDgCDAgCDAACDAQAVgwIAAXQDAHwAAGQPAIMCAGgAAARkAQB0
+DwB8AABkAQCDAgB0AwB8CwBkGgCDAgCDAAAXAzyDAQABcXwCAXF8Aldx3QFXcZwBV24BAAF0AwB8
+AABkCgCDAgBkCwBkGwCDAgABdAMAfAAAZAoAgwIAZA0AZAIAgwIAAXwAAFNkAABTKBwAAABOcwUA
+AAB0b3RhbGkAAAAAcyoAAABnZXRQb3J0YWxEZWZhdWx0QWNjb3VudGluZ01vdmVtZW50VHlwZUxp
+c3RzDAAAAHNlYXJjaEZvbGRlcnMLAAAAcG9ydGFsX3R5cGVzCQAAAGdldE9iamVjdHMOAAAAZ2V0
+U291cmNlVmFsdWVzEAAAAGdldEFjY291bnRUeXBlSWRzDQAAAGNvbGxlY3RlZF92YXRzCgAAAHNl
+dGRlZmF1bHRzBQAAAHRpdGxlcwgAAABnZXRUaXRsZXMFAAAAcmF0aW9zDQAAAGdldFRvdGFsUHJp
+Y2VzBgAAAHVwZGF0ZXMHAAAAaGFzX2tleXMPAAAAZ2V0TW92ZW1lbnRMaXN0cxsAAABnZXREZWxp
+dmVyeVJlbGF0ZWRWYWx1ZUxpc3RzEwAAAFNpbXVsYXRpb24gTW92ZW1lbnRzGAAAAGdldE9yZGVy
+UmVsYXRlZFZhbHVlTGlzdHMHAAAAZ2V0UGF0aGkBAAAAcwwAAABvYmplY3RWYWx1ZXNzAwAAAGxv
+Z3MeAAAAYWRkZWQgc2ltdWxhdGlvbiBtb3ZlbWVudCBmcm9tcwsAAABnZXRRdWFudGl0eXMAAAAA
+KBYAAABzCQAAAHZhdF9pbmZvc3MHAAAAY29udGV4dHMHAAAAaW52b2ljZXMJAAAAX2dldGF0dHJf
+cx0AAABhY2NvdW50aW5nX21vdmVtZW50X3R5cGVfbGlzdHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
+MHMJAAAAX2dldGl0ZXJfcwEAAAB4cxgAAABhY2NvdW50aW5nX21vdmVtZW50X2xpc3RzAwAAAGxl
+bnMIAAAAbW92ZW1lbnRzBwAAAGFjY291bnRzBAAAAE5vbmVzBQAAAGZsb2F0cwkAAABfZ2V0aXRl
+bV9zEAAAAGludm9pY2VfbW92ZW1lbnRzHwAAAGFnZ3JlZ2F0ZWRfc2ltdWxhdGlvbl9tb3ZlbWVu
+dHNzEwAAAHNpbXVsYXRpb25fbW92ZW1lbnRzBwAAAF93cml0ZV9zEQAAAGFwcGxpZWRfcnVsZV9s
+aXN0cwwAAABhcHBsaWVkX3J1bGUoFgAAAHMJAAAAdmF0X2luZm9zcwcAAABjb250ZXh0cwcAAABp
+bnZvaWNlcwkAAABfZ2V0YXR0cl9zHQAAAGFjY291bnRpbmdfbW92ZW1lbnRfdHlwZV9saXN0cwYA
+AABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhzGAAAAGFjY291bnRpbmdf
+bW92ZW1lbnRfbGlzdHMDAAAAbGVucwgAAABtb3ZlbWVudHMHAAAAYWNjb3VudHMEAAAATm9uZXMF
+AAAAZmxvYXRzCQAAAF9nZXRpdGVtX3MQAAAAaW52b2ljZV9tb3ZlbWVudHMfAAAAYWdncmVnYXRl
+ZF9zaW11bGF0aW9uX21vdmVtZW50c3MTAAAAc2ltdWxhdGlvbl9tb3ZlbWVudHMHAAAAX3dyaXRl
+X3MRAAAAYXBwbGllZF9ydWxlX2xpc3RzDAAAAGFwcGxpZWRfcnVsZSgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMdAAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9nZXRWQVQBAAAAc0wAAAAA
+Bg8EBgESASYAJQMNAQ0ABgESARQBHAUiATgBPgMXARkABgEGAR4BIAEfAQcBHAISARoBDwMZAAYB
+EgEUARwBIgEiATgBSQIWARMBKAEAAABzHQAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25fZ2V0VkFU
+KAEAAABzHQAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25fZ2V0VkFUKAAAAAAoAAAAAHMPAAAAU2Ny
+aXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/SaleInvoiceTransaction_getVAT</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>vat_infos</string>
+                            <string>context</string>
+                            <string>invoice</string>
+                            <string>_getattr_</string>
+                            <string>accounting_movement_type_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>accounting_movement_list</string>
+                            <string>len</string>
+                            <string>movement</string>
+                            <string>account</string>
+                            <string>None</string>
+                            <string>float</string>
+                            <string>_getitem_</string>
+                            <string>invoice_movement</string>
+                            <string>aggregated_simulation_movements</string>
+                            <string>simulation_movement</string>
+                            <string>_write_</string>
+                            <string>applied_rule_list</string>
+                            <string>applied_rule</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleInvoiceTransaction_getVAT</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

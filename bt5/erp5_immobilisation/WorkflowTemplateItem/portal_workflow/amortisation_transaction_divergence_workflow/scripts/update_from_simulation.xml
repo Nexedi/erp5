@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>delivery = state_change.object\n
+context.portal_deliveries.amortisation_transaction_builder.updateFromSimulation(delivery.getRelativeUrl())\n
+\n
+return\n
+\n
+delivery = state_change.object\n
+delivery.updateFromSimulation()\n
+\n
+return\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+from DateTime import DateTime\n
+\n
+delivery = state_change.object\n
+try :\n
+  target_start_date = state_change.kwargs[\'target_start_date\']\n
+  target_stop_date = state_change.kwargs[\'target_stop_date\']\n
+except :\n
+  target_start_date = delivery.getTargetStartDate()\n
+  target_stop_date = delivery.getTargetStopDate()\n
+\n
+# dsolver = delivery.portal_simulation.newDeliverySolver(\'Distribute\', param=value, etc.)\n
+dsolver = delivery.portal_simulation.newDeliverySolver(\'Distribute\')\n
+\n
+# tsolver = delivery.portal_simulation.newTargetSolver(\'Reduce\', param=value, etc.)\n
+tsolver = delivery.portal_simulation.newTargetSolver(\'SplitAndDefer\', target_start_date=target_start_date, target_stop_date=target_stop_date)\n
+\n
+# Adopt Dates\n
+delivery.solve(dsolver, tsolver)\n
+\n
+# Solve movements\n
+for m in delivery.getMovementList():\n
+  m.solve(dsolver, tsolver)\n
+\n
+# Close solver\n
+delivery_list = delivery.portal_simulation.closeTargetSolver(tsolver)\n
+\n
+# Change workflow state\n
+for new_delivery in delivery_list :\n
+   # Copy local roles\n
+   for k, v in delivery.get_local_roles():\n
+     new_delivery .manage_addLocalRoles(k,v)\n
+   # update the state of the created deliveries to \'confirmed\'\n
+   new_delivery .confirm()\n
+\n
+#If delivery is started or stopped, we automatically change to delivered\n
+if delivery.portal_workflow.getInfoFor(delivery, \'simulation_state\') in (\'started\', \'stopped\') :\n
+  delivery.deliver()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABAAAAAWAAAAQwAA
+AHNNAgAAdAAAfAAAZAEAgwIAfQIAdAAAdAAAdAAAdAMAZAIAgwIAZAMAgwIAZAQAgwIAdAAAfAIA
+ZAUAgwIAgwAAgwEAAWQAAFN0AAB8AABkAQCDAgB9AgB0AAB8AgBkBACDAgCDAAABZAAAU2QGAGsE
+AGwEAH0EAAF0AAB8AABkAQCDAgB9AgB5NAB0BQB0AAB8AABkBwCDAgBkCACDAgB9BgB0BQB0AAB8
+AABkBwCDAgBkCQCDAgB9BwBXbisAAQEBdAAAfAIAZAoAgwIAgwAAfQYAdAAAfAIAZAsAgwIAgwAA
+fQcAbgEAWHQAAHQAAHwCAGQMAIMCAGQNAIMCAGQOAIMBAH0IAHQAAHQAAHwCAGQMAIMCAGQPAIMC
+AGQQAGQIAHwGAGQJAHwHAIMBAn0JAHQAAHwCAGQRAIMCAHwIAHwJAIMCAAF4NgB0CgB0AAB8AgBk
+EgCDAgCDAACDAQBEXRwAfQsAdAAAfAsAZBEAgwIAfAgAfAkAgwIAAXFcAVd0AAB0AAB8AgBkDACD
+AgBkEwCDAgB8CQCDAQB9DAB4agB0CgB8DACDAQBEXVwAfQ0AeEMAdAoAdAAAfAIAZBQAgwIAgwAA
+gwEARF0pAHQKAAKDAQBcAgB9DgB9DwB0AAB8DQBkFQCDAgB8DgB8DwCDAgABccYBV3QAAHwNAGQW
+AIMCAIMAAAFxpwFXdAAAdAAAfAIAZBcAgwIAZBgAgwIAfAIAZBkAgwIAZBoAZBsAZgIAagYAbxQA
+AXQAAHwCAGQcAIMCAIMAAAFuAQABZAAAUygdAAAATnMGAAAAb2JqZWN0cxEAAABwb3J0YWxfZGVs
+aXZlcmllc3MgAAAAYW1vcnRpc2F0aW9uX3RyYW5zYWN0aW9uX2J1aWxkZXJzFAAAAHVwZGF0ZUZy
+b21TaW11bGF0aW9ucw4AAABnZXRSZWxhdGl2ZVVybCgBAAAAcwgAAABEYXRlVGltZXMGAAAAa3dh
+cmdzcxEAAAB0YXJnZXRfc3RhcnRfZGF0ZXMQAAAAdGFyZ2V0X3N0b3BfZGF0ZXMSAAAAZ2V0VGFy
+Z2V0U3RhcnREYXRlcxEAAABnZXRUYXJnZXRTdG9wRGF0ZXMRAAAAcG9ydGFsX3NpbXVsYXRpb25z
+EQAAAG5ld0RlbGl2ZXJ5U29sdmVycwoAAABEaXN0cmlidXRlcw8AAABuZXdUYXJnZXRTb2x2ZXJz
+DQAAAFNwbGl0QW5kRGVmZXJzBQAAAHNvbHZlcw8AAABnZXRNb3ZlbWVudExpc3RzEQAAAGNsb3Nl
+VGFyZ2V0U29sdmVycw8AAABnZXRfbG9jYWxfcm9sZXNzFAAAAG1hbmFnZV9hZGRMb2NhbFJvbGVz
+cwcAAABjb25maXJtcw8AAABwb3J0YWxfd29ya2Zsb3dzCgAAAGdldEluZm9Gb3JzEAAAAHNpbXVs
+YXRpb25fc3RhdGVzBwAAAHN0YXJ0ZWRzBwAAAHN0b3BwZWRzBwAAAGRlbGl2ZXIoEAAAAHMJAAAA
+X2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzCAAAAGRlbGl2ZXJ5cwcAAABjb250ZXh0cwgAAABE
+YXRlVGltZXMJAAAAX2dldGl0ZW1fcxEAAAB0YXJnZXRfc3RhcnRfZGF0ZXMQAAAAdGFyZ2V0X3N0
+b3BfZGF0ZXMHAAAAZHNvbHZlcnMHAAAAdHNvbHZlcnMJAAAAX2dldGl0ZXJfcwEAAABtcw0AAABk
+ZWxpdmVyeV9saXN0cwwAAABuZXdfZGVsaXZlcnlzAQAAAGtzAQAAAHYoEAAAAHMMAAAAc3RhdGVf
+Y2hhbmdlcwkAAABfZ2V0YXR0cl9zCAAAAGRlbGl2ZXJ5cwcAAABjb250ZXh0cwgAAABEYXRlVGlt
+ZXMJAAAAX2dldGl0ZW1fcxEAAAB0YXJnZXRfc3RhcnRfZGF0ZXMQAAAAdGFyZ2V0X3N0b3BfZGF0
+ZXMHAAAAZHNvbHZlcnMHAAAAdHNvbHZlcnMJAAAAX2dldGl0ZXJfcwEAAABtcw0AAABkZWxpdmVy
+eV9saXN0cwwAAABuZXdfZGVsaXZlcnlzAQAAAGtzAQAAAHYoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzFgAAAHVwZGF0ZV9mcm9tX3NpbXVsYXRpb24BAAAAczYAAAAYASgCBAISAQ0CBAgN
+Ag8BAwEYAR8CEgEWAx4DLQMTAxkACQEXAx4DDQAGAhkAFgEaAhEDMQEoAQAAAHMWAAAAdXBkYXRl
+X2Zyb21fc2ltdWxhdGlvbigBAAAAcxYAAAB1cGRhdGVfZnJvbV9zaW11bGF0aW9uKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_workflow/amortisation_transaction_divergence_workflow/scripts/update_from_simulation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getattr_</string>
+                            <string>delivery</string>
+                            <string>context</string>
+                            <string>DateTime</string>
+                            <string>_getitem_</string>
+                            <string>target_start_date</string>
+                            <string>target_stop_date</string>
+                            <string>dsolver</string>
+                            <string>tsolver</string>
+                            <string>_getiter_</string>
+                            <string>m</string>
+                            <string>delivery_list</string>
+                            <string>new_delivery</string>
+                            <string>k</string>
+                            <string>v</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>update_from_simulation</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

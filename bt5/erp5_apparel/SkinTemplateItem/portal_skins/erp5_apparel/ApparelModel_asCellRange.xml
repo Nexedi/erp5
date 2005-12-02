@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+cell_range = []\n
+# Those value are define on property sheet of portal type\n
+resource = context.getDefaultResourceValue()\n
+if resource is None: # When we have a supply line in the resource\n
+  resource = context.getParent()\n
+\n
+base_category_list = resource.getVariationBaseCategoryList()\n
+\n
+for c in base_category_list:\n
+  # try to display line first, then column, and finally others\n
+  if matrixbox==1:\n
+    # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
+    cell_range.append(map(lambda x: (x[1], x[0]),\n
+                          resource.getVariationCategoryItemList(\n
+                                 base_category_list=(c,),\n
+                                 display_base_category=display_base_category,\n
+                                 omit_individual_variation=0, sort_id=\'id\')))\n
+  else:\n
+    cell_range.append(\n
+             resource.getVariationCategoryList(base_category_list=(c,),\n
+                                               omit_individual_variation=0, sort_id=\'id\'))\n
+\n
+\n
+predicate_list = context.contentValues(\n
+                              filter={\'portal_type\':\'Predicate Group\'})\n
+pred_ids = []\n
+if predicate_list != []:\n
+  if matrixbox == 1:\n
+    pred_ids = list(map(lambda x: (x.getRelativeUrl(), x.getTitle()), \n
+                                   predicate_list))\n
+  else:\n
+    pred_ids = list(map(lambda x: x.getRelativeUrl(), predicate_list))\n
+\n
+# Insert predicat list for display in columns\n
+cell_range.insert(1, pred_ids)\n
+\n
+# Remove empty range\n
+cell_range = filter(lambda x: x!=[], cell_range)\n
+\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQCAGQDAIQCAFoAAGQAAFMoBAAAAE5pAAAAAGkBAAAA
+YwIAAAAPAAAAEwAAAEMAAABzmAEAAGcAAH0CAHQBAHQCAGQBAIMCAIMAAH0FAHwFAHQEAGoIAG8W
+AAF0AQB0AgBkAgCDAgCDAAB9BQBuAQABdAEAfAUAZAMAgwIAgwAAfQcAeJ8AdAYAfAcAgwEARF2R
+AH0JAHwAAGQEAGoCAG9KAAF0AQB8AgBkBQCDAgB0CQBkBgCEAAB0AQB8BQBkBwCDAgBkCAB8CQBm
+AQBkCQB8AQBkCgBkCwBkDABkDQCDAASDAgCDAQABcVoAAXQBAHwCAGQFAIMCAHQBAHwFAGQOAIMC
+AGQIAHwJAGYBAGQKAGQLAGQMAGQNAIMAA4MBAAFxWgBXdAEAdAIAZA8AgwIAZBAAaAAABGQRAGQS
+AAM8gwABfQsAZwAAfQwAfAsAZwAAagMAb0UAAXwAAGQEAGoCAG8cAAF0DQB0CQBkEwCEAAB8CwCD
+AgCDAQB9DABxaAEBdA0AdAkAZBQAhAAAfAsAgwIAgwEAfQwAbgEAAXQBAHwCAGQVAIMCAGQEAHwM
+AIMCAAF0DgBkFgCEAAB8AgCDAgB9AgB8AgBTZAAAUygXAAAATnMXAAAAZ2V0RGVmYXVsdFJlc291
+cmNlVmFsdWVzCQAAAGdldFBhcmVudHMcAAAAZ2V0VmFyaWF0aW9uQmFzZUNhdGVnb3J5TGlzdGkB
+AAAAcwYAAABhcHBlbmRjAQAAAAIAAAAEAAAAQwAAAHMcAAAAdAAAfAAAZAEAgwIAdAAAfAAAZAIA
+gwIAZgIAUygDAAAATmkBAAAAaQAAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwEAAAB4KAIAAABzAQAA
+AHhzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJk
+YS4xPg0AAABzAAAAAHMcAAAAZ2V0VmFyaWF0aW9uQ2F0ZWdvcnlJdGVtTGlzdHMSAAAAYmFzZV9j
+YXRlZ29yeV9saXN0cxUAAABkaXNwbGF5X2Jhc2VfY2F0ZWdvcnlzGQAAAG9taXRfaW5kaXZpZHVh
+bF92YXJpYXRpb25pAAAAAHMHAAAAc29ydF9pZHMCAAAAaWRzGAAAAGdldFZhcmlhdGlvbkNhdGVn
+b3J5TGlzdHMNAAAAY29udGVudFZhbHVlc3MGAAAAZmlsdGVycwsAAABwb3J0YWxfdHlwZXMPAAAA
+UHJlZGljYXRlIEdyb3VwYwEAAAACAAAABAAAAEMAAABzIgAAAHQAAHwAAGQBAIMCAIMAAHQAAHwA
+AGQCAIMCAIMAAGYCAFMoAwAAAE5zDgAAAGdldFJlbGF0aXZlVXJscwgAAABnZXRUaXRsZSgCAAAA
+cwkAAABfZ2V0YXR0cl9zAQAAAHgoAgAAAHMBAAAAeHMJAAAAX2dldGF0dHJfKAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcwoAAAA8bGFtYmRhLjI+HQAAAHMAAAAAYwEAAAACAAAAAwAAAEMA
+AABzEAAAAHQAAHwAAGQBAIMCAIMAAFMoAgAAAE5zDgAAAGdldFJlbGF0aXZlVXJsKAIAAABzCQAA
+AF9nZXRhdHRyX3MBAAAAeCgCAAAAcwEAAAB4cwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzCgAAADxsYW1iZGEuMz4gAAAAcwAAAABzBgAAAGluc2VydGMBAAAAAQAA
+AAIAAABDAAAAcwoAAAB8AABnAABqAwBTKAEAAABOKAEAAABzAQAAAHgoAQAAAHMBAAAAeCgAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS40PiYAAABzAAAAACgPAAAAcwoA
+AABjZWxsX3JhbmdlcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCAAAAHJlc291cmNlcwQAAABO
+b25lcxIAAABiYXNlX2NhdGVnb3J5X2xpc3RzCQAAAF9nZXRpdGVyX3MBAAAAY3MJAAAAbWF0cml4
+Ym94cwMAAABtYXBzFQAAAGRpc3BsYXlfYmFzZV9jYXRlZ29yeXMOAAAAcHJlZGljYXRlX2xpc3Rz
+CAAAAHByZWRfaWRzcwQAAABsaXN0cwYAAABmaWx0ZXIoDwAAAHMJAAAAbWF0cml4Ym94cxUAAABk
+aXNwbGF5X2Jhc2VfY2F0ZWdvcnlzCgAAAGNlbGxfcmFuZ2VzCQAAAF9nZXRhdHRyX3MHAAAAY29u
+dGV4dHMIAAAAcmVzb3VyY2VzBAAAAE5vbmVzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMJAAAAX2dl
+dGl0ZXJfcwEAAABjcwMAAABtYXBzDgAAAHByZWRpY2F0ZV9saXN0cwgAAABwcmVkX2lkc3MEAAAA
+bGlzdHMGAAAAZmlsdGVyKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxgAAABBcHBhcmVs
+TW9kZWxfYXNDZWxsUmFuZ2UBAAAAczAAAAAGAhIBDQEWAhICDQAGAhACFQEMAQkBIAMMASkEDwES
+AQYBDQENAQwBEAIfAxMDEgIoAQAAAHMYAAAAQXBwYXJlbE1vZGVsX2FzQ2VsbFJhbmdlKAEAAABz
+GAAAAEFwcGFyZWxNb2RlbF9hc0NlbGxSYW5nZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_apparel/ApparelModel_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, display_base_category=1</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>display_base_category</string>
+                            <string>cell_range</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>resource</string>
+                            <string>None</string>
+                            <string>base_category_list</string>
+                            <string>_getiter_</string>
+                            <string>c</string>
+                            <string>map</string>
+                            <string>predicate_list</string>
+                            <string>pred_ids</string>
+                            <string>list</string>
+                            <string>filter</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>1</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ApparelModel_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="iso-8859-1"?>\n
+<template bottommargin=\'0.665cm\' showboundary=\'0\' topmargin=\'0.635cm\' rightmargin=\'0.665cm\' tal:define=\'portal python:here.portal_url.getPortalObject()\' filename=\'accounting_details.pdf\' pagesize=\'A4\' allowsplitting=\'1\' landscape=\'0\' leftmargin=\'0.635cm\'>\n
+  <pagetemplate startframe=\'content\' id=\'FirstPage\'>\n
+    <static>\n
+      <rectangle z=\'\' height=\'1.452cm\' width=\'19.701cm\' stroke=\'(0.0,0.0,0.0)\' y=\'27.613cm\' x=\'0.635cm\' linewidth=\'1\' fill=\'(0.4,0.4,0.4)\'/>\n
+      <infostring z=\'\' color=\'(1.0,1.0,1.0)\' align=\'center\' y=\'28.08091256cm\' x=\'10.7805cm\' font=\'Helvetica\' size=\'28\'>Accounting details</infostring>\n
+      <infostring z=\'\' color=\'(0,0,0)\' align=\'center\' y=\'0.5cm\' x=\'10.7805cm\' font=\'Helvetica\' size=\'10\'>Page %(page)s</infostring>\n
+    </static>\n
+    \n
+    <frame showBoundary=\'0\' leftpadding=\'0.1cm\' height=\'26cm\' width=\'19.7cm\' rightpadding=\'0.1cm\' y=\'1.165cm\' x=\'0.635cm\' nextid=\'content\' toppadding=\'0.2cm\' id=\'content\' bottompadding=\'0.5cm\'/>\n
+  </pagetemplate>\n
+  <stylesheet>\n
+    <tablestyle name=\'default\'>\n
+      <stylecmd expr="(\'GRID\', (0,0), (-1,-1), 0.1, colors.black)"/>\n
+    </tablestyle>\n
+\n
+    <tablestyle name=\'ttp0\'>\n
+      <stylecmd expr="(\'FONT\', (0,0),(-1,-1), \'Helvetica-Bold\',12)"/>\n
+    </tablestyle>\n
+\n
+    <tablestyle name=\'ttp1\'>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,0),(3,1),(0.501960784314,0.501960784314,0.501960784314))"/>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,-1),(3,-1),(0.501960784314,0.501960784314,0.501960784314))"/>\n
+      <stylecmd expr="(\'TEXTCOLOR\', (0,0),(3,1),(1.0,1.0,1.0))"/>\n
+      <stylecmd expr="(\'TEXTCOLOR\', (0,-1),(3,-1),(1.0,1.0,1.0))"/>\n
+      <stylecmd expr="(\'ALIGNMENT\', (2,0),(3,0),\'CENTER\')"/>\n
+      <stylecmd expr="(\'ALIGNMENT\', (2,1),(3,-1),\'RIGHT\')"/>\n
+      <stylecmd expr="(\'LINEBEFORE\', (2,0),(2,1),0.06,(1.0,1.0,1.0))"/>\n
+      <stylecmd expr="(\'LINEBEFORE\', (2,2),(2,-2),0.06,(0.0,0.0,0.0))"/>\n
+      <stylecmd expr="(\'LINEBEFORE\', (2,-1),(2,-1),0.06,(1.0,1.0,1.0))"/>\n
+      <stylecmd expr="(\'LINEAFTER\', (2,0),(2,1),0.06,(1.0,1.0,1.0))"/>\n
+      <stylecmd expr="(\'LINEAFTER\', (2,2),(2,-2),0.06,(0.0,0.0,0.0))"/>\n
+      <stylecmd expr="(\'LINEAFTER\', (2,-1),(2,-1),0.06,(1.0,1.0,1.0))"/>\n
+      <stylecmd expr="(\'BOTTOMPADDING\', (0,0), (-1,-1), 1)"/>\n
+      <stylecmd expr="(\'BOTTOMPADDING\', (0,0), (3,1), 2)"/>\n
+      <stylecmd expr="(\'BOTTOMPADDING\', (0,-1), (3,-1), 2)"/>\n
+      <stylecmd expr="(\'FONT\', (0,0),(3,1), \'Helvetica-Bold\',10)"/>\n
+      <stylecmd expr="(\'FONT\', (0,-1),(3,-1), \'Helvetica-Bold\',10)"/>\n
+\n
+    </tablestyle>\n
+  </stylesheet>\n
+</template>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AmortisationTransaction_pdf_template</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

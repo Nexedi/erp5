@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Jump to a bank account of the current organisation\n
+\n
+request=context.REQUEST\n
+organisation = context.restrictedTraverse(\n
+          context.getPortalObject().portal_preferences.\\\n
+          getPreferredAccountingTransactionSourceSection())\n
+\n
+if organisation is not None :\n
+  selection_uid_list = [ bank_account.getUid() for bank_account \\\n
+     in organisation.searchFolder(portal_type = \'Bank Account\') ]\n
+  if len(selection_uid_list) != 0 : \n
+    kw = {\'uid\': selection_uid_list}\n
+    context.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\', kw)\n
+    request.set(\'object_uid\', context.getUid())\n
+    request.set(\'uids\', selection_uid_list)\n
+    return context.Base_jumpToRelatedObjectList(\n
+          uids=selection_uid_list, REQUEST=request)\n
+\n
+redirect_url = \'%s/view?%s\' % (context.getPath(),\n
+            \'portal_status_message=No+Bank+Account+For+Current+Organisation\')\n
+return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA4AAAAQAAAAQwAA
+AHN/AQAAdAAAdAEAZAEAgwIAfQIAdAAAdAEAZAIAgwIAdAAAdAAAdAAAdAEAZAMAgwIAgwAAZAQA
+gwIAZAUAgwIAgwAAgwEAfQMAfAMAdAQAagkAb+gAAWcAAARpBQB9BgB0BwB0AAB8AwBkBgCDAgBk
+BwBkCACDAAGDAQBEXRwAfQgAfAYAdAAAfAgAZAkAgwIAgwAAgwEAAXF4AH4GAH0JAHQKAHwJAIMB
+AGQKAGoDAG+GAAFoAAAEZAsAfAkAAzx9CwB0AAB0AAB0AQBkDACDAgBkDQCDAgBkDgB8CwCDAgAB
+dAAAfAIAZA8AgwIAZBAAdAAAdAEAZAkAgwIAgwAAgwIAAXQAAHwCAGQPAIMCAGQRAHwJAIMCAAF0
+AAB0AQBkDgCDAgBkEQB8CQBkAQB8AgCDAAJTcToBAW4BAAFkEgB0AAB0AQBkEwCDAgCDAABkFABm
+AgAWfQwAdAAAdA0AdAAAdAEAZAEAgwIAZBUAgwIAZBYAgwIAfAwAgwEAU2QAAFMoFwAAAE5zBwAA
+AFJFUVVFU1RzEgAAAHJlc3RyaWN0ZWRUcmF2ZXJzZXMPAAAAZ2V0UG9ydGFsT2JqZWN0cxIAAABw
+b3J0YWxfcHJlZmVyZW5jZXNzLgAAAGdldFByZWZlcnJlZEFjY291bnRpbmdUcmFuc2FjdGlvblNv
+dXJjZVNlY3Rpb25zDAAAAHNlYXJjaEZvbGRlcnMLAAAAcG9ydGFsX3R5cGVzDAAAAEJhbmsgQWNj
+b3VudHMGAAAAZ2V0VWlkaQAAAABzAwAAAHVpZHMRAAAAcG9ydGFsX3NlbGVjdGlvbnNzFQAAAHNl
+dFNlbGVjdGlvblBhcmFtc0ZvcnMcAAAAQmFzZV9qdW1wVG9SZWxhdGVkT2JqZWN0TGlzdHMDAAAA
+c2V0cwoAAABvYmplY3RfdWlkcwQAAAB1aWRzcwoAAAAlcy92aWV3PyVzcwcAAABnZXRQYXRocz4A
+AABwb3J0YWxfc3RhdHVzX21lc3NhZ2U9Tm8rQmFuaytBY2NvdW50K0ZvcitDdXJyZW50K09yZ2Fu
+aXNhdGlvbnMIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0KA4AAABzCQAAAF9nZXRhdHRyX3MHAAAA
+Y29udGV4dHMHAAAAcmVxdWVzdHMMAAAAb3JnYW5pc2F0aW9ucwQAAABOb25lcwYAAABhcHBlbmRz
+CAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zDAAAAGJhbmtfYWNjb3VudHMSAAAAc2VsZWN0aW9u
+X3VpZF9saXN0cwMAAABsZW5zAgAAAGt3cwwAAAByZWRpcmVjdF91cmxzCQAAAF9nZXRpdGVtXygO
+AAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzDAAAAG9yZ2FuaXNhdGlv
+bnMEAAAATm9uZXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwwAAABiYW5r
+X2FjY291bnRzEgAAAHNlbGVjdGlvbl91aWRfbGlzdHMDAAAAbGVucwIAAABrd3MMAAAAcmVkaXJl
+Y3RfdXJscwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzLQAAAEFj
+Y291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV9qdW1wVG9CYW5rQWNjb3VudAEAAABzHgAAAAACDwEV
+ASEDDQEQATsBEwEVARwBIgETAQ8BFQIcAigBAAAAcy0AAABBY2NvdW50aW5nVHJhbnNhY3Rpb25N
+b2R1bGVfanVtcFRvQmFua0FjY291bnQoAQAAAHMtAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9k
+dWxlX2p1bXBUb0JhbmtBY2NvdW50KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8
+bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransactionModule_jumpToBankAccount</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>organisation</string>
+                            <string>None</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>bank_account</string>
+                            <string>selection_uid_list</string>
+                            <string>len</string>
+                            <string>kw</string>
+                            <string>redirect_url</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_jumpToBankAccount</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

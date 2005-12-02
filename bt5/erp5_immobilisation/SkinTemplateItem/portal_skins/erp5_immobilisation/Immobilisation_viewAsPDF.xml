@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Form.PDFTemplate</string>
+          <string>PDFTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="iso-8859-1"?>\n
+<document filename=\'report01.pdf\' xmlns:tal="http://xml.zope.org/namespaces/tal">\n
+  <title>Title</title>\n
+  <author>Author</author>\n
+  <subject>Subject</subject>\n
+  <content tal:define="data python:here.Immobilisation_getDocumentInfo()">\n
+  <tal:block condition="python: len(data)>1">\n
+    <tal:block repeat="rep python: data[1:]">\n
+    <table style=\'ttp4\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.614cm\'>\n
+        <td colwidth=\'7.62cm\'>Accounting :</td>\n
+        <td colwidth=\'12.21cm\'></td>\n
+      </tr>\n
+    </table>\n
+\n
+    <!-- Spacer -->\n
+    <table><tr rowheight=\'1cm\'><td></td></tr></table>\n
+\n
+    <table style=\'ttp5\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.762cm\'>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+        <td colwidth=\'6.35cm\'>Immobilisation date :</td>\n
+        <td colwidth=\'5.028946cm\' tal:content=\'python: rep["start_date"]\'>stop_date</td>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+        <td colwidth=\'3.048cm\'> </td>\n
+        <td colwidth=\'3.758946cm\'> </td>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+      </tr>\n
+      <tr rowheight=\'0.762cm\'>\n
+        <td> </td>\n
+        <td>Reference (movement)</td>\n
+        <td tal:content=\'python: rep["movement_reference"]\'>Id</td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+      </tr>\n
+    </table>\n
+\n
+    <!-- Spacer -->\n
+    <table><tr rowheight=\'1.5cm\'><td></td></tr></table>\n
+\n
+    <table style=\'ttp0\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.595884cm\'>\n
+        <td colwidth=\'7.62cm\'>Immobilised item :</td>\n
+        <td colwidth=\'12.21cm\'></td>\n
+      </tr>\n
+    </table>\n
+\n
+    <!-- Spacer -->\n
+    <table><tr rowheight=\'1cm\'><td></td></tr></table>\n
+\n
+    <table style=\'ttp1\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.762cm\'>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+        <td colwidth=\'4.826cm\'>Designation :</td>\n
+        <td colwidth=\'4.266946cm\' tal:content=\'python: rep["designation"]\'>Item Title</td>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+        <td colwidth=\'5.08cm\'>Invoice reference :</td>\n
+        <td colwidth=\'4.012946cm\' tal:content=\'python: rep["invoice_reference"]\'>???</td>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+      </tr>\n
+      <tr rowheight=\'0.762cm\'>\n
+        <td> </td>\n
+        <td>Reference :</td>\n
+        <td tal:content=\'python: rep["reference"]\'>Item id</td>\n
+        <td> </td>\n
+        <td>Duration on immobilisation date :</td>\n
+        <td tal:content=\'python: rep["amortisation_duration"]\'> </td>\n
+        <td> </td>\n
+      </tr>\n
+    </table>\n
+\n
+    <!-- Spacer -->\n
+    <table><tr rowheight=\'1.5cm\'><td></td></tr></table>\n
+\n
+    <table style=\'ttp2\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.595884cm\'>\n
+        <td colwidth=\'7.62cm\'>Amortisation :</td>\n
+        <td colwidth=\'12.21cm\'></td>\n
+      </tr>\n
+    </table>\n
+\n
+    <!-- Spacer -->\n
+    <table><tr rowheight=\'1cm\'><td></td></tr></table>\n
+\n
+    <table style=\'ttp3\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.635cm\'>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+        <td colwidth=\'4.826cm\'>Amortisation type :</td>\n
+        <td colwidth=\'4.266946cm\' tal:content=\'python: rep["amortisation_type"]\'>(linear / degressive)</td>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+        <td colwidth=\'5.08cm\'>Value on immobilisation date :</td>\n
+        <td colwidth=\'4.012946cm\' tal:content=\'python: rep["amortisation_price"]\'> </td>\n
+        <td colwidth=\'0.508cm\'> </td>\n
+      </tr>\n
+      <tr rowheight=\'0.635cm\'>\n
+        <td> </td>\n
+        <td>Start date :</td>\n
+        <td tal:content=\'python: rep["start_date"]\'>stop_date</td>\n
+        <td> </td>\n
+        <td>End date :</td>\n
+        <td tal:content=\'python: rep["end_date"]\'>???</td>\n
+        <td> </td>\n
+      </tr>\n
+      <tr rowheight=\'0.635cm\'>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+      </tr>\n
+      <tr rowheight=\'0.635cm\'>\n
+        <td> </td>\n
+        <td>Section :</td>\n
+        <td tal:content=\'python: rep["section"]\'>???</td>\n
+        <td> </td>\n
+        <td>Project :</td>\n
+        <td tal:content=\'python: rep["project"]\'>destination_project</td>\n
+        <td> </td>\n
+      </tr>\n
+      <tr rowheight=\'0.635cm\'>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td> </td>\n
+        <td>Budget :</td>\n
+        <td tal:content=\'python: rep["budget"]\'>destination_budget</td>\n
+        <td> </td>\n
+      </tr>\n
+    </table>\n
+    </tal:block>\n
+  </tal:block>\n
+  <tal:block condition="python:len(data)==1">\n
+    <table>\n
+      <tr rowheight=\'0.635cm\'>\n
+        <td tal:content="python: \'No immobilisation document : \' + data[0]"> </td>\n
+      </tr>\n
+    </table>\n
+  </tal:block>\n
+  </content>\n
+</document>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/pdf</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Immobilisation_viewAsPDF</string> </value>
+        </item>
+        <item>
+            <key> <string>pdf_stylesheet</string> </key>
+            <value> <string>Immobilisation_pdf_template</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

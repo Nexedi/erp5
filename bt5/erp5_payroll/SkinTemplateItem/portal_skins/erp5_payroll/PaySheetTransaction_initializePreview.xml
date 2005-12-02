@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>import random\n
+from Products.ERP5Type.Document import newTempBase\n
+from string import zfill\n
+\n
+global portal_object, num, l\n
+portal_object = context.getPortalObject()\n
+num = 0\n
+l = []\n
+\n
+# get all pre-calculated rates and bases\n
+default_values = context.PaySheetTransaction_preCalculation()\n
+\n
+# function to create a new preview line\n
+def createPreviewLine   ( new_id                = None\n
+                        , new_title             = None\n
+                        , new_base              = None\n
+                        , new_base_name         = None\n
+                        , new_employee_rate     = None\n
+                        , new_employer_rate     = None\n
+                        , new_service_url       = None\n
+                        , new_organisation_url  = None\n
+                        , new_salary_range_cat  = None\n
+                        , new_tax_cat           = None\n
+                        ):\n
+    \n
+    global portal_object, num, l\n
+    num += 1\n
+    int_len = 3\n
+    o = newTempBase(portal_object, new_id)\n
+    o.setUid(\'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
+    o.edit(uid=\'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
+    o.edit  ( id                    = new_id\n
+            , title                 = new_title\n
+            , base                  = new_base\n
+            , base_name             = new_base_name\n
+            , employee_share_rate   = new_employee_rate\n
+            , employer_share_rate   = new_employer_rate\n
+            , service_url           = new_service_url\n
+            , organisation_url      = new_organisation_url\n
+            , salary_range_cat      = new_salary_range_cat\n
+            , tax_cat               = new_tax_cat\n
+            )\n
+    l.append(o)\n
+\n
+# get all services related to pay sheet transaction\n
+paysheet_services = []\n
+erp5site = context.portal_url.getPortalObject()\n
+# during 06/2005 service module has been renamed service_module\n
+# both names are supported\n
+if hasattr(erp5site, \'service_module\') : \n
+  service_module = erp5site.service_module\n
+else : \n
+  service_module = erp5site.service\n
+for service in service_module.objectValues():\n
+    base_cat = service.getVariationRangeBaseCategoryList()\n
+    # a service is related to paysheet transaction if it has \'tax_category\' et \'salary_range\' as base category\n
+    if \'tax_category\' in base_cat and \'salary_range\' in base_cat and service.getId() != \'labour\':\n
+        paysheet_services.append(service)\n
+\n
+# Sort the service list by id\n
+paysheet_services.sort(lambda x, y: cmp(x.getId(), y.getId()))\n
+\n
+# generate all lines for the preview form\n
+for serv in paysheet_services:\n
+    cat_list = serv.getCategoryList()\n
+    # store all categories of the service into lists\n
+    tax_cat     = []\n
+    range_cat   = []\n
+    for cat in cat_list:\n
+        if str(cat).find(\'tax_category\') != -1:\n
+            tax_cat.append(cat)\n
+        if str(cat).find(\'salary_range\') != -1:\n
+            range_cat.append(cat)\n
+    # create a line for every salary_range of the service\n
+    for base in range_cat:\n
+        name = serv.getId() + \'/\' + context.portal_categories.resolveCategory(base).getId()\n
+        # a preview line is composed of a base calculation, an employee share rate and an employer share rate\n
+        if default_values.has_key(name):\n
+            new_base            = default_values[name][\'base\']\n
+            new_employee_rate   = default_values[name][\'employee_rate\']\n
+            new_employer_rate   = default_values[name][\'employer_rate\']\n
+        # create a preview line for every salary_range value of the service\n
+        createPreviewLine   ( new_id                = serv.getId()\n
+                            , new_title             = serv.getTitleOrId()\n
+                            , new_base              = new_base\n
+                            , new_base_name         = context.portal_categories.resolveCategory(base).getTitleOrId()\n
+                            , new_employee_rate     = new_employee_rate\n
+                            , new_employer_rate     = new_employer_rate\n
+                            , new_service_url       = serv.getRelativeUrl()\n
+                            , new_organisation_url  = serv.getSource()\n
+                            , new_salary_range_cat  = base\n
+                            , new_tax_cat           = tax_cat\n
+                            )\n
+\n
+# return the list of preview lines\n
+return l\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAACEAAAA4AAAACwAA
+AHN+AwAAZAAAawAAfQEAZAEAawEAbAIAiQAAAWQCAGsDAGwEAIkBAAF0BQB0BgBkAwCDAgCDAABh
+BwBkBABhCABnAABhCQB0BQB0BgBkBQCDAgCDAAB9CwB0CwB0CwB0CwB0CwB0CwB0CwB0CwB0CwB0
+CwB0CwCHAACHAQBkBgCGCgB9DQBnAAB9DgB0BQB0BQB0BgBkBwCDAgBkAwCDAgCDAAB9DwB0DwB8
+DwBkCACDAgBvEwABdAUAfA8AZAgAgwIAfREAbhAAAXQFAHwPAGQJAIMCAH0RAHh8AHQRAHQFAHwR
+AGQKAIMCAIMAAIMBAERdYgB9EwB0BQB8EwBkCwCDAgCDAAB9FABkDAB8FABqBgBvIwABZA0AfBQA
+agYAbxYAAXQFAHwTAGQOAIMCAIMAAGQPAGoDAG8XAAF0BQB8DgBkEACDAgB8EwCDAQABcewAAXHs
+AFd0BQB8DgBkEQCDAgBkEgCEAACDAQABeAsCdBEAfA4AgwEARF39AX0VAHQFAHwVAGQTAIMCAIMA
+AH0WAGcAAH0XAGcAAH0YAHiIAHQRAHwWAIMBAERdegB9GQB0BQB0GQB8GQCDAQBkFACDAgBkDACD
+AQBkFQALagMAbxcAAXQFAHwXAGQQAIMCAHwZAIMBAAFuAQABdAUAdBkAfBkAgwEAZBQAgwIAZA0A
+gwEAZBUAC2oDAG8XAAF0BQB8GABkEACDAgB8GQCDAQABcaYBAXGmAVd4SwF0EQB8GACDAQBEXT0B
+fRsAdAUAfBUAZA4AgwIAgwAAZBYAF3QFAHQFAHQFAHQGAGQXAIMCAGQYAIMCAHwbAIMBAGQOAIMC
+AIMAABd9HAB0BQB8CwBkGQCDAgB8HACDAQBvTAABdBwAdBwAfAsAfBwAgwIAZBoAgwIAfR4AdBwA
+dBwAfAsAfBwAgwIAZBsAgwIAfR8AdBwAdBwAfAsAfBwAgwIAZBwAgwIAfSAAbgEAAXwNAGQdAHQF
+AHwVAGQOAIMCAIMAAGQeAHQFAHwVAGQfAIMCAIMAAGQgAHweAGQhAHQFAHQFAHQFAHQGAGQXAIMC
+AGQYAIMCAHwbAIMBAGQfAIMCAIMAAGQiAHwfAGQjAHwgAGQkAHQFAHwVAGQlAIMCAIMAAGQmAHQF
+AHwVAGQnAIMCAIMAAGQoAHwbAGQpAHwXAIMACgFxMQJXcXUBV3QJAFNkAABTKCoAAABOKAEAAABz
+CwAAAG5ld1RlbXBCYXNlKAEAAABzBQAAAHpmaWxscw8AAABnZXRQb3J0YWxPYmplY3RpAAAAAHMi
+AAAAUGF5U2hlZXRUcmFuc2FjdGlvbl9wcmVDYWxjdWxhdGlvbmMKAAAAEgAAABcAAAADAAAAc8UA
+AAB0AABkAQA3YQAAZAIAfQsAiAAAdAMAfAAAgwIAfQ4AdAYAfA4AZAMAgwIAZAQAiAEAdAAAfAsA
+gwIAFoMBAAF0BgB8DgBkBQCDAgBkBgBkBACIAQB0AAB8CwCDAgAWgwABAXQGAHwOAGQFAIMCAGQH
+AHwAAGQIAHwBAGQJAHwCAGQKAHwDAGQLAHwEAGQMAHwFAGQNAHwGAGQOAHwHAGQPAHwIAGQQAHwJ
+AIMACgF0BgB0EQBkEQCDAgB8DgCDAQABZAAAUygSAAAATmkBAAAAaQMAAABzBgAAAHNldFVpZHMG
+AAAAbmV3XyVzcwQAAABlZGl0cwMAAAB1aWRzAgAAAGlkcwUAAAB0aXRsZXMEAAAAYmFzZXMJAAAA
+YmFzZV9uYW1lcxMAAABlbXBsb3llZV9zaGFyZV9yYXRlcxMAAABlbXBsb3llcl9zaGFyZV9yYXRl
+cwsAAABzZXJ2aWNlX3VybHMQAAAAb3JnYW5pc2F0aW9uX3VybHMQAAAAc2FsYXJ5X3JhbmdlX2Nh
+dHMHAAAAdGF4X2NhdHMGAAAAYXBwZW5kKBIAAABzAwAAAG51bXMHAAAAaW50X2xlbnMLAAAAbmV3
+VGVtcEJhc2VzDQAAAHBvcnRhbF9vYmplY3RzBgAAAG5ld19pZHMBAAAAb3MJAAAAX2dldGF0dHJf
+cwUAAAB6ZmlsbHMJAAAAbmV3X3RpdGxlcwgAAABuZXdfYmFzZXMNAAAAbmV3X2Jhc2VfbmFtZXMR
+AAAAbmV3X2VtcGxveWVlX3JhdGVzEQAAAG5ld19lbXBsb3llcl9yYXRlcw8AAABuZXdfc2Vydmlj
+ZV91cmxzFAAAAG5ld19vcmdhbmlzYXRpb25fdXJscxQAAABuZXdfc2FsYXJ5X3JhbmdlX2NhdHML
+AAAAbmV3X3RheF9jYXRzAQAAAGwoEgAAAHMGAAAAbmV3X2lkcwkAAABuZXdfdGl0bGVzCAAAAG5l
+d19iYXNlcw0AAABuZXdfYmFzZV9uYW1lcxEAAABuZXdfZW1wbG95ZWVfcmF0ZXMRAAAAbmV3X2Vt
+cGxveWVyX3JhdGVzDwAAAG5ld19zZXJ2aWNlX3VybHMUAAAAbmV3X29yZ2FuaXNhdGlvbl91cmxz
+FAAAAG5ld19zYWxhcnlfcmFuZ2VfY2F0cwsAAABuZXdfdGF4X2NhdHMDAAAAbnVtcwcAAABpbnRf
+bGVucwsAAABuZXdUZW1wQmFzZXMNAAAAcG9ydGFsX29iamVjdHMBAAAAb3MJAAAAX2dldGF0dHJf
+cwUAAAB6ZmlsbHMBAAAAbCgCAAAAcwsAAABuZXdUZW1wQmFzZXMFAAAAemZpbGwoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcxEAAABjcmVhdGVQcmV2aWV3TGluZQ4AAABzIAAAAAANCgEGARIBIAEj
+ARIBBgEGAQYBBgEGAQYBBgEGAQoCcwoAAABwb3J0YWxfdXJscw4AAABzZXJ2aWNlX21vZHVsZXMH
+AAAAc2VydmljZXMMAAAAb2JqZWN0VmFsdWVzcyEAAABnZXRWYXJpYXRpb25SYW5nZUJhc2VDYXRl
+Z29yeUxpc3RzDAAAAHRheF9jYXRlZ29yeXMMAAAAc2FsYXJ5X3JhbmdlcwUAAABnZXRJZHMGAAAA
+bGFib3VycwYAAABhcHBlbmRzBAAAAHNvcnRjAgAAAAQAAAAFAAAAQwAAAHMlAAAAdAAAdAEAfAAA
+ZAEAgwIAgwAAdAEAfAEAZAEAgwIAgwAAgwIAUygCAAAATnMFAAAAZ2V0SWQoBAAAAHMDAAAAY21w
+cwkAAABfZ2V0YXR0cl9zAQAAAHhzAQAAAHkoBAAAAHMBAAAAeHMBAAAAeXMDAAAAY21wcwkAAABf
+Z2V0YXR0cl8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxsYW1iZGEuMz49AAAA
+cwAAAABzDwAAAGdldENhdGVnb3J5TGlzdHMEAAAAZmluZGkBAAAAcwEAAAAvcxEAAABwb3J0YWxf
+Y2F0ZWdvcmllc3MPAAAAcmVzb2x2ZUNhdGVnb3J5cwcAAABoYXNfa2V5cwQAAABiYXNlcw0AAABl
+bXBsb3llZV9yYXRlcw0AAABlbXBsb3llcl9yYXRlcwYAAABuZXdfaWRzCQAAAG5ld190aXRsZXMM
+AAAAZ2V0VGl0bGVPcklkcwgAAABuZXdfYmFzZXMNAAAAbmV3X2Jhc2VfbmFtZXMRAAAAbmV3X2Vt
+cGxveWVlX3JhdGVzEQAAAG5ld19lbXBsb3llcl9yYXRlcw8AAABuZXdfc2VydmljZV91cmxzDgAA
+AGdldFJlbGF0aXZlVXJscxQAAABuZXdfb3JnYW5pc2F0aW9uX3VybHMJAAAAZ2V0U291cmNlcxQA
+AABuZXdfc2FsYXJ5X3JhbmdlX2NhdHMLAAAAbmV3X3RheF9jYXQoIAAAAHMGAAAAcmFuZG9tcxoA
+AABQcm9kdWN0cy5FUlA1VHlwZS5Eb2N1bWVudHMLAAAAbmV3VGVtcEJhc2VzBgAAAHN0cmluZ3MF
+AAAAemZpbGxzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMNAAAAcG9ydGFsX29iamVjdHMDAAAA
+bnVtcwEAAABscw4AAABkZWZhdWx0X3ZhbHVlc3MEAAAATm9uZXMRAAAAY3JlYXRlUHJldmlld0xp
+bmVzEQAAAHBheXNoZWV0X3NlcnZpY2VzcwgAAABlcnA1c2l0ZXMHAAAAaGFzYXR0cnMOAAAAc2Vy
+dmljZV9tb2R1bGVzCQAAAF9nZXRpdGVyX3MHAAAAc2VydmljZXMIAAAAYmFzZV9jYXRzBAAAAHNl
+cnZzCAAAAGNhdF9saXN0cwcAAAB0YXhfY2F0cwkAAAByYW5nZV9jYXRzAwAAAGNhdHMDAAAAc3Ry
+cwQAAABiYXNlcwQAAABuYW1lcwkAAABfZ2V0aXRlbV9zCAAAAG5ld19iYXNlcxEAAABuZXdfZW1w
+bG95ZWVfcmF0ZXMRAAAAbmV3X2VtcGxveWVyX3JhdGUoIQAAAHMCAAAAa3dzBgAAAHJhbmRvbXMa
+AAAAUHJvZHVjdHMuRVJQNVR5cGUuRG9jdW1lbnRzCwAAAG5ld1RlbXBCYXNlcwYAAABzdHJpbmdz
+BQAAAHpmaWxscwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDQAAAHBvcnRhbF9vYmplY3RzAwAA
+AG51bXMBAAAAbHMOAAAAZGVmYXVsdF92YWx1ZXNzBAAAAE5vbmVzEQAAAGNyZWF0ZVByZXZpZXdM
+aW5lcxEAAABwYXlzaGVldF9zZXJ2aWNlc3MIAAAAZXJwNXNpdGVzBwAAAGhhc2F0dHJzDgAAAHNl
+cnZpY2VfbW9kdWxlcwkAAABfZ2V0aXRlcl9zBwAAAHNlcnZpY2VzCAAAAGJhc2VfY2F0cwQAAABz
+ZXJ2cwgAAABjYXRfbGlzdHMHAAAAdGF4X2NhdHMJAAAAcmFuZ2VfY2F0cwMAAABjYXRzAwAAAHN0
+cnMEAAAAYmFzZXMEAAAAbmFtZXMJAAAAX2dldGl0ZW1fcwgAAABuZXdfYmFzZXMRAAAAbmV3X2Vt
+cGxveWVlX3JhdGVzEQAAAG5ld19lbXBsb3llcl9yYXRlKAAAAAAoAgAAAHMLAAAAbmV3VGVtcEJh
+c2VzBQAAAHpmaWxscw8AAABTY3JpcHQgKFB5dGhvbilzJQAAAFBheVNoZWV0VHJhbnNhY3Rpb25f
+aW5pdGlhbGl6ZVByZXZpZXcBAAAAc3AAAAAJAQ0BDQMSAQYBBgMSAwMBAwEDAQMBAwEDAQMBAwED
+ARIXBgEbAxABEwIPARkABgEVAjMBGwMTAw0ABgESAgYBBgENAAYBJgEUASYBGAINAAYBQQITARgB
+GAEcAhsBDwEPASEBBgEJARIBDwEGAQ8EKAEAAABzJQAAAFBheVNoZWV0VHJhbnNhY3Rpb25faW5p
+dGlhbGl6ZVByZXZpZXcoAQAAAHMlAAAAUGF5U2hlZXRUcmFuc2FjdGlvbl9pbml0aWFsaXplUHJl
+dmlldygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_initializePreview</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>random</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_object</string>
+                            <string>num</string>
+                            <string>l</string>
+                            <string>default_values</string>
+                            <string>None</string>
+                            <string>createPreviewLine</string>
+                            <string>paysheet_services</string>
+                            <string>erp5site</string>
+                            <string>hasattr</string>
+                            <string>service_module</string>
+                            <string>_getiter_</string>
+                            <string>service</string>
+                            <string>base_cat</string>
+                            <string>serv</string>
+                            <string>cat_list</string>
+                            <string>tax_cat</string>
+                            <string>range_cat</string>
+                            <string>cat</string>
+                            <string>str</string>
+                            <string>base</string>
+                            <string>name</string>
+                            <string>_getitem_</string>
+                            <string>new_base</string>
+                            <string>new_employee_rate</string>
+                            <string>new_employer_rate</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_initializePreview</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

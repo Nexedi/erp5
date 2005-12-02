@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>#\n
+#  this script is called on the Sale Invoice Transaction\n
+# after the sale_invoice_transaction_builder delivery builder\n
+# created Sale Invoice Transaction Line\n
+# \n
+\n
+LOG = lambda msg:context.log(\n
+          "SaleInvoiceTransaction_postTransactionLineGeneration", msg)\n
+\n
+sale_invoice = context\n
+\n
+# Accounting specific: \n
+#  if every lines have the same resource, then copy the resource \n
+# on the Transaction and delete resource on the lines.\n
+\n
+accounting_line_portal_type = (\n
+                    "Sale Invoice Transaction Line",\n
+                    "Accounting Transaction Line")\n
+\n
+resources_keys = {}\n
+\n
+for line in sale_invoice.objectValues() :\n
+  if line.getPortalType() not in accounting_line_portal_type :\n
+    continue\n
+  else : \n
+    resources_keys[line.getResource()] = 1\n
+\n
+if len(resources_keys.keys()) == 1 :\n
+  # set the resource on the transaction\n
+  sale_invoice.setResource(resources_keys.keys()[0])\n
+  # and delete on the invoice lines, so that if the user\n
+  # changes the ressource on the transaction, it also change on \n
+  # the lines. \n
+  for line in sale_invoice.objectValues() :\n
+    if line.getPortalType() in accounting_line_portal_type :\n
+      line.setResource(None)\n
+      assert(line.getResource() == sale_invoice.getResource())\n
+else :\n
+  raise ValueError, "%s doesn(t have only one resource %s" % (\n
+              sale_invoice.getPath(), resources_keys.keys())\n
+\n
+\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA8AAAAUAAAAQwAA
+AHOAAQAAZAEAhAAAfQAAdAEAfQIAZAIAZAMAZgIAfQMAaAAAfQQAeFwAdAUAdAYAfAIAZAQAgwIA
+gwAAgwEARF1CAH0HAHQGAHwHAGQFAIMCAIMAAHwDAGoHAG8HAAFxOgBxOgABZAYAdAgAfAQAgwEA
+dAYAfAcAZAcAgwIAgwAAPHE6AFd0CQB0BgB8BABkCACDAgCDAACDAQBkBgBqAgBvsgABdAYAfAIA
+ZAkAgwIAdAoAdAYAfAQAZAgAgwIAgwAAZAoAgwIAgwEAAXiyAHQFAHQGAHwCAGQEAIMCAIMAAIMB
+AERdaQB9BwB0BgB8BwBkBQCDAgCDAAB8AwBqBgBvSgABdAYAfAcAZAkAgwIAdAsAgwEAAXQMAG8s
+AAF0BgB8BwBkBwCDAgCDAAB0BgB8AgBkBwCDAgCDAABqAgBwBwABdA0AggEAAXHgAAFx4ABXbiwA
+AXQOAGQLAHQGAHwCAGQMAIMCAIMAAHQGAHwEAGQIAIMCAIMAAGYCABaCAgBkAABTKA0AAABOYwEA
+AAADAAAAAwAAAEMAAABzFgAAAHQAAHQBAGQBAIMCAGQCAHwAAIMCAFMoAwAAAE5zAwAAAGxvZ3M0
+AAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9wb3N0VHJhbnNhY3Rpb25MaW5lR2VuZXJhdGlvbigD
+AAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAwAAAG1zZygDAAAAcwMAAABtc2dzCQAAAF9n
+ZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxh
+bWJkYS42PgcAAABzAgAAAA8Bcx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZXMbAAAA
+QWNjb3VudGluZyBUcmFuc2FjdGlvbiBMaW5lcwwAAABvYmplY3RWYWx1ZXNzDQAAAGdldFBvcnRh
+bFR5cGVpAQAAAHMLAAAAZ2V0UmVzb3VyY2VzBAAAAGtleXNzCwAAAHNldFJlc291cmNlaQAAAABz
+JAAAACVzIGRvZXNuKHQgaGF2ZSBvbmx5IG9uZSByZXNvdXJjZSAlc3MHAAAAZ2V0UGF0aCgPAAAA
+cwMAAABMT0dzBwAAAGNvbnRleHRzDAAAAHNhbGVfaW52b2ljZXMbAAAAYWNjb3VudGluZ19saW5l
+X3BvcnRhbF90eXBlcw4AAAByZXNvdXJjZXNfa2V5c3MJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0
+cl9zBAAAAGxpbmVzBwAAAF93cml0ZV9zAwAAAGxlbnMJAAAAX2dldGl0ZW1fcwQAAABOb25lcwkA
+AABfX2RlYnVnX19zDgAAAEFzc2VydGlvbkVycm9ycwoAAABWYWx1ZUVycm9yKA8AAABzAwAAAExP
+R3MHAAAAY29udGV4dHMMAAAAc2FsZV9pbnZvaWNlcxsAAABhY2NvdW50aW5nX2xpbmVfcG9ydGFs
+X3R5cGVzDgAAAHJlc291cmNlc19rZXlzcwkAAABfZ2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MEAAAA
+bGluZXMHAAAAX3dyaXRlX3MDAAAAbGVucwkAAABfZ2V0aXRlbV9zBAAAAE5vbmVzCQAAAF9fZGVi
+dWdfX3MOAAAAQXNzZXJ0aW9uRXJyb3JzCgAAAFZhbHVlRXJyb3IoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzNAAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25fcG9zdFRyYW5zYWN0aW9uTGlu
+ZUdlbmVyYXRpb24BAAAAcyQAAAAABgkDBgYMBAYCGQAGARkBBwIgAiICJQQZAAYBHAEQAT8CCQEo
+AQAAAHM0AAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9wb3N0VHJhbnNhY3Rpb25MaW5lR2VuZXJh
+dGlvbigBAAAAczQAAABTYWxlSW52b2ljZVRyYW5zYWN0aW9uX3Bvc3RUcmFuc2FjdGlvbkxpbmVH
+ZW5lcmF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABz
+AAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/SaleInvoiceTransaction_postTransactionLineGeneration</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>LOG</string>
+                            <string>context</string>
+                            <string>sale_invoice</string>
+                            <string>accounting_line_portal_type</string>
+                            <string>resources_keys</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>line</string>
+                            <string>_write_</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>__debug__</string>
+                            <string>AssertionError</string>
+                            <string>ValueError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleInvoiceTransaction_postTransactionLineGeneration</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

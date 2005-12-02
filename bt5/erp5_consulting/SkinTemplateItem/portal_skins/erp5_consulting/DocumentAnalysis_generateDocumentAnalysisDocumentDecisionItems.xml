@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>context_obj = context.getObject()\n
+\n
+role_type = \'Document Analysis Document Decision Item\'\n
+\n
+# this list contain all items\n
+items = []\n
+\n
+# get the user information\n
+for line in listbox:\n
+  if line.has_key(\'listbox_key\') and line[\'item_title\'] not in (\'\', None):\n
+    line_id = int(line[\'listbox_key\'])\n
+    item = {}\n
+    item[\'id\'] = line_id\n
+    item[\'title\'] = line[\'item_title\']\n
+    item[\'description\'] = line[\'item_description\']\n
+    items.append(item)\n
+\n
+# sort the list by id to have the same order of the user\n
+items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+\n
+# create corresponding objects\n
+for item in items:\n
+  context_obj.newContent( portal_type        = role_type\n
+                        , title              = item[\'title\']\n
+                        , description        = item[\'description\']\n
+                        )\n
+\n
+# return to the feature module\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=\' + role_type.replace(\' \', \'+\') + \'(s)+added.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGcAAGQBAIQBAFoAAGQAAFMoAgAAAE5jAQAAAA8AAAAPAAAA
+SwAAAHOPAQAAdAAAdAEAZAEAgwIAgwAAfQQAZAIAfQUAZwAAfQYAeLoAdAUAfAAAgwEARF2sAH0I
+AHQAAHwIAGQDAIMCAGQEAIMBAG8ZAAF0CAB8CABkBQCDAgBkBgB0CQBmAgBqBwBvdAABdAoAdAgA
+fAgAZAQAgwIAgwEAfQwAaAAAfQ0AfAwAdA0AfA0AgwEAZAcAPHQIAHwIAGQFAIMCAHQNAHwNAIMB
+AGQIADx0CAB8CABkCQCDAgB0DQB8DQCDAQBkCgA8dAAAfAYAZAsAgwIAfA0AgwEAAXErAAFxKwBX
+dAAAfAYAZAwAgwIAZA0AhAAAgwEAAXhIAHQFAHwGAIMBAERdOgB9DQB0AAB8BABkDgCDAgBkDwB8
+BQBkCAB0CAB8DQBkCACDAgBkCgB0CAB8DQBkCgCDAgCDAAMBcf4AV3QAAHQAAHQAAHQBAGQQAIMC
+AGQRAIMCAGQSAIMCAHQAAHQBAGQTAIMCAIMAAGQUABd0AAB8BQBkFQCDAgBkFgBkFwCDAgAXZBgA
+F4MBAFNkAABTKBkAAABOcwkAAABnZXRPYmplY3RzKAAAAERvY3VtZW50IEFuYWx5c2lzIERvY3Vt
+ZW50IERlY2lzaW9uIEl0ZW1zBwAAAGhhc19rZXlzCwAAAGxpc3Rib3hfa2V5cwoAAABpdGVtX3Rp
+dGxlcwAAAABzAgAAAGlkcwUAAAB0aXRsZXMQAAAAaXRlbV9kZXNjcmlwdGlvbnMLAAAAZGVzY3Jp
+cHRpb25zBgAAAGFwcGVuZHMEAAAAc29ydGMCAAAABAAAAAUAAABDAAAAcx8AAAB0AAB0AQB8AABk
+AQCDAgB0AQB8AQBkAQCDAgCDAgBTKAIAAABOcwIAAABpZCgEAAAAcwMAAABjbXBzCQAAAF9nZXRp
+dGVtX3MBAAAAeHMBAAAAeSgEAAAAcwEAAAB4cwEAAAB5cwMAAABjbXBzCQAAAF9nZXRpdGVtXygA
+AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMLAAAAPGxhbWJkYS4yMj4TAAAAcwAAAABzCgAA
+AG5ld0NvbnRlbnRzCwAAAHBvcnRhbF90eXBlcwcAAABSRVFVRVNUcwgAAABSRVNQT05TRXMIAAAA
+cmVkaXJlY3RzDAAAAGFic29sdXRlX3VybHMXAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1zBwAA
+AHJlcGxhY2VzAQAAACBzAQAAACtzCgAAAChzKSthZGRlZC4oDgAAAHMJAAAAX2dldGF0dHJfcwcA
+AABjb250ZXh0cwsAAABjb250ZXh0X29ianMJAAAAcm9sZV90eXBlcwUAAABpdGVtc3MJAAAAX2dl
+dGl0ZXJfcwcAAABsaXN0Ym94cwQAAABsaW5lcwkAAABfZ2V0aXRlbV9zBAAAAE5vbmVzAwAAAGlu
+dHMHAAAAbGluZV9pZHMEAAAAaXRlbXMHAAAAX3dyaXRlXygPAAAAcwcAAABsaXN0Ym94cwIAAABr
+d3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAABjb250ZXh0X29ianMJAAAAcm9sZV90eXBl
+cwUAAABpdGVtc3MJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwkAAABfZ2V0aXRlbV9zBAAAAE5vbmVz
+AwAAAGludHMHAAAAbGluZV9pZHMEAAAAaXRlbXMHAAAAX3dyaXRlXygAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXM+AAAARG9jdW1lbnRBbmFseXNpc19nZW5lcmF0ZURvY3VtZW50QW5hbHlz
+aXNEb2N1bWVudERlY2lzaW9uSXRlbXMBAAAAcyQAAAASAgYDBgMNAAkBLwEVAQYBEAEZARwBGwMT
+Aw0ACQEVAQ8BEQQoAQAAAHM+AAAARG9jdW1lbnRBbmFseXNpc19nZW5lcmF0ZURvY3VtZW50QW5h
+bHlzaXNEb2N1bWVudERlY2lzaW9uSXRlbXMoAQAAAHM+AAAARG9jdW1lbnRBbmFseXNpc19nZW5l
+cmF0ZURvY3VtZW50QW5hbHlzaXNEb2N1bWVudERlY2lzaW9uSXRlbXMoAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/DocumentAnalysis_generateDocumentAnalysisDocumentDecisionItems</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>context_obj</string>
+                            <string>role_type</string>
+                            <string>items</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>int</string>
+                            <string>line_id</string>
+                            <string>item</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DocumentAnalysis_generateDocumentAnalysisDocumentDecisionItems</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

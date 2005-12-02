@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Return the list of gap roots that can be used.\n
+# gap category is typically organized such as : \n
+#  gap / country / gap_name\n
+# so we always use as "root" the category of depth 2.\n
+\n
+results = []\n
+countries = context.portal_categories.gap.objectValues()\n
+for country in countries : \n
+  for gap in country.objectValues() :\n
+    title = gap.aq_parent.getTitle() + \'/\'+ gap.getTitle()\n
+    path = gap.getRelativeUrl()\n
+    if not include_gap_in_path : \n
+      path = path.replace(\'gap/\', \'\')\n
+\n
+    results += [(title, path)]\n
+\n
+return results\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAQAAAGMBAAAACgAA
+ABAAAABDAAAAc+QAAABnAAB9AQB0AQB0AQB0AQB0AgBkAQCDAgBkAgCDAgBkAwCDAgCDAAB9BAB4
+rwB0BAB8BACDAQBEXaEAfQYAeJgAdAQAdAEAfAYAZAMAgwIAgwAAgwEARF1+AH0HAHQBAHQBAHwH
+AGQEAIMCAGQFAIMCAIMAAGQGABd0AQB8BwBkBQCDAgCDAAAXfQgAdAEAfAcAZAcAgwIAgwAAfQkA
+fAAADG8cAAF0AQB8CQBkCACDAgBkCQBkCgCDAgB9CQBuAQABfAEAfAgAfAkAZgIAZwEAN30BAHFW
+AFdxNwBXfAEAU2QAAFMoCwAAAE5zEQAAAHBvcnRhbF9jYXRlZ29yaWVzcwMAAABnYXBzDAAAAG9i
+amVjdFZhbHVlc3MJAAAAYXFfcGFyZW50cwgAAABnZXRUaXRsZXMBAAAAL3MOAAAAZ2V0UmVsYXRp
+dmVVcmxzBwAAAHJlcGxhY2VzBAAAAGdhcC9zAAAAACgKAAAAcwcAAAByZXN1bHRzcwkAAABfZ2V0
+YXR0cl9zBwAAAGNvbnRleHRzCQAAAGNvdW50cmllc3MJAAAAX2dldGl0ZXJfcwcAAABjb3VudHJ5
+cwMAAABnYXBzBQAAAHRpdGxlcwQAAABwYXRocxMAAABpbmNsdWRlX2dhcF9pbl9wYXRoKAoAAABz
+EwAAAGluY2x1ZGVfZ2FwX2luX3BhdGhzBwAAAHJlc3VsdHNzCQAAAF9nZXRhdHRyX3MHAAAAY29u
+dGV4dHMJAAAAY291bnRyaWVzcwkAAABfZ2V0aXRlcl9zBwAAAGNvdW50cnlzAwAAAGdhcHMFAAAA
+dGl0bGVzBAAAAHBhdGgoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIQAAAEFjY291bnRN
+b2R1bGVfZ2V0QXZhaWxhYmxlR2FwTGlzdAEAAABzGAAAAAAFBgEkAQ0ABgEZAAYBLwESAQgBHAIb
+AigBAAAAcyEAAABBY2NvdW50TW9kdWxlX2dldEF2YWlsYWJsZUdhcExpc3QoAQAAAHMhAAAAQWNj
+b3VudE1vZHVsZV9nZXRBdmFpbGFibGVHYXBMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
+b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getAvailableGapList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>include_gap_in_path = 1 </string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>include_gap_in_path</string>
+                            <string>results</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>countries</string>
+                            <string>_getiter_</string>
+                            <string>country</string>
+                            <string>gap</string>
+                            <string>title</string>
+                            <string>path</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>1</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getAvailableGapList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,404 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>at_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>from_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>node_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_input</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_output</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>query</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>resource_uid</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>to_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>transaction_section_category</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>transaction_simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+<string>node_uid</string>
+<string>query</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>resource_uid</string>
+<string>from_date</string>
+<string>to_date</string>
+<string>at_date</string>
+<string>transaction_simulation_state</string>
+<string>transaction_section_category</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>node_uid\r\n
+query\r\n
+omit_input\r\n
+omit_output\r\n
+resource_uid:list\r\n
+from_date\r\n
+to_date\r\n
+at_date\n
+transaction_simulation_state:list\r\n
+transaction_section_category</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>zsqlbrain.py</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>ZSQLBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Account_zGetTotalQuantity</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  SUM(stock.quantity) AS quantity\n
+FROM\n
+  movement,\n
+  stock,\n
+  catalog as child,\n
+  catalog,\n
+  catalog AS section_c,\n
+  catalog AS section_bc,\n
+  category AS section_membership,\n
+  catalog AS section\n
+<dtml-if query>\n
+  , category\n
+</dtml-if>\n
+WHERE stock.node_uid = <dtml-var node_uid>\n
+  AND child.uid = stock.uid \n
+  AND child.parent_uid = catalog.uid\n
+  AND movement.uid = stock.uid\n
+  AND movement.is_accountable = 1\n
+<dtml-if resource_uid>\n
+  AND (\n
+  <dtml-in resource_uid>\n
+    movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if from_date>\n
+  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+</dtml-if>\n
+<dtml-if at_date>\n
+  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+</dtml-if>\n
+<dtml-if to_date>\n
+  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+</dtml-if>\n
+<dtml-if omit_input>\n
+  AND stock.quantity > 0.0\n
+</dtml-if>\n
+<dtml-if omit_output>\n
+  AND stock.quantity < 0.0\n
+</dtml-if>\n
+<dtml-if transaction_simulation_state>\n
+  AND (\n
+  <dtml-in transaction_simulation_state>\n
+    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+<dtml-else>\n
+  AND catalog.simulation_state != \'cancelled\' \n
+  AND catalog.simulation_state != \'draft\' \n
+</dtml-if>\n
+  AND section.uid = stock.section_uid\n
+<dtml-if transaction_section_category>\n
+  AND section_c.relative_url = <dtml-sqlvar transaction_section_category type="string">\n
+</dtml-if>\n
+  AND section_membership.category_uid =  section_c.uid\n
+  AND section_membership.base_category_uid = section_bc.uid\n
+  AND section_membership.uid = section.uid\n
+<dtml-if query>\n
+  AND category.uid = stock.section_uid\n
+AND <dtml-var query>\n
+</dtml-if>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  SUM(stock.quantity) AS quantity\n
+FROM\n
+  movement,\n
+  stock,\n
+  catalog as child,\n
+  catalog,\n
+  catalog AS section_c,\n
+  catalog AS section_bc,\n
+  category AS section_membership,\n
+  catalog AS section\n
+<dtml-if query>\n
+  , category\n
+</dtml-if>\n
+WHERE stock.node_uid = <dtml-var node_uid>\n
+  AND child.uid = stock.uid \n
+  AND child.parent_uid = catalog.uid\n
+  AND movement.uid = stock.uid\n
+  AND movement.is_accountable = 1\n
+<dtml-if resource_uid>\n
+  AND (\n
+  <dtml-in resource_uid>\n
+    movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if from_date>\n
+  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+</dtml-if>\n
+<dtml-if at_date>\n
+  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+</dtml-if>\n
+<dtml-if to_date>\n
+  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+</dtml-if>\n
+<dtml-if omit_input>\n
+  AND stock.quantity > 0.0\n
+</dtml-if>\n
+<dtml-if omit_output>\n
+  AND stock.quantity < 0.0\n
+</dtml-if>\n
+<dtml-if transaction_simulation_state>\n
+  AND (\n
+  <dtml-in transaction_simulation_state>\n
+    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+<dtml-else>\n
+  AND catalog.simulation_state != \'cancelled\' \n
+  AND catalog.simulation_state != \'draft\' \n
+</dtml-if>\n
+  AND section.uid = stock.section_uid\n
+<dtml-if transaction_section_category>\n
+  AND section_c.relative_url = <dtml-sqlvar transaction_section_category type="string">\n
+</dtml-if>\n
+  AND section_membership.category_uid =  section_c.uid\n
+  AND section_membership.base_category_uid = section_bc.uid\n
+  AND section_membership.uid = section.uid\n
+<dtml-if query>\n
+  AND category.uid = stock.section_uid\n
+AND <dtml-var query>\n
+</dtml-if>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

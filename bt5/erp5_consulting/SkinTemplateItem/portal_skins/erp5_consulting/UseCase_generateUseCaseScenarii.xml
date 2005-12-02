@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from string import zfill\n
+\n
+destination_obj = context.getObject()\n
+\n
+first_level_type  = \'Use Case Scenario\'\n
+second_level_type = \'Use Case Scenario Step\'\n
+\n
+# this list contain all input line items\n
+items = []\n
+\n
+# get the user information\n
+for inputline in listbox:\n
+  if inputline.has_key(\'listbox_key\'):\n
+    scenario = {}\n
+    scenario[\'id\'] = int(inputline[\'listbox_key\'])\n
+    scenario[\'title\'] = inputline[\'scenario_title\']\n
+    scenario[\'step_title\'] = inputline[\'step_title\']\n
+    scenario[\'step_description\'] = inputline[\'step_description\']\n
+    scenario[\'step_actor\'] = inputline[\'step_actor\']\n
+    items.append(scenario)\n
+\n
+# sort the list by id to have the same order of the user\n
+items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+\n
+clean_input_lines = {}\n
+has_1st_level = False\n
+has_2nd_level = False\n
+new_1st_level_item = None\n
+\n
+# scan every fast input line to create a structured and comprehensive list of items\n
+for item in items:\n
+  # the item has a first level\n
+  if item[\'title\'] not in (\'\', None):\n
+    has_1st_level = True\n
+    new_1st_level_item = []\n
+    new_1st_level_key = item[\'title\']\n
+  else:\n
+    has_1st_level = False\n
+\n
+  # the item has a second level, so built it\n
+  if item[\'step_title\'] not in (\'\', None):\n
+    has_2nd_level = True\n
+    new_2nd_level_item = {}\n
+    new_2nd_level_item[\'title\'] = item[\'step_title\']\n
+    if item[\'step_title\'] not in (\'\', None):\n
+      new_2nd_level_item[\'description\'] = item[\'step_description\']\n
+      new_2nd_level_item[\'actor\'] = item[\'step_actor\']\n
+    else:\n
+      new_2nd_level_item[\'description\'] = None\n
+      new_2nd_level_item[\'actor\'] = None\n
+  else:\n
+    has_2nd_level = False\n
+\n
+  if has_2nd_level == True and new_1st_level_item != None:\n
+    new_1st_level_item.append(new_2nd_level_item)\n
+\n
+  if has_1st_level == True:\n
+    if clean_input_lines.has_key(new_1st_level_key):\n
+      new_1st_level_item = clean_input_lines[new_1st_level_key] + new_1st_level_item\n
+    clean_input_lines[new_1st_level_key] = new_1st_level_item\n
+\n
+# create items objects and sub-objects\n
+for key in clean_input_lines.keys():\n
+  new_1st_level_obj = destination_obj.newContent( portal_type = first_level_type\n
+                                                , title       = key\n
+                                                )\n
+  second_level_id = 0\n
+  for second_level in clean_input_lines[key]:\n
+    second_level_id += 10\n
+    new_2nd_level_obj = new_1st_level_obj.newContent( portal_type    = second_level_type\n
+                                                    , id             = zfill(second_level_id, 4)\n
+                                                    , title          = second_level[\'title\']\n
+                                                    , description    = second_level[\'description\']\n
+                                                    , source_section = second_level[\'actor\']\n
+                                                    )\n
+\n
+# return to the module\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=\' + first_level_type.replace(\' \', \'+\') + \'(s)+added.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGcAAGQBAIQBAFoAAGQAAFMoAgAAAE5jAQAAAB8AAAAdAAAA
+SwAAAHPYAwAAZAEAawAAbAEAfQMAAXQCAHQDAGQCAIMCAIMAAH0GAGQDAH0HAGQEAH0IAGcAAH0J
+AHjKAHQIAHwAAIMBAERdvAB9CwB0AgB8CwBkBQCDAgBkBgCDAQBvoAABaAAAfQwAdAwAdA0AfAsA
+ZAYAgwIAgwEAdA4AfAwAgwEAZAcAPHQNAHwLAGQIAIMCAHQOAHwMAIMBAGQJADx0DQB8CwBkCgCD
+AgB0DgB8DACDAQBkCgA8dA0AfAsAZAsAgwIAdA4AfAwAgwEAZAsAPHQNAHwLAGQMAIMCAHQOAHwM
+AIMBAGQMADx0AgB8CQBkDQCDAgB8DACDAQABcT4AAXE+AFd0AgB8CQBkDgCDAgBkDwCEAACDAQAB
+aAAAfRAAdBAAfRIAdBAAfRMAdBMAfRUAeJEBdAgAfAkAgwEARF2DAX0WAHQNAHwWAGQJAIMCAGQQ
+AHQTAGYCAGoHAG8fAAF0FgB9EgBnAAB9FQB0DQB8FgBkCQCDAgB9GABuBwABdBAAfRIAdA0AfBYA
+ZAoAgwIAZBAAdBMAZgIAagcAb5sAAXQWAH0TAGgAAH0ZAHQNAHwWAGQKAIMCAHQOAHwZAIMBAGQJ
+ADx0DQB8FgBkCgCDAgBkEAB0EwBmAgBqBwBvNgABdA0AfBYAZAsAgwIAdA4AfBkAgwEAZBEAPHQN
+AHwWAGQMAIMCAHQOAHwZAIMBAGQSADxxPQIBdBMAdA4AfBkAgwEAZBEAPHQTAHQOAHwZAIMBAGQS
+ADxuBwABdBAAfRMAfBMAdBYAagIAbwoAAXwVAHQTAGoDAG8XAAF0AgB8FQBkDQCDAgB8GQCDAQAB
+bgEAAXwSAHQWAGoCAG9BAAF0AgB8EABkBQCDAgB8GACDAQBvFwABdA0AfBAAfBgAgwIAfBUAF30V
+AG4BAAF8FQB0DgB8EACDAQB8GAA8cTkBAXE5AVd4wgB0CAB0AgB8EABkEwCDAgCDAACDAQBEXagA
+fRoAdAIAfAYAZBQAgwIAZBUAfAcAZAkAfBoAgwACfRsAZBYAfRwAeHsAdAgAdA0AfBAAfBoAgwIA
+gwEARF1kAH0dAHwcAGQXADd9HAB0AgB8GwBkFACDAgBkFQB8CABkBwB8AwB8HABkGACDAgBkCQB0
+DQB8HQBkCQCDAgBkEQB0DQB8HQBkEQCDAgBkGQB0DQB8HQBkEgCDAgCDAAV9HgBxGQNXcdkCV3QC
+AHQCAHQCAHQDAGQaAIMCAGQbAIMCAGQcAIMCAHQCAHQDAGQdAIMCAIMAAGQeABd0AgB8BwBkHwCD
+AgBkIABkIQCDAgAXZCIAF4MBAFNkAABTKCMAAABOKAEAAABzBQAAAHpmaWxscwkAAABnZXRPYmpl
+Y3RzEQAAAFVzZSBDYXNlIFNjZW5hcmlvcxYAAABVc2UgQ2FzZSBTY2VuYXJpbyBTdGVwcwcAAABo
+YXNfa2V5cwsAAABsaXN0Ym94X2tleXMCAAAAaWRzDgAAAHNjZW5hcmlvX3RpdGxlcwUAAAB0aXRs
+ZXMKAAAAc3RlcF90aXRsZXMQAAAAc3RlcF9kZXNjcmlwdGlvbnMKAAAAc3RlcF9hY3RvcnMGAAAA
+YXBwZW5kcwQAAABzb3J0YwIAAAAEAAAABQAAAEMAAABzHwAAAHQAAHQBAHwAAGQBAIMCAHQBAHwB
+AGQBAIMCAIMCAFMoAgAAAE5zAgAAAGlkKAQAAABzAwAAAGNtcHMJAAAAX2dldGl0ZW1fcwEAAAB4
+cwEAAAB5KAQAAABzAQAAAHhzAQAAAHlzAwAAAGNtcHMJAAAAX2dldGl0ZW1fKAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcwoAAAA8bGFtYmRhLjQ+FwAAAHMAAAAAcwAAAABzCwAAAGRlc2Ny
+aXB0aW9ucwUAAABhY3RvcnMEAAAAa2V5c3MKAAAAbmV3Q29udGVudHMLAAAAcG9ydGFsX3R5cGVp
+AAAAAGkKAAAAaQQAAABzDgAAAHNvdXJjZV9zZWN0aW9ucwcAAABSRVFVRVNUcwgAAABSRVNQT05T
+RXMIAAAAcmVkaXJlY3RzDAAAAGFic29sdXRlX3VybHMXAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2Fn
+ZT1zBwAAAHJlcGxhY2VzAQAAACBzAQAAACtzCgAAAChzKSthZGRlZC4oHgAAAHMGAAAAc3RyaW5n
+cwUAAAB6ZmlsbHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw8AAABkZXN0aW5hdGlvbl9vYmpz
+EAAAAGZpcnN0X2xldmVsX3R5cGVzEQAAAHNlY29uZF9sZXZlbF90eXBlcwUAAABpdGVtc3MJAAAA
+X2dldGl0ZXJfcwcAAABsaXN0Ym94cwkAAABpbnB1dGxpbmVzCAAAAHNjZW5hcmlvcwMAAABpbnRz
+CQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlX3MRAAAAY2xlYW5faW5wdXRfbGluZXNzBQAAAEZhbHNl
+cw0AAABoYXNfMXN0X2xldmVscw0AAABoYXNfMm5kX2xldmVscwQAAABOb25lcxIAAABuZXdfMXN0
+X2xldmVsX2l0ZW1zBAAAAGl0ZW1zBAAAAFRydWVzEQAAAG5ld18xc3RfbGV2ZWxfa2V5cxIAAABu
+ZXdfMm5kX2xldmVsX2l0ZW1zAwAAAGtleXMRAAAAbmV3XzFzdF9sZXZlbF9vYmpzDwAAAHNlY29u
+ZF9sZXZlbF9pZHMMAAAAc2Vjb25kX2xldmVscxEAAABuZXdfMm5kX2xldmVsX29iaigfAAAAcwcA
+AABsaXN0Ym94cwIAAABrd3MGAAAAc3RyaW5ncwUAAAB6ZmlsbHMJAAAAX2dldGF0dHJfcwcAAABj
+b250ZXh0cw8AAABkZXN0aW5hdGlvbl9vYmpzEAAAAGZpcnN0X2xldmVsX3R5cGVzEQAAAHNlY29u
+ZF9sZXZlbF90eXBlcwUAAABpdGVtc3MJAAAAX2dldGl0ZXJfcwkAAABpbnB1dGxpbmVzCAAAAHNj
+ZW5hcmlvcwMAAABpbnRzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlX3MRAAAAY2xlYW5faW5wdXRf
+bGluZXNzBQAAAEZhbHNlcw0AAABoYXNfMXN0X2xldmVscw0AAABoYXNfMm5kX2xldmVscwQAAABO
+b25lcxIAAABuZXdfMXN0X2xldmVsX2l0ZW1zBAAAAGl0ZW1zBAAAAFRydWVzEQAAAG5ld18xc3Rf
+bGV2ZWxfa2V5cxIAAABuZXdfMm5kX2xldmVsX2l0ZW1zAwAAAGtleXMRAAAAbmV3XzFzdF9sZXZl
+bF9vYmpzDwAAAHNlY29uZF9sZXZlbF9pZHMMAAAAc2Vjb25kX2xldmVscxEAAABuZXdfMm5kX2xl
+dmVsX29iaigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMfAAAAVXNlQ2FzZV9nZW5lcmF0
+ZVVzZUNhc2VTY2VuYXJpaQEAAABzcAAAAA0CEgIGAQYDBgMNAAkBEwEGAR8BGQEZARkBHAEbAxMC
+BgEGAQYBBgMNAAYCHAEGAQYBEwIGAxwBBgEGARkBHAEZAR0CEAEUAgYCHQEUAhABEwEXARgDGQAG
+ARUBCQIGARYABgEKARUBEgEPAQ8BFwQoAQAAAHMfAAAAVXNlQ2FzZV9nZW5lcmF0ZVVzZUNhc2VT
+Y2VuYXJpaSgBAAAAcx8AAABVc2VDYXNlX2dlbmVyYXRlVXNlQ2FzZVNjZW5hcmlpKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/UseCase_generateUseCaseScenarii</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>destination_obj</string>
+                            <string>first_level_type</string>
+                            <string>second_level_type</string>
+                            <string>items</string>
+                            <string>_getiter_</string>
+                            <string>inputline</string>
+                            <string>scenario</string>
+                            <string>int</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>clean_input_lines</string>
+                            <string>False</string>
+                            <string>has_1st_level</string>
+                            <string>has_2nd_level</string>
+                            <string>None</string>
+                            <string>new_1st_level_item</string>
+                            <string>item</string>
+                            <string>True</string>
+                            <string>new_1st_level_key</string>
+                            <string>new_2nd_level_item</string>
+                            <string>key</string>
+                            <string>new_1st_level_obj</string>
+                            <string>second_level_id</string>
+                            <string>second_level</string>
+                            <string>new_2nd_level_obj</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>UseCase_generateUseCaseScenarii</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

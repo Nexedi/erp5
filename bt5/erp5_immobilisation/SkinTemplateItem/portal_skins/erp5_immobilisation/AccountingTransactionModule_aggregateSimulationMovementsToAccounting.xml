@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This script gathers simulated accounting amortisation writings from a date (included)\n
+# to another (not included) and writes the result as an unique writing in ERP5 accounting.\n
+# If from_date or to_date is None, gathering is made from or to infinite\n
+# None is not default value for arguments in order to avoid accidental calls\n
+\n
+from Products.ERP5.MovementGroup import OrderMovementGroup, PathMovementGroup\n
+from Products.ERP5.MovementGroup import DateMovementGroup, ResourceMovementGroup\n
+from Products.ERP5.MovementGroup import VariantMovementGroup, RootMovementGroup\n
+\n
+movement_list = []\n
+\n
+applied_rule_list = context.portal_rules.default_amortisation_rule.getSpecialiseRelatedValueList()\n
+for applied_rule in applied_rule_list:\n
+  for simulation_movement in applied_rule.objectValues():\n
+    movement_date = simulation_movement.getStopDate()\n
+    if (movement_date is not None) and (from_date is None or from_date - movement_date <= 0) \\\n
+                                   and (to_date is None or to_date - movement_date > 0):\n
+      movement_list.append(simulation_movement.getRelativeUrl())\n
+\n
+#context.portal_simulation.buildDeliveryList( context.portal_simulation.collectMovement(movement_list,\n
+#          [ResourceMovementGroup, DateMovementGroup, PathMovementGroup] ) )\n
+context.portal_deliveries.amortisation_transaction_builder.build(movement_relative_url_list=movement_list)\n
+\n
+return "finished"\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAABIAAAAPAAAAQwAA
+AHNLAQAAZAEAawAAbAEAfQMAbAIAfQQAAWQCAGsAAGwDAH0FAGwEAH0GAAFkAwBrAABsBQB9BwBs
+BgB9CAABZwAAfQkAdAgAdAgAdAgAdAkAZAQAgwIAZAUAgwIAZAYAgwIAgwAAfQwAeLUAdAsAfAwA
+gwEARF2nAH0OAHieAHQLAHQIAHwOAGQHAIMCAIMAAIMBAERdhAB9DwB0CAB8DwBkCACDAgCDAAB9
+EAB8EAB0DwBqCQBvOQABfAAAdA8AaggAcA4AAXwAAHwQABhkCQBqAQBvGwABfAEAdA8AaggAcA4A
+AXwBAHwQABhkCQBqBABvIwABdAgAfAkAZAoAgwIAdAgAfA8AZAsAgwIAgwAAgwEAAXGPAAFxjwBX
+cXAAV3QIAHQIAHQIAHQJAGQMAIMCAGQNAIMCAGQOAIMCAGQPAHwJAIMAAQFkEABTZAAAUygRAAAA
+TigCAAAAcxIAAABPcmRlck1vdmVtZW50R3JvdXBzEQAAAFBhdGhNb3ZlbWVudEdyb3VwKAIAAABz
+EQAAAERhdGVNb3ZlbWVudEdyb3VwcxUAAABSZXNvdXJjZU1vdmVtZW50R3JvdXAoAgAAAHMUAAAA
+VmFyaWFudE1vdmVtZW50R3JvdXBzEQAAAFJvb3RNb3ZlbWVudEdyb3VwcwwAAABwb3J0YWxfcnVs
+ZXNzGQAAAGRlZmF1bHRfYW1vcnRpc2F0aW9uX3J1bGVzHQAAAGdldFNwZWNpYWxpc2VSZWxhdGVk
+VmFsdWVMaXN0cwwAAABvYmplY3RWYWx1ZXNzCwAAAGdldFN0b3BEYXRlaQAAAABzBgAAAGFwcGVu
+ZHMOAAAAZ2V0UmVsYXRpdmVVcmxzEQAAAHBvcnRhbF9kZWxpdmVyaWVzcyAAAABhbW9ydGlzYXRp
+b25fdHJhbnNhY3Rpb25fYnVpbGRlcnMFAAAAYnVpbGRzGgAAAG1vdmVtZW50X3JlbGF0aXZlX3Vy
+bF9saXN0cwgAAABmaW5pc2hlZCgSAAAAcxsAAABQcm9kdWN0cy5FUlA1Lk1vdmVtZW50R3JvdXBz
+EgAAAE9yZGVyTW92ZW1lbnRHcm91cHMRAAAAUGF0aE1vdmVtZW50R3JvdXBzEQAAAERhdGVNb3Zl
+bWVudEdyb3VwcxUAAABSZXNvdXJjZU1vdmVtZW50R3JvdXBzFAAAAFZhcmlhbnRNb3ZlbWVudEdy
+b3VwcxEAAABSb290TW92ZW1lbnRHcm91cHMNAAAAbW92ZW1lbnRfbGlzdHMJAAAAX2dldGF0dHJf
+cwcAAABjb250ZXh0cxEAAABhcHBsaWVkX3J1bGVfbGlzdHMJAAAAX2dldGl0ZXJfcwwAAABhcHBs
+aWVkX3J1bGVzEwAAAHNpbXVsYXRpb25fbW92ZW1lbnRzDQAAAG1vdmVtZW50X2RhdGVzBAAAAE5v
+bmVzCQAAAGZyb21fZGF0ZXMHAAAAdG9fZGF0ZSgSAAAAcwkAAABmcm9tX2RhdGVzBwAAAHRvX2Rh
+dGVzGwAAAFByb2R1Y3RzLkVSUDUuTW92ZW1lbnRHcm91cHMSAAAAT3JkZXJNb3ZlbWVudEdyb3Vw
+cxEAAABQYXRoTW92ZW1lbnRHcm91cHMRAAAARGF0ZU1vdmVtZW50R3JvdXBzFQAAAFJlc291cmNl
+TW92ZW1lbnRHcm91cHMUAAAAVmFyaWFudE1vdmVtZW50R3JvdXBzEQAAAFJvb3RNb3ZlbWVudEdy
+b3Vwcw0AAABtb3ZlbWVudF9saXN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzEQAAAGFwcGxp
+ZWRfcnVsZV9saXN0cwkAAABfZ2V0aXRlcl9zDAAAAGFwcGxpZWRfcnVsZXMTAAAAc2ltdWxhdGlv
+bl9tb3ZlbWVudHMNAAAAbW92ZW1lbnRfZGF0ZXMEAAAATm9uZSgAAAAAKAAAAABzDwAAAFNjcmlw
+dCAoUHl0aG9uKXNEAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX2FnZ3JlZ2F0ZVNpbXVs
+YXRpb25Nb3ZlbWVudHNUb0FjY291bnRpbmcBAAAAcx4AAAAABRMBEwETAgYCJAENAAYBGQAGARIB
+KwEhATEEHwIoAQAAAHNEAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX2FnZ3JlZ2F0ZVNp
+bXVsYXRpb25Nb3ZlbWVudHNUb0FjY291bnRpbmcoAQAAAHNEAAAAQWNjb3VudGluZ1RyYW5zYWN0
+aW9uTW9kdWxlX2FnZ3JlZ2F0ZVNpbXVsYXRpb25Nb3ZlbWVudHNUb0FjY291bnRpbmcoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/AccountingTransactionModule_aggregateSimulationMovementsToAccounting</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>from_date, to_date</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>Products.ERP5.MovementGroup</string>
+                            <string>OrderMovementGroup</string>
+                            <string>PathMovementGroup</string>
+                            <string>DateMovementGroup</string>
+                            <string>ResourceMovementGroup</string>
+                            <string>VariantMovementGroup</string>
+                            <string>RootMovementGroup</string>
+                            <string>movement_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>applied_rule_list</string>
+                            <string>_getiter_</string>
+                            <string>applied_rule</string>
+                            <string>simulation_movement</string>
+                            <string>movement_date</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_aggregateSimulationMovementsToAccounting</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

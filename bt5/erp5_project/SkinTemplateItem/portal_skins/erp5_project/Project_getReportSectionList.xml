@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+\n
+result = []\n
+\n
+params = {}\n
+\n
+portal = context.portal_url.getPortalObject()\n
+\n
+for project_line in [x.getObject() for x in context.searchFolder(sort_id=\'int_index\')]:\n
+\n
+  result.append(\n
+                 ReportSection(path=project_line.getPhysicalPath(),    \n
+                               form_id=\'ProjectLine_viewReport\',\n
+                               selection_name=\'project_line_selection\',\n
+                               selection_params=params,\n
+                               #listbox_display_mode=\'ReportTreeMode\',\n
+                               \n
+                               )             \n
+               )\n
+\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA4AAAARAAAATwAA
+AHPSAAAAZAEAawAAbAEAfQMAAWcAAH0EAGgAAH0FAHQEAHQEAHQFAGQCAIMCAGQDAIMCAIMAAH0I
+AHiTAHQHAGcAAARpCAB9CwB0BwB0BAB0BQBkBACDAgBkBQBkBgCDAAGDAQBEXRwAfQwAfAsAdAQA
+fAwAZAcAgwIAgwAAgwEAAXFgAH4LAIMBAERdQAB9DQB0BAB8BABkCACDAgB8AwBkCQB0BAB8DQBk
+CgCDAgCDAABkCwBkDABkDQBkDgBkDwB8BQCDAASDAQABcYYAV3wEAFNkAABTKBAAAABOKAEAAABz
+DQAAAFJlcG9ydFNlY3Rpb25zCgAAAHBvcnRhbF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHMMAAAA
+c2VhcmNoRm9sZGVycwcAAABzb3J0X2lkcwkAAABpbnRfaW5kZXhzCQAAAGdldE9iamVjdHMGAAAA
+YXBwZW5kcwQAAABwYXRocw8AAABnZXRQaHlzaWNhbFBhdGhzBwAAAGZvcm1faWRzFgAAAFByb2pl
+Y3RMaW5lX3ZpZXdSZXBvcnRzDgAAAHNlbGVjdGlvbl9uYW1lcxYAAABwcm9qZWN0X2xpbmVfc2Vs
+ZWN0aW9ucxAAAABzZWxlY3Rpb25fcGFyYW1zKAwAAABzGAAAAFByb2R1Y3RzLkVSUDVGb3JtLlJl
+cG9ydHMNAAAAUmVwb3J0U2VjdGlvbnMGAAAAcmVzdWx0cwYAAABwYXJhbXNzCQAAAF9nZXRhdHRy
+X3MHAAAAY29udGV4dHMGAAAAcG9ydGFscwkAAABfZ2V0aXRlcl9zBgAAAGFwcGVuZHMIAAAAJGFw
+cGVuZDBzAQAAAHhzDAAAAHByb2plY3RfbGluZSgOAAAAcwQAAABhcmdzcwIAAABrd3MYAAAAUHJv
+ZHVjdHMuRVJQNUZvcm0uUmVwb3J0cw0AAABSZXBvcnRTZWN0aW9ucwYAAAByZXN1bHRzBgAAAHBh
+cmFtc3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwYAAABwb3J0YWxzCQAAAF9nZXRpdGVyX3MG
+AAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMBAAAAeHMMAAAAcHJvamVjdF9saW5lKAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcxwAAABQcm9qZWN0X2dldFJlcG9ydFNlY3Rpb25MaXN0AQAAAHMU
+AAAADQIGAgYCGwIsACYACQIJASQDDgcoAQAAAHMcAAAAUHJvamVjdF9nZXRSZXBvcnRTZWN0aW9u
+TGlzdCgBAAAAcxwAAABQcm9qZWN0X2dldFJlcG9ydFNlY3Rpb25MaXN0KAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_project/Project_getReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>*args,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>result</string>
+                            <string>params</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>_getiter_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>project_line</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Project_getReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

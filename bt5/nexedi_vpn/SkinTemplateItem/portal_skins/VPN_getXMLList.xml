@@ -1,0 +1,314 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This script returns a list of dictionnaries containing XML tag name and value\n
+# It builds this list by analysing \'properties\'\n
+# For each line of \'properties\', it searchs the first true condition,\n
+# and calls the corresponding method to obtain the value\n
+\n
+\n
+\n
+condition_second_is_wlan = ( context.getSecondNetworkType() == \'wireless\' )\n
+condition_second_is_ethernet = ( context.getSecondNetworkType() == \'ethernet\' )\n
+condition_third_is_ethernet = ( context.getThirdNetworkType() == \'ethernet\' )\n
+\n
+\n
+properties = [ \n
+   {\'XML_name\':\'modem_type\',          \'name\':({ \'method\':\'getModemType\', \'condition\':1                                         }, ) },\n
+   {\'XML_name\':\'modem_device\',        \'name\':({ \'method\':\'getNetworkInterface\', \'condition\':1                                  }, ) },\n
+   {\'XML_name\':\'connection_type\',     \'name\':({ \'method\':\'getConnectionType\', \'condition\':1                                    }, ) },\n
+   {\'XML_name\':\'ppp_user\',            \'name\':({ \'method\':\'getPppUser\', \'condition\':1                                           }, ) },\n
+   {\'XML_name\':\'ppp_password\',        \'name\':({ \'method\':\'getPppPassword\', \'condition\':1                                       }, ) },\n
+   {\'XML_name\':\'external_ip_address\', \'name\':({ \'method\':\'getExternalIpAddress\', \'condition\':1                                 }, ) },\n
+   {\'XML_name\':\'bridge_device\',       \'name\':({ \'method\':\'getBridgeDevice\', \'condition\':1                                      }, ) },\n
+   {\'XML_name\':\'lan_device\',          \'name\':({ \'method\':\'getSecondNetworkInterface\', \'condition\':condition_second_is_ethernet },\n
+                                              { \'method\':\'getThirdNetworkInterface\', \'condition\':condition_third_is_ethernet   } ) },\n
+   {\'XML_name\':\'wlan_device\',         \'name\':({ \'method\':\'getSecondNetworkInterface\', \'condition\':condition_second_is_wlan     }, ) },\n
+   {\'XML_name\':\'wlan_wep_key\',        \'name\':({ \'method\':\'getSecondWlanWepKey\', \'condition\':condition_second_is_wlan           }, ) },\n
+   {\'XML_name\':\'wlan_essid\',          \'name\':({ \'method\':\'getSecondWlanEssid\', \'condition\':condition_second_is_wlan            }, ) },\n
+   {\'XML_name\':\'wlan_channel\',        \'name\':({ \'method\':\'getSecondWlanChannel\', \'condition\':condition_second_is_wlan          }, ) },\n
+   {\'XML_name\':\'ip_address\',          \'name\':({ \'method\':\'getIpAddress\', \'condition\':1                                         }, ) },\n
+   {\'XML_name\':\'netmask\',             \'name\':({ \'method\':\'getNetmask\', \'condition\':1                                           }, ) },\n
+   {\'XML_name\':\'netmask_bits\',        \'name\':({ \'method\':\'getNetmaskBits\', \'condition\':1                                       }, ) },\n
+   {\'XML_name\':\'network_address\',     \'name\':({ \'method\':\'getNetworkAddress\', \'condition\':1                                    }, ) },\n
+   {\'XML_name\':\'broadcast_address\',   \'name\':({ \'method\':\'getBroadcastAddress\', \'condition\':1                                  }, ) },\n
+\n
+\n
+   {\'XML_name\':\'lan_network_address\',   \'name\':({ \'method\':\'getSecondNetworkAddress\', \'condition\':condition_second_is_ethernet  },\n
+                                                { \'method\':\'getThirdNetworkAddress\', \'condition\':condition_third_is_ethernet    } ) },\n
+   {\'XML_name\':\'lan_netmask_bits\',      \'name\':({ \'method\':\'getSecondNetmaskBits\', \'condition\':condition_second_is_ethernet     },\n
+                                                { \'method\':\'getThirdNetmaskBits\', \'condition\':condition_third_is_ethernet       } ) },\n
+   {\'XML_name\':\'dhcp_lan_range_start\',  \'name\':({ \'method\':\'getSecondDhcpRangeStart\', \'condition\':condition_second_is_ethernet  },\n
+                                                { \'method\':\'getThirdDhcpRangeStart\', \'condition\':condition_third_is_ethernet    } ) },\n
+   {\'XML_name\':\'dhcp_lan_range_end\',    \'name\':({ \'method\':\'getSecondDhcpRangeEnd\', \'condition\':condition_second_is_ethernet    },\n
+                                                { \'method\':\'getThirdDhcpRangeEnd\', \'condition\':condition_third_is_ethernet      } ) },\n
+   {\'XML_name\':\'dhcp_lan_extra_config\', \'name\':({ \'method\':\'getSecondDhcpExtraConfig\', \'condition\':condition_second_is_ethernet },\n
+                                                { \'method\':\'getThirdDhcpExtraConfig\', \'condition\':condition_third_is_ethernet   } ) },\n
+\n
+\n
+   {\'XML_name\':\'wlan_network_address\',  \'name\':({ \'method\':\'getSecondNetworkAddress\', \'condition\':condition_second_is_wlan }, ) },\n
+   {\'XML_name\':\'wlan_netmask_bits\',     \'name\':({ \'method\':\'getSecondNetmaskBits\', \'condition\':condition_second_is_wlan    }, ) },\n
+   {\'XML_name\':\'dhcp_wlan_port\',        \'name\':({ \'method\':\'getSecondDhcpWlanPort\', \'condition\':condition_second_is_wlan   }, ) },\n
+   {\'XML_name\':\'dhcp_wlan_range_start\', \'name\':({ \'method\':\'getSecondDhcpRangeStart\', \'condition\':condition_second_is_wlan }, ) },\n
+   {\'XML_name\':\'dhcp_wlan_range_end\',   \'name\':({ \'method\':\'getSecondDhcpRangeEnd\', \'condition\':condition_second_is_wlan   }, ) },\n
+\n
+   {\'XML_name\':\'bind_shared_key\',              \'name\':({ \'method\':\'getBindSharedKey\', \'condition\':1             }, ) },\n
+   {\'XML_name\':\'bind_zone\',                    \'name\':({ \'method\':\'getBindZone\', \'condition\':1                  }, ) },\n
+   {\'XML_name\':\'bind_records\',                 \'name\':({ \'method\':\'getBindRecords\', \'condition\':1               }, ) },\n
+   {\'XML_name\':\'bind_reverse_records\',         \'name\':({ \'method\':\'getBindReverseRecords\', \'condition\':1        }, ) },\n
+   {\'XML_name\':\'vpn_type\',                     \'name\':({ \'method\':\'getVpnType\', \'condition\':1                   }, ) },\n
+   {\'XML_name\':\'ipsec_extra_config\',           \'name\':({ \'method\':\'getIpsecExtraConfig\', \'condition\':1          }, ) },\n
+   {\'XML_name\':\'shorewall_rules_extra_config\', \'name\':({ \'method\':\'getShorewallRulesExtraConfig\', \'condition\':1 }, ) },\n
+   {\'XML_name\':\'root_password\',                \'name\':({ \'method\':\'getRootPassword\', \'condition\':1              }, ) },\n
+   {\'XML_name\':\'web_password\',                 \'name\':({ \'method\':\'getWebPassword\', \'condition\':1               }, ) }\n
+ ]\n
+\n
+\n
+return_value = []\n
+\n
+\n
+for i in range(len(properties)):\n
+  property_line = properties[i]\n
+\n
+  # Search for the first true condition\n
+  for j in range(len(property_line[\'name\'])):\n
+    name_line = property_line[\'name\'][j]\n
+    if name_line[\'condition\']:\n
+      method = getattr(context,name_line[\'method\'])\n
+      value = method()\n
+      return_value.append( { \'XML_tag\':property_line[\'XML_name\'], \'XML_value\':value } )\n
+      break\n
+\n
+\n
+return return_value\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABIAAAA6AAAAQwAA
+AHOcBwAAdAAAdAEAZAEAgwIAgwAAZAIAagIAfQIAdAAAdAEAZAEAgwIAgwAAZAMAagIAfQMAdAAA
+dAEAZAQAgwIAgwAAZAMAagIAfQQAaAAABGQFAGQGAAM8BGQHAGgAAARkCABkCQADPARkCgBkCwAD
+PGYBAAM8aAAABGQFAGQMAAM8BGQHAGgAAARkCABkDQADPARkCgBkCwADPGYBAAM8aAAABGQFAGQO
+AAM8BGQHAGgAAARkCABkDwADPARkCgBkCwADPGYBAAM8aAAABGQFAGQQAAM8BGQHAGgAAARkCABk
+EQADPARkCgBkCwADPGYBAAM8aAAABGQFAGQSAAM8BGQHAGgAAARkCABkEwADPARkCgBkCwADPGYB
+AAM8aAAABGQFAGQUAAM8BGQHAGgAAARkCABkFQADPARkCgBkCwADPGYBAAM8aAAABGQFAGQWAAM8
+BGQHAGgAAARkCABkFwADPARkCgBkCwADPGYBAAM8aAAABGQFAGQYAAM8BGQHAGgAAARkCABkGQAD
+PARkCgB8AwADPGgAAARkCABkGgADPARkCgB8BAADPGYCAAM8aAAABGQFAGQbAAM8BGQHAGgAAARk
+CABkGQADPARkCgB8AgADPGYBAAM8aAAABGQFAGQcAAM8BGQHAGgAAARkCABkHQADPARkCgB8AgAD
+PGYBAAM8aAAABGQFAGQeAAM8BGQHAGgAAARkCABkHwADPARkCgB8AgADPGYBAAM8aAAABGQFAGQg
+AAM8BGQHAGgAAARkCABkIQADPARkCgB8AgADPGYBAAM8aAAABGQFAGQiAAM8BGQHAGgAAARkCABk
+IwADPARkCgBkCwADPGYBAAM8aAAABGQFAGQkAAM8BGQHAGgAAARkCABkJQADPARkCgBkCwADPGYB
+AAM8aAAABGQFAGQmAAM8BGQHAGgAAARkCABkJwADPARkCgBkCwADPGYBAAM8aAAABGQFAGQoAAM8
+BGQHAGgAAARkCABkKQADPARkCgBkCwADPGYBAAM8aAAABGQFAGQqAAM8BGQHAGgAAARkCABkKwAD
+PARkCgBkCwADPGYBAAM8aAAABGQFAGQsAAM8BGQHAGgAAARkCABkLQADPARkCgB8AwADPGgAAARk
+CABkLgADPARkCgB8BAADPGYCAAM8aAAABGQFAGQvAAM8BGQHAGgAAARkCABkMAADPARkCgB8AwAD
+PGgAAARkCABkMQADPARkCgB8BAADPGYCAAM8aAAABGQFAGQyAAM8BGQHAGgAAARkCABkMwADPARk
+CgB8AwADPGgAAARkCABkNAADPARkCgB8BAADPGYCAAM8aAAABGQFAGQ1AAM8BGQHAGgAAARkCABk
+NgADPARkCgB8AwADPGgAAARkCABkNwADPARkCgB8BAADPGYCAAM8aAAABGQFAGQ4AAM8BGQHAGgA
+AARkCABkOQADPARkCgB8AwADPGgAAARkCABkOgADPARkCgB8BAADPGYCAAM8aAAABGQFAGQ7AAM8
+BGQHAGgAAARkCABkLQADPARkCgB8AgADPGYBAAM8aAAABGQFAGQ8AAM8BGQHAGgAAARkCABkMAAD
+PARkCgB8AgADPGYBAAM8aAAABGQFAGQ9AAM8BGQHAGgAAARkCABkPgADPARkCgB8AgADPGYBAAM8
+aAAABGQFAGQ/AAM8BGQHAGgAAARkCABkMwADPARkCgB8AgADPGYBAAM8aAAABGQFAGRAAAM8BGQH
+AGgAAARkCABkNgADPARkCgB8AgADPGYBAAM8aAAABGQFAGRBAAM8BGQHAGgAAARkCABkQgADPARk
+CgBkCwADPGYBAAM8aAAABGQFAGRDAAM8BGQHAGgAAARkCABkRAADPARkCgBkCwADPGYBAAM8aAAA
+BGQFAGRFAAM8BGQHAGgAAARkCABkRgADPARkCgBkCwADPGYBAAM8aAAABGQFAGRHAAM8BGQHAGgA
+AARkCABkSAADPARkCgBkCwADPGYBAAM8aAAABGQFAGRJAAM8BGQHAGgAAARkCABkSgADPARkCgBk
+CwADPGYBAAM8aAAABGQFAGRLAAM8BGQHAGgAAARkCABkTAADPARkCgBkCwADPGYBAAM8aAAABGQF
+AGRNAAM8BGQHAGgAAARkCABkTgADPARkCgBkCwADPGYBAAM8aAAABGQFAGRPAAM8BGQHAGgAAARk
+CABkUAADPARkCgBkCwADPGYBAAM8aAAABGQFAGRRAAM8BGQHAGgAAARkCABkUgADPARkCgBkCwAD
+PGYBAAM8ZyQAfQUAZwAAfQYAeNcAdAcAdAgAdAkAfAUAgwEAgwEAgwEARF29AH0KAHQLAHwFAHwK
+AIMCAH0MAHilAHQHAHQIAHQJAHQLAHwMAGQHAIMCAIMBAIMBAIMBAERdggB9DQB0CwB0CwB8DABk
+BwCDAgB8DQCDAgB9DgB0CwB8DgBkCgCDAgBvVAABdA8AdAEAdAsAfA4AZAgAgwIAgwIAfRAAfBAA
+gwAAfREAdAAAfAYAZFMAgwIAaAAABGRUAHQLAHwMAGQFAIMCAAM8BGRVAHwRAAM8gwEAAVBxCgcB
+cQoHV3HTBld8BgBTZAAAUyhWAAAATnMUAAAAZ2V0U2Vjb25kTmV0d29ya1R5cGVzCAAAAHdpcmVs
+ZXNzcwgAAABldGhlcm5ldHMTAAAAZ2V0VGhpcmROZXR3b3JrVHlwZXMIAAAAWE1MX25hbWVzCgAA
+AG1vZGVtX3R5cGVzBAAAAG5hbWVzBgAAAG1ldGhvZHMMAAAAZ2V0TW9kZW1UeXBlcwkAAABjb25k
+aXRpb25pAQAAAHMMAAAAbW9kZW1fZGV2aWNlcxMAAABnZXROZXR3b3JrSW50ZXJmYWNlcw8AAABj
+b25uZWN0aW9uX3R5cGVzEQAAAGdldENvbm5lY3Rpb25UeXBlcwgAAABwcHBfdXNlcnMKAAAAZ2V0
+UHBwVXNlcnMMAAAAcHBwX3Bhc3N3b3Jkcw4AAABnZXRQcHBQYXNzd29yZHMTAAAAZXh0ZXJuYWxf
+aXBfYWRkcmVzc3MUAAAAZ2V0RXh0ZXJuYWxJcEFkZHJlc3NzDQAAAGJyaWRnZV9kZXZpY2VzDwAA
+AGdldEJyaWRnZURldmljZXMKAAAAbGFuX2RldmljZXMZAAAAZ2V0U2Vjb25kTmV0d29ya0ludGVy
+ZmFjZXMYAAAAZ2V0VGhpcmROZXR3b3JrSW50ZXJmYWNlcwsAAAB3bGFuX2RldmljZXMMAAAAd2xh
+bl93ZXBfa2V5cxMAAABnZXRTZWNvbmRXbGFuV2VwS2V5cwoAAAB3bGFuX2Vzc2lkcxIAAABnZXRT
+ZWNvbmRXbGFuRXNzaWRzDAAAAHdsYW5fY2hhbm5lbHMUAAAAZ2V0U2Vjb25kV2xhbkNoYW5uZWxz
+CgAAAGlwX2FkZHJlc3NzDAAAAGdldElwQWRkcmVzc3MHAAAAbmV0bWFza3MKAAAAZ2V0TmV0bWFz
+a3MMAAAAbmV0bWFza19iaXRzcw4AAABnZXROZXRtYXNrQml0c3MPAAAAbmV0d29ya19hZGRyZXNz
+cxEAAABnZXROZXR3b3JrQWRkcmVzc3MRAAAAYnJvYWRjYXN0X2FkZHJlc3NzEwAAAGdldEJyb2Fk
+Y2FzdEFkZHJlc3NzEwAAAGxhbl9uZXR3b3JrX2FkZHJlc3NzFwAAAGdldFNlY29uZE5ldHdvcmtB
+ZGRyZXNzcxYAAABnZXRUaGlyZE5ldHdvcmtBZGRyZXNzcxAAAABsYW5fbmV0bWFza19iaXRzcxQA
+AABnZXRTZWNvbmROZXRtYXNrQml0c3MTAAAAZ2V0VGhpcmROZXRtYXNrQml0c3MUAAAAZGhjcF9s
+YW5fcmFuZ2Vfc3RhcnRzFwAAAGdldFNlY29uZERoY3BSYW5nZVN0YXJ0cxYAAABnZXRUaGlyZERo
+Y3BSYW5nZVN0YXJ0cxIAAABkaGNwX2xhbl9yYW5nZV9lbmRzFQAAAGdldFNlY29uZERoY3BSYW5n
+ZUVuZHMUAAAAZ2V0VGhpcmREaGNwUmFuZ2VFbmRzFQAAAGRoY3BfbGFuX2V4dHJhX2NvbmZpZ3MY
+AAAAZ2V0U2Vjb25kRGhjcEV4dHJhQ29uZmlncxcAAABnZXRUaGlyZERoY3BFeHRyYUNvbmZpZ3MU
+AAAAd2xhbl9uZXR3b3JrX2FkZHJlc3NzEQAAAHdsYW5fbmV0bWFza19iaXRzcw4AAABkaGNwX3ds
+YW5fcG9ydHMVAAAAZ2V0U2Vjb25kRGhjcFdsYW5Qb3J0cxUAAABkaGNwX3dsYW5fcmFuZ2Vfc3Rh
+cnRzEwAAAGRoY3Bfd2xhbl9yYW5nZV9lbmRzDwAAAGJpbmRfc2hhcmVkX2tleXMQAAAAZ2V0Qmlu
+ZFNoYXJlZEtleXMJAAAAYmluZF96b25lcwsAAABnZXRCaW5kWm9uZXMMAAAAYmluZF9yZWNvcmRz
+cw4AAABnZXRCaW5kUmVjb3Jkc3MUAAAAYmluZF9yZXZlcnNlX3JlY29yZHNzFQAAAGdldEJpbmRS
+ZXZlcnNlUmVjb3Jkc3MIAAAAdnBuX3R5cGVzCgAAAGdldFZwblR5cGVzEgAAAGlwc2VjX2V4dHJh
+X2NvbmZpZ3MTAAAAZ2V0SXBzZWNFeHRyYUNvbmZpZ3McAAAAc2hvcmV3YWxsX3J1bGVzX2V4dHJh
+X2NvbmZpZ3McAAAAZ2V0U2hvcmV3YWxsUnVsZXNFeHRyYUNvbmZpZ3MNAAAAcm9vdF9wYXNzd29y
+ZHMPAAAAZ2V0Um9vdFBhc3N3b3JkcwwAAAB3ZWJfcGFzc3dvcmRzDgAAAGdldFdlYlBhc3N3b3Jk
+cwYAAABhcHBlbmRzBwAAAFhNTF90YWdzCQAAAFhNTF92YWx1ZSgSAAAAcwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzGAAAAGNvbmRpdGlvbl9zZWNvbmRfaXNfd2xhbnMcAAAAY29uZGl0aW9uX3Nl
+Y29uZF9pc19ldGhlcm5ldHMbAAAAY29uZGl0aW9uX3RoaXJkX2lzX2V0aGVybmV0cwoAAABwcm9w
+ZXJ0aWVzcwwAAAByZXR1cm5fdmFsdWVzCQAAAF9nZXRpdGVyX3MFAAAAcmFuZ2VzAwAAAGxlbnMB
+AAAAaXMJAAAAX2dldGl0ZW1fcw0AAABwcm9wZXJ0eV9saW5lcwEAAABqcwkAAABuYW1lX2xpbmVz
+BwAAAGdldGF0dHJzBgAAAG1ldGhvZHMFAAAAdmFsdWUoEgAAAHMJAAAAX2dldGF0dHJfcwcAAABj
+b250ZXh0cxgAAABjb25kaXRpb25fc2Vjb25kX2lzX3dsYW5zHAAAAGNvbmRpdGlvbl9zZWNvbmRf
+aXNfZXRoZXJuZXRzGwAAAGNvbmRpdGlvbl90aGlyZF9pc19ldGhlcm5ldHMKAAAAcHJvcGVydGll
+c3MMAAAAcmV0dXJuX3ZhbHVlcwkAAABfZ2V0aXRlcl9zBQAAAHJhbmdlcwMAAABsZW5zAQAAAGlz
+CQAAAF9nZXRpdGVtX3MNAAAAcHJvcGVydHlfbGluZXMBAAAAanMJAAAAbmFtZV9saW5lcwcAAABn
+ZXRhdHRycwYAAABtZXRob2RzBQAAAHZhbHVlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
+cw4AAABWUE5fZ2V0WE1MTGlzdAEAAABzdgAAAAAHGAEYARgDAAEqASoBKgEqASoBKgEqASUBGgEq
+ASoBKgEqASoBKgEqASoBKgMlARoBJQEaASUBGgElARoBJQEaAyoBKgEqASoBKgIqASoBKgEqASoB
+KgEqASoBMAQGAxkABgEPAyIABgEbAQ0BGAEMASsBDQMoAQAAAHMOAAAAVlBOX2dldFhNTExpc3Qo
+AQAAAHMOAAAAVlBOX2dldFhNTExpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
+ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>condition_second_is_wlan</string>
+                            <string>condition_second_is_ethernet</string>
+                            <string>condition_third_is_ethernet</string>
+                            <string>properties</string>
+                            <string>return_value</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>len</string>
+                            <string>i</string>
+                            <string>_getitem_</string>
+                            <string>property_line</string>
+                            <string>j</string>
+                            <string>name_line</string>
+                            <string>getattr</string>
+                            <string>method</string>
+                            <string>value</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>VPN_getXMLList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

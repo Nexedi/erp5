@@ -1,0 +1,146 @@
+<workflow_chain>
+ <chain>
+  <type>Apparel Assortment</type>
+  <workflow>apparel_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Assortment Colour Variation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Assortment Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Bath</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Bath Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Cloth</type>
+  <workflow>apparel_cloth_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Cloth Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Colour Range</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Colour Range Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Colour Range Variation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Component</type>
+  <workflow>apparel_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Component Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Component Variation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Consumption</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Consumption Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Fabric</type>
+  <workflow>apparel_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Fabric Colour Variation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Fabric Item</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Fabric Item Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Fabric Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Measurement</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Measurement Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Model</type>
+  <workflow>apparel_model_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Model Colour Variation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Model Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Model Morphology Variation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Shape</type>
+  <workflow>apparel_shape_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Shape Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Size</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Size Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Technical Drawing</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Transformation</type>
+  <workflow>apparel_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Transformation Assorted Resource</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Transformation Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Transformation Operation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Apparel Transformation Transformed Resource</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

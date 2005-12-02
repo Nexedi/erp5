@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>if not (start_remaining_annuities and current_annuity is not None):\n
+  return None\n
+degressive_coef = kw.get(\'degressive_coefficient\', None)\n
+if not degressive_coef:\n
+  return None\n
+  \n
+\n
+# Calculate the ratio for each annuity\n
+annuity_ratio_list = []\n
+first_linear_ratio = 1./start_remaining_annuities\n
+degressive_ratio = first_linear_ratio * degressive_coef\n
+\n
+for i in range(start_remaining_annuities):\n
+  linear_ratio = 1. / (start_remaining_annuities - i)\n
+  applied_ratio = max(linear_ratio, degressive_ratio)\n
+  annuity_ratio_list.append(applied_ratio)\n
+\n
+try:\n
+  return annuity_ratio_list[current_annuity]\n
+except:\n
+  return None\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABgAAAEAAAABzHAAAAGUAAGUAAGUAAGUAAGUAAGQBAIQFAFoBAGQAAFMoAgAAAE5j
+BQAAABMAAAANAAAASwAAAHPPAAAAfAAAbwoAAXwCAHQCAGoJAAxvCAABdAIAU24BAAF0AwB8BQBk
+AQCDAgBkAgB0AgCDAgB9CAB8CAAMbwgAAXQCAFNuAQABZwAAfQkAZAMAfAAAFX0KAHwKAHwIABR9
+CwB4SgB0CQB0CgB8AACDAQCDAQBEXTYAfQ4AZAMAfAAAfA4AGBV9DwB0DQB8DwB8CwCDAgB9EQB0
+AwB8CQBkBACDAgB8EQCDAQABcXIAV3kRAHQPAHwJAHwCAIMCAFNXbgsAAQEBdAIAU24BAFhkAABT
+KAUAAABOcwMAAABnZXRzFgAAAGRlZ3Jlc3NpdmVfY29lZmZpY2llbnRmAzEuMHMGAAAAYXBwZW5k
+KBAAAABzGQAAAHN0YXJ0X3JlbWFpbmluZ19hbm51aXRpZXNzDwAAAGN1cnJlbnRfYW5udWl0eXME
+AAAATm9uZXMJAAAAX2dldGF0dHJfcwIAAABrd3MPAAAAZGVncmVzc2l2ZV9jb2VmcxIAAABhbm51
+aXR5X3JhdGlvX2xpc3RzEgAAAGZpcnN0X2xpbmVhcl9yYXRpb3MQAAAAZGVncmVzc2l2ZV9yYXRp
+b3MJAAAAX2dldGl0ZXJfcwUAAAByYW5nZXMBAAAAaXMMAAAAbGluZWFyX3JhdGlvcwMAAABtYXhz
+DQAAAGFwcGxpZWRfcmF0aW9zCQAAAF9nZXRpdGVtXygTAAAAcxkAAABzdGFydF9yZW1haW5pbmdf
+YW5udWl0aWVzcxgAAABzdG9wX3JlbWFpbmluZ19hbm51aXRpZXNzDwAAAGN1cnJlbnRfYW5udWl0
+eXMaAAAAc3RhcnRfcmVtYWluaW5nX2R1cmFiaWxpdHlzGQAAAHN0b3BfcmVtYWluaW5nX2R1cmFi
+aWxpdHlzAgAAAGt3cwQAAABOb25lcwkAAABfZ2V0YXR0cl9zDwAAAGRlZ3Jlc3NpdmVfY29lZnMS
+AAAAYW5udWl0eV9yYXRpb19saXN0cxIAAABmaXJzdF9saW5lYXJfcmF0aW9zEAAAAGRlZ3Jlc3Np
+dmVfcmF0aW9zCQAAAF9nZXRpdGVyX3MFAAAAcmFuZ2VzAQAAAGlzDAAAAGxpbmVhcl9yYXRpb3MD
+AAAAbWF4cw0AAABhcHBsaWVkX3JhdGlvcwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzEAAAAHJhdGlvQ2FsY3VsYXRpb24BAAAAcx4AAAAVAQgBGAEIAQgEBgEKAQoC
+EwAGAQ4BEgEUAgMBFAIoAgAAAHMEAAAATm9uZXMQAAAAcmF0aW9DYWxjdWxhdGlvbigCAAAAcwQA
+AABOb25lcxAAAAByYXRpb0NhbGN1bGF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
+cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_fr/degressive/ratioCalculation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>start_remaining_annuities</string>
+                            <string>stop_remaining_annuities</string>
+                            <string>current_annuity</string>
+                            <string>start_remaining_durability</string>
+                            <string>stop_remaining_durability</string>
+                            <string>kw</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>degressive_coef</string>
+                            <string>annuity_ratio_list</string>
+                            <string>first_linear_ratio</string>
+                            <string>degressive_ratio</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>linear_ratio</string>
+                            <string>max</string>
+                            <string>applied_ratio</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ratioCalculation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

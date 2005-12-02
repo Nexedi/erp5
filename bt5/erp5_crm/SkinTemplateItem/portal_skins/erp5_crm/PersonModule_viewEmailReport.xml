@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+if len(uids) == 0:\n
+  uids = map(lambda x:x.uid, context.portal_selections.callSelectionFor(selection_name))\n
+object_list =  list(context.portal_catalog(parent_uid=uids, portal_type = "Email"))\n
+for o in object_list:\n
+  o_value = o.getObject()\n
+  if o is not None:\n
+    print o_value.getUrlString()\n
+\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAA4AAAARAAAAQwAA
+AHPnAAAAdAAAgwAAfQIAdAIAdAIAdAMAZAEAgwIAZAIAgwIAfAAAgwEAfQUAdAYAfAUAgwEAZAMA
+agIAby4AAXQHAGQEAIQAAHQCAHQCAHQDAGQBAIMCAGQFAIMCAHwAAIMBAIMCAH0FAG4BAAF0CAB0
+AgB0AwBkBgCDAgBkBwB8BQBkCABkCQCDAAKDAQB9CQB4TQB0CgB8CQCDAQBEXT8AfQsAdAIAfAsA
+ZAoAgwIAgwAAfQwAfAsAdA0AagkAbxoAAXwCAAR0AgB8DABkCwCDAgCDAAACSUpxmQABcZkAV3wC
+AIMAAFNkAABTKAwAAABOcxEAAABwb3J0YWxfc2VsZWN0aW9uc3MaAAAAZ2V0U2VsZWN0aW9uQ2hl
+Y2tlZFVpZHNGb3JpAAAAAGMBAAAAAgAAAAMAAABDAAAAcw0AAAB0AAB8AABkAQCDAgBTKAIAAABO
+cwMAAAB1aWQoAgAAAHMJAAAAX2dldGF0dHJfcwEAAAB4KAIAAABzAQAAAHhzCQAAAF9nZXRhdHRy
+XygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMLAAAAPGxhbWJkYS40Nj4DAAAAcwAAAABz
+EAAAAGNhbGxTZWxlY3Rpb25Gb3JzDgAAAHBvcnRhbF9jYXRhbG9ncwoAAABwYXJlbnRfdWlkcwsA
+AABwb3J0YWxfdHlwZXMFAAAARW1haWxzCQAAAGdldE9iamVjdHMMAAAAZ2V0VXJsU3RyaW5nKA4A
+AABzBwAAAF9wcmludF9zBgAAAF9wcmludHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw4AAABz
+ZWxlY3Rpb25fbmFtZXMEAAAAdWlkc3MDAAAAbGVucwMAAABtYXBzBAAAAGxpc3RzCwAAAG9iamVj
+dF9saXN0cwkAAABfZ2V0aXRlcl9zAQAAAG9zBwAAAG9fdmFsdWVzBAAAAE5vbmUoDgAAAHMOAAAA
+c2VsZWN0aW9uX25hbWVzBwAAAF9wcmludF9zBgAAAF9wcmludHMJAAAAX2dldGF0dHJfcwcAAABj
+b250ZXh0cwQAAAB1aWRzcwMAAABsZW5zAwAAAG1hcHMEAAAAbGlzdHMLAAAAb2JqZWN0X2xpc3Rz
+CQAAAF9nZXRpdGVyX3MBAAAAb3MHAAAAb192YWx1ZXMEAAAATm9uZSgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMcAAAAUGVyc29uTW9kdWxlX3ZpZXdFbWFpbFJlcG9ydAEAAABzEgAAACcB
+EwEuASQBDQAGARIBDQEeAigBAAAAcxwAAABQZXJzb25Nb2R1bGVfdmlld0VtYWlsUmVwb3J0KAEA
+AABzHAAAAFBlcnNvbk1vZHVsZV92aWV3RW1haWxSZXBvcnQoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_crm/PersonModule_viewEmailReport</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection_name</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection_name</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>uids</string>
+                            <string>len</string>
+                            <string>map</string>
+                            <string>list</string>
+                            <string>object_list</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>o_value</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PersonModule_viewEmailReport</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

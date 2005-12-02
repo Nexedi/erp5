@@ -1,0 +1,10 @@
+ERP5 Apparel is the template for Apparel.
+
+Need paths:
+
+portal_categories/measure/apparel_cloth
+portal_categories/origin/apparel_model
+portal_categories/shape/apparel_shape
+portal_categories/composition/apparel_fabric
+portal_categories/resource/apparel_fabric
+portal_categories/feature/apparel_shape

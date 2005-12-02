@@ -1,0 +1,488 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>True  = 1\n
+False = 0\n
+\n
+global paysheet\n
+\n
+paysheet      = context.getObject()\n
+paysheet_type = paysheet.getPortalType()\n
+\n
+paysheet_line_type = \'Pay Sheet Line\'\n
+paysheet_cell_type = \'Pay Sheet Cell\'\n
+\n
+employee        = paysheet.getDestinationSection()\n
+employee_object = paysheet.getDestinationSectionValue()\n
+employer        = paysheet.getSourceSection()\n
+employer_object = paysheet.getSourceSectionValue()\n
+\n
+\n
+\n
+# delete all objects in the paysheet\n
+id_list = []\n
+for paysheet_item in paysheet.objectValues():\n
+  id_list.append(paysheet_item.getId())\n
+paysheet.manage_delObjects(id_list)\n
+\n
+\n
+\n
+# this function register all paysheet informations in paysheet lines and cells\n
+def createPaySheetItem(title=\'\', res=\'\', dest_org=\'\', cells=[]):\n
+  global paysheet\n
+  # select good cells only\n
+  good_cells = []\n
+  for cell in cells:\n
+    if cell["base"] not in (\'\', 0, None) and cell["rate"] not in (\'\', 0, None):\n
+      good_cells.append(cell)\n
+  if len(good_cells) == 0:\n
+    return\n
+  # get all variation categories used in cells\n
+  var_cat_list = []\n
+  for cell in good_cells:\n
+    # don\'t add a variation category if already in it\n
+    if cell["x"] not in var_cat_list:\n
+      var_cat_list.append(cell["x"])\n
+    if cell["y"] not in var_cat_list:\n
+      var_cat_list.append(cell["y"])\n
+  # add a new Pay Sheet Line\n
+  payline = paysheet.newContent( portal_type                  = \'Pay Sheet Line\'\n
+                               , title                        = title\n
+                               , resource                     = res\n
+                               , destination_section          = dest_org\n
+                               , destination                  = dest_org\n
+                               , variation_base_category_list = (\'tax_category\', \'salary_range\')\n
+                               , variation_category_list      = var_cat_list\n
+                               )\n
+  base_id = \'movement\'\n
+  payline.updateCellRange( script_id = \'PaySheetLine_asCellRange\'\n
+                         , base_id   = base_id\n
+                         )\n
+  # create cells\n
+  for cell in good_cells:\n
+    cell_cat_list = [cell["x"], cell["y"]]\n
+    paycell = payline.newCell(cell["x"], cell["y"], base_id = base_id)\n
+    paycell.edit( mapped_value_property_list = (\'price\', \'quantity\')\n
+                , quantity                   = cell["base"]\n
+                , price                      = cell["rate"]\n
+                , force_update               = 1\n
+                , category_list              = cell_cat_list\n
+                )\n
+\n
+\n
+\n
+# set the title of the paysheet if empty\n
+months = [\'janvier\', \'f\xc3\xa9vrier\', \'mars\', \'avril\', \'mai\', \'juin\', \'juillet\', \'ao\xc3\xbbt\', \'septembre\', \'octobre\', \'novembre\', \'d\xc3\xa9cembre\']\n
+if paysheet.getTitle() in (\'\', None):\n
+  new_title = \'Salaire \' + employee_object.getTitle()\n
+  if paysheet.getStartDate() not in (\'\', None):\n
+    new_title += \' \' + months[int(str(paysheet.getStartDate())[5:7])-1] + \' \' + str(paysheet.getStartDate())[0:4]\n
+  paysheet.setTitle(new_title)\n
+\n
+\n
+\n
+# get the ordered list of standard preview line objects\n
+std_lines = context.PaySheetTransaction_initializePreview()\n
+\n
+\n
+\n
+# this list contain all paysheet items, indexed by service\n
+paysheet_items = {}\n
+\n
+# scan every standard preview line to create an item for each service\n
+for std_line in std_lines:\n
+  # get the service url (unique because containing the id)\n
+  service = std_line.getProperty(\'service_url\')\n
+  # verify that the service is not existing\n
+  if not paysheet_items.has_key(service):\n
+    # create a temporary service item\n
+    temp_item = {}\n
+    # fill the new item with needed data\n
+    temp_item[\'title\']    = std_line.getProperty(\'title\')\n
+    temp_item[\'res\']      = std_line.getProperty(\'service_url\')\n
+    temp_item[\'dest_org\'] = std_line.getProperty(\'organisation_url\')\n
+    temp_item[\'cells\']    = []\n
+    # add the new service item to the list\n
+    paysheet_items[service] = temp_item\n
+\n
+# initialise the user preview line index\n
+user_line_index = 0\n
+\n
+# scan every standard preview line and get the correspondant user preview line to put user parameters in appropriate cells\n
+total_employee_share = 0.0\n
+for std_line in std_lines:\n
+  # define some values related to current standard preview line\n
+  service          = std_line.getProperty(\'service_url\')\n
+  salary_range_cat = std_line.getProperty(\'salary_range_cat\')\n
+  tax_cat          = std_line.getProperty(\'tax_cat\')\n
+  # increment the user line index: we can use this strategy because preview lines (user or standard ones) are sorted\n
+  user_line_index += 1\n
+  # get user paysheet parameters stored in user preview line (=listbox)\n
+  for user_line in listbox:\n
+    # Base_viewSearchResultList the user preview line corresponding to the standard preview line\n
+    if user_line.has_key(\'listbox_key\') and int(user_line[\'listbox_key\'])==user_line_index:\n
+      # got it ! we have the right line\n
+      # get the base salary\n
+      base = user_line[\'base\']\n
+      # scan allowed tax categories to get employee and/or employer share rate\n
+      for cat in tax_cat:\n
+        # define an empty new cell\n
+        new_cell = None\n
+        # convert rate from percent\n
+        employer_rate = user_line[\'employer_share_rate\']\n
+        employee_rate = user_line[\'employee_share_rate\']\n
+        if str(cat).endswith(\'employer_share\') != -1 and employer_rate not in (None, \'\'):\n
+          rate = float(employer_rate) / 100.0\n
+          new_cell = { "x"    : cat\n
+                     , "y"    : salary_range_cat\n
+                     , "base" : -base\n
+                     , "rate" : rate  # XXX Bad use of % (JPS)\n
+                     }\n
+        if str(cat).endswith(\'employee_share\') != -1 and employee_rate not in (None, \'\'):\n
+          rate = float(employee_rate) / 100.0\n
+          new_cell = { "x"    : cat\n
+                     , "y"    : salary_range_cat\n
+                     , "base" : -base\n
+                     , "rate" : rate  # XXX Bad use of % (JPS)\n
+                     }\n
+          total_employee_share += float(base) * float(rate)\n
+        # add the cell to the conresponding paysheet item\n
+        if new_cell != None:\n
+          paysheet_items[service][\'cells\'].append(new_cell)\n
+\n
+# create a paysheet item for each service with user data in it\n
+for item in paysheet_items:\n
+  if paysheet_items[item][\'cells\'] not in ([], None, \'\'):\n
+    createPaySheetItem( title    = paysheet_items[item][\'title\']\n
+                      , res      = paysheet_items[item][\'res\']\n
+                      , dest_org = paysheet_items[item][\'dest_org\']\n
+                      , cells    = paysheet_items[item][\'cells\']\n
+                      )\n
+\n
+# Finaly add the salary line\n
+gross_salary = float(paysheet.getGrossSalary())\n
+net_salary = gross_salary - total_employee_share\n
+\n
+cells = []\n
+new_cell = { "x"    : \'tax_category/social/employee_share\'\n
+           , "y"    : \'salary_range/france\'\n
+           , "base" : 1\n
+           , "rate" : -net_salary\n
+           }\n
+cells.append(new_cell)\n
+new_cell = { "x"    : \'tax_category/social/employer_share\'\n
+           , "y"    : \'salary_range/france\'\n
+           , "base" : 1\n
+           , "rate" : -gross_salary\n
+           }\n
+cells.append(new_cell)\n
+\n
+# during 06/2005 service module has been renamed service_module\n
+# both names are supported\n
+erp5site = context.portal_url.getPortalObject()\n
+if hasattr(erp5site, \'service_module\') : \n
+  service_module_name = \'service_module\'\n
+else : \n
+  service_module_name = \'service\'\n
+\n
+createPaySheetItem( title    = \'Salary\'\n
+                  , res      = \'%s/labour\'%service_module_name\n
+                  , dest_org = employee\n
+                  , cells    = cells\n
+                  )\n
+\n
+# return to pay sheet\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Pay+sheet+calculation+done.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+gwIAdAIAdAMAZEkAgwIAgwAAZEoAF4MBAFNkAABTKEsAAABOaQEAAABpAAAAAHMJAAAAZ2V0T2Jq
+ZWN0cw0AAABnZXRQb3J0YWxUeXBlcw4AAABQYXkgU2hlZXQgTGluZXMOAAAAUGF5IFNoZWV0IENl
+bGxzFQAAAGdldERlc3RpbmF0aW9uU2VjdGlvbnMaAAAAZ2V0RGVzdGluYXRpb25TZWN0aW9uVmFs
+dWVzEAAAAGdldFNvdXJjZVNlY3Rpb25zFQAAAGdldFNvdXJjZVNlY3Rpb25WYWx1ZXMMAAAAb2Jq
+ZWN0VmFsdWVzcwYAAABhcHBlbmRzBQAAAGdldElkcxEAAABtYW5hZ2VfZGVsT2JqZWN0c3MAAAAA
+YwQAAAARAAAAIAAAAEMAAABzKQIAAGcAAH0EAHhpAHQBAHwDAIMBAERdWwB9BgB0BAB8BgBkAQCD
+AgBkAgBkAwB0BQBmAwBqBwBvHAABdAQAfAYAZAQAgwIAZAIAZAMAdAUAZgMAagcAbxcAAXQGAHwE
+AGQFAIMCAHwGAIMBAAFxEwABcRMAV3QHAHwEAIMBAGQDAGoCAG8IAAFkAABTbgEAAWcAAH0LAHiA
+AHQBAHwEAIMBAERdcgB9BgB0BAB8BgBkBgCDAgB8CwBqBwBvIAABdAYAfAsAZAUAgwIAdAQAfAYA
+ZAYAgwIAgwEAAW4BAAF0BAB8BgBkBwCDAgB8CwBqBwBvIAABdAYAfAsAZAUAgwIAdAQAfAYAZAcA
+gwIAgwEAAXGgAAFxoABXdAYAdAkAZAgAgwIAZAkAZAoAZAsAfAAAZAwAfAEAZA0AfAIAZA4AfAIA
+ZA8AZBAAZBEAZgIAZBIAfAsAgwAHfQ0AZBMAfQ4AdAYAfA0AZBQAgwIAZBUAZBYAZBcAfA4AgwAC
+AXioAHQBAHwEAIMBAERdmgB9BgB0BAB8BgBkBgCDAgB0BAB8BgBkBwCDAgBnAgB9DwB0BgB8DQBk
+GACDAgB0BAB8BgBkBgCDAgB0BAB8BgBkBwCDAgBkFwB8DgCDAgF9EAB0BgB8EABkGQCDAgBkGgBk
+GwBkHABmAgBkHAB0BAB8BgBkAQCDAgBkGwB0BAB8BgBkBACDAgBkHQBkHgBkHwB8DwCDAAUBcYcB
+V2QAAFMoIAAAAE5zBAAAAGJhc2VzAAAAAGkAAAAAcwQAAAByYXRlcwYAAABhcHBlbmRzAQAAAHhz
+AQAAAHlzCgAAAG5ld0NvbnRlbnRzCwAAAHBvcnRhbF90eXBlcw4AAABQYXkgU2hlZXQgTGluZXMF
+AAAAdGl0bGVzCAAAAHJlc291cmNlcxMAAABkZXN0aW5hdGlvbl9zZWN0aW9ucwsAAABkZXN0aW5h
+dGlvbnMcAAAAdmFyaWF0aW9uX2Jhc2VfY2F0ZWdvcnlfbGlzdHMMAAAAdGF4X2NhdGVnb3J5cwwA
+AABzYWxhcnlfcmFuZ2VzFwAAAHZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwgAAABtb3ZlbWVudHMP
+AAAAdXBkYXRlQ2VsbFJhbmdlcwkAAABzY3JpcHRfaWRzGAAAAFBheVNoZWV0TGluZV9hc0NlbGxS
+YW5nZXMHAAAAYmFzZV9pZHMHAAAAbmV3Q2VsbHMEAAAAZWRpdHMaAAAAbWFwcGVkX3ZhbHVlX3By
+b3BlcnR5X2xpc3RzBQAAAHByaWNlcwgAAABxdWFudGl0eXMMAAAAZm9yY2VfdXBkYXRlaQEAAABz
+DQAAAGNhdGVnb3J5X2xpc3QoEQAAAHMKAAAAZ29vZF9jZWxsc3MJAAAAX2dldGl0ZXJfcwUAAABj
+ZWxsc3MEAAAAY2VsbHMJAAAAX2dldGl0ZW1fcwQAAABOb25lcwkAAABfZ2V0YXR0cl9zAwAAAGxl
+bnMMAAAAdmFyX2NhdF9saXN0cwgAAABwYXlzaGVldHMFAAAAdGl0bGVzAwAAAHJlc3MIAAAAZGVz
+dF9vcmdzBwAAAHBheWxpbmVzBwAAAGJhc2VfaWRzDQAAAGNlbGxfY2F0X2xpc3RzBwAAAHBheWNl
+bGwoEQAAAHMFAAAAdGl0bGVzAwAAAHJlc3MIAAAAZGVzdF9vcmdzBQAAAGNlbGxzcwoAAABnb29k
+X2NlbGxzcwkAAABfZ2V0aXRlcl9zBAAAAGNlbGxzCQAAAF9nZXRpdGVtX3MEAAAATm9uZXMJAAAA
+X2dldGF0dHJfcwMAAABsZW5zDAAAAHZhcl9jYXRfbGlzdHMIAAAAcGF5c2hlZXRzBwAAAHBheWxp
+bmVzBwAAAGJhc2VfaWRzDQAAAGNlbGxfY2F0X2xpc3RzBwAAAHBheWNlbGwoAAAAACgAAAAAcw8A
+AABTY3JpcHQgKFB5dGhvbilzEgAAAGNyZWF0ZVBheVNoZWV0SXRlbRwAAABzQAAAAAADBgENAAkB
+PgEYARMBCAIGAQ0ABgIZAR0BGQEhAhUBBgEGAQYBBgEMAQkCCQESAQcDDQAGAR4BMwEbAQ8BEgJz
+BwAAAGphbnZpZXJzCAAAAGbDqXZyaWVycwQAAABtYXJzcwUAAABhdnJpbHMDAAAAbWFpcwQAAABq
+dWlucwcAAABqdWlsbGV0cwUAAABhb8O7dHMJAAAAc2VwdGVtYnJlcwcAAABvY3RvYnJlcwgAAABu
+b3ZlbWJyZXMJAAAAZMOpY2VtYnJlcwgAAABnZXRUaXRsZXMIAAAAU2FsYWlyZSBzDAAAAGdldFN0
+YXJ0RGF0ZXMBAAAAIGkFAAAAaQcAAABpBAAAAHMIAAAAc2V0VGl0bGVzJQAAAFBheVNoZWV0VHJh
+bnNhY3Rpb25faW5pdGlhbGl6ZVByZXZpZXdzCwAAAGdldFByb3BlcnR5cwsAAABzZXJ2aWNlX3Vy
+bHMHAAAAaGFzX2tleXMFAAAAdGl0bGVzAwAAAHJlc3MQAAAAb3JnYW5pc2F0aW9uX3VybHMIAAAA
+ZGVzdF9vcmdzBQAAAGNlbGxzZgMwLjBzEAAAAHNhbGFyeV9yYW5nZV9jYXRzBwAAAHRheF9jYXRz
+CwAAAGxpc3Rib3hfa2V5cwQAAABiYXNlcxMAAABlbXBsb3llcl9zaGFyZV9yYXRlcxMAAABlbXBs
+b3llZV9zaGFyZV9yYXRlcwgAAABlbmRzd2l0aHMOAAAAZW1wbG95ZXJfc2hhcmVmBTEwMC4wcwEA
+AAB4cwEAAAB5cwQAAAByYXRlcw4AAABlbXBsb3llZV9zaGFyZXMOAAAAZ2V0R3Jvc3NTYWxhcnlz
+IgAAAHRheF9jYXRlZ29yeS9zb2NpYWwvZW1wbG95ZWVfc2hhcmVzEwAAAHNhbGFyeV9yYW5nZS9m
+cmFuY2VzIgAAAHRheF9jYXRlZ29yeS9zb2NpYWwvZW1wbG95ZXJfc2hhcmVzCgAAAHBvcnRhbF91
+cmxzDwAAAGdldFBvcnRhbE9iamVjdHMOAAAAc2VydmljZV9tb2R1bGVzBwAAAHNlcnZpY2VzBgAA
+AFNhbGFyeXMJAAAAJXMvbGFib3VycwcAAABSRVFVRVNUcwgAAABSRVNQT05TRXMIAAAAcmVkaXJl
+Y3RzDAAAAGFic29sdXRlX3VybHMyAAAAP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1QYXkrc2hlZXQr
+Y2FsY3VsYXRpb24rZG9uZS4oMAAAAHMEAAAAVHJ1ZXMFAAAARmFsc2VzCQAAAF9nZXRhdHRyX3MH
+AAAAY29udGV4dHMIAAAAcGF5c2hlZXRzDQAAAHBheXNoZWV0X3R5cGVzEgAAAHBheXNoZWV0X2xp
+bmVfdHlwZXMSAAAAcGF5c2hlZXRfY2VsbF90eXBlcwgAAABlbXBsb3llZXMPAAAAZW1wbG95ZWVf
+b2JqZWN0cwgAAABlbXBsb3llcnMPAAAAZW1wbG95ZXJfb2JqZWN0cwcAAABpZF9saXN0cwkAAABf
+Z2V0aXRlcl9zDQAAAHBheXNoZWV0X2l0ZW1zEgAAAGNyZWF0ZVBheVNoZWV0SXRlbXMGAAAAbW9u
+dGhzcwQAAABOb25lcwkAAABuZXdfdGl0bGVzCQAAAF9nZXRpdGVtX3MDAAAAaW50cwMAAABzdHJz
+CQAAAHN0ZF9saW5lc3MOAAAAcGF5c2hlZXRfaXRlbXNzCAAAAHN0ZF9saW5lcwcAAABzZXJ2aWNl
+cwkAAAB0ZW1wX2l0ZW1zBwAAAF93cml0ZV9zDwAAAHVzZXJfbGluZV9pbmRleHMUAAAAdG90YWxf
+ZW1wbG95ZWVfc2hhcmVzEAAAAHNhbGFyeV9yYW5nZV9jYXRzBwAAAHRheF9jYXRzBwAAAGxpc3Ri
+b3hzCQAAAHVzZXJfbGluZXMEAAAAYmFzZXMDAAAAY2F0cwgAAABuZXdfY2VsbHMNAAAAZW1wbG95
+ZXJfcmF0ZXMNAAAAZW1wbG95ZWVfcmF0ZXMFAAAAZmxvYXRzBAAAAHJhdGVzBAAAAGl0ZW1zDAAA
+AGdyb3NzX3NhbGFyeXMKAAAAbmV0X3NhbGFyeXMFAAAAY2VsbHNzCAAAAGVycDVzaXRlcwcAAABo
+YXNhdHRycxMAAABzZXJ2aWNlX21vZHVsZV9uYW1lKDEAAABzBwAAAGxpc3Rib3hzAgAAAGt3cwQA
+AABUcnVlcwUAAABGYWxzZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwgAAABwYXlzaGVldHMN
+AAAAcGF5c2hlZXRfdHlwZXMSAAAAcGF5c2hlZXRfbGluZV90eXBlcxIAAABwYXlzaGVldF9jZWxs
+X3R5cGVzCAAAAGVtcGxveWVlcw8AAABlbXBsb3llZV9vYmplY3RzCAAAAGVtcGxveWVycw8AAABl
+bXBsb3llcl9vYmplY3RzBwAAAGlkX2xpc3RzCQAAAF9nZXRpdGVyX3MNAAAAcGF5c2hlZXRfaXRl
+bXMSAAAAY3JlYXRlUGF5U2hlZXRJdGVtcwYAAABtb250aHNzBAAAAE5vbmVzCQAAAG5ld190aXRs
+ZXMJAAAAX2dldGl0ZW1fcwMAAABpbnRzAwAAAHN0cnMJAAAAc3RkX2xpbmVzcw4AAABwYXlzaGVl
+dF9pdGVtc3MIAAAAc3RkX2xpbmVzBwAAAHNlcnZpY2VzCQAAAHRlbXBfaXRlbXMHAAAAX3dyaXRl
+X3MPAAAAdXNlcl9saW5lX2luZGV4cxQAAAB0b3RhbF9lbXBsb3llZV9zaGFyZXMQAAAAc2FsYXJ5
+X3JhbmdlX2NhdHMHAAAAdGF4X2NhdHMJAAAAdXNlcl9saW5lcwQAAABiYXNlcwMAAABjYXRzCAAA
+AG5ld19jZWxscw0AAABlbXBsb3llcl9yYXRlcw0AAABlbXBsb3llZV9yYXRlcwUAAABmbG9hdHME
+AAAAcmF0ZXMEAAAAaXRlbXMMAAAAZ3Jvc3Nfc2FsYXJ5cwoAAABuZXRfc2FsYXJ5cwUAAABjZWxs
+c3MIAAAAZXJwNXNpdGVzBwAAAGhhc2F0dHJzEwAAAHNlcnZpY2VfbW9kdWxlX25hbWUoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIwAAAFBheVNoZWV0VHJhbnNhY3Rpb25fcG9zdENhbGN1
+bGF0aW9uAQAAAHO0AAAABgEGBBIBEgIGAQYCEgESARIBEgUGARkACQEjARAFFSwqAR8BFgEfAXIB
+FAUSBQYDDQAGAhUCFwIGAh8BHwEfARACGAMGAwYBDQAGAhUBFQEVAgoCDQAJAi8DDwINAAYCBgIP
+ARIBMwEQARABCQEKAQ8CMwEQARABCQEKAQgCHgIWATADDQAGASgBJAEYARgBGwQYAQoCBgEiAwwC
+EAEiAwwCEAQbARABCgIGAg8BBwEGAQcEKAEAAABzIwAAAFBheVNoZWV0VHJhbnNhY3Rpb25fcG9z
+dENhbGN1bGF0aW9uKAEAAABzIwAAAFBheVNoZWV0VHJhbnNhY3Rpb25fcG9zdENhbGN1bGF0aW9u
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_postCalculation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>True</string>
+                            <string>False</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>paysheet</string>
+                            <string>paysheet_type</string>
+                            <string>paysheet_line_type</string>
+                            <string>paysheet_cell_type</string>
+                            <string>employee</string>
+                            <string>employee_object</string>
+                            <string>employer</string>
+                            <string>employer_object</string>
+                            <string>id_list</string>
+                            <string>_getiter_</string>
+                            <string>paysheet_item</string>
+                            <string>createPaySheetItem</string>
+                            <string>months</string>
+                            <string>None</string>
+                            <string>new_title</string>
+                            <string>_getitem_</string>
+                            <string>int</string>
+                            <string>str</string>
+                            <string>std_lines</string>
+                            <string>paysheet_items</string>
+                            <string>std_line</string>
+                            <string>service</string>
+                            <string>temp_item</string>
+                            <string>_write_</string>
+                            <string>user_line_index</string>
+                            <string>total_employee_share</string>
+                            <string>salary_range_cat</string>
+                            <string>tax_cat</string>
+                            <string>user_line</string>
+                            <string>base</string>
+                            <string>cat</string>
+                            <string>new_cell</string>
+                            <string>employer_rate</string>
+                            <string>employee_rate</string>
+                            <string>float</string>
+                            <string>rate</string>
+                            <string>item</string>
+                            <string>gross_salary</string>
+                            <string>net_salary</string>
+                            <string>cells</string>
+                            <string>erp5site</string>
+                            <string>hasattr</string>
+                            <string>service_module_name</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_postCalculation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

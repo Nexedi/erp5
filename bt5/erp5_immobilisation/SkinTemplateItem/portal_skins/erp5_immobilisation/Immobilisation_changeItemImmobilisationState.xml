@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+error_message = None\n
+\n
+if context.isCurrentlyImmobilised():\n
+  # Unimmobilisation\n
+  context.unimmobilise()\n
+  error_message = \'Item is unimmobilised\'\n
+  \n
+else:\n
+  # Immobilisation\n
+  context.immobilise()\n
+  error_message = "Item is immobilised"\n
+\n
+redirect_url = \'%s/%s?%s%s\' % ( context.absolute_url(),\n
+                                form_id,\n
+                                \'portal_status_message=\',\n
+                                error_message )\n
+\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAkAAAALAAAASwAA
+AHOaAAAAdAAAdAEAZAEAgwIAfQQAdAMAfQYAdAAAdAEAZAIAgwIAgwAAbxoAAXQAAHQBAGQDAIMC
+AIMAAAFkBAB9BgBuFwABdAAAdAEAZAUAgwIAgwAAAWQGAH0GAGQHAHQAAHQBAGQIAIMCAIMAAHwA
+AGQJAHwGAGYEABZ9BwB0AAB0BwB8BABkCgCDAgBkCwCDAgB8BwCDAQABZAAAUygMAAAATnMHAAAA
+UkVRVUVTVHMWAAAAaXNDdXJyZW50bHlJbW1vYmlsaXNlZHMMAAAAdW5pbW1vYmlsaXNlcxUAAABJ
+dGVtIGlzIHVuaW1tb2JpbGlzZWRzCgAAAGltbW9iaWxpc2VzEwAAAEl0ZW0gaXMgaW1tb2JpbGlz
+ZWRzCgAAACVzLyVzPyVzJXNzDAAAAGFic29sdXRlX3VybHMWAAAAcG9ydGFsX3N0YXR1c19tZXNz
+YWdlPXMIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0KAgAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29u
+dGV4dHMHAAAAcmVxdWVzdHMEAAAATm9uZXMNAAAAZXJyb3JfbWVzc2FnZXMHAAAAZm9ybV9pZHMM
+AAAAcmVkaXJlY3RfdXJscwkAAABfZ2V0aXRlbV8oCQAAAHMHAAAAZm9ybV9pZHMCAAAAa3dzCQAA
+AF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMEAAAATm9uZXMNAAAAZXJyb3JfbWVz
+c2FnZXMMAAAAcmVkaXJlY3RfdXJscwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzLAAAAEltbW9iaWxpc2F0aW9uX2NoYW5nZUl0ZW1JbW1vYmlsaXNhdGlvblN0YXRl
+AQAAAHMUAAAADwEJAhMCDQENBA0BBgISAQYCEAIoAQAAAHMsAAAASW1tb2JpbGlzYXRpb25fY2hh
+bmdlSXRlbUltbW9iaWxpc2F0aW9uU3RhdGUoAQAAAHMsAAAASW1tb2JpbGlzYXRpb25fY2hhbmdl
+SXRlbUltbW9iaWxpc2F0aW9uU3RhdGUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
+ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/local_immobilisation/Immobilisation_changeItemImmobilisationState</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>error_message</string>
+                            <string>redirect_url</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Immobilisation_changeItemImmobilisationState</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

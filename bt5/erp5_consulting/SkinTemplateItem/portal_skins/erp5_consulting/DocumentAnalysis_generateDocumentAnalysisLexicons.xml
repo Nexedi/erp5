@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>first_level_transformation = \\\n
+{ \'portal_type\' : \'Document Analysis Lexicon\'\n
+, \'data_key\'    : \'lexicon_title\'\n
+, \'data\'        : [ { \'input_data_name\' : \'lexicon_title\'\n
+                    , \'output_property\' : \'title\'\n
+                    }\n
+                  , { \'input_data_name\' : \'lexicon_source_type\'\n
+                    , \'output_property\' : \'lexicon_source_type\'\n
+                    }\n
+                  ]\n
+}\n
+\n
+second_level_transformation = \\\n
+{ \'portal_type\' : \'Document Analysis Lexicon Item\'\n
+, \'data_key\'    : \'item_title\'\n
+, \'data\'        : [ { \'input_data_name\' : \'item_title\'\n
+                    , \'output_property\' : \'title\'\n
+                    }\n
+                  , { \'input_data_name\' : \'item_description\'\n
+                    , \'output_property\' : \'description\'\n
+                    }\n
+                  , { \'input_data_name\' : \'type\'\n
+                    , \'output_property\' : \'lexicon_item_type\'\n
+                    }\n
+                  , { \'input_data_name\' : \'ubm\'\n
+                    , \'output_property\' : \'lexicon_item_ubm\'\n
+                    }\n
+                  , { \'input_data_name\' : \'class\'\n
+                    , \'output_property\' : \'item_class\'\n
+                    }\n
+                  , { \'input_data_name\' : \'propertysheet\'\n
+                    , \'output_property\' : \'item_property_sheet\'\n
+                    }\n
+                  ]\n
+}\n
+\n
+fast_input_transformation_rules = [first_level_transformation, second_level_transformation]\n
+\n
+context.FastInput_generateTwoLevelObjectStructure( transformation_rules = fast_input_transformation_rules\n
+                                                 , listbox = listbox\n
+                                                 , destination = context.getObject())\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGcAAGQBAIQBAFoAAGQAAFMoAgAAAE5jAQAAAAcAAAANAAAA
+SwAAAHMoAQAAaAAABGQBAGQCAAM8BGQDAGQEAAM8BGQFAGgAAARkBgBkBAADPARkBwBkCAADPGgA
+AARkBgBkCQADPARkBwBkCQADPGcCAAM8fQIAaAAABGQBAGQKAAM8BGQDAGQLAAM8BGQFAGgAAARk
+BgBkCwADPARkBwBkCAADPGgAAARkBgBkDAADPARkBwBkDQADPGgAAARkBgBkDgADPARkBwBkDwAD
+PGgAAARkBgBkEAADPARkBwBkEQADPGgAAARkBgBkEgADPARkBwBkEwADPGgAAARkBgBkFAADPARk
+BwBkFQADPGcGAAM8fQMAfAIAfAMAZwIAfQQAdAMAdAQAZBYAgwIAZBcAfAQAZBgAfAAAZBkAdAMA
+dAQAZBoAgwIAgwAAgwADAWQAAFMoGwAAAE5zCwAAAHBvcnRhbF90eXBlcxkAAABEb2N1bWVudCBB
+bmFseXNpcyBMZXhpY29ucwgAAABkYXRhX2tleXMNAAAAbGV4aWNvbl90aXRsZXMEAAAAZGF0YXMP
+AAAAaW5wdXRfZGF0YV9uYW1lcw8AAABvdXRwdXRfcHJvcGVydHlzBQAAAHRpdGxlcxMAAABsZXhp
+Y29uX3NvdXJjZV90eXBlcx4AAABEb2N1bWVudCBBbmFseXNpcyBMZXhpY29uIEl0ZW1zCgAAAGl0
+ZW1fdGl0bGVzEAAAAGl0ZW1fZGVzY3JpcHRpb25zCwAAAGRlc2NyaXB0aW9ucwQAAAB0eXBlcxEA
+AABsZXhpY29uX2l0ZW1fdHlwZXMDAAAAdWJtcxAAAABsZXhpY29uX2l0ZW1fdWJtcwUAAABjbGFz
+c3MKAAAAaXRlbV9jbGFzc3MNAAAAcHJvcGVydHlzaGVldHMTAAAAaXRlbV9wcm9wZXJ0eV9zaGVl
+dHMpAAAARmFzdElucHV0X2dlbmVyYXRlVHdvTGV2ZWxPYmplY3RTdHJ1Y3R1cmVzFAAAAHRyYW5z
+Zm9ybWF0aW9uX3J1bGVzcwcAAABsaXN0Ym94cwsAAABkZXN0aW5hdGlvbnMJAAAAZ2V0T2JqZWN0
+KAYAAABzGgAAAGZpcnN0X2xldmVsX3RyYW5zZm9ybWF0aW9ucxsAAABzZWNvbmRfbGV2ZWxfdHJh
+bnNmb3JtYXRpb25zHwAAAGZhc3RfaW5wdXRfdHJhbnNmb3JtYXRpb25fcnVsZXNzCQAAAF9nZXRh
+dHRyX3MHAAAAY29udGV4dHMHAAAAbGlzdGJveCgHAAAAcwcAAABsaXN0Ym94cwIAAABrd3MaAAAA
+Zmlyc3RfbGV2ZWxfdHJhbnNmb3JtYXRpb25zGwAAAHNlY29uZF9sZXZlbF90cmFuc2Zvcm1hdGlv
+bnMfAAAAZmFzdF9pbnB1dF90cmFuc2Zvcm1hdGlvbl9ydWxlc3MJAAAAX2dldGF0dHJfcwcAAABj
+b250ZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pczEAAABEb2N1bWVudEFuYWx5c2lz
+X2dlbmVyYXRlRG9jdW1lbnRBbmFseXNpc0xleGljb25zAQAAAHMeAAAAAAEZAhUDHQYAARkCFQMV
+AxUDFQMVAx0GDwISAQkBKAEAAABzMQAAAERvY3VtZW50QW5hbHlzaXNfZ2VuZXJhdGVEb2N1bWVu
+dEFuYWx5c2lzTGV4aWNvbnMoAQAAAHMxAAAARG9jdW1lbnRBbmFseXNpc19nZW5lcmF0ZURvY3Vt
+ZW50QW5hbHlzaXNMZXhpY29ucygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1v
+ZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/DocumentAnalysis_generateDocumentAnalysisLexicons</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>first_level_transformation</string>
+                            <string>second_level_transformation</string>
+                            <string>fast_input_transformation_rules</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DocumentAnalysis_generateDocumentAnalysisLexicons</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

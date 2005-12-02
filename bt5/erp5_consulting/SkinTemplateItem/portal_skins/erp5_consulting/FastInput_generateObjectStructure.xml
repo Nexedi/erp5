@@ -1,0 +1,598 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from string import zfill\n
+\n
+##################################################\n
+#### About the transformation_rules structure ####\n
+# a key indicate that input of that level having the same value must be grouped together\n
+# the key has the value of one \'input_data_name\' of the corresponding level\n
+# a key is unique and required (in this version)\n
+##################################################\n
+\n
+# some analysis of transformation rules\n
+\n
+# get all input data names\n
+input_data_names = []\n
+for level_rule in transformation_rules:\n
+  for data_item in level_rule[\'data\']:\n
+    input_data_names.append(data_item[\'input_data_name\'])\n
+    \n
+#NOTUSED yet # get a level-ordered list of primary key\n
+# primary_keys = []\n
+# for level_rule in transformation_rules:\n
+#   primary_keys.append(level_rule[\'primary_key\'])\n
+\n
+# get a level-ordered list of input/output name pairs and their required status\n
+io_names = []\n
+for level_rule in transformation_rules:\n
+  new_io_names_level = []\n
+  for data_item in level_rule[\'data\']:\n
+    new_io_names_level.append([data_item[\'input_data_name\'], data_item[\'output_property\']])\n
+  io_names.append(new_io_names_level)\n
+  \n
+# get a level-ordered list of portal_types\n
+level_portal_types = []\n
+for level_rule in transformation_rules:\n
+  level_portal_types.append(level_rule[\'portal_type\'])\n
+  \n
+# get a level-ordered list of required fields\n
+# TODO : auto;atically add the primary_key\n
+required_field = []\n
+for level_rule in transformation_rules:\n
+  new_required_level = []\n
+  for data_item in level_rule[\'data\']:\n
+    if data_item[\'required\'] == True:\n
+      new_required_level.append(data_item[\'input_data_name\'])\n
+  required_field.append(new_required_level)\n
+\n
+  \n
+    \n
+# this list contain all fast input lines\n
+fast_input_lines = []\n
+\n
+# get the fast input form datas\n
+for inputline in listbox:\n
+  if inputline.has_key(\'listbox_key\'):\n
+    line = {}\n
+    line[\'id\'] = int(inputline[\'listbox_key\'])\n
+    for data_name in input_data_names:\n
+      line[data_name] = inputline[data_name]\n
+    fast_input_lines.append(line)\n
+\n
+# sort the list by id to have the same order of the user\n
+fast_input_lines.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+\n
+\n
+\n
+# the intermediate ordered-list of data and levels\n
+ordered_items = []\n
+ordered_levels = []\n
+\n
+# scan every fast input line to create a structured and comprehensive list of items\n
+for line in fast_input_lines:\n
+  \n
+  # the list of covered level of the line\n
+  line_levels = []    \n
+\n
+  # test every level to know if they are OK\n
+  level_depth = -1\n
+  for required_level in required_field:\n
+    # increase the level-depth\n
+    level_depth += 1\n
+    valid_level = None\n
+    # to validate this level, check every required field\n
+    for field_to_test in required_level:\n
+      if line[field_to_test] in (\'\', None):\n
+        valid_level = False\n
+        break\n
+      else:\n
+        valid_level = True\n
+\n
+    # the current level is ok\n
+    if valid_level != False:\n
+      # add the current level to the list of good ones\n
+      line_levels.append(level_depth)\n
+\n
+  # exclude empty line\n
+  if len(line_levels) > 0:\n
+    # put data of the line to a structured list  \n
+    line_data = []\n
+    for level in line_levels:\n
+      new_level_data = {}\n
+      for io_name_pair in io_names[level]:\n
+        new_level_data[io_name_pair[1]] = line[io_name_pair[0]]\n
+      new_level_data[\'portal_type\'] = level_portal_types[level]\n
+      line_data.append({level : new_level_data})\n
+\n
+    # save the line data item and the level list in the right order\n
+    ordered_items += line_data\n
+    ordered_levels += line_levels\n
+\n
+\n
+        \n
+# the clean ordered list of data\n
+clean_data = []\n
+\n
+# list of processed level\n
+processed_level = []\n
+\n
+# exclude level-incoherent objects\n
+for i in range(len(ordered_items)):\n
+  current_item_level = ordered_levels[i]\n
+  current_item_data = ordered_items[i]\n
+  item_ok = False\n
+  \n
+  # handle the "root" item case (must be a 0-level)\n
+  if current_item_level == 0:\n
+    item_ok = True\n
+      \n
+  # to compare with previous items, some must be alredy processed\n
+  if len(processed_level) > 0 and item_ok == False:\n
+    prev_item_level = ordered_levels[i-1]\n
+    \n
+    # the current item and the previous one are follower\n
+    if current_item_level == prev_item_level+1 or current_item_level == prev_item_level:\n
+      item_ok = True\n
+    else:\n
+      # the current item must be in the processed level list to be accepted as sub object\n
+      if current_item_level in processed_level:\n
+        item_ok = True\n
+      \n
+  # item is level-coherent, so keep it    \n
+  if item_ok == True:\n
+    # add to the clean list\n
+    clean_data.append(current_item_data.values()[0])\n
+    # add to the processed list of level\n
+    processed_level.append(current_item_level)\n
+    \n
+clean_levels = processed_level\n
+\n
+\n
+\n
+# the final structured list of data\n
+structured_data = []\n
+\n
+# create a list of ordered list\n
+series_list = []\n
+new_serie = []\n
+for i in range(len(clean_levels)):\n
+  current_item_level = clean_levels[i]\n
+  current_item_data = clean_data[i]\n
+  \n
+  # handle the "root" item case (must be a 0-level)\n
+  if current_item_level == 0:    \n
+    if len(new_serie) > 0:\n
+      series_list.append(new_serie)\n
+    new_serie = [(i, current_item_level)]\n
+  else:\n
+    prev_item_level = clean_levels[i-1]    \n
+    # the current item and the previous one are of the same serie\n
+    if current_item_level > prev_item_level:\n
+      new_serie.append((i, current_item_level))  \n
+    elif current_item_level == prev_item_level:\n
+      series_list.append(new_serie)\n
+      new_serie = [(i, current_item_level)]\n
+      \n
+# the last element must be saved\n
+series_list.append(new_serie)\n
+\n
+\n
+\n
+# this function create a serie from a simple data structure\n
+def simpleStructure(serie):\n
+  previous_level = []\n
+  for (data_id, data_level) in serie[::-1]:\n
+    previous_level = [(data_id, data_level, previous_level)]\n
+  return previous_level\n
+\n
+# create the complex data structure\n
+data_groups = []\n
+new_group = []\n
+for serie in series_list:\n
+  simple_struct = simpleStructure(serie)\n
+  # zero delimit the zone between two groups\n
+  if simple_struct[0][1] == 0:\n
+    # save the last group\n
+    if len(new_group) > 0:\n
+      data_groups.append(new_group)\n
+    # start a new group\n
+    new_group = [simple_struct]\n
+  else:\n
+    new_group.append(simple_struct)\n
+\n
+# the last element must be saved\n
+data_groups.append(new_group)\n
+\n
+print data_groups\n
+ \n
+\n
+# [\n
+# \n
+#  [\n
+#   [(0, 0, [(1, 1, [])])], \n
+#   [(2, 1, [])], \n
+#   [(3, 1, [])]\n
+#  ], \n
+# \n
+#  [\n
+#   [(4, 0, [(5, 1, [])])], \n
+#   [(6, 1, [])]\n
+#  ]\n
+# \n
+# ]\n
+# \n
+# \n
+# [[(0, 0, [(1, 1, [])])], [(2, 1, [])]] -->  [(0, 0, [(1, 1, []), (2, 1, [])])]\n
+\n
+def getLastSubList(current_list):\n
+  return current_list[-1][2]\n
+  \n
+def setLastSubList(current_list, last_sub_list_value):\n
+  current_list[-1][2] = last_sub_list_value\n
+  return current_list\n
+  \n
+def getListLevel(current_list):\n
+  return current_list[-1][1]\n
+      \n
+def aggregate(big_list, item_to_add):\n
+  if big_list == []:\n
+    return []\n
+  if getListLevel(big_list) == getListLevel(item_to_add):\n
+    print "big_list " + big_list\n
+    print "item_to_add " + item_to_add\n
+    big_list.append(item_to_add)\n
+    return big_list\n
+  else:\n
+    new_big_list_sub_level = aggregate(getLastSubList(big_list), item_to_add)\n
+    print "new_big_list_sub_level " + new_big_list_sub_level\n
+    print "big_list " + big_list\n
+    return None #setLastSubList(big_list, new_big_list_sub_level)\n
+\n
+  \n
+for group in data_groups:\n
+  collapsed_group = group[0]\n
+  for serie_group in group[1:]:\n
+    print serie_group\n
+    collapsed_group = aggregate(collapsed_group, serie_group)\n
+\n
+  print collapsed_group\n
+      \n
+    \n
+#     if\n
+#     collapsed_group.append()\n
+    \n
+\n
+  \n
+# for simple_struct in simple_structures:\n
+#   if simple_struct\n
+\n
+    \n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+AGQDAIMCAHw4AIMBAAFxawZXdAoAfDUAZAMAgwIAfDYAgwEAAXwFAAR8NQACSUpkEgCEAACJAABk
+EwCEAAB9OgBkFACEAACJAgCHAACHAQCHAgBkFQCGAACJAQB4bAB0BQB8NQCDAQBEXV4AfT0AdAgA
+fD0AZA8AgwIAfT4AeDwAdAUAdAgAfD0AZA0AZAAAhQIAgwIAgwEARF0fAH0/AHwFAAR8PwACSUqI
+AQB8PgB8PwCDAgB9PgBxcgdXfAUABHw+AAJJSnFBB1d8BQCDAABTZAAAUygWAAAATigBAAAAcwUA
+AAB6ZmlsbHMEAAAAZGF0YXMGAAAAYXBwZW5kcw8AAABpbnB1dF9kYXRhX25hbWVzDwAAAG91dHB1
+dF9wcm9wZXJ0eXMLAAAAcG9ydGFsX3R5cGVzCAAAAHJlcXVpcmVkcwcAAABoYXNfa2V5cwsAAABs
+aXN0Ym94X2tleXMCAAAAaWRzBAAAAHNvcnRjAgAAAAQAAAAFAAAAQwAAAHMfAAAAdAAAdAEAfAAA
+ZAEAgwIAdAEAfAEAZAEAgwIAgwIAUygCAAAATnMCAAAAaWQoBAAAAHMDAAAAY21wcwkAAABfZ2V0
+aXRlbV9zAQAAAHhzAQAAAHkoBAAAAHMBAAAAeHMBAAAAeXMDAAAAY21wcwkAAABfZ2V0aXRlbV8o
+AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxsYW1iZGEuOT49AAAAcwAAAABpAQAA
+AHMAAAAAaQAAAABzBgAAAHZhbHVlc2MBAAAABgAAAAkAAABDAAAAc1AAAABnAAB9AQB4PwB0AQB0
+AgB8AABkAABkAABkAQALhQMAgwIAgwEARF0eAFwCAH0EAH0FAHwEAHwFAHwBAGYDAGcBAH0BAHEm
+AFd8AQBTZAAAUygCAAAATmkBAAAAKAYAAABzDgAAAHByZXZpb3VzX2xldmVscwkAAABfZ2V0aXRl
+cl9zCQAAAF9nZXRpdGVtX3MFAAAAc2VyaWVzBwAAAGRhdGFfaWRzCgAAAGRhdGFfbGV2ZWwoBgAA
+AHMFAAAAc2VyaWVzDgAAAHByZXZpb3VzX2xldmVscwkAAABfZ2V0aXRlcl9zCQAAAF9nZXRpdGVt
+X3MHAAAAZGF0YV9pZHMKAAAAZGF0YV9sZXZlbCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMPAAAAc2ltcGxlU3RydWN0dXJltAAAAHMKAAAAAAEGASAADAEWAWMBAAAAAgAAAAUAAABDAAAA
+cxsAAAB0AAB0AAB8AABkAQALgwIAZAIAgwIAU2QAAFMoAwAAAE5pAQAAAGkCAAAAKAIAAABzCQAA
+AF9nZXRpdGVtX3MMAAAAY3VycmVudF9saXN0KAIAAABzDAAAAGN1cnJlbnRfbGlzdHMJAAAAX2dl
+dGl0ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcw4AAABnZXRMYXN0U3ViTGlzdOEA
+AABzAgAAAAABYwIAAAAEAAAABgAAAEMAAABzIgAAAHwBAHQBAHQCAHwAAGQBAAuDAgCDAQBkAgA8
+fAAAU2QAAFMoAwAAAE5pAQAAAGkCAAAAKAQAAABzEwAAAGxhc3Rfc3ViX2xpc3RfdmFsdWVzBwAA
+AF93cml0ZV9zCQAAAF9nZXRpdGVtX3MMAAAAY3VycmVudF9saXN0KAQAAABzDAAAAGN1cnJlbnRf
+bGlzdHMTAAAAbGFzdF9zdWJfbGlzdF92YWx1ZXMHAAAAX3dyaXRlX3MJAAAAX2dldGl0ZW1fKAAA
+AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcw4AAABzZXRMYXN0U3ViTGlzdOQAAABzBAAAAAAB
+GgFjAQAAAAIAAAAFAAAAQwAAAHMbAAAAdAAAdAAAfAAAZAEAC4MCAGQBAIMCAFNkAABTKAIAAABO
+aQEAAAAoAgAAAHMJAAAAX2dldGl0ZW1fcwwAAABjdXJyZW50X2xpc3QoAgAAAHMMAAAAY3VycmVu
+dF9saXN0cwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzDAAAAGdl
+dExpc3RMZXZlbOgAAABzAgAAAAABYwIAAAAKAAAADQAAAAMAAABzpwAAAHQAAIMAAH0DAHwAAGcA
+AGoCAG8IAAFnAABTbgEAAYgCAHwAAIMBAIgCAHwBAIMBAGoCAG83AAF8AwAEZAEAfAAAFwJJSnwD
+AARkAgB8AQAXAklKdAUAfAAAZAMAgwIAfAEAgwEAAXwAAFNuNgABiAEAiAAAfAAAgwEAfAEAgwIA
+fQgAfAMABGQEAHwIABcCSUp8AwAEZAEAfAAAFwJJSnQJAFNkAABTKAUAAABOcwkAAABiaWdfbGlz
+dCBzDAAAAGl0ZW1fdG9fYWRkIHMGAAAAYXBwZW5kcxcAAABuZXdfYmlnX2xpc3Rfc3ViX2xldmVs
+ICgKAAAAcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzCAAAAGJpZ19saXN0cwwAAABnZXRMaXN0TGV2
+ZWxzCwAAAGl0ZW1fdG9fYWRkcwkAAABfZ2V0YXR0cl9zCQAAAGFnZ3JlZ2F0ZXMOAAAAZ2V0TGFz
+dFN1Ykxpc3RzFgAAAG5ld19iaWdfbGlzdF9zdWJfbGV2ZWxzBAAAAE5vbmUoCgAAAHMIAAAAYmln
+X2xpc3RzCwAAAGl0ZW1fdG9fYWRkcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzDAAAAGdldExpc3RM
+ZXZlbHMJAAAAX2dldGF0dHJfcwkAAABhZ2dyZWdhdGVzDgAAAGdldExhc3RTdWJMaXN0cxYAAABu
+ZXdfYmlnX2xpc3Rfc3ViX2xldmVscwQAAABOb25lKAMAAABzDgAAAGdldExhc3RTdWJMaXN0cwkA
+AABhZ2dyZWdhdGVzDAAAAGdldExpc3RMZXZlbCgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCQAA
+AGFnZ3JlZ2F0ZesAAABzFgAAAAkBDQEIARkBDgERARABCAIVAQ4BDgEoPgAAAHMHAAAAX3ByaW50
+X3MGAAAAX3ByaW50cwYAAABzdHJpbmdzBQAAAHpmaWxscxAAAABpbnB1dF9kYXRhX25hbWVzcwkA
+AABfZ2V0aXRlcl9zFAAAAHRyYW5zZm9ybWF0aW9uX3J1bGVzcwoAAABsZXZlbF9ydWxlcwkAAABf
+Z2V0aXRlbV9zCQAAAGRhdGFfaXRlbXMJAAAAX2dldGF0dHJfcwgAAABpb19uYW1lc3MSAAAAbmV3
+X2lvX25hbWVzX2xldmVscxIAAABsZXZlbF9wb3J0YWxfdHlwZXNzDgAAAHJlcXVpcmVkX2ZpZWxk
+cxIAAABuZXdfcmVxdWlyZWRfbGV2ZWxzBAAAAFRydWVzEAAAAGZhc3RfaW5wdXRfbGluZXNzBwAA
+AGxpc3Rib3hzCQAAAGlucHV0bGluZXMEAAAAbGluZXMDAAAAaW50cwcAAABfd3JpdGVfcwkAAABk
+YXRhX25hbWVzDQAAAG9yZGVyZWRfaXRlbXNzDgAAAG9yZGVyZWRfbGV2ZWxzcwsAAABsaW5lX2xl
+dmVsc3MLAAAAbGV2ZWxfZGVwdGhzDgAAAHJlcXVpcmVkX2xldmVscwQAAABOb25lcwsAAAB2YWxp
+ZF9sZXZlbHMNAAAAZmllbGRfdG9fdGVzdHMFAAAARmFsc2VzAwAAAGxlbnMJAAAAbGluZV9kYXRh
+cwUAAABsZXZlbHMOAAAAbmV3X2xldmVsX2RhdGFzDAAAAGlvX25hbWVfcGFpcnMKAAAAY2xlYW5f
+ZGF0YXMPAAAAcHJvY2Vzc2VkX2xldmVscwUAAAByYW5nZXMBAAAAaXMSAAAAY3VycmVudF9pdGVt
+X2xldmVscxEAAABjdXJyZW50X2l0ZW1fZGF0YXMHAAAAaXRlbV9va3MPAAAAcHJldl9pdGVtX2xl
+dmVscwwAAABjbGVhbl9sZXZlbHNzDwAAAHN0cnVjdHVyZWRfZGF0YXMLAAAAc2VyaWVzX2xpc3Rz
+CQAAAG5ld19zZXJpZXMPAAAAc2ltcGxlU3RydWN0dXJlcwsAAABkYXRhX2dyb3Vwc3MJAAAAbmV3
+X2dyb3VwcwUAAABzZXJpZXMNAAAAc2ltcGxlX3N0cnVjdHMOAAAAZ2V0TGFzdFN1Ykxpc3RzDgAA
+AHNldExhc3RTdWJMaXN0cwwAAABnZXRMaXN0TGV2ZWxzCQAAAGFnZ3JlZ2F0ZXMFAAAAZ3JvdXBz
+DwAAAGNvbGxhcHNlZF9ncm91cHMLAAAAc2VyaWVfZ3JvdXAoQAAAAHMUAAAAdHJhbnNmb3JtYXRp
+b25fcnVsZXNzBwAAAGxpc3Rib3hzCwAAAGRlc3RpbmF0aW9ucwIAAABrd3MHAAAAX3ByaW50X3MG
+AAAAX3ByaW50cwYAAABzdHJpbmdzBQAAAHpmaWxscxAAAABpbnB1dF9kYXRhX25hbWVzcwkAAABf
+Z2V0aXRlcl9zCgAAAGxldmVsX3J1bGVzCQAAAF9nZXRpdGVtX3MJAAAAZGF0YV9pdGVtcwkAAABf
+Z2V0YXR0cl9zCAAAAGlvX25hbWVzcxIAAABuZXdfaW9fbmFtZXNfbGV2ZWxzEgAAAGxldmVsX3Bv
+cnRhbF90eXBlc3MOAAAAcmVxdWlyZWRfZmllbGRzEgAAAG5ld19yZXF1aXJlZF9sZXZlbHMEAAAA
+VHJ1ZXMQAAAAZmFzdF9pbnB1dF9saW5lc3MJAAAAaW5wdXRsaW5lcwQAAABsaW5lcwMAAABpbnRz
+BwAAAF93cml0ZV9zCQAAAGRhdGFfbmFtZXMNAAAAb3JkZXJlZF9pdGVtc3MOAAAAb3JkZXJlZF9s
+ZXZlbHNzCwAAAGxpbmVfbGV2ZWxzcwsAAABsZXZlbF9kZXB0aHMOAAAAcmVxdWlyZWRfbGV2ZWxz
+BAAAAE5vbmVzCwAAAHZhbGlkX2xldmVscw0AAABmaWVsZF90b190ZXN0cwUAAABGYWxzZXMDAAAA
+bGVucwkAAABsaW5lX2RhdGFzBQAAAGxldmVscw4AAABuZXdfbGV2ZWxfZGF0YXMMAAAAaW9fbmFt
+ZV9wYWlycwoAAABjbGVhbl9kYXRhcw8AAABwcm9jZXNzZWRfbGV2ZWxzBQAAAHJhbmdlcwEAAABp
+cxIAAABjdXJyZW50X2l0ZW1fbGV2ZWxzEQAAAGN1cnJlbnRfaXRlbV9kYXRhcwcAAABpdGVtX29r
+cw8AAABwcmV2X2l0ZW1fbGV2ZWxzDAAAAGNsZWFuX2xldmVsc3MPAAAAc3RydWN0dXJlZF9kYXRh
+cwsAAABzZXJpZXNfbGlzdHMJAAAAbmV3X3Nlcmllcw8AAABzaW1wbGVTdHJ1Y3R1cmVzCwAAAGRh
+dGFfZ3JvdXBzcwkAAABuZXdfZ3JvdXBzBQAAAHNlcmllcw0AAABzaW1wbGVfc3RydWN0cw4AAABn
+ZXRMYXN0U3ViTGlzdHMOAAAAc2V0TGFzdFN1Ykxpc3RzDAAAAGdldExpc3RMZXZlbHMJAAAAYWdn
+cmVnYXRlcwUAAABncm91cHMPAAAAY29sbGFwc2VkX2dyb3VwcwsAAABzZXJpZV9ncm91cCgAAAAA
+KAMAAABzDgAAAGdldExhc3RTdWJMaXN0cwkAAABhZ2dyZWdhdGVzDAAAAGdldExpc3RMZXZlbHMP
+AAAAU2NyaXB0IChQeXRob24pcyEAAABGYXN0SW5wdXRfZ2VuZXJhdGVPYmplY3RTdHJ1Y3R1cmUB
+AAAAcwYBAAAWDAYBDQAGARYACQEhCAYBDQAGAQYBFgAJAS8BFAMGAQ0ACQEdBAYBDQAGAQYBFgAG
+ARkBJAEUBQYDDQAJARMBBgEfAQ0ABgEgARsDEwUGAQYDDQAGAwYDBwENAAYCCgEGAg0ABgEcAQYB
+BQIKAxACGAMTAgYBDQAGAQYBFgAGAS8BHAEdAwoBEgUGAwYDGQAGAQ8BDwEGAw0BCgMgARMDHgEK
+Aw0BDgMQAigCGAIGBQYDBgEGARkABgEPAQ8DDQEWARQBEwITAhABGgEQARABGgMQBQkHBgEGAQ0A
+BgEMAh8CFgEUAhACFwMQAgoVCQMJBAkDEg8NAAYBDwEcAAYBCgETAg4MKAIAAABzBAAAAE5vbmVz
+IQAAAEZhc3RJbnB1dF9nZW5lcmF0ZU9iamVjdFN0cnVjdHVyZSgCAAAAcwQAAABOb25lcyEAAABG
+YXN0SW5wdXRfZ2VuZXJhdGVPYmplY3RTdHJ1Y3R1cmUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
+dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/FastInput_generateObjectStructure</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>transformation_rules=[], listbox=[], destination=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>transformation_rules</string>
+                            <string>listbox</string>
+                            <string>destination</string>
+                            <string>kw</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>input_data_names</string>
+                            <string>_getiter_</string>
+                            <string>level_rule</string>
+                            <string>_getitem_</string>
+                            <string>data_item</string>
+                            <string>_getattr_</string>
+                            <string>io_names</string>
+                            <string>new_io_names_level</string>
+                            <string>level_portal_types</string>
+                            <string>required_field</string>
+                            <string>new_required_level</string>
+                            <string>True</string>
+                            <string>fast_input_lines</string>
+                            <string>inputline</string>
+                            <string>line</string>
+                            <string>int</string>
+                            <string>_write_</string>
+                            <string>data_name</string>
+                            <string>ordered_items</string>
+                            <string>ordered_levels</string>
+                            <string>line_levels</string>
+                            <string>level_depth</string>
+                            <string>required_level</string>
+                            <string>None</string>
+                            <string>valid_level</string>
+                            <string>field_to_test</string>
+                            <string>False</string>
+                            <string>len</string>
+                            <string>line_data</string>
+                            <string>level</string>
+                            <string>new_level_data</string>
+                            <string>io_name_pair</string>
+                            <string>clean_data</string>
+                            <string>processed_level</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>current_item_level</string>
+                            <string>current_item_data</string>
+                            <string>item_ok</string>
+                            <string>prev_item_level</string>
+                            <string>clean_levels</string>
+                            <string>structured_data</string>
+                            <string>series_list</string>
+                            <string>new_serie</string>
+                            <string>simpleStructure</string>
+                            <string>data_groups</string>
+                            <string>new_group</string>
+                            <string>serie</string>
+                            <string>simple_struct</string>
+                            <string>getLastSubList</string>
+                            <string>setLastSubList</string>
+                            <string>getListLevel</string>
+                            <string>aggregate</string>
+                            <string>group</string>
+                            <string>collapsed_group</string>
+                            <string>serie_group</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+                <list/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>FastInput_generateObjectStructure</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple>
+                <string>Prints, but never reads \'printed\' variable.</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

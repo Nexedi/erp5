@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># This script should be smart enough to guess what to use for lines, columns and tabs.\n
+# For now, we only statically define it.\n
+\n
+dimension_list = [\'tax_category\', \'product\', \'region\', \'product_line\',\n
+                  \'destination_region\', \'has_vat_number\', \'movement\']\n
+\n
+if list_dimensions == 1 :\n
+  return dimension_list\n
+\n
+dimension_result_list = []\n
+\n
+for dimension in dimension_list :\n
+  if dimension is not None :\n
+    predicate_list = context.searchFolder(string_index=dimension, sort_on=\'int_index\')\n
+    if len(predicate_list):\n
+     # context.log(\'InvoiceTransactionRule_asCellRance predicate_list %s \' %dimension,\n
+    #              [x.getObject() for x in predicate_list])\n
+      dimension_result_list.append(predicate_list)\n
+\n
+\n
+dimension_ids_list = []\n
+\n
+if matrixbox == 1 :\n
+  for dimension_result in dimension_result_list :\n
+    dimension_ids_list.append(map(lambda x: (x.getObject().getRelativeUrl(), x.getObject().getTitle()), dimension_result))\n
+else :\n
+  for dimension_result in dimension_result_list :\n
+    dimension_ids_list.append(map(lambda x: x.getObject().getRelativeUrl(), dimension_result))\n
+\n
+return dimension_ids_list\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQBAGQCAIQCAFoAAGQAAFMoAwAAAE5pAAAAAGMCAAAA
+DgAAABEAAABDAAAAcysBAABkAQBkAgBkAwBkBABkBQBkBgBkBwBnBwB9AgB8AQBkCABqAgBvCAAB
+fAIAU24BAAFnAAB9AwB4ZwB0AwB8AgCDAQBEXVkAfQUAfAUAdAUAagkAb0YAAXQGAHQHAGQJAIMC
+AGQKAHwFAGQLAGQMAIMAAn0JAHQJAHwJAIMBAG8XAAF0BgB8AwBkDQCDAgB8CQCDAQABcZwAAXFD
+AAFxQwBXZwAAfQsAfAAAZAgAagIAbzoAAXhtAHQDAHwDAIMBAERdJQB9DAB0BgB8CwBkDQCDAgB0
+DQBkDgCEAAB8DACDAgCDAQABccAAV243AAF4MwB0AwB8AwCDAQBEXSUAfQwAdAYAfAsAZA0AgwIA
+dA0AZA8AhAAAfAwAgwIAgwEAAXH6AFd8CwBTZAAAUygQAAAATnMMAAAAdGF4X2NhdGVnb3J5cwcA
+AABwcm9kdWN0cwYAAAByZWdpb25zDAAAAHByb2R1Y3RfbGluZXMSAAAAZGVzdGluYXRpb25fcmVn
+aW9ucw4AAABoYXNfdmF0X251bWJlcnMIAAAAbW92ZW1lbnRpAQAAAHMMAAAAc2VhcmNoRm9sZGVy
+cwwAAABzdHJpbmdfaW5kZXhzBwAAAHNvcnRfb25zCQAAAGludF9pbmRleHMGAAAAYXBwZW5kYwEA
+AAACAAAABQAAAEMAAABzOgAAAHQAAHQAAHwAAGQBAIMCAIMAAGQCAIMCAIMAAHQAAHQAAHwAAGQB
+AIMCAIMAAGQDAIMCAIMAAGYCAFMoBAAAAE5zCQAAAGdldE9iamVjdHMOAAAAZ2V0UmVsYXRpdmVV
+cmxzCAAAAGdldFRpdGxlKAIAAABzCQAAAF9nZXRhdHRyX3MBAAAAeCgCAAAAcwEAAAB4cwkAAABf
+Z2V0YXR0cl8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxsYW1iZGEuMj4ZAAAA
+cwAAAABjAQAAAAIAAAAEAAAAQwAAAHMcAAAAdAAAdAAAfAAAZAEAgwIAgwAAZAIAgwIAgwAAUygD
+AAAATnMJAAAAZ2V0T2JqZWN0cw4AAABnZXRSZWxhdGl2ZVVybCgCAAAAcwkAAABfZ2V0YXR0cl9z
+AQAAAHgoAgAAAHMBAAAAeHMJAAAAX2dldGF0dHJfKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
+b24pcwoAAAA8bGFtYmRhLjM+HAAAAHMAAAAAKA4AAABzDgAAAGRpbWVuc2lvbl9saXN0cw8AAABs
+aXN0X2RpbWVuc2lvbnNzFQAAAGRpbWVuc2lvbl9yZXN1bHRfbGlzdHMJAAAAX2dldGl0ZXJfcwkA
+AABkaW1lbnNpb25zBAAAAE5vbmVzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMOAAAAcHJlZGlj
+YXRlX2xpc3RzAwAAAGxlbnMSAAAAZGltZW5zaW9uX2lkc19saXN0cwkAAABtYXRyaXhib3hzEAAA
+AGRpbWVuc2lvbl9yZXN1bHRzAwAAAG1hcCgOAAAAcwkAAABtYXRyaXhib3hzDwAAAGxpc3RfZGlt
+ZW5zaW9uc3MOAAAAZGltZW5zaW9uX2xpc3RzFQAAAGRpbWVuc2lvbl9yZXN1bHRfbGlzdHMJAAAA
+X2dldGl0ZXJfcwkAAABkaW1lbnNpb25zBAAAAE5vbmVzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4
+dHMOAAAAcHJlZGljYXRlX2xpc3RzAwAAAGxlbnMSAAAAZGltZW5zaW9uX2lkc19saXN0cxAAAABk
+aW1lbnNpb25fcmVzdWx0cwMAAABtYXAoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIgAA
+AEludm9pY2VUcmFuc2FjdGlvblJ1bGVfYXNDZWxsUmFuZ2UBAAAAcyYAAAAAAxsDDQEIAgYCDQAG
+AQ0BHgEQAxwDBgINAQ0ACQEkAg0ACQEgAigBAAAAcyIAAABJbnZvaWNlVHJhbnNhY3Rpb25SdWxl
+X2FzQ2VsbFJhbmdlKAEAAABzIgAAAEludm9pY2VUcmFuc2FjdGlvblJ1bGVfYXNDZWxsUmFuZ2Uo
+AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/InvoiceTransactionRule_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0, list_dimensions=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>list_dimensions</string>
+                            <string>dimension_list</string>
+                            <string>dimension_result_list</string>
+                            <string>_getiter_</string>
+                            <string>dimension</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>predicate_list</string>
+                            <string>len</string>
+                            <string>dimension_ids_list</string>
+                            <string>dimension_result</string>
+                            <string>map</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>InvoiceTransactionRule_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

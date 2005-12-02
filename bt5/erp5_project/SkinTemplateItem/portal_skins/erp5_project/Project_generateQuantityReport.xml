@@ -1,0 +1,374 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# This is what we want to display in the report\n
+# project_month     worker1    worker2    worker3\n
+#    january           34              32             15\n
+#    february          10              14             20\n
+\n
+def getYearAndMonth(date):\n
+  return (date.year(),date.Month())\n
+\n
+\n
+def getMonthDict(line):\n
+  start_date = line.getStartDate()\n
+  stop_date = line.getStopDate()\n
+  month_dict={}\n
+  if getYearAndMonth(start_date) == getYearAndMonth(stop_date):\n
+    month_dict={getYearAndMonth(start_date):line.getQuantity() or 0}\n
+  else:\n
+    nb_days = (stop_date-start_date)*86400\n
+    current_date = start_date\n
+    previous_current_date = start_date\n
+    quantity = line.getQuantity() or 0\n
+    while current_date < stop_date:\n
+      previous_current_date = current_date\n
+      year_and_month = getYearAndMonth(current_date)\n
+      while previous_current_date.month()==current_date.month() and current_date < stop_date:\n
+        current_date = current_date + 1\n
+      month_dict[year_and_month] = quantity / nb_days * (current_date-previous_current_date) * 86400\n
+      \n
+      \n
+  return month_dict\n
+\n
+def getTotalQuantity(line,worker):\n
+  quantity = {}\n
+  child_list = line.objectValues()\n
+  if len(child_list)>0:\n
+    for child in child_list:\n
+      child_quantity = getTotalQuantity(child,worker)\n
+      for key,value in child_quantity.items():\n
+        if not quantity.has_key(key):\n
+          quantity[key] = 0\n
+        quantity[key] = quantity[key] + value\n
+  else:\n
+    if worker in line.getSourceValueList():\n
+      quantity = getMonthDict(line)\n
+  return quantity\n
+\n
+listbox = []\n
+worker_list = context.getSourceValueList()\n
+worker_quantity = {}\n
+for worker in worker_list:\n
+  worker_quantity[worker] = getTotalQuantity(context,worker)\n
+\n
+month_list = []\n
+current_date = context.getStartDate()\n
+month_list.append(getYearAndMonth(current_date))\n
+from DateTime import DateTime\n
+while getYearAndMonth(current_date)!=getYearAndMonth(context.getStopDate()):\n
+  start_date_day = context.getStartDate().day()\n
+  previous_current_date = current_date\n
+  current_date = current_date + 1\n
+  while current_date.day() != start_date_day and current_date-previous_current_date<31:\n
+    current_date = current_date + 1\n
+  month_list.append(getYearAndMonth(current_date))\n
+   \n
+for year,month in month_list:\n
+  listbox_line = {}\n
+  listbox_line[\'year\'] = year\n
+  listbox_line[\'month\'] = month\n
+  for worker in worker_list:\n
+    quantity = 0\n
+    if worker_quantity[worker].has_key((year,month)):\n
+      quantity = worker_quantity[worker][(year,month)]\n
+    listbox_line[worker.getTitle()] = quantity\n
+  listbox.append(listbox_line)  \n
+\n
+\n
+\n
+context.Base_updateDialogForm(listbox=listbox)\n
+\n
+return context.Project_viewQuantityReport(listbox=listbox)\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+  \n
+# Previous version\n
+\n
+def getTotalQuantity(line,worker):\n
+  child_list = line.objectValues()\n
+  if len(child_list)>0:\n
+    return sum([getTotalQuantity(x,worker) for x in child_list])\n
+  else:\n
+    if worker in line.getSourceValueList():\n
+      return line.getQuantity()  or 0\n
+    else:\n
+      return 0\n
+\n
+listbox = []\n
+worker_list = context.getSourceValueList()\n
+for project_line in [x.getObject() for x in context.searchFolder(sort_on=[(\'int_index\',\'ascending\')])]:\n
+  listbox_line = {}\n
+  listbox_line[\'title\'] = project_line.getTitle()\n
+  for worker in worker_list:\n
+    listbox_line[worker.getTitle()] = getTotalQuantity(project_line,worker)\n
+  listbox_line[\'start_date\'] = project_line.getStartDate()\n
+  listbox_line[\'stop_date\'] = project_line.getStopDate()\n
+  listbox.append(listbox_line)\n
+\n
+context.Base_updateDialogForm(listbox=listbox)\n
+#return repr(listbox)\n
+return context.Project_viewQuantityReport(listbox=listbox)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABoAAAAgAAAACwAA
+AHPLAwAAZAEAhAAAiQIAhwIAZAIAhgAAiQEAhwAAhwEAZAMAhgAAiQAAZwAAfQQAdAQAdAUAZAQA
+gwIAgwAAfQcAaAAAfQgAeC0AdAgAfAcAgwEARF0fAH0KAIgAAHQFAHwKAIMCAHQKAHwIAIMBAHwK
+ADxxTwBXZwAAfQwAdAQAdAUAZAUAgwIAgwAAfQ0AdAQAfAwAZAYAgwIAiAIAfA0AgwEAgwEAAWQH
+AGsNAGwNAH0OAAF4rQCIAgB8DQCDAQCIAgB0BAB0BQBkCACDAgCDAACDAQBqAwBvhwABdAQAdAQA
+dAUAZAUAgwIAgwAAZAkAgwIAgwAAfQ8AfA0AfRAAfA0AZAoAF30NAHg5AHQEAHwNAGQJAIMCAIMA
+AHwPAGoDAG8OAAF8DQB8EAAYZAsAagAAbw4AAXwNAGQKABd9DQBxCQEBV3QEAHwMAGQGAIMCAIgC
+AHwNAIMBAIMBAAFxswABV3jaAHQIAHwMAIMBAERdzAB0CAACgwEAXAIAfREAfRIAaAAAfRMAfBEA
+dAoAfBMAgwEAZAwAPHwSAHQKAHwTAIMBAGQNADx4fQB0CAB8BwCDAQBEXW8AfQoAZA4AfRQAdAQA
+dBQAfAgAfAoAgwIAZA8AgwIAfBEAfBIAZgIAgwEAbyIAAXQUAHQUAHwIAHwKAIMCAHwRAHwSAGYC
+AIMCAH0UAG4BAAF8FAB0CgB8EwCDAQB0BAB8CgBkEACDAgCDAAA8cbMBV3QEAHwEAGQGAIMCAHwT
+AIMBAAFxbQFXdAQAdAUAZBEAgwIAZBIAfAQAgwABAXQEAHQFAGQTAIMCAGQSAHwEAIMAAVOHAABk
+FACGAACJAABnAAB9BAB0BAB0BQBkBACDAgCDAAB9BwB4CwF0CABnAAAEaRUAfRcAdAgAdAQAdAUA
+ZBUAgwIAZBYAZBcAZBgAZgIAZwEAgwABgwEARF0cAH0YAHwXAHQEAHwYAGQZAIMCAIMAAIMBAAFx
+wgJ+FwCDAQBEXa8AfRkAaAAAfRMAdAQAfBkAZBAAgwIAgwAAdAoAfBMAgwEAZBoAPHg5AHQIAHwH
+AIMBAERdKwB9CgCIAAB8GQB8CgCDAgB0CgB8EwCDAQB0BAB8CgBkEACDAgCDAAA8cR0DV3QEAHwZ
+AGQFAIMCAIMAAHQKAHwTAIMBAGQbADx0BAB8GQBkCACDAgCDAAB0CgB8EwCDAQBkHAA8dAQAfAQA
+ZAYAgwIAfBMAgwEAAXHoAld0BAB0BQBkEQCDAgBkEgB8BACDAAEBdAQAdAUAZBMAgwIAZBIAfAQA
+gwABU2QAAFMoHQAAAE5jAQAAAAIAAAAFAAAAQwAAAHMmAAAAdAAAfAAAZAEAgwIAgwAAdAAAfAAA
+ZAIAgwIAgwAAZgIAU2QAAFMoAwAAAE5zBAAAAHllYXJzBQAAAE1vbnRoKAIAAABzCQAAAF9nZXRh
+dHRyX3MEAAAAZGF0ZSgCAAAAcwQAAABkYXRlcwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzDwAAAGdldFllYXJBbmRNb250aAYAAABzAgAAAAABYwEAAAAMAAAADQAA
+AAMAAABzNQEAAHQAAHwAAGQBAIMCAIMAAH0CAHQAAHwAAGQCAIMCAIMAAH0DAGgAAH0EAIgAAHwC
+AIMBAIgAAHwDAIMBAGoCAG8sAAFoAAAEiAAAfAIAgwEAdAAAfAAAZAMAgwIAgwAAcAQAAWQEAAM8
+fQQAbr8AAXwDAHwCABhkBQAUfQYAfAIAfQcAfAIAfQgAdAAAfAAAZAMAgwIAgwAAcAQAAWQEAH0J
+AHiIAHwHAHwDAGoAAG96AAF8BwB9CACIAAB8BwCDAQB9CgB4QQB0AAB8CABkBgCDAgCDAAB0AAB8
+BwBkBgCDAgCDAABqAgBvCgABfAcAfAMAagAAbw4AAXwHAGQHABd9BwBxxwABV3wJAHwGABV8BwB8
+CAAYFGQFABR0CwB8BACDAQB8CgA8caUAAVd8BABTZAAAUygIAAAATnMMAAAAZ2V0U3RhcnREYXRl
+cwsAAABnZXRTdG9wRGF0ZXMLAAAAZ2V0UXVhbnRpdHlpAAAAAGmAUQEAcwUAAABtb250aGkBAAAA
+KAwAAABzCQAAAF9nZXRhdHRyX3MEAAAAbGluZXMKAAAAc3RhcnRfZGF0ZXMJAAAAc3RvcF9kYXRl
+cwoAAABtb250aF9kaWN0cw8AAABnZXRZZWFyQW5kTW9udGhzBwAAAG5iX2RheXNzDAAAAGN1cnJl
+bnRfZGF0ZXMVAAAAcHJldmlvdXNfY3VycmVudF9kYXRlcwgAAABxdWFudGl0eXMOAAAAeWVhcl9h
+bmRfbW9udGhzBwAAAF93cml0ZV8oDAAAAHMEAAAAbGluZXMJAAAAX2dldGF0dHJfcwoAAABzdGFy
+dF9kYXRlcwkAAABzdG9wX2RhdGVzCgAAAG1vbnRoX2RpY3RzDwAAAGdldFllYXJBbmRNb250aHMH
+AAAAbmJfZGF5c3MMAAAAY3VycmVudF9kYXRlcxUAAABwcmV2aW91c19jdXJyZW50X2RhdGVzCAAA
+AHF1YW50aXR5cw4AAAB5ZWFyX2FuZF9tb250aHMHAAAAX3dyaXRlXygBAAAAcw8AAABnZXRZZWFy
+QW5kTW9udGgoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwwAAABnZXRNb250aERpY3QKAAAAcyQA
+AAAAARIBEgEGARkBLAIOAQYBBgEZAQMADQEGAQwBAwAyAQ8BJQNjAgAAAA8AAAAOAAAAAwAAAHP3
+AAAAaAAAfQIAdAEAfAAAZAEAgwIAgwAAfQQAdAQAfAQAgwEAZAIAagQAb5sAAXjBAHQFAHwEAIMB
+AERdhgB9BwCIAAB8BwB8AQCDAgB9CQB4bgB0BQB0AQB8CQBkAwCDAgCDAACDAQBEXVQAXAIAfQoA
+fQsAdAEAfAIAZAQAgwIAfAoAgwEADG8UAAFkAgB0DAB8AgCDAQB8CgA8bgEAAXQNAHwCAHwKAIMC
+AHwLABd0DAB8AgCDAQB8CgA8cWYAV3E4AFduKgABfAEAdAEAfAAAZAUAgwIAgwAAagYAbxAAAYgB
+AHwAAIMBAH0CAG4BAAF8AgBTZAAAUygGAAAATnMMAAAAb2JqZWN0VmFsdWVzaQAAAABzBQAAAGl0
+ZW1zcwcAAABoYXNfa2V5cxIAAABnZXRTb3VyY2VWYWx1ZUxpc3QoDwAAAHMIAAAAcXVhbnRpdHlz
+CQAAAF9nZXRhdHRyX3MEAAAAbGluZXMKAAAAY2hpbGRfbGlzdHMDAAAAbGVucwkAAABfZ2V0aXRl
+cl9zBQAAAGNoaWxkcxAAAABnZXRUb3RhbFF1YW50aXR5cwYAAAB3b3JrZXJzDgAAAGNoaWxkX3F1
+YW50aXR5cwMAAABrZXlzBQAAAHZhbHVlcwcAAABfd3JpdGVfcwkAAABfZ2V0aXRlbV9zDAAAAGdl
+dE1vbnRoRGljdCgPAAAAcwQAAABsaW5lcwYAAAB3b3JrZXJzCAAAAHF1YW50aXR5cwkAAABfZ2V0
+YXR0cl9zCgAAAGNoaWxkX2xpc3RzAwAAAGxlbnMJAAAAX2dldGl0ZXJfcwUAAABjaGlsZHMQAAAA
+Z2V0VG90YWxRdWFudGl0eXMOAAAAY2hpbGRfcXVhbnRpdHlzAwAAAGtleXMFAAAAdmFsdWVzBwAA
+AF93cml0ZV9zCQAAAF9nZXRpdGVtX3MMAAAAZ2V0TW9udGhEaWN0KAIAAABzEAAAAGdldFRvdGFs
+UXVhbnRpdHlzDAAAAGdldE1vbnRoRGljdCgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzEAAAAGdl
+dFRvdGFsUXVhbnRpdHkfAAAAcxwAAAAAAQYBEgETAQ0ABgEPARkADAEXARQBKQIZARABcxIAAABn
+ZXRTb3VyY2VWYWx1ZUxpc3RzDAAAAGdldFN0YXJ0RGF0ZXMGAAAAYXBwZW5kKAEAAABzCAAAAERh
+dGVUaW1lcwsAAABnZXRTdG9wRGF0ZXMDAAAAZGF5aQEAAABpHwAAAHMEAAAAeWVhcnMFAAAAbW9u
+dGhpAAAAAHMHAAAAaGFzX2tleXMIAAAAZ2V0VGl0bGVzFQAAAEJhc2VfdXBkYXRlRGlhbG9nRm9y
+bXMHAAAAbGlzdGJveHMaAAAAUHJvamVjdF92aWV3UXVhbnRpdHlSZXBvcnRjAgAAAAsAAAAKAAAA
+AwAAAHOfAAAAdAAAfAAAZAEAgwIAgwAAfQMAdAMAfAMAgwEAZAIAagQAbz4AAXQEAGcAAARpBQB9
+BwB0BwB8AwCDAQBEXRkAfQkAfAcAiAAAfAkAfAEAgwIAgwEAAXE8AH4HAIMBAFNuOQABfAEAdAAA
+fAAAZAMAgwIAgwAAagYAbxsAAXQAAHwAAGQEAIMCAIMAAHAEAAFkAgBTbgUAAWQCAFNkAABTKAUA
+AABOcwwAAABvYmplY3RWYWx1ZXNpAAAAAHMSAAAAZ2V0U291cmNlVmFsdWVMaXN0cwsAAABnZXRR
+dWFudGl0eSgLAAAAcwkAAABfZ2V0YXR0cl9zBAAAAGxpbmVzCgAAAGNoaWxkX2xpc3RzAwAAAGxl
+bnMDAAAAc3VtcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhzEAAA
+AGdldFRvdGFsUXVhbnRpdHlzBgAAAHdvcmtlcigLAAAAcwQAAABsaW5lcwYAAAB3b3JrZXJzCQAA
+AF9nZXRhdHRyX3MKAAAAY2hpbGRfbGlzdHMDAAAAbGVucwMAAABzdW1zBgAAAGFwcGVuZHMIAAAA
+JGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MBAAAAeHMQAAAAZ2V0VG90YWxRdWFudGl0eSgBAAAAcxAA
+AABnZXRUb3RhbFF1YW50aXR5KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMQAAAAZ2V0VG90YWxR
+dWFudGl0eVwAAABzDgAAAAABEgETARcAJwIZARsCcwwAAABzZWFyY2hGb2xkZXJzBwAAAHNvcnRf
+b25zCQAAAGludF9pbmRleHMJAAAAYXNjZW5kaW5ncwkAAABnZXRPYmplY3RzBQAAAHRpdGxlcwoA
+AABzdGFydF9kYXRlcwkAAABzdG9wX2RhdGUoGQAAAHMPAAAAZ2V0WWVhckFuZE1vbnRocwwAAABn
+ZXRNb250aERpY3RzEAAAAGdldFRvdGFsUXVhbnRpdHlzBwAAAGxpc3Rib3hzCQAAAF9nZXRhdHRy
+X3MHAAAAY29udGV4dHMLAAAAd29ya2VyX2xpc3RzDwAAAHdvcmtlcl9xdWFudGl0eXMJAAAAX2dl
+dGl0ZXJfcwYAAAB3b3JrZXJzBwAAAF93cml0ZV9zCgAAAG1vbnRoX2xpc3RzDAAAAGN1cnJlbnRf
+ZGF0ZXMIAAAARGF0ZVRpbWVzDgAAAHN0YXJ0X2RhdGVfZGF5cxUAAABwcmV2aW91c19jdXJyZW50
+X2RhdGVzBAAAAHllYXJzBQAAAG1vbnRocwwAAABsaXN0Ym94X2xpbmVzCAAAAHF1YW50aXR5cwkA
+AABfZ2V0aXRlbV9zBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzAQAAAHhzDAAAAHByb2plY3RfbGlu
+ZSgaAAAAcwIAAABrd3MPAAAAZ2V0WWVhckFuZE1vbnRocwwAAABnZXRNb250aERpY3RzEAAAAGdl
+dFRvdGFsUXVhbnRpdHlzBwAAAGxpc3Rib3hzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMLAAAA
+d29ya2VyX2xpc3RzDwAAAHdvcmtlcl9xdWFudGl0eXMJAAAAX2dldGl0ZXJfcwYAAAB3b3JrZXJz
+BwAAAF93cml0ZV9zCgAAAG1vbnRoX2xpc3RzDAAAAGN1cnJlbnRfZGF0ZXMIAAAARGF0ZVRpbWVz
+DgAAAHN0YXJ0X2RhdGVfZGF5cxUAAABwcmV2aW91c19jdXJyZW50X2RhdGVzBAAAAHllYXJzBQAA
+AG1vbnRocwwAAABsaXN0Ym94X2xpbmVzCAAAAHF1YW50aXR5cwkAAABfZ2V0aXRlbV9zBgAAAGFw
+cGVuZHMIAAAAJGFwcGVuZDBzAQAAAHhzDAAAAHByb2plY3RfbGluZSgAAAAAKAMAAABzEAAAAGdl
+dFRvdGFsUXVhbnRpdHlzDAAAAGdldE1vbnRoRGljdHMPAAAAZ2V0WWVhckFuZE1vbnRocw8AAABT
+Y3JpcHQgKFB5dGhvbilzHgAAAFByb2plY3RfZ2VuZXJhdGVRdWFudGl0eVJlcG9ydAEAAABzaAAA
+AAAFCQQMFQ8PBgESAQYBDQAGAR0CBgEVARYBDQEDACUBHgEGAQoBAwAqARIBGwINABMBBgEQARAB
+DQAGAQwBHwEiASMBFwQTAhYNDAoGARIBNQAmAAYBBgEcAQ0ABgEpARwBHwEXAhMCKAEAAABzHgAA
+AFByb2plY3RfZ2VuZXJhdGVRdWFudGl0eVJlcG9ydCgBAAAAcx4AAABQcm9qZWN0X2dlbmVyYXRl
+UXVhbnRpdHlSZXBvcnQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_project/Project_generateQuantityReport</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>getYearAndMonth</string>
+                            <string>getMonthDict</string>
+                            <string>getTotalQuantity</string>
+                            <string>listbox</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>worker_list</string>
+                            <string>worker_quantity</string>
+                            <string>_getiter_</string>
+                            <string>worker</string>
+                            <string>_write_</string>
+                            <string>month_list</string>
+                            <string>current_date</string>
+                            <string>DateTime</string>
+                            <string>start_date_day</string>
+                            <string>previous_current_date</string>
+                            <string>year</string>
+                            <string>month</string>
+                            <string>listbox_line</string>
+                            <string>quantity</string>
+                            <string>_getitem_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>project_line</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Project_generateQuantityReport</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

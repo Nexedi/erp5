@@ -1,0 +1,8 @@
+2005/09/15 - Kevin
+* Little update of career-related accessor calls to follow changes on Person module
+
+2005/07/23 - Kevin
+* PaySheetTransaction_preCalculation() now handle ceiling salary year safely
+
+2005/07/07 - Jérome
+* Rename service to service_module

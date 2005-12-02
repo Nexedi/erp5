@@ -1,0 +1,6 @@
+2005-11-11 Romain
+* Correct naming convention.
+
+2005-09-24 - JPS
+* Renamed modules
+* Removed service module (it should be part of another template)
