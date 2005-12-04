@@ -151,7 +151,7 @@ class TemplateTool (BaseTool):
         RESPONSE.setHeader('Content-type','tar/x-gzip')
         RESPONSE.setHeader('Content-Disposition',
                            'inline;filename=%s-%s.bt5' % \
-                               (business_template.getTitle(), 
+                               (path, 
                                 business_template.getVersion()))
       try:
         return export_string.getvalue()
