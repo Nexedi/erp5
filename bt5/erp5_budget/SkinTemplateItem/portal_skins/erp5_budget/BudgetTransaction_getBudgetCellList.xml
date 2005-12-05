@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+budget_list = context.getPortalObject().budget_module.objectValues()\n
+budget_cell=[(\'\', \'\')]\n
+for o in budget_list:\n
+    if o.getPortalType() == \'Budget\':\n
+    \n
+         if date >= o.getStartDate() and date <= o.getStopDate():             \n
+             lines = o.objectValues()\n
+             for l in lines:\n
+                cells = l.objectValues()\n
+                if l.getGroup() == group:\n
+                    for c in cells:\n
+                           item=[]                           \n
+                           title = c.getTitle()\n
+                           item.append(title) \n
+                           item.append(c.getRelativeUrl())\n
+                           budget_cell.append(item) \n
+\n
+return budget_cell\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAA4AAAAVAAAAQwAA
+AHN0AQAAdAAAdAAAdAAAdAEAZAEAgwIAgwAAZAIAgwIAZAMAgwIAgwAAfQQAZAQAZAQAZgIAZwEA
+fQUAeDMBdAQAfAQAgwEARF0lAX0HAHQAAHwHAGQFAIMCAIMAAGQGAGoCAG8GAQF8AAB0AAB8BwBk
+BwCDAgCDAABqBQBvFgABfAAAdAAAfAcAZAgAgwIAgwAAagEAb9AAAXQAAHwHAGQDAIMCAIMAAH0I
+AHi7AHQEAHwIAIMBAERdqQB9CQB0AAB8CQBkAwCDAgCDAAB9CgB0AAB8CQBkCQCDAgCDAAB8AQBq
+AgBveAABeHUAdAQAfAoAgwEARF1jAH0LAGcAAH0MAHQAAHwLAGQKAIMCAIMAAH0NAHQAAHwMAGQL
+AIMCAHwNAIMBAAF0AAB8DABkCwCDAgB0AAB8CwBkDACDAgCDAACDAQABdAAAfAUAZAsAgwIAfAwA
+gwEAAXHxAFdxswABcbMAV3FoAQFxQwABcUMAV3wFAFNkAABTKA0AAABOcw8AAABnZXRQb3J0YWxP
+YmplY3RzDQAAAGJ1ZGdldF9tb2R1bGVzDAAAAG9iamVjdFZhbHVlc3MAAAAAcw0AAABnZXRQb3J0
+YWxUeXBlcwYAAABCdWRnZXRzDAAAAGdldFN0YXJ0RGF0ZXMLAAAAZ2V0U3RvcERhdGVzCAAAAGdl
+dEdyb3VwcwgAAABnZXRUaXRsZXMGAAAAYXBwZW5kcw4AAABnZXRSZWxhdGl2ZVVybCgOAAAAcwkA
+AABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCwAAAGJ1ZGdldF9saXN0cwsAAABidWRnZXRfY2VsbHMJ
+AAAAX2dldGl0ZXJfcwEAAABvcwQAAABkYXRlcwUAAABsaW5lc3MBAAAAbHMFAAAAY2VsbHNzBQAA
+AGdyb3VwcwEAAABjcwQAAABpdGVtcwUAAAB0aXRsZSgOAAAAcwQAAABkYXRlcwUAAABncm91cHMJ
+AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAABidWRnZXRfbGlzdHMLAAAAYnVkZ2V0X2NlbGxz
+CQAAAF9nZXRpdGVyX3MBAAAAb3MFAAAAbGluZXNzAQAAAGxzBQAAAGNlbGxzcwEAAABjcwQAAABp
+dGVtcwUAAAB0aXRsZSgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNp
+dGlvbiBDb250ZXh0cyMAAABCdWRnZXRUcmFuc2FjdGlvbl9nZXRCdWRnZXRDZWxsTGlzdAEAAABz
+JAAAACcBDwENAAYBGQIyARIBDQAGARIBGQENAAYBBgEVARMBHwEoAigBAAAAcyMAAABCdWRnZXRU
+cmFuc2FjdGlvbl9nZXRCdWRnZXRDZWxsTGlzdCgBAAAAcyMAAABCdWRnZXRUcmFuc2FjdGlvbl9n
+ZXRCdWRnZXRDZWxsTGlzdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1
+aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/BudgetTransaction_getBudgetCellList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string> date,group</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>date</string>
+                            <string>group</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>budget_list</string>
+                            <string>budget_cell</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>lines</string>
+                            <string>l</string>
+                            <string>cells</string>
+                            <string>c</string>
+                            <string>item</string>
+                            <string>title</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BudgetTransaction_getBudgetCellList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>LOG = lambda msg:context.log("PaymentTransaction_selectMovement", msg)\n
+\n
+kw[\'parent_specialise_portal_type\'] = \'Payment Rule\'\n
+kw[\'portal_type\'] = \'Simulation Movement\'\n
+##### TODO : use is_deliverable when it will be implemented\n
+kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+\n
+movement_list = [x.getObject() for x in context.PaymentTransaction_zSelectMovementTempImpl(**kw)]\n
+LOG("SQL used = %s"%context.PaymentTransaction_zSelectMovementTempImpl(src__=1, **kw))\n
+LOG("movement_list = %s"%movement_list)\n
+return movement_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMBAAAADAAA
+AA4AAABLAAAAc94AAABkAQCEAAB9AgBkAgB0AQB8AQCDAQBkAwA8ZAQAdAEAfAEAgwEAZAUAPHQD
+AHwBAGQGAIMCAHQEAHQDAHQDAHQFAGQHAIMCAGQIAIMCAHwBAI0BAIMBAAFnAAAEaQYAfQgAdAgA
+dAQAdAMAdAUAZAkAgwIAfAEAjQEAgwEARF0cAH0KAHwIAHQDAHwKAGQKAIMCAIMAAIMBAAFxfQB+
+CAB9CwB8AgBkCwB0BAB0AwB0BQBkCQCDAgBkDABkDQB8AQCNAQEWgwEAAXwCAGQOAHwLABaDAQAB
+fAsAU2QAAFMoDwAAAE5jAQAAAAMAAAADAAAAQwAAAHMWAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwIA
+UygDAAAATnMDAAAAbG9ncyEAAABQYXltZW50VHJhbnNhY3Rpb25fc2VsZWN0TW92ZW1lbnQoAwAA
+AHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwMAAABtc2coAwAAAHMDAAAAbXNncwkAAABfZ2V0
+YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNx
+dWlzaXRpb24gQ29udGV4dHMKAAAAPGxhbWJkYS44PgEAAABzAAAAAHMMAAAAUGF5bWVudCBSdWxl
+cx0AAABwYXJlbnRfc3BlY2lhbGlzZV9wb3J0YWxfdHlwZXMTAAAAU2ltdWxhdGlvbiBNb3ZlbWVu
+dHMLAAAAcG9ydGFsX3R5cGVzBgAAAHVwZGF0ZXMOAAAAcG9ydGFsX2NhdGFsb2dzDQAAAGJ1aWxk
+U1FMUXVlcnlzKgAAAFBheW1lbnRUcmFuc2FjdGlvbl96U2VsZWN0TW92ZW1lbnRUZW1wSW1wbHMJ
+AAAAZ2V0T2JqZWN0cw0AAABTUUwgdXNlZCA9ICVzcwUAAABzcmNfX2kBAAAAcxIAAABtb3ZlbWVu
+dF9saXN0ID0gJXMoCwAAAHMDAAAATE9HcwcAAABfd3JpdGVfcwIAAABrd3MJAAAAX2dldGF0dHJf
+cwcAAABfYXBwbHlfcwcAAABjb250ZXh0cwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0
+aXRlcl9zAQAAAHhzDQAAAG1vdmVtZW50X2xpc3QoDAAAAHMFAAAAc3JjX19zAgAAAGt3cwMAAABM
+T0dzBwAAAF93cml0ZV9zCQAAAF9nZXRhdHRyX3MHAAAAX2FwcGx5X3MHAAAAY29udGV4dHMGAAAA
+YXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwEAAAB4cw0AAABtb3ZlbWVudF9saXN0
+KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRz
+IQAAAFBheW1lbnRUcmFuc2FjdGlvbl9zZWxlY3RNb3ZlbWVudAEAAABzEAAAAAkCEAETAisCJgAl
+ASYBDgEoAQAAAHMhAAAAUGF5bWVudFRyYW5zYWN0aW9uX3NlbGVjdE1vdmVtZW50KAEAAABzIQAA
+AFBheW1lbnRUcmFuc2FjdGlvbl9zZWxlY3RNb3ZlbWVudCgAAAAAKAAAAABzKQAAAFB5dGhvbiBT
+Y3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/PaymentTransaction_selectMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>src__=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>src__</string>
+                            <string>kw</string>
+                            <string>LOG</string>
+                            <string>_write_</string>
+                            <string>_getattr_</string>
+                            <string>_apply_</string>
+                            <string>context</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>movement_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaymentTransaction_selectMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

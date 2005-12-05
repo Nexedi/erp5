@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="iso-8859-1"?>\n
+<template bottommargin=\'2cm\' showboundary=\'0\' topmargin=\'2cm\' \n
+          rightmargin=\'2cm\' tal:define=\'portal python:here.portal_url.getPortalObject()\' \n
+          filename=\'journal.pdf\' pagesize=\'A4\' allowsplitting=\'1\' landscape=\'0\' leftmargin=\'2cm\'>\n
+  <pagetemplate startframe=\'content\' id=\'FirstPage\'>\n
+    <static/>\n
+    <frame showBoundary=\'0\' leftpadding=\'0.1cm\' height=\'23.94cm\' width=\'17.59cm\' rightpadding=\'0.1cm\' y=\'2cm\' x=\'2cm\' nextid=\'content\' toppadding=\'0.2cm\' id=\'content\' bottompadding=\'0.5cm\'/>\n
+  </pagetemplate>\n
+  <stylesheet>\n
+    <tablestyle name=\'default\'>\n
+      <stylecmd expr="(\'GRID\', (0,0), (-1,-1), 0.1, colors.black)"/>\n
+    </tablestyle>\n
+    <tablestyle name=\'transaction_header\'>\n
+      <stylecmd expr="(\'LINEBELOW\', (2,0), (2,0), 0.1, colors.black)"/> \n
+      <stylecmd expr="(\'LINEBELOW\', (-3,0), (-3,0), 0.1, colors.black)"/> \n
+      <stylecmd expr="(\'LINEBEFORE\', (0,0),(2,0), 0.1, colors.black)"/>\n
+      <stylecmd expr="(\'LINEAFTER\', (-3,0),(-1,0), 0.1, colors.black)"/>\n
+      <stylecmd expr="(\'ALIGN\', (0,0),(-1,-1), \'CENTER\')"/>\n
+      <stylecmd expr="(\'VALIGN\', (0,0),(-1,-1), \'BOTTOM\')"/>\n
+    </tablestyle>\n
+    <tablestyle name=\'transaction_body\'>\n
+      <stylecmd expr="(\'LINEBEFORE\', (0,0),(2,0), 0.1, colors.black)"/>\n
+      <stylecmd expr="(\'LINEAFTER\', (-3,0),(-1,0), 0.1, colors.black)"/>\n
+      <stylecmd expr="(\'ALIGN\', (-2,0), (-1,-1), \'RIGHT\')"/>\n
+     </tablestyle>\n
+    <tablestyle name=\'transaction_footer\'>\n
+      <stylecmd expr="(\'LINEBEFORE\', (0,0),(2,0), 0.1, colors.black)"/>\n
+      <stylecmd expr="(\'LINEAFTER\', (-3,0),(-1,0), 0.1, colors.black)"/>\n
+      <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Times-Italic\', 10)"/>\n
+    </tablestyle>\n
+\n
+    <tablestyle name="top_of_page">\n
+      <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
+      <stylecmd expr="(\'BOX\', (0,0), (-1,0), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BOX\', (0,1), (-1,-1), 1, colors.black)"/>\n
+      <stylecmd expr="(\'BACKGROUND\', (0,0), (-1,0), (0.9,0.9,0.9))"/>\n
+      <stylecmd expr="(\'ALIGN\', (0,0), (-1,-1), \'CENTER\')"/>\n
+      <stylecmd expr="(\'VALIGN\', (0,0), (-1,-1), \'TOP\')"/>\n
+      <stylecmd expr="(\'LEFTPADDING\', (0,0), (-1,-1), 1)"/>\n
+      <stylecmd expr="(\'RIGHTPADDING\', (0,0), (-1,-1), 1)"/>\n
+      <stylecmd expr="(\'BOTTOMPADDING\', (0,0), (-1,-1), 0)"/>\n
+      <stylecmd expr="(\'TOPPADDING\', (0,0), (-1,-1), 1)"/>\n
+    </tablestyle>\n
+\n
+\n
+  </stylesheet>\n
+</template>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_journal_pdf_template</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

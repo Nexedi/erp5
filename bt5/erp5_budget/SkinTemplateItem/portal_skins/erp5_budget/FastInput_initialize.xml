@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+from string import zfill\n
+\n
+global portal_object, new_id, l\n
+portal_object = context.getPortalObject()\n
+new_id = 0\n
+l = []\n
+\n
+# function to create a new fast input line\n
+def createInputLine():\n
+    global portal_object, new_id, l\n
+    new_id += 1\n
+    int_len = 3\n
+    o = newTempBase(portal_object, new_id)\n
+    o.setUid(\'new_%s\' % zfill(new_id, int_len))\n
+    o.edit(uid=\'new_%s\' % zfill(new_id, int_len))\n
+    o.edit(id = new_id)\n
+    l.append(o)\n
+\n
+# generate all lines for the fast input form\n
+for x in range(lines_num):\n
+  createInputLine()\n
+\n
+# return the list of fast input lines\n
+return l\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pBQAAAGMBAAAADwAA
+AAkAAAALAAAAc3MAAABkAQBrAABsAQCJAAABZAIAawIAbAMAiQEAAXQEAHQFAGQDAIMCAIMAAGEG
+AGQEAGEHAGcAAGEIAIcAAIcBAGQFAIYAAH0LAHghAHQKAHQLAHwAAIMBAIMBAERdDQB9DgB8CwCD
+AAABcVoAV3QIAFNkAABTKAYAAABOKAEAAABzCwAAAG5ld1RlbXBCYXNlKAEAAABzBQAAAHpmaWxs
+cw8AAABnZXRQb3J0YWxPYmplY3RpAAAAAGMAAAAACAAAAAgAAAADAAAAc48AAAB0AABkAQA3YQAA
+ZAIAfQEAiAAAdAMAdAAAgwIAfQQAdAUAfAQAZAMAgwIAZAQAiAEAdAAAfAEAgwIAFoMBAAF0BQB8
+BABkBQCDAgBkBgBkBACIAQB0AAB8AQCDAgAWgwABAXQFAHwEAGQFAIMCAGQHAHQAAIMAAQF0BQB0
+BwBkCACDAgB8BACDAQABZAAAUygJAAAATmkBAAAAaQMAAABzBgAAAHNldFVpZHMGAAAAbmV3XyVz
+cwQAAABlZGl0cwMAAAB1aWRzAgAAAGlkcwYAAABhcHBlbmQoCAAAAHMGAAAAbmV3X2lkcwcAAABp
+bnRfbGVucwsAAABuZXdUZW1wQmFzZXMNAAAAcG9ydGFsX29iamVjdHMBAAAAb3MJAAAAX2dldGF0
+dHJfcwUAAAB6ZmlsbHMBAAAAbCgIAAAAcwYAAABuZXdfaWRzBwAAAGludF9sZW5zCwAAAG5ld1Rl
+bXBCYXNlcw0AAABwb3J0YWxfb2JqZWN0cwEAAABvcwkAAABfZ2V0YXR0cl9zBQAAAHpmaWxscwEA
+AABsKAIAAABzCwAAAG5ld1RlbXBCYXNlcwUAAAB6ZmlsbCgAAAAAcykAAABQeXRob24gU2NyaXB0
+IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMPAAAAY3JlYXRlSW5wdXRMaW5lCgAAAHMOAAAA
+AAIKAQYBEgEgASMBFgEoDgAAAHMaAAAAUHJvZHVjdHMuRVJQNVR5cGUuRG9jdW1lbnRzCwAAAG5l
+d1RlbXBCYXNlcwYAAABzdHJpbmdzBQAAAHpmaWxscwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
+DQAAAHBvcnRhbF9vYmplY3RzBgAAAG5ld19pZHMBAAAAbHMPAAAAY3JlYXRlSW5wdXRMaW5lcwkA
+AABfZ2V0aXRlcl9zBQAAAHJhbmdlcwkAAABsaW5lc19udW1zAQAAAHgoDwAAAHMJAAAAbGluZXNf
+bnVtcwIAAABrd3MaAAAAUHJvZHVjdHMuRVJQNVR5cGUuRG9jdW1lbnRzCwAAAG5ld1RlbXBCYXNl
+cwYAAABzdHJpbmdzBQAAAHpmaWxscwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDQAAAHBvcnRh
+bF9vYmplY3RzBgAAAG5ld19pZHMBAAAAbHMPAAAAY3JlYXRlSW5wdXRMaW5lcwkAAABfZ2V0aXRl
+cl9zBQAAAHJhbmdlcwEAAAB4KAAAAAAoAgAAAHMLAAAAbmV3VGVtcEJhc2VzBQAAAHpmaWxscykA
+AABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMUAAAARmFzdElucHV0
+X2luaXRpYWxpemUBAAAAcxIAAAANAQ0DEgEGAQYDDwsTAAYBCwMoAQAAAHMUAAAARmFzdElucHV0
+X2luaXRpYWxpemUoAQAAAHMUAAAARmFzdElucHV0X2luaXRpYWxpemUoAAAAACgAAAAAcykAAABQ
+eXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAA
+cwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/FastInput_initialize</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>lines_num=5, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>lines_num</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_object</string>
+                            <string>new_id</string>
+                            <string>l</string>
+                            <string>createInputLine</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>x</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>5</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>FastInput_initialize</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

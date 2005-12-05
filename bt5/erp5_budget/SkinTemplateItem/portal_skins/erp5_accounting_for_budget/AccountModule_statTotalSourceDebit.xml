@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>return context.AccountModule_statBalance(brain, selection, omit_input=1, float_value=1, **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAKAAAA
+SwAAAHMsAAAAdAAAdAEAdAIAZAEAgwIAfAEAfAAAZAIAZAMAZAQAZAMAfAIAjQMCU2QAAFMoBQAA
+AE5zGQAAAEFjY291bnRNb2R1bGVfc3RhdEJhbGFuY2VzCgAAAG9taXRfaW5wdXRpAQAAAHMLAAAA
+ZmxvYXRfdmFsdWUoBgAAAHMHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwUA
+AABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrdygGAAAAcwkAAABzZWxlY3Rpb25zBQAAAGJyYWlu
+cwIAAABrd3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMp
+AAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzIgAAAEFjY291bnRN
+b2R1bGVfc3RhdFRvdGFsU291cmNlRGViaXQBAAAAcwAAAAAoAgAAAHMEAAAATm9uZXMiAAAAQWNj
+b3VudE1vZHVsZV9zdGF0VG90YWxTb3VyY2VEZWJpdCgCAAAAcwQAAABOb25lcyIAAABBY2NvdW50
+TW9kdWxlX3N0YXRUb3RhbFNvdXJjZURlYml0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3
+aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_statTotalSourceDebit</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection, brain=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>brain</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_statTotalSourceDebit</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

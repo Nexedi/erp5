@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>parent = context.getParent()\n
+if parent is not None: return parent.getDestinationReference()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAFAAAAQwAA
+AHM3AAAAdAAAdAEAZAEAgwIAgwAAfQIAfAIAdAMAagkAbxQAAXQAAHwCAGQCAIMCAIMAAFNuAQAB
+ZAAAUygDAAAATnMJAAAAZ2V0UGFyZW50cxcAAABnZXREZXN0aW5hdGlvblJlZmVyZW5jZSgEAAAA
+cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBgAAAHBhcmVudHMEAAAATm9uZSgEAAAAcwkAAABf
+Z2V0YXR0cl9zBwAAAGNvbnRleHRzBgAAAHBhcmVudHMEAAAATm9uZSgAAAAAKAAAAABzKQAAAFB5
+dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cx4AAABFbnRpdHlfZ2V0RGVz
+dGluYXRpb25SZWZlcmVuY2UBAAAAcwIAAAASASgBAAAAcx4AAABFbnRpdHlfZ2V0RGVzdGluYXRp
+b25SZWZlcmVuY2UoAQAAAHMeAAAARW50aXR5X2dldERlc3RpbmF0aW9uUmVmZXJlbmNlKAAAAAAo
+AAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxt
+b2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getDestinationReference</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>parent</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Entity_getDestinationReference</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

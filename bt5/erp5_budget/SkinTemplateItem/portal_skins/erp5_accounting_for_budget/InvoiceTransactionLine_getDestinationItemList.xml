@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
+\n
+category_dict = {\'income\': \'portal_categories/account_type/expense\',\n
+                 \'expense\': \'portal_categories/account_type/income\',\n
+                 \'payable\': \'portal_categories/account_type/asset/receivable\',\n
+                 \'receivable\': \'portal_categories/account_type/liability/payable\',\n
+                 \'collected_vat\': \'portal_categories/account_type/asset/receivable/refundable_vat\',\n
+                 \'refundable_vat\': \'portal_categories/account_type/liability/payable/collected_vat\',\n
+                 \'bank\': \'portal_categories/account_type/asset/cash\',\n
+                 }\n
+\n
+if context.id in category_dict:\n
+  category = category_dict[context.id]\n
+else:\n
+  category = \'portal_categories/account_type\'\n
+\n
+display_dict = {}\n
+def display(x):\n
+  if x not in display_dict:\n
+    gap_id = x.getGapId()\n
+    account_title = x.getTitle()\n
+    display_dict[x] = "%s - %s" % (gap_id, account_title)\n
+  return display_dict[x]\n
+\n
+def sort(x,y):\n
+  return cmp(display(x), display(y))\n
+\n
+def getItemList(category=None, portal_path=None):\n
+  obj = context.restrictedTraverse(category)\n
+  item_list = obj.getCategoryMemberItemList(portal_type=\'Account\', base=0,\n
+                                            display_method=display, sort_method=sort)\n
+  return item_list\n
+\n
+getItemList = CachingMethod(getItemList, id=(\'getInvoiceTransactionLineItemList\', \'getItemList\'))\n
+portal_path = context.getPortalObject().getPhysicalPath()\n
+return getItemList(category=category, portal_path=portal_path)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA0AAAARAAAAAwAA
+AHMKAQAAZAEAawAAbAEAfQEAAWgAAARkAgBkAwADPARkBABkBQADPARkBgBkBwADPARkCABkCQAD
+PARkCgBkCwADPARkDABkDQADPARkDgBkDwADPH0CAHQDAHQEAGQQAIMCAHwCAGoGAG8cAAF0BQB8
+AgB0AwB0BABkEACDAgCDAgB9BgBuBwABZBEAfQYAaAAAiQEAhwEAZBIAhgAAiQIAhwIAZBMAhgAA
+iQAAdAoAdAoAhwAAhwIAZBQAhgIAfQsAfAEAfAsAZBAAZBUAZBYAZgIAgwEBfQsAdAMAdAMAdAQA
+ZBcAgwIAgwAAZBgAgwIAgwAAfQwAfAsAZBkAfAYAZBoAfAwAgwACU2QAAFMoGwAAAE4oAQAAAHMN
+AAAAQ2FjaGluZ01ldGhvZHMGAAAAaW5jb21lcyYAAABwb3J0YWxfY2F0ZWdvcmllcy9hY2NvdW50
+X3R5cGUvZXhwZW5zZXMHAAAAZXhwZW5zZXMlAAAAcG9ydGFsX2NhdGVnb3JpZXMvYWNjb3VudF90
+eXBlL2luY29tZXMHAAAAcGF5YWJsZXMvAAAAcG9ydGFsX2NhdGVnb3JpZXMvYWNjb3VudF90eXBl
+L2Fzc2V0L3JlY2VpdmFibGVzCgAAAHJlY2VpdmFibGVzMAAAAHBvcnRhbF9jYXRlZ29yaWVzL2Fj
+Y291bnRfdHlwZS9saWFiaWxpdHkvcGF5YWJsZXMNAAAAY29sbGVjdGVkX3ZhdHM+AAAAcG9ydGFs
+X2NhdGVnb3JpZXMvYWNjb3VudF90eXBlL2Fzc2V0L3JlY2VpdmFibGUvcmVmdW5kYWJsZV92YXRz
+DgAAAHJlZnVuZGFibGVfdmF0cz4AAABwb3J0YWxfY2F0ZWdvcmllcy9hY2NvdW50X3R5cGUvbGlh
+YmlsaXR5L3BheWFibGUvY29sbGVjdGVkX3ZhdHMEAAAAYmFua3MpAAAAcG9ydGFsX2NhdGVnb3Jp
+ZXMvYWNjb3VudF90eXBlL2Fzc2V0L2Nhc2hzAgAAAGlkcx4AAABwb3J0YWxfY2F0ZWdvcmllcy9h
+Y2NvdW50X3R5cGVjAQAAAAcAAAAGAAAAAwAAAHNgAAAAfAAAiAAAagcAb0IAAXQCAHwAAGQBAIMC
+AIMAAH0DAHQCAHwAAGQCAIMCAIMAAH0EAGQDAHwDAHwEAGYCABZ0BQCIAACDAQB8AAA8bgEAAXQG
+AIgAAHwAAIMCAFNkAABTKAQAAABOcwgAAABnZXRHYXBJZHMIAAAAZ2V0VGl0bGVzBwAAACVzIC0g
+JXMoBwAAAHMBAAAAeHMMAAAAZGlzcGxheV9kaWN0cwkAAABfZ2V0YXR0cl9zBgAAAGdhcF9pZHMN
+AAAAYWNjb3VudF90aXRsZXMHAAAAX3dyaXRlX3MJAAAAX2dldGl0ZW1fKAcAAABzAQAAAHhzDAAA
+AGRpc3BsYXlfZGljdHMJAAAAX2dldGF0dHJfcwYAAABnYXBfaWRzDQAAAGFjY291bnRfdGl0bGVz
+BwAAAF93cml0ZV9zCQAAAF9nZXRpdGVtXygBAAAAcwwAAABkaXNwbGF5X2RpY3QoAAAAAHMpAAAA
+UHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzBwAAAGRpc3BsYXkSAAAA
+cwoAAAAAAQ0BEgESAR4BYwIAAAAEAAAABQAAAAMAAABzHQAAAHQAAIgAAHwAAIMBAIgAAHwBAIMB
+AIMCAFNkAABTKAEAAABOKAQAAABzAwAAAGNtcHMHAAAAZGlzcGxheXMBAAAAeHMBAAAAeSgEAAAA
+cwEAAAB4cwEAAAB5cwMAAABjbXBzBwAAAGRpc3BsYXkoAQAAAHMHAAAAZGlzcGxheSgAAAAAcykA
+AABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMEAAAAc29ydBkAAABz
+AgAAAAABYwIAAAAIAAAACgAAAAMAAABzRwAAAHQAAHQBAGQBAIMCAHwAAIMBAH0EAHQAAHwEAGQC
+AIMCAGQDAGQEAGQFAGQGAGQHAIgBAGQIAIgAAIMABH0HAHwHAFNkAABTKAkAAABOcxIAAAByZXN0
+cmljdGVkVHJhdmVyc2VzGQAAAGdldENhdGVnb3J5TWVtYmVySXRlbUxpc3RzCwAAAHBvcnRhbF90
+eXBlcwcAAABBY2NvdW50cwQAAABiYXNlaQAAAABzDgAAAGRpc3BsYXlfbWV0aG9kcwsAAABzb3J0
+X21ldGhvZCgHAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCAAAAGNhdGVnb3J5cwMAAABv
+YmpzBwAAAGRpc3BsYXlzBAAAAHNvcnRzCQAAAGl0ZW1fbGlzdCgIAAAAcwgAAABjYXRlZ29yeXML
+AAAAcG9ydGFsX3BhdGhzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMDAAAAb2JqcwcAAABkaXNw
+bGF5cwQAAABzb3J0cwkAAABpdGVtX2xpc3QoAgAAAHMEAAAAc29ydHMHAAAAZGlzcGxheSgAAAAA
+cykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMLAAAAZ2V0SXRl
+bUxpc3QcAAAAcwgAAAAAARUBGwEPAXMhAAAAZ2V0SW52b2ljZVRyYW5zYWN0aW9uTGluZUl0ZW1M
+aXN0cwsAAABnZXRJdGVtTGlzdHMPAAAAZ2V0UG9ydGFsT2JqZWN0cw8AAABnZXRQaHlzaWNhbFBh
+dGhzCAAAAGNhdGVnb3J5cwsAAABwb3J0YWxfcGF0aCgNAAAAcxcAAABQcm9kdWN0cy5FUlA1VHlw
+ZS5DYWNoZXMNAAAAQ2FjaGluZ01ldGhvZHMNAAAAY2F0ZWdvcnlfZGljdHMJAAAAX2dldGF0dHJf
+cwcAAABjb250ZXh0cwkAAABfZ2V0aXRlbV9zCAAAAGNhdGVnb3J5cwwAAABkaXNwbGF5X2RpY3Rz
+BwAAAGRpc3BsYXlzBAAAAHNvcnRzBAAAAE5vbmVzCwAAAGdldEl0ZW1MaXN0cwsAAABwb3J0YWxf
+cGF0aCgNAAAAcxcAAABQcm9kdWN0cy5FUlA1VHlwZS5DYWNoZXMNAAAAQ2FjaGluZ01ldGhvZHMN
+AAAAY2F0ZWdvcnlfZGljdHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwkAAABfZ2V0aXRlbV9z
+CAAAAGNhdGVnb3J5cwwAAABkaXNwbGF5X2RpY3RzBwAAAGRpc3BsYXlzBAAAAHNvcnRzBAAAAE5v
+bmVzCwAAAGdldEl0ZW1MaXN0cwsAAABwb3J0YWxfcGF0aCgAAAAAKAMAAABzBAAAAHNvcnRzDAAA
+AGRpc3BsYXlfZGljdHMHAAAAZGlzcGxheXMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVp
+c2l0aW9uIENvbnRleHRzLQAAAEludm9pY2VUcmFuc2FjdGlvbkxpbmVfZ2V0RGVzdGluYXRpb25J
+dGVtTGlzdAEAAABzFgAAAA0CRQkWARwCBgIGAQwHDAMVBhgBHgEoAQAAAHMtAAAASW52b2ljZVRy
+YW5zYWN0aW9uTGluZV9nZXREZXN0aW5hdGlvbkl0ZW1MaXN0KAEAAABzLQAAAEludm9pY2VUcmFu
+c2FjdGlvbkxpbmVfZ2V0RGVzdGluYXRpb25JdGVtTGlzdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBT
+Y3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/InvoiceTransactionLine_getDestinationItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>category_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>_getitem_</string>
+                            <string>category</string>
+                            <string>display_dict</string>
+                            <string>display</string>
+                            <string>sort</string>
+                            <string>None</string>
+                            <string>getItemList</string>
+                            <string>portal_path</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>InvoiceTransactionLine_getDestinationItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

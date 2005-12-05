@@ -1,0 +1,560 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+import math\n
+\n
+# wether we should or not expand accounts into virtual accounts (payable & receivable with other parties / cash with bank account)\n
+expand_accounts = kw.get("expand_accounts", 1)\n
+# the gap tree to use\n
+gap_root = kw["gap_root"]\n
+\n
+def gap_sort_func(a, b) :\n
+  a_gap = a.getGapId()\n
+  b_gap = b.getGapId()\n
+  while len(a_gap) < 7 : \n
+    a_gap += \'0\'\n
+  while len(b_gap) < 7 : \n
+    b_gap += \'0\'\n
+  if a_gap < b_gap : return -1\n
+  if a_gap > b_gap : return 1\n
+  return 0\n
+\n
+def formatValues(dict) : \n
+  for k, v in dict.items():\n
+    if not(same_type(v, "") or same_type(v, u"")) :\n
+      if round(v) == 0.00 : \n
+        dict[k] = ""\n
+      else :\n
+        # FIXME: this part is a copy of Floatfield format_value\n
+        value = str(float(v))\n
+        value_list = value.split(\'.\')\n
+        integer = value_list[0]\n
+        i = len(integer)%3\n
+        value = integer[:i]\n
+        while i != len(integer):\n
+          value += \' \' + integer[i:i+3]\n
+          i += 3\n
+        dict[k] = \'%s.%s\'%(integer, value_list[1])\n
+  return dict \n
+\n
+def expandBankAccountsForAccount(account, **kw) : \n
+  tmp_accounts = []\n
+  organisations = context.portal_categories.restrictedTraverse(kw[\'transaction_section_category\']).getGroupRelatedValueList(portal_type=\'Organisation\')\n
+  orga_and_banks = []\n
+  for orga in organisations : \n
+     orga_and_banks += [(orga, o.getObject()) for o in orga.searchFolder(portal_type=[\'Bank Account\'])]\n
+  for orga, bank in orga_and_banks : \n
+    this_tmp_account = {\n
+         \'uid\'   : account.getUid(),\n
+         \'id\'    : \'%s-%s-%s\'%(account.getGapId(), orga.getTitle().decode(\'utf8\')[:8].upper(), bank.getTitle().decode(\'utf8\')[:8].upper() ), \n
+         \'title\' : \'%s (%s / %s)\'%(account.getTitle(), orga.getTitle(), bank.getTitle()), \n
+    }\n
+    this_tmp_account[\'debit\']  = bank.BankAccount_statSourceDebit( node_uid = [account.getUid()] )\n
+    this_tmp_account[\'credit\'] = bank.BankAccount_statSourceCredit( node_uid = [account.getUid()] ) \n
+\n
+    balance = this_tmp_account[\'debit\'] - this_tmp_account[\'credit\']\n
+    this_tmp_account[\'debit_balance\'] = balance > 0 and balance or 0.00\n
+    this_tmp_account[\'credit_balance\'] = balance < 0 and - balance or 0.00\n
+    if this_tmp_account[\'credit\'] != 0 or this_tmp_account[\'debit\'] != 0 :\n
+      tmp_accounts.append(account.asContext(**formatValues(this_tmp_account)))\n
+  return tmp_accounts\n
+\n
+def expandThirdPartiesForAccount(account, **kw) : \n
+  tmp_accounts = []\n
+  entities = [o.getObject() for o in context.Account_zDistinctSectionList(node_uid = account.getUid())]\n
+  for entity in entities : \n
+    if entity.getPortalType() == "Organisation" and entity.getGroup() == kw[\'transaction_section_category\'] : \n
+       continue # do not display our organisation\n
+    this_tmp_account = {\n
+         \'uid\' : account.getUid(),\n
+         \'id\'    : \'%s-%s\'%(account.getGapId(), entity.getTitle().decode(\'utf8\')[:12].upper()), \n
+         \'title\' : \'%s (%s)\'%(account.getTitle(), entity.getTitle()), \n
+    }\n
+    this_tmp_account[\'debit\'] = entity.Entity_statSourceDebit( node_uid = [account.getUid()] )\n
+    this_tmp_account[\'credit\'] = entity.Entity_statSourceCredit( node_uid = [account.getUid()] ) \n
+\n
+    balance = this_tmp_account[\'debit\'] - this_tmp_account[\'credit\']\n
+    this_tmp_account[\'debit_balance\'] = balance > 0 and balance or 0.00\n
+    this_tmp_account[\'credit_balance\'] = balance < 0 and - balance or 0.00\n
+    if this_tmp_account[\'credit\'] != 0 or this_tmp_account[\'debit\'] != 0 :\n
+      tmp_accounts.append(entity.asContext(**formatValues(this_tmp_account)))\n
+  return tmp_accounts\n
+\n
+\n
+### FIXME: is this working ? I guess no, as multi-currency is not yet tested\n
+try:\n
+  currency = kw[\'accounting_transaction_line_currency\']\n
+  id = currency.split(\'/\')[-1]\n
+except KeyError:\n
+  id = \'\'\n
+if not id:\n
+  id = \'&nbsp;\'\n
+kw[\'select_expression\'] = "\'%s\' AS accounting_transaction_line_currency" % id\n
+\n
+\n
+accounts = [ o.getObject() for o in context.portal_catalog(**kw) ]\n
+accounts = filter(lambda account: account.getGapId() is not None, accounts )\n
+accounts.sort(gap_sort_func)\n
+\n
+accounts_to_expand_by_third_parties = \\\n
+    context.portal_categories.account_type.asset.receivable.getAccountTypeRelatedValueList(\n
+         portal_type=\'Account\', strict_membership=1) + \\\n
+    context.portal_categories.account_type.liability.payable.getAccountTypeRelatedValueList(\n
+         portal_type=\'Account\', strict_membership=1) # we use strict_membership because we do not want VAT\n
+\n
+accounts_to_expand_by_bank_accounts = \\\n
+    context.portal_categories.account_type.asset.cash.getAccountTypeRelatedValueList(portal_type=\'Account\')\n
+\n
+report_items = []\n
+results = []\n
+for account in accounts : \n
+  if expand_accounts and account in accounts_to_expand_by_third_parties :\n
+    # get all organisations with this account, and create a "virtual-Account" for each organisation\n
+    virtual_accounts = expandThirdPartiesForAccount(account, **kw)\n
+    # then display the aggregate account\n
+    item = {\n
+       \'title\': account.getTitle(),\n
+       \'debit\': account.Resource_zGetInventory_old(node_uid=account.getUid(), \n
+                                            omit_input=1,\n
+                                            omit_simulation=1,\n
+                                            simulation_state = kw[\'transaction_simulation_state\'],\n
+                                            section_category = kw[\'transaction_section_category\'],\n
+                                            to_date = kw[\'to_date\'],\n
+                                            )[0].quantity or 0.00,  \n
+\n
+       \'credit\': - (account.Resource_zGetInventory_old(node_uid=account.getUid(), \n
+                                            omit_output=1,\n
+                                            omit_simulation=1,\n
+                                            simulation_state = kw[\'transaction_simulation_state\'], \n
+                                            section_category = kw[\'transaction_section_category\'],\n
+                                            to_date = kw[\'to_date\'],\n
+                                            )[0].quantity or 0.00 )}\n
+    # provide a clearly different display when it is a summary account (TODO: it should be in itallic ?).\n
+    if len(virtual_accounts) :\n
+      item[\'id\'] = "   %s **TOTAL**" % account.getGapId()\n
+    else : \n
+      item[\'id\'] = account.getGapId()\n
+    balance = item[\'debit\'] - item[\'credit\']\n
+    item[\'debit_balance\'] = balance > 0 and balance or 0.00\n
+    item[\'credit_balance\'] = balance < 0 and - balance or 0.00\n
+    report_items += virtual_accounts\n
+    report_items.append(account.asContext(**formatValues(item)))\n
+\n
+  elif expand_accounts and account in accounts_to_expand_by_bank_accounts :\n
+    virtual_accounts = expandBankAccountsForAccount(account, **kw)\n
+    # then display the aggregate account\n
+    item = {\n
+       \'title\': account.getTitle(),\n
+       \'debit\': account.Resource_zGetInventory_old(node_uid=account.getUid(), \n
+                                            omit_input=1,\n
+                                            omit_simulation=1,\n
+                                            simulation_state = kw[\'transaction_simulation_state\'],\n
+                                            section_category = kw[\'transaction_section_category\'],\n
+                                            to_date = kw[\'to_date\'],\n
+                                            )[0].quantity or 0.00,  \n
+\n
+       \'credit\': - (account.Resource_zGetInventory_old(node_uid=account.getUid(), \n
+                                            omit_output=1,\n
+                                            omit_simulation=1,\n
+                                            simulation_state = kw[\'transaction_simulation_state\'], \n
+                                            section_category = kw[\'transaction_section_category\'],\n
+                                            to_date = kw[\'to_date\'],\n
+                                            )[0].quantity or 0.00 )}\n
+    # provide a clearly different display when it is a summary account (TODO: it should be in itallic ?).\n
+    if len(virtual_accounts) :\n
+      item[\'id\'] = "   %s **TOTAL**" % account.getGapId()\n
+    else : \n
+      item[\'id\'] = account.getGapId()\n
+    balance = item[\'debit\'] - item[\'credit\']\n
+    item[\'debit_balance\'] = balance > 0 and balance or 0.00\n
+    item[\'credit_balance\'] = balance < 0 and - balance or 0.00\n
+    report_items += virtual_accounts\n
+    report_items.append(account.asContext(**formatValues(item)))\n
+\n
+\n
+  else : \n
+    item = {\n
+       \'id\':    account.getGapId(),\n
+       \'title\': account.getTitle(),\n
+       \'debit\': account.Resource_zGetInventory_old(node_uid=account.getUid(), \n
+                                            omit_input=1,\n
+                                            omit_simulation=1,\n
+                                            simulation_state = kw[\'transaction_simulation_state\'],\n
+                                            section_category = kw[\'transaction_section_category\'],\n
+                                            to_date = kw[\'to_date\'],\n
+                                            )[0].quantity or 0.00,  \n
+\n
+       \'credit\': - (account.Resource_zGetInventory_old(node_uid=account.getUid(), \n
+                                            omit_output=1,\n
+                                            omit_simulation=1,\n
+                                            simulation_state = kw[\'transaction_simulation_state\'], \n
+                                            to_date = kw[\'to_date\'],\n
+                                            section_category = kw[\'transaction_section_category\'],\n
+                                            )[0].quantity or 0.00 )}\n
+    balance = item[\'debit\'] - item[\'credit\']\n
+    item[\'debit_balance\'] = balance > 0 and balance or 0.00\n
+    item[\'credit_balance\'] = balance < 0 and - balance or 0.00\n
+    report_items.append(account.asContext(**formatValues(item)))\n
+    \n
+return report_items\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAACAAAABIAAAACwAA
+AHMYCAAAZAAAawAAfQIAdAEAfAEAZAEAgwIAZAIAZAMAgwIAfQQAdAQAfAEAZAQAgwIAfQYAZAUA
+hAAAfQcAZAYAhAAAiQAAhwAAZAcAhgAAfQkAhwAAZAgAhgAAfQoAeTIAdAQAfAEAZAkAgwIAfQsA
+dAQAdAEAfAsAZAoAgwIAZAsAgwEAZAMAC4MCAH0MAFduGQAEdAwAagoAbw0AAQEBAWQMAH0MAG4C
+AAFYfAwADG8KAAFkDQB9DABuAQABZA4AfAwAFnQNAHwBAIMBAGQPADxnAAAEaQ4AfRAAdBAAdBEA
+dAEAdBIAZBAAgwIAfAEAjQEAgwEARF0cAH0UAHwQAHQBAHwUAGQRAIMCAIMAAIMBAAFx9AB+EAB9
+FQB0FQBkEgCEAAB8FQCDAgB9FQB0AQB8FQBkEwCDAgB8BwCDAQABdAEAdAEAdAEAdAEAdAEAdBIA
+ZBQAgwIAZBUAgwIAZBYAgwIAZBcAgwIAZBgAgwIAZBkAZBoAZBsAZAMAgwACdAEAdAEAdAEAdAEA
+dAEAdBIAZBQAgwIAZBUAgwIAZBwAgwIAZB0AgwIAZBgAgwIAZBkAZBoAZBsAZAMAgwACF30XAHQB
+AHQBAHQBAHQBAHQBAHQSAGQUAIMCAGQVAIMCAGQWAIMCAGQeAIMCAGQYAIMCAGQZAGQaAIMAAX0Y
+AGcAAH0ZAGcAAH0aAHgFBnQQAHwVAIMBAERd9wV9GwB8BABvCgABfBsAfBcAagYAbwsCAXQRAHwK
+AHwbAHwBAI0CAH0cAGgAAARkHwB0AQB8GwBkIACDAgCDAAADPARkIQB0AQB0BAB0AQB8GwBkIgCD
+AgBkIwB0AQB8GwBkJACDAgCDAABkJQBkAwBkJgBkAwBkJwB0BAB8AQBkKACDAgBkKQB0BAB8AQBk
+KgCDAgBkKwB0BAB8AQBkKwCDAgCDAAZkLACDAgBkLQCDAgBwBAABZC4AAzwEZC8AdAEAdAQAdAEA
+fBsAZCIAgwIAZCMAdAEAfBsAZCQAgwIAgwAAZDAAZAMAZCYAZAMAZCcAdAQAfAEAZCgAgwIAZCkA
+dAQAfAEAZCoAgwIAZCsAdAQAfAEAZCsAgwIAgwAGZCwAgwIAZC0AgwIAcAQAAWQuAAsDPH0dAHQd
+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
+AGoCAG8UAAFkAgB0BwB8AACDAQB8AwA8cTUBAXQIAHQJAHwEAIMBAIMBAH0KAHQBAHwKAGQFAIMC
+AGQGAIMBAH0LAHQMAHwLAGQHAIMCAH0NAHQOAHwNAIMBAGQIABZ9DwB0DAB8DQBkAAB8DwCFAgCD
+AgB9CgB4QwB8DwB0DgB8DQCDAQBqAwBvLwABfAoAZAkAdAwAfA0AfA8AfA8AZAgAF4UCAIMCABc3
+fQoAfA8AZAgAN30PAHHLAAFXZAoAfA0AdAwAfAsAZAsAgwIAZgIAFnQHAHwAAIMBAHwDADxxGQAB
+cRkAV3wAAFNkAABTKAwAAABOcwUAAABpdGVtc3MAAAAAdQAAAABmAzAuMHMFAAAAc3BsaXRzAQAA
+AC5pAAAAAGkDAAAAcwEAAAAgcwUAAAAlcy4lc2kBAAAAKBAAAABzCQAAAF9nZXRpdGVyX3MJAAAA
+X2dldGF0dHJfcwQAAABkaWN0cwEAAABrcwEAAAB2cwkAAABzYW1lX3R5cGVzBQAAAHJvdW5kcwcA
+AABfd3JpdGVfcwMAAABzdHJzBQAAAGZsb2F0cwUAAAB2YWx1ZXMKAAAAdmFsdWVfbGlzdHMJAAAA
+X2dldGl0ZW1fcwcAAABpbnRlZ2VycwMAAABsZW5zAQAAAGkoEAAAAHMEAAAAZGljdHMJAAAAX2dl
+dGl0ZXJfcwkAAABfZ2V0YXR0cl9zAQAAAGtzAQAAAHZzCQAAAHNhbWVfdHlwZXMFAAAAcm91bmRz
+BwAAAF93cml0ZV9zAwAAAHN0cnMFAAAAZmxvYXRzBQAAAHZhbHVlcwoAAAB2YWx1ZV9saXN0cwkA
+AABfZ2V0aXRlbV9zBwAAAGludGVnZXJzAwAAAGxlbnMBAAAAaSgAAAAAKAAAAABzKQAAAFB5dGhv
+biBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwwAAABmb3JtYXRWYWx1ZXMTAAAA
+cyAAAAAAARkADAEhARMBFAMSARUBDwEQARUBAwATASEBDwErAWMBAAAAEwAAABsAAAALAAAAc94C
+AABnAAB9AgB0AQB0AQB0AQB0AgBkAQCDAgBkAgCDAgB0AwB8AQBkAwCDAgCDAQBkBACDAgBkBQBk
+BgCDAAF9BgBnAAB9BwB4bAB0BwB8BgCDAQBEXV4AfQkAfAcAZwAABGkJAH0LAHQHAHQBAHwJAGQH
+AIMCAGQFAGQIAGcBAIMAAYMBAERdIgB9DAB8CwB8CQB0AQB8DABkCQCDAgCDAABmAgCDAQABcYQA
+fgsAN30HAHFSAFd4HwJ0BwB8BwCDAQBEXRECXAIAfQkAfQ0AaAAABGQKAHQBAHwAAGQLAIMCAIMA
+AAM8BGQMAGQNAHQBAHwAAGQOAIMCAIMAAHQBAHQDAHQBAHQBAHwJAGQPAIMCAIMAAGQQAIMCAGQR
+AIMBAGQAAGQSAIUCAIMCAGQTAIMCAIMAAHQBAHQDAHQBAHQBAHwNAGQPAIMCAIMAAGQQAIMCAGQR
+AIMBAGQAAGQSAIUCAIMCAGQTAIMCAIMAAGYDABYDPARkFABkFQB0AQB8AABkDwCDAgCDAAB0AQB8
+CQBkDwCDAgCDAAB0AQB8DQBkDwCDAgCDAABmAwAWAzx9DgB0AQB8DQBkFgCDAgBkFwB0AQB8AABk
+CwCDAgCDAABnAQCDAAF0DwB8DgCDAQBkGAA8dAEAfA0AZBkAgwIAZBcAdAEAfAAAZAsAgwIAgwAA
+ZwEAgwABdA8AfA4AgwEAZBoAPHQDAHwOAGQYAIMCAHQDAHwOAGQaAIMCABh9EAB8EABkGwBqBABv
+BAABfBAAcAQAAWQcAHQPAHwOAIMBAGQdADx8EABkGwBqAABvBQABfBAAC3AEAAFkHAB0DwB8DgCD
+AQBkHgA8dAMAfA4AZBoAgwIAZBsAagMAcBMAAXQDAHwOAGQYAIMCAGQbAGoDAG8vAAF0AQB8AgBk
+HwCDAgB0EQB0AQB8AABkIACDAgCIAAB8DgCDAQCNAQCDAQABccEAAXHBAFd8AgBTZAAAUyghAAAA
+TnMRAAAAcG9ydGFsX2NhdGVnb3JpZXNzEgAAAHJlc3RyaWN0ZWRUcmF2ZXJzZXMcAAAAdHJhbnNh
+Y3Rpb25fc2VjdGlvbl9jYXRlZ29yeXMYAAAAZ2V0R3JvdXBSZWxhdGVkVmFsdWVMaXN0cwsAAABw
+b3J0YWxfdHlwZXMMAAAAT3JnYW5pc2F0aW9ucwwAAABzZWFyY2hGb2xkZXJzDAAAAEJhbmsgQWNj
+b3VudHMJAAAAZ2V0T2JqZWN0cwMAAAB1aWRzBgAAAGdldFVpZHMCAAAAaWRzCAAAACVzLSVzLSVz
+cwgAAABnZXRHYXBJZHMIAAAAZ2V0VGl0bGVzBgAAAGRlY29kZXMEAAAAdXRmOGkIAAAAcwUAAAB1
+cHBlcnMFAAAAdGl0bGVzDAAAACVzICglcyAvICVzKXMbAAAAQmFua0FjY291bnRfc3RhdFNvdXJj
+ZURlYml0cwgAAABub2RlX3VpZHMFAAAAZGViaXRzHAAAAEJhbmtBY2NvdW50X3N0YXRTb3VyY2VD
+cmVkaXRzBgAAAGNyZWRpdGkAAAAAZgMwLjBzDQAAAGRlYml0X2JhbGFuY2VzDgAAAGNyZWRpdF9i
+YWxhbmNlcwYAAABhcHBlbmRzCQAAAGFzQ29udGV4dCgTAAAAcwwAAAB0bXBfYWNjb3VudHNzCQAA
+AF9nZXRhdHRyX3MHAAAAY29udGV4dHMJAAAAX2dldGl0ZW1fcwIAAABrd3MNAAAAb3JnYW5pc2F0
+aW9uc3MOAAAAb3JnYV9hbmRfYmFua3NzCQAAAF9nZXRpdGVyX3MEAAAAb3JnYXMGAAAAYXBwZW5k
+cwgAAAAkYXBwZW5kMHMBAAAAb3MEAAAAYmFua3MHAAAAYWNjb3VudHMQAAAAdGhpc190bXBfYWNj
+b3VudHMHAAAAX3dyaXRlX3MHAAAAYmFsYW5jZXMHAAAAX2FwcGx5X3MMAAAAZm9ybWF0VmFsdWVz
+KBMAAABzBwAAAGFjY291bnRzAgAAAGt3cwwAAAB0bXBfYWNjb3VudHNzCQAAAF9nZXRhdHRyX3MH
+AAAAY29udGV4dHMJAAAAX2dldGl0ZW1fcw0AAABvcmdhbmlzYXRpb25zcw4AAABvcmdhX2FuZF9i
+YW5rc3MJAAAAX2dldGl0ZXJfcwQAAABvcmdhcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwEAAABv
+cwQAAABiYW5rcxAAAAB0aGlzX3RtcF9hY2NvdW50cwcAAABfd3JpdGVfcwcAAABiYWxhbmNlcwcA
+AABfYXBwbHlfcwwAAABmb3JtYXRWYWx1ZXMoAQAAAHMMAAAAZm9ybWF0VmFsdWVzKAAAAABzKQAA
+AFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cxwAAABleHBhbmRCYW5r
+QWNjb3VudHNGb3JBY2NvdW50JQAAAHMqAAAAAAEGATkBBgENAAYBLAAwAQ0ADAEKARUBjgE2AjEB
+MQIcASQBKAEsATABYwEAAAARAAAAHwAAAAsAAABzewIAAGcAAH0CAGcAAARpAQB9BAB0AwB0BAB0
+BQBkAQCDAgBkAgB0BAB8AABkAwCDAgCDAACDAAGDAQBEXRwAfQgAfAQAdAQAfAgAZAQAgwIAgwAA
+gwEAAXE4AH4EAH0JAHgTAnQDAHwJAIMBAERdBQJ9CgB0BAB8CgBkBQCDAgCDAABkBgBqAgBvHwAB
+dAQAfAoAZAcAgwIAgwAAdAoAfAEAZAgAgwIAagIAbwcAAXFqAG4BAAFoAAAEZAkAdAQAfAAAZAMA
+gwIAgwAAAzwEZAoAZAsAdAQAfAAAZAwAgwIAgwAAdAQAdAoAdAQAdAQAfAoAZA0AgwIAgwAAZA4A
+gwIAZA8AgwEAZAAAZBAAhQIAgwIAZBEAgwIAgwAAZgIAFgM8BGQSAGQTAHQEAHwAAGQNAIMCAIMA
+AHQEAHwKAGQNAIMCAIMAAGYCABYDPH0MAHQEAHwKAGQUAIMCAGQCAHQEAHwAAGQDAIMCAIMAAGcB
+AIMAAXQNAHwMAIMBAGQVADx0BAB8CgBkFgCDAgBkAgB0BAB8AABkAwCDAgCDAABnAQCDAAF0DQB8
+DACDAQBkFwA8dAoAfAwAZBUAgwIAdAoAfAwAZBcAgwIAGH0OAHwOAGQYAGoEAG8EAAF8DgBwBAAB
+ZBkAdA0AfAwAgwEAZBoAPHwOAGQYAGoAAG8FAAF8DgALcAQAAWQZAHQNAHwMAIMBAGQbADx0CgB8
+DABkFwCDAgBkGABqAwBwEwABdAoAfAwAZBUAgwIAZBgAagMAby8AAXQEAHwCAGQcAIMCAHQPAHQE
+AHwKAGQdAIMCAIgAAHwMAIMBAI0BAIMBAAFxagABcWoAV3wCAFNkAABTKB4AAABOcxwAAABBY2Nv
+dW50X3pEaXN0aW5jdFNlY3Rpb25MaXN0cwgAAABub2RlX3VpZHMGAAAAZ2V0VWlkcwkAAABnZXRP
+YmplY3RzDQAAAGdldFBvcnRhbFR5cGVzDAAAAE9yZ2FuaXNhdGlvbnMIAAAAZ2V0R3JvdXBzHAAA
+AHRyYW5zYWN0aW9uX3NlY3Rpb25fY2F0ZWdvcnlzAwAAAHVpZHMCAAAAaWRzBQAAACVzLSVzcwgA
+AABnZXRHYXBJZHMIAAAAZ2V0VGl0bGVzBgAAAGRlY29kZXMEAAAAdXRmOGkMAAAAcwUAAAB1cHBl
+cnMFAAAAdGl0bGVzBwAAACVzICglcylzFgAAAEVudGl0eV9zdGF0U291cmNlRGViaXRzBQAAAGRl
+Yml0cxcAAABFbnRpdHlfc3RhdFNvdXJjZUNyZWRpdHMGAAAAY3JlZGl0aQAAAABmAzAuMHMNAAAA
+ZGViaXRfYmFsYW5jZXMOAAAAY3JlZGl0X2JhbGFuY2VzBgAAAGFwcGVuZHMJAAAAYXNDb250ZXh0
+KBEAAABzDAAAAHRtcF9hY2NvdW50c3MGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0
+ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAGFjY291bnRzAQAAAG9zCAAAAGVudGl0
+aWVzcwYAAABlbnRpdHlzCQAAAF9nZXRpdGVtX3MCAAAAa3dzEAAAAHRoaXNfdG1wX2FjY291bnRz
+BwAAAF93cml0ZV9zBwAAAGJhbGFuY2VzBwAAAF9hcHBseV9zDAAAAGZvcm1hdFZhbHVlcygRAAAA
+cwcAAABhY2NvdW50cwIAAABrd3MMAAAAdG1wX2FjY291bnRzcwYAAABhcHBlbmRzCAAAACRhcHBl
+bmQwcwkAAABfZ2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMBAAAAb3MIAAAAZW50
+aXRpZXNzBgAAAGVudGl0eXMJAAAAX2dldGl0ZW1fcxAAAAB0aGlzX3RtcF9hY2NvdW50cwcAAABf
+d3JpdGVfcwcAAABiYWxhbmNlcwcAAABfYXBwbHlfcwwAAABmb3JtYXRWYWx1ZXMoAQAAAHMMAAAA
+Zm9ybWF0VmFsdWVzKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBD
+b250ZXh0cxwAAABleHBhbmRUaGlyZFBhcnRpZXNGb3JBY2NvdW50OwAAAHMmAAAAAAEGATIAJQEN
+AAkBOAEHAQoBFQFVAScCMQExAhwBJAEoASwBMAFzJAAAAGFjY291bnRpbmdfdHJhbnNhY3Rpb25f
+bGluZV9jdXJyZW5jeXMFAAAAc3BsaXRzAQAAAC9zAAAAAHMGAAAAJm5ic3A7cywAAAAnJXMnIEFT
+IGFjY291bnRpbmdfdHJhbnNhY3Rpb25fbGluZV9jdXJyZW5jeXMRAAAAc2VsZWN0X2V4cHJlc3Np
+b25zDgAAAHBvcnRhbF9jYXRhbG9ncwkAAABnZXRPYmplY3RjAQAAAAMAAAADAAAAQwAAAHMWAAAA
+dAAAfAAAZAEAgwIAgwAAdAIAagkAUygCAAAATnMIAAAAZ2V0R2FwSWQoAwAAAHMJAAAAX2dldGF0
+dHJfcwcAAABhY2NvdW50cwQAAABOb25lKAMAAABzBwAAAGFjY291bnRzCQAAAF9nZXRhdHRyX3ME
+AAAATm9uZSgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBD
+b250ZXh0cwoAAAA8bGFtYmRhLjU+XQAAAHMAAAAAcwQAAABzb3J0cxEAAABwb3J0YWxfY2F0ZWdv
+cmllc3MMAAAAYWNjb3VudF90eXBlcwUAAABhc3NldHMKAAAAcmVjZWl2YWJsZXMeAAAAZ2V0QWNj
+b3VudFR5cGVSZWxhdGVkVmFsdWVMaXN0cwsAAABwb3J0YWxfdHlwZXMHAAAAQWNjb3VudHMRAAAA
+c3RyaWN0X21lbWJlcnNoaXBzCQAAAGxpYWJpbGl0eXMHAAAAcGF5YWJsZXMEAAAAY2FzaHMFAAAA
+dGl0bGVzCAAAAGdldFRpdGxlcwUAAABkZWJpdHMaAAAAUmVzb3VyY2VfekdldEludmVudG9yeV9v
+bGRzCAAAAG5vZGVfdWlkcwYAAABnZXRVaWRzCgAAAG9taXRfaW5wdXRzDwAAAG9taXRfc2ltdWxh
+dGlvbnMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMcAAAAdHJhbnNhY3Rpb25fc2ltdWxhdGlvbl9zdGF0
+ZXMQAAAAc2VjdGlvbl9jYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29yeXMH
+AAAAdG9fZGF0ZWkAAAAAcwgAAABxdWFudGl0eWYDMC4wcwYAAABjcmVkaXRzCwAAAG9taXRfb3V0
+cHV0cw8AAAAgICAlcyAqKlRPVEFMKipzCAAAAGdldEdhcElkcwIAAABpZHMNAAAAZGViaXRfYmFs
+YW5jZXMOAAAAY3JlZGl0X2JhbGFuY2VzBgAAAGFwcGVuZHMJAAAAYXNDb250ZXh0KB8AAABzBAAA
+AG1hdGhzCQAAAF9nZXRhdHRyX3MCAAAAa3dzDwAAAGV4cGFuZF9hY2NvdW50c3MJAAAAX2dldGl0
+ZW1fcwgAAABnYXBfcm9vdHMNAAAAZ2FwX3NvcnRfZnVuY3MMAAAAZm9ybWF0VmFsdWVzcxwAAABl
+eHBhbmRCYW5rQWNjb3VudHNGb3JBY2NvdW50cxwAAABleHBhbmRUaGlyZFBhcnRpZXNGb3JBY2Nv
+dW50cwgAAABjdXJyZW5jeXMCAAAAaWRzCAAAAEtleUVycm9ycwcAAABfd3JpdGVfcwYAAABhcHBl
+bmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zBwAAAF9hcHBseV9zBwAAAGNvbnRleHRzAQAA
+AG9zCAAAAGFjY291bnRzcwYAAABmaWx0ZXJzIwAAAGFjY291bnRzX3RvX2V4cGFuZF9ieV90aGly
+ZF9wYXJ0aWVzcyMAAABhY2NvdW50c190b19leHBhbmRfYnlfYmFua19hY2NvdW50c3MMAAAAcmVw
+b3J0X2l0ZW1zcwcAAAByZXN1bHRzcwcAAABhY2NvdW50cxAAAAB2aXJ0dWFsX2FjY291bnRzcwQA
+AABpdGVtcwMAAABsZW5zBwAAAGJhbGFuY2UoIAAAAHMJAAAAc2VsZWN0aW9ucwIAAABrd3MEAAAA
+bWF0aHMJAAAAX2dldGF0dHJfcw8AAABleHBhbmRfYWNjb3VudHNzCQAAAF9nZXRpdGVtX3MIAAAA
+Z2FwX3Jvb3RzDQAAAGdhcF9zb3J0X2Z1bmNzDAAAAGZvcm1hdFZhbHVlc3McAAAAZXhwYW5kQmFu
+a0FjY291bnRzRm9yQWNjb3VudHMcAAAAZXhwYW5kVGhpcmRQYXJ0aWVzRm9yQWNjb3VudHMIAAAA
+Y3VycmVuY3lzAgAAAGlkcwgAAABLZXlFcnJvcnMHAAAAX3dyaXRlX3MGAAAAYXBwZW5kcwgAAAAk
+YXBwZW5kMHMJAAAAX2dldGl0ZXJfcwcAAABfYXBwbHlfcwcAAABjb250ZXh0cwEAAABvcwgAAABh
+Y2NvdW50c3MGAAAAZmlsdGVycyMAAABhY2NvdW50c190b19leHBhbmRfYnlfdGhpcmRfcGFydGll
+c3MjAAAAYWNjb3VudHNfdG9fZXhwYW5kX2J5X2JhbmtfYWNjb3VudHNzDAAAAHJlcG9ydF9pdGVt
+c3MHAAAAcmVzdWx0c3MHAAAAYWNjb3VudHMQAAAAdmlydHVhbF9hY2NvdW50c3MEAAAAaXRlbXMD
+AAAAbGVucwcAAABiYWxhbmNlKAAAAAAoAQAAAHMMAAAAZm9ybWF0VmFsdWVzcykAAABQeXRob24g
+U2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMrAAAAQWNjb3VudE1vZHVsZV9nZXRB
+Y2NvdW50TGlzdEZvclRyaWFsQmFsYW5jZQEAAABzpgAAAAkDGAIPAgkLCRIMFgwXAwEPASMBDgEL
+AQgBCgEUAyYAJQEVARACDwE/AjQDDwEtAgYBBgENAAYBFAISAgoBGwEtAw8BDwEuAy0DDwEPASUD
+DQEkAhwBHAEkASUBDQEsAhQBEgIKARsBLQMPAQ8BLgMtAw8BDwElAw0BJAIcARwBJAElAQ0BLAQK
+ARUBGwEtAw8BDwEuAy0DDwEPASUCHAEkASgBLAIoAQAAAHMrAAAAQWNjb3VudE1vZHVsZV9nZXRB
+Y2NvdW50TGlzdEZvclRyaWFsQmFsYW5jZSgBAAAAcysAAABBY2NvdW50TW9kdWxlX2dldEFjY291
+bnRMaXN0Rm9yVHJpYWxCYWxhbmNlKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0
+IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getAccountListForTrialBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>kw</string>
+                            <string>math</string>
+                            <string>_getattr_</string>
+                            <string>expand_accounts</string>
+                            <string>_getitem_</string>
+                            <string>gap_root</string>
+                            <string>gap_sort_func</string>
+                            <string>formatValues</string>
+                            <string>expandBankAccountsForAccount</string>
+                            <string>expandThirdPartiesForAccount</string>
+                            <string>currency</string>
+                            <string>id</string>
+                            <string>KeyError</string>
+                            <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
+                            <string>context</string>
+                            <string>o</string>
+                            <string>accounts</string>
+                            <string>filter</string>
+                            <string>accounts_to_expand_by_third_parties</string>
+                            <string>accounts_to_expand_by_bank_accounts</string>
+                            <string>report_items</string>
+                            <string>results</string>
+                            <string>account</string>
+                            <string>virtual_accounts</string>
+                            <string>item</string>
+                            <string>len</string>
+                            <string>balance</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getAccountListForTrialBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

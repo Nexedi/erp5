@@ -1,0 +1,414 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>from_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>node</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_input</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_output</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>query</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>resource</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>section_category</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>to_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>transaction</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>query</string>
+                            <string>node</string>
+                            <string>simulation_state</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>resource</string>
+                            <string>section_category</string>
+                            <string>transaction</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>query\r\n
+node:list\r\n
+simulation_state:list\r\n
+from_date\r\n
+to_date\r\n
+resource:list\r\n
+section_category\r\n
+transaction\r\n
+omit_input\r\n
+omit_output</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_zGetQuantity</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  SUM(stock.quantity) AS quantity\n
+  , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS source_credit\n
+  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0) AS source_debit\n
+  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0)  - IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS source_balance\n
+FROM\n
+  catalog\n
+  , catalog AS child\n
+  , movement\n
+  , stock\n
+<dtml-if resource>\n
+  , catalog AS resource\n
+</dtml-if>\n
+<dtml-if node>\n
+  , catalog AS node\n
+</dtml-if>\n
+<dtml-if section_category>\n
+  , catalog AS section_c\n
+  , catalog AS section_bc\n
+  , category AS section_membership\n
+  , catalog AS section\n
+</dtml-if>\n
+<dtml-if query>\n
+  , category\n
+  , roles_and_users\n
+  , subject\n
+</dtml-if>\n
+WHERE\n
+  catalog.uid = child.parent_uid\n
+  AND child.uid = stock.uid\n
+  AND child.uid = movement.uid\n
+  AND movement.is_accountable = 1\n
+<dtml-if transaction>\n
+  AND catalog.uid = <dtml-sqlvar transaction type="int">\n
+</dtml-if>\n
+<dtml-if resource>\n
+  AND movement.resource_uid = resource.uid\n
+  AND (\n
+  <dtml-in resource>\n
+    resource.relative_url = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if node>\n
+  AND stock.node_uid = node.uid\n
+  AND (\n
+  <dtml-in node>\n
+    node.relative_url = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if from_date>\n
+  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+</dtml-if>\n
+<dtml-if to_date>\n
+  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+</dtml-if>\n
+<dtml-if simulation_state>\n
+  AND (\n
+  <dtml-in simulation_state>\n
+    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if section_category>\n
+  AND section.uid = stock.section_uid\n
+  AND section_c.relative_url = <dtml-sqlvar section_category type="string">\n
+  AND section_membership.category_uid =  section_c.uid\n
+  AND section_membership.base_category_uid = section_bc.uid\n
+  AND section_membership.uid = section.uid\n
+</dtml-if>\n
+<dtml-if omit_input>\n
+  AND stock.quantity < 0\n
+</dtml-if>\n
+<dtml-if omit_output>\n
+  AND stock.quantity > 0\n
+</dtml-if>\n
+<dtml-if query>\n
+  AND catalog.uid = category.uid\n
+  AND catalog.uid = roles_and_users.uid\n
+  AND catalog.uid = subject.uid\n
+  AND <dtml-var query>\n
+</dtml-if>\n
+<dtml-if sort_on>\n
+  ORDER BY <dtml-var sort_on>\n
+</dtml-if>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  SUM(stock.quantity) AS quantity\n
+  , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS source_credit\n
+  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0) AS source_debit\n
+  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0)  - IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS source_balance\n
+FROM\n
+  catalog\n
+  , catalog AS child\n
+  , movement\n
+  , stock\n
+<dtml-if resource>\n
+  , catalog AS resource\n
+</dtml-if>\n
+<dtml-if node>\n
+  , catalog AS node\n
+</dtml-if>\n
+<dtml-if section_category>\n
+  , catalog AS section_c\n
+  , catalog AS section_bc\n
+  , category AS section_membership\n
+  , catalog AS section\n
+</dtml-if>\n
+<dtml-if query>\n
+  , category\n
+  , roles_and_users\n
+  , subject\n
+</dtml-if>\n
+WHERE\n
+  catalog.uid = child.parent_uid\n
+  AND child.uid = stock.uid\n
+  AND child.uid = movement.uid\n
+  AND movement.is_accountable = 1\n
+<dtml-if transaction>\n
+  AND catalog.uid = <dtml-sqlvar transaction type="int">\n
+</dtml-if>\n
+<dtml-if resource>\n
+  AND movement.resource_uid = resource.uid\n
+  AND (\n
+  <dtml-in resource>\n
+    resource.relative_url = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if node>\n
+  AND stock.node_uid = node.uid\n
+  AND (\n
+  <dtml-in node>\n
+    node.relative_url = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if from_date>\n
+  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+</dtml-if>\n
+<dtml-if to_date>\n
+  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+</dtml-if>\n
+<dtml-if simulation_state>\n
+  AND (\n
+  <dtml-in simulation_state>\n
+    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+  </dtml-in>\n
+  )\n
+</dtml-if>\n
+<dtml-if section_category>\n
+  AND section.uid = stock.section_uid\n
+  AND section_c.relative_url = <dtml-sqlvar section_category type="string">\n
+  AND section_membership.category_uid =  section_c.uid\n
+  AND section_membership.base_category_uid = section_bc.uid\n
+  AND section_membership.uid = section.uid\n
+</dtml-if>\n
+<dtml-if omit_input>\n
+  AND stock.quantity < 0\n
+</dtml-if>\n
+<dtml-if omit_output>\n
+  AND stock.quantity > 0\n
+</dtml-if>\n
+<dtml-if query>\n
+  AND catalog.uid = category.uid\n
+  AND catalog.uid = roles_and_users.uid\n
+  AND catalog.uid = subject.uid\n
+  AND <dtml-var query>\n
+</dtml-if>\n
+<dtml-if sort_on>\n
+  ORDER BY <dtml-var sort_on>\n
+</dtml-if>
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># delete all objects wich are mapped values in the budget module\n
+id_list = []\n
+budgets = context.getPortalObject().budget_module\n
+for budget_obj in context.getPortalObject().budget_module.objectValues():\n
+  if budget_obj.getPortalType() == \'Mapped Value\':\n
+    id_list.append(budget_obj.getId())\n
+budgets.manage_delObjects(id_list)\n
+\n
+# Create predicates (mapped values) from budget cells\n
+for objects in budgets.objectValues():\n
+  if objects.getPortalType() == \'Budget\':\n
+    for objline in objects.objectValues():\n
+      if objline.getPortalType() == \'Budget Line\':\n
+        for obj in objline.objectValues():\n
+          financial_section = obj.getMembershipCriterionCategoryList()[0]\n
+          function = obj.getMembershipCriterionCategoryList()[1]\n
+          group = obj.getMembershipCriterionCategoryList()[2]\n
+          budget = obj.getQuantity() + obj.getCurrentInventory() - obj.getConsumedBudget()\n
+          budget_module = obj.getPortalObject().budget_module\n
+          predicate = budget_module.newContent(portal_type=\'Mapped Value\')\n
+          predicate.setMembershipCriterionBaseCategoryList([\'financial_section\',\'function\',\'group\'])\n
+          predicate.setMembershipCriterionCategoryList([financial_section,function,group])\n
+          predicate.setCriterionPropertyList([\'quantity\',\'stop_date\'])\n
+          predicate.setCriterion(\'quantity\',max=budget)\n
+          predicate.setCriterion(\'stop_date\',min=obj.getStartDate(),max=obj.getStopDate())\n
+          predicate.immediateReindexObject()\n
+          print repr((\'\\n\',obj, predicate))\n
+return printed\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABMAAAAeAAAAQwAA
+AHPfAgAAdAAAgwAAfQEAZwAAfQIAdAMAdAMAdAQAZAEAgwIAgwAAZAIAgwIAfQUAeHEAdAYAdAMA
+dAMAdAMAdAQAZAEAgwIAgwAAZAIAgwIAZAMAgwIAgwAAgwEARF1CAH0HAHQDAHwHAGQEAIMCAIMA
+AGQFAGoCAG8jAAF0AwB8AgBkBgCDAgB0AwB8BwBkBwCDAgCDAACDAQABcVgAAXFYAFd0AwB8BQBk
+CACDAgB8AgCDAQABeCACdAYAdAMAfAUAZAMAgwIAgwAAgwEARF0GAn0IAHQDAHwIAGQEAIMCAIMA
+AGQJAGoCAG/nAQF45AF0BgB0AwB8CABkAwCDAgCDAACDAQBEXcYBfQkAdAMAfAkAZAQAgwIAgwAA
+ZAoAagIAb6cBAXikAXQGAHQDAHwJAGQDAIMCAIMAAIMBAERdhgF9CgB0CwB0AwB8CgBkCwCDAgCD
+AABkDACDAgB9DAB0CwB0AwB8CgBkCwCDAgCDAABkDQCDAgB9DQB0CwB0AwB8CgBkCwCDAgCDAABk
+DgCDAgB9DgB0AwB8CgBkDwCDAgCDAAB0AwB8CgBkEACDAgCDAAAXdAMAfAoAZBEAgwIAgwAAGH0P
+AHQDAHQDAHwKAGQBAIMCAIMAAGQCAIMCAH0QAHQDAHwQAGQSAIMCAGQTAGQFAIMAAX0RAHQDAHwR
+AGQUAIMCAGQVAGQWAGQXAGcDAIMBAAF0AwB8EQBkGACDAgB8DAB8DQB8DgBnAwCDAQABdAMAfBEA
+ZBkAgwIAZBoAZBsAZwIAgwEAAXQDAHwRAGQcAIMCAGQaAGQdAHwPAIMBAQF0AwB8EQBkHACDAgBk
+GwBkHgB0AwB8CgBkHwCDAgCDAABkHQB0AwB8CgBkIACDAgCDAACDAQIBdAMAfBEAZCEAgwIAgwAA
+AXwBAAR0EgBkIgB8CgB8EQBmAwCDAQACSUpxOgFXcQIBAXECAVdxygABccoAV3wBAIMAAFNkAABT
+KCMAAABOcw8AAABnZXRQb3J0YWxPYmplY3RzDQAAAGJ1ZGdldF9tb2R1bGVzDAAAAG9iamVjdFZh
+bHVlc3MNAAAAZ2V0UG9ydGFsVHlwZXMMAAAATWFwcGVkIFZhbHVlcwYAAABhcHBlbmRzBQAAAGdl
+dElkcxEAAABtYW5hZ2VfZGVsT2JqZWN0c3MGAAAAQnVkZ2V0cwsAAABCdWRnZXQgTGluZXMiAAAA
+Z2V0TWVtYmVyc2hpcENyaXRlcmlvbkNhdGVnb3J5TGlzdGkAAAAAaQEAAABpAgAAAHMLAAAAZ2V0
+UXVhbnRpdHlzEwAAAGdldEN1cnJlbnRJbnZlbnRvcnlzEQAAAGdldENvbnN1bWVkQnVkZ2V0cwoA
+AABuZXdDb250ZW50cwsAAABwb3J0YWxfdHlwZXMmAAAAc2V0TWVtYmVyc2hpcENyaXRlcmlvbkJh
+c2VDYXRlZ29yeUxpc3RzEQAAAGZpbmFuY2lhbF9zZWN0aW9ucwgAAABmdW5jdGlvbnMFAAAAZ3Jv
+dXBzIgAAAHNldE1lbWJlcnNoaXBDcml0ZXJpb25DYXRlZ29yeUxpc3RzGAAAAHNldENyaXRlcmlv
+blByb3BlcnR5TGlzdHMIAAAAcXVhbnRpdHlzCQAAAHN0b3BfZGF0ZXMMAAAAc2V0Q3JpdGVyaW9u
+cwMAAABtYXhzAwAAAG1pbnMMAAAAZ2V0U3RhcnREYXRlcwsAAABnZXRTdG9wRGF0ZXMWAAAAaW1t
+ZWRpYXRlUmVpbmRleE9iamVjdHMBAAAACigTAAAAcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzBwAA
+AGlkX2xpc3RzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAYnVkZ2V0c3MJAAAAX2dldGl0
+ZXJfcwoAAABidWRnZXRfb2JqcwcAAABvYmplY3RzcwcAAABvYmpsaW5lcwMAAABvYmpzCQAAAF9n
+ZXRpdGVtX3MRAAAAZmluYW5jaWFsX3NlY3Rpb25zCAAAAGZ1bmN0aW9ucwUAAABncm91cHMGAAAA
+YnVkZ2V0cw0AAABidWRnZXRfbW9kdWxlcwkAAABwcmVkaWNhdGVzBAAAAHJlcHIoEwAAAHMHAAAA
+X3ByaW50X3MGAAAAX3ByaW50cwcAAABpZF9saXN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
+BwAAAGJ1ZGdldHNzCQAAAF9nZXRpdGVyX3MKAAAAYnVkZ2V0X29ianMHAAAAb2JqZWN0c3MHAAAA
+b2JqbGluZXMDAAAAb2JqcwkAAABfZ2V0aXRlbV9zEQAAAGZpbmFuY2lhbF9zZWN0aW9ucwgAAABm
+dW5jdGlvbnMFAAAAZ3JvdXBzBgAAAGJ1ZGdldHMNAAAAYnVkZ2V0X21vZHVsZXMJAAAAcHJlZGlj
+YXRlcwQAAAByZXByKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0
+aW9uIENvbnRleHRzHgAAAEJ1ZGdldE1vZHVsZV9nZW5lcmF0ZVByZWRpY2F0ZQEAAABzOgAAAAkB
+BgEbAS4ABgEcAScBEAMZAAYBGQEZAAYBGQEZAAYBGwEbARsBMgEbARsBHAEcARkBGQE3AQ0BLQEo
+AQAAAHMeAAAAQnVkZ2V0TW9kdWxlX2dlbmVyYXRlUHJlZGljYXRlKAEAAABzHgAAAEJ1ZGdldE1v
+ZHVsZV9nZW5lcmF0ZVByZWRpY2F0ZSgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91
+dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/BudgetModule_generatePredicate</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>id_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>budgets</string>
+                            <string>_getiter_</string>
+                            <string>budget_obj</string>
+                            <string>objects</string>
+                            <string>objline</string>
+                            <string>obj</string>
+                            <string>_getitem_</string>
+                            <string>financial_section</string>
+                            <string>function</string>
+                            <string>group</string>
+                            <string>budget</string>
+                            <string>budget_module</string>
+                            <string>predicate</string>
+                            <string>repr</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BudgetModule_generatePredicate</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

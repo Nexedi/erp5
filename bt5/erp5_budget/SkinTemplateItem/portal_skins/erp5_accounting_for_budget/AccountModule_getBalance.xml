@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>params = selection.getParams()\n
+kwd = {}\n
+# read settings from accounting selection\n
+accounting_selection_params = context.portal_selections.getSelectionParams("accounting_selection")\n
+if accounting_selection_params.get(\'from_date\') : \n
+  kwd[\'from_date\'] = accounting_selection_params[\'from_date\']\n
+if accounting_selection_params.get(\'to_date\') : \n
+  kwd[\'to_date\'] = accounting_selection_params[\'to_date\']\n
+if accounting_selection_params.get(\'simulation_state\') : \n
+  kwd[\'simulation_state\'] = accounting_selection_params[\'simulation_state\']\n
+else :\n
+  kwd[\'simulation_state\'] = []\n
+if accounting_selection_params.get(\'section_category\') : \n
+  kwd[\'section_category\'] = accounting_selection_params[\'section_category\']\n
+else : \n
+  kwd[\'section_category\'] = context.getPortalDefaultSectionCategory()\n
+\n
+url = params.get(\'accounting_transaction_line_currency\')\n
+if url:\n
+  currency = context.restrictedTraverse(url)\n
+  kwd[\'resource_uid\'] = [currency.getUid()]\n
+if kw.get(\'omit_input\') : \n
+  kwd[\'omit_input\'] = 1\n
+if kw.get(\'omit_output\') : \n
+  kwd[\'omit_output\'] = 1\n
+\n
+  \n
+inventory = context.Resource_zGetInventory_old(node_uid=context.getUid(), \n
+                                                 omit_simulation=1,\n
+                                                 **kwd) \n
+total = inventory[0].inventory or 0.0\n
+\n
+## MonetaryAmount_formatAsString was a quick hack to display number in a "1 234.56" style\n
+## removed because the implementation is too dirty\n
+### return context.MonetaryAmount_formatAsString(total)\n
+\n
+return total\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAA8AAAAi
+AAAASwAAAHMtAgAAdAAAfAEAZAEAgwIAgwAAfQQAaAAAfQUAdAAAdAAAdAQAZAIAgwIAZAMAgwIA
+ZAQAgwEAfQcAdAAAfAcAZAUAgwIAZAYAgwEAbx0AAXQGAHwHAGQGAIMCAHQHAHwFAIMBAGQGADxu
+AQABdAAAfAcAZAUAgwIAZAcAgwEAbx0AAXQGAHwHAGQHAIMCAHQHAHwFAIMBAGQHADxuAQABdAAA
+fAcAZAUAgwIAZAgAgwEAbx0AAXQGAHwHAGQIAIMCAHQHAHwFAIMBAGQIADxuEQABZwAAdAcAfAUA
+gwEAZAgAPHQAAHwHAGQFAIMCAGQJAIMBAG8dAAF0BgB8BwBkCQCDAgB0BwB8BQCDAQBkCQA8bh0A
+AXQAAHQEAGQKAIMCAIMAAHQHAHwFAIMBAGQJADx0AAB8BABkBQCDAgBkCwCDAQB9CgB8CgBvOAAB
+dAAAdAQAZAwAgwIAfAoAgwEAfQsAdAAAfAsAZA0AgwIAgwAAZwEAdAcAfAUAgwEAZA4APG4BAAF0
+AAB8AgBkBQCDAgBkDwCDAQBvFAABZBAAdAcAfAUAgwEAZA8APG4BAAF0AAB8AgBkBQCDAgBkEQCD
+AQBvFAABZBAAdAcAfAUAgwEAZBEAPG4BAAF0CwB0AAB0BABkEgCDAgBkEwB0AAB0BABkDQCDAgCD
+AABkFABkEAB8BQCNAQJ9DQB0AAB0BgB8DQBkFQCDAgBkFgCDAgBwBAABZBcAfQ4AfA4AU2QAAFMo
+GAAAAE5zCQAAAGdldFBhcmFtc3MRAAAAcG9ydGFsX3NlbGVjdGlvbnNzEgAAAGdldFNlbGVjdGlv
+blBhcmFtc3MUAAAAYWNjb3VudGluZ19zZWxlY3Rpb25zAwAAAGdldHMJAAAAZnJvbV9kYXRlcwcA
+AAB0b19kYXRlcxAAAABzaW11bGF0aW9uX3N0YXRlcxAAAABzZWN0aW9uX2NhdGVnb3J5cx8AAABn
+ZXRQb3J0YWxEZWZhdWx0U2VjdGlvbkNhdGVnb3J5cyQAAABhY2NvdW50aW5nX3RyYW5zYWN0aW9u
+X2xpbmVfY3VycmVuY3lzEgAAAHJlc3RyaWN0ZWRUcmF2ZXJzZXMGAAAAZ2V0VWlkcwwAAAByZXNv
+dXJjZV91aWRzCgAAAG9taXRfaW5wdXRpAQAAAHMLAAAAb21pdF9vdXRwdXRzGgAAAFJlc291cmNl
+X3pHZXRJbnZlbnRvcnlfb2xkcwgAAABub2RlX3VpZHMPAAAAb21pdF9zaW11bGF0aW9uaQAAAABz
+CQAAAGludmVudG9yeWYDMC4wKA4AAABzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwYAAABw
+YXJhbXNzAwAAAGt3ZHMHAAAAY29udGV4dHMbAAAAYWNjb3VudGluZ19zZWxlY3Rpb25fcGFyYW1z
+cwkAAABfZ2V0aXRlbV9zBwAAAF93cml0ZV9zAwAAAHVybHMIAAAAY3VycmVuY3lzAgAAAGt3cwcA
+AABfYXBwbHlfcwkAAABpbnZlbnRvcnlzBQAAAHRvdGFsKA8AAABzBQAAAGJyYWlucwkAAABzZWxl
+Y3Rpb25zAgAAAGt3cwkAAABfZ2V0YXR0cl9zBgAAAHBhcmFtc3MDAAAAa3dkcwcAAABjb250ZXh0
+cxsAAABhY2NvdW50aW5nX3NlbGVjdGlvbl9wYXJhbXNzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRl
+X3MDAAAAdXJscwgAAABjdXJyZW5jeXMHAAAAX2FwcGx5X3MJAAAAaW52ZW50b3J5cwUAAAB0b3Rh
+bCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0
+cxgAAABBY2NvdW50TW9kdWxlX2dldEJhbGFuY2UBAAAAczAAAAASAQYCIQETASABEwEgARMBHQIT
+ARMBHQIcAhUBBwEVASYBEwEXARMBFAMnAgkBHwYoAgAAAHMEAAAATm9uZXMYAAAAQWNjb3VudE1v
+ZHVsZV9nZXRCYWxhbmNlKAIAAABzBAAAAE5vbmVzGAAAAEFjY291bnRNb2R1bGVfZ2V0QmFsYW5j
+ZSgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0
+cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>brain=None, selection=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>brain</string>
+                            <string>selection</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>params</string>
+                            <string>kwd</string>
+                            <string>context</string>
+                            <string>accounting_selection_params</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>url</string>
+                            <string>currency</string>
+                            <string>_apply_</string>
+                            <string>inventory</string>
+                            <string>total</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

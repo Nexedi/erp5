@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Trial balance.\n
+\n
+"""\n
+\n
+from Products.ERP5Form.Report import ReportSection\n
+\n
+request                      = context.REQUEST\n
+to_date                      = request[\'to_date\']\n
+transaction_section_category = request[\'transaction_section_category\']\n
+transaction_simulation_state = request[\'transaction_simulation_state\']\n
+gap_root                     = request[\'gap_root\']\n
+from_date                    = request.get(\'from_date\', None)\n
+\n
+# flat_mode is a boolean that indicate wether we  should use a report tree \n
+# or a flat list of all accounts. \n
+tree_mode                    =  request.get(\'tree_mode\', 0)\n
+\n
+\n
+result = []\n
+params =  { \n
+            \'to_date\'                              : to_date,\n
+            \'transaction_section_category\'         : transaction_section_category,\n
+            \'section_category\'                     : transaction_section_category,\n
+            \'transaction_simulation_state\'         : transaction_simulation_state,\n
+            \'accounting_transaction_line_currency\' : None,\n
+            \'is_report_opened\'                     : 1,\n
+            \'report_depth\'                         : 5,\n
+            \'gap_root\'                             : gap_root,\n
+          }\n
+\n
+if from_date: \n
+    params[\'from_date\'] = from_date\n
+\n
+portal = context.portal_url.getPortalObject()\n
+\n
+# Account balance\n
+balance_columns = (    (\'id\', \'GAP\'),\n
+                       (\'title\', \'Account\'),\n
+                      # (\'AccountModule_getAccountingTransactionCount\', \'Transaction Count\'),\n
+                       (\'debit\', \'Debit\'),\n
+                       (\'credit\', \'Credit\'),\n
+                       (\'debit_balance\', \'Debit Balance\'),\n
+                       (\'credit_balance\', \'Credit Balance\')\n
+                   )\n
+\n
+\n
+if not tree_mode :\n
+  result.append(\n
+                ReportSection(path=portal.account_module.getPhysicalPath(), \n
+                               title=\'Trial Balance\',   \n
+                               level=1,\n
+                               form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
+                               selection_name=\'accounting_selection\',\n
+                               selection_params=params,\n
+                               listbox_display_mode=\'FlatListMode\',\n
+                               selection_columns=balance_columns,\n
+                               )             \n
+               )\n
+else : \n
+  selection_report_path = \'portal_categories/\' + gap_root\n
+  selection_report_list = context.restrictedTraverse(selection_report_path).getPathList()\n
+  params[\'report_list\'] = selection_report_list\n
+  params[\'report_path\'] = selection_report_list\n
+\n
+  result.append(\n
+                 ReportSection(path=portal.account_module.getPhysicalPath(), \n
+                               title=\'Trial Balance\',   \n
+                               level=1,\n
+                               form_id=\'AccountModule_viewAccountList\',\n
+                               selection_name=\'account_selection\',\n
+                               selection_params=params,\n
+                               listbox_display_mode=\'ReportTreeMode\',\n
+                               selection_columns=balance_columns,\n
+                               selection_report_path=selection_report_path,\n
+                               selection_report_list=selection_report_list\n
+                               ) \n
+               )\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABQAAAAiAAAAQwAA
+AHNvAgAAZAEAawAAbAEAfQEAAXQCAHQDAGQCAIMCAH0EAHQFAHwEAGQDAIMCAH0GAHQFAHwEAGQE
+AIMCAH0HAHQFAHwEAGQFAIMCAH0IAHQFAHwEAGQGAIMCAH0JAHQCAHwEAGQHAIMCAGQIAHQKAIMC
+AH0LAHQCAHwEAGQHAIMCAGQJAGQKAIMCAH0MAGcAAH0NAGgAAARkAwB8BgADPARkBAB8BwADPARk
+CwB8BwADPARkBQB8CAADPARkDAB0CgADPARkDQBkDgADPARkDwBkEAADPARkBgB8CQADPH0OAHwL
+AG8UAAF8CwB0DwB8DgCDAQBkCAA8bgEAAXQCAHQCAHQDAGQRAIMCAGQSAIMCAIMAAH0QAGQTAGQU
+AGYCAGQVAGQWAGYCAGQXAGQYAGYCAGQZAGQaAGYCAGQbAGQcAGYCAGQdAGQeAGYCAGYGAH0RAHwM
+AAxvXwABdAIAfA0AZB8AgwIAfAEAZCAAdAIAdAIAfBAAZCEAgwIAZCIAgwIAgwAAZBUAZCMAZCQA
+ZA4AZCUAZCYAZCcAZCgAZCkAfA4AZCoAZCsAZCwAfBEAgwAIgwEAAW6zAAFkLQB8CQAXfRIAdAIA
+dAIAdAMAZC4AgwIAfBIAgwEAZC8AgwIAgwAAfRMAfBMAdA8AfA4AgwEAZDAAPHwTAHQPAHwOAIMB
+AGQxADx0AgB8DQBkHwCDAgB8AQBkIAB0AgB0AgB8EABkIQCDAgBkIgCDAgCDAABkFQBkIwBkJABk
+DgBkJQBkMgBkJwBkMwBkKQB8DgBkKgBkNABkLAB8EQBkNQB8EgBkNgB8EwCDAAqDAQABfA0AU2QA
+AFMoNwAAAE4oAQAAAHMNAAAAUmVwb3J0U2VjdGlvbnMHAAAAUkVRVUVTVHMHAAAAdG9fZGF0ZXMc
+AAAAdHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25fc2ltdWxhdGlv
+bl9zdGF0ZXMIAAAAZ2FwX3Jvb3RzAwAAAGdldHMJAAAAZnJvbV9kYXRlcwkAAAB0cmVlX21vZGVp
+AAAAAHMQAAAAc2VjdGlvbl9jYXRlZ29yeXMkAAAAYWNjb3VudGluZ190cmFuc2FjdGlvbl9saW5l
+X2N1cnJlbmN5cxAAAABpc19yZXBvcnRfb3BlbmVkaQEAAABzDAAAAHJlcG9ydF9kZXB0aGkFAAAA
+cwoAAABwb3J0YWxfdXJscw8AAABnZXRQb3J0YWxPYmplY3RzAgAAAGlkcwMAAABHQVBzBQAAAHRp
+dGxlcwcAAABBY2NvdW50cwUAAABkZWJpdHMFAAAARGViaXRzBgAAAGNyZWRpdHMGAAAAQ3JlZGl0
+cw0AAABkZWJpdF9iYWxhbmNlcw0AAABEZWJpdCBCYWxhbmNlcw4AAABjcmVkaXRfYmFsYW5jZXMO
+AAAAQ3JlZGl0IEJhbGFuY2VzBgAAAGFwcGVuZHMEAAAAcGF0aHMOAAAAYWNjb3VudF9tb2R1bGVz
+DwAAAGdldFBoeXNpY2FsUGF0aHMNAAAAVHJpYWwgQmFsYW5jZXMFAAAAbGV2ZWxzBwAAAGZvcm1f
+aWRzLAAAAEFjY291bnRNb2R1bGVfdmlld0FjY291bnRMaXN0Rm9yVHJpYWxCYWxhbmNlcw4AAABz
+ZWxlY3Rpb25fbmFtZXMUAAAAYWNjb3VudGluZ19zZWxlY3Rpb25zEAAAAHNlbGVjdGlvbl9wYXJh
+bXNzFAAAAGxpc3Rib3hfZGlzcGxheV9tb2RlcwwAAABGbGF0TGlzdE1vZGVzEQAAAHNlbGVjdGlv
+bl9jb2x1bW5zcxIAAABwb3J0YWxfY2F0ZWdvcmllcy9zEgAAAHJlc3RyaWN0ZWRUcmF2ZXJzZXML
+AAAAZ2V0UGF0aExpc3RzCwAAAHJlcG9ydF9saXN0cwsAAAByZXBvcnRfcGF0aHMdAAAAQWNjb3Vu
+dE1vZHVsZV92aWV3QWNjb3VudExpc3RzEQAAAGFjY291bnRfc2VsZWN0aW9ucw4AAABSZXBvcnRU
+cmVlTW9kZXMVAAAAc2VsZWN0aW9uX3JlcG9ydF9wYXRocxUAAABzZWxlY3Rpb25fcmVwb3J0X2xp
+c3QoFAAAAHMYAAAAUHJvZHVjdHMuRVJQNUZvcm0uUmVwb3J0cw0AAABSZXBvcnRTZWN0aW9ucwkA
+AABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzCQAAAF9nZXRpdGVtX3MHAAAAdG9f
+ZGF0ZXMcAAAAdHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25fc2lt
+dWxhdGlvbl9zdGF0ZXMIAAAAZ2FwX3Jvb3RzBAAAAE5vbmVzCQAAAGZyb21fZGF0ZXMJAAAAdHJl
+ZV9tb2RlcwYAAAByZXN1bHRzBgAAAHBhcmFtc3MHAAAAX3dyaXRlX3MGAAAAcG9ydGFscw8AAABi
+YWxhbmNlX2NvbHVtbnNzFQAAAHNlbGVjdGlvbl9yZXBvcnRfcGF0aHMVAAAAc2VsZWN0aW9uX3Jl
+cG9ydF9saXN0KBQAAABzGAAAAFByb2R1Y3RzLkVSUDVGb3JtLlJlcG9ydHMNAAAAUmVwb3J0U2Vj
+dGlvbnMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAAByZXF1ZXN0cwkAAABfZ2V0aXRlbV9z
+BwAAAHRvX2RhdGVzHAAAAHRyYW5zYWN0aW9uX3NlY3Rpb25fY2F0ZWdvcnlzHAAAAHRyYW5zYWN0
+aW9uX3NpbXVsYXRpb25fc3RhdGVzCAAAAGdhcF9yb290cwQAAABOb25lcwkAAABmcm9tX2RhdGVz
+CQAAAHRyZWVfbW9kZXMGAAAAcmVzdWx0cwYAAABwYXJhbXNzBwAAAF93cml0ZV9zBgAAAHBvcnRh
+bHMPAAAAYmFsYW5jZV9jb2x1bW5zcxUAAABzZWxlY3Rpb25fcmVwb3J0X3BhdGhzFQAAAHNlbGVj
+dGlvbl9yZXBvcnRfbGlzdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1
+aXNpdGlvbiBDb250ZXh0cy4AAABBY2NvdW50TW9kdWxlX2dldFRyaWFsQmFsYW5jZVJlcG9ydFNl
+Y3Rpb25MaXN0AQAAAHNSAAAAAAUNAg8BDwEPAQ8BDwEYBBgDBgEHAQkBCQEJAQkBGwMIAwcBFAIb
+AwkBCQIJAQkBCQEPBAsBCQE5BQwCDgQKASEBEAETAgkBOQUMAgYBBgEKAygBAAAAcy4AAABBY2Nv
+dW50TW9kdWxlX2dldFRyaWFsQmFsYW5jZVJlcG9ydFNlY3Rpb25MaXN0KAEAAABzLgAAAEFjY291
+bnRNb2R1bGVfZ2V0VHJpYWxCYWxhbmNlUmVwb3J0U2VjdGlvbkxpc3QoAAAAACgAAAAAcykAAABQ
+eXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAA
+cwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getTrialBalanceReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>_getitem_</string>
+                            <string>to_date</string>
+                            <string>transaction_section_category</string>
+                            <string>transaction_simulation_state</string>
+                            <string>gap_root</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>tree_mode</string>
+                            <string>result</string>
+                            <string>params</string>
+                            <string>_write_</string>
+                            <string>portal</string>
+                            <string>balance_columns</string>
+                            <string>selection_report_path</string>
+                            <string>selection_report_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getTrialBalanceReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

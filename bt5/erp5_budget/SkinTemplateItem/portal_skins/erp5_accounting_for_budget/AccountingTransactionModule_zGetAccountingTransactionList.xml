@@ -1,0 +1,517 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>count</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>entity</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>from_date</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>node</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_input</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_output</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>resource</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>section_category</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>select_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_domain</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_params</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_report</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>selection_sort_on</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>stat</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>to_date</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>transaction</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>selection</string>
+                            <string>selection_domain</string>
+                            <string>selection_report</string>
+                            <string>selection_params</string>
+                            <string>selection_sort_on</string>
+                            <string>select_expression</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>node</string>
+                            <string>resource</string>
+                            <string>entity</string>
+                            <string>stat</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>transaction</string>
+                            <string>section_category</string>
+                            <string>count</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>selection\r\n
+selection_domain\r\n
+selection_report\r\n
+selection_params=""\r\n
+selection_sort_on\r\n
+select_expression\r\n
+from_date=""\r\n
+to_date=""\r\n
+node=""\r\n
+resource=""\r\n
+entity=""\r\n
+stat=""\r\n
+omit_input\r\n
+omit_output\r\n
+transaction=""\r\n
+section_category=""\r\n
+count=""</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>zsqlbrain.py</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>ZSQLBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_zGetAccountingTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let params="selection and selection.getParams() or selection_params">\n
+<dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**params)">\n
+\n
+<dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
+<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **params)">\n
+\n
+<dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
+<dtml-let section_category="not entity and section_category or \'\'">\n
+\n
+SELECT\n
+  <dtml-if stat>\n
+    SUM(stock.quantity) AS quantity\n
+  <dtml-elif count>\n
+    COUNT(DISTINCT catalog.id) AS count\n
+  <dtml-else>\n
+    DISTINCT\n
+    <dtml-in "portal_catalog.getCatalogSearchResultKeys()"> <dtml-var sequence-item> <dtml-unless sequence-end>,</dtml-unless> </dtml-in>\n
+    <dtml-if select_expression>, <dtml-var select_expression> </dtml-if>\n
+  </dtml-if>\n
+\n
+FROM\n
+  <dtml-in "query[\'from_table_list\']"> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+\n
+  <dtml-if "from_date or to_date or node or resource or entity or stat or section_category">, catalog AS child </dtml-if>\n
+  <dtml-if "from_date or to_date or node or resource or stat">, movement </dtml-if>\n
+  <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
+  <dtml-if node>, catalog AS source_account </dtml-if>\n
+  <dtml-if resource>, catalog AS currency </dtml-if>\n
+  <dtml-if entity>, catalog AS related_entity </dtml-if>\n
+  <dtml-if section_category>, category, catalog AS section_c </dtml-if>\n
+\n
+WHERE\n
+  1 = 1\n
+  <dtml-if "query[\'where_expression\']">\n
+    AND <dtml-var "query[\'where_expression\']">\n
+  </dtml-if>\n
+  <dtml-if selection_domain>\n
+    AND <dtml-var "selection_domain.asSqlExpression()">\n
+  </dtml-if>\n
+  <dtml-if selection_report>\n
+    AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
+  </dtml-if>\n
+\n
+  <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
+  <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
+  <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
+  <dtml-if "from_date or to_date or node or resource or entity or stat or section_category"> AND child.parent_uid = catalog.uid </dtml-if>\n
+  <dtml-if "from_date or to_date or node or resource or stat"> AND movement.uid = child.uid </dtml-if>\n
+  <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n
+  <dtml-if node> AND source_account.uid = movement.source_uid </dtml-if>\n
+  <dtml-if resource> AND currency.uid = movement.resource_uid </dtml-if>\n
+  <dtml-if entity> AND related_entity.uid = stock.section_uid </dtml-if>\n
+  <dtml-if section_category> AND category.uid = stock.section_uid AND section_c.uid = category.category_uid </dtml-if>\n
+\n
+  <dtml-if from_date> AND movement.stop_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
+  <dtml-if to_date> AND movement.stop_date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>\n
+  <dtml-if node> AND ( <dtml-in node> <dtml-unless sequence-start>OR</dtml-unless> source_account.relative_url = \'<dtml-var sequence-item>\' </dtml-in> ) </dtml-if>\n
+  <dtml-if resource> AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
+  <dtml-if entity> AND related_entity.relative_url = \'<dtml-var entity>\' </dtml-if>\n
+  <dtml-if stat> AND movement.is_accountable = 1 </dtml-if>\n
+  <dtml-if omit_input> AND stock.quantity < 0 </dtml-if>\n
+  <dtml-if omit_output> AND stock.quantity > 0 </dtml-if>\n
+  <dtml-if transaction> AND catalog.uid = \'<dtml-var transaction>\' </dtml-if>\n
+  <dtml-if section_category> AND section_c.relative_url = \'<dtml-var section_category>\' </dtml-if>\n
+  <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
+    AND ( 0 = 1 \n
+      <dtml-in expr="selection.getInvertModeUidList()">\n
+        OR catalog.uid = <dtml-var sequence-item> \n
+      </dtml-in>\n
+    )\n
+  </dtml-if>\n
+<dtml-if "query[\'order_by_expression\']">\n
+  ORDER BY <dtml-var "query[\'order_by_expression\']">\n
+</dtml-if>\n
+<dtml-unless count>\n
+<dtml-if "query[\'limit_expression\']">\n
+  LIMIT <dtml-var "query[\'limit_expression\']">\n
+<dtml-else>\n
+  LIMIT 1000\n
+</dtml-if>\n
+</dtml-unless>\n
+\n
+</dtml-let>\n
+</dtml-let>\n
+</dtml-let>\n
+</dtml-let>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let params="selection and selection.getParams() or selection_params">\n
+<dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**params)">\n
+\n
+<dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
+<dtml-let query="(stat) and portal_catalog.buildSQLQuery(**params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **params)">\n
+\n
+<dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
+<dtml-let section_category="not entity and section_category or \'\'">\n
+\n
+SELECT\n
+  <dtml-if stat>\n
+    SUM(stock.quantity) AS quantity\n
+  <dtml-elif count>\n
+    COUNT(DISTINCT catalog.id) AS count\n
+  <dtml-else>\n
+    DISTINCT\n
+    <dtml-in "portal_catalog.getCatalogSearchResultKeys()"> <dtml-var sequence-item> <dtml-unless sequence-end>,</dtml-unless> </dtml-in>\n
+    <dtml-if select_expression>, <dtml-var select_expression> </dtml-if>\n
+  </dtml-if>\n
+\n
+FROM\n
+  <dtml-in "query[\'from_table_list\']"> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
+\n
+  <dtml-if "from_date or to_date or node or resource or entity or stat or section_category">, catalog AS child </dtml-if>\n
+  <dtml-if "from_date or to_date or node or resource or stat">, movement </dtml-if>\n
+  <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
+  <dtml-if node>, catalog AS source_account </dtml-if>\n
+  <dtml-if resource>, catalog AS currency </dtml-if>\n
+  <dtml-if entity>, catalog AS related_entity </dtml-if>\n
+  <dtml-if section_category>, category, catalog AS section_c </dtml-if>\n
+\n
+WHERE\n
+  1 = 1\n
+  <dtml-if "query[\'where_expression\']">\n
+    AND <dtml-var "query[\'where_expression\']">\n
+  </dtml-if>\n
+  <dtml-if selection_domain>\n
+    AND <dtml-var "selection_domain.asSqlExpression()">\n
+  </dtml-if>\n
+  <dtml-if selection_report>\n
+    AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
+  </dtml-if>\n
+\n
+  <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
+  <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
+  <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
+  <dtml-if "from_date or to_date or node or resource or entity or stat or section_category"> AND child.parent_uid = catalog.uid </dtml-if>\n
+  <dtml-if "from_date or to_date or node or resource or stat"> AND movement.uid = child.uid </dtml-if>\n
+  <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n
+  <dtml-if node> AND source_account.uid = movement.source_uid </dtml-if>\n
+  <dtml-if resource> AND currency.uid = movement.resource_uid </dtml-if>\n
+  <dtml-if entity> AND related_entity.uid = stock.section_uid </dtml-if>\n
+  <dtml-if section_category> AND category.uid = stock.section_uid AND section_c.uid = category.category_uid </dtml-if>\n
+\n
+  <dtml-if from_date> AND movement.stop_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
+  <dtml-if to_date> AND movement.stop_date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>\n
+  <dtml-if node> AND ( <dtml-in node> <dtml-unless sequence-start>OR</dtml-unless> source_account.relative_url = \'<dtml-var sequence-item>\' </dtml-in> ) </dtml-if>\n
+  <dtml-if resource> AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
+  <dtml-if entity> AND related_entity.relative_url = \'<dtml-var entity>\' </dtml-if>\n
+  <dtml-if stat> AND movement.is_accountable = 1 </dtml-if>\n
+  <dtml-if omit_input> AND stock.quantity < 0 </dtml-if>\n
+  <dtml-if omit_output> AND stock.quantity > 0 </dtml-if>\n
+  <dtml-if transaction> AND catalog.uid = \'<dtml-var transaction>\' </dtml-if>\n
+  <dtml-if section_category> AND section_c.relative_url = \'<dtml-var section_category>\' </dtml-if>\n
+  <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
+    AND ( 0 = 1 \n
+      <dtml-in expr="selection.getInvertModeUidList()">\n
+        OR catalog.uid = <dtml-var sequence-item> \n
+      </dtml-in>\n
+    )\n
+  </dtml-if>\n
+<dtml-if "query[\'order_by_expression\']">\n
+  ORDER BY <dtml-var "query[\'order_by_expression\']">\n
+</dtml-if>\n
+<dtml-unless count>\n
+<dtml-if "query[\'limit_expression\']">\n
+  LIMIT <dtml-var "query[\'limit_expression\']">\n
+<dtml-else>\n
+  LIMIT 1000\n
+</dtml-if>\n
+</dtml-unless>\n
+\n
+</dtml-let>\n
+</dtml-let>\n
+</dtml-let>\n
+</dtml-let>
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

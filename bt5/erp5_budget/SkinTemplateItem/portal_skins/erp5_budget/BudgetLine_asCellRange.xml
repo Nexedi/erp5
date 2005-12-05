@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>line = context.Budget_getFinancialSectionItemList()\n
+column = context.Budget_getFunctionItemList(begin=1)\n
+tab = [context.getGroupValue().getRelativeUrl()] \n
+\n
+if matrixbox == 0:\n
+  if len(tab) :\n
+    cell_range = [line, column, tab]\n
+  else :\n
+    cell_range = [line, column]\n
+else:\n
+  if len(tab) :\n
+    cell_range = [[(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in line],\n
+        [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in column],\n
+        [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in tab]]\n
+  else :\n
+    cell_range = [[(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in line],\n
+        [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in column]]\n
+\n
+return cell_range\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMBAAAADAAA
+ABYAAABDAAAAc1ECAAB0AAB0AQBkAQCDAgCDAAB9AwB0AAB0AQBkAgCDAgBkAwBkBACDAAF9BAB0
+AAB0AAB0AQBkBQCDAgCDAABkBgCDAgCDAABnAQB9BQB8AABkBwBqAgBvMAABdAYAfAUAgwEAbxMA
+AXwDAHwEAHwFAGcDAH0HAHFJAgF8AwB8BABnAgB9BwBuwgEBdAYAfAUAgwEAbwYBAWcAAARpCAB9
+CQB0CgB8AwCDAQBEXToAfQsAfAkAfAsAdAAAdAAAdAAAdAEAZAgAgwIAZAkAgwIAfAsAgwEAZAoA
+gwIAgwAAZgIAgwEAAXGpAH4JAGcAAARpCAB9CQB0CgB8BACDAQBEXToAfQsAfAkAfAsAdAAAdAAA
+dAAAdAEAZAgAgwIAZAkAgwIAfAsAgwEAZAoAgwIAgwAAZgIAgwEAAXH9AH4JAGcAAARpCAB9CQB0
+CgB8BQCDAQBEXToAfQsAfAkAfAsAdAAAdAAAdAAAdAEAZAgAgwIAZAkAgwIAfAsAgwEAZAoAgwIA
+gwAAZgIAgwEAAXFRAX4JAGcDAH0HAG6vAAFnAAAEaQgAfQkAdAoAfAMAgwEARF06AH0LAHwJAHwL
+AHQAAHQAAHQAAHQBAGQIAIMCAGQJAIMCAHwLAIMBAGQKAIMCAIMAAGYCAIMBAAFxrwF+CQBnAAAE
+aQgAfQkAdAoAfAQAgwEARF06AH0LAHwJAHwLAHQAAHQAAHQAAHQBAGQIAIMCAGQJAIMCAHwLAIMB
+AGQKAIMCAIMAAGYCAIMBAAFxAwJ+CQBnAgB9BwB8BwBTZAAAUygLAAAATnMiAAAAQnVkZ2V0X2dl
+dEZpbmFuY2lhbFNlY3Rpb25JdGVtTGlzdHMaAAAAQnVkZ2V0X2dldEZ1bmN0aW9uSXRlbUxpc3Rz
+BQAAAGJlZ2luaQEAAABzDQAAAGdldEdyb3VwVmFsdWVzDgAAAGdldFJlbGF0aXZlVXJsaQAAAABz
+EQAAAHBvcnRhbF9jYXRlZ29yaWVzcxAAAABnZXRDYXRlZ29yeVZhbHVlcwgAAABnZXRUaXRsZSgM
+AAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBAAAAGxpbmVzBgAAAGNvbHVtbnMDAAAAdGFi
+cwkAAABtYXRyaXhib3hzAwAAAGxlbnMKAAAAY2VsbF9yYW5nZXMGAAAAYXBwZW5kcwgAAAAkYXBw
+ZW5kMHMJAAAAX2dldGl0ZXJfcwEAAAB4KAwAAABzCQAAAG1hdHJpeGJveHMJAAAAX2dldGF0dHJf
+cwcAAABjb250ZXh0cwQAAABsaW5lcwYAAABjb2x1bW5zAwAAAHRhYnMDAAAAbGVucwoAAABjZWxs
+X3JhbmdlcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHgoAAAAACgA
+AAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMWAAAAQnVk
+Z2V0TGluZV9hc0NlbGxSYW5nZQEAAABzJAAAABIBGAEhAg0BDQETAhACDQEUAEABFABAARQASgIU
+AEABFABGAigBAAAAcxYAAABCdWRnZXRMaW5lX2FzQ2VsbFJhbmdlKAEAAABzFgAAAEJ1ZGdldExp
+bmVfYXNDZWxsUmFuZ2UoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlz
+aXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/BudgetLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>matrixbox=0</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Author</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>matrixbox</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>line</string>
+                            <string>column</string>
+                            <string>tab</string>
+                            <string>len</string>
+                            <string>cell_range</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BudgetLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>params = selection.getParams()\n
+kwd = {}\n
+\n
+# read settings from accounting selection\n
+accounting_selection_params = context.portal_selections.getSelectionParams("accounting_selection")\n
+if accounting_selection_params.get(\'from_date\') : \n
+  kwd[\'from_date\'] = accounting_selection_params[\'from_date\']\n
+if accounting_selection_params.get(\'to_date\') : \n
+  kwd[\'to_date\'] = accounting_selection_params[\'to_date\']\n
+if accounting_selection_params.get(\'simulation_state\') : \n
+  kwd[\'simulation_state\'] = accounting_selection_params[\'simulation_state\']\n
+if accounting_selection_params.get(\'section_category\') : \n
+  kwd[\'section_category\'] = accounting_selection_params[\'section_category\']\n
+else : \n
+  kwd[\'section_category\'] = context.getPortalDefaultSectionCategory()\n
+query = context.portal_catalog.buildSQLQuery(**kwd)\n
+\n
+if query.get(\'where_expression\'):\n
+  kwd[\'where_expression\'] = query[\'where_expression\']\n
+if query.get(\'from_table_list\'):\n
+  kwd[\'from_table_list\'] = query[\'from_table_list\']\n
+\n
+resource = params.get(\'accounting_transaction_line_currency\')\n
+if resource:\n
+  currency = context.portal_categories.resolveCategory(resource)\n
+  kwd[\'resource_uid\'] = [currency.getUid()]\n
+\n
+if kw.get(\'stat\') : \n
+  if selection.getDomain() :\n
+    kwd[\'selection_domain\'] = selection.getDomain()\n
+  if selection.getReport() :\n
+    kwd[\'selection_report\'] = selection.getReport()\n
+  if kw.get(\'closed_summary\'):\n
+    kwd[\'closed_summary\'] = kw[\'closed_summary\']\n
+  if selection.isInvertMode() : \n
+    kwd[\'selection_uids\'] = selection.getInvertModeUidList()\n
+  result = context.Resource_zStatInventory(omit_simulation=1,\n
+                                         **kwd)\n
+  row = result[0]\n
+  return int(row.count or 0)\n
+\n
+inventory = context.Resource_zGetInventory_old(node_uid=context.getUid(),\n
+                                               omit_simulation=1,\n
+                                               **kwd) \n
+inventory = inventory[0]\n
+return inventory.stock_uid\n
+\n
+# XXX should be return currency.getInventoryCount(from_date = params.get(\'from_date\'), to_date=params.get(\'to_date\'),  )\n
+# XXX should be actually return currency.getInventoryCount(**params  )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAABIAAAAtAAAASwAA
+AHN/AwAAdAAAfAAAZAEAgwIAgwAAfQQAaAAAfQUAdAAAdAAAdAQAZAIAgwIAZAMAgwIAZAQAgwEA
+fQcAdAAAfAcAZAUAgwIAZAYAgwEAbx0AAXQGAHwHAGQGAIMCAHQHAHwFAIMBAGQGADxuAQABdAAA
+fAcAZAUAgwIAZAcAgwEAbx0AAXQGAHwHAGQHAIMCAHQHAHwFAIMBAGQHADxuAQABdAAAfAcAZAUA
+gwIAZAgAgwEAbx0AAXQGAHwHAGQIAIMCAHQHAHwFAIMBAGQIADxuAQABdAAAfAcAZAUAgwIAZAkA
+gwEAbx0AAXQGAHwHAGQJAIMCAHQHAHwFAIMBAGQJADxuHQABdAAAdAQAZAoAgwIAgwAAdAcAfAUA
+gwEAZAkAPHQIAHQAAHQAAHQEAGQLAIMCAGQMAIMCAHwFAI0BAH0LAHQAAHwLAGQFAIMCAGQNAIMB
+AG8dAAF0BgB8CwBkDQCDAgB0BwB8BQCDAQBkDQA8bgEAAXQAAHwLAGQFAIMCAGQOAIMBAG8dAAF0
+BgB8CwBkDgCDAgB0BwB8BQCDAQBkDgA8bgEAAXQAAHwEAGQFAIMCAGQPAIMBAH0MAHwMAG9BAAF0
+AAB0AAB0BABkEACDAgBkEQCDAgB8DACDAQB9DQB0AAB8DQBkEgCDAgCDAABnAQB0BwB8BQCDAQBk
+EwA8bgEAAXQAAHwCAGQFAIMCAGQUAIMBAG8XAQF0AAB8AABkFQCDAgCDAABvIAABdAAAfAAAZBUA
+gwIAgwAAdAcAfAUAgwEAZBYAPG4BAAF0AAB8AABkFwCDAgCDAABvIAABdAAAfAAAZBcAgwIAgwAA
+dAcAfAUAgwEAZBgAPG4BAAF0AAB8AgBkBQCDAgBkGQCDAQBvHQABdAYAfAIAZBkAgwIAdAcAfAUA
+gwEAZBkAPG4BAAF0AAB8AABkGgCDAgCDAABvIAABdAAAfAAAZBsAgwIAgwAAdAcAfAUAgwEAZBwA
+PG4BAAF0CAB0AAB0BABkHQCDAgBkHgBkHwB8BQCNAQF9DgB0BgB8DgBkIACDAgB9DwB0DwB0AAB8
+DwBkIQCDAgBwBAABZCAAgwEAU24BAAF0CAB0AAB0BABkIgCDAgBkIwB0AAB0BABkEgCDAgCDAABk
+HgBkHwB8BQCNAQJ9EQB0BgB8EQBkIACDAgB9EQB0AAB8EQBkJACDAgBTZAAAUyglAAAATnMJAAAA
+Z2V0UGFyYW1zcxEAAABwb3J0YWxfc2VsZWN0aW9uc3MSAAAAZ2V0U2VsZWN0aW9uUGFyYW1zcxQA
+AABhY2NvdW50aW5nX3NlbGVjdGlvbnMDAAAAZ2V0cwkAAABmcm9tX2RhdGVzBwAAAHRvX2RhdGVz
+EAAAAHNpbXVsYXRpb25fc3RhdGVzEAAAAHNlY3Rpb25fY2F0ZWdvcnlzHwAAAGdldFBvcnRhbERl
+ZmF1bHRTZWN0aW9uQ2F0ZWdvcnlzDgAAAHBvcnRhbF9jYXRhbG9ncw0AAABidWlsZFNRTFF1ZXJ5
+cxAAAAB3aGVyZV9leHByZXNzaW9ucw8AAABmcm9tX3RhYmxlX2xpc3RzJAAAAGFjY291bnRpbmdf
+dHJhbnNhY3Rpb25fbGluZV9jdXJyZW5jeXMRAAAAcG9ydGFsX2NhdGVnb3JpZXNzDwAAAHJlc29s
+dmVDYXRlZ29yeXMGAAAAZ2V0VWlkcwwAAAByZXNvdXJjZV91aWRzBAAAAHN0YXRzCQAAAGdldERv
+bWFpbnMQAAAAc2VsZWN0aW9uX2RvbWFpbnMJAAAAZ2V0UmVwb3J0cxAAAABzZWxlY3Rpb25fcmVw
+b3J0cw4AAABjbG9zZWRfc3VtbWFyeXMMAAAAaXNJbnZlcnRNb2RlcxQAAABnZXRJbnZlcnRNb2Rl
+VWlkTGlzdHMOAAAAc2VsZWN0aW9uX3VpZHNzFwAAAFJlc291cmNlX3pTdGF0SW52ZW50b3J5cw8A
+AABvbWl0X3NpbXVsYXRpb25pAQAAAGkAAAAAcwUAAABjb3VudHMaAAAAUmVzb3VyY2VfekdldElu
+dmVudG9yeV9vbGRzCAAAAG5vZGVfdWlkcwkAAABzdG9ja191aWQoEQAAAHMJAAAAX2dldGF0dHJf
+cwkAAABzZWxlY3Rpb25zBgAAAHBhcmFtc3MDAAAAa3dkcwcAAABjb250ZXh0cxsAAABhY2NvdW50
+aW5nX3NlbGVjdGlvbl9wYXJhbXNzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlX3MHAAAAX2FwcGx5
+X3MFAAAAcXVlcnlzCAAAAHJlc291cmNlcwgAAABjdXJyZW5jeXMCAAAAa3dzBgAAAHJlc3VsdHMD
+AAAAcm93cwMAAABpbnRzCQAAAGludmVudG9yeSgSAAAAcwkAAABzZWxlY3Rpb25zBQAAAGJyYWlu
+cwIAAABrd3MJAAAAX2dldGF0dHJfcwYAAABwYXJhbXNzAwAAAGt3ZHMHAAAAY29udGV4dHMbAAAA
+YWNjb3VudGluZ19zZWxlY3Rpb25fcGFyYW1zcwkAAABfZ2V0aXRlbV9zBwAAAF93cml0ZV9zBwAA
+AF9hcHBseV9zBQAAAHF1ZXJ5cwgAAAByZXNvdXJjZXMIAAAAY3VycmVuY3lzBgAAAHJlc3VsdHMD
+AAAAcm93cwMAAABpbnRzCQAAAGludmVudG9yeSgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQg
+d2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cysAAABBY2NvdW50TW9kdWxlX2dldEFjY291bnRp
+bmdUcmFuc2FjdGlvbkNvdW50AQAAAHNKAAAAEgEGAyEBEwEgARMBIAETASABEwEdAhwBJAITASAB
+EwEdAhUBBwEeASYCFgEQASMBEAEjARMBIAEQASABFQEJAQ8BHgInAgkBDwEoAQAAAHMrAAAAQWNj
+b3VudE1vZHVsZV9nZXRBY2NvdW50aW5nVHJhbnNhY3Rpb25Db3VudCgBAAAAcysAAABBY2NvdW50
+TW9kdWxlX2dldEFjY291bnRpbmdUcmFuc2FjdGlvbkNvdW50KAAAAAAoAAAAAHMpAAAAUHl0aG9u
+IFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getAccountingTransactionCount</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>selection, brain, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>selection</string>
+                            <string>brain</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>params</string>
+                            <string>kwd</string>
+                            <string>context</string>
+                            <string>accounting_selection_params</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>query</string>
+                            <string>resource</string>
+                            <string>currency</string>
+                            <string>result</string>
+                            <string>row</string>
+                            <string>int</string>
+                            <string>inventory</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getAccountingTransactionCount</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

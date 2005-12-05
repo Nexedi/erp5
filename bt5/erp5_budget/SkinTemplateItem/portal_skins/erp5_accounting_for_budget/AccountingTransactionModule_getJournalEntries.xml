@@ -1,0 +1,325 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+Journal entries, for use with AccountingTransactionModule_viewJournal\n
+\n
+return a list of dictionnaries like that : \n
+  \n
+{\n
+  \'date\' : Date\n
+  \'description\' : String\n
+  \'lines\' : {\n
+     \'debtor\' : Bool, \n
+     \'account_gap_id\' : String\n
+     \'account_name\' : String # with extra-description (ie. bank name if a bank, organisation name if an other party)\n
+     \'amount\' : Float\n
+     }\n
+}\n
+"""\n
+\n
+request = context.REQUEST\n
+to_date = request[\'to_date\']\n
+transaction_section_category = request[\'transaction_section_category\']\n
+transaction_simulation_state = request[\'transaction_simulation_state\']\n
+transaction_portal_type = request[\'transaction_portal_type\']\n
+from_date = request.get(\'from_date\', None)\n
+\n
+params = {\n
+    \'sort_on\' : \'delivery.stop_date\',\n
+    \'to_date\' : to_date,\n
+    \'simulation_state\': transaction_simulation_state,\n
+    \'section_category\' : transaction_section_category,\n
+    \'portal_type\': transaction_portal_type,\n
+}\n
+if from_date: \n
+    params[\'from_date\'] = from_date\n
+\n
+result=[]\n
+for transaction in context.AccountingTransactionModule_zGetAccountingTransactionList(\n
+             selection_params = params, selection=None, **params):\n
+    transaction = transaction.getObject()\n
+    lines = []\n
+    date = transaction.getStopDate() or transaction.getStartDate() \n
+    transaction_dict={\'date\'       : str(date)[:10], \n
+                      \'description\':"%s (source reference: %s)"%(transaction.getTitle() or None, transaction.getSourceReference()), \n
+                      \'lines\'      : lines  }\n
+    result.append(transaction_dict)\n
+    transaction_lines = transaction.contentValues(filter={\'portal_type\':[\'Accounting Transaction Line\', \n
+                                                          \'Sale Invoice Transaction Line\',\n
+                                                          \'Purchase Invoice Transaction Line\', \n
+                                                          \'Pay Sheet Transaction Line\',\n
+                                                          \'Payment Transaction Line\',\n
+                                                          \'Balance Transaction Line\']})\n
+\n
+    transaction_lines.sort(lambda x,y: int(y.getObject().getSourceDebit() - x.getObject().getSourceDebit()))\n
+    for line in transaction_lines : \n
+       line = line.getObject()\n
+       debtor = (line.getSourceDebit() > line.getSourceCredit())\n
+       account = line.getSourceValue()\n
+       if account is None: continue\n
+       if account.getAccountType() == \'asset/cash\' : \n
+          account_description = "%s (%s)"%(line.getSourceTitle(), line.getSourcePaymentTitle())\n
+       elif account.getAccountType() in (\'asset/receivable\', \'liability/payable\'): \n
+          account_description = "%s (%s)"%(line.getSourceTitle(), line.getDestinationSectionTitle())\n
+       else : \n
+          account_description = line.getSourceTitle()\n
+       lines.append({\n
+          \'debtor\' : debtor,\n
+          \'account_gap_id\' : account.getGapId(),\n
+          \'account_name\' : account_description,\n
+          \'amount\' : debtor  and (line.getSourceDebit() - line.getSourceCredit()) \\\n
+                              or (line.getSourceCredit() - line.getSourceDebit())\n
+       })\n
+\n
+       # internal mouvements, ie when we are destination and source\n
+       if line.getDestinationSection() == line.getSourceSection() :\n
+         debtor = (line.getDestinationDebit() > line.getDestinationCredit())\n
+         account = line.getDestinationValue()\n
+         if account is None : continue\n
+         if account.getAccountType() == \'asset/cash\' : \n
+            account_description = "%s (%s)"%(line.getDestinationTitle(), line.getDestinationPaymentTitle())\n
+         elif account.getAccountType() in (\'asset/receivable\', \'liability/payable\'): \n
+            account_description = "%s (%s)"%(line.getDestinationTitle(), line.getSourceSectionTitle())\n
+         else : \n
+            account_description = line.getDestinationTitle()\n
+         lines.append({\n
+            \'debtor\' : debtor,\n
+            \'account_gap_id\' : account.getGapId(),\n
+            \'account_name\' : account_description,\n
+            \'amount\' : debtor  and (line.getDestinationDebit() - line.getDestinationCredit()) \\\n
+                                or (line.getDestinationCredit() - line.getDestinationDebit())\n
+            })\n
+\n
+return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABkAAABBAAAAQwAA
+AHMoBQAAdAAAdAEAZAEAgwIAfQIAdAMAfAIAZAIAgwIAfQQAdAMAfAIAZAMAgwIAfQUAdAMAfAIA
+ZAQAgwIAfQYAdAMAfAIAZAUAgwIAfQcAdAAAfAIAZAYAgwIAZAcAdAgAgwIAfQkAaAAABGQIAGQJ
+AAM8BGQCAHwEAAM8BGQKAHwGAAM8BGQLAHwFAAM8BGQMAHwHAAM8fQoAfAkAbxQAAXwJAHQLAHwK
+AIMBAGQHADxuAQABZwAAfQwAeGYEdA0AdA4AdAAAdAEAZA0AgwIAZA4AfAoAZA8AdAgAfAoAjQEC
+gwEARF06BH0PAHQAAHwPAGQQAIMCAIMAAH0PAGcAAH0QAHQAAHwPAGQRAIMCAIMAAHAQAAF0AAB8
+DwBkEgCDAgCDAAB9EQBoAAAEZBMAdAMAdBIAfBEAgwEAZAAAZBQAhQIAgwIAAzwEZBUAZBYAdAAA
+fA8AZBcAgwIAgwAAcAQAAXQIAHQAAHwPAGQYAIMCAIMAAGYCABYDPARkGQB8EAADPH0TAHQAAHwM
+AGQaAIMCAHwTAIMBAAF0AAB8DwBkGwCDAgBkHABoAAAEZAwAZB0AZB4AZB8AZCAAZCEAZCIAZwYA
+AzyDAAF9FAB0AAB8FABkIwCDAgBkJACEAACDAQABeDkDdA0AfBQAgwEARF0rA30VAHQAAHwVAGQQ
+AIMCAIMAAH0VAHQAAHwVAGQlAIMCAIMAAHQAAHwVAGQmAIMCAIMAAGoEAH0WAHQAAHwVAGQnAIMC
+AIMAAH0XAHwXAHQIAGoIAG8HAAFx7QFuAQABdAAAfBcAZCgAgwIAgwAAZCkAagIAbywAAWQqAHQA
+AHwVAGQrAIMCAIMAAHQAAHwVAGQsAIMCAIMAAGYCABZ9GABuXgABdAAAfBcAZCgAgwIAgwAAZC0A
+ZC4AZgIAagYAbywAAWQqAHQAAHwVAGQrAIMCAIMAAHQAAHwVAGQvAIMCAIMAAGYCABZ9GABuEwAB
+dAAAfBUAZCsAgwIAgwAAfRgAdAAAfBAAZBoAgwIAaAAABGQwAHwWAAM8BGQxAHQAAHwXAGQyAIMC
+AIMAAAM8BGQzAHwYAAM8BGQ0AHwWAG8gAAF0AAB8FQBkJQCDAgCDAAB0AAB8FQBkJgCDAgCDAAAY
+cCAAAXQAAHwVAGQmAIMCAIMAAHQAAHwVAGQlAIMCAIMAABgDPIMBAAF0AAB8FQBkNQCDAgCDAAB0
+AAB8FQBkNgCDAgCDAABqAgBveQEBdAAAfBUAZDcAgwIAgwAAdAAAfBUAZDgAgwIAgwAAagQAfRYA
+dAAAfBUAZDkAgwIAgwAAfRcAfBcAdAgAaggAbwcAAXHtAW4BAAF0AAB8FwBkKACDAgCDAABkKQBq
+AgBvLAABZCoAdAAAfBUAZDoAgwIAgwAAdAAAfBUAZDsAgwIAgwAAZgIAFn0YAG5eAAF0AAB8FwBk
+KACDAgCDAABkLQBkLgBmAgBqBgBvLAABZCoAdAAAfBUAZDoAgwIAgwAAdAAAfBUAZDwAgwIAgwAA
+ZgIAFn0YAG4TAAF0AAB8FQBkOgCDAgCDAAB9GAB0AAB8EABkGgCDAgBoAAAEZDAAfBYAAzwEZDEA
+dAAAfBcAZDIAgwIAgwAAAzwEZDMAfBgAAzwEZDQAfBYAbyAAAXQAAHwVAGQ3AIMCAIMAAHQAAHwV
+AGQ4AIMCAIMAABhwIAABdAAAfBUAZDgAgwIAgwAAdAAAfBUAZDcAgwIAgwAAGAM8gwEAAXHtAQFx
+7QFXceIAV3wMAFNkAABTKD0AAABOcwcAAABSRVFVRVNUcwcAAAB0b19kYXRlcxwAAAB0cmFuc2Fj
+dGlvbl9zZWN0aW9uX2NhdGVnb3J5cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRlcxcA
+AAB0cmFuc2FjdGlvbl9wb3J0YWxfdHlwZXMDAAAAZ2V0cwkAAABmcm9tX2RhdGVzBwAAAHNvcnRf
+b25zEgAAAGRlbGl2ZXJ5LnN0b3BfZGF0ZXMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMQAAAAc2VjdGlv
+bl9jYXRlZ29yeXMLAAAAcG9ydGFsX3R5cGVzOQAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVs
+ZV96R2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdHMQAAAAc2VsZWN0aW9uX3BhcmFtc3MJAAAA
+c2VsZWN0aW9ucwkAAABnZXRPYmplY3RzCwAAAGdldFN0b3BEYXRlcwwAAABnZXRTdGFydERhdGVz
+BAAAAGRhdGVpCgAAAHMLAAAAZGVzY3JpcHRpb25zGQAAACVzIChzb3VyY2UgcmVmZXJlbmNlOiAl
+cylzCAAAAGdldFRpdGxlcxIAAABnZXRTb3VyY2VSZWZlcmVuY2VzBQAAAGxpbmVzcwYAAABhcHBl
+bmRzDQAAAGNvbnRlbnRWYWx1ZXNzBgAAAGZpbHRlcnMbAAAAQWNjb3VudGluZyBUcmFuc2FjdGlv
+biBMaW5lcx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZXMhAAAAUHVyY2hhc2UgSW52
+b2ljZSBUcmFuc2FjdGlvbiBMaW5lcxoAAABQYXkgU2hlZXQgVHJhbnNhY3Rpb24gTGluZXMYAAAA
+UGF5bWVudCBUcmFuc2FjdGlvbiBMaW5lcxgAAABCYWxhbmNlIFRyYW5zYWN0aW9uIExpbmVzBAAA
+AHNvcnRjAgAAAAQAAAAGAAAAQwAAAHM+AAAAdAAAdAEAdAEAfAEAZAEAgwIAgwAAZAIAgwIAgwAA
+dAEAdAEAfAAAZAEAgwIAgwAAZAIAgwIAgwAAGIMBAFMoAwAAAE5zCQAAAGdldE9iamVjdHMOAAAA
+Z2V0U291cmNlRGViaXQoBAAAAHMDAAAAaW50cwkAAABfZ2V0YXR0cl9zAQAAAHlzAQAAAHgoBAAA
+AHMBAAAAeHMBAAAAeXMDAAAAaW50cwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcykAAABQeXRob24g
+U2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMKAAAAPGxhbWJkYS40PjQAAABzAAAA
+AHMOAAAAZ2V0U291cmNlRGViaXRzDwAAAGdldFNvdXJjZUNyZWRpdHMOAAAAZ2V0U291cmNlVmFs
+dWVzDgAAAGdldEFjY291bnRUeXBlcwoAAABhc3NldC9jYXNocwcAAAAlcyAoJXMpcw4AAABnZXRT
+b3VyY2VUaXRsZXMVAAAAZ2V0U291cmNlUGF5bWVudFRpdGxlcxAAAABhc3NldC9yZWNlaXZhYmxl
+cxEAAABsaWFiaWxpdHkvcGF5YWJsZXMaAAAAZ2V0RGVzdGluYXRpb25TZWN0aW9uVGl0bGVzBgAA
+AGRlYnRvcnMOAAAAYWNjb3VudF9nYXBfaWRzCAAAAGdldEdhcElkcwwAAABhY2NvdW50X25hbWVz
+BgAAAGFtb3VudHMVAAAAZ2V0RGVzdGluYXRpb25TZWN0aW9ucxAAAABnZXRTb3VyY2VTZWN0aW9u
+cxMAAABnZXREZXN0aW5hdGlvbkRlYml0cxQAAABnZXREZXN0aW5hdGlvbkNyZWRpdHMTAAAAZ2V0
+RGVzdGluYXRpb25WYWx1ZXMTAAAAZ2V0RGVzdGluYXRpb25UaXRsZXMaAAAAZ2V0RGVzdGluYXRp
+b25QYXltZW50VGl0bGVzFQAAAGdldFNvdXJjZVNlY3Rpb25UaXRsZSgZAAAAcwkAAABfZ2V0YXR0
+cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzCQAAAF9nZXRpdGVtX3MHAAAAdG9fZGF0ZXMcAAAA
+dHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25fc2ltdWxhdGlvbl9z
+dGF0ZXMXAAAAdHJhbnNhY3Rpb25fcG9ydGFsX3R5cGVzBAAAAE5vbmVzCQAAAGZyb21fZGF0ZXMG
+AAAAcGFyYW1zcwcAAABfd3JpdGVfcwYAAAByZXN1bHRzCQAAAF9nZXRpdGVyX3MHAAAAX2FwcGx5
+X3MLAAAAdHJhbnNhY3Rpb25zBQAAAGxpbmVzcwQAAABkYXRlcwMAAABzdHJzEAAAAHRyYW5zYWN0
+aW9uX2RpY3RzEQAAAHRyYW5zYWN0aW9uX2xpbmVzcwQAAABsaW5lcwYAAABkZWJ0b3JzBwAAAGFj
+Y291bnRzEwAAAGFjY291bnRfZGVzY3JpcHRpb24oGQAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250
+ZXh0cwcAAAByZXF1ZXN0cwkAAABfZ2V0aXRlbV9zBwAAAHRvX2RhdGVzHAAAAHRyYW5zYWN0aW9u
+X3NlY3Rpb25fY2F0ZWdvcnlzHAAAAHRyYW5zYWN0aW9uX3NpbXVsYXRpb25fc3RhdGVzFwAAAHRy
+YW5zYWN0aW9uX3BvcnRhbF90eXBlcwQAAABOb25lcwkAAABmcm9tX2RhdGVzBgAAAHBhcmFtc3MH
+AAAAX3dyaXRlX3MGAAAAcmVzdWx0cwkAAABfZ2V0aXRlcl9zBwAAAF9hcHBseV9zCwAAAHRyYW5z
+YWN0aW9ucwUAAABsaW5lc3MEAAAAZGF0ZXMDAAAAc3RycxAAAAB0cmFuc2FjdGlvbl9kaWN0cxEA
+AAB0cmFuc2FjdGlvbl9saW5lc3MEAAAAbGluZXMGAAAAZGVidG9ycwcAAABhY2NvdW50cxMAAABh
+Y2NvdW50X2Rlc2NyaXB0aW9uKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFj
+cXVpc2l0aW9uIENvbnRleHRzLQAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV9nZXRKb3Vy
+bmFsRW50cmllcwEAAABzdAAAAAARDwEPAQ8BDwEPARgCEAIJAQkBCQEIAgcBFAIGARgBGQESAQYB
+JQEoAS8BCwEQATYHEwENAAYBEgEkARIBFAEZASwBHwEsAhUBEAEMARIBCQEtASIEJQEkARIBFAEZ
+ASwBHwEsAhUBEAEMARIBCQEtAS4DKAEAAABzLQAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVs
+ZV9nZXRKb3VybmFsRW50cmllcygBAAAAcy0AAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVf
+Z2V0Sm91cm5hbEVudHJpZXMoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNx
+dWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransactionModule_getJournalEntries</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>_getitem_</string>
+                            <string>to_date</string>
+                            <string>transaction_section_category</string>
+                            <string>transaction_simulation_state</string>
+                            <string>transaction_portal_type</string>
+                            <string>None</string>
+                            <string>from_date</string>
+                            <string>params</string>
+                            <string>_write_</string>
+                            <string>result</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
+                            <string>transaction</string>
+                            <string>lines</string>
+                            <string>date</string>
+                            <string>str</string>
+                            <string>transaction_dict</string>
+                            <string>transaction_lines</string>
+                            <string>line</string>
+                            <string>debtor</string>
+                            <string>account</string>
+                            <string>account_description</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_getJournalEntries</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

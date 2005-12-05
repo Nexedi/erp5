@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>LOG = lambda msg:context.log("PaymentTransaction_copyInvoiceProperties", msg)\n
+LOG = lambda msg:None\n
+\n
+payment_transaction = context\n
+LOG("start, payment_transaction = %s @ %s"%(payment_transaction, payment_transaction.getPath()))\n
+invoice_transaction = payment_transaction.getCausalityValue()\n
+LOG("invoice_transaction = %s"%invoice_transaction)\n
+\n
+categories = {}\n
+if invoice_transaction.getResourceValue() is not None : \n
+  categories[\'resource\'] = invoice_transaction.getResource()\n
+\n
+LOG("payment_transaction categories = %s" % categories )\n
+payment_transaction.edit(\n
+   ### FIXME: the date must be set on the simulation movement\n
+   start_date   = invoice_transaction.TradeCondition_getDueDate()\n
+ , reference    = invoice_transaction.getReference()\n
+ , **categories\n
+)\n
+\n
+if payment_transaction.getSimulationState() == "draft": \n
+  payment_transaction.portal_workflow.doActionFor(\n
+                                  payment_transaction,\n
+                                  \'plan_action\',\n
+                                  wf_id=\'accounting_workflow\',\n
+                                  comment="Initialized by Delivery Builder")\n
+  LOG("payment simulation state set to planned")\n
+\n
+LOG("end")\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAUAAAAQwAA
+AHM/AQAAZAEAhAAAfQAAZAIAhAAAfQAAdAEAfQIAfAAAZAMAfAIAdAMAfAIAZAQAgwIAgwAAZgIA
+FoMBAAF0AwB8AgBkBQCDAgCDAAB9BAB8AABkBgB8BAAWgwEAAWgAAH0FAHQDAHwEAGQHAIMCAIMA
+AHQGAGoJAG8gAAF0AwB8BABkCACDAgCDAAB0BwB8BQCDAQBkCQA8bgEAAXwAAGQKAHwFABaDAQAB
+dAgAdAMAfAIAZAsAgwIAZAwAdAMAfAQAZA0AgwIAgwAAZA4AdAMAfAQAZA8AgwIAgwAAfAUAjQEC
+AXQDAHwCAGQQAIMCAIMAAGQRAGoCAG85AAF0AwB0AwB8AgBkEgCDAgBkEwCDAgB8AgBkFABkFQBk
+FgBkFwBkGACDAgIBfAAAZBkAgwEAAW4BAAF8AABkGgCDAQABZAAAUygbAAAATmMBAAAAAwAAAAMA
+AABDAAAAcxYAAAB0AAB0AQBkAQCDAgBkAgB8AACDAgBTKAMAAABOcwMAAABsb2dzKAAAAFBheW1l
+bnRUcmFuc2FjdGlvbl9jb3B5SW52b2ljZVByb3BlcnRpZXMoAwAAAHMJAAAAX2dldGF0dHJfcwcA
+AABjb250ZXh0cwMAAABtc2coAwAAAHMDAAAAbXNncwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQo
+AAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMK
+AAAAPGxhbWJkYS42PgEAAABzAAAAAGMBAAAAAgAAAAEAAABDAAAAcwQAAAB0AABTKAEAAABOKAEA
+AABzBAAAAE5vbmUoAgAAAHMDAAAAbXNncwQAAABOb25lKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNj
+cmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCgAAADxsYW1iZGEuNz4CAAAAcwAAAABz
+JAAAAHN0YXJ0LCBwYXltZW50X3RyYW5zYWN0aW9uID0gJXMgQCAlc3MHAAAAZ2V0UGF0aHMRAAAA
+Z2V0Q2F1c2FsaXR5VmFsdWVzGAAAAGludm9pY2VfdHJhbnNhY3Rpb24gPSAlc3MQAAAAZ2V0UmVz
+b3VyY2VWYWx1ZXMLAAAAZ2V0UmVzb3VyY2VzCAAAAHJlc291cmNlcyMAAABwYXltZW50X3RyYW5z
+YWN0aW9uIGNhdGVnb3JpZXMgPSAlc3MEAAAAZWRpdHMKAAAAc3RhcnRfZGF0ZXMZAAAAVHJhZGVD
+b25kaXRpb25fZ2V0RHVlRGF0ZXMJAAAAcmVmZXJlbmNlcwwAAABnZXRSZWZlcmVuY2VzEgAAAGdl
+dFNpbXVsYXRpb25TdGF0ZXMFAAAAZHJhZnRzDwAAAHBvcnRhbF93b3JrZmxvd3MLAAAAZG9BY3Rp
+b25Gb3JzCwAAAHBsYW5fYWN0aW9ucwUAAAB3Zl9pZHMTAAAAYWNjb3VudGluZ193b3JrZmxvd3MH
+AAAAY29tbWVudHMfAAAASW5pdGlhbGl6ZWQgYnkgRGVsaXZlcnkgQnVpbGRlcnMnAAAAcGF5bWVu
+dCBzaW11bGF0aW9uIHN0YXRlIHNldCB0byBwbGFubmVkcwMAAABlbmQoCQAAAHMDAAAATE9HcwcA
+AABjb250ZXh0cxMAAABwYXltZW50X3RyYW5zYWN0aW9ucwkAAABfZ2V0YXR0cl9zEwAAAGludm9p
+Y2VfdHJhbnNhY3Rpb25zCgAAAGNhdGVnb3JpZXNzBAAAAE5vbmVzBwAAAF93cml0ZV9zBwAAAF9h
+cHBseV8oCQAAAHMDAAAATE9HcwcAAABjb250ZXh0cxMAAABwYXltZW50X3RyYW5zYWN0aW9ucwkA
+AABfZ2V0YXR0cl9zEwAAAGludm9pY2VfdHJhbnNhY3Rpb25zCgAAAGNhdGVnb3JpZXNzBAAAAE5v
+bmVzBwAAAF93cml0ZV9zBwAAAF9hcHBseV8oAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdp
+dGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMoAAAAUGF5bWVudFRyYW5zYWN0aW9uX2NvcHlJbnZv
+aWNlUHJvcGVydGllcwEAAABzJAAAAAkBCQIGASABEgEOAgYBGQEgAhQBDwISAQwBBwMfAQ8BFgQO
+AigBAAAAcygAAABQYXltZW50VHJhbnNhY3Rpb25fY29weUludm9pY2VQcm9wZXJ0aWVzKAEAAABz
+KAAAAFBheW1lbnRUcmFuc2FjdGlvbl9jb3B5SW52b2ljZVByb3BlcnRpZXMoAAAAACgAAAAAcykA
+AABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4B
+AAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/PaymentTransaction_copyInvoiceProperties</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>LOG</string>
+                            <string>context</string>
+                            <string>payment_transaction</string>
+                            <string>_getattr_</string>
+                            <string>invoice_transaction</string>
+                            <string>categories</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaymentTransaction_copyInvoiceProperties</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

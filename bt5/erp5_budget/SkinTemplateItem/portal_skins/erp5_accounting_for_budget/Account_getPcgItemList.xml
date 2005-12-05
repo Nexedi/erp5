@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>raise """ DEPRECATED """\n
+\n
+\n
+def display(x):\n
+  return "%s - %s" % (x.getId(), x.getTitle())\n
+\n
+def sort(x,y):\n
+  return cmp(display(x), display(y))\n
+\n
+obj = context.restrictedTraverse(\'portal_categories/pcg\')\n
+item_list = obj.getCategoryChildItemList(base=0, display_method=display, sort_method=sort)\n
+return item_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAALAAAAAwAA
+AHNcAAAAZAEAggEAZAIAhAAAiQAAhwAAZAMAhgAAfQEAdAIAdAMAZAQAgwIAZAUAgwEAfQQAdAIA
+fAQAZAYAgwIAZAcAZAgAZAkAiAAAZAoAfAEAgwADfQUAfAUAU2QAAFMoCwAAAE5zDAAAACBERVBS
+RUNBVEVEIGMBAAAAAgAAAAYAAABDAAAAcyoAAABkAQB0AAB8AABkAgCDAgCDAAB0AAB8AABkAwCD
+AgCDAABmAgAWU2QAAFMoBAAAAE5zBwAAACVzIC0gJXNzBQAAAGdldElkcwgAAABnZXRUaXRsZSgC
+AAAAcwkAAABfZ2V0YXR0cl9zAQAAAHgoAgAAAHMBAAAAeHMJAAAAX2dldGF0dHJfKAAAAAAoAAAA
+AHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzBwAAAGRpc3Bs
+YXkEAAAAcwIAAAAAAWMCAAAABAAAAAUAAAADAAAAcx0AAAB0AACIAAB8AACDAQCIAAB8AQCDAQCD
+AgBTZAAAUygBAAAATigEAAAAcwMAAABjbXBzBwAAAGRpc3BsYXlzAQAAAHhzAQAAAHkoBAAAAHMB
+AAAAeHMBAAAAeXMDAAAAY21wcwcAAABkaXNwbGF5KAEAAABzBwAAAGRpc3BsYXkoAAAAAHMpAAAA
+UHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzBAAAAHNvcnQHAAAAcwIA
+AAAAAXMSAAAAcmVzdHJpY3RlZFRyYXZlcnNlcxUAAABwb3J0YWxfY2F0ZWdvcmllcy9wY2dzGAAA
+AGdldENhdGVnb3J5Q2hpbGRJdGVtTGlzdHMEAAAAYmFzZWkAAAAAcw4AAABkaXNwbGF5X21ldGhv
+ZHMLAAAAc29ydF9tZXRob2QoBgAAAHMHAAAAZGlzcGxheXMEAAAAc29ydHMJAAAAX2dldGF0dHJf
+cwcAAABjb250ZXh0cwMAAABvYmpzCQAAAGl0ZW1fbGlzdCgGAAAAcwcAAABkaXNwbGF5cwQAAABz
+b3J0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAwAAAG9ianMJAAAAaXRlbV9saXN0KAAAAAAo
+AQAAAHMHAAAAZGlzcGxheXMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENv
+bnRleHRzFgAAAEFjY291bnRfZ2V0UGNnSXRlbUxpc3QBAAAAcwoAAAAGAwkDDAMVASQBKAEAAABz
+FgAAAEFjY291bnRfZ2V0UGNnSXRlbUxpc3QoAQAAAHMWAAAAQWNjb3VudF9nZXRQY2dJdGVtTGlz
+dCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0
+cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/Account_getPcgItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>display</string>
+                            <string>sort</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>obj</string>
+                            <string>item_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Account_getPcgItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DEPRECATED</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

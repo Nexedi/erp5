@@ -1,0 +1,9 @@
+2005-10-15 Kevin
+* first "as is" public release (thanks to Mayoro, the author of the whole module)
+* rename skin folder 'erp5_accounting' to 'erp5_accounting_for_budget' to avoid confusion
+* add the custom accounting_workflow that support budgets
+* move and merge function category to erp5_core.bt5
+* move and merge financial_section category to erp5_accounting.bt5
+* delete source_function and destination_function (they are duplicate with the ones in erp5_core.bt5)
+* move z_related_financial_section_category, z_related_function_category and z_related_group_category catalog methods to erp5_accounting.bt5
+* move groupCategory, financialSectionCategory and functionCategory related keys to erp5_accounting.bt5

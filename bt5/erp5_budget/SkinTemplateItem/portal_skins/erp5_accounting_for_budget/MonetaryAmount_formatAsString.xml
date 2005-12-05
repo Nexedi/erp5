@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+import math\n
+\n
+fractional, integer = math.modf(float(amount or 0))\n
+\n
+fractional = abs(int(round(fractional*100)))\n
+sign = (integer < 0) and \'- \' or \'\'\n
+amount = str(abs(int(integer)))\n
+string = \'\'\n
+\n
+indexes = range(len(amount))\n
+indexes.reverse()\n
+\n
+count = 0\n
+for i in indexes : \n
+  if not count % 3 : \n
+    string = \' \' + string\n
+  string = amount[i] + string\n
+  count += 1\n
+\n
+return \'%s%s.%02d\'%(sign, string.strip(), abs(fractional))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABMAAAAOAAAAQwAA
+AHMpAQAAZAAAawAAfQEAdAEAfAEAZAEAgwIAdAIAfAAAcAQAAWQCAIMBAIMBAHQEAAKDAQBcAgB9
+BQB9BgB0BwB0CAB0CQB8BQBkAwAUgwEAgwEAgwEAfQUAfAYAZAIAagAAbwQAAWQEAHAEAAFkBQB9
+CgB0CwB0BwB0CAB8BgCDAQCDAQCDAQB9AABkBQB9DAB0DQB0DgB8AACDAQCDAQB9DwB0AQB8DwBk
+BgCDAgCDAAABZAIAfRAAeEsAdAQAfA8AgwEARF09AH0RAHwQAGQHABYMbw4AAWQIAHwMABd9DABu
+AQABdBIAfAAAfBEAgwIAfAwAF30MAHwQAGQJADd9EABxwQBXZAoAfAoAdAEAfAwAZAsAgwIAgwAA
+dAcAfAUAgwEAZgMAFlNkAABTKAwAAABOcwQAAABtb2RmaQAAAABpZAAAAHMCAAAALSBzAAAAAHMH
+AAAAcmV2ZXJzZWkDAAAAcwEAAAAgaQEAAABzCQAAACVzJXMuJTAyZHMFAAAAc3RyaXAoEwAAAHME
+AAAAbWF0aHMJAAAAX2dldGF0dHJfcwUAAABmbG9hdHMGAAAAYW1vdW50cwkAAABfZ2V0aXRlcl9z
+CgAAAGZyYWN0aW9uYWxzBwAAAGludGVnZXJzAwAAAGFic3MDAAAAaW50cwUAAAByb3VuZHMEAAAA
+c2lnbnMDAAAAc3RycwYAAABzdHJpbmdzBQAAAHJhbmdlcwMAAABsZW5zBwAAAGluZGV4ZXNzBQAA
+AGNvdW50cwEAAABpcwkAAABfZ2V0aXRlbV8oEwAAAHMGAAAAYW1vdW50cwQAAABtYXRocwkAAABf
+Z2V0YXR0cl9zBQAAAGZsb2F0cwkAAABfZ2V0aXRlcl9zCgAAAGZyYWN0aW9uYWxzBwAAAGludGVn
+ZXJzAwAAAGFic3MDAAAAaW50cwUAAAByb3VuZHMEAAAAc2lnbnMDAAAAc3RycwYAAABzdHJpbmdz
+BQAAAHJhbmdlcwMAAABsZW5zBwAAAGluZGV4ZXNzBQAAAGNvdW50cwEAAABpcwkAAABfZ2V0aXRl
+bV8oAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4
+dHMdAAAATW9uZXRhcnlBbW91bnRfZm9ybWF0QXNTdHJpbmcBAAAAcx4AAAAJAi8CHAEaARgBBgIV
+AQ0CBgENAAYBDAEOARMBDgIoAQAAAHMdAAAATW9uZXRhcnlBbW91bnRfZm9ybWF0QXNTdHJpbmco
+AQAAAHMdAAAATW9uZXRhcnlBbW91bnRfZm9ybWF0QXNTdHJpbmcoAAAAACgAAAAAcykAAABQeXRo
+b24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAA
+AAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/MonetaryAmount_formatAsString</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>amount</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>amount</string>
+                            <string>math</string>
+                            <string>_getattr_</string>
+                            <string>float</string>
+                            <string>_getiter_</string>
+                            <string>fractional</string>
+                            <string>integer</string>
+                            <string>abs</string>
+                            <string>int</string>
+                            <string>round</string>
+                            <string>sign</string>
+                            <string>str</string>
+                            <string>string</string>
+                            <string>range</string>
+                            <string>len</string>
+                            <string>indexes</string>
+                            <string>count</string>
+                            <string>i</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>MonetaryAmount_formatAsString</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
