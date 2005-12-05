@@ -64,7 +64,7 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
-          container=None, bypass_init_script=0, **kw):
+          container=None, bypass_init_script=0, activate_kw=None,**kw):
     """
       Creates a new content
     """
@@ -81,7 +81,8 @@ class FolderMixIn(ExtensionClass.Base):
     self.portal_types.constructContent(type_name=portal_type,
                                        container=container,
                                        id=new_id,
-                                       bypass_init_script=bypass_init_script
+                                       bypass_init_script=bypass_init_script,
+                                       activate_kw=activate_kw
                                        ) # **kw) removed due to CMF bug
     new_instance = container[new_id]
     if kw != {} : new_instance._edit(force_update=1, **kw)
@@ -719,9 +720,7 @@ be a problem)."""
       if type(portal_type) == type(''):
         portal_type = (portal_type,)
       object_list = filter(lambda x: x.getPortalType() in portal_type, object_list)
-      
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
-    
     return object_list
 
   # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)
