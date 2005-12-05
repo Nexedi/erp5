@@ -32,17 +32,47 @@ from zLOG import LOG
 
 class CopyToTarget(TargetSolver):
   """
-    Copy values simulation movement as target. This is
-    only acceptable for root movements. The meaning of
-    this solver of other movements is far from certain.
+  Copy values simulation movement as target. This is
+  only acceptable for root movements. The meaning of
+  this solver of other movements is far from certain.
   """
   def solve(self, movement):
     """
       Adopt values as new target
     """
-    # Reduce quantity
+    # Get interesting value
+    old_quantity = movement.getQuantity()
+    old_start_date = movement.getStartDate()
+    old_stop_date = movement.getStopDate()
+    new_quantity = movement.getDeliveryQuantity() * \
+                   movement.getDeliveryRatio()
+    new_start_date = movement.getDeliveryStartDateList()[0]
+    new_stop_date = movement.getDeliveryStopDateList()[0]
+    # Calculate delta
+    quantity_ratio = new_quantity / old_quantity
+    start_date_delta = new_start_date - old_start_date
+    stop_date_delta = new_stop_date - old_stop_date
+    # Modify recursively simulation movement
+    self._recursivelySolve(movement, quantity_ratio=quantity_ratio,
+                           start_date_delta=start_date_delta, 
+                           stop_date_delta=stop_date_delta)
+
+  def _recursivelySolve(self, movement, quantity_ratio=1, start_date_delta=0,
+                        stop_date_delta=0):
+    """
+    Update value of the current simulation movement, and update his parent
+    movement.
+    """
+    # Modify quantity, start_date, stop_date
     movement.edit(
-      quantity=movement.getDeliveryQuantity() * movement.getDeliveryRatio(),
-      start_date=movement.getDeliveryStartDateList()[0],
-      stop_date=movement.getDeliveryStopDateList()[0]
+      quantity=movement.getQuantity() * quantity_ratio,
+      start_date=movement.getStartDate() + start_date_delta,
+      stop_date=movement.getStopDate() + stop_date_delta,
     )
+    applied_rule = movement.getParent()
+    parent_movement = applied_rule.getParent()
+    if parent_movement.getPortalType() == "Simulation Movement":
+      # Modify the parent movement
+      self._recursivelySolve(parent_movement, quantity_ratio=quantity_ratio,
+                             start_date_delta=start_date_delta, 
+                             stop_date_delta=stop_date_delta)
