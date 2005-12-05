@@ -615,6 +615,7 @@ class PathTemplateItem(ObjectTemplateItem):
       for relative_url in self._resolvePath(p, [], path.split('/')):
         object = p.unrestrictedTraverse(relative_url)
         object = object._getCopy(context)
+        id_list = object.objectIds()
         if hasattr(object, '__ac_local_roles__'):
           # remove local roles
           object.__ac_local_roles__ = None
@@ -622,6 +623,13 @@ class PathTemplateItem(ObjectTemplateItem):
           object._owner = None
         if hasattr(object, 'uid'):
           object.uid = None
+        if hasattr(object, 'groups'):
+          # we must keep groups because it's ereased when we delete subobjects
+          groups = deepcopy(object.groups)
+        if len(id_list) > 0:
+          object.manage_delObjects(list(id_list))
+        if hasattr(object, 'groups'):
+          object.groups = groups          
         self._objects[relative_url] = object
         object.wl_clearLocks()
       
@@ -2314,6 +2322,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for item_name in self._item_name_list:
         item = getattr(self, item_name)
         if item is not None:
+          LOG('install item type', 0, item_name)
           item.install(local_configuration)
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
