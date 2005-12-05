@@ -78,7 +78,7 @@ class SQLQueue(RAMQueue):
     if hasattr(activity_tool,'SQLQueue_readMessageList'):
       now_date = DateTime()
       # Next processing date in case of error
-      next_processing_date = now_date + VALIDATION_ERROR_DELAY
+      next_processing_date = now_date + float(VALIDATION_ERROR_DELAY)/86400
       priority = random.choice(priority_weight)
       # Try to find a message at given priority level
       result = activity_tool.SQLQueue_readMessage(processing_node=processing_node, priority=priority,
