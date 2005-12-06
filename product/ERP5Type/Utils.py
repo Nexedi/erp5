@@ -1255,6 +1255,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
       setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
       property_holder.security.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id)
+    base_accessor = base_accessor.dummy_copy(accessor_name)
     if not hasattr(property_holder, accessor_name) or prop.get('override',0):
       setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
     # Default Getter
@@ -1634,6 +1635,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
       setattr(property_holder, accessor_name, accessor)
       property_holder.security.declareProtected( read_permission, accessor_name )
     accessor_name = '_baseGet' + UpperCase(id)
+    accessor = accessor.dummy_copy(accessor_name)
     if not hasattr(property_holder, accessor_name) or prop.get('override',0):
       setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
   ######################################################
