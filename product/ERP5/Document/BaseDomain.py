@@ -30,9 +30,9 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Document.Domain import Domain
 
-class BaseDomain(Folder):
+class BaseDomain(Domain):
   """
     Base Domain is the root of a tree of domains which can be used
     as nodes in a report tree of ListBox
@@ -51,9 +51,4 @@ class BaseDomain(Folder):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.View)
 
-  # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.DublinCore
-                    , PropertySheet.CategoryCore
-                    )
 
