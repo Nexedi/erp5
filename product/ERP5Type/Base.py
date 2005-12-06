@@ -72,6 +72,8 @@ from email import Encoders
 from socket import gethostname, gethostbyaddr
 import random
 
+from DateTime import DateTime
+
 try:
   from transaction import get as get_transaction
 except ImportError:
@@ -950,6 +952,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         elif hasattr(self, accessor_name):
           #LOG("Calling: ",0, accessor_name)
           method = getattr(self, accessor_name)
+          #LOG("Calling: ",0, method.__class__)
           try:
             old_value = method() # XXX Why not use getProperty ???
           except TypeError:
@@ -966,6 +969,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           self._setProperty(key, kw[key])
       elif self.id != kw['id']:
         self.setId(kw['id'], reindex=reindex_object)
+    # Modification date is supported by edit_workflow in ERP5
+    # There is no need to change it here
     if reindex_object:
       # We do not want to reindex the object if nothing is changed
       if (self._v_modified_property_dict != {}):
@@ -1004,11 +1009,22 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   # XXX Is this useful ? (Romain)
   edit = WorkflowMethod(edit)
 
-  # Accessing object property Ids
+  # Accessing object property through ERP5ish interface
   security.declareProtected( Permissions.View, 'getPropertyIdList' )
   def getPropertyIdList(self):
     return self.propertyIds()
-    #return map(lambda p: p['id'], self.__class__._properties)
+
+  security.declareProtected( Permissions.View, 'getPropertyValueList' )
+  def getPropertyValueList(self):
+    return self.propertyValues()
+
+  security.declareProtected( Permissions.View, 'getPropertyItemList' )
+  def getPropertyItemList(self):
+    return self.propertyItems()
+
+  security.declareProtected( Permissions.View, 'getPropertyMap' )
+  def getPropertyMap(self):
+    return self.propertyMap()
 
   # Catalog Related
   security.declareProtected( Permissions.View, 'getObject' )
@@ -1962,7 +1978,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         local_permission_list += ((permission,permission_role),)
     return local_permission_list
 
-  security.declareProtected(Permissions.View, 'get_local_permissions')
+  security.declareProtected(Permissions.ManagePortal, 'manage_setLocalPermissions')
   def manage_setLocalPermissions(self,permission,local_permission_list=None):
     """
     This works like manage_setLocalRoles. It allows to set all
@@ -2037,6 +2053,60 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
 
+  # Creation and modification date support through workflow
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDate')
+  def getCreationDate(self):
+    """
+      Returns the creation date of the document based on workflow information
+    """
+    # XXX To be implemenented
+    # Check if edit workflow defined
+    # Return none if not (or get it from parent ?)
+    # Then get the first line of edit_workflow
+    return None
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
+  def getModificationDate(self):
+    """
+      Returns the modification date of the document based on workflow information
+    """
+    # XXX To be implemenented
+    # Check if edit workflow defined
+    # Return none if not (or get it from parent ?)
+    # Then get the first line of edit_workflow
+    return None
+
+  # Dublin Core Emulation for CMF interoperatibility
+  # CMF Dublin Core Compatibility
+  def Title(self):
+    return self.getTitle('')
+
+  def Subject(self):
+    return self.getSubjectList()
+
+  def Description(self):
+    return self.getDescription('')
+
+  def Contributors(self):
+    return self.getContributorList('')
+
+  def EffectiveDate(self):
+    return self.getEffectiveDate('None')
+
+  def ExpirationDate(self):
+    return self.getExpirationDate('None')
+
+  def Contributors(self):
+    return self.getContributorList()
+
+  def Format(self):
+    return self.getFormat('')
+
+  def Language(self):
+    return self.getLanguage('')
+
+  def Rights(self):
+    return self.getRight('')
 
 InitializeClass(Base)
 
@@ -2062,7 +2132,6 @@ class TempBase(Base):
   def setUid(self, value):
     self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
 
-
   def setTitle(self, value):
     """
     Required so that getProperty('title') will work on tempBase objects
@@ -2076,6 +2145,9 @@ class TempBase(Base):
     self.title = value
 
   def getTitle(self):
+    """
+      Returns the title of this document
+    """
     return getattr(self,'title',None)
 
   security.declarePublic('setProperty')
