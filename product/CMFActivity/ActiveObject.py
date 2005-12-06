@@ -51,7 +51,8 @@ class ActiveObject(ExtensionClass.Base):
 
   security = ClassSecurityInfo()
 
-  def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, passive_commit=0, **kw):
+  def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, passive_commit=0, 
+                     activate_kw=None,**kw):
     """
       Reserved Optional parameters
       
@@ -70,6 +71,8 @@ class ActiveObject(ExtensionClass.Base):
                             going to be executed                                                              
       
     """
+    if activate_kw is not None:
+      kw.update(activate_kw)
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
