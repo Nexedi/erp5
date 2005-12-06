@@ -129,15 +129,25 @@ def PropertyManager_propertyIds(self):
 
 def PropertyManager_propertyValues(self):
     """Return a list of actual property objects """
-    return map(lambda i,s=self: getattr(s,i['id']), self._propertyMap())
+    return map(lambda i,s=self: s.getProperty(i['id']), self._propertyMap())
 
 def PropertyManager_propertyItems(self):
     """Return a list of (id,property) tuples """
-    return map(lambda i,s=self: (i['id'],getattr(s,i['id'])), self._propertyMap())
+    return map(lambda i,s=self: (i['id'],s.getProperty(i['id'])), self._propertyMap())
 
 def PropertyManager_propertyMap(self):
     """Return a tuple of mappings, giving meta-data for properties """
-    return tuple(list(self._properties) + list(getattr(self, '_local_properties', ())))
+    property_map = list(self._properties)
+    property_dict = {}
+    for p in property_map:
+      property_dict[p['id']] = None
+      # base_id is defined for properties which are associated to multiple accessors
+      if p.has_key('base_id'): property_dict[p['base_id']] = None
+    # Only add those local properties which are not global
+    for p in getattr(self, '_local_properties', ()):
+      if not property_dict.has_key(p['id']):
+        property_map.append(p)
+    return tuple(property_map)
 
 def PropertyManager_propdict(self):
     dict={}
