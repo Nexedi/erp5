@@ -2048,36 +2048,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _temp_getTitle(self):
     return getattr(self,'title',None)
 
-  def log(self,description,content):
+  def log(self, description, content):
     """
     Put a log message
     """
     LOG(description,0,content)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
-
-  # Creation and modification date support through workflow
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDate')
-  def getCreationDate(self):
-    """
-      Returns the creation date of the document based on workflow information
-    """
-    # XXX To be implemenented
-    # Check if edit workflow defined
-    # Return none if not (or get it from parent ?)
-    # Then get the first line of edit_workflow
-    return None
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
-  def getModificationDate(self):
-    """
-      Returns the modification date of the document based on workflow information
-    """
-    # XXX To be implemenented
-    # Check if edit workflow defined
-    # Return none if not (or get it from parent ?)
-    # Then get the first line of edit_workflow
-    return None
 
   # Dublin Core Emulation for CMF interoperatibility
   # CMF Dublin Core Compatibility
@@ -2110,6 +2087,43 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   def Rights(self):
     return self.getRight('')
+
+  # Creation and modification date support through workflow
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDate')
+  def getCreationDate(self):
+    """
+      Returns the creation date of the document based on workflow information
+    """
+    # Check if edit_workflow defined
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    wf = portal_workflow.getWorkflowById('edit_workflow')
+    wf_list = list(portal_workflow.getWorkflowsFor(self))
+    if wf is not None: wf_list = [wf] + wf_list
+    for wf in portal_workflow.getWorkflowsFor(self):
+      history = wf.getInfoFor(self, 'history', None)
+      if history is not None:
+        if len(history):
+          # Then get the first line of edit_workflow
+          return history[0].get('time', None)
+    return None
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
+  def getModificationDate(self):
+    """
+      Returns the modification date of the document based on workflow information
+    """
+    # Check if edit_workflow defined
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    wf = portal_workflow.getWorkflowById('edit_workflow')
+    wf_list = list(portal_workflow.getWorkflowsFor(self))
+    if wf is not None: wf_list = [wf] + wf_list
+    for wf in portal_workflow.getWorkflowsFor(self):
+      history = wf.getInfoFor(self, 'history', None)
+      if history is not None:
+        if len(history):
+          # Then get the first line of edit_workflow
+          return history[-1].get('time', None)
+    return None
 
 InitializeClass(Base)
 
