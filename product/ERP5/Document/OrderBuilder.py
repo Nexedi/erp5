@@ -284,12 +284,14 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                           movement_group,
                           self.getDeliveryCollectOrderList(),
                           {},
-                          delivery_to_update_list=delivery_to_update_list)
+                          delivery_to_update_list=delivery_to_update_list,
+                          **kw)
     return delivery_list
 
   def _deliveryGroupProcessing(self, delivery_module, movement_group, 
                                collect_order_list, property_dict,
-                               delivery_to_update_list=None):
+                               delivery_to_update_list=None,
+                               activate_kw=None,**kw):
     """
       Build empty delivery from a list of movement
     """
@@ -308,7 +310,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                               group,
                               collect_order_list[1:],
                               property_dict.copy(),
-                              delivery_to_update_list=delivery_to_update_list)
+                              delivery_to_update_list=delivery_to_update_list,
+                              activate_kw=activate_kw)
         delivery_list.extend(new_delivery_list)
     else:
       # Test if we can update a existing delivery, or if we need to create 
@@ -327,7 +330,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery = delivery_module.newContent(
                                   portal_type=self.getDeliveryPortalType(),
                                   id=new_delivery_id,
-                                  bypass_init_script=1)
+                                  bypass_init_script=1,
+                                  activate_kw=activate_kw,**kw)
         # Put properties on delivery
         delivery.edit(**property_dict)
 
@@ -337,13 +341,15 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                 delivery,
                                 group,
                                 self.getDeliveryLineCollectOrderList()[1:],
-                                {})
+                                {},
+                                activate_kw=activate_kw,**kw)
       delivery_list.append(delivery)
     return delivery_list
       
   def _deliveryLineGroupProcessing(self, delivery, movement_group,
                                    collect_order_list, property_dict,
-                                   update_requested=0):
+                                   update_requested=0,
+                                   activate_kw=None,**kw):
     """
       Build delivery line from a list of movement on a delivery
     """
@@ -355,7 +361,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       for group in movement_group.getGroupList():
         self._deliveryLineGroupProcessing(
           delivery, group, collect_order_list[1:], property_dict.copy(),
-          update_requested=update_requested)
+          update_requested=update_requested,activate_kw=activate_kw)
     else:
       # Test if we can update an existing line, or if we need to create a new
       # one
@@ -374,7 +380,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery_line = delivery.newContent(
                                   portal_type=self.getDeliveryLinePortalType(),
                                   id=new_delivery_line_id,
-                                  variation_category_list=[])
+                                  variation_category_list=[],
+                                  activate_kw=activate_kw)
         # Put properties on delivery line
         delivery_line.edit(**property_dict)
       # Update variation category list on line
@@ -399,19 +406,21 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                     group,
                                     self.getDeliveryCellCollectOrderList()[1:],
                                     {},
-                                    update_existing_line=update_existing_line)
+                                    update_existing_line=update_existing_line,
+                                    activate_kw=activate_kw)
       else:
         self._deliveryCellGroupProcessing(
                                   delivery_line,
                                   movement_group,
                                   [],
                                   {},
-                                  update_existing_line=update_existing_line)
+                                  update_existing_line=update_existing_line,
+                                  activate_kw=activate_kw)
 
 
   def _deliveryCellGroupProcessing(self, delivery_line, movement_group,
                                    collect_order_list, property_dict,
-                                   update_existing_line=0):
+                                   update_existing_line=0,activate_kw=None):
     """
       Build delivery cell from a list of movement on a delivery line
       or complete delivery line
@@ -427,7 +436,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                     group, 
                                     collect_order_list[1:], 
                                     property_dict.copy(),
-                                    update_existing_line=update_existing_line)
+                                    update_existing_line=update_existing_line,
+                                    activate_kw=activate_kw)
     else:
       movement_list = movement_group.getMovementList()
       if len(movement_list) != 1:
@@ -468,7 +478,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                                    omit_option_base_category=1)
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
             cell = delivery_line.newCell(base_id=base_id, \
-                       portal_type=self.getDeliveryCellPortalType(), *cell_key)
+                       portal_type=self.getDeliveryCellPortalType(), 
+                       activate_kw=activate_kw,*cell_key)
             vcl = movement.getVariationCategoryList()
             cell._edit(category_list=vcl,
                       # XXX hardcoded value
