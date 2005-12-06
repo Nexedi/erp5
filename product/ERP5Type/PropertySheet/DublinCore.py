@@ -37,6 +37,7 @@ class DublinCore:
         {   'id'          : 'title',
             'description' : '',
             'type'        : 'string',
+            'translatable'  : 1,
             'mode'        : 'w' },
         {   'id'          : 'subject',
             'description' : '',
@@ -47,7 +48,8 @@ class DublinCore:
             'description' : '',
             'type'        : 'text',
             'mode'        : 'w' },
-        {   'id'          : 'contributors',
+        {   'id'          : 'contributor',
+            'storage_id'  : 'contributors', # CMF Compatibility
             'description' : '',
             'type'        : 'lines',
             'default'     : (),
@@ -68,7 +70,8 @@ class DublinCore:
             'description' : '',
             'type'        : 'string',
             'mode'        : 'w' },
-        {   'id'          : 'rights',
+        {   'id'          : 'right',
+            'storage_id'  : 'rights',  # CMF Compatibility
             'description' : '',
             'type'        : 'string',
             'mode'        : 'w' },
