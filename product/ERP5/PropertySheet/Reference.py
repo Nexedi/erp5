@@ -52,6 +52,9 @@ class Reference:
             'description' : 'A reference which allows to unify multiple objects',
             'type'        : 'string',
             'mode'        : 'w' },
+        # Do not use the property below - it may be replaced by calculated
+        # references made out of reference, version_reference, portal_type, etc.
+        # ex. PROD-33456724-3
         {   'id'          : 'document_reference', # XXX ERROR - we already have a reference
             'description' : 'The references of the document itself',
             'type'        : 'string',
