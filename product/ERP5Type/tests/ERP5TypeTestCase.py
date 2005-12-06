@@ -312,7 +312,7 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             factory.manage_addERP5Site(portal_name,light_install=light_install,
                 reindex=reindex,create_activities=create_activities)
             # Release locks
-            get_transaction().commit()
+            #get_transaction().commit()
             portal=app[portal_name]
             # Remove all local PropertySheets, Documents
             for id in getLocalPropertySheetList():
@@ -329,13 +329,14 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               portal.portal_templates.download(url, id=id)
               portal.portal_templates[id].install(light_install=light_install)
               # Release locks
-              get_transaction().commit()
+              #get_transaction().commit()
             # Enbable reindexing
             # Do hot reindexing # Does not work
             if hot_reindexing:
               setattr(app,'isIndexable',1)
               portal.portal_catalog.manage_hotReindexAll()
 
+            get_transaction().commit()
             portal_activities = getattr(portal,'portal_activities',None)
             if portal_activities is not None:
               while len(portal_activities.getMessageList()) > 0:
@@ -343,12 +344,8 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
                 portal_activities.tic()
                 get_transaction().commit()
             # Reset aq dynamic, so all unit tests will start again
-            # Also, the cache must be invalidated, because portal methods
-            # must return current information
             from Products.ERP5Type.Base import _aq_reset
-            from Products.ERP5Type.Cache import clearCache
             _aq_reset()
-            clearCache()
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
