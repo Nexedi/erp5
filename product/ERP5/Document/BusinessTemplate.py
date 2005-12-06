@@ -2097,6 +2097,7 @@ class BusinessTemplate(XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
+                      , PropertySheet.Version
                       , PropertySheet.BusinessTemplate
                       )
 

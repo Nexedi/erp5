@@ -69,6 +69,7 @@ class Document(XMLObject, TextContent):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Version
                       , PropertySheet.Document
                       )
 
