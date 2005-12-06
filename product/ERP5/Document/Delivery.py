@@ -459,6 +459,40 @@ class Delivery(XMLObject):
       kw['category'] = self._getMovementResourceList()
       return self.portal_simulation.getMovementHistoryStat(**kw)
 
+# JPS: We must still decide if getInventoryAssetPrice is part of the Delivery API
+
+#     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryAssetPrice')
+#     def getInventoryAssetPrice(self, **kw):
+#       """
+#         Returns asset at infinite
+#       """
+#       kw['category'] = self._getMovementResourceList()
+#       return self.portal_simulation.getInventoryAssetPrice(**kw)
+# 
+#     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
+#     def getFutureInventoryAssetPrice(self, **kw):
+#       """
+#         Returns asset at infinite
+#       """
+#       kw['category'] = self._getMovementResourceList()
+#       return self.portal_simulation.getFutureInventoryAssetPrice(**kw)
+# 
+#     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
+#     def getCurrentInventoryAssetPrice(self, **kw):
+#       """
+#         Returns asset at infinite
+#       """
+#       kw['category'] = self._getMovementResourceList()
+#       return self.portal_simulation.getCurrentInventoryAssetPrice(**kw)
+# 
+#     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
+#     def getAvailableInventoryAssetPrice(self, **kw):
+#       """
+#         Returns asset at infinite
+#       """
+#       kw['category'] = self._getMovementResourceList()
+#       return self.portal_simulation.getAvailableInventoryAssetPrice(**kw)
+
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       """
