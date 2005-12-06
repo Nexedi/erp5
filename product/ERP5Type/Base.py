@@ -48,7 +48,7 @@ from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import CachingMethod, clearCache
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 
@@ -114,6 +114,9 @@ def _aq_reset():
   Base.aq_method_generated = {}
   Base.aq_portal_type = {}
   Base.aq_related_generated = 0
+  # Some method generations are based on portal methods, and portal methods cache results.
+  # So it is safer to invalidate the cache.
+  clearCache()
 
 class PropertyHolder:
   isRADContent = 1
