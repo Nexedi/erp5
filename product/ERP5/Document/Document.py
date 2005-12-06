@@ -30,8 +30,9 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.WebDAVSupport import TextContent
 
-class Document(XMLObject):
+class Document(XMLObject, TextContent):
     """
         A Document can contain text that can be formatted using
         *Structured Text* or *HTML*. Text can be automatically translated
@@ -42,6 +43,15 @@ class Document(XMLObject):
 
         Document inherits from XMLObject and can
         be synchronized accross multiple sites.
+
+        Version Management: the notion of version depends on the
+        type of application. For example, in the case (1) of Transformation
+        (BOM), all versions are considered as equal and may be kept
+        indefinitely for both archive and usage purpose. In the case (2)
+        of Person data, the new version replaces the previous one
+        in place and is not needed for archive. In the case (3) of
+        a web page, the new version replaces the previous one,
+        the previous one being kept in place for archive.
     """
 
     meta_type = 'ERP5 Document'
@@ -65,3 +75,5 @@ class Document(XMLObject):
     # Declarative interfaces
     __implements__ = ()
 
+    # Patch
+    PUT = TextContent.PUT

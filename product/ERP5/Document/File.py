@@ -151,3 +151,10 @@ or 'HTML'. Text can be automatically translated through the use of\
 
     def manage_beforeDelete(self, item, container):
       CMFFile.manage_beforeDelete(self, item, container)
+
+    # DAV Support
+    PUT = CMFFile.PUT
+    manage_FTPget = CMFFile.manage_FTPget
+    manage_FTPlist = CMFFile.manage_FTPlist
+    manage_FTPstat = CMFFile.manage_FTPstat
+	    

@@ -63,7 +63,7 @@ class Image (Base, CMFPhoto):
                     , PropertySheet.DublinCore
                     )
 
-  def __init__( self, id, title='', file='', store='ExtImage'
+  def __init__( self, id, title='', file='', store='Image'
               , engine='ImageMagick', quality=75, pregen=0, timeout=0):
     Photo.__init__(self, id=id, title=title, file=file, store=store
                   , engine=engine, quality=quality, pregen=pregen, timeout=timeout)
