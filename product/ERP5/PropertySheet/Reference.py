@@ -38,6 +38,9 @@ class Reference:
             'description' : 'The absolute references of the document (our reference)',
             'type'        : 'string',
             'mode'        : 'w' },
+        # WARNING: the naming is wrong because it conflicts with getSourceReference
+        # which returns the reference of the source. Must be renamed as
+        # source_specific_reference
         {   'id'          : 'source_reference',
             'storage_id'  : 'default_source_reference', # Compatibility
             'description' : 'The references of the document for default sources',
