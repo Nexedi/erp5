@@ -37,7 +37,8 @@ from DateTime import DateTime
 
 class DomainTool(BaseTool):
     """
-    A tool to define ranges and subranges (predicates)
+        A tool to define reusable ranges and subranges through
+        predicate trees
     """
     id = 'portal_domains'
     meta_type = 'ERP5 Domain Tool'    
