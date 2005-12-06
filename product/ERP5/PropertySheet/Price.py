@@ -53,17 +53,18 @@ class Price:
             'default'     : 1.0,
             'mode'        : 'w' },
         # Asset Value Pricing
-        {   'id'          : 'source_asset_price',
-            'description' : 'Asset price from the source point of view',
+        {   'id'          : 'source_total_asset_price',
+            'description' : 'Total asset price from the source point of view',
             'type'        : 'float',
             'mode'        : 'w' },
-        {   'id'          : 'destination_asset_price',
-            'description' : 'Asset price from the source point of view',
+        {   'id'          : 'destination_total_asset_price',
+            'description' : 'Total asset price from the destination point of view',
             'type'        : 'float',
             'mode'        : 'w' },
         # Pricing properties related to sourcing
         # Such price should be used very carefully since
         # They are incompatible with the multi company model
+        # WARNING: dangerous naming (like we had with source_reference)
         {   'id'          : 'source_base_price',
             'description' : 'A typical per unit price at which this ' \
                             'resource can be sourced (bought)',
