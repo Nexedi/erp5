@@ -74,7 +74,7 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
 
   security.declareProtected(Permissions.ModifyPortalContent, 
                             '_buildMovementList')
-  def _buildMovementList(self, applied_rule, movement_dict):
+  def _buildMovementList(self, applied_rule, movement_dict,activate_kw=None,**kw):
     """
       For each movement in the dictionnary, test if the movement already
       exists.
@@ -87,7 +87,8 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
       if movement is None:
         movement = applied_rule.newContent(
                         portal_type=self.simulation_movement_portal_type,
-                        id=movement_id
+                        id=movement_id,
+                        activate_kw=activate_kw
         )
       # Update movement properties
       movement.edit(**(movement_dict[movement_id]))
@@ -180,7 +181,7 @@ class TransformationSourcingRule(Rule):
       """
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, **kw):
+    def expand(self, applied_rule, activate_kw=None,**kw):
       """
         Expands the current movement downward.
         -> new status -> expanded
@@ -232,9 +233,9 @@ class TransformationSourcingRule(Rule):
             }
           })
         # Build the movement
-        self._buildMovementList(applied_rule, movement_dict)
+        self._buildMovementList(applied_rule, movement_dict,activate_kw=activate_kw)
       # Create one submovement which sources the transformation
-      Rule.expand(self, applied_rule, **kw)
+      Rule.expand(self, applied_rule, activate_kw=activate_kw, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):

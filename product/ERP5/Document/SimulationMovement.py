@@ -224,8 +224,8 @@ class SimulationMovement(Movement):
       # Parse each rule and test if it applies
       for rule in portal_rules.objectValues():
         if rule.test(self):
-          my_applied_rule = rule.constructNewAppliedRule(self)
-          my_applied_rule.expand()
+          my_applied_rule = rule.constructNewAppliedRule(self,**kw)
+          my_applied_rule.expand(**kw)
       # Set to expanded
       self.setCausalityState('expanded')
 
@@ -476,23 +476,22 @@ class SimulationMovement(Movement):
 #             "method: %s, self: %s , delivery: %s" % \
 #             tuple([method]+[str(getattr(x,method)()) for x in (self, delivery)]))
       return 1
-
     d_quantity = delivery.getQuantity()
-    if d_quantity is None:
-      d_quantity = 0
     quantity = self.getCorrectedQuantity()
     d_error = self.getDeliveryError()
     if quantity is None:
       if d_quantity is None:
         return 0
       return 1
+    if d_quantity is None:
+      d_quantity = 0
     if d_error is None:
       d_error = 0
     delivery_ratio = self.getDeliveryRatio()
-    if delivery_ratio is not None:
-      d_quantity *= delivery_ratio 
     #LOG('SimulationMovement.isDivergent d_quantity',0,d_quantity)
     #LOG('SimulationMovement.isDivergent quantity + d_error',0,quantity + d_error)
+    if delivery_ratio is not None:
+      d_quantity *= delivery_ratio 
     if d_quantity != quantity + d_error:
       return 1
     return 0  

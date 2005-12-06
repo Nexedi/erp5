@@ -135,7 +135,7 @@ class TransformationRule(Rule):
                                                          current_supply_link)
         movement_dict.update(consumed_mvt_dict)
         # Finally, build movement
-        self._buildMovementList(applied_rule, movement_dict)
+        self._buildMovementList(applied_rule, movement_dict,**kw)
       # Expand each movement created
       Rule.expand(self, applied_rule, **kw)
 
