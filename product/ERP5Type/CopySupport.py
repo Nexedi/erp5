@@ -46,7 +46,7 @@ class CopyContainer:
 
   # Declarative security
   security = ClassSecurityInfo()
-
+  
   # Copy / Paste support
   security.declareProtected( Permissions.ModifyPortalContent, 'manage_copyObjects' )
   def manage_copyObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
