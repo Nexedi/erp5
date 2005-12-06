@@ -60,3 +60,16 @@ class Currency(Resource):
                       , PropertySheet.Resource
                       , PropertySheet.Reference
                       )
+
+    # Unit conversion
+    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
+    def convertQuantity(self, quantity, from_unit, to_unit):
+      return quantity
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'convertCurrency')
+    def convertCurrency(self, quantity, to_currency):
+      if to_currency is self:
+        return quantity
+      return quantity
+
+      
