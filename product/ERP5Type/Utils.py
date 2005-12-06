@@ -309,8 +309,10 @@ class DocumentConstructor(Method):
     def __init__(self, klass):
       self.klass = klass
 
-    def __call__(self, folder, id, REQUEST=None, **kw):
+    def __call__(self, folder, id, REQUEST=None, activate_kw=None,**kw):
       o = self.klass(id)
+      if activate_kw is not None:
+        o._v_activate_kw = activate_kw
       folder._setObject(id, o)
       o.uid = folder.portal_catalog.newUid()
       #LOG('DocumentConstructor', 0, 'o = %r, kw = %r' % (o, kw))

@@ -169,7 +169,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     #
     security.declarePublic('constructInstance')
     def constructInstance( self, container, id, bypass_init_script=0, 
-                                 activate_kw=None,*args, **kw ):
+                                 *args, **kw ):
         """
         Build a "bare" instance of the appropriate type in
         'container', using 'id' as its id.
@@ -178,23 +178,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         Returns the object.
         """
         # This is part is copied from CMFCore/TypesTool
-        # because we want to specify activate_kw before
-        # finishConstruction, so before reindexing
-        m = self._getFactoryMethod(container)
-        id = str(id)
-        if getattr( m, 'isDocTemp', 0 ):
-            args = ( m.aq_parent, self.REQUEST ) + args
-            kw[ 'id' ] = id
-        else:
-            args = ( id, ) + args
-        id = apply( m, args, kw ) or id  # allow factory to munge ID
-        ob = container._getOb( id )
-
-        if activate_kw is not None:
-          ob._v_activate_kw = activate_kw
-          LOG('ERP5Type.constructInstance new_ob._v_activate_kw',0,ob._v_activate_kw)
-
-        self._finishConstruction(ob)
+        ob = FactoryTypeInformation.constructInstance(
+                                             self, container, id, *args, **kw)
 
         # Only try to assign roles to secutiry groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects
