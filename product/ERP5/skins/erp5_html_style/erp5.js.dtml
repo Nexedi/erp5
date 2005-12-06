@@ -1,8 +1,0 @@
-function submitAction(formulaire,act) {
-//alert(formulaire.module_select.options[formulaire.module_select.selectedIndex].value);
-formulaire.action = act;
-formulaire.submit();
-}
-
-
-

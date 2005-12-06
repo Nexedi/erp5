@@ -1,2 +1,0 @@
-<div metal:use-macro="here/navigation_box/macros/navigation_box"
-              >Navigation Box</div>
