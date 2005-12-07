@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that the amount of `resource` in account `payment` is greater than or equal to `quantity`\n
+\n
+# returns a dictionnary like : {\'error_code\', \'balance\'}\n
+\n
+workflow_id = \'bank_account_workflow\'\n
+workflow_correct_state_list = (\'valid\', \'being_modified\', \'validating_modification\')\n
+manual_validation_account_category_list = (\'test\',)\n
+\n
+# First check that the payment account is in an acceptable state\n
+payment_state = context.portal_workflow.getInfoFor(ob=payment, name=\'simulation_state\', wf_id=workflow_id)\n
+\n
+if payment_state not in workflow_correct_state_list :\n
+  return {\'error_code\':2} # closed account\n
+\n
+resource = context.restrictedTraverse(payment).getPriceCurrencyValue()\n
+\n
+if resource is None :\n
+  raise AttributeError, \'No currency defined on %s\' % payment\n
+\n
+# Next, check the balance of the account\n
+account_balance = resource.getFutureInventory(payment=payment, src__=src__)\n
+\n
+if src__ :\n
+  return account_balance \n
+\n
+if account_balance - quantity < 0 :\n
+#  if payment.getBankAccountType() in manual_validation_account_category_list :\n
+#    return {\'error_code\':3, \'balance\':account_balance} # manual_validation\n
+\n
+  return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
+\n
+return {\'error_code\':0, \'balance\':account_balance} # ok\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMDAAAADQAA
+ABcAAABDAAAAcxoBAABkAQB9AwBkAgBkAwBkBABmAwB9BABkBQBmAQB9BQB0AwB0AwB0BABkBgCD
+AgBkBwCDAgBkCAB8AABkCQBkCgBkCwB8AwCDAAN9CAB8CAB8BABqBwBvEQABaAAABGQMAGQNAAM8
+U24BAAF0AwB0AwB0BABkDgCDAgB8AACDAQBkDwCDAgCDAAB9CQB8CQB0CABqCABvEQABdAkAZBAA
+fAAAFoICAG4BAAF0AwB8CQBkEQCDAgBkEgB8AABkEwB8AgCDAAJ9DAB8AgBvCAABfAwAU24BAAF8
+DAB8AQAYZBQAagAAbxoAAWgAAARkDABkFQADPARkFgB8DAADPFNuAQABaAAABGQMAGQUAAM8BGQW
+AHwMAAM8U2QAAFMoFwAAAE5zFQAAAGJhbmtfYWNjb3VudF93b3JrZmxvd3MFAAAAdmFsaWRzDgAA
+AGJlaW5nX21vZGlmaWVkcxcAAAB2YWxpZGF0aW5nX21vZGlmaWNhdGlvbnMEAAAAdGVzdHMPAAAA
+cG9ydGFsX3dvcmtmbG93cwoAAABnZXRJbmZvRm9ycwIAAABvYnMEAAAAbmFtZXMQAAAAc2ltdWxh
+dGlvbl9zdGF0ZXMFAAAAd2ZfaWRzCgAAAGVycm9yX2NvZGVpAgAAAHMSAAAAcmVzdHJpY3RlZFRy
+YXZlcnNlcxUAAABnZXRQcmljZUN1cnJlbmN5VmFsdWVzGQAAAE5vIGN1cnJlbmN5IGRlZmluZWQg
+b24gJXNzEgAAAGdldEZ1dHVyZUludmVudG9yeXMHAAAAcGF5bWVudHMFAAAAc3JjX19pAAAAAGkB
+AAAAcwcAAABiYWxhbmNlKA0AAABzCwAAAHdvcmtmbG93X2lkcxsAAAB3b3JrZmxvd19jb3JyZWN0
+X3N0YXRlX2xpc3RzJwAAAG1hbnVhbF92YWxpZGF0aW9uX2FjY291bnRfY2F0ZWdvcnlfbGlzdHMJ
+AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAABwYXltZW50cw0AAABwYXltZW50X3N0YXRlcwgA
+AAByZXNvdXJjZXMEAAAATm9uZXMOAAAAQXR0cmlidXRlRXJyb3JzBQAAAHNyY19fcw8AAABhY2Nv
+dW50X2JhbGFuY2VzCAAAAHF1YW50aXR5KA0AAABzBwAAAHBheW1lbnRzCAAAAHF1YW50aXR5cwUA
+AABzcmNfX3MLAAAAd29ya2Zsb3dfaWRzGwAAAHdvcmtmbG93X2NvcnJlY3Rfc3RhdGVfbGlzdHMn
+AAAAbWFudWFsX3ZhbGlkYXRpb25fYWNjb3VudF9jYXRlZ29yeV9saXN0cwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzDQAAAHBheW1lbnRfc3RhdGVzCAAAAHJlc291cmNlcwQAAABOb25lcw4AAABB
+dHRyaWJ1dGVFcnJvcnMPAAAAYWNjb3VudF9iYWxhbmNlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcxgAAABCYW5rQWNjb3VudF9jaGVja0JhbGFuY2UBAAAAcx4AAAAABAYBDwEJAy0CDQER
+AiECDQERAx4CBwEIAhEEGgIoAQAAAHMYAAAAQmFua0FjY291bnRfY2hlY2tCYWxhbmNlKAEAAABz
+GAAAAEJhbmtBY2NvdW50X2NoZWNrQmFsYW5jZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/BankAccount_checkBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>payment, quantity, src__=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>payment</string>
+                            <string>quantity</string>
+                            <string>src__</string>
+                            <string>workflow_id</string>
+                            <string>workflow_correct_state_list</string>
+                            <string>manual_validation_account_category_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>payment_state</string>
+                            <string>resource</string>
+                            <string>None</string>
+                            <string>AttributeError</string>
+                            <string>account_balance</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BankAccount_checkBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

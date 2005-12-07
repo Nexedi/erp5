@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+def sortLine(a_Source,b_Source):\n
+   if a_Source.getPortalType() in (\'Coin\', \'Banknote\'):\n
+      a = a_Source\n
+      b = b_Source\n
+   else :\n
+      a = a.getResourceValue()\n
+      b = b.getResourceValue()\n
+   if a.getPortalType() == b.getPortalType() :\n
+      if a.getBasePrice() > b.getBasePrice() :\n
+         return -1\n
+      elif a.getBasePrice() < b.getBasePrice() :\n
+         return 1\n
+      else :\n
+         if int(a.getVariation()) < int(b.getVariation()) :\n
+            return 1         \n
+         elif int(a.getVariation()) > int(b.getVariation()) :\n
+            return -1\n
+         else :\n
+            return 0\n
+   elif a.getPortalType() == \'Banknote\':\n
+      return -1\n
+   else:\n
+      return 1\n
+\n
+\n
+listCurrency.sort(sortLine)\n
+return listCurrency\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
+AHMkAAAAZAEAhAAAfQEAdAEAfAAAZAIAgwIAfAEAgwEAAXwAAFNkAABTKAMAAABOYwIAAAAGAAAA
+FwAAAEMAAABzeAEAAHQAAHwAAGQBAIMCAIMAAGQCAGQDAGYCAGoGAG8QAAF8AAB9AwB8AQB9BABu
+JQABdAAAfAMAZAQAgwIAgwAAfQMAdAAAfAQAZAQAgwIAgwAAfQQAdAAAfAMAZAEAgwIAgwAAdAAA
+fAQAZAEAgwIAgwAAagIAb9YAAXQAAHwDAGQFAIMCAIMAAHQAAHwEAGQFAIMCAIMAAGoEAG8JAAFk
+BgALU3F0AQF0AAB8AwBkBQCDAgCDAAB0AAB8BABkBQCDAgCDAABqAABvCAABZAYAU3F0AQF0BQB0
+AAB8AwBkBwCDAgCDAACDAQB0BQB0AAB8BABkBwCDAgCDAACDAQBqAABvCAABZAYAU3F0AQF0BQB0
+AAB8AwBkBwCDAgCDAACDAQB0BQB0AAB8BABkBwCDAgCDAACDAQBqBABvCQABZAYAC1NxdAEBZAgA
+U24nAAF0AAB8AwBkAQCDAgCDAABkAwBqAgBvCQABZAYAC1NuBQABZAYAU2QAAFMoCQAAAE5zDQAA
+AGdldFBvcnRhbFR5cGVzBAAAAENvaW5zCAAAAEJhbmtub3RlcxAAAABnZXRSZXNvdXJjZVZhbHVl
+cwwAAABnZXRCYXNlUHJpY2VpAQAAAHMMAAAAZ2V0VmFyaWF0aW9uaQAAAAAoBgAAAHMJAAAAX2dl
+dGF0dHJfcwgAAABhX1NvdXJjZXMBAAAAYXMIAAAAYl9Tb3VyY2VzAQAAAGJzAwAAAGludCgGAAAA
+cwgAAABhX1NvdXJjZXMIAAAAYl9Tb3VyY2VzCQAAAF9nZXRhdHRyX3MBAAAAYXMBAAAAYnMDAAAA
+aW50KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAABzb3J0TGluZQEAAABzJAAAAAAB
+HwEGAQoCEgESASUBJQEJASUBCAIxAQgBMQEJAggBGQEJAnMEAAAAc29ydCgDAAAAcwgAAABzb3J0
+TGluZXMJAAAAX2dldGF0dHJfcwwAAABsaXN0Q3VycmVuY3koAwAAAHMMAAAAbGlzdEN1cnJlbmN5
+cwgAAABzb3J0TGluZXMJAAAAX2dldGF0dHJfKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
+cxcAAABDYXNoRGV0YWlsX3NvcnRDdXJyZW5jeQEAAABzBAAAAAwZEAEoAQAAAHMXAAAAQ2FzaERl
+dGFpbF9zb3J0Q3VycmVuY3koAQAAAHMXAAAAQ2FzaERldGFpbF9zb3J0Q3VycmVuY3koAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_sortCurrency</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listCurrency,</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listCurrency</string>
+                            <string>sortLine</string>
+                            <string>_getattr_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_sortCurrency</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

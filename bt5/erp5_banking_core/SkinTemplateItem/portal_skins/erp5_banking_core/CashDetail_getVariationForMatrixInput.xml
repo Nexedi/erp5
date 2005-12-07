@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+request = context.REQUEST\n
+default_emissionLetter_list = getattr(request,\'my_emissionLetter_list\',None)       # Find Emission letter on the REQUEST\n
+default_cashStatus_list     = getattr(request,\'my_cashStatus_list\',None)           # Find Cash Status on the REQUEST\n
+default_variation_list      = getattr(request,\'my_variation_list\',None)            # Find Variation on the REQUEST\n
+default_otherParameter_list      = getattr(request,\'my_otherParameter\',None)            # Find Variation on the REQUEST\n
+\n
+\n
+return_list = []\n
+return_list.append([\'displayed_resource\',\'Coupure\'])\n
+\n
+\n
+if default_emissionLetter_list is None:\n
+   default_emissionLetter_list = getattr(request,\'field_my_emissionLetter_list\',None)       # Find Emission letter on the REQUEST\n
+   default_cashStatus_list     = getattr(request,\'field_my_cashStatus_list\',None)           # Find Cash Status on the REQUEST\n
+   default_variation_list      = getattr(request,\'field_my_variation_list\',None)            # Find Variation on the REQUEST\n
+   default_otherParameter_list = getattr(request,\'field_my_otherParameter\',None)            # Find Variation on the REQUEST\n
+\n
+if len(default_otherParameter_list) > 2:\n
+   default_columnBase = default_otherParameter_list[3]\n
+else :\n
+   default_columnBase = \'variation\'\n
+\n
+allow_addLine = False\n
+if len(default_emissionLetter_list) > 1 and default_columnBase <> \'emissionLetter\':\n
+   return_list.append([\'emissionLetter\',\'Emission Letter\'])\n
+   allow_addLine = True\n
+if len(default_cashStatus_list) > 1 and default_columnBase <> \'cashStatus\':\n
+   return_list.append([\'cashStatus\',\'Cash Status\'])\n
+   allow_addLine = True\n
+if len(default_variation_list) > 1 and default_columnBase <> \'variation\':\n
+   return_list.append([\'variation\',\'Variation\'])\n
+   allow_addLine = True\n
+\n
+if allow_addLine:\n
+   return_list.append([\'numberLineToAdd\',\'numberLineToAdd\'])\n
+\n
+\n
+if default_columnBase == \'cashStatus\':\n
+   default_columnBase_list = default_cashStatus_list\n
+   column_category  = \'cash_status\'\n
+elif default_columnBase == \'emissionLetter\':\n
+   default_columnBase_list = default_emissionLetter_list\n
+   column_category  = \'emission_letter\'\n
+else:\n
+   default_columnBase_list = default_variation_list\n
+   column_category  = \'variation\'\n
+\n
+\n
+\n
+if len(default_columnBase_list) > 0 :\n
+   columnBase_list =  [x for x in context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
+                        if x[1] in default_columnBase_list]\n
+else:\n
+   columnBase_list =  context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
+\n
+\n
+\n
+counter = 1\n
+for x in columnBase_list:\n
+   return_list.append([\'column\'+str(counter),x[0]])\n
+   counter += 1\n
+return_list.append([\'price\',\'Montant\'])\n
+return_list.append([\'resource\',\'\'])\n
+return_list.append([\'resourceId\',\'\'])\n
+return return_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABoAAAAeAAAASwAA
+AHOYAwAAdAAAdAEAZAEAgwIAfQMAdAMAfAMAZAIAdAQAgwMAfQYAdAMAfAMAZAMAdAQAgwMAfQcA
+dAMAfAMAZAQAdAQAgwMAfQgAdAMAfAMAZAUAdAQAgwMAfQkAZwAAfQoAdAAAfAoAZAYAgwIAZAcA
+ZAgAZwIAgwEAAXwGAHQEAGoIAG9MAAF0AwB8AwBkCQB0BACDAwB9BgB0AwB8AwBkCgB0BACDAwB9
+BwB0AwB8AwBkCwB0BACDAwB9CAB0AwB8AwBkDAB0BACDAwB9CQBuAQABdAoAfAkAgwEAZA0AagQA
+bxMAAXQLAHwJAGQOAIMCAH0NAG4HAAFkDwB9DQB0DQB9DwB0CgB8BgCDAQBkEABqBABvCgABfA0A
+ZBEAagMAbyMAAXQAAHwKAGQGAIMCAGQRAGQSAGcCAIMBAAF0DwB9DwBuAQABdAoAfAcAgwEAZBAA
+agQAbwoAAXwNAGQTAGoDAG8jAAF0AAB8CgBkBgCDAgBkEwBkFABnAgCDAQABdA8AfQ8AbgEAAXQK
+AHwIAIMBAGQQAGoEAG8KAAF8DQBkDwBqAwBvIwABdAAAfAoAZAYAgwIAZA8AZBUAZwIAgwEAAXQP
+AH0PAG4BAAF8DwBvHQABdAAAfAoAZAYAgwIAZBYAZBYAZwIAgwEAAW4BAAF8DQBkEwBqAgBvEAAB
+fAcAfREAZBcAfRIAbioAAXwNAGQRAGoCAG8QAAF8BgB9EQBkGAB9EgBuDQABfAgAfREAZA8AfRIA
+dAoAfBEAgwEAZBkAagQAb3gAAWcAAARpEgB9FAB0FAB0CwB0AAB0CwB0AAB0AQBkGgCDAgB8EgCD
+AgBkGwCDAgCDAABkEABkAACFAgCDAgCDAQBEXSoAfRYAdAsAfBYAZBAAgwIAfBEAagYAbw4AAXwU
+AHwWAIMBAAFxiAIBcYgCfhQAfRcAbjQAAXQLAHQAAHQLAHQAAHQBAGQaAIMCAHwSAIMCAGQbAIMC
+AIMAAGQQAGQAAIUCAIMCAH0XAGQQAH0YAHhKAHQUAHwXAIMBAERdPAB9FgB0AAB8CgBkBgCDAgBk
+HAB0GAB8GACDAQAXdAsAfBYAZBkAgwIAZwIAgwEAAXwYAGQQADd9GABxBQNXdAAAfAoAZAYAgwIA
+ZB0AZB4AZwIAgwEAAXQAAHwKAGQGAIMCAGQfAGQgAGcCAIMBAAF0AAB8CgBkBgCDAgBkIQBkIABn
+AgCDAQABfAoAU2QAAFMoIgAAAE5zBwAAAFJFUVVFU1RzFgAAAG15X2VtaXNzaW9uTGV0dGVyX2xp
+c3RzEgAAAG15X2Nhc2hTdGF0dXNfbGlzdHMRAAAAbXlfdmFyaWF0aW9uX2xpc3RzEQAAAG15X290
+aGVyUGFyYW1ldGVycwYAAABhcHBlbmRzEgAAAGRpc3BsYXllZF9yZXNvdXJjZXMHAAAAQ291cHVy
+ZXMcAAAAZmllbGRfbXlfZW1pc3Npb25MZXR0ZXJfbGlzdHMYAAAAZmllbGRfbXlfY2FzaFN0YXR1
+c19saXN0cxcAAABmaWVsZF9teV92YXJpYXRpb25fbGlzdHMXAAAAZmllbGRfbXlfb3RoZXJQYXJh
+bWV0ZXJpAgAAAGkDAAAAcwkAAAB2YXJpYXRpb25pAQAAAHMOAAAAZW1pc3Npb25MZXR0ZXJzDwAA
+AEVtaXNzaW9uIExldHRlcnMKAAAAY2FzaFN0YXR1c3MLAAAAQ2FzaCBTdGF0dXNzCQAAAFZhcmlh
+dGlvbnMPAAAAbnVtYmVyTGluZVRvQWRkcwsAAABjYXNoX3N0YXR1c3MPAAAAZW1pc3Npb25fbGV0
+dGVyaQAAAABzEQAAAHBvcnRhbF9jYXRlZ29yaWVzcx0AAABnZXRDYXRlZ29yeUNoaWxkVGl0bGVJ
+dGVtTGlzdHMGAAAAY29sdW1ucwUAAABwcmljZXMHAAAATW9udGFudHMIAAAAcmVzb3VyY2VzAAAA
+AHMKAAAAcmVzb3VyY2VJZCgZAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVl
+c3RzBwAAAGdldGF0dHJzBAAAAE5vbmVzGwAAAGRlZmF1bHRfZW1pc3Npb25MZXR0ZXJfbGlzdHMX
+AAAAZGVmYXVsdF9jYXNoU3RhdHVzX2xpc3RzFgAAAGRlZmF1bHRfdmFyaWF0aW9uX2xpc3RzGwAA
+AGRlZmF1bHRfb3RoZXJQYXJhbWV0ZXJfbGlzdHMLAAAAcmV0dXJuX2xpc3RzAwAAAGxlbnMJAAAA
+X2dldGl0ZW1fcxIAAABkZWZhdWx0X2NvbHVtbkJhc2VzBQAAAEZhbHNlcw0AAABhbGxvd19hZGRM
+aW5lcwQAAABUcnVlcxcAAABkZWZhdWx0X2NvbHVtbkJhc2VfbGlzdHMPAAAAY29sdW1uX2NhdGVn
+b3J5cwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhzDwAAAGNvbHVt
+bkJhc2VfbGlzdHMHAAAAY291bnRlcnMDAAAAc3RyKBoAAABzAgAAAGt3cwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzBwAAAGdldGF0dHJzBAAAAE5vbmVzGwAAAGRlZmF1bHRf
+ZW1pc3Npb25MZXR0ZXJfbGlzdHMXAAAAZGVmYXVsdF9jYXNoU3RhdHVzX2xpc3RzFgAAAGRlZmF1
+bHRfdmFyaWF0aW9uX2xpc3RzGwAAAGRlZmF1bHRfb3RoZXJQYXJhbWV0ZXJfbGlzdHMLAAAAcmV0
+dXJuX2xpc3RzAwAAAGxlbnMJAAAAX2dldGl0ZW1fcxIAAABkZWZhdWx0X2NvbHVtbkJhc2VzBQAA
+AEZhbHNlcw0AAABhbGxvd19hZGRMaW5lcwQAAABUcnVlcxcAAABkZWZhdWx0X2NvbHVtbkJhc2Vf
+bGlzdHMPAAAAY29sdW1uX2NhdGVnb3J5cwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0
+aXRlcl9zAQAAAHhzDwAAAGNvbHVtbkJhc2VfbGlzdHMHAAAAY291bnRlcnMDAAAAc3RyKAAAAAAo
+AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyUAAABDYXNoRGV0YWlsX2dldFZhcmlhdGlvbkZvck1h
+dHJpeElucHV0AQAAAHNgAAAADwESARIBEgESAwkBFgMNARIBEgESARYCEwETAgYCBgEjARYBCgEj
+ARYBCgEjARYBCgIKARoDDQEGAQoBDQEGAQoCBgEGBBMBQQAGATECMwQGAQ0ACQEpAREBGQEZARYB
+KAEAAABzJQAAAENhc2hEZXRhaWxfZ2V0VmFyaWF0aW9uRm9yTWF0cml4SW5wdXQoAQAAAHMlAAAA
+Q2FzaERldGFpbF9nZXRWYXJpYXRpb25Gb3JNYXRyaXhJbnB1dCgAAAAAKAAAAABzDwAAAFNjcmlw
+dCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_getVariationForMatrixInput</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>default_emissionLetter_list</string>
+                            <string>default_cashStatus_list</string>
+                            <string>default_variation_list</string>
+                            <string>default_otherParameter_list</string>
+                            <string>return_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>default_columnBase</string>
+                            <string>False</string>
+                            <string>allow_addLine</string>
+                            <string>True</string>
+                            <string>default_columnBase_list</string>
+                            <string>column_category</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>columnBase_list</string>
+                            <string>counter</string>
+                            <string>str</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_getVariationForMatrixInput</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

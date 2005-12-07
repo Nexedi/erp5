@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# list of all variation in the portal category\n
+catalog_variation_list =  [x for x in context.portal_categories.variation.getCategoryChildTitleItemList()[1:]   \n
+                           if x[1] in  variation_list ]\n
+# List of elements on the input listbox\n
+for listbox_line in listbox :\n
+  resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'),id = listbox_line[\'resourceId\'])\n
+  if resource_list[0].getObject().getPriceCurrency() <> \'currency/\'+operationCurrency:\n
+     return 0\n
+  resourceVariation_list = resource_list[0].getObject().getVariationIdList()\n
+  counter = 1\n
+  if columnBase == \'variation\':\n
+     for y in catalog_variation_list:\n
+         if int(listbox_line[\'column\'+str(counter)] or 0) <> 0 :          \n
+            if y[1] not in resourceVariation_list :\n
+               return 0  \n
+         counter += 1       \n
+  else:\n
+     if len(variation_list)> 1:\n
+        currentVariation = listbox_line[\'variation\']\n
+     else:\n
+       currentVariation = variation_list[0]\n
+       counter = 0\n
+       for y in range(numberOfColumn):\n
+          counter += 1    \n
+          if int(listbox_line[\'column\'+str(counter)] or 0) <> 0 : \n
+             if currentVariation not in resourceVariation_list :\n
+                return 0  \n
+\n
+return 1\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABgAAAEAAAABzHAAAAGUAAGQAAGQAAGQAAGQAAGQBAIQFAFoBAGQAAFMoAgAAAE5j
+BQAAABgAAAAhAAAASwAAAHNQAgAAZwAABGkAAH0HAHQCAHQDAHQEAHQEAHQEAHQFAGQBAIMCAGQC
+AIMCAGQDAIMCAIMAAGQEAGQAAIUCAIMCAIMBAERdKgB9DAB0AwB8DABkBACDAgB8AgBqBgBvDgAB
+fAcAfAwAgwEAAXFBAAFxQQB+BwB9DQB40QF0AgB8AACDAQBEXcMBfQ4AdAQAdAUAZAUAgwIAZAYA
+ZAcAZAgAZgIAZAkAdAMAfA4AZAoAgwIAgwACfQ8AdAQAdAQAdAMAfA8AZAsAgwIAZAwAgwIAgwAA
+ZA0AgwIAgwAAZA4AfAQAF2oDAG8IAAFkCwBTbgEAAXQEAHQEAHQDAHwPAGQLAIMCAGQMAIMCAIMA
+AGQPAIMCAIMAAH0QAGQEAH0RAHwBAGQCAGoCAG90AAF4GQF0AgB8DQCDAQBEXV8AfRIAdBEAdAMA
+fA4AZBAAdBIAfBEAgwEAF4MCAHAEAAFkCwCDAQBkCwBqAwBvIgABdAMAfBIAZAQAgwIAfBAAagcA
+bwgAAWQLAFNxigEBbgEAAXwRAGQEADd9EQBxNQFXcYEAAXQTAHwCAIMBAGQEAGoEAG8TAAF0AwB8
+DgBkAgCDAgB9FgBxgQABdAMAfAIAZAsAgwIAfRYAZAsAfREAeGoAdAIAdBUAfAMAgwEAgwEARF1W
+AH0SAHwRAGQEADd9EQB0EQB0AwB8DgBkEAB0EgB8EQCDAQAXgwIAcAQAAWQLAIMBAGQLAGoDAG8Z
+AAF8FgB8EABqBwBvCAABZAsAU3FAAgFx6gEBceoBV3GBAFdkBABTZAAAUygRAAAATnMRAAAAcG9y
+dGFsX2NhdGVnb3JpZXNzCQAAAHZhcmlhdGlvbnMdAAAAZ2V0Q2F0ZWdvcnlDaGlsZFRpdGxlSXRl
+bUxpc3RpAQAAAHMOAAAAcG9ydGFsX2NhdGFsb2dzCwAAAHBvcnRhbF90eXBlcwgAAABCYW5rbm90
+ZXMEAAAAQ29pbnMCAAAAaWRzCgAAAHJlc291cmNlSWRpAAAAAHMJAAAAZ2V0T2JqZWN0cxAAAABn
+ZXRQcmljZUN1cnJlbmN5cwkAAABjdXJyZW5jeS9zEgAAAGdldFZhcmlhdGlvbklkTGlzdHMGAAAA
+Y29sdW1uKBcAAABzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MJAAAAX2dl
+dGl0ZW1fcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzDgAAAHZhcmlhdGlvbl9saXN0
+cxYAAABjYXRhbG9nX3ZhcmlhdGlvbl9saXN0cwcAAABsaXN0Ym94cwwAAABsaXN0Ym94X2xpbmVz
+DQAAAHJlc291cmNlX2xpc3RzEQAAAG9wZXJhdGlvbkN1cnJlbmN5cxYAAAByZXNvdXJjZVZhcmlh
+dGlvbl9saXN0cwcAAABjb3VudGVycwoAAABjb2x1bW5CYXNlcwEAAAB5cwMAAABpbnRzAwAAAHN0
+cnMDAAAAbGVucxAAAABjdXJyZW50VmFyaWF0aW9ucwUAAAByYW5nZXMOAAAAbnVtYmVyT2ZDb2x1
+bW4oGAAAAHMHAAAAbGlzdGJveHMKAAAAY29sdW1uQmFzZXMOAAAAdmFyaWF0aW9uX2xpc3RzDgAA
+AG51bWJlck9mQ29sdW1ucxEAAABvcGVyYXRpb25DdXJyZW5jeXMCAAAAa3dzBgAAAGFwcGVuZHMI
+AAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGl0ZW1fcwkAAABfZ2V0YXR0cl9zBwAA
+AGNvbnRleHRzAQAAAHhzFgAAAGNhdGFsb2dfdmFyaWF0aW9uX2xpc3RzDAAAAGxpc3Rib3hfbGlu
+ZXMNAAAAcmVzb3VyY2VfbGlzdHMWAAAAcmVzb3VyY2VWYXJpYXRpb25fbGlzdHMHAAAAY291bnRl
+cnMBAAAAeXMDAAAAaW50cwMAAABzdHJzAwAAAGxlbnMQAAAAY3VycmVudFZhcmlhdGlvbnMFAAAA
+cmFuZ2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGgAAAENhc2hEZXRhaWxfaXNMaXN0
+Ym94VmFsaWRlAQAAAHM4AAAAAAFBAAYBLQINAAYBLQEyAQgBJwEGAQ0BDQAGAS0BFgEMARICEwET
+Ag8BBgETAAYBCgEtAQ0BFAIoAgAAAHMEAAAATm9uZXMaAAAAQ2FzaERldGFpbF9pc0xpc3Rib3hW
+YWxpZGUoAgAAAHMEAAAATm9uZXMaAAAAQ2FzaERldGFpbF9pc0xpc3Rib3hWYWxpZGUoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_isListboxValide</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=None, columnBase, variation_list, numberOfColumn ,operationCurrency, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>5</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>columnBase</string>
+                            <string>variation_list</string>
+                            <string>numberOfColumn</string>
+                            <string>operationCurrency</string>
+                            <string>kw</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>catalog_variation_list</string>
+                            <string>listbox_line</string>
+                            <string>resource_list</string>
+                            <string>resourceVariation_list</string>
+                            <string>counter</string>
+                            <string>y</string>
+                            <string>int</string>
+                            <string>str</string>
+                            <string>len</string>
+                            <string>currentVariation</string>
+                            <string>range</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_isListboxValide</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

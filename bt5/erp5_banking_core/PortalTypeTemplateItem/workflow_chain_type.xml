@@ -1,0 +1,50 @@
+<workflow_chain>
+ <chain>
+  <type>Banknote</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Category</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Check</type>
+  <workflow>check_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Checkbook</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Checkbook Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Coin</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Counter</type>
+  <workflow>counter_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Counter Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Currency Cash Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Delivery Cell</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Foreign Check</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Foreign Check Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+</workflow_chain>

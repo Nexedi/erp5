@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># get the current logged user site\n
+\n
+valid_assignment_list = context.Baobab_getUserAssignmentList()\n
+\n
+site_list = []\n
+for a in valid_assignment_list:\n
+  new_site = a.getSite()\n
+  if new_site not in (\'\', None):\n
+    site_list.append(new_site)\n
+return site_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAIAAAAQwAA
+AHNzAAAAdAAAdAEAZAEAgwIAgwAAfQIAZwAAfQMAeFAAdAQAfAIAgwEARF1CAH0FAHQAAHwFAGQC
+AIMCAIMAAH0GAHwGAGQDAHQHAGYCAGoHAG8XAAF0AAB8AwBkBACDAgB8BgCDAQABcSUAAXElAFd8
+AwBTZAAAUygFAAAATnMcAAAAQmFvYmFiX2dldFVzZXJBc3NpZ25tZW50TGlzdHMHAAAAZ2V0U2l0
+ZXMAAAAAcwYAAABhcHBlbmQoCAAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cxUAAAB2YWxp
+ZF9hc3NpZ25tZW50X2xpc3RzCQAAAHNpdGVfbGlzdHMJAAAAX2dldGl0ZXJfcwEAAABhcwgAAABu
+ZXdfc2l0ZXMEAAAATm9uZSgIAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzFQAAAHZhbGlk
+X2Fzc2lnbm1lbnRfbGlzdHMJAAAAc2l0ZV9saXN0cwkAAABfZ2V0aXRlcl9zAQAAAGFzCAAAAG5l
+d19zaXRlcwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcx4AAABCYW9iYWJf
+Z2V0VXNlckFzc2lnbmVkU2l0ZUxpc3QBAAAAcxAAAAAAAhICBgENAAYBEgEWARgBKAEAAABzHgAA
+AEJhb2JhYl9nZXRVc2VyQXNzaWduZWRTaXRlTGlzdCgBAAAAcx4AAABCYW9iYWJfZ2V0VXNlckFz
+c2lnbmVkU2l0ZUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getUserAssignedSiteList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>valid_assignment_list</string>
+                            <string>site_list</string>
+                            <string>_getiter_</string>
+                            <string>a</string>
+                            <string>new_site</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Baobab_getUserAssignedSiteList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

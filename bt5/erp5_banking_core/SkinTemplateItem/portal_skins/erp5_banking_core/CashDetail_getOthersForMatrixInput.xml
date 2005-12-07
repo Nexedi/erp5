@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+return_value = None\n
+if myChoice == \'emissionLetter_item\':\n
+   my_list = getattr(request,\'my_emissionLetter_list\',None)   # Find Emission letter on the REQUEST\n
+   if my_list is None: \n
+      my_list = getattr(request,\'field_my_emissionLetter_list\',None)   # Find Emission letter on the REQUEST\n
+\n
+   if my_list is not None: \n
+      return_value =  [x for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()\n
+                if x[1] in my_list ]\n
+   else: \n
+      return_value =  [x for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()]\n
+elif myChoice == \'emissionLetter_defaultValue\':\n
+   return_value = getattr(request,\'my_emissionLetter_list\',None)   # Find Emission letter on the REQUEST\n
+   return_value = return_value[1]\n
+elif myChoice == \'cashStatus_item\':\n
+   my_list = getattr(request,\'my_cashStatus_list\',None)   # Find cash Status on the REQUEST\n
+   if my_list is None: \n
+      my_list = getattr(request,\'field_my_cashStatus_list\',None)   # Find Emission letter on the REQUEST\n
+   if my_list is not None: \n
+      return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTitleItemList()\n
+                  if x[1] in my_list]\n
+   else:\n
+      return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTitleItemList()]\n
+elif myChoice == \'cashStatus_defaultValue\':\n
+   return_value = getattr(request,\'my_cashStatus_list\',None)   # Find cash Status on the REQUEST\n
+   return_value = return_value[1]\n
+\n
+elif myChoice == \'variation_item\':\n
+   my_list = getattr(request,\'my_variation_list\',None)   # Find variation on the REQUEST\n
+   if my_list is None: \n
+      my_list = getattr(request,\'field_my_variation_list\',None)   # Find variation on the REQUEST\n
+   if my_list is not None: \n
+      return_value =  [x for x in context.portal_categories.variation.getCategoryChildTitleItemList()\n
+                  if x[1] in my_list]\n
+   else:\n
+      return_value =  [x for x in context.portal_categories.variation.getCategoryChildTitleItemList()]\n
+elif myChoice == \'variation_defaultValue\':\n
+   return_value = getattr(request,\'my_variation_list\',None)   # Find variation on the REQUEST\n
+   return_value = return_value[1]\n
+\n
+\n
+return return_value\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAA4AAAAVAAAA
+SwAAAHPIAwAAdAAAdAEAZAEAgwIAfQQAdAMAfQYAfAAAZAIAagIAb/oAAXQGAHwEAGQDAHQDAIMD
+AH0IAHwIAHQDAGoIAG8WAAF0BgB8BABkBAB0AwCDAwB9CABuAQABfAgAdAMAagkAb2kAAWcAAARp
+CAB9CgB0CgB0AAB0AAB0AAB0AQBkBQCDAgBkBgCDAgBkBwCDAgCDAACDAQBEXSoAfQwAdAwAfAwA
+ZAgAgwIAfAgAagYAbw4AAXwKAHwMAIMBAAFxlgABcZYAfgoAfQYAccADAWcAAARpCAB9CgB0CgB0
+AAB0AAB0AAB0AQBkBQCDAgBkBgCDAgBkBwCDAgCDAACDAQBEXRAAfQwAfAoAfAwAgwEAAXH/AH4K
+AH0GAG6lAgF8AABkCQBqAgBvJQABdAYAfAQAZAMAdAMAgwMAfQYAdAwAfAYAZAgAgwIAfQYAbnMC
+AXwAAGQKAGoCAG/6AAF0BgB8BABkCwB0AwCDAwB9CAB8CAB0AwBqCABvFgABdAYAfAQAZAwAdAMA
+gwMAfQgAbgEAAXwIAHQDAGoJAG9pAAFnAAAEaQgAfQoAdAoAdAAAdAAAdAAAdAEAZAUAgwIAZA0A
+gwIAZAcAgwIAgwAAgwEARF0qAH0MAHQMAHwMAGQIAIMCAHwIAGoGAG8OAAF8CgB8DACDAQABcc8B
+AXHPAX4KAH0GAHHAAwFnAAAEaQgAfQoAdAoAdAAAdAAAdAAAdAEAZAUAgwIAZA0AgwIAZAcAgwIA
+gwAAgwEARF0QAH0MAHwKAHwMAIMBAAFxOAJ+CgB9BgBubAEBfAAAZA4AagIAbyUAAXQGAHwEAGQL
+AHQDAIMDAH0GAHQMAHwGAGQIAIMCAH0GAG46AQF8AABkDwBqAgBv+gABdAYAfAQAZBAAdAMAgwMA
+fQgAfAgAdAMAaggAbxYAAXQGAHwEAGQRAHQDAIMDAH0IAG4BAAF8CAB0AwBqCQBvaQABZwAABGkI
+AH0KAHQKAHQAAHQAAHQAAHQBAGQFAIMCAGQSAIMCAGQHAIMCAIMAAIMBAERdKgB9DAB0DAB8DABk
+CACDAgB8CABqBgBvDgABfAoAfAwAgwEAAXEIAwFxCAN+CgB9BgBxwAMBZwAABGkIAH0KAHQKAHQA
+AHQAAHQAAHQBAGQFAIMCAGQSAIMCAGQHAIMCAIMAAIMBAERdEAB9DAB8CgB8DACDAQABcXEDfgoA
+fQYAbjMAAXwAAGQTAGoCAG8lAAF0BgB8BABkEAB0AwCDAwB9BgB0DAB8BgBkCACDAgB9BgBuAQAB
+fAYAU2QAAFMoFAAAAE5zBwAAAFJFUVVFU1RzEwAAAGVtaXNzaW9uTGV0dGVyX2l0ZW1zFgAAAG15
+X2VtaXNzaW9uTGV0dGVyX2xpc3RzHAAAAGZpZWxkX215X2VtaXNzaW9uTGV0dGVyX2xpc3RzEQAA
+AHBvcnRhbF9jYXRlZ29yaWVzcw8AAABlbWlzc2lvbl9sZXR0ZXJzHQAAAGdldENhdGVnb3J5Q2hp
+bGRUaXRsZUl0ZW1MaXN0aQEAAABzGwAAAGVtaXNzaW9uTGV0dGVyX2RlZmF1bHRWYWx1ZXMPAAAA
+Y2FzaFN0YXR1c19pdGVtcxIAAABteV9jYXNoU3RhdHVzX2xpc3RzGAAAAGZpZWxkX215X2Nhc2hT
+dGF0dXNfbGlzdHMLAAAAY2FzaF9zdGF0dXNzFwAAAGNhc2hTdGF0dXNfZGVmYXVsdFZhbHVlcw4A
+AAB2YXJpYXRpb25faXRlbXMRAAAAbXlfdmFyaWF0aW9uX2xpc3RzFwAAAGZpZWxkX215X3Zhcmlh
+dGlvbl9saXN0cwkAAAB2YXJpYXRpb25zFgAAAHZhcmlhdGlvbl9kZWZhdWx0VmFsdWUoDQAAAHMJ
+AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAAByZXF1ZXN0cwQAAABOb25lcwwAAAByZXR1cm5f
+dmFsdWVzCAAAAG15Q2hvaWNlcwcAAABnZXRhdHRycwcAAABteV9saXN0cwYAAABhcHBlbmRzCAAA
+ACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhzCQAAAF9nZXRpdGVtXygOAAAAcwgAAABteUNo
+b2ljZXMCAAAAa3dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMEAAAATm9u
+ZXMMAAAAcmV0dXJuX3ZhbHVlcwcAAABnZXRhdHRycwcAAABteV9saXN0cwYAAABhcHBlbmRzCAAA
+ACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhzCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMiAAAAQ2FzaERldGFpbF9nZXRPdGhlcnNGb3JNYXRyaXhJbnB1dAEA
+AABzUgAAAA8BBgENARIBDQEWAg0BMgAGATECMgAdAQ0BEgETAQ0BEgENARYBDQEyAAYBMQIyAB0B
+DQESARMCDQESAQ0BFgENATIABgExAjIAHQENARIBEwMoAgAAAHMEAAAATm9uZXMiAAAAQ2FzaERl
+dGFpbF9nZXRPdGhlcnNGb3JNYXRyaXhJbnB1dCgCAAAAcwQAAABOb25lcyIAAABDYXNoRGV0YWls
+X2dldE90aGVyc0Zvck1hdHJpeElucHV0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgA
+AAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_getOthersForMatrixInput</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>myChoice=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>myChoice</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>return_value</string>
+                            <string>getattr</string>
+                            <string>my_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_getOthersForMatrixInput</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

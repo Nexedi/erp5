@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Form.PDFTemplate</string>
+          <string>PDFTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="iso-8859-1"?>\n
+<document filename=\'report01.pdf\'>\n
+  <title>Title</title>\n
+  <author>Author</author>\n
+  <subject>Subject</subject>\n
+  <content>\n
+    <table style=\'ttp0\' splitbyrow=\'1\' repeatrows=\'0\' repeatcols=\'0\'>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td colwidth=\'4.71cm\'>\n
+        </td>\n
+        <td colwidth=\'6.212cm\'>\n
+        </td>\n
+        <td colwidth=\'1.845cm\'>\n
+        </td>\n
+        <td colwidth=\'6.563cm\'>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>\n
+        </td>\n
+        <td>DECOMPOSITION</td>\n
+        <td>\n
+        </td>\n
+        <td>MONTANT</td>\n
+      </tr>\n
+      <tr rowheight=\'0.695cm\'>\n
+        <td>Nombre</td>\n
+        <td>Coupure</td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>Billet de :</td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>10.000 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>5.000 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>2.000 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>1.000 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.866cm\'>\n
+        <td>\n
+        </td>\n
+        <td>Valeur totale des billets</td>\n
+        <td>\n
+        </td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>Piece de :</td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>5.000 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>500 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>200 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>100 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>50 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>25 F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>10F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>5F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>2F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>1F</td>\n
+        <td>2003</td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.866cm\'>\n
+        <td>\n
+        </td>\n
+        <td>Valeur totale des pieces</td>\n
+        <td>\n
+        </td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.554cm\'>\n
+        <td>PAR LE DEBIT DU COMPTE</td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>TOTAL DU RETRAIT</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.803cm\'>\n
+        <td>Numero</td>\n
+        <td>Z00091232</td>\n
+        <td>\n
+        </td>\n
+        <td>0</td>\n
+      </tr>\n
+      <tr rowheight=\'0.427cm\'>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+      <tr rowheight=\'0.868cm\'>\n
+        <td>Intitule</td>\n
+        <td>KANE ABDOUL</td>\n
+        <td>\n
+        </td>\n
+        <td>\n
+        </td>\n
+      </tr>\n
+    </table>\n
+  </content>\n
+</document>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashContainer_viewPdf</string> </value>
+        </item>
+        <item>
+            <key> <string>pdf_stylesheet</string> </key>
+            <value> <string>CashMovement_pdfTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

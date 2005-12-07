@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+parent_portal_type = context.getParent().getPortalType()\n
+variation_dict = {}\n
+for variation in context.getVariationText().split(\'\\n\') :\n
+  variation_list = variation.split(\'/\', 1)\n
+  if len(variation_list) == 2 :\n
+    variation_dict[variation_list[0]] = variation_list[1]\n
+# fonctionne uniquement pour les cellule : dans le cas des lignes: les autres valaures sont ecras\xc3\xa9\n
+dest_variation_dict = variation_dict.copy()\n
+##########################################\n
+\n
+\n
+# ceci est une transformation\n
+# -> quand on fait une destruction de billet, une Destruction Line avec cash status to delete\n
+# -> en source cash_status = to_delete; en destination cash_status = cancelled\n
+# Faire la liste des modules qui demandent une transformation et coder la liste des modules en dur ici\n
+#  avec les variations \xc3\xa0 forcer.\n
+\n
+if 0 and parent_portal_type == \'Cash To Currency Purchase Line Out\' :\n
+  variation_dict[\'emission_letter\'] = \'k\'\n
+  dest_variation_dict[\'cash_status\'] = \'cancelled\'\n
+\n
+##########################################\n
+variation_list = [\'%s/%s\' % (k, v) for k, v in variation_dict.items()]\n
+dest_variation_list = [\'%s/%s\' % (k, v) for k, v in dest_variation_dict.items()]\n
+variation_list.sort() ; dest_variation_list.sort()\n
+return [\'\\n\'.join(variation_list), \'\\n\'.join(dest_variation_list)]\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABAAAAAXAAAAQwAA
+AHPdAQAAdAAAdAAAdAEAZAEAgwIAgwAAZAIAgwIAgwAAfQIAaAAAfQMAeIAAdAQAdAAAdAAAdAEA
+ZAMAgwIAgwAAZAQAgwIAZAUAgwEAgwEARF1XAH0FAHQAAHwFAGQEAIMCAGQGAGQHAIMCAH0GAHQH
+AHwGAIMBAGQIAGoCAG8mAAF0CAB8BgBkBwCDAgB0CQB8AwCDAQB0CAB8BgBkCQCDAgA8cUwAAXFM
+AFd0AAB8AwBkCgCDAgCDAAB9CgBkCQBvCgABfAIAZAsAagIAbyQAAWQMAHQJAHwDAIMBAGQNADxk
+DgB0CQB8CgCDAQBkDwA8bgEAAWcAAARpCwB9DAB0BAB0AAB8AwBkEACDAgCDAACDAQBEXScAdAQA
+AoMBAFwCAH0NAH0OAHwMAGQRAHwNAHwOAGYCABaDAQABcREBfgwAfQYAZwAABGkLAH0MAHQEAHQA
+AHwKAGQQAIMCAIMAAIMBAERdJwB0BAACgwEAXAIAfQ0AfQ4AfAwAZBEAfA0AfA4AZgIAFoMBAAFx
+YQF+DAB9DwB0AAB8BgBkEgCDAgCDAAABdAAAfA8AZBIAgwIAgwAAAXQAAGQFAGQTAIMCAHwGAIMB
+AHQAAGQFAGQTAIMCAHwPAIMBAGcCAFNkAABTKBQAAABOcwkAAABnZXRQYXJlbnRzDQAAAGdldFBv
+cnRhbFR5cGVzEAAAAGdldFZhcmlhdGlvblRleHRzBQAAAHNwbGl0cwEAAAAKcwEAAAAvaQEAAABp
+AgAAAGkAAAAAcwQAAABjb3B5cyIAAABDYXNoIFRvIEN1cnJlbmN5IFB1cmNoYXNlIExpbmUgT3V0
+cwEAAABrcw8AAABlbWlzc2lvbl9sZXR0ZXJzCQAAAGNhbmNlbGxlZHMLAAAAY2FzaF9zdGF0dXNz
+BQAAAGl0ZW1zcwUAAAAlcy8lc3MEAAAAc29ydHMEAAAAam9pbigQAAAAcwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzEgAAAHBhcmVudF9wb3J0YWxfdHlwZXMOAAAAdmFyaWF0aW9uX2RpY3RzCQAA
+AF9nZXRpdGVyX3MJAAAAdmFyaWF0aW9ucw4AAAB2YXJpYXRpb25fbGlzdHMDAAAAbGVucwkAAABf
+Z2V0aXRlbV9zBwAAAF93cml0ZV9zEwAAAGRlc3RfdmFyaWF0aW9uX2RpY3RzBgAAAGFwcGVuZHMI
+AAAAJGFwcGVuZDBzAQAAAGtzAQAAAHZzEwAAAGRlc3RfdmFyaWF0aW9uX2xpc3QoEAAAAHMJAAAA
+X2dldGF0dHJfcwcAAABjb250ZXh0cxIAAABwYXJlbnRfcG9ydGFsX3R5cGVzDgAAAHZhcmlhdGlv
+bl9kaWN0cwkAAABfZ2V0aXRlcl9zCQAAAHZhcmlhdGlvbnMOAAAAdmFyaWF0aW9uX2xpc3RzAwAA
+AGxlbnMJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfcxMAAABkZXN0X3ZhcmlhdGlvbl9kaWN0cwYA
+AABhcHBlbmRzCAAAACRhcHBlbmQwcwEAAABrcwEAAAB2cxMAAABkZXN0X3ZhcmlhdGlvbl9saXN0
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyQAAABNb3ZlbWVudF9nZXRUcmFuc2Zvcm1l
+ZFZhcmlhdGlvblRleHQBAAAAcyAAAAAeAQYBKAAGARgBEwEqAhkKDQEQARQDIAAwASAAMwEdASgB
+AAAAcyQAAABNb3ZlbWVudF9nZXRUcmFuc2Zvcm1lZFZhcmlhdGlvblRleHQoAQAAAHMkAAAATW92
+ZW1lbnRfZ2V0VHJhbnNmb3JtZWRWYXJpYXRpb25UZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Movement_getTransformedVariationText</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>parent_portal_type</string>
+                            <string>variation_dict</string>
+                            <string>_getiter_</string>
+                            <string>variation</string>
+                            <string>variation_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>dest_variation_dict</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>dest_variation_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Movement_getTransformedVariationText</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

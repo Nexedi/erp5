@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>my_category_list =[]\n
+for y in base_category_list :\n
+    my_category_list += [x[1] for x in context.portal_categories[y].getCategoryChildTitleItemList(base=1)[1:]]\n
+return my_category_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzGQAAAGQBAGQCAGQDAGYDAGQEAIQBAFoAAGQAAFMoBQAAAE5zDwAA
+AGVtaXNzaW9uX2xldHRlcnMLAAAAY2FzaF9zdGF0dXNzCQAAAHZhcmlhdGlvbmMBAAAACgAAAA8A
+AABDAAAAc5IAAABnAAB9AQB4gQB0AQB8AACDAQBEXXMAfQMAfAEAZwAABGkEAH0FAHQBAHQGAHQH
+AHQGAHQHAHQIAGQBAIMCAHwDAIMCAGQCAIMCAGQDAGQEAIMAAWQEAGQAAIUCAIMCAIMBAERdGQB9
+CQB8BQB0BgB8CQBkBACDAgCDAQABcWMAfgUAN30BAHETAFd8AQBTZAAAUygFAAAATnMRAAAAcG9y
+dGFsX2NhdGVnb3JpZXNzHQAAAGdldENhdGVnb3J5Q2hpbGRUaXRsZUl0ZW1MaXN0cwQAAABiYXNl
+aQEAAAAoCgAAAHMQAAAAbXlfY2F0ZWdvcnlfbGlzdHMJAAAAX2dldGl0ZXJfcxIAAABiYXNlX2Nh
+dGVnb3J5X2xpc3RzAQAAAHlzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVtX3MJ
+AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwEAAAB4KAoAAABzEgAAAGJhc2VfY2F0ZWdvcnlfbGlz
+dHMQAAAAbXlfY2F0ZWdvcnlfbGlzdHMJAAAAX2dldGl0ZXJfcwEAAAB5cwYAAABhcHBlbmRzCAAA
+ACRhcHBlbmQwcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMBAAAAeCgA
+AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMbAAAAT3JkZXJMaW5lX2dldE1hdHJpeEl0ZW1M
+aXN0AQAAAHMKAAAABgENAAYBSgAnASgBAAAAcxsAAABPcmRlckxpbmVfZ2V0TWF0cml4SXRlbUxp
+c3QoAQAAAHMbAAAAT3JkZXJMaW5lX2dldE1hdHJpeEl0ZW1MaXN0KAAAAAAoAAAAAHMPAAAAU2Ny
+aXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/OrderLine_getMatrixItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_category_list=(\'emission_letter\',\'cash_status\',\'variation\')</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>base_category_list</string>
+                            <string>my_category_list</string>
+                            <string>_getiter_</string>
+                            <string>y</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <tuple>
+                  <string>emission_letter</string>
+                  <string>cash_status</string>
+                  <string>variation</string>
+                </tuple>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>OrderLine_getMatrixItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

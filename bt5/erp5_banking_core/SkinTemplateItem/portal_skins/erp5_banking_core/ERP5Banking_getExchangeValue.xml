@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>rate = context.CurrencyExchange_getExchangeRateList()[1]\n
+price = context.getBasePrice()\n
+\n
+#raise "KEVIN", repr(context.CurrencyExchange_getExchangeRateList())\n
+\n
+if None in (rate, price):\n
+  return None\n
+if rate is not type(1.0):\n
+  try:    \n
+    rate = float(rate)\n
+  except: \n
+    rate = None\n
+if price is not type(1.0):\n
+  try:    \n
+    price = float(price)\n
+  except: \n
+    price = None\n
+\n
+if None in (rate, price):\n
+  return None\n
+\n
+return rate * price\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAQAAAAQwAA
+AHPdAAAAdAAAdAEAdAIAZAEAgwIAgwAAZAIAgwIAfQMAdAEAdAIAZAMAgwIAgwAAfQQAdAUAfAMA
+fAQAZgIAagYAbwgAAXQFAFNuAQABfAMAdAYAZAQAgwEAagkAbyQAAXkQAHQHAHwDAIMBAH0DAFdx
+fwABAQF0BQB9AwBxfwBYbgEAAXwEAHQGAGQEAIMBAGoJAG8kAAF5EAB0BwB8BACDAQB9BABXcbYA
+AQEBdAUAfQQAcbYAWG4BAAF0BQB8AwB8BABmAgBqBgBvCAABdAUAU24BAAF8AwB8BAAUU2QAAFMo
+BQAAAE5zJAAAAEN1cnJlbmN5RXhjaGFuZ2VfZ2V0RXhjaGFuZ2VSYXRlTGlzdGkBAAAAcwwAAABn
+ZXRCYXNlUHJpY2VmAzEuMCgIAAAAcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MHAAAAY29u
+dGV4dHMEAAAAcmF0ZXMFAAAAcHJpY2VzBAAAAE5vbmVzBAAAAHR5cGVzBQAAAGZsb2F0KAgAAABz
+CQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwQAAAByYXRlcwUAAABwcmlj
+ZXMEAAAATm9uZXMEAAAAdHlwZXMFAAAAZmxvYXQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzHAAAAEVSUDVCYW5raW5nX2dldEV4Y2hhbmdlVmFsdWUBAAAAcxwAAAAbARIEEwEIARMBAwET
+Ag4BEwEDARMCDgITAQgCKAEAAABzHAAAAEVSUDVCYW5raW5nX2dldEV4Y2hhbmdlVmFsdWUoAQAA
+AHMcAAAARVJQNUJhbmtpbmdfZ2V0RXhjaGFuZ2VWYWx1ZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/ERP5Banking_getExchangeValue</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>rate</string>
+                            <string>price</string>
+                            <string>None</string>
+                            <string>type</string>
+                            <string>float</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Banking_getExchangeValue</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

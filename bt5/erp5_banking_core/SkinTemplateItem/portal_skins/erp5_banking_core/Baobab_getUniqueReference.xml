@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>baobab_id_group = (\'baobab\', \'bankng_operation\')\n
+application_id = \'BA\'\n
+\n
+# first try to get the reference\n
+try:\n
+  reference = context.getSourceReference()\n
+except AttributeError:\n
+  return \'\'\n
+\n
+# if it\'s not defined, try to generate it\n
+if reference in (None, \'\') or not str(reference).startswith(application_id):\n
+  # codification\n
+  source = context.getSourceValue()\n
+  if source not in (None, \'\'):\n
+    codification = source.getCodification()\n
+    if codification in (None, \'\'):\n
+      return \'\'\n
+  else:\n
+    return \'\'\n
+\n
+  # date\n
+  date = context.getStopDate()\n
+  if date in (None, \'\'):\n
+    return \'No date defined\'\n
+  year = date.strftime(\'%Y\')\n
+\n
+  # actual generation\n
+  if reference in (None, \'\'):\n
+    reference = context.portal_ids.generateNewId(id_group = baobab_id_group)\n
+\n
+  # affectation\n
+  reference = "%s-%s-%s-%s" % (application_id, codification, year, reference)\n
+  context.setSourceReference(reference)\n
+\n
+# finally, return it\n
+return reference\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAwAAAAVAAAAQwAA
+AHN7AQAAZAEAZAIAZgIAfQAAZAMAfQEAeRYAdAIAdAMAZAQAgwIAgwAAfQQAV24XAAR0BQBqCgBv
+CwABAQEBZAUAU24CAAFYfAQAdAYAZAUAZgIAagYAcBoAAXQCAHQHAHwEAIMBAGQGAIMCAHwBAIMB
+AAxvAQEBdAIAdAMAZAcAgwIAgwAAfQgAfAgAdAYAZAUAZgIAagcAbzEAAXQCAHwIAGQIAIMCAIMA
+AH0JAHwJAHQGAGQFAGYCAGoGAG8IAAFkBQBTccwAAW4FAAFkBQBTdAIAdAMAZAkAgwIAgwAAfQoA
+fAoAdAYAZAUAZgIAagYAbwgAAWQKAFNuAQABdAIAfAoAZAsAgwIAZAwAgwEAfQsAfAQAdAYAZAUA
+ZgIAagYAbyUAAXQCAHQCAHQDAGQNAIMCAGQOAIMCAGQPAHwAAIMAAX0EAG4BAAFkEAB8AQB8CQB8
+CwB8BABmBAAWfQQAdAIAdAMAZBEAgwIAfAQAgwEAAW4BAAF8BABTZAAAUygSAAAATnMGAAAAYmFv
+YmFicxAAAABiYW5rbmdfb3BlcmF0aW9ucwIAAABCQXMSAAAAZ2V0U291cmNlUmVmZXJlbmNlcwAA
+AABzCgAAAHN0YXJ0c3dpdGhzDgAAAGdldFNvdXJjZVZhbHVlcw8AAABnZXRDb2RpZmljYXRpb25z
+CwAAAGdldFN0b3BEYXRlcw8AAABObyBkYXRlIGRlZmluZWRzCAAAAHN0cmZ0aW1lcwIAAAAlWXMK
+AAAAcG9ydGFsX2lkc3MNAAAAZ2VuZXJhdGVOZXdJZHMIAAAAaWRfZ3JvdXBzCwAAACVzLSVzLSVz
+LSVzcxIAAABzZXRTb3VyY2VSZWZlcmVuY2UoDAAAAHMPAAAAYmFvYmFiX2lkX2dyb3Vwcw4AAABh
+cHBsaWNhdGlvbl9pZHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwkAAAByZWZlcmVuY2VzDgAA
+AEF0dHJpYnV0ZUVycm9ycwQAAABOb25lcwMAAABzdHJzBgAAAHNvdXJjZXMMAAAAY29kaWZpY2F0
+aW9ucwQAAABkYXRlcwQAAAB5ZWFyKAwAAABzDwAAAGJhb2JhYl9pZF9ncm91cHMOAAAAYXBwbGlj
+YXRpb25faWRzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMJAAAAcmVmZXJlbmNlcw4AAABBdHRy
+aWJ1dGVFcnJvcnMEAAAATm9uZXMDAAAAc3RycwYAAABzb3VyY2VzDAAAAGNvZGlmaWNhdGlvbnME
+AAAAZGF0ZXMEAAAAeWVhcigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMZAAAAQmFvYmFi
+X2dldFVuaXF1ZVJlZmVyZW5jZQEAAABzKgAAAAwBBgMDARYBDgEJAzACEgETARIBEwEMAgQDEgET
+AQgBFQMTASUDGQEUAygBAAAAcxkAAABCYW9iYWJfZ2V0VW5pcXVlUmVmZXJlbmNlKAEAAABzGQAA
+AEJhb2JhYl9nZXRVbmlxdWVSZWZlcmVuY2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
+CAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getUniqueReference</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>baobab_id_group</string>
+                            <string>application_id</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>reference</string>
+                            <string>AttributeError</string>
+                            <string>None</string>
+                            <string>str</string>
+                            <string>source</string>
+                            <string>codification</string>
+                            <string>date</string>
+                            <string>year</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Baobab_getUniqueReference</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+\n
+if start_number == None and stop_number == None:\n
+\n
+  try:\n
+     # when clicking on the button\n
+     start_number = int(request[\'start_number\'])\n
+     stop_number = int(request[\'stop_number\'])\n
+  except:\n
+     # when hitting the enter key\n
+     start_number = int(request[\'field_my_start_number\'])\n
+     stop_number = int(request[\'field_my_stop_number\'])\n
+\n
+context.setTitle(\'%s - %s\' % (start_number, stop_number))\n
+for i in range(start_number, stop_number + 1):\n
+  newline = context.newContent(portal_type=\'Check\', title=str(i))\n
+  newline.setDestination(context.getDestinationSection())\n
+  newline.setStartDate(context.getStartDate())\n
+\n
+request.RESPONSE.redirect(context.absolute_url())\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQBAGQCAIQCAFoAAGQAAFMoAwAAAE5pAAAAAGMCAAAA
+DQAAAA4AAABDAAAAc14BAAB0AAB0AQBkAQCDAgB9BAB8AAB0BABqAgBvCgABfAEAdAQAagIAb2YA
+AXkuAHQGAHQHAHwEAGQCAIMCAIMBAH0AAHQGAHQHAHwEAGQDAIMCAIMBAH0BAFdxjwABAQF0BgB0
+BwB8BABkBACDAgCDAQB9AAB0BgB0BwB8BABkBQCDAgCDAQB9AQBxjwBYbgEAAXQAAHQBAGQGAIMC
+AGQHAHwAAHwBAGYCABaDAQABeIMAdAgAdAkAfAAAfAEAZAgAF4MCAIMBAERdaAB9CgB0AAB0AQBk
+CQCDAgBkCgBkCwBkDAB0CwB8CgCDAQCDAAJ9DAB0AAB8DABkDQCDAgB0AAB0AQBkDgCDAgCDAACD
+AQABdAAAfAwAZA8AgwIAdAAAdAEAZBAAgwIAgwAAgwEAAXHGAFd0AAB0AAB8BABkEQCDAgBkEgCD
+AgB0AAB0AQBkEwCDAgCDAACDAQABZAAAUygUAAAATnMHAAAAUkVRVUVTVHMMAAAAc3RhcnRfbnVt
+YmVycwsAAABzdG9wX251bWJlcnMVAAAAZmllbGRfbXlfc3RhcnRfbnVtYmVycxQAAABmaWVsZF9t
+eV9zdG9wX251bWJlcnMIAAAAc2V0VGl0bGVzBwAAACVzIC0gJXNpAQAAAHMKAAAAbmV3Q29udGVu
+dHMLAAAAcG9ydGFsX3R5cGVzBQAAAENoZWNrcwUAAAB0aXRsZXMOAAAAc2V0RGVzdGluYXRpb25z
+FQAAAGdldERlc3RpbmF0aW9uU2VjdGlvbnMMAAAAc2V0U3RhcnREYXRlcwwAAABnZXRTdGFydERh
+dGVzCAAAAFJFU1BPTlNFcwgAAAByZWRpcmVjdHMMAAAAYWJzb2x1dGVfdXJsKA0AAABzCQAAAF9n
+ZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMMAAAAc3RhcnRfbnVtYmVycwQAAABOb25l
+cwsAAABzdG9wX251bWJlcnMDAAAAaW50cwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRpdGVyX3MFAAAA
+cmFuZ2VzAQAAAGlzAwAAAHN0cnMHAAAAbmV3bGluZSgNAAAAcwwAAABzdGFydF9udW1iZXJzCwAA
+AHN0b3BfbnVtYmVycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzBAAAAE5v
+bmVzAwAAAGludHMJAAAAX2dldGl0ZW1fcwkAAABfZ2V0aXRlcl9zBQAAAHJhbmdlcwEAAABpcwMA
+AABzdHJzBwAAAG5ld2xpbmUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGQAAAENoZWNr
+Ym9va19jcmVhdGVDaGVja0xpc3QBAAAAcxoAAAAPAhoCAwIVARwDFQEgAhoBGgAGAScBHwEmAigB
+AAAAcxkAAABDaGVja2Jvb2tfY3JlYXRlQ2hlY2tMaXN0KAEAAABzGQAAAENoZWNrYm9va19jcmVh
+dGVDaGVja0xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAA
+AHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Checkbook_createCheckList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>start_number = 0, stop_number = 0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>start_number</string>
+                            <string>stop_number</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>int</string>
+                            <string>_getitem_</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>str</string>
+                            <string>newline</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Checkbook_createCheckList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

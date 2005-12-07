@@ -1,0 +1,594 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+if listbox is None:\n
+\n
+   default_cashStatus_list     = cashDetail_parameter[\'cashStatus_list\']\n
+   default_emissionLetter_list = cashDetail_parameter[\'emissionLetter_list\']\n
+   default_variation_list      = cashDetail_parameter[\'variation_list\']\n
+   operation_currency          = cashDetail_parameter[\'operation_currency\']\n
+   default_line_portalType     = cashDetail_parameter[\'line_portalType\']\n
+   default_columnBase          = cashDetail_parameter[\'columnBase\']\n
+   default_updatePossible      = cashDetail_parameter[\'updatePossible\']\n
+   default_currencyCash_portalType =  cashDetail_parameter[\'currencyCash_portalType\']\n
+\n
+   if cashDetail_parameter.has_key(\'useInventory\'):\n
+      default_useInventory        = cashDetail_parameter[\'useInventory\']\n
+      default_useInventory        = default_useInventory or 0\n
+   else:\n
+      default_useInventory        = 0\n
+   \n
+   if  default_currencyCash_portalType is None:\n
+      default_currencyCash_portalType = (\'Banknote\',\'Coin\')\n
+      \n
+   default_otherParameter = (operation_currency, default_line_portalType, default_updatePossible,default_columnBase,default_useInventory)\n
+\n
+\n
+   if default_cashStatus_list is None :\n
+      default_cashStatus_list = [x[1] for x in context.portal_categories.cash_status.getCategoryChildTitleItemList()[1:]] \n
+   if default_emissionLetter_list is None :\n
+      default_emissionLetter_list = [x[1] for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()[1:]] \n
+\n
+   if default_variation_list is None :\n
+      default_variation_list = [x[1] for x in context.portal_categories.variation.getCategoryChildTitleItemList()[1:]] \n
+\n
+   default_emissionLetter_list.sort()\n
+\n
+#   currency_list = [x.getObject() for x in context.portal_catalog(portal_type=(\'Banknote\',\'Coin\')) \\\n
+   currency_list = [x.getObject() for x in context.portal_catalog(portal_type=default_currencyCash_portalType ) \\\n
+                                   if x.getObject().getPriceCurrency() == \'currency/\'+operation_currency] \n
+   currency_list = context.CashDetail_sortCurrency(currency_list)\n
+\n
+   total_price = 0\n
+   listbox = []\n
+   Line_number = 0\n
+   for listbox_line in currency_list :\n
+       if default_columnBase == \'cashStatus\':\n
+          axis_list_dict = {\'column\':default_cashStatus_list,\'line1\': default_emissionLetter_list ,\'line2\': default_variation_list}\n
+          axis_dict      = {\'column\':\'cash_status\',\'line1\': \'emission_letter\' ,\'line2\': \'variation\'}\n
+          axis_name      = {\'column\':\'cashStatus\',\'line1\': \'emissionLetter\' ,\'line2\': \'variation\'}\n
+       elif default_columnBase == \'emissionLetter\':\n
+#          columnBase_list = default_emissionLetter_list\n
+          axis_list_dict = {\'column\':default_emissionLetter_list ,\'line1\':default_cashStatus_list ,\'line2\': default_variation_list}\n
+          axis_dict      = {\'column\':\'emission_letter\',\'line1\':\'cash_status\'  ,\'line2\': \'variation\'}\n
+          axis_name      = {\'column\':\'emissionLetter\' ,\'line1\':\'cashStatus\', \'line2\': \'variation\'}\n
+       else:\n
+          axis_list_dict = {\'column\':default_variation_list,\'line1\': default_emissionLetter_list ,\'line2\': default_cashStatus_list}\n
+          axis_dict      = {\'column\':\'variation\',\'line1\': \'emission_letter\' ,\'line2\':\'cash_status\' }\n
+          axis_name      = {\'column\':\'variation\',\'line1\': \'emissionLetter\' ,\'line2\':\'cashStatus\' }\n
+\n
+       resource_created = False\n
+       resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id= listbox_line.getId())\n
+       resource_price = resource_list[0].getObject().getBasePrice()\n
+\n
+\n
+       find_currencyLine = context.CashDetail_search_lineByResource(listbox_line.getId(),default_line_portalType )   # Search if current object contain line with the gived portal type#       if not find_currencyLine is None :                         # If Check Payment line is found\n
+\n
+\n
+       for line1 in axis_list_dict[\'line1\'] :     \n
+          for line2 in axis_list_dict[\'line2\'] : \n
+              debug_kha = []    \n
+              counter = 0\n
+              Line_number += 1\n
+ #             for y in columnBase_list:     \n
+              newLine_created = False  \n
+              total_quantity = 0       \n
+              for col in axis_list_dict[\'column\']:\n
+                  counter += 1\n
+                  quantity = 0\n
+                  \n
+                  if find_currencyLine is not None:\n
+                     if default_columnBase == \'cashStatus\':\n
+                        cell = find_currencyLine.getCell(axis_dict[\'line1\']+\'/\'+line1, axis_dict[\'line2\']+\'/\'+line2  , axis_dict[\'column\']+\'/\'+col)\n
+                     elif default_columnBase == \'emissionLetter\':\n
+                        cell = find_currencyLine.getCell(axis_dict[\'column\']+\'/\'+col,  axis_dict[\'line2\']+\'/\'+line2 , axis_dict[\'line1\']+\'/\'+line1  )\n
+                     else:\n
+                        cell = find_currencyLine.getCell(axis_dict[\'line1\']+\'/\'+line1  , axis_dict[\'column\']+\'/\'+col, axis_dict[\'line2\']+\'/\'+line2)\n
+\n
+#                     cell = find_currencyLine.getCell(axis_dict[\'line1\']+\'/\'+line1  , axis_dict[\'line2\']+\'/\'+line2, axis_dict[\'column\']+\'/\'+col)\n
+                     if cell is not None:\n
+#                        debug_kha.append((axis_dict[\'line1\']+\'/\'+line1  , axis_dict[\'line2\']+\'/\'+line2, axis_dict[\'column\']+\'/\'+col))\n
+                        if (default_useInventory is None) or (default_useInventory == 0):\n
+                           quantity = cell.getQuantity()\n
+                        else:\n
+                           quantity = cell.getInventory()\n
+\n
+                        if not ((quantity is None) or (quantity == 0)  or ( newLine_created == True)):\n
+                           newLine_created = True\n
+                           resource_created = True\n
+                           currency_dict = {\'resource\':listbox_line.getTitle(),\'resourceId\':listbox_line.getId()}\n
+                           currency_dict[axis_name[\'line1\']] = line1\n
+                           currency_dict[axis_name[\'line2\']] = line2\n
+                        if newLine_created == True:\n
+                           currency_dict[\'column\'+str(counter)]= quantity                         \n
+                           total_quantity += quantity \n
+\n
+              if newLine_created:\n
+                 currency_dict[\'price\']= context.Integer_toString(int(total_quantity * resource_price))\n
+                 total_price += int(total_quantity * resource_price)\n
+                 listbox.append(currency_dict)\n
+\n
+ #             raise \'KHADIM\', repr(debug_kha)\n
+       if not resource_created:\n
+          currency_dict = {\'resource\':listbox_line.getTitle(),\'resourceId\':listbox_line.getId()}\n
+          currency_dict[\'emissionLetter\'] = default_emissionLetter_list[0]\n
+          currency_dict[\'cashStatus\']     = default_cashStatus_list[0]\n
+          currency_dict[\'variation\']      = default_variation_list[0]\n
+          currency_dict[\'numberLineToAdd\']= 0 \n
+          resource_price = resource_list[0].getObject().getBasePrice() \n
+          currency_dict[\'price\']= context.Integer_toString(int(total_quantity * resource_price))\n
+          total_price += int(total_quantity * resource_price)\n
+          listbox.append(currency_dict)\n
+\n
+\n
+   total_price = context.Integer_toString(total_price)\n
+   context.Base_updateDialogForm(  listbox=listbox\n
+                              , calculated_price=total_price\n
+                              , otherParameter = default_otherParameter\n
+                              , cashStatus_list=default_cashStatus_list\n
+                              , emissionLetter_list=default_emissionLetter_list\n
+                              , variation_list=default_variation_list\n
+                              , line_portalType = default_line_portalType\n
+                              , operation_currency = operation_currency\n
+                              , empty_line_number=0)\n
+\n
+\n
+\n
+\n
+   return context.asContext(  context=None\n
+                         , portal_type=context.getPortalType()\n
+                         , calculated_price=total_price\n
+                         , otherParameter = default_otherParameter\n
+                         , cashStatus_list=default_cashStatus_list\n
+                         , emissionLetter_list=default_emissionLetter_list\n
+                         , variation_list=default_variation_list\n
+ #                        , line_portalType = default_line_portalType\n
+ #                        , operation_currency = operation_currency\n
+                         ,**kw\n
+                        ).CashDetail_fastInputForm(**kw)\n
+\n
+\n
+else : \n
+   otherParameter_list = kw[\'otherParameter\']\n
+   default_columnBase = otherParameter_list[3]\n
+   default_updatePossible      = otherParameter_list[2]\n
+   default_line_portalType     = otherParameter_list[1]\n
+\n
+\n
+   if default_updatePossible == \'False\':\n
+      context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
+      return context.asContext(  context=None, portal_type=context.getPortalType() ,**kw ).CashDetail_fastInputForm(**kw)\n
+\n
+   if default_columnBase == \'cashStatus\':\n
+      columnBase_list = kw[\'cashStatus_list\']\n
+      maxLines = len(kw[\'emissionLetter_list\']) * len(kw[\'variation_list\'])\n
+   elif default_columnBase == \'emissionLetter\':\n
+      columnBase_list = kw[\'emissionLetter_list\']\n
+      maxLines = len(kw[\'cashStatus_list\']) * len(kw[\'variation_list\'])\n
+   else:\n
+      columnBase_list = kw[\'variation_list\']\n
+      maxLines = len(kw[\'emissionLetter_list\']) * len(kw[\'cashStatus_list\'])\n
+\n
+   total_price = 0\n
+   new_lineList = []\n
+   counter = 0\n
+\n
+   preview_listbox_line = None\n
+   numberLineToAdd = 0\n
+   numberSameLine = 0\n
+\n
+   listbox_line_count = len(listbox) \n
+   if listbox_line_count > 0:\n
+      listbox_line_count_plus_1 = listbox_line_count+1\n
+   else:\n
+      listbox_line_count_plus_1 = listbox_line_count\n
+\n
+   last_row = False\n
+\n
+   last_row = False\n
+#   for x in listbox :\n
+   for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
+      if i_listbox < listbox_line_count:\n
+         listbox_line = listbox[i_listbox]\n
+         del listbox_line[\'listbox_key\']\n
+\n
+\n
+      else:\n
+         last_row = True\n
+\n
+      if preview_listbox_line is None :\n
+         preview_listbox_line = listbox_line.copy() \n
+      elif last_row or preview_listbox_line[\'resourceId\'] <> listbox_line[\'resourceId\'] :\n
+         \n
+         if numberLineToAdd > (maxLines - numberSameLine) :\n
+            numberLineToAdd = maxLines - numberSameLine\n
+         if numberLineToAdd > 0:\n
+            counter = 1\n
+            preview_listbox_line[\'numberLineToAdd\'] = 0\n
+            for w in columnBase_list:\n
+                preview_listbox_line[\'column\'+str(counter)] = 0\n
+                preview_listbox_line[\'price\'] = 0\n
+                counter  += 1\n
+            for z in range(0,numberLineToAdd) :\n
+               new_lineList.append(preview_listbox_line) \n
+#            raise \'KHA\',repr((a1,b1,c1, x[\'column4\'], preview_listbox_line[\'column4\'],montest[\'column4\']))\n
+         if last_row:\n
+            break\n
+\n
+         preview_listbox_line = listbox_line.copy() \n
+         numberSameLine = 0; \n
+         numberLineToAdd = 0\n
+      numberSameLine +=  1\n
+      if maxLines > 1:\n
+         numberLineToAdd += listbox_line[\'numberLineToAdd\']\n
+         listbox_line[\'numberLineToAdd\'] = 0\n
+      resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id = listbox_line[\'resourceId\'])\n
+      resource_price = resource_list[0].getObject().getBasePrice()\n
+      listbox_line[\'resource\'] = resource_list[0].getObject().getTitle()\n
+\n
+      quantity = 0\n
+      counter = 1\n
+      for y in columnBase_list:\n
+          cell_quantity = int(listbox_line[\'column\'+str(counter)] or 0)\n
+          quantity = quantity + cell_quantity\n
+          counter  += 1\n
+      listbox_line[\'price\'] = context.Integer_toString(int(quantity * resource_price))\n
+#      raise \'KHA\',repr(( x ))\n
+\n
+      total_price += int(quantity * resource_price)\n
+      new_lineList.append(listbox_line) \n
+\n
+   listbox = new_lineList \n
+#   raise \'KHA\',repr(( listbox ))\n
+   total_price = context.Integer_toString(total_price)\n
+\n
+\n
+\n
+   context.Base_updateDialogForm(  listbox=listbox\n
+                              , calculated_price=total_price\n
+                              , empty_line_number=0)\n
+\n
+   return context.asContext(  context=None\n
+                         , portal_type=context.getPortalType()\n
+                         , calculated_price=total_price\n
+                         ,**kw\n
+                        ).CashDetail_fastInputForm(**kw)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABAAAAEAAAABzFgAAAGUAAGUAAGUAAGQBAIQDAFoBAGQAAFMoAgAAAE5jAwAAAEIA
+AABEAAAASwAAAHMuDwAAfAAAdAEAaggAb8sJAXQCAHwBAGQBAIMCAH0GAHQCAHwBAGQCAIMCAH0H
+AHQCAHwBAGQDAIMCAH0IAHQCAHwBAGQEAIMCAH0JAHQCAHwBAGQFAIMCAH0KAHQCAHwBAGQGAIMC
+AH0LAHQCAHwBAGQHAIMCAH0MAHQCAHwBAGQIAIMCAH0NAHQMAHwBAGQJAIMCAGQKAIMBAG8gAAF0
+AgB8AQBkCgCDAgB9DwB8DwBwBAABZAsAfQ8AbgcAAWQLAH0PAHwNAHQBAGoIAG8QAAFkDABkDQBm
+AgB9DQBuAQABfAkAfAoAfAwAfAsAfA8AZgUAfRAAfAYAdAEAaggAb2cAAWcAAARpDwB9EgB0EQB0
+AgB0DAB0DAB0DAB0EgBkDgCDAgBkDwCDAgBkEACDAgCDAABkEQBkAACFAgCDAgCDAQBEXRkAfRUA
+fBIAdAIAfBUAZBEAgwIAgwEAAXFBAX4SAH0GAG4BAAF8BwB0AQBqCABvZwABZwAABGkPAH0SAHQR
+AHQCAHQMAHQMAHQMAHQSAGQOAIMCAGQSAIMCAGQQAIMCAIMAAGQRAGQAAIUCAIMCAIMBAERdGQB9
+FQB8EgB0AgB8FQBkEQCDAgCDAQABcbUBfhIAfQcAbgEAAXwIAHQBAGoIAG9nAAFnAAAEaQ8AfRIA
+dBEAdAIAdAwAdAwAdAwAdBIAZA4AgwIAZBMAgwIAZBAAgwIAgwAAZBEAZAAAhQIAgwIAgwEARF0Z
+AH0VAHwSAHQCAHwVAGQRAIMCAIMBAAFxKQJ+EgB9CABuAQABdAwAfAcAZBQAgwIAgwAAAWcAAARp
+DwB9EgB0EQB0DAB0EgBkFQCDAgBkFgB8DQCDAAGDAQBEXUkAfRUAdAwAdAwAfBUAZBcAgwIAgwAA
+ZBgAgwIAgwAAZBkAfAkAF2oCAG8aAAF8EgB0DAB8FQBkFwCDAgCDAACDAQABcYUCAXGFAn4SAH0W
+AHQMAHQSAGQaAIMCAHwWAIMBAH0WAGQLAH0XAGcAAH0AAGQLAH0YAHgaBnQRAHwWAIMBAERdDAZ9
+GQB8CwBkGwBqAgBvZwABaAAABGQcAHwGAAM8BGQdAHwHAAM8BGQeAHwIAAM8fRoAaAAABGQcAGQP
+AAM8BGQdAGQSAAM8BGQeAGQTAAM8fRsAaAAABGQcAGQbAAM8BGQdAGQfAAM8BGQeAGQTAAM8fRwA
+btgAAXwLAGQfAGoCAG9nAAFoAAAEZBwAfAcAAzwEZB0AfAYAAzwEZB4AfAgAAzx9GgBoAAAEZBwA
+ZBIAAzwEZB0AZA8AAzwEZB4AZBMAAzx9GwBoAAAEZBwAZB8AAzwEZB0AZBsAAzwEZB4AZBMAAzx9
+HABuZAABaAAABGQcAHwIAAM8BGQdAHwHAAM8BGQeAHwGAAM8fRoAaAAABGQcAGQTAAM8BGQdAGQS
+AAM8BGQeAGQPAAM8fRsAaAAABGQcAGQTAAM8BGQdAGQfAAM8BGQeAGQbAAM8fRwAdBsAfR4AdAwA
+dBIAZBUAgwIAZBYAZAwAZA0AZgIAZCAAdAwAfBkAZCEAgwIAgwAAgwACfR8AdAwAdAwAdAIAfB8A
+ZAsAgwIAZBcAgwIAgwAAZCIAgwIAgwAAfSAAdAwAdBIAZCMAgwIAdAwAfBkAZCEAgwIAgwAAfAoA
+gwIAfSEAeCkDdBEAdAIAfBoAZB0AgwIAgwEARF0SA30iAHgJA3QRAHQCAHwaAGQeAIMCAIMBAERd
+8gJ9IwBnAAB9JABkCwB9JQB8GABkEQA3fRgAdBsAfSYAZAsAfScAeGwCdBEAdAIAfBoAZBwAgwIA
+gwEARF1VAn0oAHwlAGQRADd9JQBkCwB9KQB8IQB0AQBqCQBvMgIBfAsAZBsAagIAb1IAAXQMAHwh
+AGQkAIMCAHQCAHwbAGQdAIMCAGQlABd8IgAXdAIAfBsAZB4AgwIAZCUAF3wjABd0AgB8GwBkHACD
+AgBkJQAXfCgAF4MDAH0qAG6uAAF8CwBkHwBqAgBvUgABdAwAfCEAZCQAgwIAdAIAfBsAZBwAgwIA
+ZCUAF3woABd0AgB8GwBkHgCDAgBkJQAXfCMAF3QCAHwbAGQdAIMCAGQlABd8IgAXgwMAfSoAbk8A
+AXQMAHwhAGQkAIMCAHQCAHwbAGQdAIMCAGQlABd8IgAXdAIAfBsAZBwAgwIAZCUAF3woABd0AgB8
+GwBkHgCDAgBkJQAXfCMAF4MDAH0qAHwqAHQBAGoJAG8VAQF8DwB0AQBqCABwCgABfA8AZAsAagIA
+bxYAAXQMAHwqAGQmAIMCAIMAAH0pAG4TAAF0DAB8KgBkJwCDAgCDAAB9KQB8KQB0AQBqCABwFwAB
+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
+AH0pAGQRAH0lAHhOAHQRAHwyAIMBAERdQAB9QAB0LQB0AgB8GQBkHAB0LAB8JQCDAQAXgwIAcAQA
+AWQLAIMBAH1BAHwpAHxBABd9KQB8JQBkEQA3fSUAcQ8OV3QMAHQSAGQrAIMCAHQtAHwpAHwgABSD
+AQCDAQB0KwB8GQCDAQBkLAA8fBcAdC0AfCkAfCAAFIMBADd9FwB0DAB8NQBkLQCDAgB8GQCDAQAB
+cbsLV3w1AH0AAHQMAHQSAGQrAIMCAHwXAIMBAH0XAHQMAHQSAGQvAIMCAGQwAHwAAGQxAHwXAGQz
+AGQLAIMAAwF0LgB0DAB0LgB0DAB0EgBkNACDAgBkNQB0AQBkFgB0DAB0EgBkNgCDAgCDAABkMQB8
+FwB8AwCNAQNkNwCDAgB8AwCNAQBTZAAAUyg9AAAATnMPAAAAY2FzaFN0YXR1c19saXN0cxMAAABl
+bWlzc2lvbkxldHRlcl9saXN0cw4AAAB2YXJpYXRpb25fbGlzdHMSAAAAb3BlcmF0aW9uX2N1cnJl
+bmN5cw8AAABsaW5lX3BvcnRhbFR5cGVzCgAAAGNvbHVtbkJhc2VzDgAAAHVwZGF0ZVBvc3NpYmxl
+cxcAAABjdXJyZW5jeUNhc2hfcG9ydGFsVHlwZXMHAAAAaGFzX2tleXMMAAAAdXNlSW52ZW50b3J5
+aQAAAABzCAAAAEJhbmtub3RlcwQAAABDb2lucxEAAABwb3J0YWxfY2F0ZWdvcmllc3MLAAAAY2Fz
+aF9zdGF0dXNzHQAAAGdldENhdGVnb3J5Q2hpbGRUaXRsZUl0ZW1MaXN0aQEAAABzDwAAAGVtaXNz
+aW9uX2xldHRlcnMJAAAAdmFyaWF0aW9ucwQAAABzb3J0cw4AAABwb3J0YWxfY2F0YWxvZ3MLAAAA
+cG9ydGFsX3R5cGVzCQAAAGdldE9iamVjdHMQAAAAZ2V0UHJpY2VDdXJyZW5jeXMJAAAAY3VycmVu
+Y3kvcxcAAABDYXNoRGV0YWlsX3NvcnRDdXJyZW5jeXMKAAAAY2FzaFN0YXR1c3MGAAAAY29sdW1u
+cwUAAABsaW5lMXMFAAAAbGluZTJzDgAAAGVtaXNzaW9uTGV0dGVycwIAAABpZHMFAAAAZ2V0SWRz
+DAAAAGdldEJhc2VQcmljZXMgAAAAQ2FzaERldGFpbF9zZWFyY2hfbGluZUJ5UmVzb3VyY2VzBwAA
+AGdldENlbGxzAQAAAC9zCwAAAGdldFF1YW50aXR5cwwAAABnZXRJbnZlbnRvcnlzCAAAAHJlc291
+cmNlcwgAAABnZXRUaXRsZXMKAAAAcmVzb3VyY2VJZHMQAAAASW50ZWdlcl90b1N0cmluZ3MFAAAA
+cHJpY2VzBgAAAGFwcGVuZHMPAAAAbnVtYmVyTGluZVRvQWRkcxUAAABCYXNlX3VwZGF0ZURpYWxv
+Z0Zvcm1zBwAAAGxpc3Rib3hzEAAAAGNhbGN1bGF0ZWRfcHJpY2VzDgAAAG90aGVyUGFyYW1ldGVy
+cxEAAABlbXB0eV9saW5lX251bWJlcnMJAAAAYXNDb250ZXh0cwcAAABjb250ZXh0cw0AAABnZXRQ
+b3J0YWxUeXBlcxgAAABDYXNoRGV0YWlsX2Zhc3RJbnB1dEZvcm1pAwAAAGkCAAAAcwUAAABGYWxz
+ZXMLAAAAbGlzdGJveF9rZXlzBAAAAGNvcHkoQQAAAHMHAAAAbGlzdGJveHMEAAAATm9uZXMJAAAA
+X2dldGl0ZW1fcxQAAABjYXNoRGV0YWlsX3BhcmFtZXRlcnMXAAAAZGVmYXVsdF9jYXNoU3RhdHVz
+X2xpc3RzGwAAAGRlZmF1bHRfZW1pc3Npb25MZXR0ZXJfbGlzdHMWAAAAZGVmYXVsdF92YXJpYXRp
+b25fbGlzdHMSAAAAb3BlcmF0aW9uX2N1cnJlbmN5cxcAAABkZWZhdWx0X2xpbmVfcG9ydGFsVHlw
+ZXMSAAAAZGVmYXVsdF9jb2x1bW5CYXNlcxYAAABkZWZhdWx0X3VwZGF0ZVBvc3NpYmxlcx8AAABk
+ZWZhdWx0X2N1cnJlbmN5Q2FzaF9wb3J0YWxUeXBlcwkAAABfZ2V0YXR0cl9zFAAAAGRlZmF1bHRf
+dXNlSW52ZW50b3J5cxYAAABkZWZhdWx0X290aGVyUGFyYW1ldGVycwYAAABhcHBlbmRzCAAAACRh
+cHBlbmQwcwkAAABfZ2V0aXRlcl9zBwAAAGNvbnRleHRzAQAAAHhzDQAAAGN1cnJlbmN5X2xpc3Rz
+CwAAAHRvdGFsX3ByaWNlcwsAAABMaW5lX251bWJlcnMMAAAAbGlzdGJveF9saW5lcw4AAABheGlz
+X2xpc3RfZGljdHMJAAAAYXhpc19kaWN0cwkAAABheGlzX25hbWVzBQAAAEZhbHNlcxAAAAByZXNv
+dXJjZV9jcmVhdGVkcw0AAAByZXNvdXJjZV9saXN0cw4AAAByZXNvdXJjZV9wcmljZXMRAAAAZmlu
+ZF9jdXJyZW5jeUxpbmVzBQAAAGxpbmUxcwUAAABsaW5lMnMJAAAAZGVidWdfa2hhcwcAAABjb3Vu
+dGVycw8AAABuZXdMaW5lX2NyZWF0ZWRzDgAAAHRvdGFsX3F1YW50aXR5cwMAAABjb2xzCAAAAHF1
+YW50aXR5cwQAAABjZWxscwQAAABUcnVlcw0AAABjdXJyZW5jeV9kaWN0cwcAAABfd3JpdGVfcwMA
+AABzdHJzAwAAAGludHMHAAAAX2FwcGx5X3MCAAAAa3dzEwAAAG90aGVyUGFyYW1ldGVyX2xpc3Rz
+DwAAAGNvbHVtbkJhc2VfbGlzdHMDAAAAbGVucwgAAABtYXhMaW5lc3MMAAAAbmV3X2xpbmVMaXN0
+cxQAAABwcmV2aWV3X2xpc3Rib3hfbGluZXMPAAAAbnVtYmVyTGluZVRvQWRkcw4AAABudW1iZXJT
+YW1lTGluZXMSAAAAbGlzdGJveF9saW5lX2NvdW50cxkAAABsaXN0Ym94X2xpbmVfY291bnRfcGx1
+c18xcwgAAABsYXN0X3Jvd3MFAAAAcmFuZ2VzCQAAAGlfbGlzdGJveHMBAAAAd3MBAAAAenMBAAAA
+eXMNAAAAY2VsbF9xdWFudGl0eShCAAAAcwcAAABsaXN0Ym94cxQAAABjYXNoRGV0YWlsX3BhcmFt
+ZXRlcnMLAAAAZGVzdGluYXRpb25zAgAAAGt3cwQAAABOb25lcwkAAABfZ2V0aXRlbV9zFwAAAGRl
+ZmF1bHRfY2FzaFN0YXR1c19saXN0cxsAAABkZWZhdWx0X2VtaXNzaW9uTGV0dGVyX2xpc3RzFgAA
+AGRlZmF1bHRfdmFyaWF0aW9uX2xpc3RzEgAAAG9wZXJhdGlvbl9jdXJyZW5jeXMXAAAAZGVmYXVs
+dF9saW5lX3BvcnRhbFR5cGVzEgAAAGRlZmF1bHRfY29sdW1uQmFzZXMWAAAAZGVmYXVsdF91cGRh
+dGVQb3NzaWJsZXMfAAAAZGVmYXVsdF9jdXJyZW5jeUNhc2hfcG9ydGFsVHlwZXMJAAAAX2dldGF0
+dHJfcxQAAABkZWZhdWx0X3VzZUludmVudG9yeXMWAAAAZGVmYXVsdF9vdGhlclBhcmFtZXRlcnMG
+AAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwcAAABjb250ZXh0cwEAAAB4cw0A
+AABjdXJyZW5jeV9saXN0cwsAAAB0b3RhbF9wcmljZXMLAAAATGluZV9udW1iZXJzDAAAAGxpc3Ri
+b3hfbGluZXMOAAAAYXhpc19saXN0X2RpY3RzCQAAAGF4aXNfZGljdHMJAAAAYXhpc19uYW1lcwUA
+AABGYWxzZXMQAAAAcmVzb3VyY2VfY3JlYXRlZHMNAAAAcmVzb3VyY2VfbGlzdHMOAAAAcmVzb3Vy
+Y2VfcHJpY2VzEQAAAGZpbmRfY3VycmVuY3lMaW5lcwUAAABsaW5lMXMFAAAAbGluZTJzCQAAAGRl
+YnVnX2toYXMHAAAAY291bnRlcnMPAAAAbmV3TGluZV9jcmVhdGVkcw4AAAB0b3RhbF9xdWFudGl0
+eXMDAAAAY29scwgAAABxdWFudGl0eXMEAAAAY2VsbHMEAAAAVHJ1ZXMNAAAAY3VycmVuY3lfZGlj
+dHMHAAAAX3dyaXRlX3MDAAAAc3RycwMAAABpbnRzBwAAAF9hcHBseV9zEwAAAG90aGVyUGFyYW1l
+dGVyX2xpc3RzDwAAAGNvbHVtbkJhc2VfbGlzdHMDAAAAbGVucwgAAABtYXhMaW5lc3MMAAAAbmV3
+X2xpbmVMaXN0cxQAAABwcmV2aWV3X2xpc3Rib3hfbGluZXMPAAAAbnVtYmVyTGluZVRvQWRkcw4A
+AABudW1iZXJTYW1lTGluZXMSAAAAbGlzdGJveF9saW5lX2NvdW50cxkAAABsaXN0Ym94X2xpbmVf
+Y291bnRfcGx1c18xcwgAAABsYXN0X3Jvd3MFAAAAcmFuZ2VzCQAAAGlfbGlzdGJveHMBAAAAd3MB
+AAAAenMBAAAAeXMNAAAAY2VsbF9xdWFudGl0eSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMaAAAAQ2FzaERldGFpbF9mYXN0SW5wdXRVcGRhdGUBAAAAc4IBAAANAg8BDwEPAQ8BDwEPAQ8B
+EgITAQ8BEQIGAg0BEAIVAw0BQQAmAQ0BQQAmAg0BQQApAg0DJgAGAUwBFQIGAQYBBgENAAYBDQEh
+ASEBJQENAiEBIQElAiEBIQEhAgYBMAEnAyQDFgAGARYABgEGAQYBCgIGAQYBFgAGAQoBBgINAQ0B
+UgENAVICTgMNAhoBFgISAigBBgEGATABGQEdAQ0BGgEaAgcBKQEXARwDCAEwARkBGQEZARABJwEp
+ARcBGAMYARIBBgEGAQYBBgEGAQYBDQYhAQ8BBgEGAQYBBgEDAwwBCwQPAQ8BDwEPAxABGQFEAg0B
+DwEsAQ0BDwEsAg8BKAIGAQYBBgIGAQYBBgIMAQ0BDgIGAgYCBgIWAAYBDQESAQ4EBgINARYBJgIR
+AQ4BDQEGARABDQAGARoBEAEOARYACQEYAgcBBQISAQoBCgEKAQ0BEwEUAS0BJwExAgYBBgENAAYB
+JgEKAQ4BKQMXARQCBgIYBBIBDQMhAQ8BAwEMASgCAAAAcwQAAABOb25lcxoAAABDYXNoRGV0YWls
+X2Zhc3RJbnB1dFVwZGF0ZSgCAAAAcwQAAABOb25lcxoAAABDYXNoRGV0YWlsX2Zhc3RJbnB1dFVw
+ZGF0ZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_fastInputUpdate</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=None,cashDetail_parameter=None, destination=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>cashDetail_parameter</string>
+                            <string>destination</string>
+                            <string>kw</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
+                            <string>default_cashStatus_list</string>
+                            <string>default_emissionLetter_list</string>
+                            <string>default_variation_list</string>
+                            <string>operation_currency</string>
+                            <string>default_line_portalType</string>
+                            <string>default_columnBase</string>
+                            <string>default_updatePossible</string>
+                            <string>default_currencyCash_portalType</string>
+                            <string>_getattr_</string>
+                            <string>default_useInventory</string>
+                            <string>default_otherParameter</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>currency_list</string>
+                            <string>total_price</string>
+                            <string>Line_number</string>
+                            <string>listbox_line</string>
+                            <string>axis_list_dict</string>
+                            <string>axis_dict</string>
+                            <string>axis_name</string>
+                            <string>False</string>
+                            <string>resource_created</string>
+                            <string>resource_list</string>
+                            <string>resource_price</string>
+                            <string>find_currencyLine</string>
+                            <string>line1</string>
+                            <string>line2</string>
+                            <string>debug_kha</string>
+                            <string>counter</string>
+                            <string>newLine_created</string>
+                            <string>total_quantity</string>
+                            <string>col</string>
+                            <string>quantity</string>
+                            <string>cell</string>
+                            <string>True</string>
+                            <string>currency_dict</string>
+                            <string>_write_</string>
+                            <string>str</string>
+                            <string>int</string>
+                            <string>_apply_</string>
+                            <string>otherParameter_list</string>
+                            <string>columnBase_list</string>
+                            <string>len</string>
+                            <string>maxLines</string>
+                            <string>new_lineList</string>
+                            <string>preview_listbox_line</string>
+                            <string>numberLineToAdd</string>
+                            <string>numberSameLine</string>
+                            <string>listbox_line_count</string>
+                            <string>listbox_line_count_plus_1</string>
+                            <string>last_row</string>
+                            <string>range</string>
+                            <string>i_listbox</string>
+                            <string>w</string>
+                            <string>z</string>
+                            <string>y</string>
+                            <string>cell_quantity</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_fastInputUpdate</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

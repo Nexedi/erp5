@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>currency_list = [(\'%s - %s\' % (x.getId(), x.getTitle()), x.getRelativeUrl())\n
+  for x in context.currency.objectValues()]\n
+\n
+currency_list.insert(0, (\'\',\'\'))\n
+\n
+return currency_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAMAAAAQwAA
+AHOaAAAAZwAABGkAAH0BAHQCAHQDAHQDAHQEAGQBAIMCAGQCAIMCAIMAAIMBAERdRAB9BQB8AQBk
+AwB0AwB8BQBkBACDAgCDAAB0AwB8BQBkBQCDAgCDAABmAgAWdAMAfAUAZAYAgwIAgwAAZgIAgwEA
+AXEpAH4BAH0GAHQDAHwGAGQHAIMCAGQIAGQJAGQJAGYCAIMCAAF8BgBTZAAAUygKAAAATnMIAAAA
+Y3VycmVuY3lzDAAAAG9iamVjdFZhbHVlc3MHAAAAJXMgLSAlc3MFAAAAZ2V0SWRzCAAAAGdldFRp
+dGxlcw4AAABnZXRSZWxhdGl2ZVVybHMGAAAAaW5zZXJ0aQAAAABzAAAAACgHAAAAcwYAAABhcHBl
+bmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMB
+AAAAeHMNAAAAY3VycmVuY3lfbGlzdCgHAAAAcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABf
+Z2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMBAAAAeHMNAAAAY3VycmVuY3lfbGlz
+dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMgAAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRD
+dXJyZW5jeUxpc3QBAAAAcwgAAAATARYAUAIZAigBAAAAcyAAAABDdXJyZW5jeUV4Y2hhbmdlX2dl
+dEN1cnJlbmN5TGlzdCgBAAAAcyAAAABDdXJyZW5jeUV4Y2hhbmdlX2dldEN1cnJlbmN5TGlzdCgA
+AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CurrencyExchange_getCurrencyList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>currency_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CurrencyExchange_getCurrencyList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Move this to erp5_core ???</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

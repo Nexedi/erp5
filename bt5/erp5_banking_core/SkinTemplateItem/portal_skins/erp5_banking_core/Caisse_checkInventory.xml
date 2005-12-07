@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that the amount of resources at `source` is greater or equal\n
+# than the amount of movement of type `portal_type` in this movement\n
+\n
+# returns {\'error_code\', \'resource1\':quantity1, \'resource2\':quantity2, ...}\n
+\n
+currency_cash_portal_type_list = [\'Banknote\', \'Coin\']\n
+\n
+inventory_dict = {}\n
+requested_dict = {}\n
+\n
+# test all movement\n
+tmp_list = context.contentValues(filter={\'portal_type\': portal_type})\n
+line_list = []\n
+for l in tmp_list :\n
+  # The source can be different for every line (due to getBaobabSource approach)\n
+  source_caisse = source or l.getBaobabSource()\n
+  # XXX Use of try is not a good idea - it hides errors\n
+  try :\n
+    # test if resource is a currency_cash\n
+    if (l.getResourceValue().getPortalType() in currency_cash_portal_type_list) \\\n
+      and (l.getBaobabSource() == source_caisse) :\n
+      line_list.append(l)\n
+  except :\n
+    pass\n
+\n
+if len(line_list) == 0 :\n
+  return 2\n
+\n
+for line in line_list :\n
+  line_resource = line.getResource()\n
+  # The source can be different for every line (due to getBaobabSource approach)\n
+  source_caisse = source or line.getBaobabSource()\n
+  if line.hasCellContent() :\n
+    for cell in line.objectValues() :\n
+      variation_text = cell.getVariationText()\n
+\n
+      inventory_value = context.portal_simulation.getFutureInventory(node=source_caisse, resource = line_resource,\n
+          variation_text = variation_text)\n
+      if debug == 0 and inventory_value - cell.getQuantity() < 0 :\n
+        return 1\n
+      if debug == 1 :\n
+        print \'Asking for %s of %s (%s) :\\n there are %s available at %s\\n\' % (cell.getQuantity(), line.getResourceTitle(),\n
+           repr(variation_text), inventory_value, source_caisse)\n
+\n
+  else :\n
+    inventory_value = context.portal_simulation.getFutureInventory(section=source_caisse, resource=line.getResource())\n
+\n
+    if debug == 0 and inventory_value - line.getQuantity() < 0 :\n
+      return 1\n
+    if debug == 1 :\n
+      print \'Asking for %s of %s\\n : there are %s available at %s\\n\' % (line.getQuantity(), line.getResourceTitle(),\n
+          inventory_value, source_caisse)\n
+\n
+if debug == 1 :\n
+  print \'finished\'\n
+  return printed\n
+\n
+return 0\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAABAAAAEAAAABzFgAAAGUAAGUAAGQBAGQCAIQDAFoBAGQAAFMoAwAAAE5pAAAAAGMD
+AAAAFgAAACIAAABDAAAAcwEDAAB0AACDAAB9BABkAQBkAgBnAgB9BQBoAAB9BgBoAAB9BwB0BQB0
+BgBkAwCDAgBkBABoAAAEZAUAfAEAAzyDAAF9CgBnAAB9CwB4kAB0CgB8CgCDAQBEXYIAfQ0AfAAA
+cBAAAXQFAHwNAGQGAIMCAIMAAH0OAHlZAHQFAHQFAHwNAGQHAIMCAIMAAGQIAIMCAIMAAHwFAGoG
+AG8WAAF0BQB8DQBkBgCDAgCDAAB8DgBqAgBvFwABdAUAfAsAZAkAgwIAfA0AgwEAAW4BAAFXcVUA
+AQEBcVUAWHFVAFd0DgB8CwCDAQBkCgBqAgBvCAABZAsAU24BAAF43gF0CgB8CwCDAQBEXdABfRAA
+dAUAfBAAZAwAgwIAgwAAfREAfAAAcBAAAXQFAHwQAGQGAIMCAIMAAH0OAHQFAHwQAGQNAIMCAIMA
+AG/kAAF4iQF0CgB0BQB8EABkDgCDAgCDAACDAQBEXcMAfRIAdAUAfBIAZA8AgwIAgwAAfRMAdAUA
+dAUAdAYAZBAAgwIAZBEAgwIAZBIAfA4AZBMAfBEAZBQAfBMAgwADfRQAfAIAZAoAagIAbxoAAXwU
+AHQFAHwSAGQVAIMCAIMAABhkCgBqAABvCAABZBYAU24BAAF8AgBkFgBqAgBvPwABfAQABGQXAHQF
+AHwSAGQVAIMCAIMAAHQFAHwQAGQYAIMCAIMAAHQVAHwTAIMBAHwUAHwOAGYFABYCSUpxYAEBcWAB
+V3EDAQF0BQB0BQB0BgBkEACDAgBkEQCDAgBkGQB8DgBkEwB0BQB8EABkDACDAgCDAACDAAJ9FAB8
+AgBkCgBqAgBvGgABfBQAdAUAfBAAZBUAgwIAgwAAGGQKAGoAAG8IAAFkFgBTbgEAAXwCAGQWAGoC
+AG82AAF8BAAEZBoAdAUAfBAAZBUAgwIAgwAAdAUAfBAAZBgAgwIAgwAAfBQAfA4AZgQAFgJJSnED
+AQFxAwFXfAIAZBYAagIAbxUAAXwEAARkGwACSUp8BACDAABTbgEAAWQKAFNkAABTKBwAAABOcwgA
+AABCYW5rbm90ZXMEAAAAQ29pbnMNAAAAY29udGVudFZhbHVlc3MGAAAAZmlsdGVycwsAAABwb3J0
+YWxfdHlwZXMPAAAAZ2V0QmFvYmFiU291cmNlcxAAAABnZXRSZXNvdXJjZVZhbHVlcw0AAABnZXRQ
+b3J0YWxUeXBlcwYAAABhcHBlbmRpAAAAAGkCAAAAcwsAAABnZXRSZXNvdXJjZXMOAAAAaGFzQ2Vs
+bENvbnRlbnRzDAAAAG9iamVjdFZhbHVlc3MQAAAAZ2V0VmFyaWF0aW9uVGV4dHMRAAAAcG9ydGFs
+X3NpbXVsYXRpb25zEgAAAGdldEZ1dHVyZUludmVudG9yeXMEAAAAbm9kZXMIAAAAcmVzb3VyY2Vz
+DgAAAHZhcmlhdGlvbl90ZXh0cwsAAABnZXRRdWFudGl0eWkBAAAAczkAAABBc2tpbmcgZm9yICVz
+IG9mICVzICglcykgOgogdGhlcmUgYXJlICVzIGF2YWlsYWJsZSBhdCAlcwpzEAAAAGdldFJlc291
+cmNlVGl0bGVzBwAAAHNlY3Rpb25zNAAAAEFza2luZyBmb3IgJXMgb2YgJXMKIDogdGhlcmUgYXJl
+ICVzIGF2YWlsYWJsZSBhdCAlcwpzCAAAAGZpbmlzaGVkKBYAAABzBwAAAF9wcmludF9zBgAAAF9w
+cmludHMeAAAAY3VycmVuY3lfY2FzaF9wb3J0YWxfdHlwZV9saXN0cw4AAABpbnZlbnRvcnlfZGlj
+dHMOAAAAcmVxdWVzdGVkX2RpY3RzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMLAAAAcG9ydGFs
+X3R5cGVzCAAAAHRtcF9saXN0cwkAAABsaW5lX2xpc3RzCQAAAF9nZXRpdGVyX3MBAAAAbHMGAAAA
+c291cmNlcw0AAABzb3VyY2VfY2Fpc3NlcwMAAABsZW5zBAAAAGxpbmVzDQAAAGxpbmVfcmVzb3Vy
+Y2VzBAAAAGNlbGxzDgAAAHZhcmlhdGlvbl90ZXh0cw8AAABpbnZlbnRvcnlfdmFsdWVzBQAAAGRl
+YnVncwQAAAByZXByKBYAAABzBgAAAHNvdXJjZXMLAAAAcG9ydGFsX3R5cGVzBQAAAGRlYnVncwcA
+AABfcHJpbnRfcwYAAABfcHJpbnRzHgAAAGN1cnJlbmN5X2Nhc2hfcG9ydGFsX3R5cGVfbGlzdHMO
+AAAAaW52ZW50b3J5X2RpY3RzDgAAAHJlcXVlc3RlZF9kaWN0cwkAAABfZ2V0YXR0cl9zBwAAAGNv
+bnRleHRzCAAAAHRtcF9saXN0cwkAAABsaW5lX2xpc3RzCQAAAF9nZXRpdGVyX3MBAAAAbHMNAAAA
+c291cmNlX2NhaXNzZXMDAAAAbGVucwQAAABsaW5lcw0AAABsaW5lX3Jlc291cmNlcwQAAABjZWxs
+cw4AAAB2YXJpYXRpb25fdGV4dHMPAAAAaW52ZW50b3J5X3ZhbHVlcwQAAAByZXByKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcxUAAABDYWlzc2VfY2hlY2tJbnZlbnRvcnkBAAAAc1AAAAAJ
+BQwCBgEGAyEBBgENAAYCGQIJAiIBGQEbAggCEwEIAg0ABgESAhwBEAEZAAYBEgIkAQkBKgEIAQ0B
+JQEiAzMCKgEIAQ0BJQEVAg0BCgELAigCAAAAcwQAAABOb25lcxUAAABDYWlzc2VfY2hlY2tJbnZl
+bnRvcnkoAgAAAHMEAAAATm9uZXMVAAAAQ2Fpc3NlX2NoZWNrSW52ZW50b3J5KAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Caisse_checkInventory</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>source=None,  portal_type=None, debug=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>source</string>
+                            <string>portal_type</string>
+                            <string>debug</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>currency_cash_portal_type_list</string>
+                            <string>inventory_dict</string>
+                            <string>requested_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>tmp_list</string>
+                            <string>line_list</string>
+                            <string>_getiter_</string>
+                            <string>l</string>
+                            <string>source_caisse</string>
+                            <string>len</string>
+                            <string>line</string>
+                            <string>line_resource</string>
+                            <string>cell</string>
+                            <string>variation_text</string>
+                            <string>inventory_value</string>
+                            <string>repr</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Caisse_checkInventory</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>def currency_cmp(a, b):\n
+  a_type = a[0][0]\n
+  b_type = b[0][0]\n
+  tmp_cmp = cmp(a_type, b_type)\n
+  if tmp_cmp != 0:\n
+    return tmp_cmp\n
+  a_value = int(a[0].split()[2])\n
+  b_value = int(b[0].split()[2])\n
+  tmp_cmp= cmp(b_value, a_value)\n
+  if tmp_cmp != 0:\n
+    return tmp_cmp\n
+  a_year = int(a[1])\n
+  b_year = int(b[1])\n
+  return cmp(a_year, b_year)\n
+\n
+list.sort(currency_cmp)\n
+return list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
+AHMkAAAAZAEAhAAAfQEAdAEAfAAAZAIAgwIAfAEAgwEAAXwAAFNkAABTKAMAAABOYwIAAAANAAAA
+DwAAAEMAAABzBwEAAHQAAHQAAHwAAGQBAIMCAGQBAIMCAH0DAHQAAHQAAHwBAGQBAIMCAGQBAIMC
+AH0EAHQFAHwDAHwEAIMCAH0GAHwGAGQBAGoDAG8IAAF8BgBTbgEAAXQHAHQAAHQIAHQAAHwAAGQB
+AIMCAGQCAIMCAIMAAGQDAIMCAIMBAH0JAHQHAHQAAHQIAHQAAHwBAGQBAIMCAGQCAIMCAIMAAGQD
+AIMCAIMBAH0KAHQFAHwKAHwJAIMCAH0GAHwGAGQBAGoDAG8IAAF8BgBTbgEAAXQHAHQAAHwAAGQE
+AIMCAIMBAH0LAHQHAHQAAHwBAGQEAIMCAIMBAH0MAHQFAHwLAHwMAIMCAFNkAABTKAUAAABOaQAA
+AABzBQAAAHNwbGl0aQIAAABpAQAAACgNAAAAcwkAAABfZ2V0aXRlbV9zAQAAAGFzBgAAAGFfdHlw
+ZXMBAAAAYnMGAAAAYl90eXBlcwMAAABjbXBzBwAAAHRtcF9jbXBzAwAAAGludHMJAAAAX2dldGF0
+dHJfcwcAAABhX3ZhbHVlcwcAAABiX3ZhbHVlcwYAAABhX3llYXJzBgAAAGJfeWVhcigNAAAAcwEA
+AABhcwEAAABicwkAAABfZ2V0aXRlbV9zBgAAAGFfdHlwZXMGAAAAYl90eXBlcwMAAABjbXBzBwAA
+AHRtcF9jbXBzAwAAAGludHMJAAAAX2dldGF0dHJfcwcAAABhX3ZhbHVlcwcAAABiX3ZhbHVlcwYA
+AABhX3llYXJzBgAAAGJfeWVhcigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMMAAAAY3Vy
+cmVuY3lfY21wAQAAAHMaAAAAAAEYARgBDwENAQgBKgEqAQ8BDQEIARUBFQFzBAAAAHNvcnQoAwAA
+AHMMAAAAY3VycmVuY3lfY21wcwkAAABfZ2V0YXR0cl9zBAAAAGxpc3QoAwAAAHMEAAAAbGlzdHMM
+AAAAY3VycmVuY3lfY21wcwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzHAAAAEJhb2JhYl9zb3J0UmVzb3VyY2VUaXRsZUxpc3QBAAAAcwQAAAAMDxABKAEAAABzHAAA
+AEJhb2JhYl9zb3J0UmVzb3VyY2VUaXRsZUxpc3QoAQAAAHMcAAAAQmFvYmFiX3NvcnRSZXNvdXJj
+ZVRpdGxlTGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAA
+cwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_sortResourceTitleList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>list</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>list</string>
+                            <string>currency_cmp</string>
+                            <string>_getattr_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Baobab_sortResourceTitleList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,548 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+cell_base_id = \'movement\'\n
+\n
+variation_list      = kw[\'variation_list\']\n
+emissionLetter_list = kw[\'emissionLetter_list\']\n
+cashStatus_list     = kw[\'cashStatus_list\']\n
+operationCurrency   = kw[\'operation_currency\']\n
+line_portal_type    = kw[\'line_portalType\']\n
+\n
+otherParameter_list = kw[\'otherParameter\']\n
+operationCurrency   = otherParameter_list[0]\n
+line_portal_type    = otherParameter_list[1]\n
+updatePossible      = otherParameter_list[2]\n
+columnBase          = otherParameter_list[3]\n
+useInventory        = int(otherParameter_list[4])\n
+\n
+if columnBase == \'emissionLetter\':\n
+  numberOfColumn = len(emissionLetter_list)\n
+elif columnBase == \'cashStatus\':\n
+  numberOfColumn = len(cashStatus_list)\n
+else:\n
+  numberOfColumn = len(variation_list)\n
+\n
+#if (updatePossible==\'False\') or (not context.CashDetail_isListboxValide(listbox=listbox,columnBase=columnBase,numberOfColumn=numberOfColumn, variation_list=variation_list, operationCurrency=operationCurrency)):\n
+#  context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
+#  return context.asContext(context=None,portal_type=context.getPortalType(), **kw).CashDetail_fastInputForm(**kw)\n
+\n
+# list of all variation in the portal category\n
+catalog_variation_list = [x for x in context.portal_categories.variation.getCategoryChildTitleItemList()[1:]\n
+                            if x[1] in variation_list]\n
+\n
+base_list=(\'emission_letter\', \'cash_status\', \'variation\')\n
+default_variation_category_list = [\'emission_letter/\'+x  for x in emissionLetter_list]\n
+default_variation_category_list = default_variation_category_list + [\'cash_status/\'+x  for x in cashStatus_list]\n
+\n
+counter_line=0\n
+\n
+#containerLines_toDelete = []\n
+lines_toDelete = []\n
+# List of elements on the input listbox\n
+\n
+previous_resourceId = None\n
+line_created = False\n
+\n
+listbox_line_count = len(listbox)\n
+if listbox_line_count > 0:\n
+   listbox_line_count_plus_1 = listbox_line_count+1\n
+else:\n
+   listbox_line_count_plus_1 = listbox_line_count\n
+\n
+last_row = False\n
+\n
+#for listbox_line in listbox :    # Element of ListBox\n
+test = []\n
+create_line = False\n
+for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
+  if i_listbox >= listbox_line_count:\n
+    last_row = True\n
+  else:\n
+    listbox_line = listbox[i_listbox]\n
+\n
+  if last_row or (previous_resourceId is None) or not (previous_resourceId == listbox_line[\'resourceId\']):\n
+\n
+     if create_line :\n
+        counter_line += 1\n
+        new_line = context.newContent(portal_type=line_portal_type)             # New line creation\n
+        new_line.setResourceValue(resource_object)                              # Set line resource by object found\n
+        new_line.setVariationBaseCategoryList(base_list)\n
+        new_line.setVariationCategoryList(line_category_list)\n
+\n
+\n
+        new_line.updateCellRange(script_id=\'CashDetail_asCellRange\', base_id = cell_base_id)\n
+\n
+        kwd = {\'base_id\': cell_base_id}\n
+        cell_range_key_list = new_line.getCellRangeKeyList(base_id = cell_base_id)\n
+\n
+\n
+        if cell_range_key_list <> [[None, None]] :\n
+           i = 0\n
+           for k in cell_range_key_list:\n
+               category_list = filter(lambda k_item: k_item is not None, k)\n
+               c = new_line.newCell(*k, **kwd)\n
+               mapped_value_list = [\'price\',]\n
+               if useInventory == 1:\n
+                 mapped_value_list.append(\'inventory\')\n
+               else:\n
+                 mapped_value_list.append(\'quantity\')\n
+               c.edit( mapped_value_property_list    = mapped_value_list\n
+                      ,force_update                  = 1\n
+                      ,membership_criterion_category_list = category_list\n
+                      ,category_list = category_list\n
+                     )\n
+\n
+\n
+\n
+\n
+        for cell_category in cell_category_list :\n
+            variante_list = [cell_category[\'emission_letter\'], cell_category[\'variation\'], cell_category[\'cash_status\']]\n
+            cell = new_line.getCell(base_id = cell_base_id , *variante_list )\n
+            if cell is None :\n
+               raise \'ERROR\', repr((test,cell_category[\'quantity\'], cell , new_line.getCellKeyList(base_id=\'movement\'), variante_list ))\n
+            if useInventory == 1:\n
+               oldQuantity = cell.getProperty(\'inventory\') or 0\n
+               cell.edit( inventory      = cell_category[\'quantity\'] + oldQuantity\n
+                        , price          = new_line.getResourceValue().getBasePrice()\n
+                        , reindex_object = 1\n
+                        )\n
+            else:\n
+               oldQuantity = cell.getProperty(\'quantity\') or 0\n
+               cell.edit( quantity       = cell_category[\'quantity\'] + oldQuantity\n
+                        , price          = new_line.getResourceValue().getBasePrice()\n
+                        , reindex_object = 1\n
+                        )\n
+\n
+     if last_row:\n
+        break\n
+     create_line = False\n
+     line_category_list = []\n
+     cell_category_list = []\n
+\n
+     old_line = context.CashDetail_search_lineByResource(listbox_line[\'resourceId\'],line_portal_type)   # Search if current object contain line with the gived portal type\n
+     if old_line is not None:                # Line found, delete it\n
+        context.manage_delObjects(old_line.getId())\n
+\n
+\n
+     previous_resourceId = listbox_line[\'resourceId\']\n
+     resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'),id = listbox_line[\'resourceId\'])\n
+     resource_object = resource_list[0].getObject()\n
+\n
+  if columnBase == \'cashStatus\':\n
+     if len(emissionLetter_list ) > 1 :\n
+        cell_emissionLetter = \'emission_letter/\' + listbox_line[\'emissionLetter\']\n
+     else :\n
+        cell_emissionLetter = \'emission_letter/\' + emissionLetter_list[0]\n
+     if len(variation_list ) > 1 :\n
+        cell_variation = \'variation/\'+listbox_line[\'variation\']\n
+     else :\n
+        cell_variation = \'variation/\'+variation_list[0]\n
+     axis_list_dict = {\'column\':cashStatus_list,\'line1\': emissionLetter_list ,\'line2\': variation_list}\n
+     axis_dict      = {\'column\':\'cash_status\',\'line1\': \'emission_letter\' ,\'line2\': \'variation\'}\n
+     base_line_category_list = (cell_variation,cell_emissionLetter)\n
+  elif columnBase == \'emissionLetter\':\n
+     if len(cashStatus_list ) > 1 :\n
+        cell_cashStatus = \'cash_status/\'+listbox_line[\'cashStatus\']\n
+     else :\n
+        cell_cashStatus = \'cash_status/\'+cashStatus_list[0]\n
+     if len(variation_list ) > 1 :\n
+        cell_variation = \'variation/\'+listbox_line[\'variation\']\n
+     else :\n
+        cell_variation = \'variation/\'+variation_list[0]\n
+     axis_list_dict = {\'column\':emissionLetter_list ,\'line1\':cashStatus_list ,\'line2\': variation_list}\n
+     axis_dict      = {\'column\':\'emission_letter\',\'line1\':\'cash_status\'  ,\'line2\': \'variation\'}\n
+     base_line_category_list = (cell_variation,cell_cashStatus)\n
+  else:\n
+     if len(emissionLetter_list ) > 1 :\n
+         cell_emissionLetter = \'emission_letter/\' +listbox_line[\'emissionLetter\']\n
+     else :\n
+        cell_emissionLetter = \'emission_letter/\' +emissionLetter_list[0]\n
+     if len(cashStatus_list ) > 1 :\n
+        cell_cashStatus = \'cash_status/\'+listbox_line[\'cashStatus\']\n
+     else :\n
+        cell_cashStatus = \'cash_status/\'+cashStatus_list[0]\n
+     axis_list_dict = {\'column\':variation_list,\'line1\': emissionLetter_list ,\'line2\': cashStatus_list}\n
+     axis_dict      = {\'column\':\'variation\',\'line1\': \'emission_letter\' ,\'line2\':\'cash_status\' }\n
+     base_line_category_list = (cell_cashStatus,cell_emissionLetter)\n
+  categoy_list_created = False\n
+  counter = 0\n
+  for col in axis_list_dict[\'column\']:\n
+      counter += 1\n
+      #raise \'KHADIMTEST\', repr(listbox_line)\n
+      cell_quantity = int(listbox_line[\'column\'+str(counter)] or 0)\n
+      if cell_quantity <> 0 :                                          # input quantity in the listbox\n
+         if columnBase == \'cashStatus\':\n
+            cell_cashStatus = \'cash_status/\'+col\n
+         elif columnBase == \'emissionLetter\':\n
+            cell_emissionLetter = \'emission_letter/\' +col\n
+         else:\n
+            cell_variation = \'variation/\'+col\n
+\n
+         cell_category_list += [{\'emission_letter\':cell_emissionLetter  ,\'variation\':cell_variation, \'cash_status\':cell_cashStatus, \'quantity\':cell_quantity}]\n
+\n
+         create_line = True\n
+         if not categoy_list_created:\n
+            for base_line_category in base_line_category_list:\n
+              if base_line_category not in line_category_list:\n
+                line_category_list.append(base_line_category)\n
+            categoy_list_created = True\n
+         column_category = axis_dict[\'column\']+\'/\'+col\n
+         if column_category not in line_category_list:\n
+           line_category_list.append(column_category)\n
+\n
+\n
+request  = context.REQUEST\n
+redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                , \'portal_status_message=\'+str(counter_line)+ \' + ligne(s)+cr\xc3\xa9\xc3\xa9e(s)...\'\n
+                                )\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+ZEMAdEUAfBkAgwEAF2REABdmAgAWfUoAdBIAdAEAfEkAZEUAgwIAZEYAgwIAfEoAgwEAAWQAAFMo
+RwAAAE5zCAAAAG1vdmVtZW50cw4AAAB2YXJpYXRpb25fbGlzdHMTAAAAZW1pc3Npb25MZXR0ZXJf
+bGlzdHMPAAAAY2FzaFN0YXR1c19saXN0cxIAAABvcGVyYXRpb25fY3VycmVuY3lzDwAAAGxpbmVf
+cG9ydGFsVHlwZXMOAAAAb3RoZXJQYXJhbWV0ZXJpAAAAAGkBAAAAaQIAAABpAwAAAGkEAAAAcw4A
+AABlbWlzc2lvbkxldHRlcnMKAAAAY2FzaFN0YXR1c3MRAAAAcG9ydGFsX2NhdGVnb3JpZXNzCQAA
+AHZhcmlhdGlvbnMdAAAAZ2V0Q2F0ZWdvcnlDaGlsZFRpdGxlSXRlbUxpc3RzDwAAAGVtaXNzaW9u
+X2xldHRlcnMLAAAAY2FzaF9zdGF0dXNzEAAAAGVtaXNzaW9uX2xldHRlci9zDAAAAGNhc2hfc3Rh
+dHVzL3MKAAAAcmVzb3VyY2VJZHMKAAAAbmV3Q29udGVudHMLAAAAcG9ydGFsX3R5cGVzEAAAAHNl
+dFJlc291cmNlVmFsdWVzHAAAAHNldFZhcmlhdGlvbkJhc2VDYXRlZ29yeUxpc3RzGAAAAHNldFZh
+cmlhdGlvbkNhdGVnb3J5TGlzdHMPAAAAdXBkYXRlQ2VsbFJhbmdlcwkAAABzY3JpcHRfaWRzFgAA
+AENhc2hEZXRhaWxfYXNDZWxsUmFuZ2VzBwAAAGJhc2VfaWRzEwAAAGdldENlbGxSYW5nZUtleUxp
+c3RjAQAAAAIAAAACAAAAQwAAAHMKAAAAfAAAdAEAagkAUygBAAAATigCAAAAcwYAAABrX2l0ZW1z
+BAAAAE5vbmUoAgAAAHMGAAAAa19pdGVtcwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcwsAAAA8bGFtYmRhLjY1PlAAAABzAAAAAHMHAAAAbmV3Q2VsbHMFAAAAcHJpY2VzBgAA
+AGFwcGVuZHMJAAAAaW52ZW50b3J5cwgAAABxdWFudGl0eXMEAAAAZWRpdHMaAAAAbWFwcGVkX3Zh
+bHVlX3Byb3BlcnR5X2xpc3RzDAAAAGZvcmNlX3VwZGF0ZXMiAAAAbWVtYmVyc2hpcF9jcml0ZXJp
+b25fY2F0ZWdvcnlfbGlzdHMNAAAAY2F0ZWdvcnlfbGlzdHMHAAAAZ2V0Q2VsbHMFAAAARVJST1Jz
+DgAAAGdldENlbGxLZXlMaXN0cwsAAABnZXRQcm9wZXJ0eXMQAAAAZ2V0UmVzb3VyY2VWYWx1ZXMM
+AAAAZ2V0QmFzZVByaWNlcw4AAAByZWluZGV4X29iamVjdHMgAAAAQ2FzaERldGFpbF9zZWFyY2hf
+bGluZUJ5UmVzb3VyY2VzEQAAAG1hbmFnZV9kZWxPYmplY3RzcwUAAABnZXRJZHMOAAAAcG9ydGFs
+X2NhdGFsb2dzCAAAAEJhbmtub3RlcwQAAABDb2lucwIAAABpZHMJAAAAZ2V0T2JqZWN0cwoAAAB2
+YXJpYXRpb24vcwYAAABjb2x1bW5zBQAAAGxpbmUxcwUAAABsaW5lMnMBAAAAL3MHAAAAUkVRVUVT
+VHMKAAAAJXMvdmlldz8lc3MMAAAAYWJzb2x1dGVfdXJscxYAAABwb3J0YWxfc3RhdHVzX21lc3Nh
+Z2U9cxkAAAAgKyBsaWduZShzKStjcsOpw6llKHMpLi4ucwgAAABSRVNQT05TRXMIAAAAcmVkaXJl
+Y3QoSwAAAHMMAAAAY2VsbF9iYXNlX2lkcwkAAABfZ2V0aXRlbV9zAgAAAGt3cw4AAAB2YXJpYXRp
+b25fbGlzdHMTAAAAZW1pc3Npb25MZXR0ZXJfbGlzdHMPAAAAY2FzaFN0YXR1c19saXN0cxEAAABv
+cGVyYXRpb25DdXJyZW5jeXMQAAAAbGluZV9wb3J0YWxfdHlwZXMTAAAAb3RoZXJQYXJhbWV0ZXJf
+bGlzdHMOAAAAdXBkYXRlUG9zc2libGVzCgAAAGNvbHVtbkJhc2VzAwAAAGludHMMAAAAdXNlSW52
+ZW50b3J5cwMAAABsZW5zDgAAAG51bWJlck9mQ29sdW1ucwYAAABhcHBlbmRzCAAAACRhcHBlbmQw
+cwkAAABfZ2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMBAAAAeHMWAAAAY2F0YWxv
+Z192YXJpYXRpb25fbGlzdHMJAAAAYmFzZV9saXN0cx8AAABkZWZhdWx0X3ZhcmlhdGlvbl9jYXRl
+Z29yeV9saXN0cwwAAABjb3VudGVyX2xpbmVzDgAAAGxpbmVzX3RvRGVsZXRlcwQAAABOb25lcxMA
+AABwcmV2aW91c19yZXNvdXJjZUlkcwUAAABGYWxzZXMMAAAAbGluZV9jcmVhdGVkcwcAAABsaXN0
+Ym94cxIAAABsaXN0Ym94X2xpbmVfY291bnRzGQAAAGxpc3Rib3hfbGluZV9jb3VudF9wbHVzXzFz
+CAAAAGxhc3Rfcm93cwQAAAB0ZXN0cwsAAABjcmVhdGVfbGluZXMFAAAAcmFuZ2VzCQAAAGlfbGlz
+dGJveHMEAAAAVHJ1ZXMMAAAAbGlzdGJveF9saW5lcwgAAABuZXdfbGluZXMPAAAAcmVzb3VyY2Vf
+b2JqZWN0cxIAAABsaW5lX2NhdGVnb3J5X2xpc3RzAwAAAGt3ZHMTAAAAY2VsbF9yYW5nZV9rZXlf
+bGlzdHMBAAAAaXMBAAAAa3MGAAAAZmlsdGVycw0AAABjYXRlZ29yeV9saXN0cwcAAABfYXBwbHlf
+cwEAAABjcxEAAABtYXBwZWRfdmFsdWVfbGlzdHMSAAAAY2VsbF9jYXRlZ29yeV9saXN0cw0AAABj
+ZWxsX2NhdGVnb3J5cw0AAAB2YXJpYW50ZV9saXN0cwQAAABjZWxscwQAAAByZXBycwsAAABvbGRR
+dWFudGl0eXMIAAAAb2xkX2xpbmVzDQAAAHJlc291cmNlX2xpc3RzEwAAAGNlbGxfZW1pc3Npb25M
+ZXR0ZXJzDgAAAGNlbGxfdmFyaWF0aW9ucw4AAABheGlzX2xpc3RfZGljdHMJAAAAYXhpc19kaWN0
+cxcAAABiYXNlX2xpbmVfY2F0ZWdvcnlfbGlzdHMPAAAAY2VsbF9jYXNoU3RhdHVzcxQAAABjYXRl
+Z295X2xpc3RfY3JlYXRlZHMHAAAAY291bnRlcnMDAAAAY29scwMAAABzdHJzDQAAAGNlbGxfcXVh
+bnRpdHlzEgAAAGJhc2VfbGluZV9jYXRlZ29yeXMPAAAAY29sdW1uX2NhdGVnb3J5cwcAAAByZXF1
+ZXN0cwwAAAByZWRpcmVjdF91cmwoSwAAAHMHAAAAbGlzdGJveHMCAAAAa3dzDAAAAGNlbGxfYmFz
+ZV9pZHMJAAAAX2dldGl0ZW1fcw4AAAB2YXJpYXRpb25fbGlzdHMTAAAAZW1pc3Npb25MZXR0ZXJf
+bGlzdHMPAAAAY2FzaFN0YXR1c19saXN0cxEAAABvcGVyYXRpb25DdXJyZW5jeXMQAAAAbGluZV9w
+b3J0YWxfdHlwZXMTAAAAb3RoZXJQYXJhbWV0ZXJfbGlzdHMOAAAAdXBkYXRlUG9zc2libGVzCgAA
+AGNvbHVtbkJhc2VzAwAAAGludHMMAAAAdXNlSW52ZW50b3J5cwMAAABsZW5zDgAAAG51bWJlck9m
+Q29sdW1ucwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zCQAAAF9nZXRhdHRy
+X3MHAAAAY29udGV4dHMBAAAAeHMWAAAAY2F0YWxvZ192YXJpYXRpb25fbGlzdHMJAAAAYmFzZV9s
+aXN0cx8AAABkZWZhdWx0X3ZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwwAAABjb3VudGVyX2xpbmVz
+DgAAAGxpbmVzX3RvRGVsZXRlcwQAAABOb25lcxMAAABwcmV2aW91c19yZXNvdXJjZUlkcwUAAABG
+YWxzZXMMAAAAbGluZV9jcmVhdGVkcxIAAABsaXN0Ym94X2xpbmVfY291bnRzGQAAAGxpc3Rib3hf
+bGluZV9jb3VudF9wbHVzXzFzCAAAAGxhc3Rfcm93cwQAAAB0ZXN0cwsAAABjcmVhdGVfbGluZXMF
+AAAAcmFuZ2VzCQAAAGlfbGlzdGJveHMEAAAAVHJ1ZXMMAAAAbGlzdGJveF9saW5lcwgAAABuZXdf
+bGluZXMPAAAAcmVzb3VyY2Vfb2JqZWN0cxIAAABsaW5lX2NhdGVnb3J5X2xpc3RzAwAAAGt3ZHMT
+AAAAY2VsbF9yYW5nZV9rZXlfbGlzdHMBAAAAaXMBAAAAa3MGAAAAZmlsdGVycw0AAABjYXRlZ29y
+eV9saXN0cwcAAABfYXBwbHlfcwEAAABjcxEAAABtYXBwZWRfdmFsdWVfbGlzdHMSAAAAY2VsbF9j
+YXRlZ29yeV9saXN0cw0AAABjZWxsX2NhdGVnb3J5cw0AAAB2YXJpYW50ZV9saXN0cwQAAABjZWxs
+cwQAAAByZXBycwsAAABvbGRRdWFudGl0eXMIAAAAb2xkX2xpbmVzDQAAAHJlc291cmNlX2xpc3Rz
+EwAAAGNlbGxfZW1pc3Npb25MZXR0ZXJzDgAAAGNlbGxfdmFyaWF0aW9ucw4AAABheGlzX2xpc3Rf
+ZGljdHMJAAAAYXhpc19kaWN0cxcAAABiYXNlX2xpbmVfY2F0ZWdvcnlfbGlzdHMPAAAAY2VsbF9j
+YXNoU3RhdHVzcxQAAABjYXRlZ295X2xpc3RfY3JlYXRlZHMHAAAAY291bnRlcnMDAAAAY29scwMA
+AABzdHJzDQAAAGNlbGxfcXVhbnRpdHlzEgAAAGJhc2VfbGluZV9jYXRlZ29yeXMPAAAAY29sdW1u
+X2NhdGVnb3J5cwcAAAByZXF1ZXN0cwwAAAByZWRpcmVjdF91cmwoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzGAAAAENhc2hEZXRhaWxfZmFzdElucHV0U2F2ZQEAAABzHgEAAAYCDwEPAQ8B
+DwEPAg8BDwEPAQ8BDwEVAg0BEAENARACDAdBAAYBLQIPARQAHQEXAB4CBgMGAwYBBgIMAQ0BDgIG
+AgYDBgEGARYABgENAQoCDwIrAgcBCgEbARMBEwETAxkCDwEYAxYBBgENAAYBEgEbAQkBEAEXAhMB
+GAIGAQ8GDQAGASoBHgENAT0BDQEfASUBIwQfASUBJwQHAQUBBgEGAQYCIQEQASADDwEtAR8CDQET
+ARcCEwETARcCEwEhASEBEAENARMBFwITARMBFwITASEBIQEQAhMBFwITARMBFwITASEBIQEMAQYB
+BgEWAAYBCgImAQ0BDQEOAQ0BDgIKAjECBgEIAQ0ABgEQARgBCgEXARABIAMPARUBGwIoAgAAAHME
+AAAATm9uZXMYAAAAQ2FzaERldGFpbF9mYXN0SW5wdXRTYXZlKAIAAABzBAAAAE5vbmVzGAAAAENh
+c2hEZXRhaWxfZmFzdElucHV0U2F2ZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAA
+PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_fastInputSave</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>cell_base_id</string>
+                            <string>_getitem_</string>
+                            <string>variation_list</string>
+                            <string>emissionLetter_list</string>
+                            <string>cashStatus_list</string>
+                            <string>operationCurrency</string>
+                            <string>line_portal_type</string>
+                            <string>otherParameter_list</string>
+                            <string>updatePossible</string>
+                            <string>columnBase</string>
+                            <string>int</string>
+                            <string>useInventory</string>
+                            <string>len</string>
+                            <string>numberOfColumn</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>catalog_variation_list</string>
+                            <string>base_list</string>
+                            <string>default_variation_category_list</string>
+                            <string>counter_line</string>
+                            <string>lines_toDelete</string>
+                            <string>None</string>
+                            <string>previous_resourceId</string>
+                            <string>False</string>
+                            <string>line_created</string>
+                            <string>listbox_line_count</string>
+                            <string>listbox_line_count_plus_1</string>
+                            <string>last_row</string>
+                            <string>test</string>
+                            <string>create_line</string>
+                            <string>range</string>
+                            <string>i_listbox</string>
+                            <string>True</string>
+                            <string>listbox_line</string>
+                            <string>new_line</string>
+                            <string>resource_object</string>
+                            <string>line_category_list</string>
+                            <string>kwd</string>
+                            <string>cell_range_key_list</string>
+                            <string>i</string>
+                            <string>k</string>
+                            <string>filter</string>
+                            <string>category_list</string>
+                            <string>_apply_</string>
+                            <string>c</string>
+                            <string>mapped_value_list</string>
+                            <string>cell_category_list</string>
+                            <string>cell_category</string>
+                            <string>variante_list</string>
+                            <string>cell</string>
+                            <string>repr</string>
+                            <string>oldQuantity</string>
+                            <string>old_line</string>
+                            <string>resource_list</string>
+                            <string>cell_emissionLetter</string>
+                            <string>cell_variation</string>
+                            <string>axis_list_dict</string>
+                            <string>axis_dict</string>
+                            <string>base_line_category_list</string>
+                            <string>cell_cashStatus</string>
+                            <string>categoy_list_created</string>
+                            <string>counter</string>
+                            <string>col</string>
+                            <string>str</string>
+                            <string>cell_quantity</string>
+                            <string>base_line_category</string>
+                            <string>column_category</string>
+                            <string>request</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_fastInputSave</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

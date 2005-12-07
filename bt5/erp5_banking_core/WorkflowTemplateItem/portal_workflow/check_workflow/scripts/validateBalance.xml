@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+my_transaction = state_change.object\n
+# if context.portal_workflow.getInfoFor(ob=state_change.object,name=\'simulation_assigned\',wf_id=\'check_payment_workflow\') is not None:\n
+#return None\n
+\n
+payment  = my_transaction.getDestinationPayment()\n
+quantity = my_transaction.getPrice()\n
+\n
+#inventory = context.BankAccount_checkBalance(payment=payment,quantity=quantity)\n
+inventory = 1\n
+if inventory == 2 :\n
+  raise ValidationFailed, \'le compte n\'\'est pas valide ! Veuillez v\xc3\xa9rifier.\'\n
+elif inventory == 1 :\n
+  raise ValidationFailed, \'Provision insuffisante ! Op\xc3\xa9ration refus\xc3\xa9e.\'\n
+elif inventory == 3:\n
+  my_transaction.order(message=\'Op\xc3\xa9ration en validation manuelle pour provision insuffisante !\')\n
+elif inventory == 0 :\n
+  my_transaction.confirm(message=\'Op\xc3\xa9ration envoy\xc3\xa9e \xc3\xa0 la caisse pour paiement.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAgAAAAIAAAAQwAA
+AHPMAAAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQCAHwEAGQDAIMCAIMAAH0FAHQCAHwE
+AGQEAIMCAIMAAH0GAGQFAH0HAHwHAGQGAGoCAG8NAAF8AgBkBwCCAgBuaQABfAcAZAUAagIAbw0A
+AXwCAGQIAIICAG5PAAF8BwBkCQBqAgBvGgABdAIAfAQAZAoAgwIAZAsAZAwAgwABAW4oAAF8BwBk
+DQBqAgBvGgABdAIAfAQAZA4AgwIAZAsAZA8AgwABAW4BAAFkAABTKBAAAABOKAEAAABzEAAAAFZh
+bGlkYXRpb25GYWlsZWRzBgAAAG9iamVjdHMVAAAAZ2V0RGVzdGluYXRpb25QYXltZW50cwgAAABn
+ZXRQcmljZWkBAAAAaQIAAABzLwAAAGxlIGNvbXB0ZSBuZXN0IHBhcyB2YWxpZGUgISBWZXVpbGxl
+eiB2w6lyaWZpZXIucy0AAABQcm92aXNpb24gaW5zdWZmaXNhbnRlICEgT3DDqXJhdGlvbiByZWZ1
+c8OpZS5pAwAAAHMFAAAAb3JkZXJzBwAAAG1lc3NhZ2VzPwAAAE9ww6lyYXRpb24gZW4gdmFsaWRh
+dGlvbiBtYW51ZWxsZSBwb3VyIHByb3Zpc2lvbiBpbnN1ZmZpc2FudGUgIWkAAAAAcwcAAABjb25m
+aXJtcy8AAABPcMOpcmF0aW9uIGVudm95w6llIMOgIGxhIGNhaXNzZSBwb3VyIHBhaWVtZW50LigI
+AAAAcx4AAABQcm9kdWN0cy5EQ1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWls
+ZWRzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcw4AAABteV90cmFuc2FjdGlvbnMHAAAA
+cGF5bWVudHMIAAAAcXVhbnRpdHlzCQAAAGludmVudG9yeSgIAAAAcwwAAABzdGF0ZV9jaGFuZ2Vz
+HgAAAFByb2R1Y3RzLkRDV29ya2Zsb3cuRENXb3JrZmxvd3MQAAAAVmFsaWRhdGlvbkZhaWxlZHMJ
+AAAAX2dldGF0dHJfcw4AAABteV90cmFuc2FjdGlvbnMHAAAAcGF5bWVudHMIAAAAcXVhbnRpdHlz
+CQAAAGludmVudG9yeSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMPAAAAdmFsaWRhdGVC
+YWxhbmNlAQAAAHMYAAAADQIPBBIBEgMGAQ0BDQENAQ0BEAEXARABKAEAAABzDwAAAHZhbGlkYXRl
+QmFsYW5jZSgBAAAAcw8AAAB2YWxpZGF0ZUJhbGFuY2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
+dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_workflow/check_workflow/scripts/validateBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>my_transaction</string>
+                            <string>payment</string>
+                            <string>quantity</string>
+                            <string>inventory</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

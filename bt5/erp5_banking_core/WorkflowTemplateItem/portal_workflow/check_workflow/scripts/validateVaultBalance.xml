@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+transaction = state_change.object\n
+\n
+caisse = transaction.getSource()\n
+resource = context.Caisse_checkInventory(source= caisse,portal_type=\'Check Payment Line\')\n
+\n
+# Get price and total_price.\n
+price = transaction.getPrice()\n
+billetage = transaction.getTotalPrice(deliveryLineType=\'Check Payment Line\')\n
+\n
+if resource == 3 :\n
+  raise ValidationFailed, \'Aucun billetage saisi !!! Veuillez v\xc3\xa9rifier\' \n
+elif price != billetage :\n
+  raise ValidationFailed, \'Le montant saisi est diff\xc3\xa9rent du billetage\'\n
+elif resource == 2 :\n
+  raise ValidationFailed, \'Aucune ressource !!! Veuillez v\xc3\xa9rifier\'\n
+elif resource == 1 :\n
+  raise ValidationFailed, \'Insufficient balance\'\n
+\n
+# elif len(transaction.checkConsistency()) > 7 :\n
+#  raise ValidationFailed, \'Erreur dans les donn\xc3\xa9es! Veuillez v\xc3\xa9rifier\'\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAoAAAAJAAAAQwAA
+AHPiAAAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQCAHwEAGQDAIMCAIMAAH0FAHQCAHQG
+AGQEAIMCAGQFAHwFAGQGAGQHAIMAAn0HAHQCAHwEAGQIAIMCAIMAAH0IAHQCAHwEAGQJAIMCAGQK
+AGQHAIMAAX0JAHwHAGQLAGoCAG8NAAF8AgBkDACCAgBuTwABfAgAfAkAagMAbw0AAXwCAGQNAIIC
+AG41AAF8BwBkDgBqAgBvDQABfAIAZA8AggIAbhsAAXwHAGQQAGoCAG8NAAF8AgBkEQCCAgBuAQAB
+ZAAAUygSAAAATigBAAAAcxAAAABWYWxpZGF0aW9uRmFpbGVkcwYAAABvYmplY3RzCQAAAGdldFNv
+dXJjZXMVAAAAQ2Fpc3NlX2NoZWNrSW52ZW50b3J5cwYAAABzb3VyY2VzCwAAAHBvcnRhbF90eXBl
+cxIAAABDaGVjayBQYXltZW50IExpbmVzCAAAAGdldFByaWNlcw0AAABnZXRUb3RhbFByaWNlcxAA
+AABkZWxpdmVyeUxpbmVUeXBlaQMAAABzLAAAAEF1Y3VuIGJpbGxldGFnZSBzYWlzaSAhISEgVmV1
+aWxsZXogdsOpcmlmaWVycywAAABMZSBtb250YW50IHNhaXNpIGVzdCBkaWZmw6lyZW50IGR1IGJp
+bGxldGFnZWkCAAAAcycAAABBdWN1bmUgcmVzc291cmNlICEhISBWZXVpbGxleiB2w6lyaWZpZXJp
+AQAAAHMUAAAASW5zdWZmaWNpZW50IGJhbGFuY2UoCgAAAHMeAAAAUHJvZHVjdHMuRENXb3JrZmxv
+dy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRl
+X2NoYW5nZXMLAAAAdHJhbnNhY3Rpb25zBgAAAGNhaXNzZXMHAAAAY29udGV4dHMIAAAAcmVzb3Vy
+Y2VzBQAAAHByaWNlcwkAAABiaWxsZXRhZ2UoCgAAAHMMAAAAc3RhdGVfY2hhbmdlcx4AAABQcm9k
+dWN0cy5EQ1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzCQAAAF9nZXRh
+dHRyX3MLAAAAdHJhbnNhY3Rpb25zBgAAAGNhaXNzZXMHAAAAY29udGV4dHMIAAAAcmVzb3VyY2Vz
+BQAAAHByaWNlcwkAAABiaWxsZXRhZ2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFAAA
+AHZhbGlkYXRlVmF1bHRCYWxhbmNlAQAAAHMaAAAADQIPAhIBHgMSARgCDQENAQ0BDQENAQ0BDQEo
+AQAAAHMUAAAAdmFsaWRhdGVWYXVsdEJhbGFuY2UoAQAAAHMUAAAAdmFsaWRhdGVWYXVsdEJhbGFu
+Y2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_workflow/check_workflow/scripts/validateVaultBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>transaction</string>
+                            <string>caisse</string>
+                            <string>context</string>
+                            <string>resource</string>
+                            <string>price</string>
+                            <string>billetage</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateVaultBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

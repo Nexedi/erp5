@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+class Number:\n
+    DIC  = {0:\'Z\xc3\xa9ro\', 1:\'un\',2:\'deux\',3:\'trois\',4:\'quatre\',5:\'cinq\',6:\'six\',7:\'sept\', 8:\'huit\',9:\'neuf\',\n
+            10:\'dix\',11:\'onze\',12:\'douze\',13:\'treize\', 14:\'quatorze\',15:\'quinze\',16:\'seize\',17:\'dix-sept\',\n
+            18:\'dix-huit\',19:\'dix-neuf\',20:\'vingt\',30:\'trente\',40:\'quarante\',50:\'cinquante\', 60:\'soixante\',\n
+            80:\'quatre vingt\',100:\'cent\',1000:\'mille\',1000000:\'million\',1000000000:\'milliard\'}\n
+\n
+    def MinusHumdred(self,MyNumber):\n
+        if MyNumber == 0:            return \'\'\n
+        elif MyNumber in self.DIC:   return self.DIC[MyNumber]\n
+        elif MyNumber < 60:          return self.DIC[10*(MyNumber/10)]+self.iif(MyNumber%10==1, \' et \',\' \')+self.DIC[MyNumber%10]\n
+        elif MyNumber < 80:          return self.DIC[60]+self.iif(MyNumber%10==1, \' et \',\' \')+self.DIC[MyNumber - 60]\n
+        elif MyNumber < 100:         return self.DIC[80]+\' \'+self.DIC[MyNumber - 80]\n
+\n
+    def iif(self, condition,trueVal,falseVal):\n
+        if condition:    return trueVal\n
+        else:            return falseVal\n
+\n
+    def convert(self,MyNumber,step=1000000000, Hundred=False):\n
+        if MyNumber <= 100:          return self.MinusHumdred(MyNumber)\n
+        elif MyNumber < step:        return self.convert(MyNumber,step/self.iif(step>1000,1000,10),Hundred)\n
+        elif MyNumber < 2*step:\n
+            return self.iif(step>1000,\'un \',\'\')+self.DIC[step] + self.iif(MyNumber%step>0,\' \',\'\') + self.convert(MyNumber%step, step/self.iif(step>1000,1000,10),Hundred)\n
+        else:\n
+            return (self.convert(MyNumber/step, step/self.iif(step>1000,1000,10),(Hundred or step>100)) +\' \'+ \n
+                      self.DIC[step]+self.iif(step == 1000 or (step == 100 and (MyNumber%step > 0 or Hundred)),\'\',\'s\') +\n
+                      self.iif(MyNumber%step>0,\' \',\'\') + self.convert(MyNumber%step, step/self.iif(step>1000,1000,10),Hundred))\n
+    def numbertoletter(self,aNumber):\n
+        return self.iif(aNumber == 0, self.DIC[0], self.convert(aNumber))\n
+#return pvalue\n
+v_value = Number()\n
+\n
+return v_value.numbertoletter(pvalue)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+fAAAZAIAgwIAfAEAgwEAU275AQF8AQB8AgBqAABvPAABdAEAfAAAZAMAgwIAfAEAfAIAdAEAfAAA
+ZAQAgwIAfAIAZAUAagQAZAUAZAYAgwMAFXwDAIMDAFNusAEBfAEAZAcAfAIAFGoAAG+YAAF0AQB8
+AABkBACDAgB8AgBkBQBqBABkCABkCQCDAwB0BQB0AQB8AABkCgCDAgB8AgCDAgAXdAEAfAAAZAQA
+gwIAfAEAfAIAFmQLAGoEAGQMAGQJAIMDABd0AQB8AABkAwCDAgB8AQB8AgAWfAIAdAEAfAAAZAQA
+gwIAfAIAZAUAagQAZAUAZAYAgwMAFXwDAIMDABdTbgcBAXQBAHwAAGQDAIMCAHwBAHwCABV8AgB0
+AQB8AABkBACDAgB8AgBkBQBqBABkBQBkBgCDAwAVfAMAcAoAAXwCAGQBAGoEAIMDAGQMABd0BQB0
+AQB8AABkCgCDAgB8AgCDAgAXdAEAfAAAZAQAgwIAfAIAZAUAagIAcCIAAXwCAGQBAGoCAG8VAAF8
+AQB8AgAWZAsAagQAcAQAAXwDAGQJAGQNAIMDABd0AQB8AABkBACDAgB8AQB8AgAWZAsAagQAZAwA
+ZAkAgwMAF3QBAHwAAGQDAIMCAHwBAHwCABZ8AgB0AQB8AABkBACDAgB8AgBkBQBqBABkBQBkBgCD
+AwAVfAMAgwMAF1NkAABTKA4AAABOaWQAAABzDAAAAE1pbnVzSHVtZHJlZHMHAAAAY29udmVydHMD
+AAAAaWlmaegDAABpCgAAAGkCAAAAcwMAAAB1biBzAAAAAHMDAAAARElDaQAAAABzAQAAACBzAQAA
+AHMoBgAAAHMIAAAATXlOdW1iZXJzCQAAAF9nZXRhdHRyX3MEAAAAc2VsZnMEAAAAc3RlcHMHAAAA
+SHVuZHJlZHMJAAAAX2dldGl0ZW1fKAYAAABzBAAAAHNlbGZzCAAAAE15TnVtYmVycwQAAABzdGVw
+cwcAAABIdW5kcmVkcwkAAABfZ2V0YXR0cl9zCQAAAF9nZXRpdGVtXygAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMHAAAAY29udmVydBIAAABzDgAAAAABJAFJAREBmAJSAVcBYwIAAAAEAAAA
+BwAAAEMAAABzRAAAAHQAAHwAAGQBAIMCAHwBAGQCAGoCAHQDAHQAAHwAAGQDAIMCAGQCAIMCAHQA
+AHwAAGQEAIMCAHwBAIMBAIMDAFNkAABTKAUAAABOcwMAAABpaWZpAAAAAHMDAAAARElDcwcAAABj
+b252ZXJ0KAQAAABzCQAAAF9nZXRhdHRyX3MEAAAAc2VsZnMHAAAAYU51bWJlcnMJAAAAX2dldGl0
+ZW1fKAQAAABzBAAAAHNlbGZzBwAAAGFOdW1iZXJzCQAAAF9nZXRhdHRyX3MJAAAAX2dldGl0ZW1f
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcw4AAABudW1iZXJ0b2xldHRlchsAAABzAgAA
+AAABKAgAAABzCAAAAF9fbmFtZV9fcwoAAABfX21vZHVsZV9fcwMAAABESUNzDAAAAE1pbnVzSHVt
+ZHJlZHMDAAAAaWlmcwUAAABGYWxzZXMHAAAAY29udmVydHMOAAAAbnVtYmVydG9sZXR0ZXIoAAAA
+ACgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMGAAAATnVtYmVyAQAAAHMMAAAABgH/ABUF
+CQcJBA8Jcw4AAABudW1iZXJ0b2xldHRlcigEAAAAcwYAAABOdW1iZXJzBwAAAHZfdmFsdWVzCQAA
+AF9nZXRhdHRyX3MGAAAAcHZhbHVlKAQAAABzBgAAAHB2YWx1ZXMGAAAATnVtYmVycwcAAAB2X3Zh
+bHVlcwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGQAAAEJhb2Jh
+Yl9nZXRMaXR0ZXJhbEludGVnZXIBAAAAcwQAAAATHQkCKAEAAABzGQAAAEJhb2JhYl9nZXRMaXR0
+ZXJhbEludGVnZXIoAQAAAHMZAAAAQmFvYmFiX2dldExpdHRlcmFsSW50ZWdlcigAAAAAKAAAAABz
+DwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getLitteralInteger</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>pvalue=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>pvalue</string>
+                            <string>Number</string>
+                            <string>v_value</string>
+                            <string>_getattr_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Baobab_getLitteralInteger</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

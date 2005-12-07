@@ -1,0 +1,141 @@
+<site_property>
+ <property>
+  <id>portal_assignment_base_category_list</id>
+  <type>lines</type>
+  <value>
+   <item>site</item>
+   <item>group</item>
+   <item>function</item>
+  </value>
+ </property>
+ <property>
+  <id>portal_criterion_base_category_list</id>
+  <type>lines</type>
+  <value>
+   <item>source</item>
+   <item>destination</item>
+   <item>resource</item>
+   <item>currency_exchange_type</item>
+   <item>price_currency</item>
+  </value>
+ </property>
+ <property>
+  <id>portal_delivery_movement_type_list</id>
+  <type>lines</type>
+  <value>
+   <item>Accounting Transaction Line</item>
+   <item>Account Transfer Line</item>
+   <item>Balance Transaction Line</item>
+   <item>Cash Classification Line In</item>
+   <item>Cash Classification Line Out</item>
+   <item>Cash Extraction Line</item>
+   <item>Check Opposition Cash Reserve</item>
+   <item>Cash Container Line</item>
+   <item>Cash Exchange Line In</item>
+   <item>Cash Exchange Line Out</item>
+   <item>Cash Inventory Line</item>
+   <item>Cash Movement Line</item>
+   <item>Cash Sorting Line In</item>
+   <item>Cash Sorting Line Out</item>
+   <item>Cash To Currency Purchase Line In</item>
+   <item>Cash To Currency Purchase Line Out</item>
+   <item>Cash To Currency Sale Line In</item>
+   <item>Cash To Currency Sale Line Out</item>
+   <item>Cash Transfer Line</item>
+   <item>Check Payment Line</item>
+   <item>Classification Survey Line</item>
+   <item>Currency Purchase Line</item>
+   <item>Currency Sale Line</item>
+   <item>Internal Money Deposit Line</item>
+   <item>Internal Money Payment Line</item>
+   <item>Monetary Destruction Line</item>
+   <item>Monetary Issue Line</item>
+   <item>Monetary Recall Line</item>
+   <item>Monetary Survey Line</item>
+   <item>Money Deposit Line</item>
+   <item>Outsourcing Sort Line In</item>
+   <item>Outsourcing Sort Line Out</item>
+   <item>Money Deposit Regulation Line</item>
+   <item>Purchase Invoice Transaction Line</item>
+   <item>Sale Invoice Transaction Line</item>
+   <item>Cash Inventory Cell</item>
+   <item>Delivery Cell</item>
+   <item>Supply Cell</item>
+   <item>Dap Check Payment Line</item>
+   <item>Currency Exchange Line</item>
+   <item>Currency Exchange Cell</item>
+   <item>Checkbook Reception Line</item>
+   <item>Checkbook Delivery Line</item>
+   <item>Cash Balance Regulation Line In</item>
+   <item>Cash Balance Regulation Line Out</item>
+   <item>Cash Incident Line In</item>
+   <item>Cash Incident Line Out</item>
+  </value>
+ </property>
+ <property>
+  <id>portal_delivery_type_list</id>
+  <type>lines</type>
+  <value>
+   <item>Accounting Transaction</item>
+   <item>Account Transfer</item>
+   <item>Balance Transaction</item>
+   <item>Cash Classification</item>
+   <item>Cash Container</item>
+   <item>Cash Exchange</item>
+   <item>Cash Inventory</item>
+   <item>Cash Movement</item>
+   <item>Cash Movement Emitted</item>
+   <item>Cash Movement Emitted From Transit</item>
+   <item>Cash Movement Emitted To Transit</item>
+   <item>Cash Movement New</item>
+   <item>Cash Movement New From Transit</item>
+   <item>Cash Movement New To Transit</item>
+   <item>Cash Sorting</item>
+   <item>Cash To Currency Purchase</item>
+   <item>Cash To Currency Sale</item>
+   <item>Cash Transfer</item>
+   <item>Cash Extraction</item>
+   <item>Check Payment</item>
+   <item>Classification Survey</item>
+   <item>Currency Purchase</item>
+   <item>Currency Sale</item>
+   <item>Internal Money Deposit</item>
+   <item>Internal Money Payment</item>
+   <item>Check Opposition</item>
+   <item>Monetary Destruction</item>
+   <item>Monetary Issue</item>
+   <item>Monetary Recall</item>
+   <item>Monetary Survey</item>
+   <item>Money Deposit</item>
+   <item>Payment Transaction</item>
+   <item>Purchase Invoice Transaction</item>
+   <item>Sale Invoice Transaction</item>
+   <item>Dap Issue</item>
+   <item>Outsourcing Sort</item>
+   <item>Money Deposit Regulation</item>
+   <item>Dap Check Payment</item>
+   <item>Checkbook Reception</item>
+   <item>Checkbook Delivery</item>
+   <item>Cash Balance Regulation</item>
+   <item>Cash Incident</item>
+  </value>
+ </property>
+ <property>
+  <id>portal_supply_type_list</id>
+  <type>lines</type>
+  <value>
+   <item>Supply Line</item>
+   <item>Supply Cell</item>
+   <item>Currency Exchange Line</item>
+   <item>Currency Exchange Cell</item>
+  </value>
+ </property>
+ <property>
+  <id>portal_variation_type_list</id>
+  <type>lines</type>
+  <value>
+   <item>Variation</item>
+   <item>Checkbook Type Variation</item>
+  </value>
+ </property>
+</site_property>

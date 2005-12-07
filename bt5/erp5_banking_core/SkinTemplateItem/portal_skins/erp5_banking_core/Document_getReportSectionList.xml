@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+\n
+result = []\n
+\n
+# Use Cases\n
+result.append(\n
+                 ReportSection(path=context.getPhysicalPath(), \n
+                               title=\'Use Cases\',   \n
+                               form_id=None,\n
+                               level=1,\n
+                               )             \n
+               )\n
+\n
+use_case = context.use_case\n
+\n
+for o in use_case.contentValues():\n
+  result.append(\n
+                 ReportSection(path=o.getPhysicalPath(), \n
+                               title=\'Use Case de %s \' % o.getTitle(),   \n
+                               level=2,\n
+                               form_id=\'UseCase_viewUseCaseActors\',\n
+                               )             \n
+               )\n
+  for a in o.contentValues(filter={\'portal_type\' : \'Use Case Scenario\'}):\n
+    result.append(\n
+                 ReportSection(path=a.getPhysicalPath(), \n
+                               title=\'Sc\xc3\xa9nario %s\' % a.getTitle(),   \n
+                               level=3,\n
+                               form_id=\'UseCaseScenario_view\',\n
+                               )             \n
+               )\n
+\n
+# Analyse documentaire\n
+result.append(\n
+                 ReportSection(path=context.getPhysicalPath(), \n
+                               title=\'Analyse documentaire: Documents\',   \n
+                               form_id=None,\n
+                               level=1,\n
+                               )             \n
+               )\n
+\n
+document_analysis = context.document_analysis[\'1\']\n
+\n
+for o in document_analysis.contentValues(filter={\'portal_type\' : \'Document Analysis Document\'}):\n
+  result.append(\n
+                 ReportSection(path=o.getPhysicalPath(), \n
+                               title=\'Structure documentaire de %s \' % o.getTitle(),   \n
+                               level=2,\n
+                               form_id=\'DocumentAnalysisDocument_viewItems\',\n
+                               )             \n
+               )\n
+\n
+\n
+\n
+# Analyse documentaire\n
+result.append(\n
+                 ReportSection(path=context.getPhysicalPath(), \n
+                               title=\'Analyse documentaire: Lexiques\',   \n
+                               form_id=None,\n
+                               level=1,\n
+                               )             \n
+               )\n
+\n
+document_analysis = context.document_analysis[\'1\']\n
+\n
+for o in document_analysis.contentValues(filter={\'portal_type\' : \'Document Analysis Lexicon\'}):\n
+  result.append(\n
+                 ReportSection(path=o.getPhysicalPath(), \n
+                               title=\'Lexique de %s \' % o.getTitle(),   \n
+                               level=2,\n
+                               form_id=\'DocumentAnalysisLexicon_view\',\n
+                               )             \n
+               )\n
+\n
+\n
+return result\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAwAAAAoAAAAQwAA
+AHPpAgAAZAEAawAAbAEAfQEAAWcAAH0CAHQDAHwCAGQCAIMCAHwBAGQDAHQDAHQEAGQEAIMCAIMA
+AGQFAGQGAGQHAHQFAGQIAGQJAIMABIMBAAF0AwB0BABkCgCDAgB9BgB45gB0BwB0AwB8BgBkCwCD
+AgCDAACDAQBEXcwAfQgAdAMAfAIAZAIAgwIAfAEAZAMAdAMAfAgAZAQAgwIAgwAAZAUAZAwAdAMA
+fAgAZA0AgwIAgwAAFmQIAGQOAGQHAGQPAIMABIMBAAF4eQB0BwB0AwB8CABkCwCDAgBkEABoAAAE
+ZBEAZBIAAzyDAAGDAQBEXVAAfQkAdAMAfAIAZAIAgwIAfAEAZAMAdAMAfAkAZAQAgwIAgwAAZAUA
+ZBMAdAMAfAkAZA0AgwIAgwAAFmQIAGQUAGQHAGQVAIMABIMBAAFx7QBXcXUAV3QDAHwCAGQCAIMC
+AHwBAGQDAHQDAHQEAGQEAIMCAIMAAGQFAGQWAGQHAHQFAGQIAGQJAIMABIMBAAF0CgB0AwB0BABk
+FwCDAgBkGACDAgB9CwB4eQB0BwB0AwB8CwBkCwCDAgBkEABoAAAEZBEAZBkAAzyDAAGDAQBEXVAA
+fQgAdAMAfAIAZAIAgwIAfAEAZAMAdAMAfAgAZAQAgwIAgwAAZAUAZBoAdAMAfAgAZA0AgwIAgwAA
+FmQIAGQOAGQHAGQbAIMABIMBAAFxvwFXdAMAfAIAZAIAgwIAfAEAZAMAdAMAdAQAZAQAgwIAgwAA
+ZAUAZBwAZAcAdAUAZAgAZAkAgwAEgwEAAXQKAHQDAHQEAGQXAIMCAGQYAIMCAH0LAHh5AHQHAHQD
+AHwLAGQLAIMCAGQQAGgAAARkEQBkHQADPIMAAYMBAERdUAB9CAB0AwB8AgBkAgCDAgB8AQBkAwB0
+AwB8CABkBACDAgCDAABkBQBkHgB0AwB8CABkDQCDAgCDAAAWZAgAZA4AZAcAZB8AgwAEgwEAAXGN
+Ald8AgBTZAAAUyggAAAATigBAAAAcw0AAABSZXBvcnRTZWN0aW9ucwYAAABhcHBlbmRzBAAAAHBh
+dGhzDwAAAGdldFBoeXNpY2FsUGF0aHMFAAAAdGl0bGVzCQAAAFVzZSBDYXNlc3MHAAAAZm9ybV9p
+ZHMFAAAAbGV2ZWxpAQAAAHMIAAAAdXNlX2Nhc2VzDQAAAGNvbnRlbnRWYWx1ZXNzDwAAAFVzZSBD
+YXNlIGRlICVzIHMIAAAAZ2V0VGl0bGVpAgAAAHMZAAAAVXNlQ2FzZV92aWV3VXNlQ2FzZUFjdG9y
+c3MGAAAAZmlsdGVycwsAAABwb3J0YWxfdHlwZXMRAAAAVXNlIENhc2UgU2NlbmFyaW9zDAAAAFNj
+w6luYXJpbyAlc2kDAAAAcxQAAABVc2VDYXNlU2NlbmFyaW9fdmlld3MfAAAAQW5hbHlzZSBkb2N1
+bWVudGFpcmU6IERvY3VtZW50c3MRAAAAZG9jdW1lbnRfYW5hbHlzaXNzAQAAADFzGgAAAERvY3Vt
+ZW50IEFuYWx5c2lzIERvY3VtZW50cx0AAABTdHJ1Y3R1cmUgZG9jdW1lbnRhaXJlIGRlICVzIHMi
+AAAARG9jdW1lbnRBbmFseXNpc0RvY3VtZW50X3ZpZXdJdGVtc3MeAAAAQW5hbHlzZSBkb2N1bWVu
+dGFpcmU6IExleGlxdWVzcxkAAABEb2N1bWVudCBBbmFseXNpcyBMZXhpY29ucw4AAABMZXhpcXVl
+IGRlICVzIHMcAAAARG9jdW1lbnRBbmFseXNpc0xleGljb25fdmlldygMAAAAcxgAAABQcm9kdWN0
+cy5FUlA1Rm9ybS5SZXBvcnRzDQAAAFJlcG9ydFNlY3Rpb25zBgAAAHJlc3VsdHMJAAAAX2dldGF0
+dHJfcwcAAABjb250ZXh0cwQAAABOb25lcwgAAAB1c2VfY2FzZXMJAAAAX2dldGl0ZXJfcwEAAABv
+cwEAAABhcwkAAABfZ2V0aXRlbV9zEQAAAGRvY3VtZW50X2FuYWx5c2lzKAwAAABzGAAAAFByb2R1
+Y3RzLkVSUDVGb3JtLlJlcG9ydHMNAAAAUmVwb3J0U2VjdGlvbnMGAAAAcmVzdWx0cwkAAABfZ2V0
+YXR0cl9zBwAAAGNvbnRleHRzBAAAAE5vbmVzCAAAAHVzZV9jYXNlcwkAAABfZ2V0aXRlcl9zAQAA
+AG9zAQAAAGFzCQAAAF9nZXRpdGVtX3MRAAAAZG9jdW1lbnRfYW5hbHlzaXMoAAAAACgAAAAAcw8A
+AABTY3JpcHQgKFB5dGhvbilzHQAAAERvY3VtZW50X2dldFJlcG9ydFNlY3Rpb25MaXN0AQAAAHNE
+AAAADQIJAwkBHgIQBQ8CGQAJAQkBHgEgBSgACQEJAR4BKwcJAR4CEAUYAigACQEJAR4BJwkJAR4C
+EAUYAigACQEJAR4BJAcoAQAAAHMdAAAARG9jdW1lbnRfZ2V0UmVwb3J0U2VjdGlvbkxpc3QoAQAA
+AHMdAAAARG9jdW1lbnRfZ2V0UmVwb3J0U2VjdGlvbkxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Document_getReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>use_case</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>a</string>
+                            <string>_getitem_</string>
+                            <string>document_analysis</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_getReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Move this to erp5_consulting ?</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
