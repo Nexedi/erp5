@@ -1,0 +1,3 @@
+destination_payment_uid | category,catalog/uid/z_related_destination_payment
+destination_payment_id | category,catalog/id/z_related_destination_payment
+destination_payment_title | category,catalog/title/z_related_destination_payment

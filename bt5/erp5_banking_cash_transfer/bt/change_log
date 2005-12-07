@@ -1,0 +1,2 @@
+2005-12-07 Kevin
+* Move CashTransfer_CashTransferLine_fastInputCall to erp5_baobab_config because they contain reference to the local currency.

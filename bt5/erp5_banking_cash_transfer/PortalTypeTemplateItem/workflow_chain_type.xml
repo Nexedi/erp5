@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Cash Transfer</type>
+  <workflow>cash_transfer_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Cash Transfer Line</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Cash Transfer Module</type>
+  <workflow></workflow>
+ </chain>
+</workflow_chain>

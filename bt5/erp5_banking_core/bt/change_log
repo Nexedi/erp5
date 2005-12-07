@@ -1,0 +1,34 @@
+2005-12-07 Kevin
+* Move CashDetail_loadScript_example, Container_fastInputUpdate, Container_getContaineeTotalPrice, CounterModule_getVaultTransactionList, ImportCsvToCategories to erp5_baobab_config because they contain reference to the local currency.
+
+2005-11-15 Kevin
+* Use getCategoryChildTitleOrIdItemList on cash_currency views
+
+2005-11-07 Kevin
+* Add portal_assignment_base_category_list.
+* Delete custom Person_updateUserSecurityGroup script.
+* Delete z_catalog_item, z_catalog_movement and z_catalog_stock Zsql custom methods.
+* Mark ERP5Type_initLocalRoleMapping scripts as deprecated.
+* Delete ListBox_initializeFakeContent, MakeCellNoEditable, OLD_Baobab_asGroupId, OLD_Baobab_assignLocalRole, OLD_CashDetail_CreateCell, OLD_CashDetail_fastInputSave, OLD_Person_getGroupIdList, Value_ifNone, getSiteList.
+
+2005-11-02 Kevin
+* Delete validateAndAssignConfirmUserAction script in check_workflow.
+* Recreate all check_workflow scripts to force zope recreate a goud _filepath value.
+* Move CashContainer_pdfTemplate to erp5_baobab_config.
+
+2005-10-31 Kevin
+* Custom BankAccount_view deprecated.
+* Delete BankAccount custom PropertySheet.
+
+2005-10-19 Kevin
+* Update z_catalog_stock_list.zsql to follow Seb's changes.
+* Add check_workflow.
+
+2005-09-24 Kevin
+* Set Security base category script to None.
+
+2005-09-20 Kevin
+* Update the security script related to Person.
+
+2005-09-18 Alex
+* Added portal properties.
