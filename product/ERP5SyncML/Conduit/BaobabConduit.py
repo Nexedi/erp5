@@ -164,9 +164,9 @@ class BaobabConduit(ERP5Conduit):
       This is a redefinition of the original ERP5Conduit.constructContent function to
       create Baobab objects.
     """
-    erp5_site_path        = object.absolute_url(relative=1)
-    person_module         = object.person
-    organisation_module   = object.organisation
+    erp5_site_path             = object.absolute_url(relative=1)
+    person_module_object       = object.person_module
+    organisation_module_object = object.organisation_module
 
     # Modules below are not always required
     #   (it depends of the nature of objects you want to synchronize)
@@ -186,7 +186,7 @@ class BaobabConduit(ERP5Conduit):
       source_portal_type = special_portal_type.split('_')[0]
       construction_location = '/'.join(special_portal_type.split('_')[1:][::-1])
       parent_object = None
-      for search_folder in ('person', 'organisation'):
+      for search_folder in ('person_module', 'organisation_module'):
         path = '/' + search_folder + '/' + construction_location
         parent_object_path = erp5_site_path + path
         try:
@@ -213,14 +213,14 @@ class BaobabConduit(ERP5Conduit):
     ### handle client objects
     if portal_type.startswith('Client'):
       if portal_type[-3:] == 'PER':
-        subobject = person_module.newContent( portal_type = 'Person'
-                                            , id          = object_id
-                                            )
+        subobject = person_module_object.newContent( portal_type = 'Person'
+                                                   , id          = object_id
+                                                   )
         subobject.setCareerRole('client')
       else:
-        subobject = organisation_module.newContent( portal_type = 'Organisation'
-                                                  , id          = object_id
-                                                  )
+        subobject = organisation_module_object.newContent( portal_type = 'Organisation'
+                                                         , id          = object_id
+                                                         )
         subobject.setRole('client')
 
     ### handle bank account objects
@@ -257,9 +257,9 @@ class BaobabConduit(ERP5Conduit):
       # try to get the agent in the person module
       person = findObjectFromSpecialPortalType('Person_' + object_id)
       if person == None:
-        person = person_module.newContent( portal_type = 'Person'
-                                         , id          = object_id + 'a'
-                                         )
+        person = person_module_object.newContent( portal_type = 'Person'
+                                                , id          = object_id + 'a'
+                                                )
       subobject.setAgent(person.getRelativeUrl())
 
     ### handle privilege objects
@@ -460,8 +460,8 @@ class BaobabConduit(ERP5Conduit):
         if k == 'account_number': bank_account_number = v
       # try to find the bank account
       if bank_account_number != None:
-        customer_list = object.person.contentValues(filter={'portal_type': 'Person'}) + \
-                        object.organisation.contentValues(filter={'portal_type': 'Organisation'})
+        customer_list = object.person_module.contentValues(filter={'portal_type': 'Person'}) + \
+                        object.organisation_module.contentValues(filter={'portal_type': 'Organisation'})
         bank_account_object = None
         for customer in customer_list:
           for bank_account in customer.contentValues(filter={'portal_type': 'Bank Account'}):
