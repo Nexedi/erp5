@@ -195,18 +195,18 @@ class BaobabConduit(ERP5Conduit):
           raise
         except:
           LOG( 'BaobabConduit:'
-             , 100
-             , "parent object of '%s' not found in %s" % (source_portal_type, parent_object_path)
+             , 0
+             , "'%s' parent object not found in %s" % (source_portal_type, search_folder)
              )
       if parent_object == None:
         LOG( 'BaobabConduit:'
            , 100
-           , "parent object of '%s' not found !" % (source_portal_type)
+           , "'%s' parent object not found !" % (source_portal_type)
            )
       else:
         LOG( 'BaobabConduit:'
            , 0
-           , "parent object of '%s' found (%s)" % (source_portal_type, repr(parent_object))
+           , "'%s' parent object found at %s" % (source_portal_type, repr(parent_object))
            )
       return parent_object
 
