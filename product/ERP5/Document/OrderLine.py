@@ -56,6 +56,7 @@ class OrderLine(DeliveryLine):
                       , PropertySheet.Movement
                       , PropertySheet.Price
                       , PropertySheet.VariationRange
+                      , PropertySheet.ItemAggregation
                       )
 
     # Declarative interfaces
