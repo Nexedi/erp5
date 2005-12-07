@@ -25,6 +25,7 @@ from DocumentTemplate.DT_Util import TemplateDict
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToMixedCase
+from string import join
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
