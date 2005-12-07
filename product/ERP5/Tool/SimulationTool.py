@@ -204,6 +204,9 @@ class SimulationTool (BaseTool):
         if to_date :
           date_dict['query'].append(to_date)
           date_dict['range'] = 'minmax'
+        elif at_date :
+          date_dict['query'].append(at_date)
+          date_dict['range'] = 'minngt'
       elif to_date :
         date_dict['query'].append(to_date)
         date_dict['range'] = 'max'
