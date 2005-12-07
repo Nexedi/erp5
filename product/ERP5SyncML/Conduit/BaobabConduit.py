@@ -171,11 +171,11 @@ class BaobabConduit(ERP5Conduit):
     # Modules below are not always required
     #   (it depends of the nature of objects you want to synchronize)
     try:    cash_inventory_module = object.cash_inventory_module
-    except KeyError: cash_inventory_module = None
+    except AttributeError: cash_inventory_module = None
     try:    bank_account_inventory_module = object.bank_account_inventory_module
-    except KeyError: bank_account_inventory_module = None
+    except AttributeError: bank_account_inventory_module = None
     try:    currency_cash_module  = object.currency_cash_module
-    except KeyError: currency_cash_module  = None
+    except AttributeError: currency_cash_module  = None
 
     subobject = None
 
