@@ -66,7 +66,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Get the assignment object and its parent\n
+            <value> <string># Using PAS removes the need of this script\n
+if state_change.object.acl_users.meta_type == \'Pluggable Auth Service\':\n
+  return\n
+\n
+# Get the assignment object and its parent\n
 assignment_object = state_change.object\n
 person_object     = assignment_object.aq_parent\n
 \n
@@ -79,18 +83,20 @@ if person_security_script is not None:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAcAAAAFAAAAQwAA
-AHNMAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAfQMAdAQAfAMAZAMAdAUAgwMAfQYAfAYA
-dAUAagkAbwsAAXwGAIMAAAFuAQABZAAAUygEAAAATnMGAAAAb2JqZWN0cwkAAABhcV9wYXJlbnRz
-HgAAAFBlcnNvbl91cGRhdGVVc2VyU2VjdXJpdHlHcm91cCgHAAAAcwkAAABfZ2V0YXR0cl9zDAAA
-AHN0YXRlX2NoYW5nZXMRAAAAYXNzaWdubWVudF9vYmplY3RzDQAAAHBlcnNvbl9vYmplY3RzBwAA
-AGdldGF0dHJzBAAAAE5vbmVzFgAAAHBlcnNvbl9zZWN1cml0eV9zY3JpcHQoBwAAAHMMAAAAc3Rh
-dGVfY2hhbmdlcwkAAABfZ2V0YXR0cl9zEQAAAGFzc2lnbm1lbnRfb2JqZWN0cw0AAABwZXJzb25f
-b2JqZWN0cwcAAABnZXRhdHRycwQAAABOb25lcxYAAABwZXJzb25fc2VjdXJpdHlfc2NyaXB0KAAA
-AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyIAAABBc3NpZ25tZW50X3VwZGF0ZVVzZXJTZWN1
-cml0eUdyb3VwAQAAAHMKAAAAAAEPAQ8DEgINASgBAAAAcyIAAABBc3NpZ25tZW50X3VwZGF0ZVVz
-ZXJTZWN1cml0eUdyb3VwKAEAAABzIgAAAEFzc2lnbm1lbnRfdXBkYXRlVXNlclNlY3VyaXR5R3Jv
-dXAoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAcAAAAKAAAAQwAA
+AHN8AAAAdAAAdAAAdAAAfAAAZAEAgwIAZAIAgwIAZAMAgwIAZAQAagIAbwgAAWQAAFNuAQABdAAA
+fAAAZAEAgwIAfQIAdAAAfAIAZAUAgwIAfQMAdAQAfAMAZAYAdAUAgwMAfQYAfAYAdAUAagkAbwsA
+AXwGAIMAAAFuAQABZAAAUygHAAAATnMGAAAAb2JqZWN0cwkAAABhY2xfdXNlcnNzCQAAAG1ldGFf
+dHlwZXMWAAAAUGx1Z2dhYmxlIEF1dGggU2VydmljZXMJAAAAYXFfcGFyZW50cx4AAABQZXJzb25f
+dXBkYXRlVXNlclNlY3VyaXR5R3JvdXAoBwAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFu
+Z2VzEQAAAGFzc2lnbm1lbnRfb2JqZWN0cw0AAABwZXJzb25fb2JqZWN0cwcAAABnZXRhdHRycwQA
+AABOb25lcxYAAABwZXJzb25fc2VjdXJpdHlfc2NyaXB0KAcAAABzDAAAAHN0YXRlX2NoYW5nZXMJ
+AAAAX2dldGF0dHJfcxEAAABhc3NpZ25tZW50X29iamVjdHMNAAAAcGVyc29uX29iamVjdHMHAAAA
+Z2V0YXR0cnMEAAAATm9uZXMWAAAAcGVyc29uX3NlY3VyaXR5X3NjcmlwdCgAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMiAAAAQXNzaWdubWVudF91cGRhdGVVc2VyU2VjdXJpdHlHcm91cAEA
+AABzDgAAAAABKAEIAw8BDwMSAg0BKAEAAABzIgAAAEFzc2lnbm1lbnRfdXBkYXRlVXNlclNlY3Vy
+aXR5R3JvdXAoAQAAAHMiAAAAQXNzaWdubWVudF91cGRhdGVVc2VyU2VjdXJpdHlHcm91cCgAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

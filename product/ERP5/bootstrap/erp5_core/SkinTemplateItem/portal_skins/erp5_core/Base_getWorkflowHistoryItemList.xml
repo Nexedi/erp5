@@ -90,7 +90,7 @@ for workflow_item in workflow_item_list:\n
       if key.startswith(compatibility_name):\n
         # Display the workflow state in the state columns\n
         key = key[len(compatibility_name):]\n
-    if key.endswith(\'state\'):\n
+    if key.endswith(\'state\'): # FIXME use translated_state_title here, not state id\n
       key = \'state\'\n
     # o.edit(key=value)\n
     o.setProperty(key, value)\n

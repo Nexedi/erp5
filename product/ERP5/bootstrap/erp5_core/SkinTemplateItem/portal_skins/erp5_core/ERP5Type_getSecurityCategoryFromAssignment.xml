@@ -70,9 +70,12 @@
 \n
 # base_category_list : list of category values we need to retrieve\n
 # user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#                               or getSecurityManager().getUser().getId()       [PluggableAuthService]\n
+#             When using PluggableAuthService with ERP5GroupMAnager, user_name is the id\n
+#             of the person linked to getUser().getId() through getReference() (which is its login).\n
 # object : object which we want to assign roles to.\n
 # portal_type : portal type of object\n
+\n
+# must always return a list of dicts\n
 \n
 category_list = []\n
 \n
@@ -80,7 +83,8 @@ person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\'
 person_object = getattr(person_module, user_name, None)\n
 \n
 # if a person_object was not found in the module, we do nothing more\n
-# this happens for example when a manager creates a person_object for a new user\n
+# this happens for example when a manager with no associated person object\n
+# creates a person_object for a new user\n
 if person_object is None:\n
   return []\n
 \n
@@ -123,7 +127,7 @@ ZXRhdHRycwQAAABOb25lcw0AAABwZXJzb25fb2JqZWN0cwkAAABfZ2V0aXRlcl9zCgAAAGFzc2ln
 bm1lbnRzDQAAAGNhdGVnb3J5X2RpY3RzDQAAAGJhc2VfY2F0ZWdvcnlzDgAAAGNhdGVnb3J5X3Zh
 bHVlcwcAAABfd3JpdGVfcwwAAABSdW50aW1lRXJyb3IoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
 dGhvbilzKgAAAEVSUDVUeXBlX2dldFNlY3VyaXR5Q2F0ZWdvcnlGcm9tQXNzaWdubWVudAEAAABz
-IgAAAAAIBgIqARIEDQEIAygABgEZAQYBDQAGARUBEwEUAhQBGAIoAQAAAHMqAAAARVJQNVR5cGVf
+IgAAAAALBgIqARIFDQEIAygABgEZAQYBDQAGARUBEwEUAhQBGAIoAQAAAHMqAAAARVJQNVR5cGVf
 Z2V0U2VjdXJpdHlDYXRlZ29yeUZyb21Bc3NpZ25tZW50KAEAAABzKgAAAEVSUDVUeXBlX2dldFNl
 Y3VyaXR5Q2F0ZWdvcnlGcm9tQXNzaWdubWVudCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
 KXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
