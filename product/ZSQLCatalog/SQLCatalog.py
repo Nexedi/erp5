@@ -1527,6 +1527,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   query_item += ["%s < '%s'" % (key, query_max) ]
                 elif range_value == 'minmax' :
                   query_item += ["%s >= '%s' and %s < '%s'" % (key, query_min, key, query_max) ]
+                elif range_value == 'minngt' :
+                  query_item += ["%s >= '%s' and %s <= '%s'" % (key, query_min, key, query_max) ]
                 elif range_value == 'ngt' :
                   query_item += ["%s <= '%s'" % (key, query_max) ]
               else :
