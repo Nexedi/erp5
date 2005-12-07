@@ -295,7 +295,9 @@ class ERP5TransitionDefinition (TransitionDefinition):
   """
   pass  
 
-def getAvailableScriptIds(self):
-    return self.getWorkflow().scripts.keys() + [k for k in self.getWorkflow().transitions.keys() if self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD]
+  def getAvailableScriptIds(self):
+      return self.getWorkflow().scripts.keys() + \
+           [k for k in self.getWorkflow().transitions.keys() if \
+             self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD]
 
 TransitionDefinition.getAvailableScriptIds = ERP5TransitionDefinition.getAvailableScriptIds
