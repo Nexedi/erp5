@@ -50,8 +50,12 @@ class CopyToTarget(TargetSolver):
     new_stop_date = movement.getDeliveryStopDateList()[0]
     # Calculate delta
     quantity_ratio = new_quantity / old_quantity
-    start_date_delta = new_start_date - old_start_date
-    stop_date_delta = new_stop_date - old_stop_date
+    start_date_delta = 0
+    stop_date_delta = 0
+    if new_start_date is not None and old_start_date is not None:
+      start_date_delta = new_start_date - old_start_date
+    if new_stop_date is not None and old_stop_date is not None:
+      stop_date_delta = new_stop_date - old_stop_date
     # Modify recursively simulation movement
     self._recursivelySolve(movement, quantity_ratio=quantity_ratio,
                            start_date_delta=start_date_delta, 
@@ -64,10 +68,16 @@ class CopyToTarget(TargetSolver):
     movement.
     """
     # Modify quantity, start_date, stop_date
+    start_date = movement.getStartDate()
+    if start_date is not None:
+      start_date = start_date + start_date_delta
+    stop_date = movement.getStopDate()
+    if stop_date is not None:
+      stop_date = stop_date + stop_date_delta
     movement.edit(
       quantity=movement.getQuantity() * quantity_ratio,
-      start_date=movement.getStartDate() + start_date_delta,
-      stop_date=movement.getStopDate() + stop_date_delta,
+      start_date=start_date,
+      stop_date=stop_date
     )
     applied_rule = movement.getParent()
     parent_movement = applied_rule.getParent()
