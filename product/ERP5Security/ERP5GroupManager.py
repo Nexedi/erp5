@@ -17,7 +17,8 @@
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager,\
+    getSecurityManager, setSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
@@ -74,6 +75,7 @@ class ERP5GroupManager(BasePlugin):
       # SecurityManager to be able to access the Catalog
       #FIXME here we assume that the portal owner will always have
       #      enough rights, which might as well be wrong
+      sm = getSecurityManager()
       newSecurityManager(self, self.getPortalObject().getOwner())
 
       # To get the complete list of groups, we try to call the
@@ -105,6 +107,7 @@ class ERP5GroupManager(BasePlugin):
               login is %s : %s' % (user_name,
               repr([r.getObject() for r in catalog_result]))
         else: # no person is linked to this user login
+          setSecurityManager(sm)
           return ()
       person_object = catalog_result[0].getObject()
       person_id = person_object.getId()
@@ -128,6 +131,7 @@ class ERP5GroupManager(BasePlugin):
           security_group_list.append(group_id_generator(
               category_order=base_category_list, **category_dict))
 
+      setSecurityManager(sm)
       return tuple(security_group_list)
 
     _getGroupsForPrincipal = CachingMethod(_getGroupsForPrincipal, id='ERP5GroupManager_getGroupsForPrincipal')

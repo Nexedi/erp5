@@ -17,7 +17,8 @@
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager,\
+    setSecurityManager, newSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
@@ -139,10 +140,12 @@ class ERP5UserManager(BasePlugin):
         """       
         # because we aren't logged in, we have to create our own
         # SecurityManager to be able to access the Catalog
+        sm = getSecurityManager()
         newSecurityManager(self, self.getPortalObject().portal_catalog.getOwner())
         
         result = self.getPortalObject().portal_catalog(portal_type="Person", reference=login)
         
+        setSecurityManager(sm)
         return [item.getObject() for item in result]
     
 classImplements( ERP5UserManager
