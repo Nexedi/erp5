@@ -174,7 +174,7 @@ class BaobabConduit(ERP5Conduit):
     except AttributeError: cash_inventory_module = None
     try:    bank_account_inventory_module = object.bank_account_inventory_module
     except AttributeError: bank_account_inventory_module = None
-    try:    currency_cash_module  = object.currency_cash_module
+    try:    currency_cash_module = object.currency_cash_module
     except AttributeError: currency_cash_module  = None
 
     subobject = None
@@ -653,7 +653,7 @@ class BaobabConduit(ERP5Conduit):
     return
 
   def editMandataireFonction(self, document, value):
-    document.getAgentValue().setDefaultCareerGrade(value)
+    document.getAgentValue().setCareerGrade(value)
     return
 
   def editMandataireTelephone(self, document, value):
