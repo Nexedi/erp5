@@ -7,7 +7,7 @@
 __version__ = '0.3.0'
 
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import getLocalPropertySheetList, removeLocalPropertySheet
 from Products.ERP5Type.Utils import getLocalDocumentList, removeLocalDocument
@@ -138,6 +138,13 @@ class ERP5TypeTestCase(PortalTestCase):
       uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member'], [])
       user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
       newSecurityManager(None, user)
+
+    def _setupUser(self):
+      '''Creates the default user.'''
+      uf = self.portal.acl_users
+      # do nothing if the user already exists
+      if not uf.getUser(user_name):
+        uf._doAddUser(user_name, 'secret', ['Member'], [])
 
     def setUp(self):
         '''Sets up the fixture. Do not override,
