@@ -13,6 +13,8 @@
 #
 ##############################################################################
 
+import sys
+
 # Adding commit_prepare to the zodb transaction
 try:
     from ZODB import Transaction, POSException
