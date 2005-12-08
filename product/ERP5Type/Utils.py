@@ -991,13 +991,18 @@ def setDefaultProperties(property_holder, object=None):
     # First build the property list from the property sheet
     # and the class properties
     prop_list = []
-    prop_list += property_holder.__dict__.get('_properties',[]) # Do not consider superclass _properties definition
+    # Do not consider superclass _properties definition
+    for prop in property_holder.__dict__.get('_properties', []):
+      # Copy the dict so that Expression objects are not overwritten.
+      prop_list.append(prop.copy())
     cat_list = []
     cat_list += property_holder.__dict__.get('_categories',[]) # Do not consider superclass _categories definition
     constraint_list = []  # a list of declarative consistency definitions (ie. constraints)
     constraint_list += property_holder.__dict__.get('_constraints',[]) # Do not consider superclass _constraints definition
     for base in property_holder.property_sheets:
-        prop_list += base._properties
+        for prop in base._properties:
+          # Copy the dict so that Expression objects are not overwritten.
+          prop_list.append(prop.copy())
         if hasattr(base, '_categories'):
           if type(base._categories) in (type(()), type([])):
             cat_list += base._categories
@@ -1011,7 +1016,6 @@ def setDefaultProperties(property_holder, object=None):
       for key,value in prop.items():
         if isinstance(value, Expression):
           prop[key] = value(econtext)
-          #LOG('setDefaultProperties', 0, 'key = %r, value = %r, prop[key] = %r' % (key, value, prop[key]))
     new_cat_list = []
     for cat in cat_list:
       if isinstance(cat, Expression):
