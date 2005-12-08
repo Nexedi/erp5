@@ -238,8 +238,6 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.portal.portal_delivery_movement_type_list.append('Internal Packing List Line')
     self.portal.portal_delivery_movement_type_list = tuple(self.portal.portal_delivery_movement_type_list)
 
-    LOG("KevAcquisition",0,repr(self.portal.getPortalAcquisitionMovementTypeList()))
-
     self.internal_packing_list_module = self.getInternalPackingListModule()
     self.internal_packing_list = self.internal_packing_list_module.newContent(id='packing_list_1', portal_type='Internal Packing List',
             source=None, destination_value=self.caisse_1)
@@ -345,8 +343,11 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
     base_id = 'movement'
     line_kwd = {'base_id':base_id}
-    line = delivery_object.newContent(id=line_id, portal_type=line_portal_type,
-            resource_value=resource_object, quantity_unit_value=self.unit)
+    line = delivery_object.newContent( id                  = line_id
+                                     , portal_type         = line_portal_type
+                                     , resource_value      = resource_object
+                                     , quantity_unit_value = self.unit
+                                     )
     line.setVariationBaseCategoryList(variation_base_category_list)
     line.setVariationCategoryList(variation_category_list)
     line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
@@ -364,18 +365,18 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     for variation in self.variation_list:
       cell = line.getCell('emission_letter/k', variation, 'cash_status/valid')
       cell.setQuantity(resource_quantity_dict[variation])
-      cell.setResourceValue(resource_object)
-      cell.setDestinationValue(self.caisse_1)
-      LOG("XXX set Resource Value >>>>>>",0, repr(resource_object))
-      LOG("XXX set Destination Value >>>>>>",0, repr(self.caisse_1))
-      LOG("XXX get Destination Value On Cell >>>>>>",0, repr(cell))
-      LOG("XXX get Destination Value >>>>>>",0, repr(cell.getDestinationValue()))
-      LOG("XXX get Baobab Destination Value >>>>>>",0, repr(cell.getBaobabDestinationValue()))
-      LOG("XXX get Destination UID >>>>>>",0, repr(cell.getDestinationUid()))
-      LOG("XXX get Baobab Destination UID >>>>>>",0, repr(cell.getBaobabDestinationUid()))
-      LOG("XXX getBaobabDestinationUID func >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None)))
-      LOG("XXX func dict >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None).__dict__))
-      LOG("XXX func module >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None).__module__))
+#      cell.setResourceValue(resource_object)
+#       cell.setDestinationValue(self.caisse_1)
+#       LOG("XXX set Resource Value >>>>>>",0, repr(resource_object))
+#       LOG("XXX set Destination Value >>>>>>",0, repr(self.caisse_1))
+#       LOG("XXX get Destination Value On Cell >>>>>>",0, repr(cell))
+#       LOG("XXX get Destination Value >>>>>>",0, repr(cell.getDestinationValue()))
+#       LOG("XXX get Baobab Destination Value >>>>>>",0, repr(cell.getBaobabDestinationValue()))
+#       LOG("XXX get Destination UID >>>>>>",0, repr(cell.getDestinationUid()))
+#       LOG("XXX get Baobab Destination UID >>>>>>",0, repr(cell.getBaobabDestinationUid()))
+#       LOG("XXX getBaobabDestinationUID func >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None)))
+#       LOG("XXX func dict >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None).__dict__))
+#       LOG("XXX func module >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None).__module__))
 
 
   def getUserFolder(self):
