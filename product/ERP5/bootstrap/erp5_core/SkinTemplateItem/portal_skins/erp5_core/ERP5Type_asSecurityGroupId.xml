@@ -80,7 +80,10 @@ code_list = []\n
 # sort the category list lexicographically\n
 # this prevents us to choose the exact order we want,\n
 # but also prevents some human mistake to f*ck everything up by creating site_function instead of function_site\n
-category_order.sort()\n
+category_list = []\n
+if category_order not in (None, \'\', (), []):\n
+  category_list = [ x for x in category_order]\n
+category_order = category_list.sort()\n
 \n
 for base_category in category_order:\n
   category        = kw[base_category]\n
@@ -96,26 +99,29 @@ return \'_\'.join(code_list)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAA0AAAAMAAAASwAA
-AHPdAAAAZwAAfQIAdAEAfAAAZAEAgwIAgwAAAXitAHQDAHwAAIMBAERdnwB9BQB0BQB8AQB8BQCD
-AgB9BwBkAgB8BQB8BwBmAgAWfQgAdAEAdAEAdAkAZAMAgwIAZAQAgwIAfAgAgwEAfQoAfAoAdAsA
-ZAUAZgIAagYAbxEAAWQGAGQHAHwIABaCAgBuAQABdAEAfAoAZAgAgwIAgwAAcBAAAXQBAHwKAGQJ
-AIMCAIMAAH0MAHQBAHwCAGQKAIMCAHwMAIMBAAFxIwBXdAEAZAsAZAwAgwIAfAIAgwEAU2QAAFMo
-DQAAAE5zBAAAAHNvcnRzBQAAACVzLyVzcxEAAABwb3J0YWxfY2F0ZWdvcmllc3MQAAAAZ2V0Q2F0
-ZWdvcnlWYWx1ZXMAAAAAcxsAAABTZWN1cml0eVJvbGVEZWZpbml0aW9uRXJyb3JzGwAAAENhdGVn
-b3J5ICclcycgZG9lc24ndCBleGlzdHMPAAAAZ2V0Q29kaWZpY2F0aW9ucwUAAABnZXRJZHMGAAAA
-YXBwZW5kcwEAAABfcwQAAABqb2luKA0AAABzCQAAAGNvZGVfbGlzdHMJAAAAX2dldGF0dHJfcw4A
-AABjYXRlZ29yeV9vcmRlcnMJAAAAX2dldGl0ZXJfcw0AAABiYXNlX2NhdGVnb3J5cwkAAABfZ2V0
-aXRlbV9zAgAAAGt3cwgAAABjYXRlZ29yeXMNAAAAY2F0ZWdvcnlfcGF0aHMHAAAAY29udGV4dHMP
-AAAAY2F0ZWdvcnlfb2JqZWN0cwQAAABOb25lcw0AAABjYXRlZ29yeV9jb2RlKA0AAABzDgAAAGNh
-dGVnb3J5X29yZGVycwIAAABrd3MJAAAAY29kZV9saXN0cwkAAABfZ2V0YXR0cl9zCQAAAF9nZXRp
-dGVyX3MNAAAAYmFzZV9jYXRlZ29yeXMJAAAAX2dldGl0ZW1fcwgAAABjYXRlZ29yeXMNAAAAY2F0
-ZWdvcnlfcGF0aHMHAAAAY29udGV4dHMPAAAAY2F0ZWdvcnlfb2JqZWN0cwQAAABOb25lcw0AAABj
-YXRlZ29yeV9jb2RlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxoAAABFUlA1VHlwZV9h
-c1NlY3VyaXR5R3JvdXBJZAEAAABzGAAAAAAJCQUNAg0ABgEPARABHgETAREBKAEUAigBAAAAcxoA
-AABFUlA1VHlwZV9hc1NlY3VyaXR5R3JvdXBJZCgBAAAAcxoAAABFUlA1VHlwZV9hc1NlY3VyaXR5
-R3JvdXBJZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAA
-AAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABEAAAARAAAASwAA
+AHMvAQAAZwAAfQIAZwAAfQMAfAAAdAMAZAEAZgAAZwAAZgQAagcAbzEAAWcAAARpBAB9BgB0BgB8
+AACDAQBEXRAAfQgAfAYAfAgAgwEAAXE5AH4GAH0DAG4BAAF0CAB8AwBkAgCDAgCDAAB9AAB4rQB0
+BgB8AACDAQBEXZ8AfQoAdAoAfAEAfAoAgwIAfQwAZAMAfAoAfAwAZgIAFn0NAHQIAHQIAHQOAGQE
+AIMCAGQFAIMCAHwNAIMBAH0PAHwPAHQDAGQBAGYCAGoGAG8RAAFkBgBkBwB8DQAWggIAbgEAAXQI
+AHwPAGQIAIMCAIMAAHAQAAF0CAB8DwBkCQCDAgCDAAB9EAB0CAB8AgBkCgCDAgB8EACDAQABcXUA
+V3QIAGQLAGQMAIMCAHwCAIMBAFNkAABTKA0AAABOcwAAAABzBAAAAHNvcnRzBQAAACVzLyVzcxEA
+AABwb3J0YWxfY2F0ZWdvcmllc3MQAAAAZ2V0Q2F0ZWdvcnlWYWx1ZXMbAAAAU2VjdXJpdHlSb2xl
+RGVmaW5pdGlvbkVycm9ycxsAAABDYXRlZ29yeSAnJXMnIGRvZXNuJ3QgZXhpc3RzDwAAAGdldENv
+ZGlmaWNhdGlvbnMFAAAAZ2V0SWRzBgAAAGFwcGVuZHMBAAAAX3MEAAAAam9pbigRAAAAcwkAAABj
+b2RlX2xpc3RzDQAAAGNhdGVnb3J5X2xpc3RzDgAAAGNhdGVnb3J5X29yZGVycwQAAABOb25lcwYA
+AABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAAAHhzCQAAAF9nZXRhdHRyX3MN
+AAAAYmFzZV9jYXRlZ29yeXMJAAAAX2dldGl0ZW1fcwIAAABrd3MIAAAAY2F0ZWdvcnlzDQAAAGNh
+dGVnb3J5X3BhdGhzBwAAAGNvbnRleHRzDwAAAGNhdGVnb3J5X29iamVjdHMNAAAAY2F0ZWdvcnlf
+Y29kZSgRAAAAcw4AAABjYXRlZ29yeV9vcmRlcnMCAAAAa3dzCQAAAGNvZGVfbGlzdHMNAAAAY2F0
+ZWdvcnlfbGlzdHMEAAAATm9uZXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJf
+cwEAAAB4cwkAAABfZ2V0YXR0cl9zDQAAAGJhc2VfY2F0ZWdvcnlzCQAAAF9nZXRpdGVtX3MIAAAA
+Y2F0ZWdvcnlzDQAAAGNhdGVnb3J5X3BhdGhzBwAAAGNvbnRleHRzDwAAAGNhdGVnb3J5X29iamVj
+dHMNAAAAY2F0ZWdvcnlfY29kZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMaAAAARVJQ
+NVR5cGVfYXNTZWN1cml0eUdyb3VwSWQBAAAAcyAAAAAACQYFBgEZARQAHQESAg0ABgEPARABHgET
+AREBKAEUAigBAAAAcxoAAABFUlA1VHlwZV9hc1NlY3VyaXR5R3JvdXBJZCgBAAAAcxoAAABFUlA1
+VHlwZV9hc1NlY3VyaXR5R3JvdXBJZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAA
+PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -152,15 +158,19 @@ AAA=</string> </value>
                             <string>category_order</string>
                             <string>kw</string>
                             <string>code_list</string>
-                            <string>_getattr_</string>
+                            <string>category_list</string>
+                            <string>None</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>x</string>
+                            <string>_getattr_</string>
                             <string>base_category</string>
                             <string>_getitem_</string>
                             <string>category</string>
                             <string>category_path</string>
                             <string>context</string>
                             <string>category_object</string>
-                            <string>None</string>
                             <string>category_code</string>
                           </tuple>
                         </value>

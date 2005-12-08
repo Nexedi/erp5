@@ -1,3 +1,6 @@
+2005-12-08 Kevin
+* Transform tuple to list to let ERP5Type_asSecurityGroupId do a sort.
+
 2005-12-07 yo
 * New skins: erp5_html.css and  form_html for PDF editing.
 
