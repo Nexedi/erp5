@@ -1,3 +1,9 @@
+2005-12-08 yo
+* Fix the LEFT JOIN syntax in Order_zSelectMovement.
+
+2005-12-05 Seb
+* Cleaned SaleOrder_applySaleTradeCondition
+
 2005-11-30 aurel
 * add aggregateMovementGroup in portal_deliveries/purchase_packing_list_builder
 

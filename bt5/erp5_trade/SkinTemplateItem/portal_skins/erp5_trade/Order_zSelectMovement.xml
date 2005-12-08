@@ -136,18 +136,16 @@ SELECT DISTINCT\n
   catalog.id\n
 \n
 FROM\n
-movement as simulation_movement,\n
-<dtml-in from_table_list> \n
-  <dtml-var sequence-item> AS <dtml-var sequence-key>\n
-  <dtml-if sequence-end>\n
-  <dtml-else>,\n
+  movement as simulation_movement\n
+<dtml-in prefix="table" expr="from_table_list"> \n
+  <dtml-if expr="table_key != \'catalog\'">\n
+  , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
-\n
-LEFT JOIN catalog AS base_category ON base_category.relative_url = "delivery" \n
-                                  AND base_category.portal_type = "Base Category"\n
-LEFT JOIN category ON catalog.uid=category.uid\n
-                  AND base_category.uid=category.base_category_uid\n
+  , catalog\n
+  LEFT JOIN category \n
+    ON (catalog.uid = category.uid\n
+        AND category.base_category_uid = <dtml-sqlvar "portal_categories.delivery.getUid()" type="int">)\n
 WHERE\n
   1=1\n
   <dtml-if where_expression>\n
@@ -208,18 +206,16 @@ SELECT DISTINCT\n
   catalog.id\n
 \n
 FROM\n
-movement as simulation_movement,\n
-<dtml-in from_table_list> \n
-  <dtml-var sequence-item> AS <dtml-var sequence-key>\n
-  <dtml-if sequence-end>\n
-  <dtml-else>,\n
+  movement as simulation_movement\n
+<dtml-in prefix="table" expr="from_table_list"> \n
+  <dtml-if expr="table_key != \'catalog\'">\n
+  , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
-\n
-LEFT JOIN catalog AS base_category ON base_category.relative_url = "delivery" \n
-                                  AND base_category.portal_type = "Base Category"\n
-LEFT JOIN category ON catalog.uid=category.uid\n
-                  AND base_category.uid=category.base_category_uid\n
+  , catalog\n
+  LEFT JOIN category \n
+    ON (catalog.uid = category.uid\n
+        AND category.base_category_uid = <dtml-sqlvar "portal_categories.delivery.getUid()" type="int">)\n
 WHERE\n
   1=1\n
   <dtml-if where_expression>\n
