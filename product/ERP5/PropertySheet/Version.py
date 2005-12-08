@@ -35,11 +35,13 @@ class Version:
         {   'id'          : 'version',
             'description' : 'A version identifier',
             'type'        : 'string',
-            'mode'        : 'w' },
+            'mode'        : 'w',
+            'default'     : '' },
         {   'id'          : 'revision',
             'description' : 'A revision identifier',
             'type'        : 'string',
-            'mode'        : 'w' },
+            'mode'        : 'w',
+            'default'     : '' },
     )
 
     _categories = ()
