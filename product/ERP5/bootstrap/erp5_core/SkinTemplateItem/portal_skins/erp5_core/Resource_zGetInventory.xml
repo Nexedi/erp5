@@ -198,11 +198,16 @@ SELECT\n
   MAX(stock.date) AS date\n
 \n
 FROM\n
-  <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  stock\n
+  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+<dtml-in prefix="table" expr="from_table_list"> \n
+  <dtml-if expr="table_key != \'stock\'">\n
+  , <dtml-var table_item> AS <dtml-var table_key>\n
+  </dtml-if>\n
+</dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
   , catalog as node, catalog as resource, movement as inventory_movement\n
-  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 \n
 WHERE\n
   1 = 1\n
@@ -332,11 +337,16 @@ SELECT\n
   MAX(stock.date) AS date\n
 \n
 FROM\n
-  <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
+  stock\n
+  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
+<dtml-in prefix="table" expr="from_table_list"> \n
+  <dtml-if expr="table_key != \'stock\'">\n
+  , <dtml-var table_item> AS <dtml-var table_key>\n
+  </dtml-if>\n
+</dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
   , catalog as node, catalog as resource, movement as inventory_movement\n
-  LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 \n
 WHERE\n
   1 = 1\n

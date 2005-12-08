@@ -1,3 +1,6 @@
+2005-12-08 yo
+* Fix the LEFT JOIN syntax in Resource_zGetInventory and Resource_zGetInventoryList.
+
 2005-12-08 Kevin
 * Transform tuple to list to let ERP5Type_asSecurityGroupId do a sort.
 
