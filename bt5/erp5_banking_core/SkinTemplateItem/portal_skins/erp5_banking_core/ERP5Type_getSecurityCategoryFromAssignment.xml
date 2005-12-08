@@ -69,19 +69,24 @@
             <value> <string># XXX For now, this script requires proxy manager\n
 \n
 # base_category_list : list of category values we need to retrieve\n
-# user_name : string obtained from getSecurityManager().getUser().getUserName()\n
+# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
+#             When using PluggableAuthService with ERP5GroupMAnager, user_name is the id\n
+#             of the person linked to getUser().getId() through getReference() (which is its login).\n
 # object : object which we want to assign roles to.\n
 # portal_type : portal type of object\n
 \n
+# must always return a list of dicts\n
+\n
 category_list = []\n
 \n
-person_module = getattr(context.portal_url.getPortalObject(), \'person\', None)\n
+person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
 person_object = getattr(person_module, user_name, None)\n
 \n
 # if a person_object was not found in the module, we do nothing more\n
-# this happens for example when a manager creates a person_object for a new user\n
-if person_object == None:\n
-  return\n
+# this happens for example when a manager with no associated person object\n
+# creates a person_object for a new user\n
+if person_object is None:\n
+  return []\n
 \n
 # We look for valid assignments of this user\n
 for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignment\'}):\n
@@ -109,33 +114,34 @@ return category_list\n
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBAAAABQAAAAVAAAAQwAA
-AHN5AQAAZwAAfQQAdAEAdAIAdAIAdAMAZAEAgwIAZAIAgwIAgwAAZAMAdAQAgwMAfQkAdAEAfAkA
-fAEAdAQAgwMAfQoAfAoAdAQAagIAbwgAAWQAAFNuAQABeMUAdAgAdAIAfAoAZAQAgwIAZAUAaAAA
-BGQGAGQHAAM8gwABgwEARF2cAH0MAHQCAHwMAGQIAIMCAIMAAGQJAGoCAG99AAFoAAB9DQB4XQB0
-CAB8AACDAQBEXU8AfQ4AdAIAfAwAZAoAgwIAfA4AgwEAfQ8AfA8AdAQAZAsAZgIAagcAbxQAAXwP
-AHQOAHwNAIMBAHwOADxxrgABdA8AZAwAfA4AFoICAHGuAFd0AgB8BABkDQCDAgB8DQCDAQABcXwA
-AXF8AFdnAAB9EgB4SAB0CAB8BACDAQBEXToAfRMAdAIAfBMAZA4AgwIAZA8AgwEAZBAAC2oCAG8X
-AAF0AgB8EgBkDQCDAgB8EwCDAQABcS8BAXEvAVd8EgBTfAQAU2QAAFMoEQAAAE5zCgAAAHBvcnRh
-bF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHMGAAAAcGVyc29ucw0AAABjb250ZW50VmFsdWVzcwYA
-AABmaWx0ZXJzCwAAAHBvcnRhbF90eXBlcwoAAABBc3NpZ25tZW50cxIAAABnZXRWYWxpZGF0aW9u
-U3RhdGVzBAAAAG9wZW5zCwAAAGdldFByb3BlcnR5cwAAAABzSQAAAEVycm9yOiAnJXMnIHByb3Bl
-cnR5IGlzIHJlcXVpcmVkIGluIG9yZGVyIHRvIHVwZGF0ZSBwZXJzb24gc2VjdXJpdHkgZ3JvdXBz
-BgAAAGFwcGVuZHMEAAAAZmluZHMHAAAAX2J0c2F2ZWkBAAAAKBIAAABzDQAAAGNhdGVnb3J5X2xp
-c3RzBwAAAGdldGF0dHJzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMEAAAATm9uZXMNAAAAcGVy
-c29uX21vZHVsZXMJAAAAdXNlcl9uYW1lcw0AAABwZXJzb25fb2JqZWN0cwkAAABfZ2V0aXRlcl9z
-CgAAAGFzc2lnbm1lbnRzDQAAAGNhdGVnb3J5X2RpY3RzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMN
-AAAAYmFzZV9jYXRlZ29yeXMOAAAAY2F0ZWdvcnlfdmFsdWVzBwAAAF93cml0ZV9zDAAAAFJ1bnRp
-bWVFcnJvcnMKAAAAY2xlYW5fbGlzdHMDAAAAY2F0KBQAAABzEgAAAGJhc2VfY2F0ZWdvcnlfbGlz
-dHMJAAAAdXNlcl9uYW1lcwYAAABvYmplY3RzCwAAAHBvcnRhbF90eXBlcw0AAABjYXRlZ29yeV9s
-aXN0cwcAAABnZXRhdHRycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBAAAAE5vbmVzDQAAAHBl
-cnNvbl9tb2R1bGVzDQAAAHBlcnNvbl9vYmplY3RzCQAAAF9nZXRpdGVyX3MKAAAAYXNzaWdubWVu
-dHMNAAAAY2F0ZWdvcnlfZGljdHMNAAAAYmFzZV9jYXRlZ29yeXMOAAAAY2F0ZWdvcnlfdmFsdWVz
-BwAAAF93cml0ZV9zDAAAAFJ1bnRpbWVFcnJvcnMKAAAAY2xlYW5fbGlzdHMDAAAAY2F0KAAAAAAo
-AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyoAAABFUlA1VHlwZV9nZXRTZWN1cml0eUNhdGVnb3J5
-RnJvbUFzc2lnbm1lbnQBAAAAcy4AAAAABwYCJwESBA0BCAMoAAYBGQEGAQ0ABgEVARMBFAIUARgD
-BgENAAYBIAEYAQQDKAEAAABzKgAAAEVSUDVUeXBlX2dldFNlY3VyaXR5Q2F0ZWdvcnlGcm9tQXNz
-aWdubWVudCgBAAAAcyoAAABFUlA1VHlwZV9nZXRTZWN1cml0eUNhdGVnb3J5RnJvbUFzc2lnbm1l
-bnQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+AHN8AQAAZwAAfQQAdAEAdAEAdAEAdAIAZAEAgwIAZAIAgwIAgwAAZAMAgwIAZAQAgwEAfQcAdAQA
+fAcAfAEAdAYAgwMAfQoAfAoAdAYAaggAbwgAAWcAAFNuAQABeMUAdAgAdAEAfAoAZAUAgwIAZAYA
+aAAABGQHAGQIAAM8gwABgwEARF2cAH0MAHQBAHwMAGQJAIMCAIMAAGQKAGoCAG99AAFoAAB9DQB4
+XQB0CAB8AACDAQBEXU8AfQ4AdAEAfAwAZAsAgwIAfA4AgwEAfQ8AfA8AdAYAZAwAZgIAagcAbxQA
+AXwPAHQOAHwNAIMBAHwOADxxsQABdA8AZA0AfA4AFoICAHGxAFd0AQB8BABkDgCDAgB8DQCDAQAB
+cX8AAXF/AFdnAAB9EgB4SAB0CAB8BACDAQBEXToAfRMAdAEAfBMAZA8AgwIAZBAAgwEAZBEAC2oC
+AG8XAAF0AQB8EgBkDgCDAgB8EwCDAQABcTIBAXEyAVd8EgBTfAQAU2QAAFMoEgAAAE5zCgAAAHBv
+cnRhbF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHMQAAAAZ2V0RGVmYXVsdE1vZHVsZXMGAAAAUGVy
+c29ucw0AAABjb250ZW50VmFsdWVzcwYAAABmaWx0ZXJzCwAAAHBvcnRhbF90eXBlcwoAAABBc3Np
+Z25tZW50cxIAAABnZXRWYWxpZGF0aW9uU3RhdGVzBAAAAG9wZW5zCwAAAGdldFByb3BlcnR5cwAA
+AABzSQAAAEVycm9yOiAnJXMnIHByb3BlcnR5IGlzIHJlcXVpcmVkIGluIG9yZGVyIHRvIHVwZGF0
+ZSBwZXJzb24gc2VjdXJpdHkgZ3JvdXBzBgAAAGFwcGVuZHMEAAAAZmluZHMHAAAAX2J0c2F2ZWkB
+AAAAKBIAAABzDQAAAGNhdGVnb3J5X2xpc3RzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMNAAAA
+cGVyc29uX21vZHVsZXMHAAAAZ2V0YXR0cnMJAAAAdXNlcl9uYW1lcwQAAABOb25lcw0AAABwZXJz
+b25fb2JqZWN0cwkAAABfZ2V0aXRlcl9zCgAAAGFzc2lnbm1lbnRzDQAAAGNhdGVnb3J5X2RpY3Rz
+EgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMNAAAAYmFzZV9jYXRlZ29yeXMOAAAAY2F0ZWdvcnlfdmFs
+dWVzBwAAAF93cml0ZV9zDAAAAFJ1bnRpbWVFcnJvcnMKAAAAY2xlYW5fbGlzdHMDAAAAY2F0KBQA
+AABzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMJAAAAdXNlcl9uYW1lcwYAAABvYmplY3RzCwAAAHBv
+cnRhbF90eXBlcw0AAABjYXRlZ29yeV9saXN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDQAA
+AHBlcnNvbl9tb2R1bGVzBwAAAGdldGF0dHJzBAAAAE5vbmVzDQAAAHBlcnNvbl9vYmplY3RzCQAA
+AF9nZXRpdGVyX3MKAAAAYXNzaWdubWVudHMNAAAAY2F0ZWdvcnlfZGljdHMNAAAAYmFzZV9jYXRl
+Z29yeXMOAAAAY2F0ZWdvcnlfdmFsdWVzBwAAAF93cml0ZV9zDAAAAFJ1bnRpbWVFcnJvcnMKAAAA
+Y2xlYW5fbGlzdHMDAAAAY2F0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyoAAABFUlA1
+VHlwZV9nZXRTZWN1cml0eUNhdGVnb3J5RnJvbUFzc2lnbm1lbnQBAAAAcy4AAAAACwYCKgESBQ0B
+CAMoAAYBGQEGAQ0ABgEVARMBFAIUARgDBgENAAYBIAEYAQQDKAEAAABzKgAAAEVSUDVUeXBlX2dl
+dFNlY3VyaXR5Q2F0ZWdvcnlGcm9tQXNzaWdubWVudCgBAAAAcyoAAABFUlA1VHlwZV9nZXRTZWN1
+cml0eUNhdGVnb3J5RnJvbUFzc2lnbm1lbnQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
+CAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -188,11 +194,11 @@ bnQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string
                             <string>object</string>
                             <string>portal_type</string>
                             <string>category_list</string>
-                            <string>getattr</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
                             <string>person_module</string>
+                            <string>getattr</string>
+                            <string>None</string>
                             <string>person_object</string>
                             <string>_getiter_</string>
                             <string>assignment</string>
