@@ -31,10 +31,9 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Document.Folder import Folder
 
 
-class AgentPrivilege(Folder, XMLObject):
+class AgentPrivilege(XMLObject):
     """
     An Agent Privilege allow the Bank Account owner to give permissions to an Agent for a given period of time, for a maximum amount of money.
     """
