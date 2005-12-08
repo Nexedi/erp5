@@ -549,12 +549,8 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return List of category values to generate security groups.
       """
-      category_tuple = self._getPortalGroupedCategoryList('assignment') or self._getPortalConfiguration('portal_assignment_base_category_list')
-      category_list = []
-      if category_tuple not in (None, '', (), []):
-        category_list = [ x for x in category_tuple]
-      return category_list
-    
+      return self._getPortalGroupedCategoryList('assignment') or self._getPortalConfiguration('portal_assignment_base_category_list')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
       """
