@@ -93,55 +93,48 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
   if assignment.getValidationState() == \'open\':\n
     category_dict = {}\n
     for base_category in base_category_list:\n
-      category_value = assignment.getProperty(base_category)\n
-      if category_value not in (None, \'\'):\n
-        category_dict[base_category] = category_value\n
-      else:\n
-        raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
+      ### Here is the filter patch waiting bug #124 to be corrected ###\n
+      if base_category.find("_btsave") == -1:\n
+      ### end of filter patch ###\n
+        category_value = assignment.getProperty(base_category)\n
+        if category_value not in (None, \'\'):\n
+          category_dict[base_category] = category_value\n
+        else:\n
+          raise RuntimeError, "Error: \'%s\' property is required in order to update person security group"  % (base_category)\n
     category_list.append(category_dict)\n
-\n
-### Here is the filter patch waiting bug #124 to be corrected ###\n
-clean_list = []\n
-for cat in category_list:\n
-  if cat.find("_btsave") == -1:\n
-    clean_list.append(cat)\n
-return clean_list\n
-### end of filter patch ###\n
 \n
 return category_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBAAAABQAAAAVAAAAQwAA
-AHN8AQAAZwAAfQQAdAEAdAEAdAEAdAIAZAEAgwIAZAIAgwIAgwAAZAMAgwIAZAQAgwEAfQcAdAQA
-fAcAfAEAdAYAgwMAfQoAfAoAdAYAaggAbwgAAWcAAFNuAQABeMUAdAgAdAEAfAoAZAUAgwIAZAYA
-aAAABGQHAGQIAAM8gwABgwEARF2cAH0MAHQBAHwMAGQJAIMCAIMAAGQKAGoCAG99AAFoAAB9DQB4
-XQB0CAB8AACDAQBEXU8AfQ4AdAEAfAwAZAsAgwIAfA4AgwEAfQ8AfA8AdAYAZAwAZgIAagcAbxQA
-AXwPAHQOAHwNAIMBAHwOADxxsQABdA8AZA0AfA4AFoICAHGxAFd0AQB8BABkDgCDAgB8DQCDAQAB
-cX8AAXF/AFdnAAB9EgB4SAB0CAB8BACDAQBEXToAfRMAdAEAfBMAZA8AgwIAZBAAgwEAZBEAC2oC
-AG8XAAF0AQB8EgBkDgCDAgB8EwCDAQABcTIBAXEyAVd8EgBTfAQAU2QAAFMoEgAAAE5zCgAAAHBv
-cnRhbF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHMQAAAAZ2V0RGVmYXVsdE1vZHVsZXMGAAAAUGVy
-c29ucw0AAABjb250ZW50VmFsdWVzcwYAAABmaWx0ZXJzCwAAAHBvcnRhbF90eXBlcwoAAABBc3Np
-Z25tZW50cxIAAABnZXRWYWxpZGF0aW9uU3RhdGVzBAAAAG9wZW5zCwAAAGdldFByb3BlcnR5cwAA
-AABzSQAAAEVycm9yOiAnJXMnIHByb3BlcnR5IGlzIHJlcXVpcmVkIGluIG9yZGVyIHRvIHVwZGF0
-ZSBwZXJzb24gc2VjdXJpdHkgZ3JvdXBzBgAAAGFwcGVuZHMEAAAAZmluZHMHAAAAX2J0c2F2ZWkB
-AAAAKBIAAABzDQAAAGNhdGVnb3J5X2xpc3RzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMNAAAA
-cGVyc29uX21vZHVsZXMHAAAAZ2V0YXR0cnMJAAAAdXNlcl9uYW1lcwQAAABOb25lcw0AAABwZXJz
-b25fb2JqZWN0cwkAAABfZ2V0aXRlcl9zCgAAAGFzc2lnbm1lbnRzDQAAAGNhdGVnb3J5X2RpY3Rz
-EgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMNAAAAYmFzZV9jYXRlZ29yeXMOAAAAY2F0ZWdvcnlfdmFs
-dWVzBwAAAF93cml0ZV9zDAAAAFJ1bnRpbWVFcnJvcnMKAAAAY2xlYW5fbGlzdHMDAAAAY2F0KBQA
-AABzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMJAAAAdXNlcl9uYW1lcwYAAABvYmplY3RzCwAAAHBv
-cnRhbF90eXBlcw0AAABjYXRlZ29yeV9saXN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDQAA
-AHBlcnNvbl9tb2R1bGVzBwAAAGdldGF0dHJzBAAAAE5vbmVzDQAAAHBlcnNvbl9vYmplY3RzCQAA
-AF9nZXRpdGVyX3MKAAAAYXNzaWdubWVudHMNAAAAY2F0ZWdvcnlfZGljdHMNAAAAYmFzZV9jYXRl
-Z29yeXMOAAAAY2F0ZWdvcnlfdmFsdWVzBwAAAF93cml0ZV9zDAAAAFJ1bnRpbWVFcnJvcnMKAAAA
-Y2xlYW5fbGlzdHMDAAAAY2F0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyoAAABFUlA1
-VHlwZV9nZXRTZWN1cml0eUNhdGVnb3J5RnJvbUFzc2lnbm1lbnQBAAAAcy4AAAAACwYCKgESBQ0B
-CAMoAAYBGQEGAQ0ABgEVARMBFAIUARgDBgENAAYBIAEYAQQDKAEAAABzKgAAAEVSUDVUeXBlX2dl
-dFNlY3VyaXR5Q2F0ZWdvcnlGcm9tQXNzaWdubWVudCgBAAAAcyoAAABFUlA1VHlwZV9nZXRTZWN1
-cml0eUNhdGVnb3J5RnJvbUFzc2lnbm1lbnQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
-CAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBAAAABIAAAAXAAAAQwAA
+AHNIAQAAZwAAfQQAdAEAdAEAdAEAdAIAZAEAgwIAZAIAgwIAgwAAZAMAgwIAZAQAgwEAfQcAdAQA
+fAcAfAEAdAYAgwMAfQoAfAoAdAYAaggAbwgAAWcAAFNuAQABeOYAdAgAdAEAfAoAZAUAgwIAZAYA
+aAAABGQHAGQIAAM8gwABgwEARF29AH0MAHQBAHwMAGQJAIMCAIMAAGQKAGoCAG+eAAFoAAB9DQB4
+fgB0CAB8AACDAQBEXXAAfQ4AdAEAfA4AZAsAgwIAZAwAgwEAZA0AC2oCAG9NAAF0AQB8DABkDgCD
+AgB8DgCDAQB9DwB8DwB0BgBkDwBmAgBqBwBvFAABfA8AdA4AfA0AgwEAfA4APHEhAQF0DwBkEAB8
+DgAWggIAcbEAAXGxAFd0AQB8BABkEQCDAgB8DQCDAQABcX8AAXF/AFd8BABTZAAAUygSAAAATnMK
+AAAAcG9ydGFsX3VybHMPAAAAZ2V0UG9ydGFsT2JqZWN0cxAAAABnZXREZWZhdWx0TW9kdWxlcwYA
+AABQZXJzb25zDQAAAGNvbnRlbnRWYWx1ZXNzBgAAAGZpbHRlcnMLAAAAcG9ydGFsX3R5cGVzCgAA
+AEFzc2lnbm1lbnRzEgAAAGdldFZhbGlkYXRpb25TdGF0ZXMEAAAAb3BlbnMEAAAAZmluZHMHAAAA
+X2J0c2F2ZWkBAAAAcwsAAABnZXRQcm9wZXJ0eXMAAAAAc0kAAABFcnJvcjogJyVzJyBwcm9wZXJ0
+eSBpcyByZXF1aXJlZCBpbiBvcmRlciB0byB1cGRhdGUgcGVyc29uIHNlY3VyaXR5IGdyb3VwcwYA
+AABhcHBlbmQoEAAAAHMNAAAAY2F0ZWdvcnlfbGlzdHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0
+cw0AAABwZXJzb25fbW9kdWxlcwcAAABnZXRhdHRycwkAAAB1c2VyX25hbWVzBAAAAE5vbmVzDQAA
+AHBlcnNvbl9vYmplY3RzCQAAAF9nZXRpdGVyX3MKAAAAYXNzaWdubWVudHMNAAAAY2F0ZWdvcnlf
+ZGljdHMSAAAAYmFzZV9jYXRlZ29yeV9saXN0cw0AAABiYXNlX2NhdGVnb3J5cw4AAABjYXRlZ29y
+eV92YWx1ZXMHAAAAX3dyaXRlX3MMAAAAUnVudGltZUVycm9yKBIAAABzEgAAAGJhc2VfY2F0ZWdv
+cnlfbGlzdHMJAAAAdXNlcl9uYW1lcwYAAABvYmplY3RzCwAAAHBvcnRhbF90eXBlcw0AAABjYXRl
+Z29yeV9saXN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDQAAAHBlcnNvbl9tb2R1bGVzBwAA
+AGdldGF0dHJzBAAAAE5vbmVzDQAAAHBlcnNvbl9vYmplY3RzCQAAAF9nZXRpdGVyX3MKAAAAYXNz
+aWdubWVudHMNAAAAY2F0ZWdvcnlfZGljdHMNAAAAYmFzZV9jYXRlZ29yeXMOAAAAY2F0ZWdvcnlf
+dmFsdWVzBwAAAF93cml0ZV9zDAAAAFJ1bnRpbWVFcnJvcigAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMqAAAARVJQNVR5cGVfZ2V0U2VjdXJpdHlDYXRlZ29yeUZyb21Bc3NpZ25tZW50AQAA
+AHMkAAAAAAsGAioBEgUNAQgDKAAGARkBBgENAAYCHQIVARMBFAIYARgCKAEAAABzKgAAAEVSUDVU
+eXBlX2dldFNlY3VyaXR5Q2F0ZWdvcnlGcm9tQXNzaWdubWVudCgBAAAAcyoAAABFUlA1VHlwZV9n
+ZXRTZWN1cml0eUNhdGVnb3J5RnJvbUFzc2lnbm1lbnQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
+dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -207,8 +200,6 @@ CAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                             <string>category_value</string>
                             <string>_write_</string>
                             <string>RuntimeError</string>
-                            <string>clean_list</string>
-                            <string>cat</string>
                           </tuple>
                         </value>
                     </item>
