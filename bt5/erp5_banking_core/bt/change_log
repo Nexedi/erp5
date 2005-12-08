@@ -1,3 +1,6 @@
+2005-12-08 Kevin
+* Delete custom version of ERP5Type_getSecurityCategoryFromAssignment. Move it to erp5_core.
+
 2005-12-07 Kevin
 * Move CashDetail_loadScript_example, Container_fastInputUpdate, Container_getContaineeTotalPrice, CounterModule_getVaultTransactionList, ImportCsvToCategories to erp5_baobab_config because they contain reference to the local currency.
 * Add a custom version of ERP5Type_getSecurityCategoryFromAssignment to filter the category list and not include categories saved by Business Templates. This customisation must be removed when bug #124 will be corrected.
