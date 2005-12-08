@@ -1,3 +1,10 @@
+2005-12-08 yo
+* Fix the LEFT JOIN syntax in ProductionOrder_zSelectMovement.
+* Add ProductionDelivery_getSupplyLinkList by seb.
+
+2005-12-06 Seb
+* Again update on after more testing production_order_workflow in order to add tags and priority
+
 2005-12-01 Seb
 * Started to update production_order_workflow in order to add tags and priority
 * updated ProductionOrder_zSelectMovement, added alias on table movement

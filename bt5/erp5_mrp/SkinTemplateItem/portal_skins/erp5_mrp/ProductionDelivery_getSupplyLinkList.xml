@@ -66,60 +66,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change.object\n
-\n
-previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-expand_tag = order.getPath() + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-order.activate(tag=expand_tag,after_tag=previous_tag,priority=3).updateAppliedRule(rule_id = \'default_production_order_rule\',activate_kw=activate_kw)\n
-\n
-delivery_builder_list = [\n
-    order.portal_deliveries.production_report_builder,\n
-    order.portal_deliveries.production_packing_list_builder\n
-]\n
-\n
-for delivery_builder in delivery_builder_list:\n
-  delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag,priority=3).build(explanation_uid=order.getUid(),activate_kw=activate_kw)\n
+            <value> <string>supply_link_list = []\n
+for movement in context.getMovementList():\n
+  for sim_movement in movement.getDeliveryRelatedValueList(portal_type=\'Simulation Movement\'):\n
+    causality = sim_movement.getCausalityValue()\n
+    if causality is not None and causality not in supply_link_list:\n
+      supply_link_list.append(causality)\n
+return supply_link_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAkAAAAQAAAAQwAA
-AHMeAQAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAZAMAF30DAHQAAHwCAGQCAIMCAIMA
-AGQEABd9BABoAAAEZAUAfAQAAzwEZAYAZAcAAzx9BQB0AAB0AAB8AgBkCACDAgBkBQB8BABkCQB8
-AwBkBgBkBwCDAANkCgCDAgBkCwBkDABkDQB8BQCDAAIBdAAAdAAAfAIAZA4AgwIAZA8AgwIAdAAA
-dAAAfAIAZA4AgwIAZBAAgwIAZwIAfQYAeFoAdAcAfAYAgwEARF1MAH0IAHQAAHQAAHwIAGQIAIMC
-AGQRAGQSAGQJAHwEAGQGAGQHAIMAA2QTAIMCAGQUAHQAAHwCAGQVAIMCAIMAAGQNAHwFAIMAAgFx
-ygBXZAAAUygWAAAATnMGAAAAb2JqZWN0cwcAAABnZXRQYXRocxcAAABfZmlyc3RVcGRhdGVBcHBs
-aWVkUnVsZXMHAAAAX2V4cGFuZHMDAAAAdGFncwgAAABwcmlvcml0eWkDAAAAcwgAAABhY3RpdmF0
-ZXMJAAAAYWZ0ZXJfdGFncxEAAAB1cGRhdGVBcHBsaWVkUnVsZXMHAAAAcnVsZV9pZHMdAAAAZGVm
-YXVsdF9wcm9kdWN0aW9uX29yZGVyX3J1bGVzCwAAAGFjdGl2YXRlX2t3cxEAAABwb3J0YWxfZGVs
-aXZlcmllc3MZAAAAcHJvZHVjdGlvbl9yZXBvcnRfYnVpbGRlcnMfAAAAcHJvZHVjdGlvbl9wYWNr
-aW5nX2xpc3RfYnVpbGRlcnMIAAAAYWN0aXZpdHlzCAAAAFNRTFF1ZXVlcwUAAABidWlsZHMPAAAA
-ZXhwbGFuYXRpb25fdWlkcwYAAABnZXRVaWQoCQAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9j
-aGFuZ2VzBQAAAG9yZGVycwwAAABwcmV2aW91c190YWdzCgAAAGV4cGFuZF90YWdzCwAAAGFjdGl2
-YXRlX2t3cxUAAABkZWxpdmVyeV9idWlsZGVyX2xpc3RzCQAAAF9nZXRpdGVyX3MQAAAAZGVsaXZl
-cnlfYnVpbGRlcigJAAAAcwwAAABzdGF0ZV9jaGFuZ2VzCQAAAF9nZXRhdHRyX3MFAAAAb3JkZXJz
-DAAAAHByZXZpb3VzX3RhZ3MKAAAAZXhwYW5kX3RhZ3MLAAAAYWN0aXZhdGVfa3dzFQAAAGRlbGl2
-ZXJ5X2J1aWxkZXJfbGlzdHMJAAAAX2dldGl0ZXJfcxAAAABkZWxpdmVyeV9idWlsZGVyKAAAAAAo
-AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxYAAABPcmRlcl9idWlsZFBhY2tpbmdMaXN0AQAAAHMU
-AAAADwIWARYBHgE0AgYBFQEVAw0ADAEoAQAAAHMWAAAAT3JkZXJfYnVpbGRQYWNraW5nTGlzdCgB
-AAAAcxYAAABPcmRlcl9idWlsZFBhY2tpbmdMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
-b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
-        </item>
-        <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAANAAAAQwAA
+AHOdAAAAZwAAfQAAeIwAdAEAdAIAdAMAZAEAgwIAgwAAgwEARF1yAH0EAHhpAHQBAHQCAHwEAGQC
+AIMCAGQDAGQEAIMAAYMBAERdSQB9BQB0AgB8BQBkBQCDAgCDAAB9BgB8BgB0BwBqCQBvCgABfAYA
+fAAAagcAbxcAAXQCAHwAAGQGAIMCAHwGAIMBAAFxRAABcUQAV3EfAFd8AABTZAAAUygHAAAATnMP
+AAAAZ2V0TW92ZW1lbnRMaXN0cxsAAABnZXREZWxpdmVyeVJlbGF0ZWRWYWx1ZUxpc3RzCwAAAHBv
+cnRhbF90eXBlcxMAAABTaW11bGF0aW9uIE1vdmVtZW50cxEAAABnZXRDYXVzYWxpdHlWYWx1ZXMG
+AAAAYXBwZW5kKAgAAABzEAAAAHN1cHBseV9saW5rX2xpc3RzCQAAAF9nZXRpdGVyX3MJAAAAX2dl
+dGF0dHJfcwcAAABjb250ZXh0cwgAAABtb3ZlbWVudHMMAAAAc2ltX21vdmVtZW50cwkAAABjYXVz
+YWxpdHlzBAAAAE5vbmUoCAAAAHMQAAAAc3VwcGx5X2xpbmtfbGlzdHMJAAAAX2dldGl0ZXJfcwkA
+AABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCAAAAG1vdmVtZW50cwwAAABzaW1fbW92ZW1lbnRzCQAA
+AGNhdXNhbGl0eXMEAAAATm9uZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMkAAAAUHJv
+ZHVjdGlvbkRlbGl2ZXJ5X2dldFN1cHBseUxpbmtMaXN0AQAAAHMQAAAABgEZAAYBHwAGARIBHQEc
+ASgBAAAAcyQAAABQcm9kdWN0aW9uRGVsaXZlcnlfZ2V0U3VwcGx5TGlua0xpc3QoAQAAAHMkAAAA
+UHJvZHVjdGlvbkRlbGl2ZXJ5X2dldFN1cHBseUxpbmtMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/order_workflow/scripts/Order_buildPackingList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_mrp/ProductionDelivery_getSupplyLinkList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,21 +125,20 @@ b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getattr_</string>
-                            <string>order</string>
-                            <string>previous_tag</string>
-                            <string>expand_tag</string>
-                            <string>activate_kw</string>
-                            <string>delivery_builder_list</string>
+                            <string>supply_link_list</string>
                             <string>_getiter_</string>
-                            <string>delivery_builder</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>movement</string>
+                            <string>sim_movement</string>
+                            <string>causality</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -170,33 +155,12 @@ b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order_buildPackingList</string> </value>
+            <value> <string>ProductionDelivery_getSupplyLinkList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

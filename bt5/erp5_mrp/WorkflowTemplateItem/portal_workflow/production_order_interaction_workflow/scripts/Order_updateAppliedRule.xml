@@ -69,21 +69,29 @@
             <value> <string>order = state_change.object\n
 \n
 if order.getSimulationState() in order.getPortalPlannedOrderStateList():\n
-  order.updateAppliedRule("default_production_order_rule")\n
+  # Be carreful, tags must corresponds to ones in production_order_workflow\n
+  previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
+  expand_tag = order.getPath() + \'_expand\'\n
+  order.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(tag=expand_tag,rule_id = \'default_production_order_rule\',priority=3)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAGAAAAQwAA
-AHNPAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAdAAAfAIAZAMAgwIAgwAAagYAbxcA
-AXQAAHwCAGQEAIMCAGQFAIMBAAFuAQABZAAAUygGAAAATnMGAAAAb2JqZWN0cxIAAABnZXRTaW11
-bGF0aW9uU3RhdGVzHgAAAGdldFBvcnRhbFBsYW5uZWRPcmRlclN0YXRlTGlzdHMRAAAAdXBkYXRl
-QXBwbGllZFJ1bGVzHQAAAGRlZmF1bHRfcHJvZHVjdGlvbl9vcmRlcl9ydWxlKAMAAABzCQAAAF9n
-ZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwUAAABvcmRlcigDAAAAcwwAAABzdGF0ZV9jaGFuZ2Vz
-CQAAAF9nZXRhdHRyX3MFAAAAb3JkZXIoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFwAA
-AE9yZGVyX3VwZGF0ZUFwcGxpZWRSdWxlAQAAAHMEAAAADwIoASgBAAAAcxcAAABPcmRlcl91cGRh
-dGVBcHBsaWVkUnVsZSgBAAAAcxcAAABPcmRlcl91cGRhdGVBcHBsaWVkUnVsZSgAAAAAKAAAAABz
-DwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAKAAAAQwAA
+AHOiAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAdAAAfAIAZAMAgwIAgwAAagYAb2oA
+AXQAAHwCAGQEAIMCAIMAAGQFABd9AwB0AAB8AgBkBACDAgCDAABkBgAXfQQAdAAAdAAAfAIAZAcA
+gwIAZAgAfAQAZAkAfAMAgwACZAoAgwIAZAgAfAQAZAsAZAwAZA0AZA4AgwADAW4BAAFkAABTKA8A
+AABOcwYAAABvYmplY3RzEgAAAGdldFNpbXVsYXRpb25TdGF0ZXMeAAAAZ2V0UG9ydGFsUGxhbm5l
+ZE9yZGVyU3RhdGVMaXN0cwcAAABnZXRQYXRocxcAAABfZmlyc3RVcGRhdGVBcHBsaWVkUnVsZXMH
+AAAAX2V4cGFuZHMIAAAAYWN0aXZhdGVzAwAAAHRhZ3MJAAAAYWZ0ZXJfdGFncxEAAAB1cGRhdGVB
+cHBsaWVkUnVsZXMHAAAAcnVsZV9pZHMdAAAAZGVmYXVsdF9wcm9kdWN0aW9uX29yZGVyX3J1bGVz
+CAAAAHByaW9yaXR5aQMAAAAoBQAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzBQAA
+AG9yZGVycwwAAABwcmV2aW91c190YWdzCgAAAGV4cGFuZF90YWcoBQAAAHMMAAAAc3RhdGVfY2hh
+bmdlcwkAAABfZ2V0YXR0cl9zBQAAAG9yZGVycwwAAABwcmV2aW91c190YWdzCgAAAGV4cGFuZF90
+YWcoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFwAAAE9yZGVyX3VwZGF0ZUFwcGxpZWRS
+dWxlAQAAAHMIAAAADwIlAhYBHAEoAQAAAHMXAAAAT3JkZXJfdXBkYXRlQXBwbGllZFJ1bGUoAQAA
+AHMXAAAAT3JkZXJfdXBkYXRlQXBwbGllZFJ1bGUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -120,6 +128,8 @@ DwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
                             <string>state_change</string>
                             <string>_getattr_</string>
                             <string>order</string>
+                            <string>previous_tag</string>
+                            <string>expand_tag</string>
                           </tuple>
                         </value>
                     </item>
