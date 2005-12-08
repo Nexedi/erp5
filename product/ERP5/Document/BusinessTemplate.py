@@ -1650,13 +1650,23 @@ class RoleTemplateItem(BaseTemplateItem):
 
   def install(self, context, **kw):
     p = context.getPortalObject()
-    roles = {}
-    for role in p.__ac_roles__:
-      roles[role] = 1
+    # get roles
     if (getattr(self, 'template_format_version', 0)) == 1:
       role_list = self._objects.keys()
     else:
       role_list = self._archive.keys()
+    # set roles in PAS
+    if p.acl_users.meta_type == 'Pluggable Auth Service':
+      role_manager_list = p.acl_users.objectValues('ZODB Role Manager')
+      for role_manager in role_manager_list:
+        existing_role_list = role_manager.listRoleIds()
+        for role in role_list:
+          if role not in existing_role_list:
+            role_manager.addRole(role)
+    # set roles on portal
+    roles = {}
+    for role in p.__ac_roles__:
+      roles[role] = 1
     for role in role_list:
       roles[role] = 1
     p.__ac_roles__ = tuple(roles.keys())
