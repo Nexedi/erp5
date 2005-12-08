@@ -247,7 +247,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # deal with groups
         getGroups = getattr(user, 'getGroups', None)
         if getGroups is not None:
-            groups = user.getGroups()
+            groups = list(user.getGroups())
             groups.append('role:Anonymous')
             if 'Authenticated' in result:
                 groups.append('role:Authenticated')
