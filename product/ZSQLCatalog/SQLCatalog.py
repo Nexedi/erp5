@@ -1258,6 +1258,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     ids.sort()
     return ids
 
+  def _quoteSQLString(self, value):
+    """Return a quoted string of the value.
+    """
+    if hasattr(value, 'ISO'):
+      value = value.ISO()
+    elif hasattr(value, 'strftime'):
+      value = value.strftime('%Y-%m-%d %H:%M:%S')
+    else:
+      value = sql_quote(str(value))
+    return value
+
   def buildSQLQuery(self, query_table='catalog', REQUEST=None, **kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
     # Get search arguments:
@@ -1456,9 +1467,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               # Add table to table dict
               from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
             # Default case: variable equality
-            if type(value) is type(''):
+            if type(value) is type('') or isinstance(value, DateTime):
               # For security.
-              value = sql_quote(value)
+              value = self._quoteSQLString(value)
               if value != '':
                 # we consider empty string as Non Significant
                 if value == '=':
@@ -1496,7 +1507,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                     query_item += ["%s = %s" % (key, value_item)]
                   else:
                     # For security.
-                    value_item = sql_quote(str(value_item))
+                    value_item = self._quoteSQLString(value_item)
                     if '%' in value_item:
                       query_item += ["%s LIKE '%s'" % (key, value_item)]
                     elif key in keyword_search_keys:
@@ -1519,8 +1530,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               range_value = value.get('range')
 
               if range_value :
-                query_min = sql_quote(str(min(query_value)))
-                query_max = sql_quote(str(max(query_value)))
+                query_min = self._quoteSQLString(min(query_value))
+                query_max = self._quoteSQLString(max(query_value))
                 if range_value == 'min' :
                   query_item += ["%s >= '%s'" % (key, query_min) ]
                 elif range_value == 'max' :
@@ -1533,11 +1544,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   query_item += ["%s <= '%s'" % (key, query_max) ]
               else :
                 for query_value_item in query_value :
-                  query_item += ['%s = %s' % (key, sql_quote(str(query_value_item)))]
+                  query_item += ['%s = %s' % (key, self._quoteSQLString(query_value_item))]
               if len(query_item) > 0:
                 where_expression += ['(%s)' % join(query_item, ' %s ' % operator_value)]
             else:
-              where_expression += ["%s = %s" % (key, sql_quote(str(value)))]
+              where_expression += ["%s = %s" % (key, self._quoteSQLString(value))]
           elif key in topic_search_keys:
             # ERP5 CPS compatibility
             topic_operator = 'or'
