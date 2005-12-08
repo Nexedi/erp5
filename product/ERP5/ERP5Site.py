@@ -266,10 +266,10 @@ class ERP5Site ( CMFSite, FolderMixIn ):
           if group in getattr(pt, 'group_list', ()):
             type_list.append(pt.getId())
         return tuple(type_list)
-        
+
       getTypeList = CachingMethod(getTypeList, id=('_getPortalGroupedTypeList', group), cache_duration=3600)
       return getTypeList(group)
-    
+
     def _getPortalGroupedCategoryList(self, group):
       """Return a list of base categories classified to a specific group.
       """
@@ -279,7 +279,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
           if group in bc.getCategoryTypeList():
             category_list.append(bc.getId())
         return tuple(category_list)
-        
+
       getCategoryList = CachingMethod(getCategoryList, id=('_getPortalGroupedCategoryList', group), cache_duration=3600)
       return getCategoryList(group)
 
@@ -294,10 +294,10 @@ class ERP5Site ( CMFSite, FolderMixIn ):
               if group in getattr(state, 'type_list', ()):
                 state_dict[state.getId()] = None
         return tuple(state_dict.keys())
-        
+
       getStateList = CachingMethod(getStateList, id=('_getPortalGroupedStateList', group), cache_duration=3600)
       return getStateList(group)
-        
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDefaultSectionCategory')
     def getPortalDefaultSectionCategory(self):
       """
@@ -305,11 +305,11 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       LOG('ERP5Site', 0, 'getPortalDefaultSectionCategory is deprecated; use portal_preferences.getPreferredSectionCategory instead.')
       section_category = self.portal_preferences.getPreferredSectionCategory()
-      
+
       # XXX This is only for backward-compatibility.
       if not section_category:
         section_category = self._getPortalConfiguration('portal_default_section_category')
-        
+
       return section_category
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalResourceTypeList')
@@ -549,7 +549,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return List of category values to generate security groups.
       """
-      return self._getPortalGroupedCategoryList('assignment') or self._getPortalConfiguration('portal_assignment_base_category_list')
+      ### Here is the filter patch waiting bug #124 to be corrected
+      category_list = self._getPortalGroupedCategoryList('assignment') or self._getPortalConfiguration('portal_assignment_base_category_list')
+      clean_list = []
+      for cat in category_list:
+        if cat.find("_btsave") == -1:
+          clean_list.append(cat)
+      return clean_list
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
@@ -993,7 +999,7 @@ class ERP5Generator(PortalGenerator):
         template = os.path.join(bootstrap_dir, 'erp5_core')
         if not os.path.exists(template):
           template = os.path.join(bootstrap_dir, 'erp5_core.bt5')
-          
+
         id = template_tool.generateNewId()
         template_tool.download(template, id=id)
         template_tool[id].install(**kw)
