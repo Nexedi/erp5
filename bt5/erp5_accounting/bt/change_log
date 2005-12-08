@@ -1,3 +1,10 @@
+2005-12-08 yo
+* Fix the LEFT JOIN syntax in PaymentTransaction_zSelectMovement and SaleInvoiceTransaction_zSelectMovemen.
+
+2005-12-06 yo
+* Remove Resource_zGetInventory_old.
+* Fix the LEFT JOIN in Account_zGetAccountingTransactionList.
+
 2005-11-30 yo
 * Use portal_preferences.getPreferredAccountingTransactionGap instead of getGap.
 

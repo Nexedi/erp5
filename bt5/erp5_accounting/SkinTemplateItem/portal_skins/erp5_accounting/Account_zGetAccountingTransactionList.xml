@@ -239,7 +239,11 @@ SELECT\n
   stock.quantity AS source_balance\n
 FROM\n
   movement,\n
-  stock,\n
+  stock\n
+  LEFT JOIN catalog AS destination_section \n
+      ON destination_section.uid = stock.mirror_section_uid\n
+        AND stock.node_uid = <dtml-var getUid>,\n
+\n
   catalog,\n
   catalog  AS transaction_line,\n
   catalog  AS transaction,\n
@@ -250,10 +254,6 @@ FROM\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if where_expression>, category </dtml-if>\n
-\n
-  LEFT JOIN catalog AS destination_section \n
-      ON destination_section.uid = stock.mirror_section_uid\n
-        AND stock.node_uid = <dtml-var getUid>\n
 \n
 WHERE stock.node_uid = <dtml-var getUid>\n
   AND transaction_line.uid = stock.uid \n
@@ -362,7 +362,11 @@ SELECT\n
   stock.quantity AS source_balance\n
 FROM\n
   movement,\n
-  stock,\n
+  stock\n
+  LEFT JOIN catalog AS destination_section \n
+      ON destination_section.uid = stock.mirror_section_uid\n
+        AND stock.node_uid = <dtml-var getUid>,\n
+\n
   catalog,\n
   catalog  AS transaction_line,\n
   catalog  AS transaction,\n
@@ -373,10 +377,6 @@ FROM\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if where_expression>, category </dtml-if>\n
-\n
-  LEFT JOIN catalog AS destination_section \n
-      ON destination_section.uid = stock.mirror_section_uid\n
-        AND stock.node_uid = <dtml-var getUid>\n
 \n
 WHERE stock.node_uid = <dtml-var getUid>\n
   AND transaction_line.uid = stock.uid \n
