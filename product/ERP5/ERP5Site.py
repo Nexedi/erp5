@@ -882,6 +882,10 @@ class ERP5Generator(PortalGenerator):
           p.acl_users.manage_addProduct['PluggableAuthService'].addZODBUserManager('zodb_users')
           p.acl_users.manage_addProduct['PluggableAuthService'].addZODBGroupManager('zodb_groups')
           p.acl_users.manage_addProduct['PluggableAuthService'].addZODBRoleManager('zodb_roles')
+          # Add CMF Portal Roles
+          #XXX Maybe it will no longer be required once PAS is the standard
+          p.acl_users.zodb_roles.addRole('Member')
+          p.acl_users.zodb_roles.addRole('Reviewer')
           # Register ZODB Interface
           p.acl_users.zodb_users.manage_activateInterfaces(('IAuthenticationPlugin',
                                                         'IUserEnumerationPlugin','IUserAdderPlugin'))
