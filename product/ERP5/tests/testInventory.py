@@ -946,9 +946,9 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     LOG('Testing inventory with args :', 0, kw)
     a_inventory = simulation.getInventory(**kw)
     if e_inventory != a_inventory:
-       LOG('TEST ERROR : Inventory differs between expected (%s) and real (%s) quantities' % (repr(e_inventory), repr(a_inventory)),0,'')
-       LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
-       self.assertEquals(e_inventory, a_inventory)
+      LOG('TEST ERROR : Inventory differs between expected (%s) and real (%s) quantities' % (repr(e_inventory), repr(a_inventory)),0,'')
+      LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
+      self.assertEquals(e_inventory, a_inventory)
 
                
   def stepTestGetInventoryOnSimulationState(self, sequence=None, sequence_list=None, **kw):
@@ -1363,7 +1363,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       if len(found_list) == 0:
         LOG('TEST ERROR : Found a line with getInventoryList which is not expected.', 0, 'Found line : %s (inventory : %s) ; expected values with these attributes : %s' % (a_attributes, a_inventory, expected_list))
         LOG('SQL Query was : ', 0, repr(simulation.getInventoryList(src__=1, **kw)))
-        self.failUnless(0)
+        self.assertNotEquals(len(found), 0)
       found = found_list[0]
       LOG('found a line with inventory =', 0, repr(found['inventory']))
       del expected[found['id']]
@@ -1371,7 +1371,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     if len(expected) > 0:
       LOG('TEST ERROR : Not all expected values were matched. Remaining =', 0, expected)
       LOG('SQL Query was : ', 0, str(simulation.getInventoryList(src__=1, **kw)))
-      self.failUnless(0)
+      self.failUnless(len(expected), 0)
       
       
   def stepTestGetNextNegativeInventoryDate(self, sequence=None, sequence_list=None, **kw):
@@ -1473,6 +1473,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     next_date = simulation.getNextNegativeInventoryDate(resource=resource_value.getRelativeUrl(),
                                                         node = organisation_list[node].getRelativeUrl(),
                                                         variation_category = variation_categories)
+    next_date = next_date.strftime('%Y-%m-%d %H:%M:%S')
     expected_negative_date = '%.4d-%.2d-%.2d %.2d:%.2d:%.2d' % (expected_negative_date.year(),
                                                       expected_negative_date.month(),
                                                       expected_negative_date.day(),
