@@ -112,7 +112,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       Return the list of business templates we need
     """
     return ( 'erp5_trade'  # erp5_trade is not required to make erp5_banking_cash_transfer working.
-                           # As explained below erp5_trade is just used to help us initialize ressources.
+                           # As explained below erp5_trade is just used to help us initialize ressources
+                           #   via Internal Packing List.
            , 'erp5_banking_core'
            , 'erp5_banking_cash_transfer'
            )
@@ -201,7 +202,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # Create some users who will get different roles on the cash transfer.
     #
     # Dictionnary data scheme:
-    #     'user_login': ['user_type', ['Global Role'], 'organisation', 'function', 'group', 'site']
+    #     'user_login': [['Global Role'], 'organisation', 'function', 'group', 'site']
     #
     user_dict = {
         'user_1' : [[], self.organisation, 'banking/caissier_principal', 'baobab', 'testsite']
@@ -211,11 +212,10 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.createERP5Users(user_dict)
 
     # We must assign local roles to cash_transfer_module manually, as they are
-    # not packed in Business Templates yet
+    #   not packed in Business Templates yet.
     if self.PAS_installed:
       pass
-      # TODO: Do something with PAS !
-      # By I don't know yet how to create local roles manually with PAS.
+      # TODO: create local roles manually with PAS (don't know how to do yet).
     else:
       self.cash_transfer_module.manage_addLocalGroupRoles('CCP_BAOBAB_TEST', ('Author',))
 
@@ -229,14 +229,16 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.billet_5000 = self.currency_cash_module.newContent(id='billet_5000', portal_type='Banknote', base_price=5000, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
     self.piece_200 = self.currency_cash_module.newContent(id='piece_200', portal_type='Coin', base_price=200, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
 
-    # Before the test, we need to create resources in the source
-    # Using internal_packing_list from erp5_trade is the easiest
+    # Before the test, we need to create resources in the source.
+    # Using internal_packing_list from erp5_trade is the easiest.
     self.portal.portal_delivery_type_list = list(self.portal.portal_delivery_type_list)
     self.portal.portal_delivery_type_list.append('Internal Packing List')
     self.portal.portal_delivery_type_list = tuple(self.portal.portal_delivery_type_list)
     self.portal.portal_delivery_movement_type_list = list(self.portal.portal_delivery_movement_type_list)
     self.portal.portal_delivery_movement_type_list.append('Internal Packing List Line')
     self.portal.portal_delivery_movement_type_list = tuple(self.portal.portal_delivery_movement_type_list)
+
+    LOG("KevAcquisition",0,repr(self.portal.getPortalAcquisitionMovementTypeList()))
 
     self.internal_packing_list_module = self.getInternalPackingListModule()
     self.internal_packing_list = self.internal_packing_list_module.newContent(id='packing_list_1', portal_type='Internal Packing List',
@@ -281,7 +283,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     manager_roles = ['Manager']
     if self.PAS_installed:
       # As said in PluggableAuthService/interfaces/authservice.py, userFolderAddUser()
-      # method is "not supported out-of-the-box by the pluggable authentication service".
+      #   method is "not supported out-of-the-box by the pluggable authentication service".
       # That's why in the case of PAS we have to create and assign roles manually.
       self.user_folder.zodb_users.manage_addUser( user_id    = manager_login
                                                 , login_name = manager_login
@@ -320,15 +322,15 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
         self.assignPASRolesToUser(user_login, user_roles)
       elif not self.PAS_installed:
         # The user_folder counterpart of the erp5 user must be
-        # created manually in the case of NuxUserGroup.
+        #   created manually in the case of NuxUserGroup.
         self.user_folder.userFolderAddUser( name     = user_login
                                           , password = ''
                                           , roles    = user_roles
                                           , domains  = []
                                           )
       # User assignment to security groups is also required, but is taken care of
-      # by the assignment workflow when NuxUserGroup is used and
-      # by ERP5Security PAS plugins in the context of PAS use.
+      #   by the assignment workflow when NuxUserGroup is used and
+      #   by ERP5Security PAS plugins in the context of PAS use.
       assignment.open()
 
 
@@ -339,29 +341,41 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
 
   def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
           variation_base_category_list, variation_category_list, resource_quantity_dict):
-      """
-      """
-      base_id = 'movement'
-      line_kwd = {'base_id':base_id}
-      line = delivery_object.newContent(id=line_id, portal_type=line_portal_type,
-              resource_value=resource_object, quantity_unit_value=self.unit)
-      line.setVariationBaseCategoryList(variation_base_category_list)
-      line.setVariationCategoryList(variation_category_list)
-      line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
-      cell_range_key_list = line.getCellRangeKeyList(base_id=base_id)
-      if cell_range_key_list <> [[None, None]] :
-          for k in cell_range_key_list:
-              category_list = filter(lambda k_item: k_item is not None, k)
-              c = line.newCell(*k, **line_kwd)
-              mapped_value_list = ['price', 'quantity']
-              c.edit(mapped_value_property_list=mapped_value_list
-                      ,force_update=1
-                      ,membership_criterion_category_list=category_list
-                      ,category_list=category_list
-                      )
-      for variation in self.variation_list:
-          cell = line.getCell('emission_letter/k', variation, 'cash_status/valid')
-          cell.setQuantity(resource_quantity_dict[variation])
+    """
+    """
+    base_id = 'movement'
+    line_kwd = {'base_id':base_id}
+    line = delivery_object.newContent(id=line_id, portal_type=line_portal_type,
+            resource_value=resource_object, quantity_unit_value=self.unit)
+    line.setVariationBaseCategoryList(variation_base_category_list)
+    line.setVariationCategoryList(variation_category_list)
+    line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
+    cell_range_key_list = line.getCellRangeKeyList(base_id=base_id)
+    if cell_range_key_list <> [[None, None]] :
+      for k in cell_range_key_list:
+        category_list = filter(lambda k_item: k_item is not None, k)
+        c = line.newCell(*k, **line_kwd)
+        mapped_value_list = ['price', 'quantity']
+        c.edit( membership_criterion_category_list = category_list
+              , mapped_value_property_list         = mapped_value_list
+              , category_list                      = category_list
+              , force_update                       = 1
+              )
+    for variation in self.variation_list:
+      cell = line.getCell('emission_letter/k', variation, 'cash_status/valid')
+      cell.setQuantity(resource_quantity_dict[variation])
+      cell.setResourceValue(resource_object)
+      cell.setDestinationValue(self.caisse_1)
+      LOG("XXX set Resource Value >>>>>>",0, repr(resource_object))
+      LOG("XXX set Destination Value >>>>>>",0, repr(self.caisse_1))
+      LOG("XXX get Destination Value On Cell >>>>>>",0, repr(cell))
+      LOG("XXX get Destination Value >>>>>>",0, repr(cell.getDestinationValue()))
+      LOG("XXX get Baobab Destination Value >>>>>>",0, repr(cell.getBaobabDestinationValue()))
+      LOG("XXX get Destination UID >>>>>>",0, repr(cell.getDestinationUid()))
+      LOG("XXX get Baobab Destination UID >>>>>>",0, repr(cell.getBaobabDestinationUid()))
+      LOG("XXX getBaobabDestinationUID func >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None)))
+      LOG("XXX func dict >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None).__dict__))
+      LOG("XXX func module >>>>>>",0, repr(getattr(cell, 'getBaobabDestinationUid', None).__module__))
 
 
   def getUserFolder(self):
@@ -397,9 +411,11 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.tic()
 
 
-  def stepFirstCheck(self, sequence=None, sequence_list=None, **kwd):
+  def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that all the objects we created in afterSetUp or that were added by the business template and that we rely on are really here
+      Check that all the objects we created in afterSetUp or
+        that were added by the business template and that we rely
+        on are really here.
     """
     # check that Categories were created
     self.assertEqual(self.caisse_1.getPortalType(), 'Category')
@@ -424,7 +440,11 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.cash_transfer_module.getPortalType(), 'Cash Transfer Module')
     self.assertEqual(len(self.cash_transfer_module.objectValues()), 0)
 
-    # check inventory at source
+
+  def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Check the initial inventory.
+    """
     self.simulation_tool = self.getSimulationTool()
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
@@ -729,7 +749,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    sequence_string = 'Tic FirstCheck CheckSource CheckDestination' \
+    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory CheckSource CheckDestination' \
                     + ' CreateCashTransfer Tic CheckCashTransfer' \
                     + ' CreateValidLine1 Tic CheckValidLine1 CheckSubTotal' \
                     + ' CreateValidLine2 Tic CheckValidLine2 CheckTotal' \
