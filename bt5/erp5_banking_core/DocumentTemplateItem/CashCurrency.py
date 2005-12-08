@@ -69,7 +69,7 @@ class CashCurrency(Resource):
     def getTitle(self,**kw):
       """
       The title will depend on the Portal Type and the value, for example :
-      Pi�e de 500
+      Piece de 500
       """
       title = self.portal_types[self.getPortalType()].title
       price = self.getBasePrice()

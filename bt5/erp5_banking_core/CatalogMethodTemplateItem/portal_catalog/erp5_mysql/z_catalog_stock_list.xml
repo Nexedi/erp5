@@ -280,9 +280,7 @@ WHERE\n
           <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getDestinationPaymentUid[loop_item], getDestinationFunctionUid[loop_item], getDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">\n
         </dtml-if>\n
         <dtml-if "getBaobabSourceUid[loop_item]">\n
-          <dtml-if "getInventoriatedQuantity[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getSourcePaymentUid[loop_item], getSourceFunctionUid[loop_item], getSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getStartDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">\n
-          </dtml-if>\n
+          <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getSourcePaymentUid[loop_item], getSourceFunctionUid[loop_item], getSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getStartDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">\n
         </dtml-if>\n
       </dtml-if>\n
     </dtml-if>\n
@@ -370,9 +368,7 @@ WHERE\n
           <dtml-call expr="row_list.append([uid[loop_item], getBaobabDestinationUid[loop_item], getBaobabDestinationSectionUid[loop_item], getDestinationPaymentUid[loop_item], getDestinationFunctionUid[loop_item], getDestinationProjectUid[loop_item], getBaobabSourceSectionUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">\n
         </dtml-if>\n
         <dtml-if "getBaobabSourceUid[loop_item]">\n
-          <dtml-if "getInventoriatedQuantity[loop_item]">\n
-            <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getSourcePaymentUid[loop_item], getSourceFunctionUid[loop_item], getSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getStartDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">\n
-          </dtml-if>\n
+          <dtml-call expr="row_list.append([uid[loop_item], getBaobabSourceUid[loop_item], getBaobabSourceSectionUid[loop_item], getSourcePaymentUid[loop_item], getSourceFunctionUid[loop_item], getSourceProjectUid[loop_item], getBaobabDestinationSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getStartDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">\n
         </dtml-if>\n
       </dtml-if>\n
     </dtml-if>\n

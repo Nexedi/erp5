@@ -65,7 +65,6 @@ class BankingOperation(Delivery,AccountingTransaction):
         """
             Returns a calculated source
         """
-        LOG("KevClasses>> Banking operation >>> getBaobabSourceUid ",0,repr(self))
         return self.getSourceUid()
 
     security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
@@ -73,7 +72,6 @@ class BankingOperation(Delivery,AccountingTransaction):
         """
             Returns a calculated destination
         """
-        LOG("KevClasses>> Banking operation >>> getBaobabDestinationUid ",0,repr(self))
         return self.getDestinationUid()
 
     security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid')
@@ -81,7 +79,6 @@ class BankingOperation(Delivery,AccountingTransaction):
         """
             Returns a calculated source section
         """
-        LOG("KevClasses>> Banking operation >>> getBaobabSourceSectionUid ",0,repr(self))
         return self.getSourceSectionUid()
 
     security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
@@ -89,7 +86,6 @@ class BankingOperation(Delivery,AccountingTransaction):
         """
             Returns a calculated destination section
         """
-        LOG("KevClasses>> Banking operation >>> getBaobabDestinationSectionUid ",0,repr(self))
         return self.getDestinationSectionUid()
 
 # Dynamic patch

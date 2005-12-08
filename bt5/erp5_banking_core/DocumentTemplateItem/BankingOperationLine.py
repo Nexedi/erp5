@@ -54,7 +54,6 @@ class BankingOperationLine(AccountingTransactionLine):
         """
             Returns a calculated source
         """
-        LOG("KevClasses>> Banking operation line >>> getBaobabSourceUid ",0,repr(self))
         return self.getSourceUid()
 
     security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
@@ -62,6 +61,5 @@ class BankingOperationLine(AccountingTransactionLine):
         """
             Returns a calculated destination
         """
-        LOG("KevClasses>>  Banking operation line >>> getBaobabDestinationUid ",0,repr(self))
         return self.getDestinationUid()
 

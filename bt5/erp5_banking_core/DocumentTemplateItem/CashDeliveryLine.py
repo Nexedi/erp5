@@ -75,7 +75,6 @@ class CashDeliveryLine(DeliveryLine):
         """
             Returns a calculated source section
         """
-        LOG("KevClasses>> Cash Delivery Line >>> getBaobabSourceSectionUid ",0,repr(self))
         return self.getSourceSectionUid()
 
     security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
@@ -83,7 +82,6 @@ class CashDeliveryLine(DeliveryLine):
         """
             Returns a calculated destination section
         """
-        LOG("KevClasses>> Cash Delivery Line >>> getBaobabDestinationSectionUid ",0,repr(self))
         return self.getDestinationSectionUid()
 
     security.declareProtected(Permissions.View, 'getBaobabSource')
@@ -91,7 +89,6 @@ class CashDeliveryLine(DeliveryLine):
         """
             Returns a calculated source
         """
-        LOG("KevClasses>> Cash Delivery Line >>> getBaobabSource ",0,repr(self))
         if self.portal_type in out_portal_type_list:
           return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getRelativeUrl()
         elif self.portal_type in in_portal_type_list:
@@ -103,7 +100,6 @@ class CashDeliveryLine(DeliveryLine):
         """
             Returns a calculated source
         """
-        LOG("KevClasses>> Cash Delivery Line  >>> getBaobabSourceUid ",0,repr(self))
         if self.portal_type in out_portal_type_list:
           return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getUid()
         elif self.portal_type in in_portal_type_list:
@@ -115,7 +111,6 @@ class CashDeliveryLine(DeliveryLine):
         """
             Returns a calculated destination
         """
-        LOG("KevClasses>> Cash Delivery Line >>> getBaobabDestinationUid ",0,repr(self))
         if self.portal_type in in_portal_type_list:
           return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('entrante').getUid()
         elif self.portal_type in out_portal_type_list :
