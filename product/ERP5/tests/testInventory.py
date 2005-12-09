@@ -1473,6 +1473,8 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     next_date = simulation.getNextNegativeInventoryDate(resource=resource_value.getRelativeUrl(),
                                                         node = organisation_list[node].getRelativeUrl(),
                                                         variation_category = variation_categories)
+    if type(next_date) == type(''):
+      next_date = DateTime(next_date)
     next_date = next_date.strftime('%Y-%m-%d %H:%M:%S')
     expected_negative_date = '%.4d-%.2d-%.2d %.2d:%.2d:%.2d' % (expected_negative_date.year(),
                                                       expected_negative_date.month(),
