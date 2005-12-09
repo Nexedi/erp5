@@ -34,6 +34,7 @@ $DIRECTORY/ERP5Type/tests/runUnitTest.py testPreferences >> $DIRECTORY/test_full
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5SyncML >> $DIRECTORY/test_full_output 2>&1
 
 cat $DIRECTORY/test_full_output | grep '\(^OK\|^FAILED\|^Ran\)' >> $DIRECTORY/test_output
+sed 's/Ran Unit test/\nRan Unit test/g' < $DIRECTORY/test_output > $DIRECTORY/test_output
 
 $DIRECTORY/sendMailToList
 
