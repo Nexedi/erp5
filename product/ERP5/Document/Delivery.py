@@ -526,7 +526,7 @@ class Delivery(XMLObject):
         # Nothing to do if we are already simulated
         self._createAppliedRule(rule_id,force=force,**kw)
 
-    def _createAppliedRule(self, rule_id,force=0,**kw):
+    def _createAppliedRule(self, rule_id,force=0,activate_kw=None,**kw):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -568,21 +568,21 @@ class Delivery(XMLObject):
         after_path_and_method_id=(
                 my_applied_rule.getPath(),
                ['immediateReindexObject', 'recursiveImmediateReindexObject']),
-               **kw
-        ).expand(my_applied_rule.getId(),force=force,**kw)
+               activate_kw=activate_kw
+        ).expand(my_applied_rule.getId(),force=force,activate_kw=activate_kw,**kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule_id, force=0, **kw):
+    def expand(self, applied_rule_id, force=0, activate_kw=None,**kw):
       """
         Reexpand applied rule
       """
       my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
       if my_applied_rule is not None:
-        my_applied_rule.expand(force=force, **kw)
+        my_applied_rule.expand(force=force, activate_kw=activate_kw,**kw)
         # once expanded, the applied_rule must be reindexed
         # because some simulation_movement may change even
         # if there are not edited (acquisition)
-        my_applied_rule.activate(**kw).recursiveReindexObject()
+        my_applied_rule.recursiveReindexObject(activate_kw=activate_kw)
       else:
         LOG("ERP5 Error:", 100,
             "Could not expand applied rule %s for delivery %s" %\
