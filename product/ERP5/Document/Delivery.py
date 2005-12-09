@@ -227,7 +227,7 @@ class Delivery(XMLObject):
       for my_simulation_movement in self.getDeliveryRelatedValueList(
                                                 portal_type = 'Simulation Movement'):
           # And apply
-          getattr(my_simulation_movement.getObject(), method_id)()
+          getattr(my_simulation_movement.getObject(), method_id)(**kw)
       for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         # Find related in simulation
         for my_simulation_movement in m.getDeliveryRelatedValueList(
