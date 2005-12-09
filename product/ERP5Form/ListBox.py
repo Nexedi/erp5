@@ -1595,7 +1595,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 if tales_expr:
                   #
                   real_o = o
-                  if hasattr(o,'getObject'): # we have a line of sql result
+                  if hasattr(aq_base(o),'getObject'): # we have a line of sql result
                     real_o = o.getObject()
                   field_kw = {'cell':real_o}
                   attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
