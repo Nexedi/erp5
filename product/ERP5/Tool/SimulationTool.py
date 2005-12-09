@@ -506,11 +506,15 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      return self.Resource_zGetInventory(src__=src__,
+      result = self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
+      total_result = 0
+      for row in result :
+        total_result += row.stock_uid
+      return total_result
+      
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, **kw):
       """
