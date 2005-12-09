@@ -510,6 +510,9 @@ class SimulationTool (BaseTool):
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+      if src__ :
+        return result
+      
       total_result = 0
       for row in result :
         total_result += row.stock_uid
