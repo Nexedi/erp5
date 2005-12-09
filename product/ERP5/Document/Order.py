@@ -82,32 +82,32 @@ class Order(Delivery):
       return Delivery.getTotalQuantity(self, **kw)
     
     def applyToOrderRelatedMovement(self, portal_type='Simulation Movement', \
-                                    method_id = 'expand'):
+                                    method_id = 'expand',**kw):
       """
         Warning: does not work if it was not catalogued immediately
       """
       for my_simulation_movement in self.getOrderRelatedValueList(
                                          portal_type='Simulation Movement'):
           # And apply
-          getattr(my_simulation_movement, method_id)()
+          getattr(my_simulation_movement, method_id)(**kw)
       for m in self.contentValues(filter={'portal_type': \
                                           self.getPortalMovementTypeList()}):
         # Find related in simulation
         for my_simulation_movement in m.getOrderRelatedValueList(
                                             portal_type='Simulation Movement'):
           # And apply
-          getattr(my_simulation_movement, method_id)()
+          getattr(my_simulation_movement, method_id)(**kw)
         for c in m.contentValues(filter={'portal_type':
             self.getPortalMovementTypeList()}):
           for my_simulation_movement in c.getOrderRelatedValueList(
                                             portal_type='Simulation Movement'):
             # And apply
-            getattr(my_simulation_movement, method_id)()
+            getattr(my_simulation_movement, method_id)(**kw)
 
-    def applyToOrderRelatedAppliedRule(self, method_id='expand'):
+    def applyToOrderRelatedAppliedRule(self, method_id='expand',**kw):
       my_applied_rule = self.getCausalityRelatedValue( \
                                       portal_type='Applied Rule')
-      getattr(my_applied_rule.getObject(), method_id)()
+      getattr(my_applied_rule.getObject(), method_id)(**kw)
 
 
     security.declareProtected(Permissions.AccessContentsInformation, \
