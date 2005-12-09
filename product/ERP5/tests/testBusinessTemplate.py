@@ -53,6 +53,7 @@ from Products.ERP5Type import product_path
 from DateTime import DateTime
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from urllib import pathname2url
 
 class TestBusinessTemplate(ERP5TypeTestCase):
   """
@@ -254,7 +255,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.removeObjects()
     
     # import and install Business Template
-    pt.download(url='file:'+template_path, id='template_test')
+    pt.download(url='file:'+pathname2url(template_path), id='template_test')
     template = pt._getOb(id='template_test')  
     template.install()
     self.assertEquals(template.getBuildingState(), 'built')
@@ -368,7 +369,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     new_bt = sequence.get('new_bt')
     template_path = sequence.get('template_path')
     import_bt_id = "import_%s" % new_bt.getId()
-    template_tool.download(url='file:'+template_path, id=import_bt_id)
+    template_tool.download(url='file:'+pathname2url(template_path), id=import_bt_id)
     import_bt = template_tool._getOb(id=import_bt_id)
     self.assertEquals(import_bt.getPortalType(), 'Business Template')
     sequence.edit(new_bt=import_bt)
