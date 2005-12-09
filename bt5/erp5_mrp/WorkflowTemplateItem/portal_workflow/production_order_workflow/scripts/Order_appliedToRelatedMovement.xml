@@ -68,20 +68,25 @@
             <key> <string>_body</string> </key>
             <value> <string>order = state_change.object\n
 \n
-order.applyToOrderRelatedMovement(method_id=\'expand\')\n
+expand_tag = order.getPath() + \'_expand\'\n
+activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
+order.applyToOrderRelatedMovement(method_id=\'expand\',activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
-AHMpAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAZAMAZAQAgwABAWQAAFMoBQAAAE5zBgAA
-AG9iamVjdHMbAAAAYXBwbHlUb09yZGVyUmVsYXRlZE1vdmVtZW50cwkAAABtZXRob2RfaWRzBgAA
-AGV4cGFuZCgDAAAAcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMFAAAAb3JkZXIoAwAA
-AHMMAAAAc3RhdGVfY2hhbmdlcwkAAABfZ2V0YXR0cl9zBQAAAG9yZGVyKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcx4AAABPcmRlcl9hcHBsaWVkVG9SZWxhdGVkTW92ZW1lbnQBAAAAcwIA
-AAASAigBAAAAcx4AAABPcmRlcl9hcHBsaWVkVG9SZWxhdGVkTW92ZW1lbnQoAQAAAHMeAAAAT3Jk
-ZXJfYXBwbGllZFRvUmVsYXRlZE1vdmVtZW50KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
-cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAGAAAAQwAA
+AHNdAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAZAMAF30DAGgAAARkBAB8AwADPARk
+BQBkBgADPH0EAHQAAHwCAGQHAIMCAGQIAGQJAGQKAHwEAIMAAgFkAABTKAsAAABOcwYAAABvYmpl
+Y3RzBwAAAGdldFBhdGhzBwAAAF9leHBhbmRzAwAAAHRhZ3MIAAAAcHJpb3JpdHlpAwAAAHMbAAAA
+YXBwbHlUb09yZGVyUmVsYXRlZE1vdmVtZW50cwkAAABtZXRob2RfaWRzBgAAAGV4cGFuZHMLAAAA
+YWN0aXZhdGVfa3coBQAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzBQAAAG9yZGVy
+cwoAAABleHBhbmRfdGFncwsAAABhY3RpdmF0ZV9rdygFAAAAcwwAAABzdGF0ZV9jaGFuZ2VzCQAA
+AF9nZXRhdHRyX3MFAAAAb3JkZXJzCgAAAGV4cGFuZF90YWdzCwAAAGFjdGl2YXRlX2t3KAAAAAAo
+AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcx4AAABPcmRlcl9hcHBsaWVkVG9SZWxhdGVkTW92ZW1l
+bnQBAAAAcwYAAAAPAhYBGwEoAQAAAHMeAAAAT3JkZXJfYXBwbGllZFRvUmVsYXRlZE1vdmVtZW50
+KAEAAABzHgAAAE9yZGVyX2FwcGxpZWRUb1JlbGF0ZWRNb3ZlbWVudCgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -118,6 +123,8 @@ cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                             <string>state_change</string>
                             <string>_getattr_</string>
                             <string>order</string>
+                            <string>expand_tag</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>

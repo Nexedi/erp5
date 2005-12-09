@@ -1,3 +1,6 @@
+2005-12-09 Seb
+* Updated the Order_appliedToRelatedMovement script in production_order_workflow
+
 2005-12-08 yo
 * Fix the LEFT JOIN syntax in ProductionOrder_zSelectMovement.
 * Add ProductionDelivery_getSupplyLinkList by seb.
