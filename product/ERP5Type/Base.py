@@ -1880,7 +1880,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   #
   #  pass
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'commitTransaction')
+  security.declarePublic('commitTransaction')
   def commitTransaction(self):
     # Commit a zope transaction (to reduce locks)
     get_transaction().commit()
