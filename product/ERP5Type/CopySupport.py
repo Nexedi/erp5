@@ -48,7 +48,7 @@ class CopyContainer:
   security = ClassSecurityInfo()
   
   # Copy / Paste support
-  security.declareProtected( Permissions.ModifyPortalContent, 'manage_copyObjects' )
+  security.declareProtected( Permissions.AccessContentsInformation, 'manage_copyObjects' )
   def manage_copyObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
       """
         Put a reference to the objects named in ids in the clip board
