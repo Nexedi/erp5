@@ -2099,12 +2099,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     wf = portal_workflow.getWorkflowById('edit_workflow')
     wf_list = list(portal_workflow.getWorkflowsFor(self))
     if wf is not None: wf_list = [wf] + wf_list
-    for wf in portal_workflow.getWorkflowsFor(self):
+    for wf in wf_list:
       history = wf.getInfoFor(self, 'history', None)
       if history is not None:
         if len(history):
           # Then get the first line of edit_workflow
           return history[0].get('time', None)
+    if hasattr(self, 'CreationDate') :
+      return self.CreationDate()
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
@@ -2117,11 +2119,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     wf = portal_workflow.getWorkflowById('edit_workflow')
     wf_list = list(portal_workflow.getWorkflowsFor(self))
     if wf is not None: wf_list = [wf] + wf_list
-    for wf in portal_workflow.getWorkflowsFor(self):
+    for wf in wf_list:
       history = wf.getInfoFor(self, 'history', None)
       if history is not None:
         if len(history):
-          # Then get the first line of edit_workflow
+          # Then get the last line of edit_workflow
           return history[-1].get('time', None)
     return None
 
