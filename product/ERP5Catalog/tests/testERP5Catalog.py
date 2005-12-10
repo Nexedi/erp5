@@ -45,7 +45,6 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-from DateTime import DateTime
 from Acquisition import aq_base, aq_inner
 from zLOG import LOG
 from Products.ERP5Type.DateUtils import addToDate
@@ -61,16 +60,7 @@ except ImportError:
 
 class TestERP5Catalog(ERP5TypeTestCase):
   """
-  This is the list of test
-
-  test setNextStartDate : 
-  - every hour
-  - at 6, 10, 15, 21 every day
-  - every day at 10
-  - every 3 days at 14 and 15 and 17
-  - every monday and friday, at 6 and 15
-  - every 1st and 15th every month, at 12 and 14
-  - every 1st day of every 2 month, at 6
+    Tests for ERP5 Catalog.
   """
 
   def getTitle(self):
@@ -78,26 +68,13 @@ class TestERP5Catalog(ERP5TypeTestCase):
 
   # Different variables used for this test
   run_all_test = 1
-  source_company_id = 'Nexedi'
-  destination_company_id = 'Coramy'
-  component_id = 'brick'
-  sales_order_id = '1'
-  quantity = 10
-  base_price = 0.7832
 
-  #def populate(self, quiet=1, run=1):
   def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
     catalog_tool = self.getCatalogTool()
     # XXX This does not works
     #catalog_tool.reindexObject(portal)
-
-    # First reindex
-    #LOG('afterSetup',0,'portal.portal_categories.immediateReindexObject')
-    #portal.portal_categories.immediateReindexObject()
-    #LOG('afterSetup',0,'portal.portal_simulation.immediateReindexObject')
-    #portal.portal_simulation.immediateReindexObject()
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -518,3 +495,42 @@ class TestERP5Catalog(ERP5TypeTestCase):
       uid = portal_catalog.newUid()
       self.failIf(uid in uid_dict)
       uid_dict[uid] = None
+  
+  def test_17_CreationDate_ModificationDate(self, quiet=0, run=1):#run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'getCreationDate, getModificationDate'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    portal_catalog = self.getCatalogTool()
+    portal = self.getPortal()
+    sql_connection = self.getSqlConnection()
+    
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',)
+    creation_date = organisation.getCreationDate().ISO()
+    get_transaction().commit()
+    self.tic()
+    sql = """select creation_date, modification_date 
+             from catalog where uid = %s""" % organisation.getUid()
+    result = sql_connection.manage_test(sql)
+    self.assertEquals(creation_date, result[0]['creation_date'].ISO())
+    self.assertEquals(organisation.getModificationDate().ISO(),
+                              result[0]['modification_date'].ISO())
+    self.assertEquals(creation_date, result[0]['modification_date'].ISO())
+    
+    import time; time.sleep(3)
+    organisation.edit(title='edited')
+    organisation.reindexObject()
+    now = DateTime().ISO()
+    get_transaction().commit()
+    self.tic()
+    result = sql_connection.manage_test(sql)
+    self.assertEquals(creation_date, result[0]['creation_date'].ISO())
+    self.assertNotEquals(organisation.getModificationDate(),
+                              organisation.getCreationDate())
+    self.assertEquals(organisation.getModificationDate().ISO(), now)
+    self.assertEquals(organisation.getModificationDate().ISO(),
+                              result[0]['modification_date'].ISO())
+    self.assertEquals(now, result[0]['modification_date'].ISO())
+    
