@@ -33,7 +33,9 @@ getDestinationReference
 getStringIndex
 getIntIndex
 getFloatIndex
-hasCellContent</params>
+hasCellContent
+getCreationDate
+getModificationDate</params>
 REPLACE INTO
   catalog
 VALUES
@@ -65,7 +67,9 @@ VALUES
   <dtml-sqlvar expr="getStringIndex[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getIntIndex[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>,
-  <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>
+  <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getCreationDate[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>

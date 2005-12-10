@@ -40,6 +40,8 @@ CREATE TABLE `catalog` (
   `int_index` INT,
   `float_index` real,
   `has_cell_content` bool,
+  `creation_date` datetime,
+  `modification_date` datetime,
   PRIMARY KEY  (`uid`),
   KEY `security_uid` (`security_uid`),
   KEY `Parent` (`parent_uid`),
