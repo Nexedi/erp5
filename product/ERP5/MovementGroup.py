@@ -709,7 +709,9 @@ class FakeMovement:
     """
     total_quantity = 0
     for movement in self.getMovementList():
-      total_quantity += movement.getQuantity()
+      quantity = movement.getQuantity()
+      if quantity != None:
+        total_quantity += quantity
     return total_quantity
 
   def getAddPrice(self):
@@ -718,7 +720,10 @@ class FakeMovement:
     """
     total_price = 0
     for movement in self.getMovementList():
-      total_price += (movement.getQuantity() * movement.getPrice())
+      quantity = movement.getQuantity()
+      price = movement.getPrice()
+      if (quantity is not None) and (price is not None):
+        total_price += (quantity * price)
     return total_price
 
   def recursiveReindexObject(self):
