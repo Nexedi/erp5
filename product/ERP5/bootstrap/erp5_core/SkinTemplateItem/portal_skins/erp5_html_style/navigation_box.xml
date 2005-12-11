@@ -225,7 +225,7 @@ src="/images/erp5_html_style/images/info.png"\n
           <img src="/images/erp5_html_style/images/sepafon.png" alt="|" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;\n
         </td>\n
         <td  align="right" valign="middle">\n
-            <input type="text" name="title">\n
+            <input type="text" name="SearchableText">\n
         </td>\n
         <td  align="right" valign="middle">\n
           <input class="input_image" type="image"\n
