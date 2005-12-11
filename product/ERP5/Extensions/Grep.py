@@ -2,10 +2,11 @@ import re
 import cgi
 from Acquisition import aq_base
 
-def traverse(ob, r, result):
-  if hasattr(aq_base(ob), 'objectValues'):
+def traverse(ob, r, result, command_line_arguments):
+  if command_line_arguments['r'] and \
+                hasattr(aq_base(ob), 'objectValues'):
     for sub in ob.objectValues():
-      traverse(sub, r, result)
+      traverse(sub, r, result, command_line_arguments)
   try:
     if hasattr(aq_base(ob), 'manage_FTPget'):
       text = ob.manage_FTPget()
@@ -14,21 +15,31 @@ def traverse(ob, r, result):
   except:
     text = None
   if text:
-    for l in text.split('\n'):
+    text_lines = text.split('\n')
+    for i, l in enumerate(text_lines):
       if r.search(l) is not None:
+        context = text_lines[i-command_line_arguments['B'] :
+                             i+1+command_line_arguments['A']]
         path = '/'.join(ob.getPhysicalPath())
-        result.append((path, l))
+        result.append((path, "\n".join(context)))
         break
 
-def grep(self, pattern):
+def grep(self, pattern, A=0, B=0, r=1, i=0):
+  command_line_arguments = {} # emulate grep command line args
+  command_line_arguments['A'] = int(A)
+  command_line_arguments['B'] = int(B)
+  command_line_arguments['r'] = int(r)
+  re_flags = 0
+  if int(i) :
+    re_flags = re.IGNORECASE
   result = []
-  traverse(self, re.compile(pattern), result)
+  traverse(self, re.compile(pattern, re_flags), result, command_line_arguments)
   html_element_list = ['<html>', '<body>']
   for path, line in result:
     path = cgi.escape(path)
     line = cgi.escape(line)
     html_element_list.append('<a href="%s/manage_workspace">%s</a>: %s<br/>' % (
-path, path, line))
+path, path, line.replace('\n', '<br/>')))
   html_element_list.extend(['</body>', '</html>'])
   self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
   return '\n'.join(html_element_list)
