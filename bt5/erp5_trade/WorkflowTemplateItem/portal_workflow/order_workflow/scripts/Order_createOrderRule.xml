@@ -69,22 +69,24 @@
             <value> <string>order = state_change.object\n
 \n
 tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-order.activate(tag=tag).updateAppliedRule(tag=tag,rule_id = \'default_order_rule\')\n
+activate_kw = {\'tag\':tag,\'priority\':3}\n
+order.activate(tag=tag).updateAppliedRule(rule_id = \'default_order_rule\',activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAGAAAASwAA
-AHNXAAAAdAAAfAAAZAEAgwIAfQMAdAAAfAMAZAIAgwIAgwAAZAMAF30EAHQAAHQAAHwDAGQEAIMC
-AGQFAHwEAIMAAWQGAIMCAGQFAHwEAGQHAGQIAIMAAgFkAABTKAkAAABOcwYAAABvYmplY3RzBwAA
-AGdldFBhdGhzFwAAAF9maXJzdFVwZGF0ZUFwcGxpZWRSdWxlcwgAAABhY3RpdmF0ZXMDAAAAdGFn
-cxEAAAB1cGRhdGVBcHBsaWVkUnVsZXMHAAAAcnVsZV9pZHMSAAAAZGVmYXVsdF9vcmRlcl9ydWxl
-KAQAAABzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwUAAABvcmRlcnMDAAAAdGFnKAUA
-AABzDAAAAHN0YXRlX2NoYW5nZXMCAAAAa3dzCQAAAF9nZXRhdHRyX3MFAAAAb3JkZXJzAwAAAHRh
-ZygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMVAAAAT3JkZXJfY3JlYXRlT3JkZXJSdWxl
-AQAAAHMEAAAADwIcASgBAAAAcxUAAABPcmRlcl9jcmVhdGVPcmRlclJ1bGUoAQAAAHMVAAAAT3Jk
-ZXJfY3JlYXRlT3JkZXJSdWxlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9k
-dWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAYAAAAGAAAASwAA
+AHNvAAAAdAAAfAAAZAEAgwIAfQMAdAAAfAMAZAIAgwIAgwAAZAMAF30EAGgAAARkBAB8BAADPARk
+BQBkBgADPH0FAHQAAHQAAHwDAGQHAIMCAGQEAHwEAIMAAWQIAIMCAGQJAGQKAGQLAHwFAIMAAgFk
+AABTKAwAAABOcwYAAABvYmplY3RzBwAAAGdldFBhdGhzFwAAAF9maXJzdFVwZGF0ZUFwcGxpZWRS
+dWxlcwMAAAB0YWdzCAAAAHByaW9yaXR5aQMAAABzCAAAAGFjdGl2YXRlcxEAAAB1cGRhdGVBcHBs
+aWVkUnVsZXMHAAAAcnVsZV9pZHMSAAAAZGVmYXVsdF9vcmRlcl9ydWxlcwsAAABhY3RpdmF0ZV9r
+dygFAAAAcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMFAAAAb3JkZXJzAwAAAHRhZ3ML
+AAAAYWN0aXZhdGVfa3coBgAAAHMMAAAAc3RhdGVfY2hhbmdlcwIAAABrd3MJAAAAX2dldGF0dHJf
+cwUAAABvcmRlcnMDAAAAdGFncwsAAABhY3RpdmF0ZV9rdygAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMVAAAAT3JkZXJfY3JlYXRlT3JkZXJSdWxlAQAAAHMGAAAADwIWAR4BKAEAAABzFQAA
+AE9yZGVyX2NyZWF0ZU9yZGVyUnVsZSgBAAAAcxUAAABPcmRlcl9jcmVhdGVPcmRlclJ1bGUoAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -123,6 +125,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                             <string>_getattr_</string>
                             <string>order</string>
                             <string>tag</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>
