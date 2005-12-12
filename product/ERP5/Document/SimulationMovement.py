@@ -529,6 +529,16 @@ class SimulationMovement(Movement):
     else:
       return parent_applied_rule.getRootSimulationMovement()
 
+  security.declareProtected(Permissions.View, 'getRootSimulationMovementUid')
+  def getRootSimulationMovementUid(self):
+    """
+      Return the uid of the root simulation movement in the simulation tree.
+    """
+    root_simulation_movement = self.getRootSimulationMovement()
+    if root_simulation_movement is not None:
+      return root_simulation_movement.getUid()
+    return None
+
   # XXX FIXME Use a interaction workflow instead
   # The call to activate() must be done after actual call to 
   # setDelivery() on the movement,
