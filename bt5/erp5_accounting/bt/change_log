@@ -1,3 +1,6 @@
+2005-11-12 Jérome
+* Update to use new gap preference and Inventory API instead of  Resource_zGetInventory_old
+
 2005-12-08 yo
 * Fix the LEFT JOIN syntax in PaymentTransaction_zSelectMovement and SaleInvoiceTransaction_zSelectMovemen.
 
