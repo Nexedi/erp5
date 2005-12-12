@@ -557,6 +557,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
           clean_list.append(cat)
       return clean_list
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalReferenceCurrencyID')
+    def getPortalReferenceCurrencyID(self):
+      """
+        Return the currency used as a reference for banking transaction.
+      """
+      return self._getPortalConfiguration('portal_reference_currency_id')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
       """
