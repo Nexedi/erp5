@@ -328,7 +328,7 @@ class BaobabConduit(ERP5Conduit):
       # no previous inventory found, create one
       if new_inventory == None:
         new_inventory = object.newContent(portal_type = 'Cash Inventory')
-        new_inventory.setPriceCurrency('currency/' + currency_id)
+        new_inventory.setPriceCurrency('currency_module/' + currency_id)
         new_inventory.setDestination(vault_path)
       subobject = new_inventory
 
@@ -480,7 +480,7 @@ class BaobabConduit(ERP5Conduit):
             # verify or add the currency
             current_currency_id = bank_account_object.getPriceCurrencyId()
             if current_currency_id in (None, ''):
-              bank_account_object.setPriceCurrency('currency/' + currency_id)
+              bank_account_object.setPriceCurrency('currency_module/' + currency_id)
             elif current_currency_id != currency_id:
               LOG( 'BaobabConduit inconsistency:'
                  , 200
@@ -607,7 +607,7 @@ class BaobabConduit(ERP5Conduit):
   ### BankAccount-related-properties functions
 
   def editCompteDevise(self, document, value):
-    document.setPriceCurrency('currency/' + value)
+    document.setPriceCurrency('currency_module/' + value)
 
   def editCompteDateOuverture(self, document, value):
     if document.getStopDate() in ('', None):
