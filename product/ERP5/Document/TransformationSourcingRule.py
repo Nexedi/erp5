@@ -224,6 +224,7 @@ class TransformationSourcingRule(Rule):
               "variation_property_dict": \
                             parent_movement.getVariationPropertyDict(),
               'quantity': parent_movement.getQuantity(),
+              'price': parent_movement.getPrice(),
               'quantity_unit': parent_movement.getQuantityUnit(),
               'start_date': previous_supply_link.getStartDate(stop_date),
               'stop_date': stop_date,
