@@ -66,7 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return - context.AccountModule_getBalance(brain=brain, selection=selection, omit_output=1, **kw) or 0.00\n
+            <value> <string>return - context.AccountModule_getBalance(brain=brain, selection=selection, omit_input=1, **kw) or 0.00\n
 </string> </value>
         </item>
         <item>
@@ -74,14 +74,14 @@
             <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAK
 AAAASwAAAHM0AAAAdAAAdAEAdAIAZAEAgwIAZAIAfAAAZAMAfAEAZAQAZAUAfAIAjQEDC3AEAAFk
 BgBTZAAAUygHAAAATnMYAAAAQWNjb3VudE1vZHVsZV9nZXRCYWxhbmNlcwUAAABicmFpbnMJAAAA
-c2VsZWN0aW9ucwsAAABvbWl0X291dHB1dGkBAAAAZgMwLjAoBgAAAHMHAAAAX2FwcGx5X3MJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0cwUAAABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrdygGAAAA
-cwUAAABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrd3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJf
-cwcAAABjb250ZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyIAAABBY2NvdW50TW9k
-dWxlX2dldFRvdGFsU291cmNlQ3JlZGl0AQAAAHMAAAAAKAIAAABzBAAAAE5vbmVzIgAAAEFjY291
-bnRNb2R1bGVfZ2V0VG90YWxTb3VyY2VDcmVkaXQoAgAAAHMEAAAATm9uZXMiAAAAQWNjb3VudE1v
-ZHVsZV9nZXRUb3RhbFNvdXJjZUNyZWRpdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMI
-AAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+c2VsZWN0aW9ucwoAAABvbWl0X2lucHV0aQEAAABmAzAuMCgGAAAAcwcAAABfYXBwbHlfcwkAAABf
+Z2V0YXR0cl9zBwAAAGNvbnRleHRzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25zAgAAAGt3KAYAAABz
+BQAAAGJyYWlucwkAAABzZWxlY3Rpb25zAgAAAGt3cwcAAABfYXBwbHlfcwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIgAAAEFjY291bnRNb2R1
+bGVfZ2V0VG90YWxTb3VyY2VDcmVkaXQBAAAAcwAAAAAoAgAAAHMEAAAATm9uZXMiAAAAQWNjb3Vu
+dE1vZHVsZV9nZXRUb3RhbFNvdXJjZUNyZWRpdCgCAAAAcwQAAABOb25lcyIAAABBY2NvdW50TW9k
+dWxlX2dldFRvdGFsU291cmNlQ3JlZGl0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgA
+AAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

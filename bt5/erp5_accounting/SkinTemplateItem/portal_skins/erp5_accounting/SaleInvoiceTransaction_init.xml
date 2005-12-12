@@ -89,19 +89,19 @@ context.AccountingTransaction_InitFromPreferences()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAKAAAASwAA
-AHOSAAAAdAAAfQIAdAIAfAIAZAEAgwIAZAIAZAMAZAQAZAUAZAYAZAcAZAgAZAkAgwAEAXQCAHwC
-AGQBAIMCAGQCAGQDAGQEAGQKAGQGAGQHAGQIAGQJAIMABAF0AgB8AgBkAQCDAgBkAgBkAwBkBABk
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAKAAAATwAA
+AHOSAAAAdAAAfQMAdAIAfAMAZAEAgwIAZAIAZAMAZAQAZAUAZAYAZAcAZAgAZAkAgwAEAXQCAHwD
+AGQBAIMCAGQCAGQDAGQEAGQKAGQGAGQHAGQIAGQJAIMABAF0AgB8AwBkAQCDAgBkAgBkAwBkBABk
 CwBkBgBkBwBkCABkCQCDAAQBdAIAdAAAZAwAgwIAgwAAAWQAAFMoDQAAAE5zCgAAAG5ld0NvbnRl
 bnRzCwAAAHBvcnRhbF90eXBlcx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZXMCAAAA
 aWRzBgAAAGluY29tZXMIAAAAcXVhbnRpdHlpAAAAAHMRAAAAaW1tZWRpYXRlX3JlaW5kZXhpAQAA
 AHMKAAAAcmVjZWl2YWJsZXMNAAAAY29sbGVjdGVkX3ZhdHMpAAAAQWNjb3VudGluZ1RyYW5zYWN0
 aW9uX0luaXRGcm9tUHJlZmVyZW5jZXMoAwAAAHMHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25z
-CQAAAF9nZXRhdHRyXygEAAAAcwIAAABrd3MHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAA
-AF9nZXRhdHRyXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMbAAAAU2FsZUludm9pY2VU
-cmFuc2FjdGlvbl9pbml0AQAAAHMIAAAACQIoBSgFKAYoAQAAAHMbAAAAU2FsZUludm9pY2VUcmFu
-c2FjdGlvbl9pbml0KAEAAABzGwAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25faW5pdCgAAAAAKAAA
-AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+CQAAAF9nZXRhdHRyXygFAAAAcwQAAABhcmdzcwIAAABrd3MHAAAAY29udGV4dHMLAAAAdHJhbnNh
+Y3Rpb25zCQAAAF9nZXRhdHRyXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMbAAAAU2Fs
+ZUludm9pY2VUcmFuc2FjdGlvbl9pbml0AQAAAHMIAAAACQIoBSgFKAYoAQAAAHMbAAAAU2FsZUlu
+dm9pY2VUcmFuc2FjdGlvbl9pbml0KAEAAABzGwAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25faW5p
+dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -109,7 +109,7 @@ AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,6 +135,7 @@ AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>args</string>
                             <string>kw</string>
                             <string>context</string>
                             <string>transaction</string>

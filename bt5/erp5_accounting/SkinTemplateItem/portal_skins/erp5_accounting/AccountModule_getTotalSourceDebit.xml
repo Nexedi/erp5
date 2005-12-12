@@ -66,21 +66,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.AccountModule_getBalance(brain, selection, omit_input=1, **kw)\n
+            <value> <string>return context.AccountModule_getBalance(brain, selection, omit_output=1, **kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAI
 AAAASwAAAHMmAAAAdAAAdAEAdAIAZAEAgwIAfAAAfAEAZAIAZAMAfAIAjQMBU2QAAFMoBAAAAE5z
-GAAAAEFjY291bnRNb2R1bGVfZ2V0QmFsYW5jZXMKAAAAb21pdF9pbnB1dGkBAAAAKAYAAABzBwAA
-AF9hcHBseV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAYnJhaW5zCQAAAHNlbGVjdGlv
-bnMCAAAAa3coBgAAAHMFAAAAYnJhaW5zCQAAAHNlbGVjdGlvbnMCAAAAa3dzBwAAAF9hcHBseV9z
-CQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMh
-AAAAQWNjb3VudE1vZHVsZV9nZXRUb3RhbFNvdXJjZURlYml0AQAAAHMAAAAAKAIAAABzBAAAAE5v
-bmVzIQAAAEFjY291bnRNb2R1bGVfZ2V0VG90YWxTb3VyY2VEZWJpdCgCAAAAcwQAAABOb25lcyEA
-AABBY2NvdW50TW9kdWxlX2dldFRvdGFsU291cmNlRGViaXQoAAAAACgAAAAAcw8AAABTY3JpcHQg
-KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+GAAAAEFjY291bnRNb2R1bGVfZ2V0QmFsYW5jZXMLAAAAb21pdF9vdXRwdXRpAQAAACgGAAAAcwcA
+AABfYXBwbHlfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBQAAAGJyYWlucwkAAABzZWxlY3Rp
+b25zAgAAAGt3KAYAAABzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25zAgAAAGt3cwcAAABfYXBwbHlf
+cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
+IQAAAEFjY291bnRNb2R1bGVfZ2V0VG90YWxTb3VyY2VEZWJpdAEAAABzAAAAACgCAAAAcwQAAABO
+b25lcyEAAABBY2NvdW50TW9kdWxlX2dldFRvdGFsU291cmNlRGViaXQoAgAAAHMEAAAATm9uZXMh
+AAAAQWNjb3VudE1vZHVsZV9nZXRUb3RhbFNvdXJjZURlYml0KAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

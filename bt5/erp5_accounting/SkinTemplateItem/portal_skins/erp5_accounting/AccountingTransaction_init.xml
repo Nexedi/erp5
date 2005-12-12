@@ -78,17 +78,17 @@ context.AccountingTransaction_InitFromPreferences()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAGAAAASwAA
-AHNSAAAAdAAAfQIAdAIAfAIAZAEAgwIAZAIAZAMAZAQAZAUAgwACAXQCAHwCAGQBAIMCAGQCAGQD
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAGAAAATwAA
+AHNSAAAAdAAAfQMAdAIAfAMAZAEAgwIAZAIAZAMAZAQAZAUAgwACAXQCAHwDAGQBAIMCAGQCAGQD
 AGQEAGQFAIMAAgF0AgB0AABkBgCDAgCDAAABZAAAUygHAAAATnMKAAAAbmV3Q29udGVudHMLAAAA
 cG9ydGFsX3R5cGVzGwAAAEFjY291bnRpbmcgVHJhbnNhY3Rpb24gTGluZXMRAAAAaW1tZWRpYXRl
 X3JlaW5kZXhpAQAAAHMpAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX0luaXRGcm9tUHJlZmVyZW5j
-ZXMoAwAAAHMHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRhdHRyXygEAAAAcwIA
-AABrd3MHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRhdHRyXygAAAAAKAAAAABz
-DwAAAFNjcmlwdCAoUHl0aG9uKXMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2luaXQBAAAAcwYA
-AAAJAhwCHAMoAQAAAHMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2luaXQoAQAAAHMaAAAAQWNj
-b3VudGluZ1RyYW5zYWN0aW9uX2luaXQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
-ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+ZXMoAwAAAHMHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRhdHRyXygFAAAAcwQA
+AABhcmdzcwIAAABrd3MHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRhdHRyXygA
+AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2lu
+aXQBAAAAcwYAAAAJAhwCHAMoAQAAAHMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2luaXQoAQAA
+AHMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2luaXQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
+dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -96,7 +96,7 @@ ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,6 +122,7 @@ ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>args</string>
                             <string>kw</string>
                             <string>context</string>
                             <string>transaction</string>
