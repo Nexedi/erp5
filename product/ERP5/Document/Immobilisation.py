@@ -35,14 +35,19 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.Movement import Movement
 
 from string import capitalize
 from zLOG import LOG
 
-class Immobilisation(XMLObject):
+class Immobilisation(Movement, XMLObject):
   """
     An Immobilisation object holds the information about
-    an accounting immobilisation (in order to amortise an object)  
+    an accounting immobilisation (in order to amortise an object)
+
+    It is an instant movement without source or destination, but which
+    implies a state change and a source_decision and a source_destination
+    Do not index in stock table
   """
   meta_type = 'ERP5 Immobilisation'
   portal_type = 'Immobilisation'
@@ -297,6 +302,7 @@ an accounting immobilisation (in order to amortise an object)
     Returns the organisation which owns the item on which the
     immobilisation movement applies, at the time of the immobilisation
     movement
+    See Item.getSectionValue for more details
     """
     item = self.getParent()
     date = self.getStopDate()
@@ -342,7 +348,9 @@ an accounting immobilisation (in order to amortise an object)
     """
     Returns a dictionary containing the value of each parameter
     whose name is given in parameter_list.
-    The value is get from the amortisation method
+    The value is get from the amortisation method parameter folder
+    (e.g. portal_skins/erp5_immobilisation/eu/linear)
+    This folder has specifical parameters needed for calculation
     """
     if type(parameter_list) == type(""):
       parameter_list = [parameter_list]
@@ -385,4 +393,3 @@ an accounting immobilisation (in order to amortise an object)
     Return true if this item is using this method
     """
     return self.isUsingAmortisationMethod('fr/actual_use')
-
