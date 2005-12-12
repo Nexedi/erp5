@@ -1,0 +1,379 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5.Tool.Category</string>
+          <string>Category</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>refundable_vat</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Refundable VAT</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.Length</string>
+          <string>Length</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <tuple>
+                        <dictionary>
+                          <item>
+                              <key> <string>action</string> </key>
+                              <value> <string>\'edit\'</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>actor</string> </key>
+                              <value> <string>jerome</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>state</string> </key>
+                              <value> <string>current</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>time</string> </key>
+                              <value>
+                                <object>
+                                  <klass>
+                                    <global id="5.1" name="DateTime" module="DateTime.DateTime"/>
+                                  </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Thu</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Jul</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38194.9001955</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>28</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>4</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Thursday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>July</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>17</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1122586576889</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>36</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>7</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>16.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Thu.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>July</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>16.889</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1122586576.89</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.90019547454</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>action</string> </key>
+                              <value> <string>\'edit\'</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>actor</string> </key>
+                              <value> <string>jerome</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>state</string> </key>
+                              <value> <string>current</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="5.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Fri</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Jul</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38195.4435986</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>29</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Friday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>July</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>6</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1122633526922</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>38</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>7</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>46.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Fri.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>am</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>6</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>July</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>46.922</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1122633526.92</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.443598634258</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
