@@ -111,7 +111,7 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
         </item>
         <item>
             <key> <string>preferred_accounting_transaction_gap</string> </key>
-            <value> <string>gap/france/m14</string> </value>
+            <value> <string>gap/france/pcg</string> </value>
         </item>
         <item>
             <key> <string>preferred_accounting_transaction_section_category</string> </key>
@@ -125,7 +125,7 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
         </item>
         <item>
             <key> <string>preferred_accounting_transaction_source_section</string> </key>
-            <value> <string>organisation_module/115</string> </value>
+            <value> <string>organisation_module/nexedi</string> </value>
         </item>
         <item>
             <key> <string>preferred_section_category</string> </key>
