@@ -85,8 +85,8 @@ table_1</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-<dtml-if expr="portal_preferences.getGap()">\n
-  AND <dtml-var table_1>.relative_url LIKE <dtml-sqlvar expr="portal_preferences.getGapValue().getRelativeUrl()+\'%\'" type="string">\n
+<dtml-if expr="portal_preferences.getPreferredAccountingTransactionGap()">\n
+  AND <dtml-var table_1>.relative_url LIKE <dtml-sqlvar expr="portal_preferences.getPreferredAccountingTransactionGap()+\'%\'" type="string">\n
 </dtml-if>\n
 AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.gap.getUid()">\n
 AND <dtml-var table_0>.uid = catalog.uid\n
@@ -129,8 +129,8 @@ AND <dtml-var table_0>.uid = catalog.uid\n
                         <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-<dtml-if expr="portal_preferences.getGap()">\n
-  AND <dtml-var table_1>.relative_url LIKE <dtml-sqlvar expr="portal_preferences.getGapValue().getRelativeUrl()+\'%\'" type="string">\n
+<dtml-if expr="portal_preferences.getPreferredAccountingTransactionGap()">\n
+  AND <dtml-var table_1>.relative_url LIKE <dtml-sqlvar expr="portal_preferences.getPreferredAccountingTransactionGap()+\'%\'" type="string">\n
 </dtml-if>\n
 AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.gap.getUid()">\n
 AND <dtml-var table_0>.uid = catalog.uid\n
