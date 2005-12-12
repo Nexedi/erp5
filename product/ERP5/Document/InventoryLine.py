@@ -71,13 +71,11 @@ class InventoryLine(DeliveryLine):
       DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
       # Calculate inventory
       item_list = self.getAggregateValueList()
-      if len(item_list) > 0:
-        inventory = 0
-        for item in item_list:
-          if item.getQuantity() not in (None, ''):
-            inventory += item.getQuantity()
+      if item_list is not None:
+        inventory = len(item_list)
+      if inventory != 0:
         self.setInventory(inventory)
-      
+
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
     def getTotalInventory(self):
@@ -128,9 +126,7 @@ class InventoryLine(DeliveryLine):
           inventory = self.getInventory()
           if current_inventory in (None, ''):
             current_inventory = 0.0
-          LOG('return 1', 0, '%s - %s' % (repr(self.getInventory()), repr(current_inventory)))
           return self.getInventory() - current_inventory
-        LOG('return 2', 0, repr(self.getInventory()))
         return self.getInventory()
       else:
         return None

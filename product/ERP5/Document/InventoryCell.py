@@ -71,11 +71,8 @@ class InventoryCell(DeliveryCell):
       DeliveryCell._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
       # Calculate inventory
       item_list = self.getAggregateValueList()
-      if len(item_list) > 0:
-        inventory = 0
-        for item in item_list:
-          if item.getQuantity() not in (None, ''):
-            inventory += item.getQuantity()
+      inventory = len(item_list)
+      if inventory != 0:
         self.setInventory(inventory)
       
 
