@@ -284,6 +284,10 @@ class TransformationRule(Rule):
       for amount in amount_list:
         consumed_mvt_id = "%s_%s" % ("cr", amount.getId())
         stop_date = parent_movement.getStartDate()
+        resource_price = amount.getResourcePrice()
+        price = None
+        if resource_price is not None:
+          price = amount.getQuantity() * resource_price
         consumed_movement_dict[consumed_mvt_id] = {
           'start_date': current_supply_link.getStartDate(stop_date),
           'stop_date': stop_date,
@@ -293,6 +297,7 @@ class TransformationRule(Rule):
           "variation_property_dict": \
                         amount.getVariationPropertyDict(),
           "quantity": amount.getQuantity() * parent_movement.getQuantity(),
+          "price": price,
           "quantity_unit": amount.getQuantityUnit(),
           "destination_list": (),
           "destination_section_list": (),
