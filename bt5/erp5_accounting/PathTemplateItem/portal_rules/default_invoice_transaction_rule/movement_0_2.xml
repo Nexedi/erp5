@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Type.Document.AccountingRuleCell</string>
+          <string>AccountingRuleCell</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>mapped_value_property_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>resource/currency/EUR</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>contributors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>movement_0_2</string> </value>
+        </item>
+        <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>mapped_value_property_list</string> </key>
+            <value>
+              <tuple>
+                <string>title</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>product_line</string>
+                <string>destination_region</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple>
+                <string>product_line/storever</string>
+                <string>destination_region/region/europe/northern_europe/latvia</string>
+                <string>destination_region/region/europe/eastern_europe/republic_of_moldova</string>
+                <string>destination_region/region/europe/northern_europe/guernsey</string>
+                <string>destination_region/region/europe/southern_europe/holy_see</string>
+                <string>destination_region/region/europe/northern_europe/jersey</string>
+                <string>destination_region/region/americas</string>
+                <string>destination_region/region/europe/eastern_europe/ukraine</string>
+                <string>destination_region/region/europe/eastern_europe/belarus</string>
+                <string>destination_region/region/europe/eastern_europe/bulgaria</string>
+                <string>destination_region/region/europe/southern_europe/andorra</string>
+                <string>destination_region/region/europe/eastern_europe/romania</string>
+                <string>destination_region/region/europe/northern_europe/iceland</string>
+                <string>destination_region/region/europe/northern_europe/aland_islands</string>
+                <string>destination_region/region/europe/eastern_europe/russian_federation</string>
+                <string>destination_region/region/europe/southern_europe/croatia</string>
+                <string>destination_region/region/europe/northern_europe/faeroe_islands</string>
+                <string>destination_region/region/europe/southern_europe/malta</string>
+                <string>destination_region/region/africa</string>
+                <string>destination_region/region/europe/southern_europe/san_marino</string>
+                <string>destination_region/region/europe/northern_europe/svalbard_and_jan_mayen_islands</string>
+                <string>destination_region/region/europe/southern_europe/gibraltar</string>
+                <string>destination_region/region/europe/northern_europe/isle_of_man</string>
+                <string>destination_region/region/asia</string>
+                <string>destination_region/region/europe/western_europe/switzerland</string>
+                <string>destination_region/region/europe/western_europe/liechtenstein</string>
+                <string>destination_region/region/europe/northern_europe/lithuania</string>
+                <string>destination_region/region/europe/southern_europe/slovenia</string>
+                <string>destination_region/region/europe/southern_europe/the_former_yugoslav_republic_of_macedonia</string>
+                <string>destination_region/region/europe/southern_europe/bosnia_and_herzegovina</string>
+                <string>destination_region/region/europe/eastern_europe/czech_republic</string>
+                <string>destination_region/region/europe/western_europe/monaco</string>
+                <string>destination_region/region/europe/eastern_europe/slovakia</string>
+                <string>destination_region/region/europe/southern_europe/serbia_and_montenegro</string>
+                <string>destination_region/region/europe/northern_europe/estonia</string>
+                <string>destination_region/region/europe/southern_europe/albania</string>
+                <string>destination_region/region/europe/eastern_europe/hungary</string>
+                <string>destination_region/region/oceania</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>multimembership_criterion_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Accounting Rule Cell</string> </value>
+        </item>
+        <item>
+            <key> <string>start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_aday</string> </key>
+                        <value> <string>Thu</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_amon</string> </key>
+                        <value> <string>Sep</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_d</string> </key>
+                        <value> <float>38229.1666667</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_day</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_dayoffset</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fday</string> </key>
+                        <value> <string>Thursday</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_fmon</string> </key>
+                        <value> <string>September</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_hour</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_millis</string> </key>
+                        <value> <long>1125547200000</long> </value>
+                    </item>
+                    <item>
+                        <key> <string>_minute</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_month</string> </key>
+                        <value> <int>9</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_nearsec</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pday</string> </key>
+                        <value> <string>Thu.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pm</string> </key>
+                        <value> <string>am</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmhour</string> </key>
+                        <value> <int>12</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_pmon</string> </key>
+                        <value> <string>Sep.</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_second</string> </key>
+                        <value> <float>0.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_t</string> </key>
+                        <value> <float>1125547200.0</float> </value>
+                    </item>
+                    <item>
+                        <key> <string>_tz</string> </key>
+                        <value> <string>GMT-4</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_year</string> </key>
+                        <value> <int>2005</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>time</string> </key>
+                        <value> <float>0.166666666664</float> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Transaction [\'storever\', \'Rest of the World\']</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.Length</string>
+          <string>Length</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>
