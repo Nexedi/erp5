@@ -612,6 +612,9 @@ class PathTemplateItem(ObjectTemplateItem):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for path in self._path_archive.keys():
+      include_subobjects = 0
+      if '**' in path:
+        include_subobjects = 1
       for relative_url in self._resolvePath(p, [], path.split('/')):
         object = p.unrestrictedTraverse(relative_url)
         object = object._getCopy(context)
@@ -627,6 +630,8 @@ class PathTemplateItem(ObjectTemplateItem):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(object.groups)
         if len(id_list) > 0:
+          if include_subobjects:
+            self.build_sub_objects(context, id_list, relative_url)
           object.manage_delObjects(list(id_list))
         if hasattr(object, 'groups'):
           object.groups = groups          
