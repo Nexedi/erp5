@@ -94,7 +94,8 @@ class Variated(Base):
   def getVariationCategoryItemList(self, base_category_list=(), base=1,
                                    display_id='logical_path', 
                                    display_base_category=1,
-                                   current_category=None,**kw):
+                                   current_category=None,
+                                   omit_option_base_category=0,**kw):
     """
       Returns the list of possible variations
     """
@@ -104,6 +105,9 @@ class Variated(Base):
 
     if base_category_list is ():
       base_category_list = self.getVariationRangeBaseCategoryList()
+      if omit_option_base_category == 1:
+        base_category_list = [x for x in base_category_list if x not in
+                              self.getPortalOptionBaseCategoryList()]
     for base_category in base_category_list:
       variation_category_list = self._getVariationCategoryList(
                                          base_category_list=[base_category])
