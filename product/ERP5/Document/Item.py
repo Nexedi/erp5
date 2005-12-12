@@ -90,6 +90,9 @@ class Item(XMLObject, Amount):
     # _update_data and _get_data are used to implement a semi-cache system on
     # heavy calculation methods.
     def _update_data(self, cached_data, date, id, value):
+      """
+      Used to implement a semi-cache system on heavy calculation methods
+      """
       if getattr(cached_data, "cached_dict", None) is None:
         cached_data.cached_dict = {}
       if cached_data.cached_dict.get(date, None) is None:
@@ -98,6 +101,9 @@ class Item(XMLObject, Amount):
     
     
     def _get_data(self, cached_data, date, id):
+      """
+      Used to implement a semi-cache system on heavy calculation methods
+      """
       if cached_data:
         cached_dict = getattr(cached_data,"cached_dict", None)
         if cached_dict is not None:
@@ -113,7 +119,8 @@ class Item(XMLObject, Amount):
     def getImmobilisationMovementValueList(self, from_date=None, to_date=None, 
                                            sort_on="stop_date", filter_valid=1, 
                                            owner_change=1, single_from=0, single_to=0, 
-                                           property_filter=['price', 'duration', 'durability'], **kw):
+                                           property_filter=['price', 'duration', 'durability'],
+                                           workflow_states = [], **kw):
       """
       Returns a list of immobilisation movements applied to current item from date to date
       Argument filter_valid allows to select only the valid immobilisation movements
@@ -124,6 +131,7 @@ class Item(XMLObject, Amount):
         from_date or to_date.
       Argument property_filter has the same goal. Its role is to reduce the number of calculated
         properties when a temporary immobilisation movement is created
+      Argument workflow_states allows to filter by states of workflows. It is a list of tuples (wf_name,wf_variable,state)
       """
       accessor = 'get'
       if sort_on is not None:
@@ -155,6 +163,14 @@ class Item(XMLObject, Amount):
              ( from_date is None or immo_date - from_date >= 0 ):
             immobilisation_list.append(immobilisation)
 
+      wf_tool = self.portal_workflow
+      for wf, wf_variable, state in workflow_states:
+        try:
+          temp_immo_list = [x for x in immobilisation_list if wf_tool.getStatusOf(wf, x)[wf_variable] == state]
+          immobilisation_list = temp_immo_list
+        except:
+          LOG('error on wf %s, wf_variable %s, state %s' % (wf, wf_variable, state), 0, '')
+          pass
 
       # Look for each change of ownership and an immobilisation movement within 1 hour
       # If found, adapt the immobilisation date to be correctly interpreted
@@ -193,21 +209,10 @@ class Item(XMLObject, Amount):
           # immobilisation movement on the change date.
           # This has to be done only if nearest_immo is defined, since the temporary
           # movement gets most of its data on the previous movement, which is nearest_immo
-          added_immo = None
-          added_immo = nearest_immo.asContext()
-          added_immo.setStopDate(owner_date + millis)
-          if "durability" in property_filter:
-            added_immo.setDurability(added_immo.getDefaultDurability(**kw))
-          if added_immo.getImmobilisation():
-            if 'price' in property_filter:
-              vat = nearest_immo.getVat()
-              previous_value = nearest_immo.getAmortisationOrDefaultAmortisationPrice(**kw)
-              current_value = added_immo.getDefaultAmortisationPrice(**kw)
-              added_immo.setAmortisationStartPrice(current_value)
-              added_immo.setVat( vat * current_value / previous_value )
-            if 'duration' in property_filter:
-              added_immo.setAmortisationDuration(added_immo.getDefaultAmortisationDuration(**kw))
-            added_immo.setInputAccount(added_immo.getOutputAccount())
+          added_immo = self._createTemporaryImmobilisationMovement(nearest_immo,
+                                                                   owner_date,
+                                                                   property_filter,
+                                                                   **kw)
           immobilisation_list.append(added_immo)
           found_immo = added_immo
 
@@ -228,24 +233,56 @@ class Item(XMLObject, Amount):
 
       if sort_on is not None:
         immobilisation_list.sort(cmpfunc)
-        # Check if some movements have the same date. If it is the case, since
-        # it is impossible to know which movement has to be before the other ones,
-        # change arbitrarily the date of one of them, in order to at least
-        # have always the same behavior
-        for i in range(len(immobilisation_list)):
-          immobilisation = immobilisation_list[i]
-          ref_date = immobilisation.getStopDate()
-          immobilisation_sublist = [immobilisation]
-          j = 1
-          while i+j < len(immobilisation_list) and immobilisation_list[i+j].getStopDate() == ref_date:
-            immobilisation_sublist.append(immobilisation_list[i+j])
-            j += 1
-          for j in range(len(immobilisation_sublist)):
-            immobilisation_sublist[j].setStopDate( ref_date + j * millis )
-          
+      self._unconfuseImmobilisationMovementList(immobilisation_list)
       return immobilisation_list
 
 
+    def _unconfuseImmobilisationMovementList(self, immobilisation_list):
+      """
+        Check if some movements have the same stop_date. If it is the case, since
+        it is impossible to know which movement has to be before the other ones,
+        change arbitrarily the date of one of them, in order to at least
+        have always the same behavior
+      """
+      immo_list = [x for x in immobilisation_list if x.getStopDate() is not None]
+      immo_list.sort(lambda x,y: cmp(x.getStopDate(), y.getStopDate()))
+      for i in range(len(immo_list)):
+        immobilisation = immo_list[i]
+        ref_date = immobilisation.getStopDate()
+        immobilisation_sublist = [immobilisation]
+        j = 1
+        while i+j < len(immo_list) and immo_list[i+j].getStopDate() == ref_date:
+          immobilisation_sublist.append(immo_list[i+j])
+          j += 1
+        for j in range(len(immobilisation_sublist)):
+          immobilisation_sublist[j].setStopDate( ref_date + j * millis )
+
+
+    def _createTemporaryImmobilisationMovement(self, base_movement, base_date, property_filter=[], **kw):
+      """
+        Create a temporary immobilisation movement from base_movement
+      """
+      added_immo = base_movement.asContext()
+      added_immo.setStopDate(base_date + millis)
+      if "durability" in property_filter:
+        added_immo.setDurability(added_immo.getDefaultDurability(**kw))
+      kwd = {}
+      if added_immo.getImmobilisation():
+        if 'price' in property_filter:
+          vat = base_movement.getVat()
+          previous_value = base_movement.getAmortisationOrDefaultAmortisationPrice(**kw)
+          current_value = added_immo.getDefaultAmortisationPrice(**kw)
+          kwd['amortisation_start_price'] = current_value
+          kwd['vat'] = vat * current_value / previous_value
+        added_immo._edit(**kwd)
+        kwd = {}
+        if 'duration' in property_filter:
+          kwd['amortisation_duration'] = added_immo.getDefaultAmortisationDuration(**kw)
+        kwd['input_account'] = added_immo.getOutputAccount()
+      added_immo._edit(**kwd)
+      return added_immo
+    
+    
     security.declareProtected(Permissions.View, 'getUnfilteredImmobilisationMovementValueList')
     def getUnfilteredImmobilisationMovementValueList(self, from_date=None, to_date=None, sort_on="stop_date", owner_change=0, **kw):
       """
@@ -302,7 +339,7 @@ class Item(XMLObject, Amount):
     security.declareProtected(Permissions.View, 'getNextImmobilisationMovementValue')
     def getNextImmobilisationMovementValue(self, at_date=None, owner_change=1, **kw):
       """
-      Returns the last immobilisation movement after the given date, or now
+      Returns the first immobilisation movement after the given date, or now
       """
       future_list = self.getFutureImmobilisationMovementValueList(at_date = at_date,
                                                                   owner_change = owner_change,
@@ -315,8 +352,8 @@ class Item(XMLObject, Amount):
     security.declareProtected(Permissions.View, 'getLastMovementAmortisationDuration')
     def getLastMovementAmortisationDuration(self, at_date=None, owner_change=1, **kw):
       """
-        Returns total duration of amortisation for the item.
-        It is the theorical lifetime of this type of item.
+        Returns the remaining duration of amortisation for this item
+	as it was entered on the last immobilisation movement
       """
       last_immobilisation_movement = self.getLastImmobilisationMovementValue(at_date = at_date, 
                                                                              owner_change=owner_change,
@@ -361,10 +398,16 @@ class Item(XMLObject, Amount):
 
     security.declareProtected(Permissions.View, 'getCurrentAmortisationDuration')
     def getCurrentAmortisationDuration(self, **kw):
-      """ Returns the total time the item has been amortised until now. """
+      """ Returns the calculated remaining amortisation duration for this item at the current time. """
       return self.getRemainingAmortisationDuration(at_date = DateTime(), **kw)
 
 
+    security.declareProtected(Permissions.View, 'getCurrentRemainingAmortisationDuration')
+    def getCurrentRemainingAmortisationDuration(self, **kw):
+      """ Returns the calculated remaining amortisation duration for this item at the current time. """
+      return self.getRemainingAmortisationDuration(at_date = DateTime(), **kw)
+
+      
     security.declareProtected(Permissions.View, 'getRemainingAmortisationDuration')
     def getRemainingAmortisationDuration(self, at_date=None, from_immobilisation=0, **kw):
       """
@@ -760,6 +803,9 @@ class Item(XMLObject, Amount):
 
     security.declareProtected(Permissions.ModifyPortalContent, '_createAmortisationRule')
     def _createAmortisationRule(self):
+      """
+      Build or update the amortisation rule related to this item, then expand the rule
+      """
       applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
       my_applied_rule_list = []
       for applied_rule in applied_rule_list:
@@ -791,6 +837,7 @@ class Item(XMLObject, Amount):
     def expandAmortisation(self):
       """
       Calculate the amortisation annuities for the item
+      in an activity
       """
       self.activate().immediateExpandAmortisation()
 
@@ -851,7 +898,7 @@ class Item(XMLObject, Amount):
     def getSectionList(self, at_date=None):
       """
       Return the list of successive owners of the item with
-      the corresponding dates
+      the corresponding ownership change dates
       If at_date is None, return the result all the time
       """
       delivery_list = self.getSectionChangeValueList(at_date = at_date)
