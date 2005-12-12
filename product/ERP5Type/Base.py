@@ -2058,9 +2058,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   # Dublin Core Emulation for CMF interoperatibility
   # CMF Dublin Core Compatibility
-  def Title(self):
-    return self.getTitle('')
-
   def Subject(self):
     return self.getSubjectList()
 
