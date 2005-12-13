@@ -1,3 +1,7 @@
+2005-11-13 aurel
+* update path definition to include parents objects
+* remove workflow rule_interaction_workflow, it is in erp5_core
+
 2005-11-12 Jérome
 * Update to use new gap preference and Inventory API instead of  Resource_zGetInventory_old
 
