@@ -33,7 +33,7 @@ else:
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
-if software_home.startswith('/usr/lib'):
+if tests_framework_home.startswith('/usr/lib'):
   real_instance_home = '/var/lib/zope'
 else:
   real_instance_home = os.path.sep.join(
