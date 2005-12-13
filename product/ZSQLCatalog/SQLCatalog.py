@@ -943,10 +943,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     self.catalogObjectList([object])
 
-  def catalogObjectList(self, object_list):
+  def catalogObjectList(self, object_list,method_id_list=None,disable_cache=0):
     """
       Add objects to the Catalog by calling
       all SQL methods and providing needed arguments.
+
+      method_id_list : specify which method should be used. If not
+                       set it will take the default value of portal_catalog
+
+      disable_cache : do not use cache, so values will be computed each time,
+                      only usefull in some particular cases, most of the time
+                      you don't need to use it
 
       Each element of 'object_list' is an object to be cataloged
 
@@ -1024,7 +1031,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             object.uid = self.newUid()
             LOG('SQLCatalog Warning:', 0, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid))
 
-    methods = self.sql_catalog_object_list
+    if method_id_list is None:
+      method_id_list = self.sql_catalog_object_list
     econtext_cache = {}
     argument_cache = {}
     expression_cache = {}
@@ -1033,7 +1041,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       enableTransactionCache(self)
       
       method_kw_dict = {}
-      for method_name in methods:
+      for method_name in method_id_list:
         kw = {}
         if self.isMethodFiltered(method_name) and self.filter_dict.has_key(method_name):
           catalogged_object_list = []
@@ -1087,11 +1095,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   raise
                 except:
                   value = None
-                argument_cache[(object.uid, arg)] = value
+                if not disable_cache:
+                  argument_cache[(object.uid, arg)] = value
               append(value)
             kw[arg] = value_list
             
-      for method_name in methods:
+      for method_name in method_id_list:
         if method_name not in method_kw_dict:
           continue
         kw = method_kw_dict[method_name]
