@@ -58,6 +58,14 @@ try:
 except ImportError:
   psyco = None
 
+try:
+  from Products.ERP5Type.Cache import enableTransactionCache, disableTransactionCache
+except ImportError:
+  def doNothing(context):
+    pass
+  enableTransactionCache = doNothing
+  disableTransactionCache = doNothing
+  
 UID_BUFFER_SIZE = 300
 
 valid_method_meta_type_list = ('Z SQL Method', 'Script (Python)')
@@ -1021,90 +1029,96 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     argument_cache = {}
     expression_cache = {}
 
-    method_kw_dict = {}
-    for method_name in methods:
-      kw = {}
-      if self.isMethodFiltered(method_name) and self.filter_dict.has_key(method_name):
-        catalogged_object_list = []
-        type_list = self.filter_dict[method_name]['type']
-        expression = self.filter_dict[method_name]['expression_instance']
-        for object in object_list:
-          # We will check if there is an filter on this
-          # method, if so we may not call this zsqlMethod
-          # for this object
-          portal_type = object.getPortalType()
-          if type_list and portal_type not in type_list:
-            continue
-          elif expression is not None:
-            expression_key = (object.uid, self.filter_dict[method_name]['expression'])
-            try:
-              result = expression_cache[expression_key]
-            except KeyError:
-              try:
-                econtext = econtext_cache[object.uid]
-              except KeyError:
-                econtext = econtext_cache[object.uid] = self.getExpressionContext(object)
-              result = expression_cache[expression_key] = expression(econtext)
-            if not result:
-              continue
-          catalogged_object_list.append(object)
-      else:
-        catalogged_object_list = object_list
-
-      if len(catalogged_object_list) == 0:
-        continue
-
-      method_kw_dict[method_name] = kw
+    try:
+      enableTransactionCache(self)
       
-      #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
-      method = getattr(self, method_name)
-      if method.meta_type == "Z SQL Method":
-        # Build the dictionnary of values
-        arguments = method.arguments_src
-        for arg in split(arguments):
-          value_list = []
-          append = value_list.append
-          for object in catalogged_object_list:
-            try:
-              value = argument_cache[(object.uid, arg)]
-            except KeyError:
+      method_kw_dict = {}
+      for method_name in methods:
+        kw = {}
+        if self.isMethodFiltered(method_name) and self.filter_dict.has_key(method_name):
+          catalogged_object_list = []
+          type_list = self.filter_dict[method_name]['type']
+          expression = self.filter_dict[method_name]['expression_instance']
+          for object in object_list:
+            # We will check if there is an filter on this
+            # method, if so we may not call this zsqlMethod
+            # for this object
+            portal_type = object.getPortalType()
+            if type_list and portal_type not in type_list:
+              continue
+            elif expression is not None:
+              expression_key = (object.uid, self.filter_dict[method_name]['expression'])
               try:
-                value = getattr(object, arg, None)
-                if callable(value):
-                  value = value()
-              except ConflictError:
-                raise
-              except:
-                value = None
-              argument_cache[(object.uid, arg)] = value
-            append(value)
-          kw[arg] = value_list
-          
-    for method_name in methods:
-      if method_name not in method_kw_dict:
-        continue
-      kw = method_kw_dict[method_name]
-      method = getattr(self, method_name)
-      method = aq_base(method).__of__(site_root.portal_catalog) # Use method in 
-              # the context of portal_catalog
-      # Alter/Create row
-      try:
-        #start_time = DateTime()
-        #LOG('catalogObjectList', 0, 'kw = %r, method_name = %r' % (kw, method_name))
-        method(**kw)
-        #end_time = DateTime()
-        #if method_name not in profile_dict:
-        #  profile_dict[method_name] = end_time.timeTime() - start_time.timeTime()
-        #else:
-        #  profile_dict[method_name] += end_time.timeTime() - start_time.timeTime()
-        #LOG('catalogObjectList', 0, '%s: %f seconds' % (method_name, profile_dict[method_name]))
-      except ConflictError:
-        raise
-      except:
-        LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list),
-            error=sys.exc_info())
-        raise
+                result = expression_cache[expression_key]
+              except KeyError:
+                try:
+                  econtext = econtext_cache[object.uid]
+                except KeyError:
+                  econtext = econtext_cache[object.uid] = self.getExpressionContext(object)
+                result = expression_cache[expression_key] = expression(econtext)
+              if not result:
+                continue
+            catalogged_object_list.append(object)
+        else:
+          catalogged_object_list = object_list
+  
+        if len(catalogged_object_list) == 0:
+          continue
+  
+        method_kw_dict[method_name] = kw
+        
+        #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
+        method = getattr(self, method_name)
+        if method.meta_type == "Z SQL Method":
+          # Build the dictionnary of values
+          arguments = method.arguments_src
+          for arg in split(arguments):
+            value_list = []
+            append = value_list.append
+            for object in catalogged_object_list:
+              try:
+                value = argument_cache[(object.uid, arg)]
+              except KeyError:
+                try:
+                  value = getattr(object, arg, None)
+                  if callable(value):
+                    value = value()
+                except ConflictError:
+                  raise
+                except:
+                  value = None
+                argument_cache[(object.uid, arg)] = value
+              append(value)
+            kw[arg] = value_list
+            
+      for method_name in methods:
+        if method_name not in method_kw_dict:
+          continue
+        kw = method_kw_dict[method_name]
+        method = getattr(self, method_name)
+        method = aq_base(method).__of__(site_root.portal_catalog) # Use method in 
+                # the context of portal_catalog
+        # Alter/Create row
+        try:
+          #start_time = DateTime()
+          #LOG('catalogObjectList', 0, 'kw = %r, method_name = %r' % (kw, method_name))
+          method(**kw)
+          #end_time = DateTime()
+          #if method_name not in profile_dict:
+          #  profile_dict[method_name] = end_time.timeTime() - start_time.timeTime()
+          #else:
+          #  profile_dict[method_name] += end_time.timeTime() - start_time.timeTime()
+          #LOG('catalogObjectList', 0, '%s: %f seconds' % (method_name, profile_dict[method_name]))
+        except ConflictError:
+          raise
+        except:
+          LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list),
+              error=sys.exc_info())
+          raise
+    finally:
+      disableTransactionCache(self)
 
+      
   if psyco is not None: psyco.bind(catalogObjectList)
 
   def uncatalogObject(self, path):
