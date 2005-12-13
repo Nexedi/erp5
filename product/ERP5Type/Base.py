@@ -48,7 +48,7 @@ from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
-from Products.ERP5Type.Cache import CachingMethod, clearCache
+from Products.ERP5Type.Cache import CachingMethod, clearCache, getTransactionCache
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 
@@ -1153,7 +1153,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Returns the portal object
     """
-    return self.portal_url.getPortalObject()
+    cache = getTransactionCache(self)
+    if cache is not None:
+      key = 'getPortalObject'
+      try:
+        return cache[key]
+      except KeyError:
+        pass
+        
+    result = self.portal_url.getPortalObject()
+    
+    if cache is not None:
+      cache[key] = result
+      
+    return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
   def getWorkflowIds(self):
