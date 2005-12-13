@@ -18,6 +18,7 @@ from Shared.DC.ZRDB.sqlvar import SQLVar
 from Shared.DC.ZRDB import sqlvar
 from string import atoi,atof
 from types import StringType
+from Products.ERP5Type.PsycoWrapper import psyco
 
 def SQLVar_render(self, md):
     name=self.__name__
@@ -105,6 +106,8 @@ def SQLVar_render(self, md):
         #v="'%s'" % v
 
     return v
+
+psyco.bind(SQLVar_render)
 
 # Patched by yo. datetime is added.
 valid_type={'int':1, 'float':1, 'string':1, 'nb': 1, 'datetime' : 1}.has_key
