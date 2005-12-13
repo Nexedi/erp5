@@ -611,7 +611,9 @@ class PathTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    for path in self._path_archive.keys():
+    keys = self._path_archive.keys()
+    keys.sort()    
+    for path in keys:
       include_subobjects = 0
       if '**' in path:
         include_subobjects = 1
