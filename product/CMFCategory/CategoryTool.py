@@ -38,6 +38,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Cache import getTransactionCache
 from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
@@ -199,14 +200,28 @@ class CategoryTool( UniqueObject, Folder, Base ):
         Returns a Category object from a given category url
         and optionnal base category id
       """
+      cache = getTransactionCache(self)
+      if cache is not None:
+        key = ('getCategoryValue', relative_url, base_category)
+        try:
+          return cache[key]
+        except KeyError:
+          pass
+          
       try:
         relative_url = str(relative_url)
         if base_category is not None:
           relative_url = '%s/%s' % (base_category, relative_url)
         node = self.unrestrictedTraverse(relative_url)
-        return node
+        value = node
       except (TypeError, KeyError, NotFound):
-        return None
+        value = None
+        
+      if cache is not None:
+        cache[key] = value
+
+      return value
+        
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryValue')
 #     def getCategoryValue(self, relative_url, base_category = None):
 #       """
@@ -751,6 +766,27 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                       'getSingleCategoryAcquiredMembershipList' )
     def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
+                                         spec=(), filter=None, acquired_object_dict = None, **kw ):
+      cache = getTransactionCache(self)
+      if cache is not None:
+        key = ('getSingleCategoryAcquiredMembershipList', context._p_oid, base_category, base, spec, 
+               filter, str(kw))
+        try:
+          return cache[key]
+        except KeyError:
+          pass
+          
+      result = self._getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
+                                                             spec=spec, filter=filter, 
+                                                             acquired_object_dict = acquired_object_dict,
+                                                             **kw)
+      if cache is not None:
+        cache[key] = result
+        
+      return result
+      
+                                      
+    def _getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
                                          spec=(), filter=None, acquired_object_dict = None, **kw ):
       """
         Returns the acquired membership of the context for a single base category
@@ -1336,6 +1372,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
           Finds an object from a relative_url
           Method is public since we use restrictedTraverse
         """
+        cache = getTransactionCache(self)
+        if cache is not None:
+          key = ('resolveCategory', relative_url)
+          try:
+            return cache[key]
+          except KeyError:
+            pass
+            
         try:
           obj = self.restrictedTraverse(relative_url)
           if obj is None:
@@ -1344,10 +1388,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #LOG("CMFCategory:",0,"Trying url %s" % url )
             obj = self.portal_catalog.resolve_url(url, REQUEST)
           #LOG('Obj type', 0, str(obj.getUid()))
-          return obj
+          value = obj
         except (KeyError, AttributeError) :
           LOG("CMFCategory WARNING",0,"Could not access object relative_url %s" % relative_url )
-          return None
+          value = None
+          
+        if cache is not None:
+          cache[key] = value
+          
+        return value
 
 InitializeClass( CategoryTool )
 
