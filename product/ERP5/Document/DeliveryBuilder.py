@@ -36,6 +36,9 @@ from Products.ERP5.Document.OrderBuilder import OrderBuilder
 
 from zLOG import LOG
 
+class SelectMethodError(Exception): pass
+class SelectMovementError(Exception): pass
+
 class DeliveryBuilder(OrderBuilder):
   """
     Delivery Builder objects allow to gather multiple Simulation Movements
@@ -134,7 +137,7 @@ class DeliveryBuilder(OrderBuilder):
     mvt_dict = {}
     for movement in movement_list:
       if mvt_dict.has_key(movement):
-        raise "SelectMethodError", \
+        raise SelectMethodError, \
               "%s return %s twice (or more)" % \
               (str(self.simulation_select_method_id),
                str(movement.getRelativeUrl()))
@@ -159,7 +162,7 @@ class DeliveryBuilder(OrderBuilder):
     # Check if simulation movement is not already linked to a existing
     # movement
     if simulation_movement.getDeliveryValue() is not None:
-      raise "SelectMovementError",\
+      raise SelectMovementError,\
             "simulation_movement '%s' must not be selected !" %\
             simulation_movement.getRelativeUrl()
     # Update simulation movement

@@ -38,6 +38,9 @@ from Products.ERP5.Document.Rule import Rule
 
 from zLOG import LOG
 
+class ProductionOrderError(Exception): pass
+class TransformationSourcingRuleError(Exception): pass
+
 class TransformationSourcingRuleMixin(ExtensionClass.Base):
   """
     Mixin class used by TransformationSourcingRule and TransformationRule
@@ -57,7 +60,7 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
     supply_chain = order.getSpecialiseValue(
                                portal_type=supply_chain_portal_type)
     if supply_chain is None:
-      raise "ProductionOrderError",\
+      raise ProductionOrderError,\
             "No SupplyChain defined on %s" % str(order)
     else:
       return supply_chain
@@ -197,7 +200,7 @@ class TransformationSourcingRule(Rule):
                                                     parent_supply_link,
                                                     movement=parent_movement)
       if len(previous_supply_link_list) == 0:
-        raise "TransformationSourcingRuleError",\
+        raise TransformationSourcingRuleError,\
               "Expand must not be called on %r" %\
                   applied_rule.getRelativeUrl()
       else:

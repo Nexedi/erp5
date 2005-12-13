@@ -38,6 +38,8 @@ from Products.ERP5.Document.TransformationSourcingRule import\
 
 from zLOG import LOG
 
+class TransformationRuleError(Exception): pass
+
 class TransformationRule(Rule):
     """
       Order Rule object make sure an Order in the similation
@@ -92,7 +94,7 @@ class TransformationRule(Rule):
         elif length > 1:
           result = 0
           # XXX FIXME: implementation needed
-          raise "TransformationRuleError",\
+          raise TransformationRuleError,\
                 "TransformationRule not able to use multiple SupplyLink."
       return result
 
@@ -118,7 +120,7 @@ class TransformationRule(Rule):
       if len(current_supply_link_list) != 1:
         # We shall no pass here.
         # The test method returned a wrong value !
-        raise "TransformationRuleError",\
+        raise TransformationRuleError,\
               "Expand must not be called on %r" %\
                   applied_rule.getRelativeUrl()
       else:

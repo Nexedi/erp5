@@ -36,6 +36,9 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from DateTime import DateTime
 from zLOG import LOG
 
+class CollectError(Exception): pass
+class MatrixError(Exception): pass
+
 class OrderBuilder(XMLObject, Amount, Predicate):
   """
     Order Builder objects allow to gather multiple Simulation Movements
@@ -441,7 +444,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     else:
       movement_list = movement_group.getMovementList()
       if len(movement_list) != 1:
-        raise "CollectError", "DeliveryBuilder: %s unable to distinct those\
+        raise CollectError, "DeliveryBuilder: %s unable to distinct those\
               movements: %s" % (self.getId(), str(movement_list))
       else:
         # XXX Hardcoded value
@@ -489,7 +492,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                              getVariationBaseCategoryList())
             object_to_update = cell
           else:
-            raise 'MatrixError', 'Cell: %s already exists on %s' % \
+            raise MatrixError, 'Cell: %s already exists on %s' % \
                   (str(cell_key), str(delivery_line))
         self._setDeliveryMovementProperties(
                             object_to_update, movement, property_dict,
