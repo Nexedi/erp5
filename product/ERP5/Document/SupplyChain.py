@@ -36,6 +36,8 @@ from Products.ERP5.Document.Path import Path
 
 from zLOG import LOG
 
+class SupplyChainError(Exception): pass
+
 class SupplyChain(Path, XMLObject):
   """
     SupplyChain defines the route used to produced a resource.
@@ -83,7 +85,7 @@ class SupplyChain(Path, XMLObject):
     if (last_list_len == 1):
       result = last_supply_link_list[0]
     else:
-      raise "SupplyChainError",\
+      raise SupplyChainError,\
             "Unable to get the last link of SupplyChain %s" %\
             str(self.getRelativeUrl())
     return result
@@ -180,7 +182,7 @@ class SupplyChain(Path, XMLObject):
     # Checked if we already tested this link 
     # to prevent infinite loop
     if current_supply_link in checked_link_list:
-      raise "SupplyChainLoop",\
+      raise SupplyChainError,\
             "SupplyLink %r is in a loop." % current_supply_link
     else:
       transformation_link_list = []
@@ -197,7 +199,7 @@ class SupplyChain(Path, XMLObject):
           # destination
           if (current_supply_link is not None) and \
              (current_supply_link.isProductionSupplyLink()):
-            raise "SupplyChainError",\
+            raise SupplyChainError,\
                   "Those SupplyLinks are in conflict: %r and %r" %\
                   (current_supply_link.getRelativeUrl(),\
                    previous_link.getRelativeUrl())
@@ -234,7 +236,7 @@ class SupplyChain(Path, XMLObject):
     # Checked if we already tested this link 
     # to prevent infinite loop
     if current_supply_link in checked_link_list:
-      raise "SupplyChainLoop",\
+      raise SupplyChainError,\
             "SupplyLink %r is in a loop." % current_supply_link
     else:
       packing_list_link_list = []

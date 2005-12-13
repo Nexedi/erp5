@@ -36,6 +36,7 @@ from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
+from Products.ERP5.Document.SupplyChain import SupplyChainError
 
 from zLOG import LOG
 
@@ -129,7 +130,7 @@ class SupplyLink(Path, XMLObject):
         # XXX This method has to be rewritten.
         # Predicate must be used.
         if len(concurrent_supply_link_list) > 1:
-          raise "SupplyChainError",\
+          raise SupplyChainError,\
                 "SupplyChain unable to find route."
         else:
           # Check if raw material is create by a production link or a packing
