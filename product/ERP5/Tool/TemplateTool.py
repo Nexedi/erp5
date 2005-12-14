@@ -73,6 +73,7 @@ class TemplateTool (BaseTool):
         - save
     """
     id = 'portal_templates'
+    title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
     allowed_types = ( 'ERP5 Business Template',)
@@ -394,6 +395,7 @@ class TemplateTool (BaseTool):
             if len(diff_list) != 0:
               diff_msg += '\n\nObject %s diff :\n' %(key)
               diff_msg += '\n'.join(diff_list)
+
       # for our own way to generate xml
       item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item']
       for item_name  in item_list_2:
@@ -412,9 +414,9 @@ class TemplateTool (BaseTool):
             if len(diff_list) != 0:
               diff_msg += '\n\nObject %s diff :\n' %(key)
               diff_msg += '\n'.join(diff_list)
-
+              
       # for document located on filesystem
-      item_list_3 = ['_document_item', '_property_sheet_item', '_extension_item', '_test_item']
+      item_list_3 = ['_document_item', '_property_sheet_item', '_extension_item', '_test_item', '_message_translation_item']
       for item_name  in item_list_3:
         item1 = getattr(bt1, item_name)        
         # build current item if we compare to installed bt
