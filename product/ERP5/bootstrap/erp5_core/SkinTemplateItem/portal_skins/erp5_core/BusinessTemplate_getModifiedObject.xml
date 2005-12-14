@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def getModifiedObjectList(context):\n
+  return context.preinstall()\n
+\n
+getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', cache_duration=36000)\n
+\n
+modified_object_list = getModifiedObjectList(context)\n
+keys = modified_object_list.keys()\n
+keys.sort()\n
+\n
+no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \'Role\', \'CatalogResultKey\', \'CatalogRelatedKey\', \'CatalogResultTable\', \'MessageTranslation\']\n
+\n
+i = 0\n
+object_list = []\n
+for object_id in keys:    \n
+  object_state, object_class = modified_object_list[object_id]\n
+  line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
+  if object_state == \'New\':\n
+    line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Install\', \'install\'], [\'Do Nothing\', \'nothing\']])\n
+  elif object_state == \'Modified\':\n
+    if object_class in no_backup_list:\n
+      line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
+    else:\n
+      line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Upgrade\', \'btsave\'], [\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
+  elif object_state == \'Removed\':\n
+    if object_class in no_backup_list:\n
+      line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
+    else:\n
+      line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Remove\', \'save_and_remove\'], [\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
+  line.setUid(\'new_%s\' % object_id)\n
+  object_list.append(line)\n
+  i += 1                                  \n
+\n
+return object_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABQAAAAgAAAASwAA
+AHOzAgAAZAEAawAAbAEAfQIAAWQCAGsCAGwDAH0EAAFkAwCEAAB9BQB8BAB8BQBkBABkBQBkBgBk
+BwCDAQJ9BQB8BQB0BQCDAQB9BwB0BwB8BwBkCACDAgCDAAB9CQB0BwB8CQBkCQCDAgCDAAABZAoA
+ZAsAZAwAZA0AZA4AZA8AZBAAZBEAZBIAZBMAZBQAZBUAZBYAZw0AfQoAZBcAfQsAZwAAfQwAeAYC
+dAwAfAkAgwEARF34AX0OAHQOAHwHAHwOAIMCAHQMAAKDAQBcAgB9EAB9EQB8AgB0BQBkGAB0EQB8
+CwCDAQAWgwIAfRMAfBAAZBkAagIAbz4AAXQHAHwTAGQaAIMCAGQbAHwOAGQcAHwQAGQdAHwRAGQe
+AGQfAGQgAGcCAGQhAGQiAGcCAGcCAIMABAFuPwEBfBAAZCMAagIAb5IAAXwRAHwKAGoGAG8+AAF0
+BwB8EwBkGgCDAgBkGwB8DgBkHAB8EABkHQB8EQBkHgBkJABkIABnAgBkJQBkIgBnAgBnAgCDAAQB
+cXMCAXQHAHwTAGQaAIMCAGQbAHwOAGQcAHwQAGQdAHwRAGQeAGQmAGQnAGcCAGQkAGQgAGcCAGQl
+AGQiAGcCAGcDAIMABAFuoAABfBAAZCgAagIAb5IAAXwRAHwKAGoGAG8+AAF0BwB8EwBkGgCDAgBk
+GwB8DgBkHAB8EABkHQB8EQBkHgBkKQBkKgBnAgBkJQBkIgBnAgBnAgCDAAQBcXMCAXQHAHwTAGQa
+AIMCAGQbAHwOAGQcAHwQAGQdAHwRAGQeAGQrAGQsAGcCAGQpAGQqAGcCAGQlAGQiAGcCAGcDAIMA
+BAFuAQABdAcAfBMAZC0AgwIAZC4AfA4AFoMBAAF0BwB8DABkLwCDAgB8EwCDAQABfAsAZDAAN30L
+AHGvAFd8DABTZAAAUygxAAAATigBAAAAcwsAAABuZXdUZW1wQmFzZSgBAAAAcw0AAABDYWNoaW5n
+TWV0aG9kYwEAAAACAAAABAAAAEMAAABzFAAAAHQAAHwAAGQBAIMCAIMAAFNkAABTKAIAAABOcwoA
+AABwcmVpbnN0YWxsKAIAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgCAAAAcwcAAABjb250
+ZXh0cwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFQAAAGdldE1v
+ZGlmaWVkT2JqZWN0TGlzdAQAAABzAgAAAAABcwIAAABpZHMmAAAAQnVzaW5lc3NUZW1wbGF0ZV9n
+ZXRNb2RpZmllZE9iamVjdExpc3RzDgAAAGNhY2hlX2R1cmF0aW9uaaCMAABzBAAAAGtleXNzBAAA
+AHNvcnRzBgAAAEFjdGlvbnMMAAAAU2l0ZVByb3BlcnR5cwYAAABNb2R1bGVzCAAAAERvY3VtZW50
+cw0AAABQcm9wZXJ0eVNoZWV0cwkAAABFeHRlbnNpb25zBAAAAFRlc3RzBwAAAFByb2R1Y3RzBAAA
+AFJvbGVzEAAAAENhdGFsb2dSZXN1bHRLZXlzEQAAAENhdGFsb2dSZWxhdGVkS2V5cxIAAABDYXRh
+bG9nUmVzdWx0VGFibGVzEgAAAE1lc3NhZ2VUcmFuc2xhdGlvbmkAAAAAcw4AAAB0bXBfaW5zdGFs
+bF8lc3MDAAAATmV3cwQAAABlZGl0cwkAAABvYmplY3RfaWRzDAAAAG9iamVjdF9zdGF0ZXMMAAAA
+b2JqZWN0X2NsYXNzcxAAAABjaG9pY2VfaXRlbV9saXN0cwcAAABJbnN0YWxscwcAAABpbnN0YWxs
+cwoAAABEbyBOb3RoaW5ncwcAAABub3RoaW5ncwgAAABNb2RpZmllZHMHAAAAVXBncmFkZXMNAAAA
+S2VlcCBPcmlnaW5hbHMSAAAAQmFja3VwIEFuZCBVcGdyYWRlcwYAAABidHNhdmVzBwAAAFJlbW92
+ZWRzBgAAAFJlbW92ZXMGAAAAcmVtb3ZlcxEAAABCYWNrdXAgQW5kIFJlbW92ZXMPAAAAc2F2ZV9h
+bmRfcmVtb3ZlcwYAAABzZXRVaWRzBgAAAG5ld18lc3MGAAAAYXBwZW5kaQEAAAAoEwAAAHMaAAAA
+UHJvZHVjdHMuRVJQNVR5cGUuRG9jdW1lbnRzCwAAAG5ld1RlbXBCYXNlcxcAAABQcm9kdWN0cy5F
+UlA1VHlwZS5DYWNoZXMNAAAAQ2FjaGluZ01ldGhvZHMVAAAAZ2V0TW9kaWZpZWRPYmplY3RMaXN0
+cwcAAABjb250ZXh0cxQAAABtb2RpZmllZF9vYmplY3RfbGlzdHMJAAAAX2dldGF0dHJfcwQAAABr
+ZXlzcw4AAABub19iYWNrdXBfbGlzdHMBAAAAaXMLAAAAb2JqZWN0X2xpc3RzCQAAAF9nZXRpdGVy
+X3MJAAAAb2JqZWN0X2lkcwkAAABfZ2V0aXRlbV9zDAAAAG9iamVjdF9zdGF0ZXMMAAAAb2JqZWN0
+X2NsYXNzcwMAAABzdHJzBAAAAGxpbmUoFAAAAHMCAAAAa3dzGgAAAFByb2R1Y3RzLkVSUDVUeXBl
+LkRvY3VtZW50cwsAAABuZXdUZW1wQmFzZXMXAAAAUHJvZHVjdHMuRVJQNVR5cGUuQ2FjaGVzDQAA
+AENhY2hpbmdNZXRob2RzFQAAAGdldE1vZGlmaWVkT2JqZWN0TGlzdHMHAAAAY29udGV4dHMUAAAA
+bW9kaWZpZWRfb2JqZWN0X2xpc3RzCQAAAF9nZXRhdHRyX3MEAAAAa2V5c3MOAAAAbm9fYmFja3Vw
+X2xpc3RzAQAAAGlzCwAAAG9iamVjdF9saXN0cwkAAABfZ2V0aXRlcl9zCQAAAG9iamVjdF9pZHMJ
+AAAAX2dldGl0ZW1fcwwAAABvYmplY3Rfc3RhdGVzDAAAAG9iamVjdF9jbGFzc3MDAAAAc3RycwQA
+AABsaW5lKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyIAAABCdXNpbmVzc1RlbXBsYXRl
+X2dldE1vZGlmaWVkT2JqZWN0AQAAAHM2AAAADQENAgkDGAIMARUBDQItAgYBBgENAAYBHAEZARAB
+OwENARABPgJEAQ0BEAE+AkcBFwEQAQ4CKAEAAABzIgAAAEJ1c2luZXNzVGVtcGxhdGVfZ2V0TW9k
+aWZpZWRPYmplY3QoAQAAAHMiAAAAQnVzaW5lc3NUZW1wbGF0ZV9nZXRNb2RpZmllZE9iamVjdCgA
+AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/BusinessTemplate_getModifiedObject</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>getModifiedObjectList</string>
+                            <string>context</string>
+                            <string>modified_object_list</string>
+                            <string>_getattr_</string>
+                            <string>keys</string>
+                            <string>no_backup_list</string>
+                            <string>i</string>
+                            <string>object_list</string>
+                            <string>_getiter_</string>
+                            <string>object_id</string>
+                            <string>_getitem_</string>
+                            <string>object_state</string>
+                            <string>object_class</string>
+                            <string>str</string>
+                            <string>line</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_getModifiedObject</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

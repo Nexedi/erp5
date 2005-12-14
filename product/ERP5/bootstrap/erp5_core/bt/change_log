@@ -1,3 +1,13 @@
+2005-12-13 aurel
+* Update way of install Business Template
+- add Trash type
+- modify Workflow_statusModiify
+- add Forms and Scripts in erp5_core
+* Change in script of rule_interraction_workflow
+
+2005-12-13 romain
+* Fix Base_edit (when displaying multiple matrixbox)
+
 2005-12-08 yo
 * Fix the LEFT JOIN syntax in Resource_zGetInventory and Resource_zGetInventoryList.
 

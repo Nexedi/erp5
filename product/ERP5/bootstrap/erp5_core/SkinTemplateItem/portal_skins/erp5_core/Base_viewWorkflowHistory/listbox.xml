@@ -359,6 +359,10 @@
                           <string>comment</string>
                           <string>Comment</string>
                         </tuple>
+                        <tuple>
+                          <string>error_message</string>
+                          <string>Error Message</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -552,6 +556,10 @@
                         </tuple>
                         <tuple>
                           <string>comment</string>
+                          <string encoding="base64">Jyc=</string>
+                        </tuple>
+                        <tuple>
+                          <string>error_message</string>
                           <string encoding="base64">Jyc=</string>
                         </tuple>
                       </list>

@@ -207,7 +207,7 @@ FROM\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
-  , catalog as node, catalog as resource, movement as inventory_movement\n
+  , catalog as node, catalog as resource\n
 \n
 WHERE\n
   1 = 1\n
@@ -217,7 +217,6 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
-  AND inventory_movement.uid = stock.uid\n
 \n
 <dtml-comment>\n
 XXX Do we want or need this ?\n
@@ -230,14 +229,14 @@ XXX How to deal with standardize ?\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
-  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+  AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR inventory_movement.destination_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
-  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+  AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR inventory_movement.destination_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n
@@ -346,7 +345,7 @@ FROM\n
 </dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
-  , catalog as node, catalog as resource, movement as inventory_movement\n
+  , catalog as node, catalog as resource\n
 \n
 WHERE\n
   1 = 1\n
@@ -356,7 +355,6 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
-  AND inventory_movement.uid = stock.uid\n
 \n
 <dtml-comment>\n
 XXX Do we want or need this ?\n
@@ -369,14 +367,14 @@ XXX How to deal with standardize ?\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
-  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+  AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR inventory_movement.destination_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
-  AND ( inventory_movement.source_uid <> inventory_movement.destination_uid\n
+  AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR inventory_movement.destination_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n

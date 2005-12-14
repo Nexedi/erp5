@@ -249,8 +249,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.ActionInformation</string>
-          <string>ActionInformation</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>
@@ -283,7 +283,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>

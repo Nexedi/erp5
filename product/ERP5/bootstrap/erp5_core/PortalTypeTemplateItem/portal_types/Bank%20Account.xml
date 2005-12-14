@@ -256,7 +256,9 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -312,7 +314,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -377,7 +379,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
             </value>
         </item>
         <item>
@@ -408,7 +410,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>
@@ -498,12 +500,31 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewHistory</string> </value>
+            <value> <string>python:portal.restrictedTraverse(\'accounting_module\', None) is not None</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="11" aka="AAAAAAAAAAs=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/Base_viewHistory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="12" aka="AAAAAAAAAAw=">
     <pickle>
       <tuple>
         <tuple>

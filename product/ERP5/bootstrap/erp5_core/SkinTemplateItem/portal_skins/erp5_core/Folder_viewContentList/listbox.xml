@@ -382,6 +382,10 @@
                           <string>description</string>
                           <string encoding="base64">Jyc=</string>
                         </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string encoding="base64">Jyc=</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

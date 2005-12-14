@@ -175,4 +175,16 @@
   <type>Template Tool</type>
   <workflow></workflow>
  </chain>
+ <chain>
+  <type>Trash Bin</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Trash Folder</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Trash Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
 </workflow_chain>
