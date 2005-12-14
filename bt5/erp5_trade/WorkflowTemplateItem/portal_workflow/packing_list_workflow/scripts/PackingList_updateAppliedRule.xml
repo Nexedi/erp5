@@ -23,7 +23,16 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <none/>
+              <dictionary>
+                <item>
+                    <key> <string>rc</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -71,39 +80,60 @@ LOG=lambda msg:\'DISABLED\'\n
 \n
 packing_list = state_change.object\n
 \n
-packing_list.updateAppliedRule(rule_id = "default_delivery_rule")\n
+\n
+activate_kw = {}\n
+related_order = context.getCausalityValue()\n
+after_path_list = []\n
+if related_order is not None:\n
+  after_path_list.append(related_order.getPath() + \'_firstUpdateAppliedRule\')\n
+  after_path_list.append(related_order.getPath() + \'_expand\')\n
+tag = packing_list.getPath()+\'_expand\'\n
+activate_kw = {\'tag\':tag,\'priority\':3}\n
+\n
+packing_list.activate(after_path=after_path_list,tag=tag,\n
+    priority=3).updateAppliedRule(rule_id = \'default_delivery_rule\',activate_kw=activate_kw)\n
+\n
 \n
 # Make sure to reindex related simulation movement if we are already\n
 # simulated\n
-packing_list.activate().applyToDeliveryRelatedMovement(method_id=\'recursiveReindexObject\')\n
+packing_list.activate(after_path=after_path_list,tag=tag,\n
+     priority=3).applyToDeliveryRelatedMovement(method_id=\'recursiveReindexObject\')\n
 \n
 packing_list.startBuilding()\n
 packing_list.activate(\n
-  after_method_id = (\'immediateReindexObject\', \'recursiveImmediateReindexObject\', \'expand\'),\n
+  after_tag = tag,\n
 ).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAHAAAASwAA
-AHOYAAAAZAEAhAAAfQIAZAIAhAAAfQIAdAEAfAAAZAMAgwIAfQQAdAEAfAQAZAQAgwIAZAUAZAYA
-gwABAXQBAHQBAHwEAGQHAIMCAIMAAGQIAIMCAGQJAGQKAIMAAQF0AQB8BABkCwCDAgCDAAABdAEA
-dAEAfAQAZAcAgwIAZAwAZA0AZA4AZA8AZgMAgwABZBAAgwIAgwAAAWQAAFMoEQAAAE5jAQAAAAMA
-AAADAAAAQwAAAHMWAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwIAUygDAAAATnMDAAAAbG9ncx0AAABQ
-YWNraW5nTGlzdF91cGRhdGVBcHBsaWVkUnVsZSgDAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
-eHRzAwAAAG1zZygDAAAAcwMAAABtc2dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAA
-AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS4yPgEAAABzAAAAAGMBAAAAAQAAAAEA
-AABDAAAAcwQAAABkAQBTKAIAAABOcwgAAABESVNBQkxFRCgAAAAAKAEAAABzAwAAAG1zZygAAAAA
-KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS4zPgIAAABzAAAAAHMGAAAAb2Jq
-ZWN0cxEAAAB1cGRhdGVBcHBsaWVkUnVsZXMHAAAAcnVsZV9pZHMVAAAAZGVmYXVsdF9kZWxpdmVy
-eV9ydWxlcwgAAABhY3RpdmF0ZXMeAAAAYXBwbHlUb0RlbGl2ZXJ5UmVsYXRlZE1vdmVtZW50cwkA
-AABtZXRob2RfaWRzFgAAAHJlY3Vyc2l2ZVJlaW5kZXhPYmplY3RzDQAAAHN0YXJ0QnVpbGRpbmdz
-DwAAAGFmdGVyX21ldGhvZF9pZHMWAAAAaW1tZWRpYXRlUmVpbmRleE9iamVjdHMfAAAAcmVjdXJz
-aXZlSW1tZWRpYXRlUmVpbmRleE9iamVjdHMGAAAAZXhwYW5kcxQAAAB1cGRhdGVDYXVzYWxpdHlT
-dGF0ZSgEAAAAcwMAAABMT0dzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwwAAABwYWNr
-aW5nX2xpc3QoBQAAAHMMAAAAc3RhdGVfY2hhbmdlcwIAAABrd3MDAAAATE9HcwkAAABfZ2V0YXR0
-cl9zDAAAAHBhY2tpbmdfbGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMdAAAAUGFj
-a2luZ0xpc3RfdXBkYXRlQXBwbGllZFJ1bGUBAAAAcw4AAAAJAQkCEgIZBB8CEwEMASgBAAAAcx0A
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAsAAAAMAAAASwAA
+AHNoAQAAZAEAhAAAfQIAZAIAhAAAfQIAdAEAfAAAZAMAgwIAfQQAaAAAfQUAdAEAdAUAZAQAgwIA
+gwAAfQcAZwAAfQgAfAcAdAgAagkAb0oAAXQBAHwIAGQFAIMCAHQBAHwHAGQGAIMCAIMAAGQHABeD
+AQABdAEAfAgAZAUAgwIAdAEAfAcAZAYAgwIAgwAAZAgAF4MBAAFuAQABdAEAfAQAZAYAgwIAgwAA
+ZAgAF30KAGgAAARkCQB8CgADPARkCgBkCwADPH0FAHQBAHQBAHwEAGQMAIMCAGQNAHwIAGQJAHwK
+AGQKAGQLAIMAA2QOAIMCAGQPAGQQAGQRAHwFAIMAAgF0AQB0AQB8BABkDACDAgBkDQB8CABkCQB8
+CgBkCgBkCwCDAANkEgCDAgBkEwBkFACDAAEBdAEAfAQAZBUAgwIAgwAAAXQBAHQBAHwEAGQMAIMC
+AGQWAHwKAIMAAWQXAIMCAIMAAAFkAABTKBgAAABOYwEAAAADAAAAAwAAAEMAAABzFgAAAHQAAHQB
+AGQBAIMCAGQCAHwAAIMCAFMoAwAAAE5zAwAAAGxvZ3MdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBw
+bGllZFJ1bGUoAwAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwMAAABtc2coAwAAAHMDAAAA
+bXNncwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzCwAAADxsYW1iZGEuNTA+AQAAAHMAAAAAYwEAAAABAAAAAQAAAEMAAABzBAAAAGQBAFMoAgAA
+AE5zCAAAAERJU0FCTEVEKAAAAAAoAQAAAHMDAAAAbXNnKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcwsAAAA8bGFtYmRhLjUxPgIAAABzAAAAAHMGAAAAb2JqZWN0cxEAAABnZXRDYXVzYWxp
+dHlWYWx1ZXMGAAAAYXBwZW5kcwcAAABnZXRQYXRocxcAAABfZmlyc3RVcGRhdGVBcHBsaWVkUnVs
+ZXMHAAAAX2V4cGFuZHMDAAAAdGFncwgAAABwcmlvcml0eWkDAAAAcwgAAABhY3RpdmF0ZXMKAAAA
+YWZ0ZXJfcGF0aHMRAAAAdXBkYXRlQXBwbGllZFJ1bGVzBwAAAHJ1bGVfaWRzFQAAAGRlZmF1bHRf
+ZGVsaXZlcnlfcnVsZXMLAAAAYWN0aXZhdGVfa3dzHgAAAGFwcGx5VG9EZWxpdmVyeVJlbGF0ZWRN
+b3ZlbWVudHMJAAAAbWV0aG9kX2lkcxYAAAByZWN1cnNpdmVSZWluZGV4T2JqZWN0cw0AAABzdGFy
+dEJ1aWxkaW5ncwkAAABhZnRlcl90YWdzFAAAAHVwZGF0ZUNhdXNhbGl0eVN0YXRlKAoAAABzAwAA
+AExPR3MJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzDAAAAHBhY2tpbmdfbGlzdHMLAAAA
+YWN0aXZhdGVfa3dzBwAAAGNvbnRleHRzDQAAAHJlbGF0ZWRfb3JkZXJzDwAAAGFmdGVyX3BhdGhf
+bGlzdHMEAAAATm9uZXMDAAAAdGFnKAsAAABzDAAAAHN0YXRlX2NoYW5nZXMCAAAAa3dzAwAAAExP
+R3MJAAAAX2dldGF0dHJfcwwAAABwYWNraW5nX2xpc3RzCwAAAGFjdGl2YXRlX2t3cwcAAABjb250
+ZXh0cw0AAAByZWxhdGVkX29yZGVycw8AAABhZnRlcl9wYXRoX2xpc3RzBAAAAE5vbmVzAwAAAHRh
+ZygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBw
+bGllZFJ1bGUBAAAAcyAAAAAJAQkCDwMGARIBBgEQASMBJAEWAR4CLQENBTEDEwEMASgBAAAAcx0A
 AABQYWNraW5nTGlzdF91cGRhdGVBcHBsaWVkUnVsZSgBAAAAcx0AAABQYWNraW5nTGlzdF91cGRh
 dGVBcHBsaWVkUnVsZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4B
 AAAAcwAAAAA=</string> </value>
@@ -145,6 +175,12 @@ AAAAcwAAAAA=</string> </value>
                             <string>LOG</string>
                             <string>_getattr_</string>
                             <string>packing_list</string>
+                            <string>activate_kw</string>
+                            <string>context</string>
+                            <string>related_order</string>
+                            <string>after_path_list</string>
+                            <string>None</string>
+                            <string>tag</string>
                           </tuple>
                         </value>
                     </item>
