@@ -885,75 +885,46 @@ class SkinTemplateItem(ObjectTemplateItem):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
   def install(self, context, trashbin, **kw):
+    ObjectTemplateItem.install(self, context, trashbin, **kw)
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      ObjectTemplateItem.install(self, context, trashbin, **kw)
-      p = context.getPortalObject()
-      ps = p.portal_skins
-      for skin_name, selection in ps.getSkinPaths():
-        new_selection = []
-        selection = selection.split(',')
-        for relative_url in self._objects.keys():
+    p = context.getPortalObject()
+    # It is necessary to make sure that the sql connections in Z SQL Methods are valid.
+    sql_connection_list = p.objectIds(spec=('Z MySQL Database Connection',))
+    for relative_url in self._archive.keys():
+      folder = p.unrestrictedTraverse(relative_url)
+      for object in folder.objectValues(spec=('Z SQL Method',)):
+        if object.connection_id not in sql_connection_list:
+          object.connection_id = sql_connection_list[0]
+    # Add new folders into skin paths.
+    ps = p.portal_skins
+    for skin_name, selection in ps.getSkinPaths():
+      new_selection = []
+      selection = selection.split(',')
+      for relative_url in self._archive.keys():
+        if (getattr(self, 'template_format_version', 0)) == 1:
           if update_dict.has_key(relative_url) or force:
             if not force:
-              action = update_dict[relative_url]
-              if action == 'nothing':
+              if update_dict[relative_url] == 'nothing':
                 continue
-            object_path = relative_url.split('/')
-            if len(object_path) > 2:
-              continue # not a skin folder
-            object = self._objects[relative_url]
-            skin_id = object_path[1]
-            if hasattr(aq_base(object), 'getProperty'):              
-              selection_list = object.getProperty('business_template_registered_skin_selections', None)
-            else:
-              continue
-            if selection_list is None or skin_name in selection_list:
-              if skin_id not in selection and skin_id not in new_selection:
-                new_selection.append(skin_id)
-        new_selection.extend(selection)
-        # sort the layer according to skin priorities
-        new_selection.sort(lambda a, b : cmp( # separate functions here
-          b in ps.objectIds() and ps[b].getProperty(
-              'business_template_skin_layer_priority', 0) or 0,
-          a in ps.objectIds() and ps[a].getProperty(
-              'business_template_skin_layer_priority', 0) or 0))
-        ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
-      # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
-      p.changeSkin(None)
-    else:
-      ObjectTemplateItem.install(self, context, trashbin, **kw)
-      p = context.getPortalObject()
-      # It is necessary to make sure that the sql connections in Z SQL Methods are valid.
-      sql_connection_list = p.objectIds(spec=('Z MySQL Database Connection',))
-      for relative_url in self._archive.keys():
-        folder = p.unrestrictedTraverse(relative_url)
-        for object in folder.objectValues(spec=('Z SQL Method',)):
-          if object.connection_id not in sql_connection_list:
-            object.connection_id = sql_connection_list[0]
-      # Add new folders into skin paths.
-      ps = p.portal_skins
-      for skin_name, selection in ps.getSkinPaths():
-        new_selection = []
-        selection = selection.split(',')
-        for relative_url in self._archive.keys():
+          object = self._objects[relative_url]
+        else:
           object = self._archive[relative_url]
-          skin_id = relative_url.split('/')[-1]
-          selection_list = object.getProperty('business_template_registered_skin_selections', None)
-          if selection_list is None or skin_name in selection_list:
-            if skin_id not in selection:
-              new_selection.append(skin_id)
-        new_selection.extend(selection)
-        # sort the layer according to skin priorities
-        new_selection.sort(lambda a, b : cmp(
-          b in ps.objectIds() and ps[b].getProperty(
-              'business_template_skin_layer_priority', 0) or 0,
-          a in ps.objectIds() and ps[a].getProperty(
-              'business_template_skin_layer_priority', 0) or 0))
-        ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
-      # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
-      p.changeSkin(None)
+        skin_id = relative_url.split('/')[-1]
+        selection_list = object.getProperty('business_template_registered_skin_selections', None)
+        if selection_list is None or skin_name in selection_list:
+          if skin_id not in selection:
+            new_selection.append(skin_id)
+      new_selection.extend(selection)
+      # sort the layer according to skin priorities
+      new_selection.sort(lambda a, b : cmp(
+        b in ps.objectIds() and ps[b].getProperty(
+            'business_template_skin_layer_priority', 0) or 0,
+        a in ps.objectIds() and ps[a].getProperty(
+            'business_template_skin_layer_priority', 0) or 0))
+      ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+    # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
+    p.changeSkin(None)
 
   def uninstall(self, context, **kw):
     # Remove folders from skin paths.
