@@ -2841,10 +2841,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           item = getattr(self, item_name)
           if item is not None:
             item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
-       # if trahs bin is empty, remove it
-      if trashbin is not None:
-        if len(trashbin.objectIds()) == 0:
-          self.portal_trash.manage_delObjects(trashbin.getId())
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
       clearCache()
