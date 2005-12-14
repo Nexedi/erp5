@@ -659,6 +659,16 @@ class ERP5Generator(PortalGenerator):
           addTool = p.manage_addProduct['CMFActivity'].manage_addTool
           addTool('CMF Activity Tool', None) # Allow user to select active/passive
 
+    def setupTemplateTool(self, p, **kw):
+      """Setup the Template Tool. Security must be set strictly.
+      """
+      addTool = p.manage_addProduct['ERP5'].manage_addTool
+      addTool('ERP5 Template Tool', None)
+      context = p.portal_templates
+      permission_list = context.possible_permissions()
+      for permission in permission_list:
+        context.manage_permission(permission, ['Manager'], 0)
+      
     def setupTools(self, p,**kw):
         """Set up initial tools"""
 
@@ -680,6 +690,7 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Rule Tool', None)
         addTool('ERP5 Id Tool', None)
         addTool('ERP5 Simulation Tool', None)
+        self.setupTemplateTool(p)
         addTool('ERP5 Template Tool', None)
         addTool('ERP5 Trash Tool', None)
         addTool('ERP5 Alarm Tool', None)
