@@ -43,6 +43,7 @@ class PreferenceTool(BaseTool):
   id            = 'portal_preferences'
   meta_type     = 'ERP5 Preference Tool'
   portal_type   = 'Preference Tool'
+  title         = 'Preferences'
   allowed_types = ( 'ERP5 Preference',)
   security      = ClassSecurityInfo()
 
