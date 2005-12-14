@@ -132,8 +132,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       os.makedirs(self.path)
 
   def addFolder(self, name=''):
-    name = pathname2url(name)
-    if name !='':
+     if name !='':
       path = os.path.join(self.path, name)
       if not os.path.exists(path):
         os.makedirs(path)
@@ -193,8 +192,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     self.tar = tarfile.open('', 'w:gz', self.fobj)
 
   def addFolder(self, name=''):
-    name = pathname2url(name)
-    if not os.path.exists(name):
+     if not os.path.exists(name):
       os.makedirs(name)
 
   def addObject(self, object, name, path=None, ext='.xml'):
@@ -3053,8 +3051,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       if self.getBuildingState() != 'built':
         raise TemplateConditionError, 'Business Template must be build before export'
-
-
+      
       if local:
         # we export into a folder tree
         bta = BusinessTemplateFolder(creation=1, path=path)
@@ -3078,8 +3075,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Export each part
       for item_name in self._item_name_list:
         getattr(self, item_name).export(context=self, bta=bta)
-
-
+        
       return bta.finishCreation()
 
     security.declareProtected(Permissions.ManagePortal, 'importFile')

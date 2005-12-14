@@ -128,6 +128,7 @@ class TemplateTool (BaseTool):
       """
       cfg = getConfiguration()
       path = os.path.join(cfg.clienthome, '%s' % (business_template.getTitle(),))
+      path = pathname2url(path)
       business_template.export(path=path, local=1)
       if REQUEST is not None:
         ret_url = business_template.absolute_url() + '/' + REQUEST.get('form_id', 'view')
