@@ -231,14 +231,14 @@ XXX How to deal with standardize ?\n
   AND stock.quantity < 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
-        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_node_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
-        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_node_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n
 </dtml-if>\n
 \n
@@ -369,14 +369,14 @@ XXX How to deal with standardize ?\n
   AND stock.quantity < 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
-        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_node_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
-        OR inventory_movement.destination_uid IS NULL\n
+        OR stock.mirror_node_uid IS NULL\n
         OR stock.mirror_section_uid IS NULL )\n
 </dtml-if>\n
 \n

@@ -1,3 +1,6 @@
+2005-12-14 yo
+* Resource_zGetInventory and Resource_zGetInventoryList must use stock.mirror_node_uid instead of inventory_movement.destionation_uid.
+
 2005-12-14 aurel
 * fix naming convention
 * set default value of form_id in Base_cancel
