@@ -66,6 +66,7 @@ from xml.dom.minidom import parse
 from Products.CMFCore.Expression import Expression
 import tarfile
 from urllib import pathname2url, url2pathname
+from difflib import unified_diff
 
 
 catalog_method_list = ('_is_catalog_method_archive', '_is_catalog_list_method_archive',
@@ -259,11 +260,49 @@ class BaseTemplateItem(Implicit, Persistent):
   def build(self, context, **kw):
     pass
 
-  def install(self, context, **kw):
+  def preinstall(self, context, installed_bt, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      modified_object_list = {}
+      new_keys = self._objects.keys()
+      for path in new_keys:
+        if installed_bt._objects.has_key(path):
+          # compare object to see it there is changes
+          new_obj_xml = self.generate_xml(path=path)
+          old_obj_xml = installed_bt.generate_xml(path=path)
+          if new_obj_xml != old_obj_xml:
+            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+        else: # new object
+          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+      # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+
+  def install(self, context, trashbin, **kw):
     pass
 
   def uninstall(self, context, **kw):
     pass
+
+  def remove(self, context, **kw):
+    remove_dict = kw.get('remove_object_dict', {})
+    keys = self._objects.keys()
+    keys.sort()
+    # if you choose remove, the object and all its subobjects will be removed
+    # even if you choose backup or keep for subobjects
+    # it is same behaviour for backup_and_remove, all we be save
+    for path in keys:
+      if remove_dict.has_key(path):
+        action = remove_dict[path]
+        if action == 'save_and_remove':
+          # like trash
+          self.uninstall(context, trash=1, object_path=path, **kw)
+        elif action == 'remove':
+          self.uninstall(context, trash=0, object_path=path, **kw)
+        
 
   def trash(self, context, new_item, **kw):
     # trash is quite similar to uninstall.
@@ -358,21 +397,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       self._objects[relative_url] = object
       object.wl_clearLocks()
 
-  def _backupObject(self, container, object_id, **kw):
-    """
-    Rename object as a _btsave_
-    """
-    container_ids = container.objectIds()
-    n = 0
-    new_object_id = object_id
-    while new_object_id in container_ids:
-      n = n + 1
-      new_object_id = '%s_btsave_%s' % (object_id, n)
-    # XXX manage_renameObject is not in ERP5 API. Use setId.
-    container.manage_renameObject(object_id, new_object_id)
-    # Returned ID of the backuped object
-    return new_object_id
-
   def _importFile(self, file_name, file):
     # import xml file
     obj = self
@@ -383,7 +407,48 @@ class ObjectTemplateItem(BaseTemplateItem):
     obj = connection.importFile(file, customImporters=customImporters)
     self._objects[file_name[:-4]] = obj
 
-  def install(self, context, **kw):
+  def preinstall(self, context, installed_bt, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      modified_object_list = {}
+      portal = context.getPortalObject()
+      new_keys = self._objects.keys()
+      for path in new_keys:
+        if installed_bt._objects.has_key(path):
+          # compare object to see it there is changes
+          new_object = self._objects[path]
+          old_object = installed_bt._objects[path]
+          new_io = StringIO()
+          old_io = StringIO()
+          OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
+          OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
+          new_obj_xml = new_io.getvalue()
+          old_obj_xml = old_io.getvalue()
+          new_io.close()
+          old_io.close()
+          if new_obj_xml != old_obj_xml:
+            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+        else: # new object
+          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+      # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def _backupObject(self, action, trashbin, container_path, object_id):
+    """
+      Backup the object in portal trash if necessery and return its subobjects
+    """
+    if action == 'btsave':
+      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1)
+    elif action == 'install':
+      subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0)
+    return subobjects_dict
+    
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
       groups = {}
       portal = context.getPortalObject()
@@ -391,41 +456,82 @@ class ObjectTemplateItem(BaseTemplateItem):
       keys = self._objects.keys()
       keys.sort()
       for path in keys:
-        container_path = path.split('/')[:-1]
-        object_id = path.split('/')[-1]
-        container = portal.unrestrictedTraverse(container_path)
-        container_ids = container.objectIds()
-        if object_id in container_ids:    # Object already exists
-          self._backupObject(container, object_id)
-        object = self._objects[path]
-        if hasattr(object, 'groups'):
-          # we must keep original order groups because they change when we add subobjects
-          groups[path] = deepcopy(object.groups)
-        object = object._getCopy(container)
-        container._setObject(object_id, object)
-        object = container._getOb(object_id)
-        object.manage_afterClone(object)
-        object.wl_clearLocks()
-        if object.meta_type in ('Z SQL Method',):
-          # It is necessary to make sure that the sql connection
-          # in this method is valid.
-          sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
-          if object.connection_id not in sql_connection_list:
-            object.connection_id = sql_connection_list[0]
+        if update_dict.has_key(path) or force:
+          # get action for the oject
+          if not force:
+            action = update_dict[path]
+            if action == 'nothing':
+              continue
+          else:
+            action = 'btsave'
+          # get subobjects in path
+          container_path = path.split('/')[:-1]
+          object_id = path.split('/')[-1]
+          try:
+            container = portal.unrestrictedTraverse(container_path)
+          except KeyError:
+            # parent object can be set to nothing, in this case just go on
+            container_url = '/'.join(container_path)            
+            if update_dict.has_key(container_url):
+              if update_dict[container_url] == 'nothing':
+                continue
+            raise
+          container_ids = container.objectIds()
+          subobjects_dict = {}
+          # Object already exists
+          if object_id in container_ids:
+            subobjects_dict = self._backupObject(action, trashbin, container_path, object_id)
+            container.manage_delObjects([object_id])
+          # install object
+          object = self._objects[path]
+          if hasattr(object, 'groups'):
+            # we must keep original order groups because they change when we add subobjects
+            groups[path] = deepcopy(object.groups)
+          # copy the object
+          object = object._getCopy(container)
+          container._setObject(object_id, object)
+          object = container._getOb(object_id)
+          object.manage_afterClone(object)
+          object.wl_clearLocks()
+          # import sub objects if there is
+          if len(subobjects_dict) > 0:
+            # get a jar
+            connection = object._p_jar
+            obj = object
+            while connection is None:
+              obj = obj.aq_parent
+              connection = obj._p_jar
+            # import subobjects
+            for subobject_id in subobjects_dict.keys():
+              subobject_data = subobjects_dict[subobject_id]
+              subobject_data.seek(0)
+              subobject = connection.importFile(subobject_data)
+              if subobject_id not in object.objectIds():
+                object._setObject(subobject_id, subobject)
+              
+          if object.meta_type in ('Z SQL Method',):
+            # It is necessary to make sure that the sql connection
+            # in this method is valid.
+            sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
+            if object.connection_id not in sql_connection_list:
+              object.connection_id = sql_connection_list[0]
       # now put original order group
       for path in groups.keys():
         object = portal.unrestrictedTraverse(path)
         object.groups = groups[path]
     else:
-      BaseTemplateItem.install(self, context, **kw)
+      # for old business template format
+      BaseTemplateItem.install(self, context, trashbin, **kw)
       portal = context.getPortalObject()
-      for relative_url,object in self._archive.items():
+      for relative_url in self._archive.keys():
+        object = self._archive[relative_url]
         container_path = relative_url.split('/')[0:-1]
         object_id = relative_url.split('/')[-1]
         container = portal.unrestrictedTraverse(container_path)
         container_ids = container.objectIds()
-        if object_id in container_ids:    # Object already exists
-          self._backupObject(container, object_id)
+        if object_id in container_ids:    # Object already exists          
+          self._backupObject('btsave', trashbin, container_path, object_id)
+          container.manage_delObjects([object_id])
         # Set a hard link
         object = object._getCopy(container)
         container._setObject(object_id, object)
@@ -443,17 +549,22 @@ class ObjectTemplateItem(BaseTemplateItem):
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
     trash = kw.get('trash', 0)
-    for relative_url in self._archive.keys():
+    trashbin = kw.get('trashbin', None)
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for relative_url in object_keys:
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
-      try:
+      try:        
         container = portal.unrestrictedTraverse(container_path)
         if trash:
-          self._backupObject(container, object_id)
-        else:
-          if object_id in container.objectIds():
-            container.manage_delObjects([object_id])
-      except NotFound:
+          self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
+        container.manage_delObjects([object_id])
+      except (NotFound, KeyError):
+        # object is already backup and/or removed
         pass
     BaseTemplateItem.uninstall(self, context, **kw)
 
@@ -651,17 +762,17 @@ class CategoryTemplateItem(ObjectTemplateItem):
       relative_url = '/'.join([url,id])
       object = p.unrestrictedTraverse(relative_url)
       object_copy = object._getCopy(context)
-      id_list = object_copy.objectIds()
-      if len(id_list) > 0:
-        self.build_sub_objects(context, id_list, relative_url)
-        object_copy.manage_delObjects(list(id_list))
       if hasattr(object, '__ac_local_roles__'):
         # remove local roles
         object.__ac_local_roles__ = None
       if hasattr(object, '_owner'):
         object._owner = None
+      id_list = object_copy.objectIds()
+      if len(id_list) > 0:
+        self.build_sub_objects(context, id_list, relative_url)
+        object_copy.manage_delObjects(list(id_list))
       if hasattr(aq_base(object_copy), 'uid'):
-        object_copy.uid = None
+        object_copy.uid = None        
       self._objects[relative_url] = object_copy
       object.wl_clearLocks()
 
@@ -671,6 +782,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
     for relative_url in self._archive.keys():
       object = p.unrestrictedTraverse(relative_url)
       object_copy = object._getCopy(context)
+      if hasattr(object, '__ac_local_roles__'):
+        # remove local roles
+        object.__ac_local_roles__ = None
+      if hasattr(object, '_owner'):
+        object._owner = None
       include_sub_categories = object.getProperty('business_template_include_sub_categories', 0)
       id_list = object_copy.objectIds()
       if len(id_list) > 0 and include_sub_categories:
@@ -678,20 +794,17 @@ class CategoryTemplateItem(ObjectTemplateItem):
         object_copy.manage_delObjects(list(id_list))
       else:
         object_copy.manage_delObjects(list(id_list))
-      if hasattr(object, '__ac_local_roles__'):
-        # remove local roles
-        object.__ac_local_roles__ = None
-      if hasattr(object, '_owner'):
-        object._owner = None
       if hasattr(aq_base(object_copy), 'uid'):
         object_copy.uid = None
       self._objects[relative_url] = object_copy
       object.wl_clearLocks()
-
-  def install(self, context, light_install = 0, **kw):
+      
+  def install(self, context, trashbin, light_install = 0, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
-      if light_install==0:
-        ObjectTemplateItem.install(self, context, **kw)
+      if light_install == 0:
+        ObjectTemplateItem.install(self, context, trashbin, **kw)
       else:
         portal = context.getPortalObject()
         category_tool = portal.portal_categories
@@ -699,28 +812,61 @@ class CategoryTemplateItem(ObjectTemplateItem):
         keys = self._objects.keys()
         keys.sort()
         for path in keys:
-          # Wrap the object by an aquisition wrapper for _aq_dynamic.
-          object = self._objects[path]
-          object = object.__of__(category_tool)
-          container_path = path.split('/')[:-1]
-          category_id = path.split('/')[-1]
-          container = category_tool.unrestrictedTraverse(container_path)
-          container_ids = container.objectIds()
-          if category_id in container_ids:    # Object already exists
-            self._backupObject(container, category_id)
-          category = container.newContent(portal_type=object.getPortalType(), id=category_id)
-          for property in object.propertyIds():
-            if property not in ('id', 'uid'):
-              category.setProperty(property, object.getProperty(property, evaluate=0))
+          if update_dict.has_key(path) or force:
+            if not force:
+              action = update_dict[path]
+              if action == 'nothing':
+                continue
+            else:
+              action = 'btsave'
+            # Wrap the object by an aquisition wrapper for _aq_dynamic.
+            object = self._objects[path]
+            object = object.__of__(category_tool)
+            container_path = path.split('/')[:-1]
+            category_id = path.split('/')[-1]
+            try:
+              container = category_tool.unrestrictedTraverse(container_path)
+            except KeyError:
+              # parent object can be set to nothing, in this case just go on
+              container_url = '/'.join(container_path)            
+              if update_dict.has_key(container_url):
+                if update_dict[container_url] == 'nothing':
+                  continue
+              raise
+            container_ids = container.objectIds() 
+            # Object already exists
+            if category_id in container_ids:
+              subobjects_dict = self._backupObject(action, trashbin, container_path, category_id)
+              container.manage_delObjects([category_id])
+            category = container.newContent(portal_type=object.getPortalType(), id=category_id)
+            for property in object.propertyIds():
+              if property not in ('id', 'uid'):
+                category.setProperty(property, object.getProperty(property, evaluate=0))
+            # import sub objects if there is
+            if len(subobjects_dict) > 0:
+              # get a jar
+              connection = object._p_jar
+              obj = category
+              while connection is None:
+                obj = obj.aq_parent
+                connection = obj._p_jar
+              # import subobjects
+              for subobject_id in subobjects_dict.keys():
+                subobject_data = subobjects_dict[subobject_id]
+                subobject_data.seek(0)
+                subobject = connection.importFile(subobject_data)
+                if subobject_id not in category.objectIds():
+                  category._setObject(subobject_id, subobject)
     else:
-      BaseTemplateItem.install(self, context, **kw)
+      BaseTemplateItem.install(self, context, trashbin, **kw)
       portal = context.getPortalObject()
       category_tool = portal.portal_categories
       tool_id = self.tool_id
       if light_install==0:
-        ObjectTemplateItem.install(self, context, **kw)
+        ObjectTemplateItem.install(self, context, trashbin, **kw)
       else:
-        for relative_url,object in self._archive.items():
+        for relative_url in self._archive.keys():
+          object = self._archive[relative_url]
           # Wrap the object by an aquisition wrapper for _aq_dynamic.
           object = object.__of__(category_tool)
           container_path = relative_url.split('/')[0:-1]
@@ -728,35 +874,43 @@ class CategoryTemplateItem(ObjectTemplateItem):
           container = category_tool.unrestrictedTraverse(container_path)
           container_ids = container.objectIds()
           if category_id in container_ids:    # Object already exists
-            self._backupObject(container, category_id)
+            subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, category_id, save=1)
+            container.manage_delObjects([category_id])
           category = container.newContent(portal_type=object.getPortalType(), id=category_id)
           for property in object.propertyIds():
             if property not in ('id', 'uid'):
               category.setProperty(property, object.getProperty(property, evaluate=0))
-
 
 class SkinTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_skins', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
-  def install(self, context, **kw):
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
-      ObjectTemplateItem.install(self, context, **kw)
+      ObjectTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
       ps = p.portal_skins
       for skin_name, selection in ps.getSkinPaths():
         new_selection = []
         selection = selection.split(',')
-        for relative_url, object in self._objects.items():
-          skin_id = relative_url.split('/')[1]
-          if hasattr(object, 'getProperty'):
-            selection_list = object.getProperty('business_template_registered_skin_selections', None)
-          else:
-            continue
-          if selection_list is None or skin_name in selection_list:
-            if skin_id not in selection and skin_id not in new_selection:
-              new_selection.append(skin_id)
+        for relative_url in self._objects.keys():
+          if update_dict.has_key(relative_url) or force:
+            if not force:
+              action = update_dict[relative_url]
+              if action == 'nothing':
+                continue
+            object = self._objects[relative_url]
+            skin_id = relative_url.split('/')[1]
+            if hasattr(object, 'getProperty'):
+              selection_list = object.getProperty('business_template_registered_skin_selections', None)
+            else:
+              continue
+            if selection_list is None or skin_name in selection_list:
+              if skin_id not in selection and skin_id not in new_selection:
+                new_selection.append(skin_id)
         new_selection.extend(selection)
         # sort the layer according to skin priorities
         new_selection.sort(lambda a, b : cmp( # separate functions here
@@ -768,7 +922,7 @@ class SkinTemplateItem(ObjectTemplateItem):
       # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
       p.changeSkin(None)
     else:
-      ObjectTemplateItem.install(self, context, **kw)
+      ObjectTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
       # It is necessary to make sure that the sql connections in Z SQL Methods are valid.
       sql_connection_list = p.objectIds(spec=('Z MySQL Database Connection',))
@@ -782,7 +936,8 @@ class SkinTemplateItem(ObjectTemplateItem):
       for skin_name, selection in ps.getSkinPaths():
         new_selection = []
         selection = selection.split(',')
-        for relative_url, object in self._archive.items():
+        for relative_url in self._archive.keys():
+          object = self._archive[relative_url]
           skin_id = relative_url.split('/')[-1]
           selection_list = object.getProperty('business_template_registered_skin_selections', None)
           if selection_list is None or skin_name in selection_list:
@@ -801,8 +956,13 @@ class SkinTemplateItem(ObjectTemplateItem):
 
   def uninstall(self, context, **kw):
     # Remove folders from skin paths.
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()    
     ps = context.portal_skins
-    skin_id_list = [relative_url.split('/')[-1] for relative_url in self._archive.keys()]
+    skin_id_list = [relative_url.split('/')[-1] for relative_url in object_keys]
     for skin_name, selection in ps.getSkinPaths():
       new_selection = []
       selection = selection.split(',')
@@ -822,6 +982,80 @@ class WorkflowTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_workflow', **kw):
     return ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+
+  def preinstall(self, context, installed_bt, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      modified_object_list = {}
+      portal = context.getPortalObject()
+      new_keys = self._objects.keys()
+      for path in new_keys:
+        if len(path.split('/')) == 2:
+          if installed_bt._objects.has_key(path):          
+            # compare object to see it there is changes
+            new_object = self._objects[path]
+            old_object = installed_bt._objects[path]
+            new_io = StringIO()
+            old_io = StringIO()
+            OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
+            OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
+            new_obj_xml = new_io.getvalue()
+            old_obj_xml = old_io.getvalue()
+            new_io.close()
+            old_io.close()
+            if new_obj_xml != old_obj_xml:
+              modified_object_list.update({path : ['Modified', 'Workflow']})
+          else: # new object
+            modified_object_list.update({path : ['New', 'Workflow']})
+      # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def install(self, context, trashbin, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      groups = {}
+      portal = context.getPortalObject()
+      # sort to add objects before their subobjects
+      keys = self._objects.keys()
+      keys.sort()
+      update_dict = kw.get('object_to_update')
+      force = kw.get('force')
+      for path in keys:
+        wf_path = '/'.join(path.split('/')[:2])
+        if wf_path in update_dict or force:
+          if not force:
+            action = update_dict[wf_path]
+            if action == 'nothing':
+              continue
+          else:
+            action = 'btsave'
+          container_path = path.split('/')[:-1]
+          object_id = path.split('/')[-1]
+          try:
+            container = portal.unrestrictedTraverse(container_path)
+          except KeyError:
+            # parent object can be set to nothing, in this case just go on
+            container_url = '/'.join(container_path)            
+            if update_dict.has_key(container_url):
+              if update_dict[container_url] == 'nothing':
+                continue
+            raise
+          container_ids = container.objectIds()
+          if object_id in container_ids:    # Object already exists
+            self._backupObject(action, trashbin, container_path, object_id)
+            container.manage_delObjects([object_id])
+          object = self._objects[path]
+          object = object._getCopy(container)
+          container._setObject(object_id, object)
+          object = container._getOb(object_id)
+          object.manage_afterClone(object)
+          object.wl_clearLocks()
+    else:
+      ObjectTemplateItem.install(self, context, trashbin, **kw)
+
+  
 
 class PortalTypeTemplateItem(ObjectTemplateItem):
 
@@ -906,8 +1140,10 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     xml_data += os.linesep+'</workflow_chain>'
     bta.addObject(object=xml_data, name='workflow_chain_type',  path=root_path)
 
-  def install(self, context, **kw):
-    ObjectTemplateItem.install(self, context, **kw)
+  def install(self, context, trashbin, **kw):
+    ObjectTemplateItem.install(self, context, trashbin, **kw)
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     # We now need to setup the list of workflows corresponding to
     # each portal type
     (default_chain, chain_dict) = self._getChainByType(context)
@@ -916,31 +1152,40 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # not very usefull
     default_chain = ''
     if (getattr(self, 'template_format_version', 0)) == 1:
-      objects = self._objects.values()
+      objects_list = self._objects
     else:
-      objects = self._archive.values()
-    for object in objects:
-      portal_type = object.id
-      chain_dict['chain_%s' % portal_type] = \
-                            self._workflow_chain_archive[portal_type]
-      context.portal_workflow.manage_changeWorkflows(default_chain,
-                                                     props=chain_dict)
+      objects_list = self._archive
+    for path in objects_list.keys():
+      if update_dict.has_key(path) or force:
+        if not force:
+          action = update_dict[path]
+          if action == 'nothing':
+            continue          
+        object = objects_list[path]
+        portal_type = object.id
+        chain_dict['chain_%s' % portal_type] = \
+                              self._workflow_chain_archive[portal_type]
+        context.portal_workflow.manage_changeWorkflows(default_chain,
+                                                       props=chain_dict)
 
-  def _backupObject(self, container, object_id, **kw):
+  def _backupObject(self, action, trashbin, container_path, object_id, **kw):
     """
       Backup portal type and keep the workflow chain.
     """
-    # Get the chain value
-    (default_chain, chain_dict) = self._getChainByType(self)
-    chain = chain_dict['chain_%s' % object_id]
-    # Backup the portal type
-    backup_id = ObjectTemplateItem._backupObject(self, container,
-                                                 object_id, **kw)
-    # Restore the chain to the backuped portal type
-    (default_chain, chain_dict) = self._getChainByType(self)
-    chain_dict['chain_%s' % backup_id] = chain
-    self.portal_workflow.manage_changeWorkflows(default_chain,
-                                                props=chain_dict)
+    subobjects_dict = {}
+    if action == 'btsave':
+      # Get the chain value
+#       (default_chain, chain_dict) = self._getChainByType(self)
+#       chain = chain_dict['chain_%s' % object_id]
+      # Backup the portal type    
+      subobjects_dict = ObjectTemplateItem._backupObject(self, action, trashbin, container_path,
+                                                        object_id, **kw)
+    return subobjects_dict
+      # Restore the chain to the backuped portal type
+#       (default_chain, chain_dict) = self._getChainByType(self)
+#       chain_dict['chain_%s' % backup_id] = chain
+#       self.portal_workflow.manage_changeWorkflows(default_chain,
+#                                                   props=chain_dict)
 
   def diff(self, verbose=0, **kw):
     """
@@ -1016,7 +1261,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     if catalog is None:
       LOG('BusinessTemplate build', 0, 'catalog not found')
       return
-    for object in self._objects.values():
+    for onbject in self._objects.values():
       method_id = object.id
       self._is_catalog_method_archive[method_id] = method_id in catalog.sql_catalog_object
       self._is_catalog_list_method_archive[method_id] = method_id in catalog.sql_catalog_object_list
@@ -1075,8 +1320,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       f.write(str(xml_data))
       f.close()
 
-  def install(self, context, **kw):
-    ObjectTemplateItem.install(self, context, **kw)
+  def install(self, context, trashbin, **kw):
+    ObjectTemplateItem.install(self, context, trashbin, **kw)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1091,10 +1336,32 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     sql_update_object = list(catalog.sql_update_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
 
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      values = self._objects.values()
-    else:
-      values = self._archive.values()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    values = []
+    new_bt_format = getattr(self, 'template_format_version', 0)
+
+    if force: # get all objects
+      if new_bt_format:
+        values = self._objects.values()
+      else:
+        values = self._archive.values()
+    else: # get only selected object
+      if new_bt_format == 1:
+        keys = self._objects.keys()
+      else:
+        keys = self._archive.keys()
+      for key in keys:
+        if update_dict.has_key(key) or force:
+          if not force:
+            action = update_dict[key]
+            if action == 'nothing':
+              continue          
+          if new_bt_format:
+            values.append(self._objects[key])
+          else:
+            values.append(self._archive[key])
+          
     for object in values:
       method_id = object.id
 
@@ -1158,11 +1425,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def uninstall(self, context, **kw):
 
-    # XXXx to be removed
     ObjectTemplateItem.uninstall(self, context, **kw)
-    return
-
-
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1172,6 +1435,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
+    values = []
+    object_path = kw.get('object_path', None)
+    # get required values
+    if object_path is None:
+      values = self._archive.values()
+    else:      
+      values.append(self._archive[object_path])
+
     # Make copies of attributes of the default catalog of portal_catalog.
     sql_catalog_object = list(catalog.sql_catalog_object)
     sql_catalog_object_list = list(catalog.sql_catalog_object_list)
@@ -1179,7 +1450,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     sql_update_object = list(catalog.sql_update_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
 
-    for object in self._archive.values():
+    for object in values:
       method_id = object.id
 
       if method_id in sql_catalog_object:
@@ -1299,31 +1570,41 @@ class ActionTemplateItem(ObjectTemplateItem):
       else:
         raise NotFound, 'Action %r not found' %(id,)
 
-  def install(self, context, **kw):
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
       p = context.getPortalObject()
       for id in self._objects.keys():
-        path = id.split(os.sep)
-        object = p.unrestrictedTraverse(path[:-1])
-        for ai in object.listActions():
-          if getattr(ai, 'id') == path[-1]:
-            raise TemplateConflictError, 'the portal type %s already has the action %s' % (object.id, path[-1])
-        action = self._objects[id]
-        object.addAction(
-                      id = action.id
-                    , name = action.title
-                    , action = action.action.text
-                    , condition = action.getCondition()
-                    , permission = action.permissions
-                    , category = action.category
-                    , visible = action.visible
-                    , icon = getattr(action, 'icon', None) and action.icon.text or ''
-                    , optional = getattr(action, 'optional', 0)
+        if update_dict.has_key(id) or force:
+          if not force:
+            action = update_dict[id]
+            if action == 'nothing':
+              continue
+          path = id.split(os.sep)
+          object = p.unrestrictedTraverse(path[:-1])
+          action_list = object.listActions()
+          for index in range(len(action_list)):
+            if getattr(action_list[index], 'id') == path[-1]:          
+              # remove previous action
+              object.deleteActions(selections=(index,))
+          action = self._objects[id]
+          object.addAction(
+                        id = action.id
+                      , name = action.title
+                      , action = action.action.text
+                      , condition = action.getCondition()
+                      , permission = action.permissions
+                      , category = action.category
+                      , visible = action.visible
+                      , icon = getattr(action, 'icon', None) and action.icon.text or ''
+                      , optional = getattr(action, 'optional', 0)
                     )
     else:
-      BaseTemplateItem.install(self, context, **kw)
+      BaseTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
-      for id,action in self._archive.items():
+      for id in self._archive.keys():
+        action = self._archive[id]
         relative_url, key, value = self._splitPath(id)
         object = p.unrestrictedTraverse(relative_url)
         for ai in object.listActions():
@@ -1343,7 +1624,14 @@ class ActionTemplateItem(ObjectTemplateItem):
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
-    for id,action in self._archive.items():
+    object_path = kw.get("object_path", None)
+    if object_path is not None:
+      keys = [object_path]
+    else:
+      keys = self._archive.keys()
+    
+    for id in keys:
+      action = self._archive[id]
       relative_url, key, value = self._splitPath(id)
       object = p.unrestrictedTraverse(relative_url)
       action_list = object.listActions()
@@ -1388,19 +1676,27 @@ class SitePropertyTemplateItem(BaseTemplateItem):
         value = str(prop.getElementsByTagName('value')[0].childNodes[0].data)
       self._objects[str(id)] = (str(type), value)
 
-  def install(self, context, **kw):
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
       p = context.getPortalObject()
       for path in self._objects.keys():
-        dir, id = os.path.split(path)
-        if p.hasProperty(id):
-          continue
-        type, property = self._objects[path]
-        p._setProperty(id, property, type=type)
+        if update_dict.has_key(path) or force:
+          if not force:
+            action = update_dict[path]
+            if action == 'nothing':
+              continue          
+          dir, id = os.path.split(path)
+          if p.hasProperty(id):
+            continue
+          type, property = self._objects[path]
+          p._setProperty(id, property, type=type)
     else:
-      BaseTemplateItem.install(self, context, **kw)
+      BaseTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
-      for id,property in self._archive.items():
+      for id,property in self._archive.keys():
+        property = self._archive[id]
         if p.hasProperty(id):
           continue
           # Too much???
@@ -1409,7 +1705,12 @@ class SitePropertyTemplateItem(BaseTemplateItem):
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
-    for id in self._archive.keys():
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      keys = [object_path]
+    else:
+      keys = self._archive.keys()
+    for id in keys:
       if p.hasProperty(id):
         p._delProperty(id)
     BaseTemplateItem.uninstall(self, context, **kw)
@@ -1500,27 +1801,36 @@ class ModuleTemplateItem(BaseTemplateItem):
       xml_data = self.generate_xml(path=id)
       bta.addObject(object=xml_data, name=id, path=path)
 
-  def install(self, context, **kw):
+  def install(self, context, trashbin, **kw):
     portal = context.getPortalObject()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
-      items = self._objects.items()
+      items = self._objects
     else:
-      items = self._archive.items()
-    for id,mapping in items:
-      path, id = os.path.split(id)
-      if id in portal.objectIds():
-        module = portal._getOb(id)
-        module.portal_type = str(mapping['portal_type']) # XXX
-      else:
-        module = portal.newContent(id=id, portal_type=str(mapping['portal_type']))
-      module.setTitle(str(mapping['title']))
-      for name,role_list in list(mapping['permission_list']):
-        acquire = (type(role_list) == type([]))
-        try:
-          module.manage_permission(name, roles=role_list, acquire=acquire)
-        except ValueError:
-          # Ignore a permission not present in this system.
-          pass
+      items = self._archive
+
+    for id in items.keys():
+      if update_dict.has_key(id) or force:
+        if not force:
+          action = update_dict[id]
+          if action == 'nothing':
+            continue
+        mapping = items[id]
+        path, id = os.path.split(id)
+        if id in portal.objectIds():
+          module = portal._getOb(id)
+          module.portal_type = str(mapping['portal_type']) 
+        else:
+          module = portal.newContent(id=id, portal_type=str(mapping['portal_type']))
+        module.setTitle(str(mapping['title']))
+        for name,role_list in list(mapping['permission_list']):
+          acquire = (type(role_list) == type([]))
+          try:
+            module.manage_permission(name, roles=role_list, acquire=acquire)
+          except ValueError:
+            # Ignore a permission not present in this system.
+            pass
 
   def _importFile(self, file_name, file):
     dict = {}
@@ -1553,11 +1863,21 @@ class ModuleTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = dict
 
   def uninstall(self, context, **kw):
+    trash = kw.get('trash', 0)      
+    object_path = kw.get('object_path', None)
+    trashbin = kw.get('trashbin', None)
+    if object_path is None:
+      keys = self._archive.keys()
+    else:
+      keys = [object_path]
     p = context.getPortalObject()
     id_list = p.objectIds()
-    for id in self._archive.keys():
+    for id in keys:
       if id in id_list:
         try:
+          if trash:
+            container_path = id.split('/')
+            self.portal_trash.backupObject(trashbin, container_path, id, save=1, keep_subobjects=1)
           p.manage_delObjects([id])
         except NotFound:
           pass
@@ -1578,25 +1898,61 @@ class DocumentTemplateItem(BaseTemplateItem):
     for id in self._archive.keys():
       self._objects[self.__class__.__name__+os.sep+id] = globals()[self.local_file_reader_name](id)
 
-  def install(self, context, **kw):
+  def preinstall(self, context, installed_bt, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      modified_object_list = {}
+      new_keys = self._objects.keys()
+      for path in new_keys:
+        if installed_bt._objects.has_key(path):
+          # compare object to see if there is changes
+          new_obj_code = self._objects[path]
+          old_obj_code = installed_bt._objects[path]
+          if new_obj_code != old_obj_code:
+            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+        else: # new object
+          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+          # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
       for id in self._objects.keys():
-        text = self._objects[id]
-        path, name = os.path.split(id)
-        # This raises an exception if the file already exists.
-        globals()[self.local_file_writer_name](name, text, create=1)
-        if self.local_file_importer_name is not None:
-          globals()[self.local_file_importer_name](name)
+        if update_dict.has_key(id) or force:
+          if not force:
+            action = update_dict[id]
+            if action == 'nothing':
+              continue
+          text = self._objects[id]
+          path, name = os.path.split(id)
+          # This raises an exception if the file already exists.
+          try:
+            globals()[self.local_file_writer_name](name, text, create=1)
+          except IOError:
+            continue
+          if self.local_file_importer_name is not None:
+            globals()[self.local_file_importer_name](name)
     else:
-      BaseTemplateItem.install(self, context, **kw)
-      for id,text in self._archive.items():
+      BaseTemplateItem.install(self, context, trashbin, **kw)
+      for id in self._archive.keys():
+        text = self._archive[id]
         # This raises an exception if the file exists.
         globals()[self.local_file_writer_name](id, text, create=1)
         if self.local_file_importer_name is not None:
           globals()[self.local_file_importer_name](id)
 
   def uninstall(self, context, **kw):
-    for id in self._archive.keys():
+    object_path = kw.get('object_path', None)    
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for id in object_keys:
       globals()[self.local_file_remover_name](id)
     BaseTemplateItem.uninstall(self, context, **kw)
 
@@ -1648,7 +2004,23 @@ class RoleTemplateItem(BaseTemplateItem):
     if len(role_list) > 0:
       self._objects[self.__class__.__name__+os.sep+'role_list'] = role_list
 
-  def install(self, context, **kw):
+  def preinstall(self, context, installed_bt, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      modified_object_list = {}
+      new_roles = self._objects.keys()
+      for role in new_roles:
+        if installed_bt._objects.has_key(role):
+          continue
+        else: # only show new roles
+          modified_object_list.update({role : ['New', 'Role']})
+      # get removed roles
+      old_roles = installed_bt._objects.keys()
+      for role in old_roles:
+        if role not in new_roles:
+          modified_object_list.update({role : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def install(self, context, trashbin, **kw):
     p = context.getPortalObject()
     # get roles
     if (getattr(self, 'template_format_version', 0)) == 1:
@@ -1732,14 +2104,14 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     sql_search_result_keys = list(catalog.sql_search_result_keys)
-    role_list = []
+    key_list = []
     for key in self._archive.keys():
       if key in sql_search_result_keys:
-        role_list.append(key)
+        key_list.append(key)
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
-    if len(role_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'key_list'] = role_list
+    if len(key_list) > 0:
+      self._objects[self.__class__.__name__+os.sep+'key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -1751,7 +2123,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       list.append(str(value))
     self._objects[file_name[:-4]] = list
 
-  def install(self, context, **kw):
+  def install(self, context, trashbin, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1769,11 +2141,17 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
         keys.append(k)
     else:
       keys = self._archive.keys()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     for key in keys:
-      if key not in sql_search_result_keys:
-        sql_search_result_keys.append(key)
+      if update_dict.has_key(key) or force:
+        if not force:
+          action = update_dict[key]
+          if action == 'nothing':
+            continue          
+        if key not in sql_search_result_keys:
+          sql_search_result_keys.append(key)
     catalog.sql_search_result_keys = sql_search_result_keys
-
 
   def uninstall(self, context, **kw):
     try:
@@ -1784,7 +2162,12 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     sql_search_result_keys = list(catalog.sql_search_result_keys)
-    for key in self._archive.keys():
+    object_path = kw.get('object_path', None)    
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for key in object_keys:
       if key in sql_search_result_keys:
         sql_search_result_keys.remove(key)
     catalog.sql_search_result_keys = sql_search_result_keys
@@ -1819,14 +2202,14 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     sql_search_related_keys = list(catalog.sql_catalog_related_keys)
-    role_list = []
+    key_list = []
     for key in self._archive.keys():
       if key in sql_search_related_keys:
-        role_list.append(key)
+        key_list.append(key)
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
-    if len(role_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'key_list'] = role_list
+    if len(key_list) > 0:
+      self._objects[self.__class__.__name__+os.sep+'key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -1838,7 +2221,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       list.append(str(value))
     self._objects[file_name[:-4]] = list
 
-  def install(self, context, **kw):
+  def install(self, context, trashbin, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1856,9 +2239,16 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
         keys.append(k)
     else:
       keys = self._archive.keys()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     for key in keys:
-      if key not in sql_catalog_related_keys:
-        sql_catalog_related_keys.append(key)
+      if update_dict.has_key(key) or force:
+        if not force:
+          action = update_dict[key]
+          if action == 'nothing':
+            continue          
+        if key not in sql_catalog_related_keys:
+          sql_catalog_related_keys.append(key)
     catalog.sql_catalog_related_keys = sql_catalog_related_keys
 
   def uninstall(self, context, **kw):
@@ -1870,7 +2260,12 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
-    for key in self._archive.keys():
+    object_path = kw.get('object_path', None)    
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for key in object_keys:
       if key in sql_catalog_related_keys:
         sql_catalog_related_keys.remove(key)
     catalog.sql_catalog_related_keys = sql_catalog_related_keys
@@ -1905,14 +2300,14 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     sql_search_result_tables = list(catalog.sql_search_tables)
-    role_list = []
+    key_list = []
     for key in self._archive.keys():
       if key in sql_search_result_tables:
-        role_list.append(key)
+        key_list.append(key)
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
-    if len(role_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'key_list'] = role_list
+    if len(key_list) > 0:
+      self._objects[self.__class__.__name__+os.sep+'key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -1924,7 +2319,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       list.append(str(value))
     self._objects[file_name[:-4]] = list
 
-  def install(self, context, **kw):
+  def install(self, context, trashbin, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1942,9 +2337,16 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
         keys.append(k)
     else:
       keys = self._archive.keys()
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     for key in keys:
-      if key not in sql_search_tables:
-        sql_search_tables.append(key)
+      if update_dict.has_key(key) or force:
+        if not force:
+          action = update_dict[key]
+          if action == 'nothing':
+            continue          
+        if key not in sql_search_tables:
+          sql_search_tables.append(key)
     catalog.sql_search_tables = sql_search_tables
 
   def uninstall(self, context, **kw):
@@ -1956,7 +2358,12 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     sql_search_tables = list(catalog.sql_search_tables)
-    for key in self._archive.keys():
+    object_path = kw.get('object_path', None)    
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._archive.keys()
+    for key in object_keys:
       if key in sql_search_tables:
         sql_search_tables.remove(key)
     catalog.sql_search_tables = sql_search_tables
@@ -1992,21 +2399,48 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         mc = localizer._getOb(catalog)
         self._objects[path] = mc.manage_export(lang)
 
-  def install(self, context, **kw):
+  def preinstall(self, context, installed_bt, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      modified_object_list = {}
+      new_keys = self._objects.keys()
+      for path in new_keys:
+        if installed_bt._objects.has_key(path):
+          # compare object to see if there is changes
+          new_obj_code = self._objects[path]
+          old_obj_code = installed_bt._objects[path]
+          if new_obj_code != old_obj_code:
+            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+        else: # new object
+          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+      # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def install(self, context, trashbin, **kw):
     localizer = context.getPortalObject().Localizer
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
     if (getattr(self, 'template_format_version', 0)) == 1:
       for path, po in self._objects.items():
-        path = string.split(path, '/')
-        lang = path[-3]
-        catalog = path[-2]
-        if lang not in localizer.get_languages():
-          localizer.manage_addLanguage(lang)
-        mc = localizer._getOb(catalog)
-        if lang not in mc.get_languages():
-          mc.manage_addLanguage(lang)
-        mc.manage_import(lang, po)
+        if update_dict.has_key(path) or force:
+          if not force:
+            action = update_dict[path]
+            if action == 'nothing':
+              continue          
+          path = string.split(path, '/')
+          lang = path[-3]
+          catalog = path[-2]
+          if lang not in localizer.get_languages():
+            localizer.manage_addLanguage(lang)
+          mc = localizer._getOb(catalog)
+          if lang not in mc.get_languages():
+            mc.manage_addLanguage(lang)
+          mc.manage_import(lang, po)
     else:
-      BaseTemplateItem.install(self, context, **kw)
+      BaseTemplateItem.install(self, context, trashbin, **kw)
       for lang, catalogs in self._archive.items():
         if lang not in localizer.get_languages():
           localizer.manage_addLanguage(lang)
@@ -2316,25 +2750,98 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self.portal_templates.update(self)
 
-    def _install(self, **kw):
+    def preinstall(self, **kw):
+      """
+        Return the list of modified/new/removed object between a Business Template
+        and the one installed if exists
+      """      
+      modified_object_list = {}
+      bt_title = self.getTitle()
+      installed_bt = self.portal_templates.getInstalledBusinessTemplate(title=bt_title)
+      if installed_bt is None:
+        installed_bt_format = 0 # that will not check for modification
+      else:
+        installed_bt_format = getattr(installed_bt, 'template_format_version', 0)
+
+      new_bt_format = getattr(self, 'template_format_version', 0)      
+      if installed_bt_format == 0 and new_bt_format == 0:
+        # still use old format, so install everything, no choice
+        return modified_object_list
+      elif installed_bt_format == 0 and new_bt_format == 1:
+        # return list of all object in bt
+        for item_name in self._item_name_list:
+          item = getattr(self, item_name)
+          if item is not None:
+            for path in item._objects.keys():
+              modified_object_list.update({path : ['New', item.__class__.__name__[:-12]]})
+        return modified_object_list
+        
+      # get the list of modified and new object
+      self.portal_templates.updateLocalConfiguration(self, **kw)
+      local_configuration = self.portal_templates.getLocalConfiguration(self)
+      for item_name in self._item_name_list:
+        new_item = getattr(self, item_name)
+        old_item = getattr(installed_bt, item_name)
+        if new_item is not None:
+          modified_object = new_item.preinstall(context=local_configuration, installed_bt=old_item)
+          if len(modified_object) > 0:
+            modified_object_list.update(modified_object)
+      return modified_object_list
+
+    def _install(self, force=1, object_to_update={}, **kw):
+      """
+        Install a new Business Template, if force, all we be upgrade or installed
+        otherwise depends of dict object_to_update
+      """
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
-      LOG('Business Template install', 0,
-          'self = %r, installed_bt = %r' % (self, installed_bt))
-
-      if installed_bt is not None:
-        installed_bt.trash(self)
+      if installed_bt is not None:        
+        if getattr(installed_bt, 'template_format_version', 0) == 0:
+          # maybe another to uninstall old format bt, maybe not needed
+          installed_bt.trash(self)
+          force = 1
         installed_bt.replace(self)
+        
+      if not force:
+        if len(object_to_update) == 0:
+          # nothing to be done
+          return
+        
+      # always created a trash bin because we may to save object already present
+      # but not in a previous business templates apart at creation of a new site
+      if len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1:
+        trashbin = self.portal_trash.newTrashBin(self.getTitle(), self)
+      else:
+        trashbin = None
+        
       # Update local dictionary containing all setup parameters
       # This may include mappings
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
+      
+      # get objects to remove
+      remove_object_dict = {}
+      for path in object_to_update.keys():
+        action = object_to_update[path]
+        if action == 'remove' or action == 'save_and_remove':
+          remove_object_dict[path] = action
+          object_to_update.pop(path)
+      # remove object from old business template
+      if len(remove_object_dict) > 0:
+        for item_name in installed_bt._item_name_list:
+          item = getattr(installed_bt, item_name)
+          if item is not None:
+            item.remove(local_configuration, remove_object_dict=remove_object_dict, trashbin=trashbin)
       # Install everything
-      for item_name in self._item_name_list:
-        item = getattr(self, item_name)
-        if item is not None:
-          LOG('install item type', 0, item_name)
-          item.install(local_configuration)
+      if len(object_to_update) > 0 or force:
+        for item_name in self._item_name_list:
+          item = getattr(self, item_name)
+          if item is not None:
+            item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
+       # if trahs bin is empty, remove it
+      if trashbin is not None:
+        if len(trashbin.objectIds()) == 0:
+          self.portal_trash.manage_delObjects(trashbin.getId())
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
       clearCache()
@@ -2561,7 +3068,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for prop in self.propertyMap():
         type = prop['type']
         id = prop['id']
-        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id'):
+        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'install_object_list_list'):        
           continue
         value = self.getProperty(id)
         if type == 'text' or type == 'string' or type == 'int':
@@ -2632,3 +3139,88 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
+
+
+    def diffObject(self, REQUEST):
+      """
+        Make a diff between an object in the Business Template
+        and the same installed in the site
+      """
+
+      class_name_dict = {
+        'Product' : '_product_item',
+        'PropertySheet' : '_property_sheet_item', 
+        'Document' : '_document_item',
+        'Extension' : '_extension_item',
+        'Test' : '_test_item',
+        'Role' : '_role_item',
+        'MessageTranslation' : '_message_translation_item',
+        'Workflow' : '_workflow_item',
+        'CatalogMethod' : '_catalog_method_item',
+        'SiteProperty' : '_site_property_item',
+        'PortalType' : '_portal_type_item',
+        'Category' : '_category_item',
+        'Module' : '_module_item',
+        'Skin' : '_skin_item',
+        'Path' : '_path_item',
+        'Action' : '_action_item',
+        'CatalogResultKey' : '_catalog_result_key_item',
+        'CatalogRelatedKey' : '_catalog_related_key_item',
+        'CatalogResultTable' : '_catalog_result_table_item',
+        }
+
+      object_id = REQUEST.object_id
+      object_class = REQUEST.object_class
+      # get objects
+      item_name = class_name_dict[object_class]
+      new_bt =self
+      installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
+      new_item = getattr(new_bt, item_name)
+      installed_item = getattr(installed_bt, item_name)
+      new_object = new_item._objects[object_id]
+      installed_object = installed_item._objects[object_id]
+      # make diff
+      diff_msg = ''
+      item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item', '_skin_item', '_action_item']
+      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item']
+      item_list_3 = ['_document_item', '_property_sheet_item', '_extension_item', '_test_item', '_message_translation_item']
+      if item_name in item_list_1:
+        f1 = StringIO()
+        f2 = StringIO()
+        OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
+        OFS.XMLExportImport.exportXML(installed_object._p_jar, installed_object._p_oid, f2)
+        new_obj_xml = f1.getvalue()
+        installed_obj_xml = f2.getvalue()
+        f1.close()
+        f2.close()
+        new_ob_xml_lines = new_obj_xml.splitlines()
+        installed_ob_xml_lines = installed_obj_xml.splitlines()
+        diff_list = list(unified_diff(installed_ob_xml_lines, new_ob_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
+        if len(diff_list) != 0:
+          diff_msg += '\n\nObject %s diff :\n' %( object_id)
+          diff_msg += '\n'.join(diff_list)
+        else:
+          diff_msg = 'No diff'
+      elif item_name in item_list_2:
+        new_obj_xml = new_item.generate_xml(path= object_id)
+        installed_obj_xml = installed_item.generate_xml(path= object_id)
+        new_obj_xml_lines = new_obj_xml.splitlines()
+        installed_obj_xml_lines = installed_obj_xml.splitlines()
+        diff_list = list(unified_diff(installed_obj_xml_lines, new_obj_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
+        if len(diff_list) != 0:
+          diff_msg += '\n\nObject %s diff :\n' %( object_id)
+          diff_msg += '\n'.join(diff_list)
+        else:
+          diff_msg = 'No diff'
+      elif item_name in item_list_3:
+        new_obj_lines = new_object.splitlines()
+        installed_obj_lines = installed_object.splitlines()
+        diff_list = list(unified_diff(installed_obj_lines, new_obj_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
+        if len(diff_list) != 0:
+          diff_msg += '\n\nObject %s diff :\n' %( object_id)
+          diff_msg += '\n'.join(diff_list)
+        else:
+          diff_msg = 'No diff'                
+      
+      return diff_msg
+
