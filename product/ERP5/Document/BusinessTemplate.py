@@ -902,9 +902,12 @@ class SkinTemplateItem(ObjectTemplateItem):
               action = update_dict[relative_url]
               if action == 'nothing':
                 continue
+            object_path = relative_url.split('/')
+            if len(object_path) > 2:
+              continue # not a skin folder
             object = self._objects[relative_url]
-            skin_id = relative_url.split('/')[1]
-            if hasattr(object, 'getProperty'):
+            skin_id = object_path[1]
+            if hasattr(aq_base(object), 'getProperty'):              
               selection_list = object.getProperty('business_template_registered_skin_selections', None)
             else:
               continue
