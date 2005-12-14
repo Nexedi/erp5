@@ -761,7 +761,7 @@ class BaobabConduit(ERP5Conduit):
     if currency_id in (None, ''):
       return vault_path
     # Get the site path corresponding to the currency-related-subvault
-    currency_object = category_tool.currency[currency_id]
+    currency_object = category_tool.currency_module[currency_id]
     currency_title  = currency_object.getTitle()
     currency_vault_path = None
     vault_object = vault_sub_item_object
