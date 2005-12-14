@@ -303,9 +303,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       Create new base category.
     """
     category_tool = self.getCategoryTool()
-    new_base_category_id = "fake_base_category"
-    new_base_category = category_tool.newContent(portal_type="Base Category",
-                                                 id=new_base_category_id)
+    new_base_category = category_tool.newContent(portal_type="Base Category",)
     sequence.edit(new_base_category=new_base_category)
 
   def stepEditNewBT(self, sequence=None, sequence_list=None, **kw):
@@ -326,6 +324,32 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     base_category_id_list.append(new_base_category.getId())
     new_bt.edit(template_base_category_list=base_category_id_list)
     sequence.edit(installed_base_cat_id=new_base_category.getId())
+
+  def stepAddCategoryToBaseCategory(self, sequence=None,
+                                    sequence_list=None, **kw):
+    """
+    Add a category to a base category
+    """
+    subcategory_id = "fake subcategory"
+    new_base_category = sequence.get('new_base_category')
+#     portal_categories = self.getCategoryTool()
+#     base_category = portal_categories._getOb('fake_base_category')
+    LOG('new_base_catory', 0, new_base_category)
+    subcategory = new_base_category.newContent(portal_type="Category",
+                                           id=subcategory_id)
+    sequence.edit(subcategory_id=subcategory.getId())
+
+  def stepCheckIfSubCategoryExists(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Check if subcategory still exists
+    """
+    base_category_id = sequence.get('installed_base_cat_id')
+    LOG("base_cat_id", 0, base_category_id)
+    portal_categories = self.getCategoryTool()
+    base_category = portal_categories._getOb(base_category_id)
+    subcategory_id = sequence.get('subcategory_id')
+    self.failUnless(subcategory_id in base_category.contentIds())
 
   def stepCheckModifiedBuildingState(self, sequence=None, 
                                      sequence_list=None, **kw):
@@ -435,7 +459,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     Check if a base category is installed.
     """
     base_category_id = sequence.get('installed_base_cat_id')
+    LOG('base_category_id', 0, base_category_id)
     portal_categories = self.getCategoryTool()
+    LOG("category list", 0, portal_categories.contentIds())
     self.failUnless(base_category_id in portal_categories.contentIds())
 
   def stepCheckIfBaseCategoryIsNotInstalled(self, sequence=None, 
@@ -447,6 +473,24 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     portal_categories = self.getCategoryTool()
     self.failIf(base_category_id in portal_categories.contentIds())
 
+  def stepCheckIfTrashBinExists(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check If we create a trash bin at upgrade
+    """
+    new_bt = sequence.get('new_bt')
+    self.failUnless(len(new_bt.portal_trash.objectIds()) == 1)
+
+  def stepRemoveAllTrashBins(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove all previous trash bins generated
+    """
+    current_bt = sequence.get('current_bt')
+    trash = current_bt.getPortalObject().portal_trash
+    trash_ids = trash.objectIds()
+    for id in list(trash_ids):
+        trash.deleteContent(id)    
+    self.failIf(len(trash.objectIds()) > 0)
+    
   def test_03_update(self, quiet=0, run=run_all_test):
     """
     Update BT
@@ -547,7 +591,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       Tic \
                       InstallNewBT \
                       CheckNoEmptyDiff \
-                      CheckIfBaseCategoryIsNotInstalled \
+                      CheckIfBaseCategoryIsInstalled \
                       SwitchBT \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -556,12 +600,11 @@ class TestBusinessTemplate(ERP5TypeTestCase):
   def test_07_installWithoutExport(self, quiet=0, run=run_all_test):
     """
     Built, install
-    XXX Why some XML is created only with export ? (as workflow chain)
     Check the diff
     """
     if not run: return
     if not quiet:
-      message = 'Test Buid and Update without export'
+      message = 'Test Build and Update without export'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
@@ -578,6 +621,42 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+
+  def test_08_checkNoSubobjectsUninstall(self, quiet=0, run=run_all_test):
+    """
+    Test if we don't remove subobjects when upgrading a
+    business tempalte
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test if subobjects remains after upgrade'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                      GetCurrentBusinessTemplate \
+                      RemoveAllTrashBins \
+                      CopyBusinessTemplate \
+                      CreateNewBaseCategory \
+                      AddCategoryToBaseCategory \
+                      AddNewBaseCategoryToNewBT \
+                      EditNewBT \
+                      BuildNewBT \
+                      CheckBuiltBuildingState \
+                      ExportNewBT \
+                      ImportNewBT \
+                      Tic \
+                      InstallNewBT \
+                      CheckNoEmptyDiff \
+                      CheckIfBaseCategoryIsInstalled \
+                      CheckIfSubCategoryExists \
+                      CheckIfTrashBinExists \
+                      SwitchBT \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
 
 if __name__ == '__main__':
     framework()
