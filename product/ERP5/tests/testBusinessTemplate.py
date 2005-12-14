@@ -250,7 +250,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     # export Business Template
     cfg = getConfiguration()
     template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (template.getTitle(),))
-    template.export(path=template_path, local=1)
+    template.export(path=pathname2url(template_path), local=1)
 
     self.removeObjects()
     
