@@ -89,10 +89,9 @@
             <value>
               <tuple>
                 <list>
-                  <string>nexedi</string>
                   <string>acl_users</string>
                 </list>
-                <string>yo</string>
+                <string>ac</string>
               </tuple>
             </value>
         </item>
@@ -172,7 +171,31 @@
         <item>
             <key> <string>_mapping</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>BusinessTemplate_installation</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>BusinessTemplate_installation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Script (Python)</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
         </item>
         <item>
@@ -205,19 +228,19 @@
                 <item>
                     <key> <string>installed</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>not_installed</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>replaced</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -290,43 +313,43 @@
                 <item>
                     <key> <string>install</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>install_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>reinstall</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>reinstall_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>replace</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>uninstall</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>uninstall_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -439,31 +462,31 @@
                 <item>
                     <key> <string>action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>actor</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>comment</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>history</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>time</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -576,6 +599,187 @@
     <pickle>
       <tuple>
         <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>ac</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>business_template = state_change.object\n
+listbox = state_change.kwargs.get(\'listbox\')\n
+workflow_action = state_change.kwargs.get(\'workflow_action\')\n
+\n
+object_to_update = {}\n
+for item in listbox:\n
+  if item[\'choice\']:\n
+    object_to_update[item[\'listbox_key\']] = item[\'choice\']\n
+\n
+if workflow_action == \'install_action\':\n
+  business_template.install(force=0, object_to_update=object_to_update)\n
+elif workflow_action == \'reinstall_action\':\n
+  business_template.reinstall(force=0, object_to_update=object_to_update)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAoAAAALAAAAQwAA
+AHP8AAAAdAAAfAAAZAEAgwIAfQIAdAAAdAAAfAAAZAIAgwIAZAMAgwIAZAQAgwEAfQMAdAAAdAAA
+fAAAZAIAgwIAZAMAgwIAZAUAgwEAfQQAaAAAfQUAeEoAdAYAfAMAgwEARF08AH0HAHQIAHwHAGQG
+AIMCAG8mAAF0CAB8BwBkBgCDAgB0CQB8BQCDAQB0CAB8BwBkBwCDAgA8cV4AAXFeAFd8BABkCABq
+AgBvIAABdAAAfAIAZAkAgwIAZAoAZAsAZAwAfAUAgwACAW4uAAF8BABkDQBqAgBvIAABdAAAfAIA
+ZA4AgwIAZAoAZAsAZAwAfAUAgwACAW4BAAFkAABTKA8AAABOcwYAAABvYmplY3RzBgAAAGt3YXJn
+c3MDAAAAZ2V0cwcAAABsaXN0Ym94cw8AAAB3b3JrZmxvd19hY3Rpb25zBgAAAGNob2ljZXMLAAAA
+bGlzdGJveF9rZXlzDgAAAGluc3RhbGxfYWN0aW9ucwcAAABpbnN0YWxscwUAAABmb3JjZWkAAAAA
+cxAAAABvYmplY3RfdG9fdXBkYXRlcxAAAAByZWluc3RhbGxfYWN0aW9ucwkAAAByZWluc3RhbGwo
+CgAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzEQAAAGJ1c2luZXNzX3RlbXBsYXRl
+cwcAAABsaXN0Ym94cw8AAAB3b3JrZmxvd19hY3Rpb25zEAAAAG9iamVjdF90b191cGRhdGVzCQAA
+AF9nZXRpdGVyX3MEAAAAaXRlbXMJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfKAoAAABzDAAAAHN0
+YXRlX2NoYW5nZXMJAAAAX2dldGF0dHJfcxEAAABidXNpbmVzc190ZW1wbGF0ZXMHAAAAbGlzdGJv
+eHMPAAAAd29ya2Zsb3dfYWN0aW9ucxAAAABvYmplY3RfdG9fdXBkYXRlcwkAAABfZ2V0aXRlcl9z
+BAAAAGl0ZW1zCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlXygAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMdAAAAQnVzaW5lc3NUZW1wbGF0ZV9pbnN0YWxsYXRpb24BAAAAcxYAAAAPAR4BHgIG
+AQ0ACQENASoCEAEdARABKAEAAABzHQAAAEJ1c2luZXNzVGVtcGxhdGVfaW5zdGFsbGF0aW9uKAEA
+AABzHQAAAEJ1c2luZXNzVGVtcGxhdGVfaW5zdGFsbGF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5_1/portal_workflow/business_template_installation_workflow/scripts/BusinessTemplate_installation</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getattr_</string>
+                            <string>business_template</string>
+                            <string>listbox</string>
+                            <string>workflow_action</string>
+                            <string>object_to_update</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_installation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <tuple>
+        <tuple>
           <string>Products.DCWorkflow.States</string>
           <string>StateDefinition</string>
         </tuple>
@@ -610,7 +814,7 @@
         <item>
             <key> <string>permission_roles</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABc=</string> </persistent>
             </value>
         </item>
         <item>
@@ -626,67 +830,6 @@
                 <string>uninstall_action</string>
               </tuple>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>superseb</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>not_installed</string> </value>
-        </item>
-        <item>
-            <key> <string>permission_roles</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAABc=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>transitions</string> </key>
-            <value>
-              <tuple>
-                <string>install</string>
-                <string>install_action</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value> <int>148911560</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -724,12 +867,73 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>replaced</string> </value>
+            <value> <string>not_installed</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAABg=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>install</string>
+                <string>install_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value> <int>148911560</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.States</string>
+          <string>StateDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>superseb</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>replaced</string> </value>
+        </item>
+        <item>
+            <key> <string>permission_roles</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAABk=</string> </persistent>
             </value>
         </item>
         <item>
@@ -752,7 +956,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="10" aka="AAAAAAAAAAo=">
+  <record id="11" aka="AAAAAAAAAAs=">
     <pickle>
       <tuple>
         <tuple>
@@ -832,7 +1036,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="11" aka="AAAAAAAAAAs=">
+  <record id="12" aka="AAAAAAAAAAw=">
     <pickle>
       <tuple>
         <tuple>
@@ -869,11 +1073,11 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=install_action</string> </value>
+            <value> <string>%(content_url)s/BusinessTemplate_installationChoice?workflow_action=install_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>install</string> </value>
+            <value> <string>BusinessTemplate_installation</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -882,7 +1086,7 @@
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABo=</string> </persistent>
             </value>
         </item>
         <item>
@@ -908,7 +1112,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="12" aka="AAAAAAAAAAw=">
+  <record id="13" aka="AAAAAAAAAA0=">
     <pickle>
       <tuple>
         <tuple>
@@ -984,7 +1188,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="13" aka="AAAAAAAAAA0=">
+  <record id="14" aka="AAAAAAAAAA4=">
     <pickle>
       <tuple>
         <tuple>
@@ -1021,11 +1225,11 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=reinstall_action</string> </value>
+            <value> <string>%(content_url)s/BusinessTemplate_installationChoice?workflow_action=reinstall_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>reinstall</string> </value>
+            <value> <string>BusinessTemplate_installation</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -1034,7 +1238,7 @@
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -1060,7 +1264,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="14" aka="AAAAAAAAAA4=">
+  <record id="15" aka="AAAAAAAAAA8=">
     <pickle>
       <tuple>
         <tuple>
@@ -1136,7 +1340,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="15" aka="AAAAAAAAAA8=">
+  <record id="16" aka="AAAAAAAAABA=">
     <pickle>
       <tuple>
         <tuple>
@@ -1212,7 +1416,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="16" aka="AAAAAAAAABA=">
+  <record id="17" aka="AAAAAAAAABE=">
     <pickle>
       <tuple>
         <tuple>
@@ -1262,7 +1466,7 @@
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABw=</string> </persistent>
             </value>
         </item>
         <item>
@@ -1283,76 +1487,6 @@
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="17" aka="AAAAAAAAABE=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Variables</string>
-          <string>VariableDefinition</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>superseb</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>default_expr</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAABw=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>default_value</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>for_catalog</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>for_status</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>action</string> </value>
-        </item>
-        <item>
-            <key> <string>info_guard</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value> <int>1910323806</int> </value>
-        </item>
-        <item>
-            <key> <string>update_always</string> </key>
             <value> <int>1</int> </value>
         </item>
       </dictionary>
@@ -1409,7 +1543,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>actor</string> </value>
+            <value> <string>action</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1419,7 +1553,7 @@
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1910323808</int> </value>
+            <value> <int>1910323806</int> </value>
         </item>
         <item>
             <key> <string>update_always</string> </key>
@@ -1479,7 +1613,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>comment</string> </value>
+            <value> <string>actor</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1489,7 +1623,7 @@
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1910323805</int> </value>
+            <value> <int>1910323808</int> </value>
         </item>
         <item>
             <key> <string>update_always</string> </key>
@@ -1545,11 +1679,11 @@
         </item>
         <item>
             <key> <string>for_status</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>history</string> </value>
+            <value> <string>comment</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1559,7 +1693,7 @@
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1910323807</int> </value>
+            <value> <int>1910323805</int> </value>
         </item>
         <item>
             <key> <string>update_always</string> </key>
@@ -1615,6 +1749,76 @@
         </item>
         <item>
             <key> <string>for_status</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>history</string> </value>
+        </item>
+        <item>
+            <key> <string>info_guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value> <int>1910323807</int> </value>
+        </item>
+        <item>
+            <key> <string>update_always</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="22" aka="AAAAAAAAABY=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Variables</string>
+          <string>VariableDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>superseb</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_expr</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAACE=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_value</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>for_catalog</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>for_status</string> </key>
             <value> <int>1</int> </value>
         </item>
         <item>
@@ -1638,7 +1842,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="22" aka="AAAAAAAAABY=">
+  <record id="23" aka="AAAAAAAAABc=">
     <pickle>
       <tuple>
         <tuple>
@@ -1694,7 +1898,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="23" aka="AAAAAAAAABc=">
+  <record id="24" aka="AAAAAAAAABg=">
     <pickle>
       <tuple>
         <tuple>
@@ -1768,7 +1972,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="24" aka="AAAAAAAAABg=">
+  <record id="25" aka="AAAAAAAAABk=">
     <pickle>
       <tuple>
         <tuple>
@@ -1824,29 +2028,6 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="25" aka="AAAAAAAAABk=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>Manage portal</string>
-              </tuple>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
   <record id="26" aka="AAAAAAAAABo=">
     <pickle>
       <tuple>
@@ -1897,8 +2078,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
+          <string>Products.DCWorkflow.Guard</string>
+          <string>Guard</string>
         </tuple>
         <none/>
       </tuple>
@@ -1906,8 +2087,12 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>text</string> </key>
-            <value> <string>transition/getId|nothing</string> </value>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Manage portal</string>
+              </tuple>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -1926,7 +2111,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>user/getUserName</string> </value>
+            <value> <string>transition/getId|nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1945,7 +2130,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:state_change.kwargs.get(\'comment\',\'\')</string> </value>
+            <value> <string>user/getUserName</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1964,12 +2149,31 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>state_change/getHistory</string> </value>
+            <value> <string>python:state_change.kwargs.get(\'comment\',\'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="32" aka="AAAAAAAAACA=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>state_change/getHistory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="33" aka="AAAAAAAAACE=">
     <pickle>
       <tuple>
         <tuple>
