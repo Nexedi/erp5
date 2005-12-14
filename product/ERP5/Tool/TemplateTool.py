@@ -38,7 +38,7 @@ from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
-from tempfile import mkstemp
+from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
 from OFS.Traversable import NotFound
 from difflib import unified_diff
@@ -143,8 +143,7 @@ class TemplateTool (BaseTool):
       """
       path = business_template.getTitle()
       path = pathname2url(path)
-      tmpfile_path = os.tmpnam()
-      tmpdir_path = os.path.dirname(tmpfile_path)
+      tmpdir_path = mkdtemp()
       current_directory = os.getcwd()
       os.chdir(tmpdir_path)
       export_string = business_template.export(path=path)
