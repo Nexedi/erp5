@@ -681,6 +681,7 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Id Tool', None)
         addTool('ERP5 Simulation Tool', None)
         addTool('ERP5 Template Tool', None)
+        addTool('ERP5 Trash Tool', None)
         addTool('ERP5 Alarm Tool', None)
         addTool('ERP5 Domain Tool', None)
         addTool('ERP5 Delivery Tool', None)
