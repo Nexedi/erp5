@@ -1,3 +1,7 @@
+2005-12-14 aurel
+* fix naming convention
+* set default value of form_id in Base_cancel
+
 2005-12-13 aurel
 * Update way of install Business Template
 - add Trash type

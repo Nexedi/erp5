@@ -231,6 +231,7 @@ SELECT\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
   stock.variation_text AS variation_text,\n
+  stock.aggregate_text AS aggregate_text,\n
   stock.resource_uid AS resource_uid,\n
   stock.uid AS stock_uid,\n
   stock.date as date,\n
@@ -370,6 +371,7 @@ SELECT\n
   resource.title AS resource_title,\n
   resource.relative_url AS resource_relative_url,\n
   stock.variation_text AS variation_text,\n
+  stock.aggregate_text AS aggregate_text,\n
   stock.resource_uid AS resource_uid,\n
   stock.uid AS stock_uid,\n
   stock.date as date,\n
