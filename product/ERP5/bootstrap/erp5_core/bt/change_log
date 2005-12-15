@@ -1,3 +1,14 @@
+2005-12-15 aurel
+* Change the name
+BusinessTemplate_installationChoice,
+BusinessTemplate_diffTwoObjects, TemplateTool_diffBusinessTemplate
+to BusinessTemplate_viewInstallationDialog,
+BusinessTemplate_viewObjectsDiff, TemplateTool_viewDiff
+
+2005-12-15 yo
+* Change the names TemplateTool_downloadBusinessTemplate and TemplateTool_importBusinessTemplate to TemplateTool_viewDownloadBusinessTemplateDialog and  ERP5 Form
+TemplateTool_viewImportBusinessTemplateDialog respectively, according to the naming convention.
+
 2005-12-14 yo
 * Resource_zGetInventory and Resource_zGetInventoryList must use stock.mirror_node_uid instead of inventory_movement.destionation_uid.
 

@@ -69,7 +69,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 if brain.object_state == \'Modified\':\n
-  return \'/\'.join(brain.getPhysicalPath()[:-1])+\'/BusinessTemplate_diffTwoObjects?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class\n
+  return \'/\'.join(brain.getPhysicalPath()[:-1])+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class\n
 else:\n
   return None\n
 
@@ -82,14 +82,14 @@ else:\n
 AHNzAAAAdAAAfAAAZAEAgwIAZAIAagIAb1UAAXQAAGQDAGQEAIMCAHQCAHQAAHwAAGQFAIMCAIMA
 AGQAAGQGAAuFAgCDAgCDAQBkBwAXdAAAfAAAZAgAgwIAF2QJABd0AAB8AABkCgCDAgAXU24FAAF0
 AwBTZAAAUygLAAAATnMMAAAAb2JqZWN0X3N0YXRlcwgAAABNb2RpZmllZHMBAAAAL3MEAAAAam9p
-bnMPAAAAZ2V0UGh5c2ljYWxQYXRoaQEAAABzKwAAAC9CdXNpbmVzc1RlbXBsYXRlX2RpZmZUd29P
-YmplY3RzP29iamVjdF9pZD1zCQAAAG9iamVjdF9pZHMOAAAAJm9iamVjdF9jbGFzcz1zDAAAAG9i
-amVjdF9jbGFzcygEAAAAcwkAAABfZ2V0YXR0cl9zBQAAAGJyYWlucwkAAABfZ2V0aXRlbV9zBAAA
-AE5vbmUoBQAAAHMFAAAAYnJhaW5zCQAAAHNlbGVjdGlvbnMJAAAAX2dldGF0dHJfcwkAAABfZ2V0
-aXRlbV9zBAAAAE5vbmUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGwAAAEJ1c2luZXNz
-VGVtcGxhdGVfZ2V0RGlmZlVybAEAAABzBAAAABYBVQIoAQAAAHMbAAAAQnVzaW5lc3NUZW1wbGF0
-ZV9nZXREaWZmVXJsKAEAAABzGwAAAEJ1c2luZXNzVGVtcGxhdGVfZ2V0RGlmZlVybCgAAAAAKAAA
-AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+bnMPAAAAZ2V0UGh5c2ljYWxQYXRoaQEAAABzLAAAAC9CdXNpbmVzc1RlbXBsYXRlX3ZpZXdPYmpl
+Y3RzRGlmZj9vYmplY3RfaWQ9cwkAAABvYmplY3RfaWRzDgAAACZvYmplY3RfY2xhc3M9cwwAAABv
+YmplY3RfY2xhc3MoBAAAAHMJAAAAX2dldGF0dHJfcwUAAABicmFpbnMJAAAAX2dldGl0ZW1fcwQA
+AABOb25lKAUAAABzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25zCQAAAF9nZXRhdHRyX3MJAAAAX2dl
+dGl0ZW1fcwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxsAAABCdXNpbmVz
+c1RlbXBsYXRlX2dldERpZmZVcmwBAAAAcwQAAAAWAVUCKAEAAABzGwAAAEJ1c2luZXNzVGVtcGxh
+dGVfZ2V0RGlmZlVybCgBAAAAcxsAAABCdXNpbmVzc1RlbXBsYXRlX2dldERpZmZVcmwoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

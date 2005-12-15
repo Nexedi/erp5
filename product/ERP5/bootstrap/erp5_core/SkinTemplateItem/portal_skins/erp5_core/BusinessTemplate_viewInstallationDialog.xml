@@ -46,8 +46,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
-            <value> <string>download</string> </value>
+            <value> <string>Workflow_statusModify</string> </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>enctype</string> </key>
@@ -57,7 +67,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -66,12 +80,38 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_url</string>
+                        <string>listbox</string>
+                        <string>my_workflow_action</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_choice</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -79,7 +119,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_downloadBusinessTemplate</string> </value>
+            <value> <string>BusinessTemplate_viewInstallationDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -87,19 +127,31 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PortalTemplates_download</string> </value>
+            <value> <string>BusinessTemplate_installationChoice</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
             <value> <int>4</int> </value>
         </item>
         <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Download Business Template</string> </value>
+            <value> <string>Validate Installation</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

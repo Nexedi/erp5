@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>importFile</string> </value>
+            <value> <string>download</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -74,7 +74,7 @@
                     <value>
                       <list>
                         <string>my_id</string>
-                        <string>my_import_file</string>
+                        <string>my_url</string>
                       </list>
                     </value>
                 </item>
@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_importBusinessTemplate</string> </value>
+            <value> <string>TemplateTool_viewDownloadBusinessTemplateDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -103,11 +103,11 @@
         </item>
         <item>
             <key> <string>stored_encoding</string> </key>
-            <value> <string>ISO-8859-1</string> </value>
+            <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Import Business Template</string> </value>
+            <value> <string>Download Business Template</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

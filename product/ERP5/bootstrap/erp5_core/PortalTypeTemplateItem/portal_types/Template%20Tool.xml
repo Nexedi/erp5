@@ -79,7 +79,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -209,7 +209,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -274,7 +274,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -339,7 +339,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -452,7 +452,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TemplateTool_importBusinessTemplate</string> </value>
+            <value> <string>string:${object_url}/TemplateTool_viewImportBusinessTemplateDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -471,7 +471,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TemplateTool_downloadBusinessTemplate</string> </value>
+            <value> <string>string:${object_url}/TemplateTool_viewDownloadBusinessTemplateDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -490,7 +490,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TemplateTool_diffBusinessTemplate</string> </value>
+            <value> <string>string:${object_url}/TemplateTool_viewDiff</string> </value>
         </item>
       </dictionary>
     </pickle>

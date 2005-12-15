@@ -67,7 +67,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -76,11 +80,35 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Default</string> </key>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>diffview</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -88,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_diffBusinessTemplate</string> </value>
+            <value> <string>BusinessTemplate_viewObjectsDiff</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -96,11 +124,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TemplateTool_diffBusinessTemplate</string> </value>
+            <value> <string>BusinessTemplate_diffTwoObjects</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -112,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Diff Business Template</string> </value>
+            <value> <string>Diff Two Object At Installation</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
