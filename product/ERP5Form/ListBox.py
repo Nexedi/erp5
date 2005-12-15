@@ -2090,7 +2090,7 @@ class ListBoxValidator(Validator.Validator):
               # because sometimes, we can be provided bad uids
               try :
                 o = here.portal_catalog.getObject(uid)
-              except KeyError, NotFound:
+              except (KeyError, NotFound, ValueError):
                 o = None
               if o is None:
                 # It is possible that this object is not catalogged yet. So
@@ -2100,9 +2100,14 @@ class ListBoxValidator(Validator.Validator):
                   list_method = getattr(here, list_method.method_name)
                   object_list = list_method(REQUEST=REQUEST,**params)
                 for object in object_list:
-                  if object.getUid() == int(uid):
-                    o = object
-                    break
+                  try:
+                    if object.getUid() == int(uid):
+                      o = object
+                      break
+                  except ValueError:
+                    if str(object.getUid()) == uid:
+                      o = object
+                      break
               for sql in editable_column_ids:
                 alias = '_'.join(sql.split('.'))
                 if '.' in sql:
