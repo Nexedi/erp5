@@ -92,7 +92,7 @@ class PDFTk :
     
     out = self._getOutput(
           PDFTK_EXECUTABLE+
-          " %s fill_form %s output - "%(
+          " %s fill_form %s output - flattern "%(
           pdfFormFileName, fdfFormFileName))
     os.remove(fdfFormFileName)
     os.remove(pdfFormFileName)
@@ -162,7 +162,7 @@ class PDFTk :
     fdf = "%FDF-1.2\x0d%\xe2\xe3\xcf\xd3\x0d\x0a"
     fdf += "1 0 obj\x0d<< \x0d/FDF << /Fields [ "
     for key, value in values.items():
-      fdf += "<< /T (%s) /V (%s)>> \x0d" % (
+      fdf += "<< /T (%s) /V (%s) /ClrF 2 /ClrFf 1 >> \x0d" % (
            self._escapeString(key),
            self._escapeString(value))
 
@@ -301,7 +301,7 @@ class PDFForm(File):
                                    globals(), __name__='manage_cells')
 
   security.declareProtected(Permissions.View, 'manage_FTPget')
-  def manage_FTPget(self, REQUEST, RESPONSE) :
+  def manage_FTPget(self, REQUEST=None, RESPONSE=None) :
     """ get this pdf form via webDAV/FTP, it returns an XML
     representation of all the fields, then the pdf itself."""
     from xml.dom.minidom import getDOMImplementation
@@ -309,7 +309,9 @@ class PDFForm(File):
     newdoc = impl.createDocument(None, "pdfform", None)
     top_element = newdoc.documentElement
     cells = newdoc.createElement('cells')
-    for cell in self.cells.keys() :
+    pdfform_cell_list = self.cells.keys()
+    pdfform_cell_list.sort()
+    for cell in pdfform_cell_list :
       cell_node = newdoc.createElement('cell')
       cell_node.setAttribute('name', cell)
       tales = newdoc.createTextNode(self.cells[cell])
@@ -322,9 +324,11 @@ class PDFForm(File):
     pdf_data.appendChild(pdf_content)
     top_element.appendChild(pdf_data)
     content = newdoc.toprettyxml('  ')
-    RESPONSE.setHeader('Content-Type', 'application/x-erp5-pdfform')
-    RESPONSE.setHeader('Content-Length', len(content))
-    RESPONSE.write(content)
+    if RESPONSE :
+      RESPONSE.setHeader('Content-Type', 'application/x-erp5-pdfform')
+      RESPONSE.setHeader('Content-Length', len(content))
+      RESPONSE.write(content)
+    return content
   manage_DAVget = manage_FTPget
   
   security.declareProtected(Permissions.ManagePortal, 'PUT')
