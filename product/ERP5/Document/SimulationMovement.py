@@ -200,8 +200,6 @@ class SimulationMovement(Movement):
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, **kw):
     """
-      -> new status : expanded
-
       Parses all existing applied rules and make sure they apply.
       Checks other possible rules and starts expansion process
       (instanciates rule and calls expand on rule)
@@ -209,44 +207,30 @@ class SimulationMovement(Movement):
       Only movements which applied rule parent is expanded can
       be expanded.
     """
-    #LOG('In simulation expand',0, str(self.id))
-#     self.reindexObject()
-    if self.getCausalityState() == 'expanded':
+    # XXX Default behaviour is not to expand if it has already been
+    # expanded, but some rules are configuration rules and need to be
+    # reexpanded  each time, because the rule apply only if predicates
+    # are true, then this kind of rule must always be tested. Currently,
+    # we know that invoicing rule acts like this, and that it comes after
+    # invoice or invoicing_rule, so we if we come from invoince rule or 
+    # invoicing rule, we always expand regardless of the causality state.
+    if (self.getParent().getSpecialiseId() not in 
+         ('default_invoicing_rule', 'default_invoice_rule')
+         and self.getCausalityState() == 'expanded' ) or \
+         len(self.objectIds()) != 0:
       # Reexpand
       for my_applied_rule in self.objectValues():
         my_applied_rule.expand(**kw)
     else:
       portal_rules = getToolByName(self, 'portal_rules')
-      # Parse each applied rule and test if it applied
-      #for applied_rule in self.objectValues():
-      #  if not applied_rule.test():
-      #    # delete
       # Parse each rule and test if it applies
       for rule in portal_rules.objectValues():
         if rule.test(self):
-          my_applied_rule = rule.constructNewAppliedRule(self,**kw)
-          my_applied_rule.expand(**kw)
+          my_applied_rule = rule.constructNewAppliedRule(self, **kw)
+      for my_applied_rule in self.objectValues() :
+        my_applied_rule.expand(**kw)
       # Set to expanded
       self.setCausalityState('expanded')
-
-  #expand = WorkflowMethod(expand) USELESS NOW
-
-# XXX moved to Portal Simulation
-#   security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-#   def solve(self, solver, new_target=None):
-#     """
-#        Makes the movement expandable again
-# 
-#        -> new status -> solved
-# 
-#        Once a movement has been updated with consistent
-#        target and planned values, it is marked as solved
-#        and can therefore be expanded again
-#     """
-#     self.portal_simulation.applyTargetSolver(self, solver, new_target=new_target)
-#     self.setCausalityState('solved')
-# 
-#   #solve = WorkflowMethod(solve) USELESS NOW
 
   security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
   def diverge(self):
