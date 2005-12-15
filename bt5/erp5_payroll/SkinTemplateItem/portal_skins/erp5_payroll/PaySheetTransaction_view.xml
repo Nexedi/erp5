@@ -90,8 +90,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
+                        <string>my_source_reference</string>
                         <string>my_description</string>
                         <string>my_source_section_title</string>
                         <string>my_destination_section_title</string>
@@ -107,7 +107,7 @@
                         <string>my_target_stop_date</string>
                         <string>my_gross_salary</string>
                         <string>my_resource</string>
-                        <string>simulation_state</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
