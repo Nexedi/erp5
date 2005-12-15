@@ -200,7 +200,6 @@ class TestERP5Category(ERP5TypeTestCase):
     self.failIfDifferentSet(predicate.getMembershipCriterionCategoryList(),self.cat_list)
     portal_categories = self.getCategoryTool()
     portal_categories[self.base_cat]['1'].edit(id='3')
-    get_transaction().commit()
     self.failIfDifferentSet(predicate.getMembershipCriterionCategoryList(),self.new_cat_list)
 
 
