@@ -151,6 +151,16 @@ class BusinessTemplate:
       'type'        : 'int',
       'mode'        : 'w',
       'default'     : 1 },
+    { 'id'          : 'license',
+      'description' : 'License',
+      'type'        : 'text',
+      'mode'        : 'w',
+      'default'     : '' },
+    { 'id'          : 'copyright',
+      'description' : 'A list of copyright holders',
+      'type'        : 'lines',
+      'mode'        : 'w',
+      'default'     : () },
  )
 
   _categories = ( )
