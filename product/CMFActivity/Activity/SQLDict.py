@@ -472,20 +472,20 @@ class SQLDict(RAMDict):
     # Count number of occurances of method_id
     if type(value) == type(''):
       value = [value]
-    result = activity_tool.SQLDict_validateMessageList(method_id=value, message_uid=None, path=None)
-#     LOG('SQLDict._validate_after_method_id, method_id',0,value)
-#     LOG('SQLDict._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
+    if len(value)>0: # if empty list provided, the message is valid
+      result = activity_tool.SQLDict_validateMessageList(method_id=value, message_uid=None, path=None)
+      if result[0].uid_count > 0:
+        return INVALID_ORDER
     return VALID
 
   def _validate_after_path(self, activity_tool, message, value):
     # Count number of occurances of path
     if type(value) == type(''):
       value = [value]
-    result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, path=value)
-    if result[0].uid_count > 0:
-      return INVALID_ORDER
+    if len(value)>0: # if empty list provided, the message is valid
+      result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, path=value)
+      if result[0].uid_count > 0:
+        return INVALID_ORDER
     return VALID
 
   def _validate_after_message_uid(self, activity_tool, message, value):
