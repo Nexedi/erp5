@@ -89,6 +89,7 @@
             <value>
               <tuple>
                 <list>
+                  <string>nexedi</string>
                   <string>acl_users</string>
                 </list>
                 <string>ac</string>
@@ -1073,7 +1074,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BusinessTemplate_installationChoice?workflow_action=install_action</string> </value>
+            <value> <string>%(content_url)s/BusinessTemplate_viewInstallationDialog?workflow_action=install_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -1225,7 +1226,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BusinessTemplate_installationChoice?workflow_action=reinstall_action</string> </value>
+            <value> <string>%(content_url)s/BusinessTemplate_viewInstallationDialog?workflow_action=reinstall_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
