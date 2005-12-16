@@ -267,8 +267,8 @@ class BaseTemplateItem(Implicit, Persistent):
       for path in new_keys:
         if installed_bt._objects.has_key(path):
           # compare object to see it there is changes
-          new_obj_xml = self.generate_xml(path=path)
-          old_obj_xml = installed_bt.generate_xml(path=path)
+          new_obj_xml = self.generateXml(path=path)
+          old_obj_xml = installed_bt.generateXml(path=path)
           if new_obj_xml != old_obj_xml:
             modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
         else: # new object
@@ -358,7 +358,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.__ac_local_roles__ = None
       if hasattr(obj, '_owner'):
         obj._owner = None
-      if hasattr(obj, 'groups'):
+      if hasattr(aq_base(obj), 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
@@ -366,7 +366,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.manage_delObjects(list(id_list))
       if hasattr(aq_base(obj), 'uid'):
         obj.uid = None
-      if hasattr(obj, 'groups'):
+      if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
@@ -384,7 +384,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.__ac_local_roles__ = None
       if hasattr(obj, '_owner'):
         obj._owner = None
-      if hasattr(obj, 'groups'):
+      if hasattr(aq_base(obj), 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
@@ -392,7 +392,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.manage_delObjects(list(id_list))
       if hasattr(aq_base(obj), 'uid'):
         obj.uid = None
-      if hasattr(obj, 'groups'):
+      if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
@@ -484,7 +484,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             container.manage_delObjects([object_id])
           # install object
           obj = self._objects[path]
-          if hasattr(obj, 'groups'):
+          if hasattr(aq_base(obj), 'groups'):
             # we must keep original order groups because they change when we add subobjects
             groups[path] = deepcopy(obj.groups)
           # copy the object
@@ -733,16 +733,16 @@ class PathTemplateItem(ObjectTemplateItem):
           obj.__ac_local_roles__ = None
         if hasattr(obj, '_owner'):
           obj._owner = None
-        if hasattr(obj, 'uid'):
+        if hasattr(aq_base(obj), 'uid'):
           obj.uid = None
-        if hasattr(obj, 'groups'):
+        if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
         if len(id_list) > 0:
           if include_subobjects:
             self.build_sub_objects(context, id_list, relative_url)
           obj.manage_delObjects(list(id_list))
-        if hasattr(obj, 'groups'):
+        if hasattr(aq_base(obj), 'groups'):
           obj.groups = groups
         self._objects[relative_url] = obj
         obj.wl_clearLocks()
@@ -985,7 +985,6 @@ class WorkflowTemplateItem(ObjectTemplateItem):
 
   def install(self, context, trashbin, **kw):
     if (getattr(self, 'template_format_version', 0)) == 1:
-      groups = {}
       portal = context.getPortalObject()
       # sort to add objects before their subobjects
       keys = self._objects.keys()
@@ -1082,7 +1081,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         obj.__ac_local_roles__ = None
       if hasattr(obj, '_owner'):
         obj._owner = None
-      if hasattr(obj, 'uid'):
+      if hasattr(aq_base(obj), 'uid'):
         obj.uid = None
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
@@ -1532,7 +1531,7 @@ class ActionTemplateItem(ObjectTemplateItem):
             action.__ac_local_roles__ = None
           if hasattr(action, '_owner'):
             action._owner = None
-          if hasattr(action, 'uid'):
+          if hasattr(aq_base(action), 'uid'):
             action.uid = None
           self._objects[key] = action
           self._objects[key].wl_clearLocks()
@@ -1685,7 +1684,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
         p._delProperty(id)
     BaseTemplateItem.uninstall(self, context, **kw)
 
-  def generate_xml(self, path=None):
+  def generateXml(self, path=None):
     xml_data = ''
     type, obj = self._objects[path]
     xml_data += os.linesep+' <property>'
@@ -1711,7 +1710,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     keys = self._objects.keys()
     keys.sort()
     for path in keys:
-      xml_data += self.generate_xml(path)
+      xml_data += self.generateXml(path)
     xml_data += os.linesep+'</site_property>'
     bta.addObject(obj=xml_data, name='properties', path=root_path)
 
@@ -1734,7 +1733,7 @@ class ModuleTemplateItem(BaseTemplateItem):
       dict['permission_list'] = module.showPermissions()
       self._objects[id] = dict
 
-  def generate_xml(self, path=None):
+  def generateXml(self, path=None):
     dict = self._objects[path]
     xml_data = '<module>'
     # sort key
@@ -1768,7 +1767,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     keys.sort()
     for id in keys:
       # expor module one by one
-      xml_data = self.generate_xml(path=id)
+      xml_data = self.generateXml(path=id)
       bta.addObject(obj=xml_data, name=id, path=path)
 
   def install(self, context, trashbin, **kw):
@@ -2045,7 +2044,7 @@ class RoleTemplateItem(BaseTemplateItem):
         del roles[role]
     p.__ac_roles__ = tuple(roles.keys())
 
-  def generate_xml(self, path):
+  def generateXml(self, path):
     obj = self._objects[path]
     xml_data = '<role_list>'
     obj.sort()
@@ -2060,7 +2059,7 @@ class RoleTemplateItem(BaseTemplateItem):
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      xml_data = self.generate_xml(path=path)
+      xml_data = self.generateXml(path=path)
       bta.addObject(obj=xml_data, name=path, path=None,)
 
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
@@ -2143,7 +2142,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     catalog.sql_search_result_keys = sql_search_result_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
-  def generate_xml(self, path=None):
+  def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
     obj.sort()
@@ -2158,7 +2157,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      xml_data = self.generate_xml(path=path)
+      xml_data = self.generateXml(path=path)
       bta.addObject(obj=xml_data, name=path, path=None)
 
 class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
@@ -2241,7 +2240,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_related_keys = sql_catalog_related_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
-  def generate_xml(self, path=None):
+  def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
     obj.sort()
@@ -2256,7 +2255,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      xml_data = self.generate_xml(path=path)
+      xml_data = self.generateXml(path=path)
       bta.addObject(obj=xml_data, name=path, path=None)
 
 class CatalogResultTableTemplateItem(BaseTemplateItem):
@@ -2339,7 +2338,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     catalog.sql_search_tables = sql_search_tables
     BaseTemplateItem.uninstall(self, context, **kw)
 
-  def generate_xml(self, path=None):
+  def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
     obj.sort()
@@ -2354,7 +2353,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      xml_data = self.generate_xml(path=path)
+      xml_data = self.generateXml(path=path)
       bta.addObject(obj=xml_data, name=path, path=None)
 
 class MessageTranslationTemplateItem(BaseTemplateItem):
@@ -3166,8 +3165,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         else:
           diff_msg = 'No diff'
       elif item_name in item_list_2:
-        new_obj_xml = new_item.generate_xml(path= object_id)
-        installed_obj_xml = installed_item.generate_xml(path= object_id)
+        new_obj_xml = new_item.generateXml(path= object_id)
+        installed_obj_xml = installed_item.generateXml(path= object_id)
         new_obj_xml_lines = new_obj_xml.splitlines()
         installed_obj_xml_lines = installed_obj_xml.splitlines()
         diff_list = list(unified_diff(installed_obj_xml_lines, new_obj_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
