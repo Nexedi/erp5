@@ -84,7 +84,7 @@ class TrashTool(BaseTool):
           connection=o._p_jar
         copy.seek(0)
         backup = connection.importFile(copy)
-        backup.isIndexabla = 0
+        backup.isIndexable = 0
         backup_object_container._setObject(object_id, backup)
         
     keep_sub = kw.get('keep_subobjects', 0)
