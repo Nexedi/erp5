@@ -91,7 +91,7 @@ for object_id in keys:    \n
     if object_class in no_backup_list:\n
       line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
     else:\n
-      line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Upgrade\', \'btsave\'], [\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
+      line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Upgrade\', \'backup\'], [\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
   elif object_state == \'Removed\':\n
     if object_class in no_backup_list:\n
       line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
@@ -132,7 +132,7 @@ bG9nUmVzdWx0VGFibGVzEgAAAE1lc3NhZ2VUcmFuc2xhdGlvbmkAAAAAcw4AAAB0bXBfaW5zdGFs
 bF8lc3MDAAAATmV3cwQAAABlZGl0cwkAAABvYmplY3RfaWRzDAAAAG9iamVjdF9zdGF0ZXMMAAAA
 b2JqZWN0X2NsYXNzcxAAAABjaG9pY2VfaXRlbV9saXN0cwcAAABJbnN0YWxscwcAAABpbnN0YWxs
 cwoAAABEbyBOb3RoaW5ncwcAAABub3RoaW5ncwgAAABNb2RpZmllZHMHAAAAVXBncmFkZXMNAAAA
-S2VlcCBPcmlnaW5hbHMSAAAAQmFja3VwIEFuZCBVcGdyYWRlcwYAAABidHNhdmVzBwAAAFJlbW92
+S2VlcCBPcmlnaW5hbHMSAAAAQmFja3VwIEFuZCBVcGdyYWRlcwYAAABiYWNrdXBzBwAAAFJlbW92
 ZWRzBgAAAFJlbW92ZXMGAAAAcmVtb3ZlcxEAAABCYWNrdXAgQW5kIFJlbW92ZXMPAAAAc2F2ZV9h
 bmRfcmVtb3ZlcwYAAABzZXRVaWRzBgAAAG5ld18lc3MGAAAAYXBwZW5kaQEAAAAoEwAAAHMaAAAA
 UHJvZHVjdHMuRVJQNVR5cGUuRG9jdW1lbnRzCwAAAG5ld1RlbXBCYXNlcxcAAABQcm9kdWN0cy5F

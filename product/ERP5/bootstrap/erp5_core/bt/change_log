@@ -1,3 +1,6 @@
+2005-12-16:
+* modify BusinessTemplate_getModifiedObject
+
 2005-12-15 aurel
 * Change the name
 BusinessTemplate_installationChoice,
