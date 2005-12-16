@@ -32,7 +32,7 @@ from Products.CMFCore.utils import UniqueObject
 from App.config import getConfiguration
 import os, tarfile, string, commands, OFS
 
-from Acquisition import Implicit
+from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -44,7 +44,12 @@ from OFS.Traversable import NotFound
 from difflib import unified_diff
 from cStringIO import StringIO
 from zLOG import LOG
-from urllib import pathname2url
+from urllib import pathname2url, urlopen, splittype, urlretrieve
+import re
+from xml.dom.minidom import parse
+import struct
+import cPickle
+import base64
 
 class LocalConfiguration(Implicit):
   """
@@ -77,6 +82,9 @@ class TemplateTool (BaseTool):
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
     allowed_types = ( 'ERP5 Business Template',)
+    
+    # This stores information on repositories.
+    repository_dict = {}
 
     # Declarative Security
     security = ClassSecurityInfo()
@@ -96,14 +104,6 @@ class TemplateTool (BaseTool):
         if bt.getInstallationState() == 'installed' and bt.getTitle() == title:
           return bt
       return None
-
-    # Import a business template
-    def importURL(self, url):
-      """
-        Import a business template
-      """
-      # Copy it to import directory
-      # and import in self
 
     def updateLocalConfiguration(self, template, **kw):
       template_id = template.getId()
@@ -143,8 +143,8 @@ class TemplateTool (BaseTool):
       """
       path = business_template.getTitle()
       path = pathname2url(path)
-      tmpdir_path = mkdtemp()
-      current_directory = os.getcwd()
+      tmpdir_path = mkdtemp() # XXXXXXXXXXXXXXX Why is it necessary to create a temporary directory?
+      current_directory = os.getcwd() # XXXXXXXXXXXXXXXXXX not thread safe
       os.chdir(tmpdir_path)
       export_string = business_template.export(path=path)
       os.chdir(current_directory)
@@ -159,6 +159,7 @@ class TemplateTool (BaseTool):
       finally:
         export_string.close()
 
+    security.declareProtected( 'Import/Export objects', 'publish' )
     def publish(self, business_template, url, username=None, password=None):
       """
         Publish in a format or another
@@ -185,10 +186,13 @@ class TemplateTool (BaseTool):
         Import template from a temp file
       """
       file = open(path, 'r')
-      # read magic key to determine wich kind of bt we use
-      file.seek(0)
-      magic = file.read(5)
-      file.close()
+      try:
+        # read magic key to determine wich kind of bt we use
+        file.seek(0)
+        magic = file.read(5)
+      finally:
+        file.close()
+        
       if magic == '<?xml': # old version
         self._importObjectFromFile(path, id=id)
         bt = self[id]
@@ -196,41 +200,59 @@ class TemplateTool (BaseTool):
         bt.setProperty('template_format_version', 0, type='int')
       else: # new version
         tar = tarfile.open(path, 'r:gz')
-        # create bt object
-        self.newContent(portal_type='Business Template', id=id)
-        bt = self._getOb(id)
-        prop_dict = {}
-        for prop in bt.propertyMap():
-          type = prop['type']
-          pid = prop['id']
-          prop_path = os.path.join(tar.members[0].name, 'bt', pid)
+        try:
+          # create bt object
+          self.newContent(portal_type='Business Template', id=id)
+          bt = self._getOb(id)
+          prop_dict = {}
+          for prop in bt.propertyMap():
+            type = prop['type']
+            pid = prop['id']
+            prop_path = os.path.join(tar.members[0].name, 'bt', pid)
+            try:
+              info = tar.getmember(prop_path)
+            except KeyError:
+              continue
+            value = tar.extractfile(info).read()
+            if type == 'text' or type == 'string' or type == 'int':
+              prop_dict[pid] = value
+            elif type == 'lines' or type == 'tokens':
+              prop_dict[pid[:-5]] = value.split(str(os.linesep))
+          prop_dict.pop('id', '')
+          bt.edit(**prop_dict)
+          # import all other files from bt
+          fobj = open(path, 'r')
           try:
-            info = tar.getmember(prop_path)
-          except KeyError:
-            continue
-          value = tar.extractfile(info).read()
-          if type == 'text' or type == 'string' or type == 'int':
-            prop_dict[pid] = value
-          elif type == 'lines' or type == 'tokens':
-            prop_dict[pid[:-5]] = value.split(str(os.linesep))
-        prop_dict.pop('id', '')
-        bt.edit(**prop_dict)
-        # import all other files from bt
-        fobj = open(path, 'r')
-        bt.importFile(file=fobj)
-        fobj.close()
-        tar.close()
-      os.remove(path)
+            bt.importFile(file=fobj)
+          finally:
+            fobj.close()
+        finally:
+          tar.close()
       return bt
 
+    security.declareProtected( Permissions.ManagePortal, 'download' )
+    def manage_download(self, url, id=None, REQUEST=None):
+      """The management interface for download.
+      """
+      if REQUEST is None:
+        REQUEST = getattr(self, 'REQUEST', None)
+
+      self.download(url, id=id)
+            
+      if REQUEST is not None:
+        ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+Successfully"
+                           % ret_url)
+
+    security.declareProtected( 'Import/Export objects', 'download' )
     def download(self, url, id=None, REQUEST=None):
       """
         Download Business template, can be file or local directory
       """
-      if REQUEST is None:
-        REQUEST = getattr(self, 'REQUEST', None)
-      from urllib import splittype, urlretrieve
-
+      # For backward compatibility; If REQUEST is passed, it is likely from the management interface.
+      if REQUEST is not None:
+        self.manage_download(url, id=id, REQUEST=REQUEST)
+      
       type, name = splittype(url)
       if os.path.isdir(name): # new version of business template in plain format (folder)
         file_list = []
@@ -242,8 +264,8 @@ class TemplateTool (BaseTool):
         os.path.walk(name, callback, None)        
         file_list.sort()
         # import bt object
-        self.newContent(portal_type='Business Template', id=id)
-        bt = self._getOb(id)
+        bt = self.newContent(portal_type='Business Template', id=id)
+        id = bt.getId()
         bt_path = os.path.join(name, 'bt')
 
         # import properties
@@ -264,15 +286,19 @@ class TemplateTool (BaseTool):
         # import all others objects
         bt.importFile(dir=1, file=file_list, root_path=name)
       else:
-        tempid, temppath = mkstemp()      
-        file, headers = urlretrieve(url, temppath)
-        bt = self._importBT(temppath, id)
+        tempid, temppath = mkstemp()
+        try:
+          os.close(tempid) # Close the opened fd as soon as possible.    
+          file, headers = urlretrieve(url, temppath)
+          if id is None:
+            id = str(self.generateNewId())
+          bt = self._importBT(temppath, id)
+        finally:
+          os.remove(temppath)
       bt.build(no_action=1)
       bt.reindexObject()
 
-      if REQUEST is not None:
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Downloaded+Successfully"
-                           % self.absolute_url())
+      return bt
 
     def importFile(self, import_file=None, id=None, REQUEST=None, **kw):
       """
@@ -287,20 +313,27 @@ class TemplateTool (BaseTool):
               % self.absolute_url())
           return
         else :
-          raise 'Error', 'No file or an empty file was specified'
+          raise RuntimeError, 'No file or an empty file was specified'
       # copy to a temp location
       import_file.seek(0) #Rewind to the beginning of file
       tempid, temppath = mkstemp()
-      tempfile = open(temppath, 'w')
-      tempfile.write(import_file.read())
-      tempfile.close()
-      bt = self._importBT(temppath, id)
+      try:
+        os.close(tempid) # Close the opened fd as soon as possible
+        tempfile = open(temppath, 'w')
+        try:
+          tempfile.write(import_file.read())
+        finally:
+          tempfile.close()
+        bt = self._importBT(temppath, id)
+      finally:
+        os.remove(temppath)
       bt.build(no_action=1)
       bt.reindexObject()
 
       if REQUEST is not None:
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Imported+Successfully"
-                           % self.absolute_url())
+        ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Templates+Imported+Successfully"
+                           % ret_url)
 
     def runUnitTestList(self, test_list=[], **kwd) :
       """
@@ -309,30 +342,6 @@ class TemplateTool (BaseTool):
       
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
       return os.popen('/usr/bin/python %s %s 2>&1' % (getUnitTestFile(), ' '.join(test_list))).read()
-
-    security.declareProtected(Permissions.DeletePortalContent, 'deleteBackupObjects')
-
-    def deleteBackupObjects(self, dry_run=1) :
-      """
-      removes 'btsave' objects from the ZODB
-      """
-      import re
-      backup_re = re.compile('_btsave_[0-9]+$')
-      backup_list = []
-
-      portal = self.getPortalObject()
-      for module in portal.objectValues() :
-        if backup_re.search(module.getId()) :
-          backup_list.append((module.getId(), portal))
-        else :
-          for oid in module.objectIds() :
-            if backup_re.search(oid) :
-              backup_list.append((oid, module))
-      if dry_run :
-        return '\n'.join(['%s in %s' % e for e in backup_list])
-      else :
-        for oid, module in backup_list :
-          module.manage_delObjects(oid)
 
     def diff(self, **kw):
       """
@@ -437,5 +446,192 @@ class TemplateTool (BaseTool):
       if compare_to_installed:
         self.manage_delObjects(ids=['installed_bt'])
       return diff_msg
-          
+
+    security.declareProtected( 'Import/Export objects', 'updateRepositoryBusinessTemplateList' )
+    def updateRepositoryBusinessTemplateList(self, repository_list, REQUEST=None, RESPONSE=None, **kw):
+      """Update the information on Business Templates in repositories.
+      """
+      self.repository_dict = PersistentMapping()
+      property_list = ('title', 'version', 'description', 'license', 'dependency', 'copyright')
+      #LOG('updateRepositoryBusiessTemplateList', 0, 'repository_list = %r' % (repository_list,))
+      for repository in repository_list:
+        url = '/'.join([repository, 'bt5list'])
+        f = urlopen(url)
+        property_dict_list = []
+        try:
+          doc = parse(f)
+          try:
+            root = doc.documentElement
+            for template in root.getElementsByTagName("template"):
+              id = template.getAttribute('id')
+              if type(id) == type(u''):
+                id = id.encode('utf-8')
+              temp_property_dict = {}
+              for node in template.childNodes:
+                if node.nodeName in property_list:
+                  value = ''
+                  for text in node.childNodes:
+                    if text.nodeType == text.TEXT_NODE:
+                      value = text.data
+                      if type(value) == type(u''):
+                        value = value.encode('utf-8')
+                      break
+                  temp_property_dict.setdefault(node.nodeName, []).append(value)
+
+              property_dict = {}
+              property_dict['id'] = id
+              property_dict['title'] = temp_property_dict.get('title', [''])[0]
+              property_dict['version'] = temp_property_dict.get('version', [''])[0]
+              property_dict['description'] = temp_property_dict.get('description', [''])[0]
+              property_dict['license'] = temp_property_dict.get('license', [''])[0]
+              property_dict['dependency_list'] = temp_property_dict.get('dependency', ())
+              property_dict['copyright_list'] = temp_property_dict.get('copyright', ())
+              
+              property_dict_list.append(property_dict)
+          finally:
+            doc.unlink()
+        finally:
+          f.close()
+        
+        self.repository_dict[repository] = tuple(property_dict_list)
+        
+      if REQUEST is not None:
+        ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Templates+Updated+Successfully"
+                           % ret_url)
+                
+    security.declareProtected( Permissions.AccessContentsInformation, 'getRepositoryList' )
+    def getRepositoryList(self):
+      """Get the list of repositories.
+      """
+      return self.repository_dict.keys()
+      
+    security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
+    def decodeRepositoryBusinessTemplateUid(self, uid):
+      """Decode the uid of a business template in a repository. Return a repository and an id.
+      """
+      return cPickle.loads(base64.b64decode(uid))
+      
+    security.declareProtected( Permissions.AccessContentsInformation, 'getRepositoryBusinessTemplateList' )
+    def getRepositoryBusinessTemplateList(self, update_only=0, **kw):
+      """Get the list of Business Templates in repositories.
+      """
+      version_state_title_dict = { 'new' : 'New', 'present' : 'Present', 'old' : 'Old' }
+
+      from Products.ERP5Type.Document import newTempBusinessTemplate
+      template_list = []
+
+      template_item_list = []
+      if update_only:
+        # First of all, filter Business Templates in repositories.
+        template_item_dict = {}
+        for repository, property_dict_list in self.repository_dict.items():
+          for property_dict in property_dict_list:
+            title = property_dict['title']
+            if title not in template_item_dict:
+              # If this is the first time to see this business template, insert it.
+              template_item_dict[title] = (repository, property_dict)
+            else:
+              # If this business template has been seen before, insert it only if
+              # this business template is newer.
+              previous_repository, previous_property_dict = template_item_dict[title]
+              if self.compareVersions(previous_property_dict['version'], property_dict['version']) < 0:
+                template_item_dict[title] = (repository, property_dict)
+        # Next, select only updated business templates.
+        for repository, property_dict in template_item_dict.values():
+          installed_bt = self.getInstalledBusinessTemplate(property_dict['title'])
+          if installed_bt is not None:
+            if self.compareVersions(installed_bt.getVersion(), property_dict['version']) < 0:
+              template_item_list.append((repository, property_dict))
+        # FIXME: resolve dependencies
+      else:
+        for repository, property_dict_list in self.repository_dict.items():
+          for property_dict in property_dict_list:
+            template_item_list.append((repository, property_dict))
+
+      # Create temporary Business Template objects for displaying.
+      for repository, property_dict in template_item_list:
+        property_dict = property_dict.copy()
+        id = property_dict['id']
+        del property_dict['id']
+        version = property_dict['version']
+        version_state = 'new'
+        for bt in self.searchFolder(title = property_dict['title']):
+          result = self.compareVersions(version, bt.getObject().getVersion())
+          if result == 0:
+            version_state = 'present'
+            break
+          elif result < 0:
+            version_state = 'old'
+        version_state_title = version_state_title_dict[version_state]
+        uid = base64.b64encode(cPickle.dumps((repository, id)))
+        obj = newTempBusinessTemplate(self, 'temp_' + uid,
+                                      version_state = version_state,
+                                      version_state_title = version_state_title,
+                                      repository = repository, **property_dict)
+        obj.setUid(uid)
+        template_list.append(obj)
+        
+      return template_list
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getUpdatedRepositoryBusinessTemplateList' )
+    def getUpdatedRepositoryBusinessTemplateList(self, **kw):
+      """Get the list of updated Business Templates in repositories.
+      """
+      #LOG('getUpdatedRepositoryBusinessTemplateList', 0, 'kw = %r' % (kw,))
+      return self.getRepositoryBusinessTemplateList(update_only=1, **kw)
+      
+    def compareVersions(self, version1, version2):
+      """Return negative if version1 < version2, 0 if version1 == version2, positive if version1 > version2.
+
+      Here is the algorithm:
+
+        - Non-alphanumeric characters are not significant, besides the function of delimiters.
+
+        - If a level of a version number is missing, it is assumed to be zero.
+
+        - An alphabetical character is less than any numerical value.
+
+        - Numerical values are compared as integers.
+
+      This archives the following predicates:
+
+        - 1.0 < 1.0.1
+
+        - 1.0rc1 < 1.0
+
+        - 1.0a < 1.0.1
+
+        - 1.1 < 2.0
+
+        - 1.0.0 = 1.0
+      """
+      r = re.compile('(\d+|[a-zA-Z])')
+      v1 = r.findall(version1)
+      v2 = r.findall(version2)
+
+      def convert(v, i):
+        """Convert the ith element of v to an interger for a comparison.
+        """
+        #LOG('convert', 0, 'v = %r, i = %r' % (v, i))
+        try:
+          e = v[i]
+          try:
+            e = int(e)
+          except ValueError:
+            # ASCII code is one byte, so this produces negative.
+            e = struct.unpack('b', e)[0] - 0x200
+        except IndexError:
+          e = 0
+        return e
+        
+      for i in xrange(max(len(v1), len(v2))):
+        e1 = convert(v1, i)
+        e2 = convert(v2, i)
+        result = cmp(e1, e2)
+        if result != 0:
+          return result
+
+      return 0
+      
 InitializeClass(TemplateTool)
