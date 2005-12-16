@@ -175,7 +175,7 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     self.assertEquals(False,packing_list.isDivergent())
 
-  def stepChangePackingListLineQuantity(self, sequence=None, sequence_list=None, **kw):
+  def stepDecreasePackingListLineQuantity(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list is divergent
     """
@@ -183,6 +183,15 @@ class TestPackingListMixin(TestOrderMixin):
     for packing_list_line in packing_list.objectValues(
                              portal_type=self.packing_list_line_portal_type):
       packing_list_line.edit(quantity=self.default_quantity-1)
+
+  def stepIncreasePackingListLineQuantity(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is divergent
+    """
+    packing_list = sequence.get('packing_list')
+    for packing_list_line in packing_list.objectValues(
+                             portal_type=self.packing_list_line_portal_type):
+      packing_list_line.edit(quantity=self.default_quantity+1)
 
   def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -215,6 +224,24 @@ class TestPackingListMixin(TestOrderMixin):
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
       self.assertEquals(1,line.getQuantity())
+
+  def stepCheckPackingListNotSplitted(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is divergent
+    """
+    order = sequence.get('order')
+    packing_list_list = order.getCausalityRelatedValueList(
+                               portal_type=self.packing_list_portal_type)
+    self.assertEquals(1,len(packing_list_list))
+    packing_list1 = sequence.get('packing_list')
+    for line in packing_list1.objectValues(
+          portal_type= self.packing_list_line_portal_type):
+      self.assertEquals(self.default_quantity+1,line.getQuantity())
+      simulation_list = line.getDeliveryRelatedValueList(
+                            portal_type='Simulation Movement')
+      self.assertEquals(len(simulation_list),1)
+      simulation_movement = simulation_list[0]
+      self.assertEquals(simulation_movement.getQuantity(),self.default_quantity+1)
 
   def stepChangePackingListDestination(self, sequence=None, sequence_list=None, **kw):
     """
@@ -419,19 +446,20 @@ class TestPackingListMixin(TestOrderMixin):
 
 
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
+
   run_all_test = 1
-  def test_01_PackingListChangeQuantity(self, quiet=0, run=run_all_test):
+  def test_01_PackingListDecreaseQuantity(self, quiet=0, run=run_all_test):
     """
       Change the quantity on an delivery line, then
       see if the packing list is divergent and then
-      see
+      split and defer the packing list
     """
     if not run: return
     sequence_list = SequenceList()
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      ChangePackingListLineQuantity \
+                      DecreasePackingListLineQuantity \
                       CheckPackingListIsCalculating \
                       SplitAndDeferPackingList \
                       Tic \
@@ -612,6 +640,27 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     
     sequence_list.play(self)
 
+  def test_10_PackingListIncreaseQuantity(self, quiet=0, run=run_all_test):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is divergent and then
+      split and defer the packing list
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      IncreasePackingListLineQuantity \
+                      CheckPackingListIsCalculating \
+                      SplitAndDeferPackingList \
+                      Tic \
+                      CheckPackingListIsSolved \
+                      CheckPackingListNotSplitted \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
 
 if __name__ == '__main__':
     framework()
