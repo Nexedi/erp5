@@ -226,6 +226,8 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     io = StringIO(data)
     tar = tarfile.TarFile(fileobj=io)
     for info in tar.getmembers():
+      if 'CVS' in info.name.split('/'):
+        continue
       if class_name in info.name:
         if info.isreg():
           file = tar.extractfile(info)
