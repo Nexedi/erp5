@@ -440,7 +440,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
       Backup the object in portal trash if necessery and return its subobjects
     """
-    if action == 'btsave':
+    if action == 'backup':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1)
     elif action == 'install':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0)
@@ -463,7 +463,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             if action == 'nothing':
               continue
           else:
-            action = 'btsave'
+            action = 'backup'
           # get subobjects in path
           container_path = path.split('/')[:-1]
           object_id = path.split('/')[-1]
@@ -530,7 +530,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         container = portal.unrestrictedTraverse(container_path)
         container_ids = container.objectIds()
         if object_id in container_ids:    # Object already exists          
-          self._backupObject('btsave', trashbin, container_path, object_id)
+          self._backupObject('backup', trashbin, container_path, object_id)
           container.manage_delObjects([object_id])
         # Set a hard link
         obj = obj._getCopy(container)
@@ -814,7 +814,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
               if action == 'nothing':
                 continue
             else:
-              action = 'btsave'
+              action = 'backup'
             # Wrap the object by an aquisition wrapper for _aq_dynamic.
             obj = self._objects[path]
             obj = obj.__of__(category_tool)
@@ -999,7 +999,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
             if action == 'nothing':
               continue
           else:
-            action = 'btsave'
+            action = 'backup'
           container_path = path.split('/')[:-1]
           object_id = path.split('/')[-1]
           try:
@@ -1142,7 +1142,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       Backup portal type and keep the workflow chain.
     """
     subobjects_dict = {}
-    if action == 'btsave':
+    if action == 'backup':
       # Get the chain value
 #       (default_chain, chain_dict) = self._getChainByType(self)
 #       chain = chain_dict['chain_%s' % object_id]
@@ -1195,13 +1195,13 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       xml = parse(file)
       chain_list = xml.getElementsByTagName('chain')
       for chain in chain_list:
-        type = chain.getElementsByTagName('type')[0].childNodes[0].data
+        ptype = chain.getElementsByTagName('type')[0].childNodes[0].data
         workflow_list = chain.getElementsByTagName('workflow')[0].childNodes
         if len(workflow_list) == 0:
           workflow = ''
         else:
           workflow = workflow_list[0].data
-        dict[str(type)] = str(workflow)
+        dict[str(ptype)] = str(workflow)
       self._workflow_chain_archive = dict
     else:
       ObjectTemplateItem._importFile(self, file_name, file)
@@ -1372,12 +1372,12 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           expr_instance = Expression(expression)
         else:
           expr_instance = self._filter_expression_instance_archive[method_id]
-        type = self._filter_type_archive[method_id]
+        filter_type = self._filter_type_archive[method_id]
         catalog.filter_dict[method_id] = PersistentMapping()
         catalog.filter_dict[method_id]['filtered'] = 1
         catalog.filter_dict[method_id]['expression'] = expression
         catalog.filter_dict[method_id]['expression_instance'] = expr_instance
-        catalog.filter_dict[method_id]['type'] = type
+        catalog.filter_dict[method_id]['type'] = filter_type
       elif method_id in catalog.filter_dict.keys():
         catalog.filter_dict[method_id]['filtered'] = 0
 
@@ -1466,20 +1466,20 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       method_list = xml.getElementsByTagName('item')
       for method in method_list:
         key = method.getAttribute('key')
-        type = str(method.getAttribute('type'))
-        if type == "str":
+        key_type = str(method.getAttribute('type'))
+        if key_type == "str":
           value = str(method.getElementsByTagName('value')[0].childNodes[0].data)
           key = str(key)
-        elif type == "int":
+        elif key_type == "int":
           value = int(method.getElementsByTagName('value')[0].childNodes[0].data)
           key = str(key)
-        elif type == "tuple":
+        elif key_type == "tuple":
           value = []
           value_list = method.getElementsByTagName('value')
           for item in value_list:
             value.append(item.childNodes[0].data)
         else:
-          LOG('BusinessTemplate import CatalogMethod, type unknown', 0, type)
+          LOG('BusinessTemplate import CatalogMethod, type unknown', 0, key_type)
           continue
         dict = getattr(self, key)
         dict[id] = value
@@ -1619,13 +1619,13 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       for property in p.propertyMap():
         if property['id'] == id:
           obj = p.getProperty(id)
-          type = property['type']
+          prop_type = property['type']
           break
       else:
         obj = None
       if obj is None:
         raise NotFound, 'the property %s is not found' % id
-      self._objects[id] = (type, obj)
+      self._objects[id] = (prop_type, obj)
 
   def _importFile(self, file_name, file):
     # recreate list of site property from xml file
@@ -1633,8 +1633,8 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     property_list = xml.getElementsByTagName('property')
     for prop in property_list:
       id = prop.getElementsByTagName('id')[0].childNodes[0].data
-      type = prop.getElementsByTagName('type')[0].childNodes[0].data
-      if type in ('lines', 'tokens'):
+      prop_type = prop.getElementsByTagName('type')[0].childNodes[0].data
+      if prop_type in ('lines', 'tokens'):
         value = []
         values = prop.getElementsByTagName('value')[0]
         items = values.getElementsByTagName('item')
@@ -1643,7 +1643,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
           value.append(str(i))
       else:
         value = str(prop.getElementsByTagName('value')[0].childNodes[0].data)
-      self._objects[str(id)] = (str(type), value)
+      self._objects[str(id)] = (str(prop_type), value)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -1659,8 +1659,8 @@ class SitePropertyTemplateItem(BaseTemplateItem):
           dir, id = os.path.split(path)
           if p.hasProperty(id):
             continue
-          type, property = self._objects[path]
-          p._setProperty(id, property, type=type)
+          prop_type, property = self._objects[path]
+          p._setProperty(id, property, type=prop_type)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       p = context.getPortalObject()
@@ -1686,11 +1686,11 @@ class SitePropertyTemplateItem(BaseTemplateItem):
 
   def generateXml(self, path=None):
     xml_data = ''
-    type, obj = self._objects[path]
+    prop_type, obj = self._objects[path]
     xml_data += os.linesep+' <property>'
     xml_data += os.linesep+'  <id>%s</id>' %(path,)
-    xml_data += os.linesep+'  <type>%s</type>' %(type,)
-    if type in ('lines', 'tokens'):
+    xml_data += os.linesep+'  <type>%s</type>' %(prop_type,)
+    if prop_type in ('lines', 'tokens'):
       xml_data += os.linesep+'  <value>'
       for item in obj:
         if item != '':
@@ -3030,14 +3030,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # export bt
       bta.addFolder(path+os.sep+'bt')
       for prop in self.propertyMap():
-        type = prop['type']
+        prop_type = prop['type']
         id = prop['id']
         if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'install_object_list_list'):        
           continue
         value = self.getProperty(id)
-        if type == 'text' or type == 'string' or type == 'int':
+        if prop_type == 'text' or prop_type == 'string' or prop_type == 'int':
           bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')
-        elif type == 'lines' or type == 'tokens':
+        elif prop_type == 'lines' or prop_type == 'tokens':
           bta.addObject(obj=str(os.linesep).join(value), name=id, path=path+os.sep+'bt', ext='')
 
       # Export each part
