@@ -251,8 +251,8 @@ class TemplateTool (BaseTool):
       """
       # For backward compatibility; If REQUEST is passed, it is likely from the management interface.
       if REQUEST is not None:
-        self.manage_download(url, id=id, REQUEST=REQUEST)
-      
+        return self.manage_download(url, id=id, REQUEST=REQUEST)
+
       type, name = splittype(url)
       if os.path.isdir(name): # new version of business template in plain format (folder)
         file_list = []
