@@ -55,11 +55,10 @@ from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class TestPackingList(TestOrderMixin,ERP5TypeTestCase):
+class TestPackingListMixin(TestOrderMixin):
   """
     Test business template erp5_trade 
   """
-  run_all_test = 1
   container_type = 'Container'
   container_line_type = 'Container Line'
 
@@ -418,6 +417,9 @@ class TestPackingList(TestOrderMixin,ERP5TypeTestCase):
     """
     get_transaction().commit()
 
+
+class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
+  run_all_test = 1
   def test_01_PackingListChangeQuantity(self, quiet=0, run=run_all_test):
     """
       Change the quantity on an delivery line, then
@@ -607,7 +609,7 @@ class TestPackingList(TestOrderMixin,ERP5TypeTestCase):
                       '
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
-
+    
     sequence_list.play(self)
 
 
