@@ -74,16 +74,17 @@ class TrashTool(BaseTool):
       if object_id not in backup_object_container.objectIds():
         # export object
         object_path = container_path + [object_id]
-        object = self.unrestrictedTraverse(object_path)
-        copy = object._p_jar.exportFile(object._p_oid)
+        obj = self.unrestrictedTraverse(object_path)
+        copy = obj._p_jar.exportFile(obj._p_oid)
         # import object in trash
         connection = backup_object_container._p_jar
-        obj = backup_object_container
+        o = backup_object_container
         while connection is None:
-          obj = obj.aq_parent
-          connection=obj._p_jar
+          o = o.aq_parent
+          connection=o._p_jar
         copy.seek(0)
         backup = connection.importFile(copy)
+        backup.isIndexabla = 0
         backup_object_container._setObject(object_id, backup)
         
     keep_sub = kw.get('keep_subobjects', 0)
@@ -91,17 +92,17 @@ class TrashTool(BaseTool):
     if not keep_sub:
       # export subobjects
       if save:
-        object = backup_object_container._getOb(object_id)
+        obj = backup_object_container._getOb(object_id)
       else:
         object_path = container_path + [object_id]
-        object = self.unrestrictedTraverse(object_path)
-      for subobject_id in list(object.objectIds()):
+        obj = self.unrestrictedTraverse(object_path)
+      for subobject_id in list(obj.objectIds()):
         subobject_path = object_path + [subobject_id]
         subobject = self.unrestrictedTraverse(subobject_path)
         subobject_copy = subobject._p_jar.exportFile(subobject._p_oid)
         subobjects_dict[subobject_id] = subobject_copy
         if save: # remove subobjecs from backup object
-          object.manage_delObjects([subobject_id])
+          obj.manage_delObjects([subobject_id])
 #     LOG('return subobject dict', 0, subobjects_dict)
     return subobjects_dict
 
@@ -131,18 +132,18 @@ class TrashTool(BaseTool):
     """
       Return a list of trash objects for a given trash bin
     """
-    def getChildObjects(object):
+    def getChildObjects(obj):
       object_list = []
-      if hasattr(aq_base(object), 'objectValues'):
-        childObjects = object.objectValues()
-      if hasattr(aq_base(object), 'isHidden'):
-        if not object.isHidden:
-          object_list.append(object)
+      if hasattr(aq_base(obj), 'objectValues'):
+        childObjects = obj.objectValues()
+      if hasattr(aq_base(obj), 'isHidden'):
+        if not obj.isHidden:
+          object_list.append(obj)
       if len(childObjects) > 0:
-        for object in childObjects:
-          object_list.extend(getChildObjects(object))          
+        for o in childObjects:
+          object_list.extend(getChildObjects(o))          
       else:
-        object_list.append(object)
+        object_list.append(obj)
       return object_list
               
     list = getChildObjects(trashbin)
