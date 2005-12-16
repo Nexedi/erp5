@@ -95,7 +95,7 @@ class TrashTool(BaseTool):
       else:
         object_path = container_path + [object_id]
         object = self.unrestrictedTraverse(object_path)
-      for subobject_id in object.objectIds():
+      for subobject_id in list(object.objectIds()):
         subobject_path = object_path + [subobject_id]
         subobject = self.unrestrictedTraverse(subobject_path)
         subobject_copy = subobject._p_jar.exportFile(subobject._p_oid)
@@ -109,7 +109,7 @@ class TrashTool(BaseTool):
     """
       Create a new trash bin at upgrade of bt
     """
-    LOG('new Trash bin for', 0, bt_title)
+#     LOG('new Trash bin for', 0, bt_title)
     # construct date
     date = DateTime()
     start_date = date.strftime('%Y-%m-%d')
@@ -121,9 +121,9 @@ class TrashTool(BaseTool):
       n = n + 1
       new_trash_id = '%s_%s' %(bt_title+'_'+start_date, n)
     # create trash bin
-    LOG('creating trash bin with id', 0, new_trash_id)
+#     LOG('creating trash bin with id', 0, new_trash_id)
     trashbin = self.newContent(portal_type='Trash Bin', id=new_trash_id, title=bt_title, start_date=start_date, causality_value=bt)
-    LOG('trash item created', 0, trashbin)
+#     LOG('trash item created', 0, trashbin)
     return trashbin
   
 
