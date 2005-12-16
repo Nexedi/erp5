@@ -415,8 +415,8 @@ class TemplateTool (BaseTool):
         item2 = getattr(bt2, item_name)
         for key in  item1._objects.keys():
           if item2._objects.has_key(key):
-            obj1_xml = item1.generate_xml(path=key)
-            obj2_xml = item2.generate_xml(path=key)
+            obj1_xml = item1.generateXml(path=key)
+            obj2_xml = item2.generateXml(path=key)
             ob1_xml_lines = obj1_xml.splitlines()
             ob2_xml_lines = obj2_xml.splitlines()
             diff_list = list(unified_diff(ob1_xml_lines, ob2_xml_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
