@@ -49,7 +49,9 @@ class CopyToTarget(TargetSolver):
     new_start_date = movement.getDeliveryStartDateList()[0]
     new_stop_date = movement.getDeliveryStopDateList()[0]
     # Calculate delta
-    quantity_ratio = new_quantity / old_quantity
+    quantity_ratio = 0
+    if old_quantity not in (None,0.0):
+      quantity_ratio = new_quantity / old_quantity
     start_date_delta = 0
     stop_date_delta = 0
     if new_start_date is not None and old_start_date is not None:
