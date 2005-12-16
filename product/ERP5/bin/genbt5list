@@ -1,0 +1,109 @@
+#! /usr/bin/python
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Yoshinori Okuji <yo@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+
+"""Generate repository information on Business Templates.
+"""
+
+import tarfile
+import os
+import sys
+import tempfile
+
+property_list = ('title', 'version', 'description', 'license', 'dependency_list', 'copyright_list')
+
+def info(message):
+  """Print a message.
+  """
+  sys.stderr.write(message)
+
+def readBusinessTemplate(tar):
+  """Read an archived Business Template.
+  """
+  property_dict = {}
+  for info in tar:
+    name_list = info.name.split('/')
+    if len(name_list) == 3 and name_list[1] == 'bt' and name_list[2] in property_list:
+      f = tar.extractfile(info)
+      try:
+        text = f.read()
+        if name_list[2].endswith('_list'):
+          property_dict[name_list[2][:-5]] = text and text.split('\n') or []
+        else:
+          property_dict[name_list[2]] = text
+      finally:
+        f.close()
+        
+  return property_dict
+        
+def generateInformation(fd):
+  os.write(fd, '<?xml version="1.0"?>\n')
+  os.write(fd, '<repository>\n')
+
+  for file in os.listdir(os.getcwd()):
+    if file.endswith('.bt5'):
+      info('Reading %s... ' % (file,))
+      try:
+        tar = tarfile.open(file, 'r:gz')
+      except tarfile.TarError:
+        info('an error happened; skipping\n')
+        continue
+      try:
+        property_dict = readBusinessTemplate(tar)
+        property_id_list = property_dict.keys()
+        property_id_list.sort()
+        os.write(fd, '  <template id="%s">\n' % (file,))
+        for property_id in property_id_list:
+          property_value = property_dict[property_id]
+          if type(property_value) == type(''):
+            os.write(fd, '    <%s>%s</%s>\n' % (property_id, property_value, property_id))
+          else:
+            for value in property_value:
+              os.write(fd, '    <%s>%s</%s>\n' % (property_id, value, property_id))
+        os.write(fd, '  </template>\n')
+        info('done\n')
+      finally:
+        tar.close()
+        
+  os.write(fd, '</repository>\n')
+       
+def main():
+  fd, path = tempfile.mkstemp()
+  try:
+    try:
+      generateInformation(fd)
+    finally:
+      os.close(fd)
+  except:
+    os.remove(path)
+    raise
+  else:
+    os.rename(path, 'bt5list')
+
+main()
