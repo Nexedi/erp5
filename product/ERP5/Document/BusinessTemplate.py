@@ -138,7 +138,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
         os.makedirs(path)
       return path
 
-  def addObject(self, object, name, path=None, ext='.xml'):
+  def addObject(self, obj, name, path=None, ext='.xml'):
     name = pathname2url(name)
     if path is None:
       object_path = os.path.join(self.path, name)
@@ -147,7 +147,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
         path = pathname2url(path)
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wt')
-    f.write(str(object))
+    f.write(str(obj))
     f.close()
 
   def _initImport(self, file=None, path=None, **kw):
@@ -195,7 +195,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
      if not os.path.exists(name):
       os.makedirs(name)
 
-  def addObject(self, object, name, path=None, ext='.xml'):
+  def addObject(self, obj, name, path=None, ext='.xml'):
     name = pathname2url(name)
     if path is None:
       object_path = os.path.join(self.path, name)
@@ -204,7 +204,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
         path = pathname2url(path)
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wt')
-    f.write(str(object))
+    f.write(str(obj))
     f.close()
 
   def finishCreation(self):
@@ -335,67 +335,67 @@ class ObjectTemplateItem(BaseTemplateItem):
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
     for key in self._objects.keys():
-      object=self._objects[key]
+      obj = self._objects[key]
       # create folder and subfolders
       folders, id = os.path.split(key)
       path = os.path.join(root_path, folders)
       bta.addFolder(name=path)
       # export object in xml
       f=StringIO()
-      XMLExportImport.exportXML(object._p_jar, object._p_oid, f)
-      bta.addObject(object=f.getvalue(), name=id, path=path)
+      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+      bta.addObject(obj=f.getvalue(), name=id, path=path)
 
   def build_sub_objects(self, context, id_list, url, **kw):
     p = context.getPortalObject()
     sub_list = {}
     for id in id_list:
       relative_url = '/'.join([url,id])
-      object = p.unrestrictedTraverse(relative_url)
-      object = object._getCopy(context)
-      id_list = object.objectIds()
-      if hasattr(object, '__ac_local_roles__'):
+      obj = p.unrestrictedTraverse(relative_url)
+      obj = obj._getCopy(context)
+      id_list = obj.objectIds()
+      if hasattr(obj, '__ac_local_roles__'):
         # remove local roles
-        object.__ac_local_roles__ = None
-      if hasattr(object, '_owner'):
-        object._owner = None
-      if hasattr(object, 'groups'):
+        obj.__ac_local_roles__ = None
+      if hasattr(obj, '_owner'):
+        obj._owner = None
+      if hasattr(obj, 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
-        groups = deepcopy(object.groups)
+        groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
-        object.manage_delObjects(list(id_list))
-      if hasattr(aq_base(object), 'uid'):
-        object.uid = None
-      if hasattr(object, 'groups'):
-        object.groups = groups
-      self._objects[relative_url] = object
-      object.wl_clearLocks()
+        obj.manage_delObjects(list(id_list))
+      if hasattr(aq_base(obj), 'uid'):
+        obj.uid = None
+      if hasattr(obj, 'groups'):
+        obj.groups = groups
+      self._objects[relative_url] = obj
+      obj.wl_clearLocks()
     return sub_list
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
-      object = p.unrestrictedTraverse(relative_url)
-      object = object._getCopy(context)
-      id_list = object.objectIds()
-      if hasattr(object, '__ac_local_roles__'):
+      obj = p.unrestrictedTraverse(relative_url)
+      obj = obj._getCopy(context)
+      id_list = obj.objectIds()
+      if hasattr(obj, '__ac_local_roles__'):
         # remove local roles
-        object.__ac_local_roles__ = None
-      if hasattr(object, '_owner'):
-        object._owner = None
-      if hasattr(object, 'groups'):
+        obj.__ac_local_roles__ = None
+      if hasattr(obj, '_owner'):
+        obj._owner = None
+      if hasattr(obj, 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
-        groups = deepcopy(object.groups)
+        groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
-        object.manage_delObjects(list(id_list))
-      if hasattr(aq_base(object), 'uid'):
-        object.uid = None
-      if hasattr(object, 'groups'):
-        object.groups = groups
-      self._objects[relative_url] = object
-      object.wl_clearLocks()
+        obj.manage_delObjects(list(id_list))
+      if hasattr(aq_base(obj), 'uid'):
+        obj.uid = None
+      if hasattr(obj, 'groups'):
+        obj.groups = groups
+      self._objects[relative_url] = obj
+      obj.wl_clearLocks()
 
   def _importFile(self, file_name, file):
     # import xml file
@@ -483,48 +483,48 @@ class ObjectTemplateItem(BaseTemplateItem):
             subobjects_dict = self._backupObject(action, trashbin, container_path, object_id)
             container.manage_delObjects([object_id])
           # install object
-          object = self._objects[path]
-          if hasattr(object, 'groups'):
+          obj = self._objects[path]
+          if hasattr(obj, 'groups'):
             # we must keep original order groups because they change when we add subobjects
-            groups[path] = deepcopy(object.groups)
+            groups[path] = deepcopy(obj.groups)
           # copy the object
-          object = object._getCopy(container)
-          container._setObject(object_id, object)
-          object = container._getOb(object_id)
-          object.manage_afterClone(object)
-          object.wl_clearLocks()
+          obj = obj._getCopy(container)
+          container._setObject(object_id, obj)
+          obj = container._getOb(object_id)
+          obj.manage_afterClone(obj)
+          obj.wl_clearLocks()
           # import sub objects if there is
           if len(subobjects_dict) > 0:
             # get a jar
-            connection = object._p_jar
-            obj = object
+            connection = obj._p_jar
+            o = obj
             while connection is None:
-              obj = obj.aq_parent
-              connection = obj._p_jar
+              o = o.aq_parent
+              connection = o._p_jar
             # import subobjects
             for subobject_id in subobjects_dict.keys():
               subobject_data = subobjects_dict[subobject_id]
               subobject_data.seek(0)
               subobject = connection.importFile(subobject_data)
-              if subobject_id not in object.objectIds():
-                object._setObject(subobject_id, subobject)
+              if subobject_id not in obj.objectIds():
+                obj._setObject(subobject_id, subobject)
               
-          if object.meta_type in ('Z SQL Method',):
+          if obj.meta_type in ('Z SQL Method',):
             # It is necessary to make sure that the sql connection
             # in this method is valid.
             sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
-            if object.connection_id not in sql_connection_list:
-              object.connection_id = sql_connection_list[0]
+            if obj.connection_id not in sql_connection_list:
+              obj.connection_id = sql_connection_list[0]
       # now put original order group
       for path in groups.keys():
-        object = portal.unrestrictedTraverse(path)
-        object.groups = groups[path]
+        obj = portal.unrestrictedTraverse(path)
+        obj.groups = groups[path]
     else:
       # for old business template format
       BaseTemplateItem.install(self, context, trashbin, **kw)
       portal = context.getPortalObject()
       for relative_url in self._archive.keys():
-        object = self._archive[relative_url]
+        obj = self._archive[relative_url]
         container_path = relative_url.split('/')[0:-1]
         object_id = relative_url.split('/')[-1]
         container = portal.unrestrictedTraverse(container_path)
@@ -533,18 +533,18 @@ class ObjectTemplateItem(BaseTemplateItem):
           self._backupObject('btsave', trashbin, container_path, object_id)
           container.manage_delObjects([object_id])
         # Set a hard link
-        object = object._getCopy(container)
-        container._setObject(object_id, object)
-        object = container._getOb(object_id)
-        object.manage_afterClone(object)
-        object.wl_clearLocks()
-        if object.meta_type in ('Z SQL Method',):
+        obj = obj._getCopy(container)
+        container._setObject(object_id, obj)
+        obj = container._getOb(object_id)
+        obj.manage_afterClone(obj)
+        obj.wl_clearLocks()
+        if obj.meta_type in ('Z SQL Method',):
           # It is necessary to make sure that the sql connection
           # in this method is valid.
           sql_connection_list = portal.objectIds(
                                    spec=('Z MySQL Database Connection',))
-          if object.connection_id not in sql_connection_list:
-            object.connection_id = sql_connection_list[0]
+          if obj.connection_id not in sql_connection_list:
+            obj.connection_id = sql_connection_list[0]
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
@@ -578,13 +578,13 @@ class ObjectTemplateItem(BaseTemplateItem):
       str(object2): None,
     }
     # Generate XML
-    for object in (object1, object2):
+    for obj in (object1, object2):
       string_io = StringIO()
-      XMLExportImport.exportXML(object._p_jar, object._p_oid, string_io)
+      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, string_io)
       object_xml = string_io.getvalue()
       string_io.close()
       object_xml_lines = object_xml.splitlines(1)
-      xml_dict[str(object)] = object_xml_lines
+      xml_dict[str(obj)] = object_xml_lines
     # Make diff between XML
     diff_instance = difflib.Differ()
     diff_list = list(diff_instance.compare(xml_dict[str(object1)],
@@ -609,23 +609,19 @@ class ObjectTemplateItem(BaseTemplateItem):
     if (getattr(self, 'template_format_version', 0)) == 0:
       object_list = getattr(self, archive_variable).items()
     else:
-      try:
-        object_list = []
-        keys = self._objects.keys()
-        keys.sort()
-        for path in keys:
-          container_path = path.split('/')[2:-1]
-          object_id = path.split('/')[-1]
-          container = portal.unrestrictedTraverse(container_path)
-          object = self._objects[path]
-          object_list.append(('/'.join(path.split('/')[2:]), object))
-      except:
-        import pdb
-        pdb.set_trace()
+      object_list = []
+      keys = self._objects.keys()
+      keys.sort()
+      for path in keys:
+        container_path = path.split('/')[2:-1]
+        object_id = path.split('/')[-1]
+        container = portal.unrestrictedTraverse(container_path)
+        obj = self._objects[path]
+        object_list.append(('/'.join(path.split('/')[2:]), obj))
 
-    for relative_url, object in object_list:
+    for relative_url, obj in object_list:
       # Browse all items stored
-      object = portal.unrestrictedTraverse(relative_url)
+      obj = portal.unrestrictedTraverse(relative_url)
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
       container = portal.unrestrictedTraverse(container_path)
@@ -712,8 +708,8 @@ class PathTemplateItem(ObjectTemplateItem):
     id = id_list[0]
     if re.search('[\*\?\[\]]', id) is None:
       # If the id has no meta character, do not have to check all objects.
-      object = folder._getOb(id)
-      return self._resolvePath(object, relative_url_list + [id], id_list[1:])
+      obj = folder._getOb(id)
+      return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
       path_list.extend(self._resolvePath(folder._getOb(object_id), relative_url_list + [object_id], id_list[1:]))
@@ -729,27 +725,27 @@ class PathTemplateItem(ObjectTemplateItem):
       if '**' in path:
         include_subobjects = 1
       for relative_url in self._resolvePath(p, [], path.split('/')):
-        object = p.unrestrictedTraverse(relative_url)
-        object = object._getCopy(context)
-        id_list = object.objectIds()
-        if hasattr(object, '__ac_local_roles__'):
+        obj = p.unrestrictedTraverse(relative_url)
+        obj = obj._getCopy(context)
+        id_list = obj.objectIds()
+        if hasattr(obj, '__ac_local_roles__'):
           # remove local roles
-          object.__ac_local_roles__ = None
-        if hasattr(object, '_owner'):
-          object._owner = None
-        if hasattr(object, 'uid'):
-          object.uid = None
-        if hasattr(object, 'groups'):
+          obj.__ac_local_roles__ = None
+        if hasattr(obj, '_owner'):
+          obj._owner = None
+        if hasattr(obj, 'uid'):
+          obj.uid = None
+        if hasattr(obj, 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
-          groups = deepcopy(object.groups)
+          groups = deepcopy(obj.groups)
         if len(id_list) > 0:
           if include_subobjects:
             self.build_sub_objects(context, id_list, relative_url)
-          object.manage_delObjects(list(id_list))
-        if hasattr(object, 'groups'):
-          object.groups = groups          
-        self._objects[relative_url] = object
-        object.wl_clearLocks()
+          obj.manage_delObjects(list(id_list))
+        if hasattr(obj, 'groups'):
+          obj.groups = groups
+        self._objects[relative_url] = obj
+        obj.wl_clearLocks()
       
 class CategoryTemplateItem(ObjectTemplateItem):
 
@@ -760,44 +756,44 @@ class CategoryTemplateItem(ObjectTemplateItem):
     p = context.getPortalObject()
     for id in id_list:
       relative_url = '/'.join([url,id])
-      object = p.unrestrictedTraverse(relative_url)
-      object_copy = object._getCopy(context)
-      if hasattr(object, '__ac_local_roles__'):
+      obj = p.unrestrictedTraverse(relative_url)
+      obj = obj._getCopy(context)
+      if hasattr(obj, '__ac_local_roles__'):
         # remove local roles
-        object.__ac_local_roles__ = None
-      if hasattr(object, '_owner'):
-        object._owner = None
-      id_list = object_copy.objectIds()
+        obj.__ac_local_roles__ = None
+      if hasattr(obj, '_owner'):
+        obj._owner = None
+      id_list = obj.objectIds()
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
-        object_copy.manage_delObjects(list(id_list))
-      if hasattr(aq_base(object_copy), 'uid'):
-        object_copy.uid = None        
-      self._objects[relative_url] = object_copy
-      object.wl_clearLocks()
+        obj.manage_delObjects(list(id_list))
+      if hasattr(aq_base(obj), 'uid'):
+        obj.uid = None
+      self._objects[relative_url] = obj
+      obj.wl_clearLocks()
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
-      object = p.unrestrictedTraverse(relative_url)
-      object_copy = object._getCopy(context)
-      if hasattr(object, '__ac_local_roles__'):
+      obj = p.unrestrictedTraverse(relative_url)
+      obj = obj._getCopy(context)
+      if hasattr(obj, '__ac_local_roles__'):
         # remove local roles
-        object.__ac_local_roles__ = None
-      if hasattr(object, '_owner'):
-        object._owner = None
-      include_sub_categories = object.getProperty('business_template_include_sub_categories', 0)
-      id_list = object_copy.objectIds()
+        obj.__ac_local_roles__ = None
+      if hasattr(obj, '_owner'):
+        obj._owner = None
+      include_sub_categories = obj.getProperty('business_template_include_sub_categories', 0)
+      id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
         self.build_sub_objects(context, id_list, relative_url)
-        object_copy.manage_delObjects(list(id_list))
+        obj.manage_delObjects(list(id_list))
       else:
-        object_copy.manage_delObjects(list(id_list))
-      if hasattr(aq_base(object_copy), 'uid'):
-        object_copy.uid = None
-      self._objects[relative_url] = object_copy
-      object.wl_clearLocks()
+        obj.manage_delObjects(list(id_list))
+      if hasattr(aq_base(obj), 'uid'):
+        obj.uid = None
+      self._objects[relative_url] = obj
+      obj.wl_clearLocks()
       
   def install(self, context, trashbin, light_install = 0, **kw):
     update_dict = kw.get('object_to_update')
@@ -820,8 +816,8 @@ class CategoryTemplateItem(ObjectTemplateItem):
             else:
               action = 'btsave'
             # Wrap the object by an aquisition wrapper for _aq_dynamic.
-            object = self._objects[path]
-            object = object.__of__(category_tool)
+            obj = self._objects[path]
+            obj = obj.__of__(category_tool)
             container_path = path.split('/')[:-1]
             category_id = path.split('/')[-1]
             try:
@@ -838,18 +834,18 @@ class CategoryTemplateItem(ObjectTemplateItem):
             if category_id in container_ids:
               subobjects_dict = self._backupObject(action, trashbin, container_path, category_id)
               container.manage_delObjects([category_id])
-            category = container.newContent(portal_type=object.getPortalType(), id=category_id)
-            for property in object.propertyIds():
+            category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
+            for property in obj.propertyIds():
               if property not in ('id', 'uid'):
-                category.setProperty(property, object.getProperty(property, evaluate=0))
+                category.setProperty(property, obj.getProperty(property, evaluate=0))
             # import sub objects if there is
             if len(subobjects_dict) > 0:
               # get a jar
-              connection = object._p_jar
-              obj = category
+              connection = obj._p_jar
+              o = category
               while connection is None:
-                obj = obj.aq_parent
-                connection = obj._p_jar
+                o = o.aq_parent
+                connection = o._p_jar
               # import subobjects
               for subobject_id in subobjects_dict.keys():
                 subobject_data = subobjects_dict[subobject_id]
@@ -866,9 +862,9 @@ class CategoryTemplateItem(ObjectTemplateItem):
         ObjectTemplateItem.install(self, context, trashbin, **kw)
       else:
         for relative_url in self._archive.keys():
-          object = self._archive[relative_url]
+          obj = self._archive[relative_url]
           # Wrap the object by an aquisition wrapper for _aq_dynamic.
-          object = object.__of__(category_tool)
+          obj = obj.__of__(category_tool)
           container_path = relative_url.split('/')[0:-1]
           category_id = relative_url.split('/')[-1]
           container = category_tool.unrestrictedTraverse(container_path)
@@ -876,10 +872,10 @@ class CategoryTemplateItem(ObjectTemplateItem):
           if category_id in container_ids:    # Object already exists
             subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, category_id, save=1)
             container.manage_delObjects([category_id])
-          category = container.newContent(portal_type=object.getPortalType(), id=category_id)
-          for property in object.propertyIds():
+          category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
+          for property in obj.propertyIds():
             if property not in ('id', 'uid'):
-              category.setProperty(property, object.getProperty(property, evaluate=0))
+              category.setProperty(property, obj.getProperty(property, evaluate=0))
 
 class SkinTemplateItem(ObjectTemplateItem):
 
@@ -895,9 +891,9 @@ class SkinTemplateItem(ObjectTemplateItem):
     sql_connection_list = p.objectIds(spec=('Z MySQL Database Connection',))
     for relative_url in self._archive.keys():
       folder = p.unrestrictedTraverse(relative_url)
-      for object in folder.objectValues(spec=('Z SQL Method',)):
-        if object.connection_id not in sql_connection_list:
-          object.connection_id = sql_connection_list[0]
+      for obj in folder.objectValues(spec=('Z SQL Method',)):
+        if obj.connection_id not in sql_connection_list:
+          obj.connection_id = sql_connection_list[0]
     # Add new folders into skin paths.
     ps = p.portal_skins
     for skin_name, selection in ps.getSkinPaths():
@@ -909,11 +905,11 @@ class SkinTemplateItem(ObjectTemplateItem):
             if not force:
               if update_dict[relative_url] == 'nothing':
                 continue
-          object = self._objects[relative_url]
+          obj = self._objects[relative_url]
         else:
-          object = self._archive[relative_url]
+          obj = self._archive[relative_url]
         skin_id = relative_url.split('/')[-1]
-        selection_list = object.getProperty('business_template_registered_skin_selections', None)
+        selection_list = obj.getProperty('business_template_registered_skin_selections', None)
         if selection_list is None or skin_name in selection_list:
           if skin_id not in selection:
             new_selection.append(skin_id)
@@ -1020,12 +1016,12 @@ class WorkflowTemplateItem(ObjectTemplateItem):
           if object_id in container_ids:    # Object already exists
             self._backupObject(action, trashbin, container_path, object_id)
             container.manage_delObjects([object_id])
-          object = self._objects[path]
-          object = object._getCopy(container)
-          container._setObject(object_id, object)
-          object = container._getOb(object_id)
-          object.manage_afterClone(object)
-          object.wl_clearLocks()
+          obj = self._objects[path]
+          obj = obj._getCopy(container)
+          container._setObject(object_id, obj)
+          obj = container._getOb(object_id)
+          obj.manage_afterClone(obj)
+          obj.wl_clearLocks()
     else:
       ObjectTemplateItem.install(self, context, trashbin, **kw)
 
@@ -1071,29 +1067,29 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
   def build(self, context, **kw):
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
-      object = p.unrestrictedTraverse(relative_url)
-      object = object._getCopy(context)
-      id_list = object.objectIds()
+      obj = p.unrestrictedTraverse(relative_url)
+      obj = obj._getCopy(context)
+      id_list = obj.objectIds()
       # remove optional actions
       optional_action_list = []
-      for index,ai in enumerate(object.listActions()):
+      for index,ai in enumerate(obj.listActions()):
         if ai.getOption():
           optional_action_list.append(index)
       if len(optional_action_list) > 0:
-        object.deleteActions(selections=optional_action_list)
-      if hasattr(object, '__ac_local_roles__'):
+        obj.deleteActions(selections=optional_action_list)
+      if hasattr(obj, '__ac_local_roles__'):
         # remove local roles
-        object.__ac_local_roles__ = None
-      if hasattr(object, '_owner'):
-        object._owner = None
-      if hasattr(object, 'uid'):
-        object.uid = None
-      self._objects[relative_url] = object
-      object.wl_clearLocks()
+        obj.__ac_local_roles__ = None
+      if hasattr(obj, '_owner'):
+        obj._owner = None
+      if hasattr(obj, 'uid'):
+        obj.uid = None
+      self._objects[relative_url] = obj
+      obj.wl_clearLocks()
     # also export workflow chain
     (default_chain, chain_dict) = self._getChainByType(context)
-    for object in self._objects.values():
-      portal_type = object.id
+    for obj in self._objects.values():
+      portal_type = obj.id
       self._workflow_chain_archive[portal_type] = chain_dict['chain_%s' % portal_type]
 
   def export(self, context, bta, **kw):
@@ -1112,7 +1108,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       xml_data += os.linesep+'  <workflow>%s</workflow>' %(self._workflow_chain_archive[key],)
       xml_data += os.linesep+' </chain>'
     xml_data += os.linesep+'</workflow_chain>'
-    bta.addObject(object=xml_data, name='workflow_chain_type',  path=root_path)
+    bta.addObject(obj=xml_data, name='workflow_chain_type',  path=root_path)
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
@@ -1126,17 +1122,17 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # not very usefull
     default_chain = ''
     if (getattr(self, 'template_format_version', 0)) == 1:
-      objects_list = self._objects
+      object_list = self._objects
     else:
-      objects_list = self._archive
-    for path in objects_list.keys():
+      object_list = self._archive
+    for path in object_list.keys():
       if update_dict.has_key(path) or force:
         if not force:
           action = update_dict[path]
           if action == 'nothing':
             continue          
-        object = objects_list[path]
-        portal_type = object.id
+        obj = object_list[path]
+        portal_type = obj.id
         chain_dict['chain_%s' % portal_type] = \
                               self._workflow_chain_archive[portal_type]
         context.portal_workflow.manage_changeWorkflows(default_chain,
@@ -1171,9 +1167,9 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # Compare chains
     container_ids = self.portal_types.objectIds()
     if (getattr(self, 'template_format_version', 0)) == 0:
-      for object in self._archive.values():
+      for obj in self._archive.values():
         try:
-          object_id = object.id
+          object_id = obj.id
         except:
           import pdb
           pdb.set_trace()
@@ -1235,8 +1231,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     if catalog is None:
       LOG('BusinessTemplate build', 0, 'catalog not found')
       return
-    for onbject in self._objects.values():
-      method_id = object.id
+    for obj in self._objects.values():
+      method_id = obj.id
       self._is_catalog_method_archive[method_id] = method_id in catalog.sql_catalog_object
       self._is_catalog_list_method_archive[method_id] = method_id in catalog.sql_catalog_object_list
       self._is_uncatalog_method_archive[method_id] = method_id in catalog.sql_uncatalog_object
@@ -1254,18 +1250,18 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
     for key in self._objects.keys():
-      object=self._objects[key]
+      obj = self._objects[key]
       # create folder and subfolders
       folders, id = os.path.split(key)
       path = os.path.join(root_path, folders)
       bta.addFolder(name=path)
       # export object in xml
       f=StringIO()
-      XMLExportImport.exportXML(object._p_jar, object._p_oid, f)
-      bta.addObject(object=f.getvalue(), name=id, path=path)
+      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+      bta.addObject(obj=f.getvalue(), name=id, path=path)
       # add all datas specific to catalog inside one file
       catalog = context.portal_catalog.getSQLCatalog()
-      method_id = object.id
+      method_id = obj.id
       object_path = os.path.join(path, method_id+'.catalog_keys.xml')
 
       f = open(object_path, 'wt')
@@ -1336,8 +1332,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           else:
             values.append(self._archive[key])
           
-    for object in values:
-      method_id = object.id
+    for obj in values:
+      method_id = obj.id
 
       is_catalog_method = int(self._is_catalog_method_archive[method_id])
       is_catalog_list_method = int(self._is_catalog_list_method_archive[method_id])
@@ -1424,8 +1420,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     sql_update_object = list(catalog.sql_update_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
 
-    for object in values:
-      method_id = object.id
+    for obj in values:
+      method_id = obj.id
 
       if method_id in sql_catalog_object:
         sql_catalog_object.remove(method_id)
@@ -1525,20 +1521,20 @@ class ActionTemplateItem(ObjectTemplateItem):
     p = context.getPortalObject()
     for id in self._archive.keys():
       relative_url, key, value = self._splitPath(id)
-      object = p.unrestrictedTraverse(relative_url)
-      for ai in object.listActions():
+      obj = p.unrestrictedTraverse(relative_url)
+      for ai in obj.listActions():
         if getattr(ai, key) == value:
           url = os.path.split(relative_url)
           key = os.path.join(url[-2], url[-1], value)
-          object = ai._getCopy(context)
-          if hasattr(object, '__ac_local_roles__'):
+          action = ai._getCopy(context)
+          if hasattr(action, '__ac_local_roles__'):
             # remove local roles
-            object.__ac_local_roles__ = None
-          if hasattr(object, '_owner'):
-            object._owner = None
-          if hasattr(object, 'uid'):
-            object.uid = None
-          self._objects[key] = object
+            action.__ac_local_roles__ = None
+          if hasattr(action, '_owner'):
+            action._owner = None
+          if hasattr(action, 'uid'):
+            action.uid = None
+          self._objects[key] = action
           self._objects[key].wl_clearLocks()
           break
       else:
@@ -1556,14 +1552,14 @@ class ActionTemplateItem(ObjectTemplateItem):
             if action == 'nothing':
               continue
           path = id.split(os.sep)
-          object = p.unrestrictedTraverse(path[:-1])
-          action_list = object.listActions()
+          obj = p.unrestrictedTraverse(path[:-1])
+          action_list = obj.listActions()
           for index in range(len(action_list)):
             if getattr(action_list[index], 'id') == path[-1]:          
               # remove previous action
-              object.deleteActions(selections=(index,))
+              obj.deleteActions(selections=(index,))
           action = self._objects[id]
-          object.addAction(
+          obj.addAction(
                         id = action.id
                       , name = action.title
                       , action = action.action.text
@@ -1580,11 +1576,11 @@ class ActionTemplateItem(ObjectTemplateItem):
       for id in self._archive.keys():
         action = self._archive[id]
         relative_url, key, value = self._splitPath(id)
-        object = p.unrestrictedTraverse(relative_url)
-        for ai in object.listActions():
+        obj = p.unrestrictedTraverse(relative_url)
+        for ai in obj.listActions():
           if getattr(ai, key) == value:
-            raise TemplateConflictError, 'the portal type %s already has the action %s' % (object.id, value)
-        object.addAction(
+            raise TemplateConflictError, 'the portal type %s already has the action %s' % (obj.id, value)
+        obj.addAction(
                       id = action.id
                     , name = action.title
                     , action = action.action.text
@@ -1607,11 +1603,11 @@ class ActionTemplateItem(ObjectTemplateItem):
     for id in keys:
       action = self._archive[id]
       relative_url, key, value = self._splitPath(id)
-      object = p.unrestrictedTraverse(relative_url)
-      action_list = object.listActions()
+      obj = p.unrestrictedTraverse(relative_url)
+      action_list = obj.listActions()
       for index in range(len(action_list)):
         if getattr(action_list[index], key) == value:
-          object.deleteActions(selections=(index,))
+          obj.deleteActions(selections=(index,))
           break
     BaseTemplateItem.uninstall(self, context, **kw)
 
@@ -1623,14 +1619,14 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     for id in self._archive.keys():
       for property in p.propertyMap():
         if property['id'] == id:
-          object = p.getProperty(id)
+          obj = p.getProperty(id)
           type = property['type']
           break
       else:
-        object = None
-      if object is None:
+        obj = None
+      if obj is None:
         raise NotFound, 'the property %s is not found' % id
-      self._objects[id] = (type, object)
+      self._objects[id] = (type, obj)
 
   def _importFile(self, file_name, file):
     # recreate list of site property from xml file
@@ -1691,18 +1687,18 @@ class SitePropertyTemplateItem(BaseTemplateItem):
 
   def generate_xml(self, path=None):
     xml_data = ''
-    type, object=self._objects[path]
+    type, obj = self._objects[path]
     xml_data += os.linesep+' <property>'
     xml_data += os.linesep+'  <id>%s</id>' %(path,)
     xml_data += os.linesep+'  <type>%s</type>' %(type,)
     if type in ('lines', 'tokens'):
       xml_data += os.linesep+'  <value>'
-      for item in object:
+      for item in obj:
         if item != '':
           xml_data += os.linesep+'   <item>%s</item>' %(item,)
       xml_data += os.linesep+'  </value>'
     else:
-      xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(object),)
+      xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(obj),)
     xml_data += os.linesep+' </property>'
     return xml_data
 
@@ -1717,7 +1713,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     for path in keys:
       xml_data += self.generate_xml(path)
     xml_data += os.linesep+'</site_property>'
-    bta.addObject(object=xml_data, name='properties', path=root_path)
+    bta.addObject(obj=xml_data, name='properties', path=root_path)
 
 class ModuleTemplateItem(BaseTemplateItem):
 
@@ -1773,7 +1769,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     for id in keys:
       # expor module one by one
       xml_data = self.generate_xml(path=id)
-      bta.addObject(object=xml_data, name=id, path=path)
+      bta.addObject(obj=xml_data, name=id, path=path)
 
   def install(self, context, trashbin, **kw):
     portal = context.getPortalObject()
@@ -1936,8 +1932,8 @@ class DocumentTemplateItem(BaseTemplateItem):
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      object=self._objects[path]
-      bta.addObject(object=object, name=path, path=None, ext='.py')
+      obj = self._objects[path]
+      bta.addObject(obj=obj, name=path, path=None, ext='.py')
 
   def _importFile(self, file_name, file):
     text = file.read()
@@ -2050,10 +2046,10 @@ class RoleTemplateItem(BaseTemplateItem):
     p.__ac_roles__ = tuple(roles.keys())
 
   def generate_xml(self, path):
-    object=self._objects[path]
+    obj = self._objects[path]
     xml_data = '<role_list>'
-    object.sort()
-    for role in object:
+    obj.sort()
+    for role in obj:
       xml_data += os.linesep+' <role>%s</role>' %(role)
     xml_data += os.linesep+'</role_list>'
     return xml_data
@@ -2065,7 +2061,7 @@ class RoleTemplateItem(BaseTemplateItem):
     bta.addFolder(name=path)
     for path in self._objects.keys():
       xml_data = self.generate_xml(path=path)
-      bta.addObject(object=xml_data, name=path, path=None,)
+      bta.addObject(obj=xml_data, name=path, path=None,)
 
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
 
@@ -2148,10 +2144,10 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def generate_xml(self, path=None):
-    object=self._objects[path]
+    obj = self._objects[path]
     xml_data = '<key_list>'
-    object.sort()
-    for key in object:
+    obj.sort()
+    for key in obj:
       xml_data += os.linesep+' <key>%s</key>' %(key)
     xml_data += os.linesep+'</key_list>'
     return xml_data
@@ -2163,7 +2159,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     bta.addFolder(name=path)
     for path in self._objects.keys():
       xml_data = self.generate_xml(path=path)
-      bta.addObject(object=xml_data, name=path, path=None)
+      bta.addObject(obj=xml_data, name=path, path=None)
 
 class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
 
@@ -2246,10 +2242,10 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def generate_xml(self, path=None):
-    object=self._objects[path]
+    obj = self._objects[path]
     xml_data = '<key_list>'
-    object.sort()
-    for key in object:
+    obj.sort()
+    for key in obj:
       xml_data += os.linesep+' <key>%s</key>' %(key)
     xml_data += os.linesep+'</key_list>'
     return xml_data
@@ -2261,7 +2257,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     bta.addFolder(name=path)
     for path in self._objects.keys():
       xml_data = self.generate_xml(path=path)
-      bta.addObject(object=xml_data, name=path, path=None)
+      bta.addObject(obj=xml_data, name=path, path=None)
 
 class CatalogResultTableTemplateItem(BaseTemplateItem):
 
@@ -2344,10 +2340,10 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def generate_xml(self, path=None):
-    object=self._objects[path]
+    obj = self._objects[path]
     xml_data = '<key_list>'
-    object.sort()
-    for key in object:
+    obj.sort()
+    for key in obj:
       xml_data += os.linesep+' <key>%s</key>' %(key)
     xml_data += os.linesep+'</key_list>'    
     return xml_data
@@ -2359,7 +2355,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     bta.addFolder(name=path)
     for path in self._objects.keys():
       xml_data = self.generate_xml(path=path)
-      bta.addObject(object=xml_data, name=path, path=None)
+      bta.addObject(obj=xml_data, name=path, path=None)
 
 class MessageTranslationTemplateItem(BaseTemplateItem):
 
@@ -2430,11 +2426,11 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     root_path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=root_path)
     for key in self._objects.keys():
-      object = self._objects[key]
+      obj = self._objects[key]
       path = os.path.join(root_path, key)
       bta.addFolder(name=path)
       f = open(path+'/translation.po', 'wt')
-      f.write(str(object))
+      f.write(str(obj))
       f.close()
 
   def _importFile(self, file_name, file):
@@ -3041,9 +3037,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
           continue
         value = self.getProperty(id)
         if type == 'text' or type == 'string' or type == 'int':
-          bta.addObject(object=value, name=id, path=path+os.sep+'bt', ext='')
+          bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')
         elif type == 'lines' or type == 'tokens':
-          bta.addObject(object=str(os.linesep).join(value), name=id, path=path+os.sep+'bt', ext='')
+          bta.addObject(obj=str(os.linesep).join(value), name=id, path=path+os.sep+'bt', ext='')
 
       # Export each part
       for item_name in self._item_name_list:
