@@ -2510,7 +2510,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """This is a workaround, because template_format_version was not set even for the new format.
       """
       if self.hasProperty('template_format_version'):
-        self._baseGetTemplateFormatVersion(d=d)
+        self._baseGetTemplateFormatVersion()
 
       # the attribute _objects in BaseTemplateItem was added in the new format.
       if hasattr(self._path_item, '_objects'):
