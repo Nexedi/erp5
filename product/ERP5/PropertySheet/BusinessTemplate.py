@@ -145,7 +145,7 @@ class BusinessTemplate:
       'description' : 'Business Template format version',
       'type'        : 'int',
       'mode'        : 'w',
-      'default'     : 1 },
+      'default'     : 0 },
     { 'id'          : 'license',
       'description' : 'License',
       'type'        : 'text',
