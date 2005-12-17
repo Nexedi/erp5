@@ -440,7 +440,9 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
       Backup the object in portal trash if necessery and return its subobjects
     """
-    if action == 'backup':
+    subobjects_dict = {}
+    # XXX btsave is for backward compatibility
+    if action == 'backup' or action == 'btsave':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1)
     elif action == 'install':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=0)
@@ -1059,7 +1061,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       Backup portal type and keep the workflow chain.
     """
     subobjects_dict = {}
-    if action == 'backup':
+    # XXX btsave is for backward compatibility
+    if action == 'backup' or action == 'btsave':
       # Get the chain value
 #       (default_chain, chain_dict) = self._getChainByType(self)
 #       chain = chain_dict['chain_%s' % object_id]
@@ -2543,18 +2546,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Set the format version.
       self._setTemplateFormatVersion(1)
 
-      # XXX Trim down the history to prevent it from bloating the bt5 file.
-      # XXX Is there any better way to shrink the size???
-      # XXX Is it still necessary as it is not saved in new bt format ??
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf_id_list = portal_workflow.getChainFor(self)
-      original_history_dict = {}
-      for wf_id in wf_id_list:
-        history = portal_workflow.getHistoryOf(wf_id, self)
-        if history is not None and len(history) > 30:
-          original_history_dict[wf_id] = history
-          LOG('Business Template', 0, 'trim down the history of %s' % (wf_id,))
-          self.workflow_history[wf_id] = history[-30:]
       # Store all datas
       self._portal_type_item = \
           PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
