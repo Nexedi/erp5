@@ -324,11 +324,11 @@ class TempDocumentConstructor(DocumentConstructor):
 
     def __call__(self, folder, id, REQUEST=None, **kw):
       o = self.klass(id)
-      o = o.__of__(folder)
-      if kw: o.__of__(folder)._edit(force_update=1, **kw)
       # Monkey patch TempBase specific arguments
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', 'setTitle', 'getTitle'):
         setattr(o, k, getattr(o,"_temp_%s" % k))
+      o = o.__of__(folder)
+      if kw: o.__of__(folder)._edit(force_update=1, **kw)
       return o
 
 python_file_parser = re.compile('^(.*)\.py$')
