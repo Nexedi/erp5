@@ -22,7 +22,7 @@ from BTrees.OIBTree import OIBTree, union
 from BTrees.Length import Length
 from OFS.ObjectManager import BadRequestException, BeforeDeleteException
 from Products.ZCatalog.Lazy import LazyMap
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, ERROR, INFO
 
 class ERP5BTreeFolder2Base(BTreeFolder2Base):
   """
