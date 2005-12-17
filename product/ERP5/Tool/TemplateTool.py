@@ -118,7 +118,7 @@ class TemplateTool (BaseTool):
       if not hasattr(self, '_local_configuration'): self._local_configuration = PersistentMapping()
       local_configuration = self._local_configuration.get(template_id, None)
       if local_configuration is not None:
-        return local_configuration.__of__(self)
+        return local_configuration.__of__(template)
       return None
 
     security.declareProtected( 'Import/Export objects', 'save' )
