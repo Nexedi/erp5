@@ -261,8 +261,8 @@ class BaseTemplateItem(Implicit, Persistent):
     pass
 
   def preinstall(self, context, installed_bt, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      modified_object_list = {}
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       for path in new_keys:
         if installed_bt._objects.has_key(path):
@@ -408,8 +408,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      modified_object_list = {}
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
       new_keys = self._objects.keys()
       for path in new_keys:
@@ -449,7 +449,7 @@ class ObjectTemplateItem(BaseTemplateItem):
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       groups = {}
       portal = context.getPortalObject()
       # sort to add objects before their subobjects
@@ -599,89 +599,6 @@ class ObjectTemplateItem(BaseTemplateItem):
     result = '%s' % ''.join(diff_list)
     return result
 
-  def diff(self, archive_variable='_archive', max_deep=0, verbose=0):
-    """
-      Show all __btsave__ created, and make a diff between
-      the current and the old version.
-    """
-    result = ''
-    portal = self.getPortalObject()
-    if (getattr(self, 'template_format_version', 0)) == 0:
-      object_list = getattr(self, archive_variable).items()
-    else:
-      object_list = []
-      keys = self._objects.keys()
-      keys.sort()
-      for path in keys:
-        container_path = path.split('/')[2:-1]
-        object_id = path.split('/')[-1]
-        container = portal.unrestrictedTraverse(container_path)
-        obj = self._objects[path]
-        object_list.append(('/'.join(path.split('/')[2:]), obj))
-
-    for relative_url, obj in object_list:
-      # Browse all items stored
-      obj = portal.unrestrictedTraverse(relative_url)
-      container_path = relative_url.split('/')[0:-1]
-      object_id = relative_url.split('/')[-1]
-      container = portal.unrestrictedTraverse(container_path)
-      container_ids = container.objectIds()
-      # Search _btsave_ object
-      compare_object_couple_list = []
-      btsave_id_list = []
-      n = 1
-      new_object_id = '%s_btsave_%s' % (object_id, n)
-      while new_object_id in container_ids:
-        # Found _btsave_ object
-        btsave_id_list.append(new_object_id)
-        compare_object_couple_list.append(
-              (portal.unrestrictedTraverse(container_path+[object_id]),
-               portal.unrestrictedTraverse(container_path+[new_object_id])))
-#               (object, portal.unrestrictedTraverse(
-#                                   container_path+[new_object_id])))
-        n += 1
-        new_object_id = '%s_btsave_%s' % (object_id, n)
-#       if n == 1:
-#         result += "$$$ Added: %s $$$\n" % \
-#               ('/'.join(container_path+[object_id]))
-#         result += '%s\n' % ('-'*80)
-      # Find all objects to compare
-      deep = 0
-      while deep != max_deep:
-        new_compare_object_couple_list = []
-        for new_object, btsave_object in compare_object_couple_list:
-          btsave_object_content_id_list = btsave_object.objectIds()
-          for new_object_content_id in new_object.objectIds():
-            if new_object_content_id in btsave_object_content_id_list:
-              new_compare_object_couple_list.append(
-                  (getattr(new_object, new_object_content_id),
-                   getattr(btsave_object, new_object_content_id)))
-              btsave_object_content_id_list.remove(new_object_content_id)
-            else:
-              result += "$$$ Added: %s/%s $$$\n" % \
-                    (new_object.absolute_url(), new_object_content_id)
-              result += '%s\n' % ('-'*80)
-          for btsave_object_id in btsave_object_content_id_list:
-            result += "$$$ Removed: %s/%s $$$\n" % \
-                  (btsave_object.absolute_url(), btsave_object_id)
-            result += '%s\n' % ('-'*80)
-        if new_compare_object_couple_list == []:
-          deep = max_deep
-        else:
-          compare_object_couple_list = new_compare_object_couple_list
-          deep += 1
-      # Now, we can compare all objects requested
-      for new_object, btsave_object in compare_object_couple_list:
-        tmp_diff = self._compareObjects(new_object, btsave_object,
-                                        btsave_object_included=1)
-        if tmp_diff != '':
-          result += "$$$ %s $$$\n$$$ %s $$$\n" % \
-              (new_object.absolute_url(),
-               btsave_object.absolute_url())
-          if verbose == 1:
-            result += tmp_diff
-          result += '%s\n' % ('-'*80)
-    return result
 
 class PathTemplateItem(ObjectTemplateItem):
   """
@@ -783,7 +700,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
         obj.__ac_local_roles__ = None
       if hasattr(obj, '_owner'):
         obj._owner = None
-      include_sub_categories = obj.getProperty('business_template_include_sub_categories', 0)
+      include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
         self.build_sub_objects(context, id_list, relative_url)
@@ -798,7 +715,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def install(self, context, trashbin, light_install = 0, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       if light_install == 0:
         ObjectTemplateItem.install(self, context, trashbin, **kw)
       else:
@@ -900,7 +817,7 @@ class SkinTemplateItem(ObjectTemplateItem):
       new_selection = []
       selection = selection.split(',')
       for relative_url in self._archive.keys():
-        if (getattr(self, 'template_format_version', 0)) == 1:
+        if context.getTemplateFormatVersion() == 1:
           if update_dict.has_key(relative_url) or force:
             if not force:
               if update_dict[relative_url] == 'nothing':
@@ -954,8 +871,8 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     return ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
   def preinstall(self, context, installed_bt, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      modified_object_list = {}
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
       new_keys = self._objects.keys()
       for path in new_keys:
@@ -984,7 +901,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     return modified_object_list
 
   def install(self, context, trashbin, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
       # sort to add objects before their subobjects
       keys = self._objects.keys()
@@ -1120,7 +1037,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # best solution, by default it is 'default_workflow', wich is
     # not very usefull
     default_chain = ''
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       object_list = self._objects
     else:
       object_list = self._archive
@@ -1155,38 +1072,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 #       chain_dict['chain_%s' % backup_id] = chain
 #       self.portal_workflow.manage_changeWorkflows(default_chain,
 #                                                   props=chain_dict)
-
-  def diff(self, verbose=0, **kw):
-    """
-      Make a diff between portal type.
-      Also compare the workflow chain.
-    """
-    # Compare XML portal type
-    result = ObjectTemplateItem.diff(self, verbose=verbose, **kw)
-    # Compare chains
-    container_ids = self.portal_types.objectIds()
-    if (getattr(self, 'template_format_version', 0)) == 0:
-      for obj in self._archive.values():
-        try:
-          object_id = obj.id
-        except:
-          import pdb
-          pdb.set_trace()
-        object_chain = self.portal_workflow.getChainFor(object_id)
-        n = 1
-        new_object_id = '%s_btsave_%s' % (object_id, n)
-        while new_object_id in container_ids:
-          backuped_object_chain = self.portal_workflow.getChainFor(new_object_id)
-          if object_chain != backuped_object_chain:
-            result += "$$$ Workflow chains: " \
-                       "%s and %s $$$\n" % \
-                        (object_id, new_object_id)
-            if verbose:
-              result += '"%s" != "%s"\n' % (object_chain, backuped_object_chain)
-            result += '%s\n' % ('-'*80)
-          n += 1
-          new_object_id = '%s_btsave_%s' % (object_id, n)
-    return result
 
   def _importFile(self, file_name, file):
     if 'workflow_chain_type.xml' in file_name:
@@ -1308,7 +1193,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     values = []
-    new_bt_format = getattr(self, 'template_format_version', 0)
+    new_bt_format = context.getTemplateFormatVersion()
 
     if force: # get all objects
       if new_bt_format:
@@ -1368,7 +1253,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
       if is_filtered:
         expression = self._filter_expression_archive[method_id]
-        if (getattr(self, 'template_format_version', 0)) == 1:
+        if context.getTemplateFormatVersion() == 1:
           expr_instance = Expression(expression)
         else:
           expr_instance = self._filter_expression_instance_archive[method_id]
@@ -1542,7 +1427,7 @@ class ActionTemplateItem(ObjectTemplateItem):
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       p = context.getPortalObject()
       for id in self._objects.keys():
         if update_dict.has_key(id) or force:
@@ -1648,7 +1533,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       p = context.getPortalObject()
       for path in self._objects.keys():
         if update_dict.has_key(path) or force:
@@ -1774,7 +1659,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     portal = context.getPortalObject()
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       items = self._objects
     else:
       items = self._archive
@@ -1868,8 +1753,8 @@ class DocumentTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+os.sep+id] = globals()[self.local_file_reader_name](id)
 
   def preinstall(self, context, installed_bt, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      modified_object_list = {}
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       for path in new_keys:
         if installed_bt._objects.has_key(path):
@@ -1890,7 +1775,7 @@ class DocumentTemplateItem(BaseTemplateItem):
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       for id in self._objects.keys():
         if update_dict.has_key(id) or force:
           if not force:
@@ -1974,8 +1859,8 @@ class RoleTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+os.sep+'role_list'] = role_list
 
   def preinstall(self, context, installed_bt, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      modified_object_list = {}
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
       new_roles = self._objects.keys()
       for role in new_roles:
         if installed_bt._objects.has_key(role):
@@ -1992,7 +1877,7 @@ class RoleTemplateItem(BaseTemplateItem):
   def install(self, context, trashbin, **kw):
     p = context.getPortalObject()
     # get roles
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       role_list = self._objects.keys()
     else:
       role_list = self._archive.keys()
@@ -2102,7 +1987,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       return
 
     sql_search_result_keys = list(catalog.sql_search_result_keys)
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
       keys = []
@@ -2200,7 +2085,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       return
 
     sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
       keys = []
@@ -2298,7 +2183,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       return
 
     sql_search_tables = list(catalog.sql_search_tables)
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
       keys = []
@@ -2369,8 +2254,8 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         self._objects[path] = mc.manage_export(lang)
 
   def preinstall(self, context, installed_bt, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      modified_object_list = {}
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
       for path in new_keys:
         if installed_bt._objects.has_key(path):
@@ -2392,7 +2277,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     localizer = context.getPortalObject().Localizer
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    if (getattr(self, 'template_format_version', 0)) == 1:
+    if context.getTemplateFormatVersion() == 1:
       for path, po in self._objects.items():
         if update_dict.has_key(path) or force:
           if not force:
@@ -2615,11 +2500,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     def __init__(self, *args, **kw):
       XMLObject.__init__(self, *args, **kw)
-      # Initialize all item to None
       self._objects = PersistentMapping()
-      for item_name in self._item_name_list:
-        setattr(self, item_name, None)
+      self._clean()
 
+    def getTemplateFormatVersion(self, **kw):
+      """This is a workaround, because template_format_version was not set even for the new format.
+      """
+      if self.hasProperty('template_format_version'):
+        self._baseGetTemplateFormatVersion(d=d)
+
+      # the attribute _objects in BaseTemplateItem was added in the new format.
+      if hasattr(self._path_item, '_objects'):
+        return 1
+        
+      return 0
+        
     security.declareProtected(Permissions.ManagePortal, 'manage_afterAdd')
     def manage_afterAdd(self, item, container):
       """
@@ -2644,6 +2539,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       
       # Make sure that everything is sane.
       self.clean()
+
+      # Set the format version.
+      self._setTemplateFormatVersion(1)
 
       # XXX Trim down the history to prevent it from bloating the bt5 file.
       # XXX Is there any better way to shrink the size???
@@ -2730,9 +2628,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if installed_bt is None:
         installed_bt_format = 0 # that will not check for modification
       else:
-        installed_bt_format = getattr(installed_bt, 'template_format_version', 0)
+        installed_bt_format = installed_bt.getTemplateFormatVersion()
 
-      new_bt_format = getattr(self, 'template_format_version', 0)      
+      new_bt_format = self.getTemplateFormatVersion()
       if installed_bt_format == 0 and new_bt_format == 0:
         # still use old format, so install everything, no choice
         return modified_object_list
@@ -2750,7 +2648,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       local_configuration = self.portal_templates.getLocalConfiguration(self)
       for item_name in self._item_name_list:
         new_item = getattr(self, item_name)
-        old_item = getattr(installed_bt, item_name)
+        old_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
           modified_object = new_item.preinstall(context=local_configuration, installed_bt=old_item)
           if len(modified_object) > 0:
@@ -2765,7 +2663,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
       if installed_bt is not None:        
-        if getattr(installed_bt, 'template_format_version', 0) == 0:
+        if installed_bt.getTemplateFormatVersion() == 0:
           # maybe another to uninstall old format bt, maybe not needed
           installed_bt.trash(self)
           force = 1
@@ -2870,7 +2768,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     uninstall = WorkflowMethod(uninstall)
 
     security.declareProtected(Permissions.ManagePortal, 'clean')
-    def clean(self):
+    def _clean(self):
       """
         Clean built information.
       """
@@ -2891,7 +2789,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for item_name in self._item_name_list:
         item = setattr(self, item_name, None)
 
-    clean = WorkflowMethod(clean)
+    clean = WorkflowMethod(_clean)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getBuildingState')
