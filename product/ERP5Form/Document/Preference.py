@@ -53,7 +53,8 @@ class Preference( Folder ):
                     , PropertySheet.XMLObject
                     , PropertySheet.DublinCore
                     , PropertySheet.Preference
-                    , PropertySheet.AccountingPreferences
+                    , PropertySheet.AccountingPreference
+                    , PropertySheet.SubversionPreference
                     )
   
   # Declarative security

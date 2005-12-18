@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-class AccountingPreferences :
+class AccountingPreference:
   """
     User Preferences for erp5_accounting
   """
