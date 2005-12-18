@@ -174,7 +174,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>BusinessTemplate_installation</string> </key>
+                    <key> <string>BusinessTemplate_install</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
@@ -189,7 +189,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>BusinessTemplate_installation</string> </value>
+                      <value> <string>BusinessTemplate_install</string> </value>
                   </item>
                   <item>
                       <key> <string>meta_type</string> </key>
@@ -710,7 +710,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_1/portal_workflow/business_template_installation_workflow/scripts/BusinessTemplate_installation</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_workflow/business_template_installation_workflow/scripts/BusinessTemplate_install</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -766,7 +766,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_installation</string> </value>
+            <value> <string>BusinessTemplate_install</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
@@ -1078,7 +1078,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>BusinessTemplate_installation</string> </value>
+            <value> <string>BusinessTemplate_install</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -1230,7 +1230,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>BusinessTemplate_installation</string> </value>
+            <value> <string>BusinessTemplate_install</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -2006,7 +2006,9 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
