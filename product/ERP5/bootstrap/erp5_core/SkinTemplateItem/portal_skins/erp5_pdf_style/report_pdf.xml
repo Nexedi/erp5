@@ -90,6 +90,8 @@
     <paragraphstyle name="ParaHeadLine3" align="RIGHT" fontname="Helvetica" fontsize="6"/>\n
  \n
     <paragraphstyle name="TableStandard" parent="Normal" fontname="Helvetica" fontsize="7" alignment="right" />\n
+    <paragraphstyle name="TableStandardLeftAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="left" />\n
+    <paragraphstyle name="TableStandardRightAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="right" />\n
     <paragraphstyle name="TableHeader" parent="Normal" fontname="Helvetica-Oblique" fontsize="7" alignment="left" />\n
     <paragraphstyle name="TableLastLine" parent="Normal" fontname="Helvetica-Oblique" fontsize="7" alignment="right" />\n
 \n
@@ -162,7 +164,7 @@
   <pagetemplate id="FirstPage" nextid="FirstPage" startframe="content">\n
     <static>\n
       <infostring align="left" x="1cm" y= "29cm" size="8" font="Helvetica" color="(0,0,0)"\n
-                  tal:content="python:\'Printed by %s at %s\'%(user.getUserName(), DateTime())" >Printed by</infostring>\n
+                  tal:content="python: here.translation_service.translate(\'ui\', \'Printed by %(user)s at %(date)s\') % {\'user\':user.getUserName(), \'date\':DateTime()}" >Printed by</infostring>\n
       <infostring align="left" x="18cm" y= "0.5cm" size="10" font="Helvetica" color="(0,0,0)" >Page %(page)s</infostring>\n
     </static>\n
 \n

@@ -68,8 +68,8 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.CMFCore.utils import getToolByName\n
 \n
-N_ = lambda msg: context.translation_service.translate(\'ui\', msg).encode(\'utf-8\')\n
-wf = getToolByName(context, \'portal_workflow\')[workflow_id]\n
+N_ = context.Base_TranslateString\n
+wf = getToolByName(context, \'portal_workflow\')[wf_id]\n
 item_list = []\n
 \n
 for state in wf.states.objectValues() :\n
@@ -81,26 +81,21 @@ return item_list\n
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAsAAAAKAAAAQwAA
-AHOZAAAAZAEAawAAbAEAfQIAAWQCAIQAAH0DAHQDAHwCAHQEAGQDAIMCAHwAAIMCAH0GAGcAAH0H
-AHhaAHQIAHQJAHQJAHwGAGQEAIMCAGQFAIMCAIMAAIMBAERdNwB9CgB0CQB8BwBkBgCDAgB8AwB0
-CQB8CgBkBwCDAgCDAQB0CQB8CgBkCACDAgBmAgCDAQABcVYAV3wHAFNkAABTKAkAAABOKAEAAABz
-DQAAAGdldFRvb2xCeU5hbWVjAQAAAAMAAAAFAAAAQwAAAHMuAAAAdAAAdAAAdAAAdAEAZAEAgwIA
-ZAIAgwIAZAMAfAAAgwIAZAQAgwIAZAUAgwEAUygGAAAATnMTAAAAdHJhbnNsYXRpb25fc2Vydmlj
-ZXMJAAAAdHJhbnNsYXRlcwIAAAB1aXMGAAAAZW5jb2RlcwUAAAB1dGYtOCgDAAAAcwkAAABfZ2V0
-YXR0cl9zBwAAAGNvbnRleHRzAwAAAG1zZygDAAAAcwMAAABtc2dzCQAAAF9nZXRhdHRyX3MHAAAA
-Y29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS42PgMAAABz
-AAAAAHMPAAAAcG9ydGFsX3dvcmtmbG93cwYAAABzdGF0ZXNzDAAAAG9iamVjdFZhbHVlc3MGAAAA
-YXBwZW5kcwUAAAB0aXRsZXMCAAAAaWQoCwAAAHMWAAAAUHJvZHVjdHMuQ01GQ29yZS51dGlsc3MN
-AAAAZ2V0VG9vbEJ5TmFtZXMCAAAATl9zCQAAAF9nZXRpdGVtX3MHAAAAY29udGV4dHMLAAAAd29y
-a2Zsb3dfaWRzAgAAAHdmcwkAAABpdGVtX2xpc3RzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0dHJf
-cwUAAABzdGF0ZSgLAAAAcwsAAAB3b3JrZmxvd19pZHMWAAAAUHJvZHVjdHMuQ01GQ29yZS51dGls
-c3MNAAAAZ2V0VG9vbEJ5TmFtZXMCAAAATl9zCQAAAF9nZXRpdGVtX3MHAAAAY29udGV4dHMCAAAA
-d2ZzCQAAAGl0ZW1fbGlzdHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBQAAAHN0YXRlKAAA
-AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcycAAABCYXNlX2dldFRyYW5zbGF0ZWRXb3JrZmxv
-d1N0YXRlSXRlbUxpc3QBAAAAcw4AAAANAgkBGAEGAiIACQEyAigBAAAAcycAAABCYXNlX2dldFRy
-YW5zbGF0ZWRXb3JrZmxvd1N0YXRlSXRlbUxpc3QoAQAAAHMnAAAAQmFzZV9nZXRUcmFuc2xhdGVk
-V29ya2Zsb3dTdGF0ZUl0ZW1MaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8
-bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+AHOfAAAAZAEAawAAbAEAfQIAAXQCAHQDAGQCAIMCAH0FAHQFAHwCAHQDAGQDAIMCAHwAAIMCAH0H
+AGcAAH0IAHhaAHQJAHQCAHQCAHwHAGQEAIMCAGQFAIMCAIMAAIMBAERdNwB9CgB0AgB8CABkBgCD
+AgB8BQB0AgB8CgBkBwCDAgCDAQB0AgB8CgBkCACDAgBmAgCDAQABcVwAV3wIAFNkAABTKAkAAABO
+KAEAAABzDQAAAGdldFRvb2xCeU5hbWVzFAAAAEJhc2VfVHJhbnNsYXRlU3RyaW5ncw8AAABwb3J0
+YWxfd29ya2Zsb3dzBgAAAHN0YXRlc3MMAAAAb2JqZWN0VmFsdWVzcwYAAABhcHBlbmRzBQAAAHRp
+dGxlcwIAAABpZCgLAAAAcxYAAABQcm9kdWN0cy5DTUZDb3JlLnV0aWxzcw0AAABnZXRUb29sQnlO
+YW1lcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAgAAAE5fcwkAAABfZ2V0aXRlbV9zBQAAAHdm
+X2lkcwIAAAB3ZnMJAAAAaXRlbV9saXN0cwkAAABfZ2V0aXRlcl9zBQAAAHN0YXRlKAsAAABzBQAA
+AHdmX2lkcxYAAABQcm9kdWN0cy5DTUZDb3JlLnV0aWxzcw0AAABnZXRUb29sQnlOYW1lcwkAAABf
+Z2V0YXR0cl9zBwAAAGNvbnRleHRzAgAAAE5fcwkAAABfZ2V0aXRlbV9zAgAAAHdmcwkAAABpdGVt
+X2xpc3RzCQAAAF9nZXRpdGVyX3MFAAAAc3RhdGUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzJwAAAEJhc2VfZ2V0VHJhbnNsYXRlZFdvcmtmbG93U3RhdGVJdGVtTGlzdAEAAABzDgAAAA0C
+DwEYAQYCIgAJATICKAEAAABzJwAAAEJhc2VfZ2V0VHJhbnNsYXRlZFdvcmtmbG93U3RhdGVJdGVt
+TGlzdCgBAAAAcycAAABCYXNlX2dldFRyYW5zbGF0ZWRXb3JrZmxvd1N0YXRlSXRlbUxpc3QoAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -108,7 +103,7 @@ bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>workflow_id</string> </value>
+            <value> <string>wf_id</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -134,16 +129,16 @@ bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>workflow_id</string>
+                            <string>wf_id</string>
                             <string>Products.CMFCore.utils</string>
                             <string>getToolByName</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>N_</string>
                             <string>_getitem_</string>
-<string>context</string>
                             <string>wf</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
                             <string>state</string>
                           </tuple>
                         </value>

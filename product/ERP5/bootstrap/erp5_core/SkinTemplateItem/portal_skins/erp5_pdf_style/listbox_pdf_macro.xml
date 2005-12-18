@@ -45,12 +45,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <html>\n
   <head>\n
-    <title tal:content="template/title">Listbox PDF Macro</title>\n
+    <title tal:content="python: here.translation_service.translate(\'ui\', template.title).encode(\'utf8\')" >Listbox PDF Macro</title>\n
   </head>\n
 <body> \n
 \n
@@ -105,8 +111,8 @@
                                        column_id python: column_item[0]">                 \n
                   <tal:block tal:condition="python: column_property is not None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
-                      <para  style="TableHeader" tal:content="python: str(column_property)" i18n:translate=""/>\n
-                    </td>\n
+                      <para  style="TableHeader" tal:content="python: here.translation_service.translate(\'ui\', str(column_property)).encode(\'utf8\')"/>\n
+                    </td> \n
                   </tal:block>\n
                   <tal:block tal:condition="python: column_property is None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
@@ -124,12 +130,13 @@
                                        column_id python: column_item[0]">                 \n
                   <tal:block tal:condition="python: column_property is not None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
-                      <para  style="TableStandard" tal:content="python: str(column_property)" />\n
+                      <para  style="TableStandard" tal:content="python: str(column_property)" \n
+                             tal:attributes="style python:column_id in (\'gap_id\', \'id\', \'title\', \'translated_portal_type\', \'third_party\', \'translated_simulation_state_title\') and \'TableStandardLeftAligned\' or \'TableStandardRightAligned\'" />\n
                     </td>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: column_property is None">\n
                     <td>\n
-                      <para  style="TableStandard" tal:content="python: \'\'" />\n
+                      <para  style="TableStandard" tal:content="python: \'\' " />\n
                     </td>\n
                   </tal:block>\n
                 </tal:block>\n

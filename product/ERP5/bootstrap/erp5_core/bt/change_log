@@ -1,3 +1,10 @@
+2005-12-18 yo
+* The portal type Preference does not need to specify PropertySheets in the portal type, since they are defined in the product.
+* Add skins and actions for repository support.
+
+2005-12-18: jérome
+* i18n : added Base_FormatDate, updated Base_TranslateString to use mapping.
+
 2005-12-16:
 * modify BusinessTemplate_getModifiedObject
 

@@ -23,16 +23,7 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>yo</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
+              <none/>
             </value>
         </item>
         <item>

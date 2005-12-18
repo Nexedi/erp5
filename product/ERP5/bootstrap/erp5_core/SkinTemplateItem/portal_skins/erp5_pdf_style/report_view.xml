@@ -61,7 +61,7 @@
    tal:define="global frame_width python:19"\n
    metal:define-macro="master">\n
   <title>List Print</title>\n
-  <author>Nexedi</author>\n
+  <author>ERP5</author>\n
   <subject>Print Example</subject>\n
   <content tal:define="group_list python: form.get_groups(include_empty=1);\n
                        field_errors python: request.get(\'field_errors\',{});\n
@@ -71,7 +71,7 @@
       <parameter>FirstPage</parameter>\n
    </action>\n
 \n
-   <para tal:content="form/title" style="Title" i18n:translate="">toto</para>\n
+   <para tal:content="form/title" style="Title" i18n:translate="" i18n:domain="ui">toto</para>\n
    <spacer height="100"/>\n
 \n
 \n
@@ -84,7 +84,7 @@
               <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
                 <tr>\n
                   <td tal:attributes="colwidth python: \'5cm\'" >\n
-                    <para  style="TableHeader" tal:content="python: field.get_value(\'title\') " i18n:translate=""/>\n
+                    <para  style="TableHeader" tal:content="python: here.translation_service.translate(\'ui\', field.get_value(\'title\')).encode(\'utf-8\')" />\n
                   </td>\n
                   <td tal:attributes="colwidth python: None" tal:define="value python: field.get_value(\'default\')">\n
                     <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
@@ -92,10 +92,13 @@
                         <para  style="TableStandard" tal:content="python: str(item)" />\n
                       </tal:block>\n
                     </tal:block>\n
-                    <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
+                    <tal:block tal:condition="python: not (same_type(value, []) or same_type(value, ()) or same_type(value, DateTime()) or same_type(value, None))">\n
                       <para  style="TableStandard" tal:content="python: \'%s \' % value" />\n
                     </tal:block>\n
-                    <tal:block tal:condition="python: value == None">\n
+                    <tal:block tal:condition="python: same_type(value, DateTime())">\n
+                      <para  style="TableStandard" tal:content="python: field.render_view(value)" />\n
+                    </tal:block>\n
+                    <tal:block tal:condition="python: value is None">\n
                       <para  style="TableStandard" tal:content="python: \' \'" />\n
                     </tal:block>\n
                   </td>\n

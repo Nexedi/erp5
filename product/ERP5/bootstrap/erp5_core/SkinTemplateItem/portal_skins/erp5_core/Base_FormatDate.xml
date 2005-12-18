@@ -66,34 +66,71 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
-translation_service = getToolByName(context, \'translation_service\', None)\n
-if translation_service is not None :\n
-  return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
-else :\n
-  return msg\n
+            <value> <string>""" Format the date according to current user preferences."""\n
+\n
+if not date :\n
+  return \'\'\n
+\n
+try :\n
+  order = context.getPortalObject().portal_preferences.getPreferredDateInputOrder()\n
+except AttributeError :\n
+  order = \'ymd\'\n
+\n
+y = date.year()\n
+m = date.month()\n
+d = date.day()\n
+\n
+result = "%04d/%02d/%02d" % (y, m, d)\n
+if order == \'ymd\':\n
+  result = "%04d/%02d/%02d" % (y, m, d)\n
+elif order == \'dmy\':\n
+  result = "%02d/%02d/%04d" % (d, m, y)\n
+elif input_order == \'mdy\':\n
+  result = "%02d/%02d/%04d" % (m, d, y)\n
+\n
+if hour_minute or seconds : \n
+  if seconds :\n
+    hour_minute_text = "%02dh%02dmn%02ds" % (date.hour(), date.minute(), date.second())\n
+  else : \n
+    hour_minute_text = "%02dh%02dmn" % (date.hour(), date.minute())\n
+  result = context.Base_TranslateString("${date} at ${hour_minute_text}", \n
+              mapping = {\'date\' : result, \'hour_minute_text\' : hour_minute_text  })\n
+  \n
+\n
+return result\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQCAGQDAIQCAFoAAGQAAFMoBAAAAE5zAgAAAHVpcwQA
-AAB1dGY4YwMAAAALAAAACQAAAEsAAABzYwAAAGQBAGsAAGwBAH0FAAF8BQB0AgBkAgB0AwCDAwB9
-CAB8CAB0AwBqCQBvLwABdAUAdAYAdAUAfAgAZAMAgwIAfAEAfAAAfAMAjQMAZAQAgwIAfAIAgwEA
-U24FAAF8AABTZAAAUygFAAAATigBAAAAcw0AAABnZXRUb29sQnlOYW1lcxMAAAB0cmFuc2xhdGlv
-bl9zZXJ2aWNlcwkAAAB0cmFuc2xhdGVzBgAAAGVuY29kZSgLAAAAcxYAAABQcm9kdWN0cy5DTUZD
-b3JlLnV0aWxzcw0AAABnZXRUb29sQnlOYW1lcwcAAABjb250ZXh0cwQAAABOb25lcxMAAAB0cmFu
-c2xhdGlvbl9zZXJ2aWNlcwkAAABfZ2V0YXR0cl9zBwAAAF9hcHBseV9zBwAAAGNhdGFsb2dzAwAA
-AG1zZ3MCAAAAa3dzCAAAAGVuY29kaW5nKAsAAABzAwAAAG1zZ3MHAAAAY2F0YWxvZ3MIAAAAZW5j
-b2RpbmdzAgAAAGt3cxYAAABQcm9kdWN0cy5DTUZDb3JlLnV0aWxzcw0AAABnZXRUb29sQnlOYW1l
-cwcAAABjb250ZXh0cwQAAABOb25lcxMAAAB0cmFuc2xhdGlvbl9zZXJ2aWNlcwkAAABfZ2V0YXR0
-cl9zBwAAAF9hcHBseV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFAAAAEJhc2VfVHJh
-bnNsYXRlU3RyaW5nAQAAAHMIAAAADQESAQ0BLwIoAQAAAHMUAAAAQmFzZV9UcmFuc2xhdGVTdHJp
-bmcoAQAAAHMUAAAAQmFzZV9UcmFuc2xhdGVTdHJpbmcoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
-dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQBAGQCAIQCAFoAAGQAAFMoAwAAAE5pAAAAAGMDAAAA
+DQAAABgAAABDAAAAc70BAAB8AAAMbwgAAWQBAFNuAQABeSsAdAEAdAEAdAEAdAIAZAIAgwIAgwAA
+ZAMAgwIAZAQAgwIAgwAAfQUAV24ZAAR0BABqCgBvDQABAQEBZAUAfQUAbgIAAVh0AQB8AABkBgCD
+AgCDAAB9BwB0AQB8AABkBwCDAgCDAAB9CAB0AQB8AABkCACDAgCDAAB9CQBkCQB8BwB8CAB8CQBm
+AwAWfQoAfAUAZAUAagIAbxcAAWQJAHwHAHwIAHwJAGYDABZ9CgBuSQABfAUAZAoAagIAbxcAAWQL
+AHwJAHwIAHwHAGYDABZ9CgBuJQABdAkAZAwAagIAbxcAAWQLAHwIAHwJAHwHAGYDABZ9CgBuAQAB
+fAEAcAQAAXwCAG+bAAF8AgBvOwABZA0AdAEAfAAAZA4AgwIAgwAAdAEAfAAAZA8AgwIAgwAAdAEA
+fAAAZBAAgwIAgwAAZgMAFn0MAG4pAAFkEQB0AQB8AABkDgCDAgCDAAB0AQB8AABkDwCDAgCDAABm
+AgAWfQwAdAEAdAIAZBIAgwIAZBMAZBQAaAAABGQVAHwKAAM8BGQWAHwMAAM8gwEBfQoAbgEAAXwK
+AFNkAABTKBcAAABOcwAAAABzDwAAAGdldFBvcnRhbE9iamVjdHMSAAAAcG9ydGFsX3ByZWZlcmVu
+Y2VzcxoAAABnZXRQcmVmZXJyZWREYXRlSW5wdXRPcmRlcnMDAAAAeW1kcwQAAAB5ZWFycwUAAABt
+b250aHMDAAAAZGF5cw4AAAAlMDRkLyUwMmQvJTAyZHMDAAAAZG15cw4AAAAlMDJkLyUwMmQvJTA0
+ZHMDAAAAbWR5cxAAAAAlMDJkaCUwMmRtbiUwMmRzcwQAAABob3VycwYAAABtaW51dGVzBgAAAHNl
+Y29uZHMLAAAAJTAyZGglMDJkbW5zFAAAAEJhc2VfVHJhbnNsYXRlU3RyaW5ncx4AAAAke2RhdGV9
+IGF0ICR7aG91cl9taW51dGVfdGV4dH1zBwAAAG1hcHBpbmdzBAAAAGRhdGVzEAAAAGhvdXJfbWlu
+dXRlX3RleHQoDQAAAHMEAAAAZGF0ZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwUAAABvcmRl
+cnMOAAAAQXR0cmlidXRlRXJyb3JzAQAAAHlzAQAAAG1zAQAAAGRzBgAAAHJlc3VsdHMLAAAAaW5w
+dXRfb3JkZXJzCwAAAGhvdXJfbWludXRlcwcAAABzZWNvbmRzcxAAAABob3VyX21pbnV0ZV90ZXh0
+KA0AAABzBAAAAGRhdGVzCwAAAGhvdXJfbWludXRlcwcAAABzZWNvbmRzcwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzBQAAAG9yZGVycw4AAABBdHRyaWJ1dGVFcnJvcnMBAAAAeXMBAAAAbXMBAAAA
+ZHMGAAAAcmVzdWx0cwsAAABpbnB1dF9vcmRlcnMQAAAAaG91cl9taW51dGVfdGV4dCgAAAAAKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMPAAAAQmFzZV9Gb3JtYXREYXRlAQAAAHMuAAAAAAIIAQgC
+AwErAQ4BCwISARIBEgITAQ0BFwENARcBDQEXAg4BBwE7AigBEgEfAygBAAAAcw8AAABCYXNlX0Zv
+cm1hdERhdGUoAQAAAHMPAAAAQmFzZV9Gb3JtYXREYXRlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_core/Base_TranslateString</string> </value>
+            <value> <string>Script (Python):/nexedi/erp5_core/Base_FormatDate</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -103,7 +140,7 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>msg, catalog="ui", encoding=\'utf8\', **kw</string> </value>
+            <value> <string>date, hour_minute=0, seconds=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,17 +166,19 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>msg</string>
-                            <string>catalog</string>
-                            <string>encoding</string>
-                            <string>kw</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>translation_service</string>
+                            <string>date</string>
+                            <string>hour_minute</string>
+                            <string>seconds</string>
                             <string>_getattr_</string>
-                            <string>_apply_</string>
+<string>context</string>
+                            <string>order</string>
+                            <string>AttributeError</string>
+                            <string>y</string>
+                            <string>m</string>
+                            <string>d</string>
+                            <string>result</string>
+                            <string>input_order</string>
+                            <string>hour_minute_text</string>
                           </tuple>
                         </value>
                     </item>
@@ -152,14 +191,14 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string>ui</string>
-                <string>utf8</string>
+                <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_TranslateString</string> </value>
+            <value> <string>Base_FormatDate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

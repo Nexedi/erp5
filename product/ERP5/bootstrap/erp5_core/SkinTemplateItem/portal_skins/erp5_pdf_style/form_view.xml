@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -63,6 +69,7 @@
                        field_errors python: request.get(\'field_errors\',{});\n
                        dummy python: request.set(\'here\',here); ">\n
 \n
+\n
     <tal:block tal:repeat="group python: group_list[:3]">\n
       <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
         <tal:block tal:condition="python: field_list not in [None, []]">\n
@@ -72,7 +79,7 @@
               <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
                 <tr>\n
                   <td tal:attributes="colwidth python: \'5cm\'" >\n
-                    <para  style="TableHeader" tal:content="python: field.get_value(\'title\') " i18n:translate=""/>\n
+                    <para  style="TableHeader" tal:content="python: here.translation_service.translate(\'ui\', field.get_value(\'title\')).encode(\'utf-8\')"/>\n
                   </td>\n
                   <td tal:attributes="colwidth python: None" tal:define="value python: field.get_value(\'default\')">\n
                     <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n

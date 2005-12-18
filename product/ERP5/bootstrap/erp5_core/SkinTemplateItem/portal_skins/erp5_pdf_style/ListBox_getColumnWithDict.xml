@@ -66,55 +66,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result = {}\n
-\n
-# 0.5 is too small and can crash pdf generation\n
+            <value> <string># 0.5 is too small and can crash pdf generation\n
 min_column_width = 1\n
 \n
+max_line_len = {}\n
 for listboxline in listboxline_list:\n
- if not listboxline.isTitleLine():\n
   line_width = 0\n
   col_count = 0\n
-  if is_report_tree_mode:\n
-    col_count += 1\n
-    column_property = listboxline.getSectionName()\n
-    if column_property is None:    \n
-      string_property = \'\'\n
-    else:\n
-      string_property = str(column_property)\n
-    line_width += len(string_property) + section_width * (listboxline.getSectionDepth() - 1)\n
-  for column_id, column_property in listboxline.getColumnItemList():   \n
-    col_count += 1\n
-    if column_property is None:    \n
-      string_property = \'\'\n
-    else:\n
-      string_property = str(column_property)\n
-    line_width += len(string_property)\n
   for column_id, column_property in listboxline.getColumnItemList():\n
     if column_property is None:    \n
       string_property = \'\'\n
     else:\n
       string_property = str(column_property)\n
-    result[column_id] = max(result.get(column_id,min_column_width), min(frame_width * 2 / col_count, frame_width * len(str(string_property)) / max(line_width, 1)))\n
-  if is_report_tree_mode:\n
-    column_property = listboxline.getSectionName()\n
-    if column_property is None:    \n
-      string_property = \'\'\n
-    else:\n
-      string_property = str(column_property)\n
-    column_id = \'section_name\'\n
-    result[column_id] = max(result.get(column_id,min_column_width), min(frame_width * 3 / col_count, frame_width * (len(str(string_property)) + section_width * (listboxline.getSectionDepth() - 1)) / max(line_width, 1)))\n
-\n
-total_col_width = 0.0\n
-for column_id in result.keys():\n
-  if result[column_id] == 0.0:\n
-    result[column_id] = 1.0\n
-for column_id in result.keys():\n
-  if column_id != \'section_name\' or is_report_tree_mode:\n
-    total_col_width += result[column_id]\n
-for column_id in result.keys():\n
-  if column_id != \'section_name\' or is_report_tree_mode:\n
-    result[column_id] = result[column_id] * frame_width / total_col_width \n
+    line_width += len(string_property)\n
+    if listboxline.isStatLine():\n
+       string_property = "%s longer" % string_property\n
+    new_column_max_len = max(len(string_property), max_line_len.get(column_id, 0))\n
+    update_dict = {}\n
+    update_dict[column_id] = new_column_max_len\n
+    max_line_len.update(update_dict)\n
+  \n
+total_max_len = float(sum(max_line_len.values()))\n
+result = {}\n
+for column_id, max_len in max_line_len.items() :\n
+  result[column_id] = max( (max(max_len, 1) / total_max_len) * frame_width, min_column_width)\n
 \n
 return result\n
 </string> </value>
@@ -122,43 +97,33 @@ return result\n
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQCAGQDAIQCAFoAAGQAAFMoBAAAAE5mBDE5LjBmAzQu
-MGMFAAAAFwAAABsAAABDAAAAc44DAABoAAB9BQBkAQB9BgB4egJ0AgB8AACDAQBEXWwCfQgAdAUA
-fAgAZAIAgwIAgwAADG9SAgFkAwB9CgBkAwB9CwB8AgBvawABfAsAZAEAN30LAHQFAHwIAGQEAIMC
-AIMAAH0MAHwMAHQKAGoIAG8KAAFkBQB9DgBuDQABdAwAfAwAgwEAfQ4AfAoAdA0AfA4AgwEAfAQA
-dAUAfAgAZAYAgwIAgwAAZAEAGBQXN30KAG4BAAF4agB0AgB0BQB8CABkBwCDAgCDAACDAQBEXVAA
-dAIAAoMBAFwCAH0RAH0MAHwLAGQBADd9CwB8DAB0CgBqCABvCgABZAUAfQ4Abg0AAXQMAHwMAIMB
-AH0OAHwKAHQNAHwOAIMBADd9CgBxygBXeKkAdAIAdAUAfAgAZAcAgwIAgwAAgwEARF2PAHQCAAKD
-AQBcAgB9EQB9DAB8DAB0CgBqCABvCgABZAUAfQ4Abg0AAXQMAHwMAIMBAH0OAHQQAHQFAHwFAGQI
-AIMCAHwRAHwGAIMCAHQRAHwDAGQJABR8CwAVfAMAdA0AdAwAfA4AgwEAgwEAFHQQAHwKAGQBAIMC
-ABWDAgCDAgB0EwB8BQCDAQB8EQA8cTcBV3wCAG+wAAF0BQB8CABkBACDAgCDAAB9DAB8DAB0CgBq
-CABvCgABZAUAfQ4Abg0AAXQMAHwMAIMBAH0OAGQKAH0RAHQQAHQFAHwFAGQIAIMCAHwRAHwGAIMC
-AHQRAHwDAGQLABR8CwAVfAMAdA0AdAwAfA4AgwEAgwEAfAQAdAUAfAgAZAYAgwIAgwAAZAEAGBQX
-FHQQAHwKAGQBAIMCABWDAgCDAgB0EwB8BQCDAQB8EQA8cYUCAXEZAAFxGQBXZAwAfRUAeEoAdAIA
-dAUAfAUAZA0AgwIAgwAAgwEARF0wAH0RAHQVAHwFAHwRAIMCAGQMAGoCAG8UAAFkDgB0EwB8BQCD
-AQB8EQA8cagCAXGoAld4SwB0AgB0BQB8BQBkDQCDAgCDAACDAQBEXTEAfREAfBEAZAoAagMAcAQA
-AXwCAG8XAAF8FQB0FQB8BQB8EQCDAgA3fRUAcfUCAXH1Ald4WQB0AgB0BQB8BQBkDQCDAgCDAACD
-AQBEXT8AfREAfBEAZAoAagMAcAQAAXwCAG8lAAF0FQB8BQB8EQCDAgB8AwAUfBUAFXQTAHwFAIMB
-AHwRADxxQwMBcUMDV3wFAFNkAABTKA8AAABOaQEAAABzCwAAAGlzVGl0bGVMaW5laQAAAABzDgAA
-AGdldFNlY3Rpb25OYW1lcwAAAABzDwAAAGdldFNlY3Rpb25EZXB0aHMRAAAAZ2V0Q29sdW1uSXRl
-bUxpc3RzAwAAAGdldGkCAAAAcwwAAABzZWN0aW9uX25hbWVpAwAAAGYDMC4wcwQAAABrZXlzZgMx
-LjAoFgAAAHMGAAAAcmVzdWx0cxAAAABtaW5fY29sdW1uX3dpZHRocwkAAABfZ2V0aXRlcl9zEAAA
-AGxpc3Rib3hsaW5lX2xpc3RzCwAAAGxpc3Rib3hsaW5lcwkAAABfZ2V0YXR0cl9zCgAAAGxpbmVf
-d2lkdGhzCQAAAGNvbF9jb3VudHMTAAAAaXNfcmVwb3J0X3RyZWVfbW9kZXMPAAAAY29sdW1uX3By
-b3BlcnR5cwQAAABOb25lcw8AAABzdHJpbmdfcHJvcGVydHlzAwAAAHN0cnMDAAAAbGVucw0AAABz
-ZWN0aW9uX3dpZHRocwkAAABjb2x1bW5faWRzAwAAAG1heHMDAAAAbWlucwsAAABmcmFtZV93aWR0
-aHMHAAAAX3dyaXRlX3MPAAAAdG90YWxfY29sX3dpZHRocwkAAABfZ2V0aXRlbV8oFwAAAHMQAAAA
-bGlzdGJveGxpbmVfbGlzdHMTAAAAaXNfZG9tYWluX3RyZWVfbW9kZXMTAAAAaXNfcmVwb3J0X3Ry
-ZWVfbW9kZXMLAAAAZnJhbWVfd2lkdGhzDQAAAHNlY3Rpb25fd2lkdGhzBgAAAHJlc3VsdHMQAAAA
-bWluX2NvbHVtbl93aWR0aHMJAAAAX2dldGl0ZXJfcwsAAABsaXN0Ym94bGluZXMJAAAAX2dldGF0
-dHJfcwoAAABsaW5lX3dpZHRocwkAAABjb2xfY291bnRzDwAAAGNvbHVtbl9wcm9wZXJ0eXMEAAAA
-Tm9uZXMPAAAAc3RyaW5nX3Byb3BlcnR5cwMAAABzdHJzAwAAAGxlbnMJAAAAY29sdW1uX2lkcwMA
-AABtYXhzAwAAAG1pbnMHAAAAX3dyaXRlX3MPAAAAdG90YWxfY29sX3dpZHRocwkAAABfZ2V0aXRl
-bV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGQAAAExpc3RCb3hfZ2V0Q29sdW1uV2l0
-aERpY3QBAAAAc14AAAAGAwYCDQAGARQBBgEGAQcBCgESAQ0BCgIMASwBGQATAQoBDQEKAgwBFAEZ
-ABMBDQEKAgwBXQEHARIBDQEKAgwBBgF9AgYBGQAGARYBGAEZAAYBFAEbARkABgEUASkCKAEAAABz
-GQAAAExpc3RCb3hfZ2V0Q29sdW1uV2l0aERpY3QoAQAAAHMZAAAATGlzdEJveF9nZXRDb2x1bW5X
-aXRoRGljdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAA
-AAA=</string> </value>
+MGMFAAAAGwAAABIAAABDAAAAc4kBAABkAQB9BQBoAAB9BgB49AB0AgB8AACDAQBEXeYAfQgAZAIA
+fQkAZAIAfQoAeNEAdAIAdAcAfAgAZAMAgwIAgwAAgwEARF23AHQCAAKDAQBcAgB9DAB9DQB8DQB0
+CgBqCABvCgABZAQAfQ8Abg0AAXQMAHwNAIMBAH0PAHwJAHQNAHwPAIMBADd9CQB0BwB8CABkBQCD
+AgCDAABvDgABZAYAfA8AFn0PAG4BAAF0DgB0DQB8DwCDAQB0BwB8BgBkBwCDAgB8DABkAgCDAgCD
+AgB9EwBoAAB9FAB8EwB0EQB8FACDAQB8DAA8dAcAfAYAZAgAgwIAfBQAgwEAAXFEAFdxGQBXdBIA
+dBMAdAcAfAYAZAkAgwIAgwAAgwEAgwEAfRgAaAAAfRkAeFcAdAIAdAcAfAYAZAoAgwIAgwAAgwEA
+RF09AHQCAAKDAQBcAgB9DAB9GgB0DgB0DgB8GgBkAQCDAgB8GAAVfAMAFHwFAIMCAHQRAHwZAIMB
+AHwMADxxQAFXfBkAU2QAAFMoCwAAAE5pAQAAAGkAAAAAcxEAAABnZXRDb2x1bW5JdGVtTGlzdHMA
+AAAAcwoAAABpc1N0YXRMaW5lcwkAAAAlcyBsb25nZXJzAwAAAGdldHMGAAAAdXBkYXRlcwYAAAB2
+YWx1ZXNzBQAAAGl0ZW1zKBgAAABzEAAAAG1pbl9jb2x1bW5fd2lkdGhzDAAAAG1heF9saW5lX2xl
+bnMJAAAAX2dldGl0ZXJfcxAAAABsaXN0Ym94bGluZV9saXN0cwsAAABsaXN0Ym94bGluZXMKAAAA
+bGluZV93aWR0aHMJAAAAY29sX2NvdW50cwkAAABfZ2V0YXR0cl9zCQAAAGNvbHVtbl9pZHMPAAAA
+Y29sdW1uX3Byb3BlcnR5cwQAAABOb25lcw8AAABzdHJpbmdfcHJvcGVydHlzAwAAAHN0cnMDAAAA
+bGVucwMAAABtYXhzEgAAAG5ld19jb2x1bW5fbWF4X2xlbnMLAAAAdXBkYXRlX2RpY3RzBwAAAF93
+cml0ZV9zBQAAAGZsb2F0cwMAAABzdW1zDQAAAHRvdGFsX21heF9sZW5zBgAAAHJlc3VsdHMHAAAA
+bWF4X2xlbnMLAAAAZnJhbWVfd2lkdGgoGwAAAHMQAAAAbGlzdGJveGxpbmVfbGlzdHMTAAAAaXNf
+ZG9tYWluX3RyZWVfbW9kZXMTAAAAaXNfcmVwb3J0X3RyZWVfbW9kZXMLAAAAZnJhbWVfd2lkdGhz
+DQAAAHNlY3Rpb25fd2lkdGhzEAAAAG1pbl9jb2x1bW5fd2lkdGhzDAAAAG1heF9saW5lX2xlbnMJ
+AAAAX2dldGl0ZXJfcwsAAABsaXN0Ym94bGluZXMKAAAAbGluZV93aWR0aHMJAAAAY29sX2NvdW50
+cwkAAABfZ2V0YXR0cl9zCQAAAGNvbHVtbl9pZHMPAAAAY29sdW1uX3Byb3BlcnR5cwQAAABOb25l
+cw8AAABzdHJpbmdfcHJvcGVydHlzAwAAAHN0cnMDAAAAbGVucwMAAABtYXhzEgAAAG5ld19jb2x1
+bW5fbWF4X2xlbnMLAAAAdXBkYXRlX2RpY3RzBwAAAF93cml0ZV9zBQAAAGZsb2F0cwMAAABzdW1z
+DQAAAHRvdGFsX21heF9sZW5zBgAAAHJlc3VsdHMHAAAAbWF4X2xlbigAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMZAAAATGlzdEJveF9nZXRDb2x1bW5XaXRoRGljdAEAAABzMAAAAAABBgIG
+AQ0ABgEGAQYBGQATAQ0BCgIMARMBEAEOAScBBgETARgCHgEGARkAEwEuAigBAAAAcxkAAABMaXN0
+Qm94X2dldENvbHVtbldpdGhEaWN0KAEAAABzGQAAAExpc3RCb3hfZ2V0Q29sdW1uV2l0aERpY3Qo
+AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -203,24 +168,28 @@ AAA=</string> </value>
                             <string>is_report_tree_mode</string>
                             <string>frame_width</string>
                             <string>section_width</string>
-                            <string>result</string>
                             <string>min_column_width</string>
+                            <string>max_line_len</string>
                             <string>_getiter_</string>
                             <string>listboxline</string>
-                            <string>_getattr_</string>
                             <string>line_width</string>
                             <string>col_count</string>
+                            <string>_getattr_</string>
+                            <string>column_id</string>
                             <string>column_property</string>
                             <string>None</string>
                             <string>string_property</string>
                             <string>str</string>
                             <string>len</string>
-                            <string>column_id</string>
                             <string>max</string>
-                            <string>min</string>
+                            <string>new_column_max_len</string>
+                            <string>update_dict</string>
                             <string>_write_</string>
-                            <string>total_col_width</string>
-                            <string>_getitem_</string>
+                            <string>float</string>
+                            <string>sum</string>
+                            <string>total_max_len</string>
+                            <string>result</string>
+                            <string>max_len</string>
                           </tuple>
                         </value>
                     </item>
@@ -241,6 +210,10 @@ AAA=</string> </value>
         <item>
             <key> <string>id</string> </key>
             <value> <string>ListBox_getColumnWithDict</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FIXME: does not support report_tree</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

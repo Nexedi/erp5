@@ -66,34 +66,56 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
-translation_service = getToolByName(context, \'translation_service\', None)\n
-if translation_service is not None :\n
-  return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
-else :\n
-  return msg\n
+            <value> <string>REQUEST = container.REQUEST\n
+RESPONSE = REQUEST.RESPONSE\n
+\n
+uids = getattr(REQUEST, \'uids\', ())\n
+ret_url = \'/\'.join([context.absolute_url(), REQUEST.get(\'form_id\', \'view\')])\n
+#return repr(len(uids))\n
+if len(uids) == 0:\n
+  RESPONSE.redirect("%s?portal_status_message=No+Business+Template+Specified" % ret_url)\n
+  return\n
+\n
+id_list = []\n
+for uid in uids:\n
+  repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
+  bt = context.download(\'/\'.join([repository, id]))\n
+  id_list.append(bt.getId())\n
+\n
+RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+As:+%s" % (ret_url, \',+\'.join(id_list)))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQCAGQDAIQCAFoAAGQAAFMoBAAAAE5zAgAAAHVpcwQA
-AAB1dGY4YwMAAAALAAAACQAAAEsAAABzYwAAAGQBAGsAAGwBAH0FAAF8BQB0AgBkAgB0AwCDAwB9
-CAB8CAB0AwBqCQBvLwABdAUAdAYAdAUAfAgAZAMAgwIAfAEAfAAAfAMAjQMAZAQAgwIAfAIAgwEA
-U24FAAF8AABTZAAAUygFAAAATigBAAAAcw0AAABnZXRUb29sQnlOYW1lcxMAAAB0cmFuc2xhdGlv
-bl9zZXJ2aWNlcwkAAAB0cmFuc2xhdGVzBgAAAGVuY29kZSgLAAAAcxYAAABQcm9kdWN0cy5DTUZD
-b3JlLnV0aWxzcw0AAABnZXRUb29sQnlOYW1lcwcAAABjb250ZXh0cwQAAABOb25lcxMAAAB0cmFu
-c2xhdGlvbl9zZXJ2aWNlcwkAAABfZ2V0YXR0cl9zBwAAAF9hcHBseV9zBwAAAGNhdGFsb2dzAwAA
-AG1zZ3MCAAAAa3dzCAAAAGVuY29kaW5nKAsAAABzAwAAAG1zZ3MHAAAAY2F0YWxvZ3MIAAAAZW5j
-b2RpbmdzAgAAAGt3cxYAAABQcm9kdWN0cy5DTUZDb3JlLnV0aWxzcw0AAABnZXRUb29sQnlOYW1l
-cwcAAABjb250ZXh0cwQAAABOb25lcxMAAAB0cmFuc2xhdGlvbl9zZXJ2aWNlcwkAAABfZ2V0YXR0
-cl9zBwAAAF9hcHBseV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFAAAAEJhc2VfVHJh
-bnNsYXRlU3RyaW5nAQAAAHMIAAAADQESAQ0BLwIoAQAAAHMUAAAAQmFzZV9UcmFuc2xhdGVTdHJp
-bmcoAQAAAHMUAAAAQmFzZV9UcmFuc2xhdGVTdHJpbmcoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
-dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA8AAAAOAAAAQwAA
+AHNTAQAAdAAAdAEAZAEAgwIAfQIAdAAAfAIAZAIAgwIAfQMAdAQAfAIAZAMAZgAAgwMAfQUAdAAA
+ZAQAZAUAgwIAdAAAdAYAZAYAgwIAgwAAdAAAfAIAZAcAgwIAZAgAZAkAgwIAZwIAgwEAfQcAdAgA
+fAUAgwEAZAoAagIAbx8AAXQAAHwDAGQLAIMCAGQMAHwHABaDAQABZAAAU24BAAFnAAB9CQB4fwB0
+CgB8BQCDAQBEXXEAfQsAdAAAdAYAZA0AgwIAfAsAgwEAdAoAAoMBAFwCAH0MAH0NAHQAAHQGAGQO
+AIMCAHQAAGQEAGQFAIMCAHwMAHwNAGcCAIMBAIMBAH0OAHQAAHwJAGQPAIMCAHQAAHwOAGQQAIMC
+AIMAAIMBAAFxrgBXdAAAfAMAZAsAgwIAZBEAfAcAdAAAZBIAZAUAgwIAfAkAgwEAZgIAFoMBAAFk
+AABTKBMAAABOcwcAAABSRVFVRVNUcwgAAABSRVNQT05TRXMEAAAAdWlkc3MBAAAAL3MEAAAAam9p
+bnMMAAAAYWJzb2x1dGVfdXJscwMAAABnZXRzBwAAAGZvcm1faWRzBAAAAHZpZXdpAAAAAHMIAAAA
+cmVkaXJlY3RzNwAAACVzP3BvcnRhbF9zdGF0dXNfbWVzc2FnZT1ObytCdXNpbmVzcytUZW1wbGF0
+ZStTcGVjaWZpZWRzIwAAAGRlY29kZVJlcG9zaXRvcnlCdXNpbmVzc1RlbXBsYXRlVWlkcwgAAABk
+b3dubG9hZHMGAAAAYXBwZW5kcwUAAABnZXRJZHM9AAAAJXM/cG9ydGFsX3N0YXR1c19tZXNzYWdl
+PUJ1c2luZXNzK1RlbXBsYXRlcytEb3dubG9hZGVkK0FzOislc3MCAAAALCsoDwAAAHMJAAAAX2dl
+dGF0dHJfcwkAAABjb250YWluZXJzBwAAAFJFUVVFU1RzCAAAAFJFU1BPTlNFcwcAAABnZXRhdHRy
+cwQAAAB1aWRzcwcAAABjb250ZXh0cwcAAAByZXRfdXJscwMAAABsZW5zBwAAAGlkX2xpc3RzCQAA
+AF9nZXRpdGVyX3MDAAAAdWlkcwoAAAByZXBvc2l0b3J5cwIAAABpZHMCAAAAYnQoDwAAAHMJAAAA
+X2dldGF0dHJfcwkAAABjb250YWluZXJzBwAAAFJFUVVFU1RzCAAAAFJFU1BPTlNFcwcAAABnZXRh
+dHRycwQAAAB1aWRzcwcAAABjb250ZXh0cwcAAAByZXRfdXJscwMAAABsZW5zBwAAAGlkX2xpc3Rz
+CQAAAF9nZXRpdGVyX3MDAAAAdWlkcwoAAAByZXBvc2l0b3J5cwIAAABpZHMCAAAAYnQoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzMwAAAFRlbXBsYXRlVG9vbF9kb3dubG9hZFJlcG9zaXRv
+cnlCdXNpbmVzc1RlbXBsYXRlTGlzdAEAAABzGgAAAA8BDwISATkCFgEUAQgCBgENAAYBIgEtASMC
+KAEAAABzMwAAAFRlbXBsYXRlVG9vbF9kb3dubG9hZFJlcG9zaXRvcnlCdXNpbmVzc1RlbXBsYXRl
+TGlzdCgBAAAAczMAAABUZW1wbGF0ZVRvb2xfZG93bmxvYWRSZXBvc2l0b3J5QnVzaW5lc3NUZW1w
+bGF0ZUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMA
+AAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_core/Base_TranslateString</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/TemplateTool_downloadRepositoryBusinessTemplateList</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -103,7 +125,7 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>msg, catalog="ui", encoding=\'utf8\', **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,23 +145,27 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>msg</string>
-                            <string>catalog</string>
-                            <string>encoding</string>
-                            <string>kw</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>translation_service</string>
                             <string>_getattr_</string>
-                            <string>_apply_</string>
+<string>container</string>
+                            <string>REQUEST</string>
+                            <string>RESPONSE</string>
+                            <string>getattr</string>
+                            <string>uids</string>
+<string>context</string>
+                            <string>ret_url</string>
+                            <string>len</string>
+                            <string>id_list</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>repository</string>
+                            <string>id</string>
+                            <string>bt</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,15 +177,12 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string>ui</string>
-                <string>utf8</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
-            <key> <string>id</string> </key>
-            <value> <string>Base_TranslateString</string> </value>
+            <key>                             <string>id</string> </key>
+            <value> <string>TemplateTool_downloadRepositoryBusinessTemplateList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

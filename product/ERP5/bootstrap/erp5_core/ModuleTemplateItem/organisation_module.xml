@@ -240,6 +240,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add Portal ZSyncer Tools</name>
+  </permission>
+  <permission>
    <name>Add Python Scripts</name>
    <role>Manager</role>
   </permission>
@@ -306,6 +309,9 @@
   <permission>
    <name>Add ZODB Mount Points</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add ZSyncers</name>
   </permission>
   <permission>
    <name>Add Zope Tutorials</name>
@@ -744,6 +750,9 @@
   <permission>
    <name>WebDAV access</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>ZSyncer: Use ZSyncer</name>
   </permission>
   <permission>
    <name>ZopeProfiler: manage</name>

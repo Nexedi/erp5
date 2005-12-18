@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -81,6 +87,8 @@
     <paragraphstyle name="ParaHeadLine3" align="RIGHT" fontname="Helvetica" fontsize="6"/>\n
  \n
     <paragraphstyle name="TableStandard" parent="Normal" fontname="Helvetica" fontsize="8" alignment="left" />\n
+    <paragraphstyle name="TableStandardLeftAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="left" />\n
+    <paragraphstyle name="TableStandardRightAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="right" />\n
     <paragraphstyle name="TableHeader" parent="Normal" fontname="Helvetica-Oblique" fontsize="9" alignment="left" />\n
     <paragraphstyle name="TableLastLine" parent="Normal" fontname="Helvetica-Oblique" fontsize="11" alignment="left" />\n
       \n
