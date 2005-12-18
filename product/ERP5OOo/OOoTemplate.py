@@ -92,7 +92,9 @@ class OOoTemplate(ZopePageTemplate):
             to produce valude xml). TALParser (used if content type
             is application/) does not produce appropriate result.
 
-          - d
+          - upload of OOo documents must be able to extract content.xml
+            from the archive, remove DTD definition and include
+            CR/LF to produce a nice looking XML source.
     """
     meta_type = "ERP5 OOo Template"
     icon = "www/OOo.png"
