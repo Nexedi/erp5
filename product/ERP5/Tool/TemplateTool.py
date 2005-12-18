@@ -230,7 +230,7 @@ class TemplateTool (BaseTool):
           tar.close()
       return bt
 
-    security.declareProtected( Permissions.ManagePortal, 'download' )
+    security.declareProtected( Permissions.ManagePortal, 'manage_download' )
     def manage_download(self, url, id=None, REQUEST=None):
       """The management interface for download.
       """
