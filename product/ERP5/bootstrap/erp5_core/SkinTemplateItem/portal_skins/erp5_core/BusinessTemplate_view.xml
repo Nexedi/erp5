@@ -110,6 +110,7 @@
                         <string>my_description</string>
                         <string>my_change_log</string>
                         <string>my_dependency_list</string>
+                        <string>my_license</string>
                       </list>
                     </value>
                 </item>
@@ -122,6 +123,7 @@
                         <string>my_template_module_id_list</string>
                         <string>my_template_base_category_list</string>
                         <string>my_template_workflow_id_list</string>
+                        <string>my_copyright_list</string>
                       </list>
                     </value>
                 </item>

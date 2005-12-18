@@ -1,4 +1,8 @@
 2005-12-18 yo
+* Add License and Copyright to BusinessTemplate_view.
+* Write the license and the copyright of this template.
+
+2005-12-18 yo
 * The portal type Preference does not need to specify PropertySheets in the portal type, since they are defined in the product.
 * Add skins and actions for repository support.
 
