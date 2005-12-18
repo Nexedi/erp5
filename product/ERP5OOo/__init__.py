@@ -37,12 +37,13 @@ import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
+# Allow access to OOoParser from scripts
 from AccessControl import ModuleSecurityInfo
 ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('OOoParser',)
 
-
 # Define object classes and tools
-object_classes = ()
+from OOoTemplate import OOoTemplate
+object_classes = (OOoTemplate, )
 portal_tools = ()
 content_classes = ()
 content_constructors = ()
