@@ -1,3 +1,11 @@
+2005-12-19 Seb
+* added sub_variation_text in Resource_zGetInventoryList
+* added category type 'sub_variation' on
+aggregate
+
+2005-12-19 Jerome
+* fix omit_input / omit_output in Resource_zStatInventory.
+
 2005-12-18 yo
 * Add License and Copyright to BusinessTemplate_view.
 * Write the license and the copyright of this template.
@@ -9,7 +17,7 @@
 2005-12-18: jérome
 * i18n : added Base_FormatDate, updated Base_TranslateString to use mapping.
 
-2005-12-16:
+2005-12-16 aurel:
 * modify BusinessTemplate_getModifiedObject
 
 2005-12-15 aurel
