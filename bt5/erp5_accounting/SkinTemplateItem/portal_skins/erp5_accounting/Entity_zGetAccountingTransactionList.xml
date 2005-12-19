@@ -272,6 +272,7 @@ FROM\n
 WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   AND child.uid = stock.uid \n
   AND child.parent_uid = catalog.uid\n
+  AND child.portal_type <> "Simulation Movement"\n
   AND movement.uid = stock.uid\n
   AND movement.source_uid = node.uid\n
   AND movement.is_accountable = 1\n
@@ -285,7 +286,7 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
 <dtml-if transaction_portal_type>\n
   AND (\n
   <dtml-in transaction_portal_type>\n
-    catalog.portal_type = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    catalog.portal_type = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
@@ -407,6 +408,7 @@ FROM\n
 WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   AND child.uid = stock.uid \n
   AND child.parent_uid = catalog.uid\n
+  AND child.portal_type <> "Simulation Movement"\n
   AND movement.uid = stock.uid\n
   AND movement.source_uid = node.uid\n
   AND movement.is_accountable = 1\n
@@ -420,7 +422,7 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
 <dtml-if transaction_portal_type>\n
   AND (\n
   <dtml-in transaction_portal_type>\n
-    catalog.portal_type = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    catalog.portal_type = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
