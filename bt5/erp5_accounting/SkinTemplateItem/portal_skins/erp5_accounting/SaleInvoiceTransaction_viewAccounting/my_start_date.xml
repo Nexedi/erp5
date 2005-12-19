@@ -331,7 +331,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Invoice Date</string> </value>
+                    <value> <string>Accounting Operation Date</string> </value>
                 </item>
                 <item>
                     <key> <string>viewable_expression</string> </key>

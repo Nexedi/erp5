@@ -187,7 +187,7 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>14</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -208,6 +208,14 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-1 234.5</string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <int>2</int> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>

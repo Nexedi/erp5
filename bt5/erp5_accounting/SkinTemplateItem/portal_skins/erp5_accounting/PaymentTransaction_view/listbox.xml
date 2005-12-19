@@ -353,6 +353,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -430,12 +434,7 @@
                 <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>resource</string>
-                          <string>resource</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -488,7 +487,7 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -523,19 +522,34 @@
                 </item>
                 <item>
                     <key> <string>stat_columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>source_debit</string>
+                          <string>AccountingTransactionLine_statSourceDebit</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_credit</string>
+                          <string>AccountingTransactionLine_statSourceCredit</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Payment Transaction Lines</string> </value>
+                    <value> <string>Accounting Transaction Lines</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>viewable_expression</string> </key>
@@ -573,7 +587,26 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>AccountingTransaction_searchInvoiceTransactionLines</unicode> </value>
+            <value> <string>AccountingTransaction_searchInvoiceTransactionLines</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>AccountingTransaction_searchInvoiceTransactionLines</string> </value>
         </item>
       </dictionary>
     </pickle>
