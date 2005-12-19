@@ -25,6 +25,7 @@ $DIRECTORY/ERP5Type/tests/runUnitTest.py testInventory >> $DIRECTORY/test_full_o
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5HR >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testBase >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testBusinessTemplate >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testTrashTool >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5Type >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testXMLMatrix >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testConstraint >> $DIRECTORY/test_full_output 2>&1
