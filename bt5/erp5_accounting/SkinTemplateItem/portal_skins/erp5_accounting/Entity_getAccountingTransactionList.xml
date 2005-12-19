@@ -90,7 +90,7 @@ if section_category :\n
 if kw.has_key(\'node_uid\'):\n
   kwd[\'node_uid\'] = transaction_selection[\'node_uid\']\n
 if kw.has_key(\'transaction_portal_type\'):\n
-  kwd[\'transaction_portal_type\'] = transaction_selection[\'transaction_portal_type\']\n
+  kwd[\'transaction_portal_type\'] = kw[\'transaction_portal_type\']\n
 \n
 \n
 # FIXME: same problem as in BankAccount_getAccountingTransactionList\n
@@ -126,7 +126,7 @@ BgCDAgCDAAB9CgB8CgBvFAABfAoAdAQAfAMAgwEAZAcAPG4BAAF0AQB8CQBkCACDAgCDAAB9CwB8
 CwBvFAABfAsAdAQAfAMAgwEAZAkAPG4BAAF0AQB8CQBkCgCDAgCDAAB9DAB8DABvFAABfAwAdAQA
 fAMAgwEAZAsAPG4BAAF0AQB8CQBkDACDAgCDAAB9DQB8DQBvFAABfA0AdAQAfAMAgwEAZA0APG4B
 AAF0AQB8AgBkAQCDAgBkDgCDAQBvHQABdAMAdAwAZA4AgwIAdAQAfAMAgwEAZA4APG4BAAF0AQB8
-AgBkAQCDAgBkDwCDAQBvHQABdAMAdAwAZA8AgwIAdAQAfAMAgwEAZA8APG4BAAFnAAB9DwB0DgB0
+AgBkAQCDAgBkDwCDAQBvHQABdAMAfAIAZA8AgwIAdAQAfAMAgwEAZA8APG4BAAFnAAB9DwB0DgB0
 AQB0BgBkEACDAgB8AwCNAQB9EQB8AQBvCAABfBEAU24BAAFkEQB9EgB4uAB0EgB8EQCDAQBEXaoA
 fRQAdAEAfBQAZBIAgwIAgwAAfRUAfBIAdAEAfBQAZBMAgwIAcAQAAWQRADd9EgB8FQB0FQBqCQBv
 awABdAEAfBUAZBQAgwIAZBUAfBIAZBMAdAEAfBQAZBMAgwIAZBYAdAEAfBQAZBYAgwIAZBcAdAEA
@@ -135,7 +135,7 @@ fA8AU2QAAFMoGgAAAE5zBwAAAGhhc19rZXlzDQAAAGhpZGVfZ3JvdXBpbmdjAQAAAAMAAAADAAAA
 QwAAAHMWAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwIAUygDAAAATnMDAAAAbG9ncyMAAABFbnRpdHlf
 Z2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdCgDAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRl
 eHRzAwAAAG1zZygDAAAAcwMAAABtc2dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAA
-AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS42PgUAAABzAAAAAHMPAAAAZ2V0UG9y
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS4zPgUAAABzAAAAAHMPAAAAZ2V0UG9y
 dGFsT2JqZWN0cxIAAABwb3J0YWxfcHJlZmVyZW5jZXNzKQAAAGdldFByZWZlcnJlZEFjY291bnRp
 bmdUcmFuc2FjdGlvbkZyb21EYXRlcwkAAABmcm9tX2RhdGVzJwAAAGdldFByZWZlcnJlZEFjY291
 bnRpbmdUcmFuc2FjdGlvbkF0RGF0ZXMHAAAAYXRfZGF0ZXM0AAAAZ2V0UHJlZmVycmVkQWNjb3Vu
@@ -171,7 +171,7 @@ ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Entity_getAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
