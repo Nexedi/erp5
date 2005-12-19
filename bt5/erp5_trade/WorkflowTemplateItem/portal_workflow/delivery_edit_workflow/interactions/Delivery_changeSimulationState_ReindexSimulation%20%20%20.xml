@@ -64,7 +64,13 @@ FIXME: reindexObjectSecurity is probably not optimal, it may launch  unnecessary
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>reindexObjectSecurity</string>
+                <string>plan</string>
+                <string>confirm</string>
+                <string>stop</string>
+                <string>deliver</string>
+                <string>start</string>
+                <string>setReady</string>
+                <string>order</string>
               </list>
             </value>
         </item>
