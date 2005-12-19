@@ -36,6 +36,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
+from Products.ERP5Form.Document.Preference import Preference
 from Products.ERP5Form import _dtmldir
 
 class PreferenceTool(BaseTool):
@@ -123,11 +124,19 @@ class PreferenceTool(BaseTool):
         # When creating an ERP5 Site, this method is called, but the 
         # type is not installed yet
         return []
-      for property_sheet in pref_portal_type.property_sheet_list :
-        # import the property sheet
-        property_sheet = getattr(__import__(property_sheet), property_sheet)
+      # 'Dynamic' property sheets added through ZMI
+      zmi_property_sheet_list = tuple(map(lambda property_sheet:
+                        getattr(__import__(property_sheet), property_sheet),
+                        pref_portal_type.property_sheet_list))
+      # 'Static' property sheets defined on the class
+      class_property_sheet_list = Preference.property_sheets
+      for property_sheet in ( zmi_property_sheet_list +
+                              class_property_sheet_list ) :
         # then generate common method names 
         for prop in property_sheet._properties :
+          if not prop.get('preference', 0) :
+            # only properties marked as preference are used
+            continue
           attribute = prop['id']
           attr_list += [ attribute,
                          'get%s' % convertToUpperCase(attribute),
