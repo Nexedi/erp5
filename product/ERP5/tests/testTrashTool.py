@@ -160,7 +160,7 @@ class TestTrashTool(ERP5TypeTestCase):
     obj = trashbin_objects_list[0]
     self.assertEqual(obj.getId(), 'portal_categories_items')
     self.assertEqual(obj.getPortalType(), 'Trash Folder')
-    #    self.assertEqual(obj.isIndexable, 0)
+    self.assertEqual(obj.isIndexable, 0)
     # get backup base category
     cat_objects_list = list(obj.objectValues())
     self.assertEqual(len(cat_objects_list), 1)
@@ -186,12 +186,12 @@ class TestTrashTool(ERP5TypeTestCase):
     trashbin_objects_list = list(trashbin.objectValues())
     self.failUnless(len(trashbin_objects_list) > 0)
     self.assertEqual(len(trashbin_objects_list), 1)
-    object = trashbin_objects_list[0]
-    self.assertEqual(object.getId(), 'portal_categories_items')    
-    self.assertEqual(object.getPortalType(), 'Trash Folder')
-    #    self.assertEqual(obj.isIndexable, 0)
+    obj = trashbin_objects_list[0]
+    self.assertEqual(obj.getId(), 'portal_categories_items')    
+    self.assertEqual(obj.getPortalType(), 'Trash Folder')
+    self.assertEqual(obj.isIndexable, 0)
     # get base category backup
-    cat_objects_list = list(object.objectValues())
+    cat_objects_list = list(obj.objectValues())
     self.assertEqual(len(cat_objects_list), 1)
     cat_object = cat_objects_list[0]
     bc_id = sequence.get('bc_id')
