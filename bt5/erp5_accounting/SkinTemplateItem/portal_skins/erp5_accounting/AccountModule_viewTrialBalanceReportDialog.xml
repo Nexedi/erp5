@@ -78,6 +78,7 @@
                         <string>my_transaction_section_category</string>
                         <string>my_from_date</string>
                         <string>my_at_date</string>
+                        <string>my_expand_accounts</string>
                         <string>my_portal_skin</string>
                       </list>
                     </value>

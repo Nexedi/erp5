@@ -51,7 +51,25 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>destination_section_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>from_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>no_destination_section_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>no_source_payment_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -89,6 +107,12 @@
                                         <value> <string>list</string> </value>
                                     </item>
                                   </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>source_payment_uid</string> </key>
+                                <value>
+                                  <dictionary/>
                                 </value>
                             </item>
                             <item>
@@ -131,6 +155,10 @@
 <string>at_date</string>
 <string>transaction_simulation_state</string>
 <string>transaction_section_category</string>
+<string>source_payment_uid</string>
+<string>no_source_payment_uid</string>
+<string>destination_section_uid</string>
+<string>no_destination_section_uid</string>
                           </list>
                         </value>
                     </item>
@@ -160,9 +188,13 @@ omit_output\r\n
 resource_uid:list\r\n
 from_date\r\n
 to_date\r\n
-at_date\n
+at_date\r\n
 transaction_simulation_state:list\r\n
-transaction_section_category</string> </value>
+transaction_section_category\r\n
+source_payment_uid\r\n
+no_source_payment_uid\r\n
+destination_section_uid\r\n
+no_destination_section_uid</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -220,6 +252,7 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND child.uid = stock.uid \n
   AND child.parent_uid = catalog.uid\n
   AND movement.uid = stock.uid\n
+  AND child.portal_type <> \'Simulation Movement\'\n
   AND movement.is_accountable = 1\n
 <dtml-if resource_uid>\n
   AND (\n
@@ -242,6 +275,18 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity < 0.0\n
+</dtml-if>\n
+<dtml-if source_payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_source_payment_uid>\n
+  AND stock.payment_uid IS NULL\n
+</dtml-if>\n
+<dtml-if destination_section_uid>\n
+  AND stock.mirror_section_uid = <dtml-sqlvar destination_section_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_destination_section_uid>\n
+  AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
@@ -320,6 +365,7 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND child.uid = stock.uid \n
   AND child.parent_uid = catalog.uid\n
   AND movement.uid = stock.uid\n
+  AND child.portal_type <> \'Simulation Movement\'\n
   AND movement.is_accountable = 1\n
 <dtml-if resource_uid>\n
   AND (\n
@@ -342,6 +388,18 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity < 0.0\n
+</dtml-if>\n
+<dtml-if source_payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_source_payment_uid>\n
+  AND stock.payment_uid IS NULL\n
+</dtml-if>\n
+<dtml-if destination_section_uid>\n
+  AND stock.mirror_section_uid = <dtml-sqlvar destination_section_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_destination_section_uid>\n
+  AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n

@@ -70,15 +70,15 @@
 if kw.has_key(\'where_expression\'):\n
   params[\'where_expression\'] = kw[\'where_expression\']\n
 if kw.get(\'resource\'):\n
-  try: params[\'resource_uid\'] = context.restritedTraverse(selection_params[\'resource\'])\n
-  except KeyError: pass\n
+  try: params[\'resource_uid\'] = context.restritedTraverse(selection_params[\'resource\']).getUid()\n
+  except (KeyError, AttributeError): pass\n
 \n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
+from_date = kw.get(\'from_date\', preference.getPreferredAccountingTransactionFromDate())\n
 if from_date :\n
   params[\'from_date\'] = from_date\n
-at_date = preference.getPreferredAccountingTransactionAtDate()\n
+at_date =  kw.get(\'at_date\', preference.getPreferredAccountingTransactionAtDate())\n
 if at_date :\n
   params[\'at_date\'] = at_date\n
 simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
@@ -93,48 +93,84 @@ if kw.get(\'omit_input\') :\n
 if kw.get(\'omit_output\') :\n
   params[\'omit_output\'] = 1\n
 \n
-result = context.Account_zGetTotalQuantity(node_uid=context.getUid(), **params)\n
+MARKER = []\n
+kw = selection.getParams()\n
+source_payment_uid = kw.get(\'source_payment_uid\', MARKER)\n
+if source_payment_uid is not MARKER:\n
+  params[\'source_payment_uid\'] = source_payment_uid\n
+no_source_payment = kw.get(\'no_source_payment_uid\', MARKER)\n
+if no_source_payment is not MARKER:\n
+  params[\'no_source_payment_uid\'] = 1\n
+\n
+destination_section_uid = kw.get(\'destination_section_uid\', MARKER)\n
+if destination_section_uid is not MARKER:\n
+  params[\'destination_section_uid\'] = destination_section_uid\n
+no_destination_section = kw.get(\'no_destination_section\', MARKER)\n
+if no_destination_section is not MARKER:\n
+  params[\'no_destination_section\'] = 1\n
+\n
+params[\'node_uid\'] = kw.get(\'node_uid\', context.getUid())\n
+\n
+if kw.get(\'from_date_summary\', 0) :\n
+  if params.has_key(\'from_date\'):\n
+    del params[\'from_date\']\n
+\n
+#context.log("SQL with %s \\n" % params, context.Account_zGetTotalQuantity(src__=1, **params))\n
+result = context.Account_zGetTotalQuantity(**params)\n
 row = result[0]\n
 return float(\'%.02f\' % (row.quantity or 0.0) )\n
-\n
-# vim: syntax=python\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABIAAAAgAAAASwAA
-AHMTAgAAaAAAfQIAdAEAfAEAZAEAgwIAZAIAgwEAbx0AAXQDAHwBAGQCAIMCAHQEAHwCAIMBAGQC
-ADxuAQABdAEAfAEAZAMAgwIAZAQAgwEAb0YAAXksAHQBAHQFAGQFAIMCAHQDAHQGAGQEAIMCAIMB
-AHQEAHwCAIMBAGQGADxXcZUABHQHAGoKAG8HAAEBAQFxlQABWG4BAAF0AQB0AQB0BQBkBwCDAgCD
-AABkCACDAgB9CQB0AQB8CQBkCQCDAgCDAAB9CgB8CgBvFAABfAoAdAQAfAIAgwEAZAoAPG4BAAF0
-AQB8CQBkCwCDAgCDAAB9CwB8CwBvFAABfAsAdAQAfAIAgwEAZAwAPG4BAAF0AQB8CQBkDQCDAgCD
-AAB9DAB8DABvFAABfAwAdAQAfAIAgwEAZA4APG4BAAF0AQB8CQBkDwCDAgCDAAB9DQB8DQBvFAAB
-fA0AdAQAfAIAgwEAZBAAPG4BAAF0AQB8AQBkAwCDAgBkEQCDAQBvFAABZBIAdAQAfAIAgwEAZBEA
-PG4BAAF0AQB8AQBkAwCDAgBkEwCDAQBvFAABZBIAdAQAfAIAgwEAZBMAPG4BAAF0DQB0AQB0BQBk
-FACDAgBkFQB0AQB0BQBkFgCDAgCDAAB8AgCNAQF9DwB0AwB8DwBkFwCDAgB9EAB0EABkGAB0AQB8
-EABkGQCDAgBwBAABZBoAFoMBAFNkAABTKBsAAABOcwcAAABoYXNfa2V5cxAAAAB3aGVyZV9leHBy
-ZXNzaW9ucwMAAABnZXRzCAAAAHJlc291cmNlcxEAAAByZXN0cml0ZWRUcmF2ZXJzZXMMAAAAcmVz
-b3VyY2VfdWlkcw8AAABnZXRQb3J0YWxPYmplY3RzEgAAAHBvcnRhbF9wcmVmZXJlbmNlc3MpAAAA
-Z2V0UHJlZmVycmVkQWNjb3VudGluZ1RyYW5zYWN0aW9uRnJvbURhdGVzCQAAAGZyb21fZGF0ZXMn
-AAAAZ2V0UHJlZmVycmVkQWNjb3VudGluZ1RyYW5zYWN0aW9uQXREYXRlcwcAAABhdF9kYXRlczQA
-AABnZXRQcmVmZXJyZWRBY2NvdW50aW5nVHJhbnNhY3Rpb25TaW11bGF0aW9uU3RhdGVMaXN0cxwA
-AAB0cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRlczAAAABnZXRQcmVmZXJyZWRBY2NvdW50aW5n
-VHJhbnNhY3Rpb25TZWN0aW9uQ2F0ZWdvcnlzHAAAAHRyYW5zYWN0aW9uX3NlY3Rpb25fY2F0ZWdv
-cnlzCgAAAG9taXRfaW5wdXRpAQAAAHMLAAAAb21pdF9vdXRwdXRzGQAAAEFjY291bnRfekdldFRv
-dGFsUXVhbnRpdHlzCAAAAG5vZGVfdWlkcwYAAABnZXRVaWRpAAAAAHMFAAAAJS4wMmZzCAAAAHF1
-YW50aXR5ZgMwLjAoEQAAAHMGAAAAcGFyYW1zcwkAAABfZ2V0YXR0cl9zAgAAAGt3cwkAAABfZ2V0
-aXRlbV9zBwAAAF93cml0ZV9zBwAAAGNvbnRleHRzEAAAAHNlbGVjdGlvbl9wYXJhbXNzCAAAAEtl
-eUVycm9ycwoAAABwcmVmZXJlbmNlcwkAAABmcm9tX2RhdGVzBwAAAGF0X2RhdGVzEAAAAHNpbXVs
-YXRpb25fc3RhdGVzEAAAAHNlY3Rpb25fY2F0ZWdvcnlzBwAAAF9hcHBseV9zBgAAAHJlc3VsdHMD
-AAAAcm93cwUAAABmbG9hdCgSAAAAcwkAAABzZWxlY3Rpb25zAgAAAGt3cwYAAABwYXJhbXNzCQAA
-AF9nZXRhdHRyX3MJAAAAX2dldGl0ZW1fcwcAAABfd3JpdGVfcwcAAABjb250ZXh0cxAAAABzZWxl
-Y3Rpb25fcGFyYW1zcwgAAABLZXlFcnJvcnMKAAAAcHJlZmVyZW5jZXMJAAAAZnJvbV9kYXRlcwcA
-AABhdF9kYXRlcxAAAABzaW11bGF0aW9uX3N0YXRlcxAAAABzZWN0aW9uX2NhdGVnb3J5cwcAAABf
-YXBwbHlfcwYAAAByZXN1bHRzAwAAAHJvd3MFAAAAZmxvYXQoAAAAACgAAAAAcw8AAABTY3JpcHQg
-KFB5dGhvbilzGQAAAEFjY291bnRfc3RhdFNvdXJjZUJhbGFuY2UBAAAAczIAAAAJARMBIAETAS8B
-FwMbARIBBwEUARIBBwEUARIBBwEUARIBBwEXAhMBFwETARQCKgEPASgBAAAAcxkAAABBY2NvdW50
-X3N0YXRTb3VyY2VCYWxhbmNlKAEAAABzGQAAAEFjY291bnRfc3RhdFNvdXJjZUJhbGFuY2UoAAAA
-ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABgAAAAzAAAASwAA
+AHOlAwAAaAAAfQIAdAEAfAEAZAEAgwIAZAIAgwEAbx0AAXQDAHwBAGQCAIMCAHQEAHwCAIMBAGQC
+ADxuAQABdAEAfAEAZAMAgwIAZAQAgwEAb1gAAXk4AHQBAHQBAHQFAGQFAIMCAHQDAHQGAGQEAIMC
+AIMBAGQGAIMCAIMAAHQEAHwCAIMBAGQHADxXcacABHQHAHQIAGYCAGoKAG8HAAEBAQFxpwABWG4B
+AAF0AQB0AQB0BQBkCACDAgCDAABkCQCDAgB9CgB0AQB8AQBkAwCDAgBkCgB0AQB8CgBkCwCDAgCD
+AACDAgB9CwB8CwBvFAABfAsAdAQAfAIAgwEAZAoAPG4BAAF0AQB8AQBkAwCDAgBkDAB0AQB8CgBk
+DQCDAgCDAACDAgB9DAB8DABvFAABfAwAdAQAfAIAgwEAZAwAPG4BAAF0AQB8CgBkDgCDAgCDAAB9
+DQB8DQBvFAABfA0AdAQAfAIAgwEAZA8APG4BAAF0AQB8CgBkEACDAgCDAAB9DgB8DgBvFAABfA4A
+dAQAfAIAgwEAZBEAPG4BAAF0AQB8AQBkAwCDAgBkEgCDAQBvFAABZBMAdAQAfAIAgwEAZBIAPG4B
+AAF0AQB8AQBkAwCDAgBkFACDAQBvFAABZBMAdAQAfAIAgwEAZBQAPG4BAAFnAAB9DwB0AQB8AABk
+FQCDAgCDAAB9AQB0AQB8AQBkAwCDAgBkFgB8DwCDAgB9EAB8EAB8DwBqCQBvFAABfBAAdAQAfAIA
+gwEAZBYAPG4BAAF0AQB8AQBkAwCDAgBkFwB8DwCDAgB9EQB8EQB8DwBqCQBvFAABZBMAdAQAfAIA
+gwEAZBcAPG4BAAF0AQB8AQBkAwCDAgBkGAB8DwCDAgB9EgB8EgB8DwBqCQBvFAABfBIAdAQAfAIA
+gwEAZBgAPG4BAAF0AQB8AQBkAwCDAgBkGQB8DwCDAgB9EwB8EwB8DwBqCQBvFAABZBMAdAQAfAIA
+gwEAZBkAPG4BAAF0AQB8AQBkAwCDAgBkGgB0AQB0BQBkBgCDAgCDAACDAgB0BAB8AgCDAQBkGgA8
+dAEAfAEAZAMAgwIAZBsAZBwAgwIAbysAAXQBAHwCAGQBAIMCAGQKAIMBAG8RAAF0BAB8AgCDAQBk
+CgA9cVwDAW4BAAF0FAB0AQB0BQBkHQCDAgB8AgCNAQB9FQB0AwB8FQBkHACDAgB9FgB0FwBkHgB0
+AQB8FgBkHwCDAgBwBAABZCAAFoMBAFNkAABTKCEAAABOcwcAAABoYXNfa2V5cxAAAAB3aGVyZV9l
+eHByZXNzaW9ucwMAAABnZXRzCAAAAHJlc291cmNlcxEAAAByZXN0cml0ZWRUcmF2ZXJzZXMGAAAA
+Z2V0VWlkcwwAAAByZXNvdXJjZV91aWRzDwAAAGdldFBvcnRhbE9iamVjdHMSAAAAcG9ydGFsX3By
+ZWZlcmVuY2VzcwkAAABmcm9tX2RhdGVzKQAAAGdldFByZWZlcnJlZEFjY291bnRpbmdUcmFuc2Fj
+dGlvbkZyb21EYXRlcwcAAABhdF9kYXRlcycAAABnZXRQcmVmZXJyZWRBY2NvdW50aW5nVHJhbnNh
+Y3Rpb25BdERhdGVzNAAAAGdldFByZWZlcnJlZEFjY291bnRpbmdUcmFuc2FjdGlvblNpbXVsYXRp
+b25TdGF0ZUxpc3RzHAAAAHRyYW5zYWN0aW9uX3NpbXVsYXRpb25fc3RhdGVzMAAAAGdldFByZWZl
+cnJlZEFjY291bnRpbmdUcmFuc2FjdGlvblNlY3Rpb25DYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25f
+c2VjdGlvbl9jYXRlZ29yeXMKAAAAb21pdF9pbnB1dGkBAAAAcwsAAABvbWl0X291dHB1dHMJAAAA
+Z2V0UGFyYW1zcxIAAABzb3VyY2VfcGF5bWVudF91aWRzFQAAAG5vX3NvdXJjZV9wYXltZW50X3Vp
+ZHMXAAAAZGVzdGluYXRpb25fc2VjdGlvbl91aWRzFgAAAG5vX2Rlc3RpbmF0aW9uX3NlY3Rpb25z
+CAAAAG5vZGVfdWlkcxEAAABmcm9tX2RhdGVfc3VtbWFyeWkAAAAAcxkAAABBY2NvdW50X3pHZXRU
+b3RhbFF1YW50aXR5cwUAAAAlLjAyZnMIAAAAcXVhbnRpdHlmAzAuMCgYAAAAcwYAAABwYXJhbXNz
+CQAAAF9nZXRhdHRyX3MCAAAAa3dzCQAAAF9nZXRpdGVtX3MHAAAAX3dyaXRlX3MHAAAAY29udGV4
+dHMQAAAAc2VsZWN0aW9uX3BhcmFtc3MIAAAAS2V5RXJyb3JzDgAAAEF0dHJpYnV0ZUVycm9ycwoA
+AABwcmVmZXJlbmNlcwkAAABmcm9tX2RhdGVzBwAAAGF0X2RhdGVzEAAAAHNpbXVsYXRpb25fc3Rh
+dGVzEAAAAHNlY3Rpb25fY2F0ZWdvcnlzBgAAAE1BUktFUnMJAAAAc2VsZWN0aW9ucxIAAABzb3Vy
+Y2VfcGF5bWVudF91aWRzEQAAAG5vX3NvdXJjZV9wYXltZW50cxcAAABkZXN0aW5hdGlvbl9zZWN0
+aW9uX3VpZHMWAAAAbm9fZGVzdGluYXRpb25fc2VjdGlvbnMHAAAAX2FwcGx5X3MGAAAAcmVzdWx0
+cwMAAAByb3dzBQAAAGZsb2F0KBgAAABzCQAAAHNlbGVjdGlvbnMCAAAAa3dzBgAAAHBhcmFtc3MJ
+AAAAX2dldGF0dHJfcwkAAABfZ2V0aXRlbV9zBwAAAF93cml0ZV9zBwAAAGNvbnRleHRzEAAAAHNl
+bGVjdGlvbl9wYXJhbXNzCAAAAEtleUVycm9ycw4AAABBdHRyaWJ1dGVFcnJvcnMKAAAAcHJlZmVy
+ZW5jZXMJAAAAZnJvbV9kYXRlcwcAAABhdF9kYXRlcxAAAABzaW11bGF0aW9uX3N0YXRlcxAAAABz
+ZWN0aW9uX2NhdGVnb3J5cwYAAABNQVJLRVJzEgAAAHNvdXJjZV9wYXltZW50X3VpZHMRAAAAbm9f
+c291cmNlX3BheW1lbnRzFwAAAGRlc3RpbmF0aW9uX3NlY3Rpb25fdWlkcxYAAABub19kZXN0aW5h
+dGlvbl9zZWN0aW9ucwcAAABfYXBwbHlfcwYAAAByZXN1bHRzAwAAAHJvd3MFAAAAZmxvYXQoAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGQAAAEFjY291bnRfc3RhdFNvdXJjZUJhbGFuY2UB
+AAAAc1YAAAAJARMBIAETATsBHQMbASQBBwEUASQBBwEUARIBBwEUARIBBwEXAhMBFwETARQCBgES
+ARgBDQEUARgBDQEUAhgBDQEUARgBDQEUAjECGQEWARIDGAEPASgBAAAAcxkAAABBY2NvdW50X3N0
+YXRTb3VyY2VCYWxhbmNlKAEAAABzGQAAAEFjY291bnRfc3RhdFNvdXJjZUJhbGFuY2UoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -191,11 +227,17 @@ ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </valu
                             <string>context</string>
                             <string>selection_params</string>
                             <string>KeyError</string>
+                            <string>AttributeError</string>
                             <string>preference</string>
                             <string>from_date</string>
                             <string>at_date</string>
                             <string>simulation_state</string>
                             <string>section_category</string>
+                            <string>MARKER</string>
+                            <string>source_payment_uid</string>
+                            <string>no_source_payment</string>
+                            <string>destination_section_uid</string>
+                            <string>no_destination_section</string>
                             <string>_apply_</string>
                             <string>result</string>
                             <string>row</string>

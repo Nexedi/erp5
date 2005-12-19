@@ -73,6 +73,7 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
+                        <string>from_date</string>
                         <string>at_date</string>
                         <string>transaction_section_category</string>
                         <string>transaction_simulation_state</string>

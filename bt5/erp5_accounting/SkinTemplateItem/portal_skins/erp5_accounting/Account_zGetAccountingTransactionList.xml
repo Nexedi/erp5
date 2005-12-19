@@ -47,6 +47,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>destination_section_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>from_date</string> </key>
                                 <value>
                                   <dictionary/>
@@ -54,6 +60,18 @@
                             </item>
                             <item>
                                 <key> <string>getUid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>no_destination_section_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>no_source_payment_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -95,6 +113,12 @@
                             </item>
                             <item>
                                 <key> <string>selection_report</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>source_payment_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -148,6 +172,10 @@
 <string>at_date</string>
 <string>transaction_simulation_state</string>
 <string>transaction_section_category</string>
+<string>source_payment_uid</string>
+<string>no_source_payment_uid</string>
+<string>destination_section_uid</string>
+<string>no_destination_section_uid</string>
                           </list>
                         </value>
                     </item>
@@ -188,7 +216,11 @@ from_date\r\n
 to_date\r\n
 at_date\r\n
 transaction_simulation_state:list\r\n
-transaction_section_category</string> </value>
+transaction_section_category\r\n
+source_payment_uid\r\n
+no_source_payment_uid\r\n
+destination_section_uid\r\n
+no_destination_section_uid</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -236,14 +268,11 @@ SELECT\n
   destination_section.title AS third_party,\n
   IF(stock.quantity > 0, stock.quantity, 0.0) AS source_debit,\n
   IF(stock.quantity < 0, - stock.quantity, 0.0) AS source_credit,\n
-  stock.quantity AS source_balance\n
+  stock.quantity AS source_balance,\n
+  stock.payment_uid AS source_payment_uid\n
 FROM\n
   movement,\n
-  stock\n
-  LEFT JOIN catalog AS destination_section \n
-      ON destination_section.uid = stock.mirror_section_uid\n
-        AND stock.node_uid = <dtml-var getUid>,\n
-\n
+  stock,\n
   catalog,\n
   catalog  AS transaction_line,\n
   catalog  AS transaction,\n
@@ -255,8 +284,13 @@ FROM\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if where_expression>, category </dtml-if>\n
 \n
+  LEFT JOIN catalog AS destination_section \n
+      ON destination_section.uid = stock.mirror_section_uid\n
+        AND stock.node_uid = <dtml-var getUid>\n
+\n
 WHERE stock.node_uid = <dtml-var getUid>\n
   AND transaction_line.uid = stock.uid \n
+  AND transaction_line.portal_type <> \'Simulation Movement\'\n
   AND transaction_line.parent_uid = transaction.uid\n
   AND catalog.uid = stock.section_uid\n
   AND movement.uid = stock.uid\n
@@ -269,19 +303,31 @@ WHERE stock.node_uid = <dtml-var getUid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND movement.start_date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND movement.start_date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND movement.start_date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
+</dtml-if>\n
+<dtml-if source_payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_source_payment_uid>\n
+  AND stock.payment_uid IS NULL\n
+</dtml-if>\n
+<dtml-if destination_section_uid>\n
+  AND stock.mirror_section_uid = <dtml-sqlvar destination_section_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_destination_section_uid>\n
+  AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
@@ -359,14 +405,11 @@ SELECT\n
   destination_section.title AS third_party,\n
   IF(stock.quantity > 0, stock.quantity, 0.0) AS source_debit,\n
   IF(stock.quantity < 0, - stock.quantity, 0.0) AS source_credit,\n
-  stock.quantity AS source_balance\n
+  stock.quantity AS source_balance,\n
+  stock.payment_uid AS source_payment_uid\n
 FROM\n
   movement,\n
-  stock\n
-  LEFT JOIN catalog AS destination_section \n
-      ON destination_section.uid = stock.mirror_section_uid\n
-        AND stock.node_uid = <dtml-var getUid>,\n
-\n
+  stock,\n
   catalog,\n
   catalog  AS transaction_line,\n
   catalog  AS transaction,\n
@@ -378,8 +421,13 @@ FROM\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if where_expression>, category </dtml-if>\n
 \n
+  LEFT JOIN catalog AS destination_section \n
+      ON destination_section.uid = stock.mirror_section_uid\n
+        AND stock.node_uid = <dtml-var getUid>\n
+\n
 WHERE stock.node_uid = <dtml-var getUid>\n
   AND transaction_line.uid = stock.uid \n
+  AND transaction_line.portal_type <> \'Simulation Movement\'\n
   AND transaction_line.parent_uid = transaction.uid\n
   AND catalog.uid = stock.section_uid\n
   AND movement.uid = stock.uid\n
@@ -392,19 +440,31 @@ WHERE stock.node_uid = <dtml-var getUid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND movement.start_date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND movement.start_date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND movement.start_date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
   AND stock.quantity > 0\n
+</dtml-if>\n
+<dtml-if source_payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_source_payment_uid>\n
+  AND stock.payment_uid IS NULL\n
+</dtml-if>\n
+<dtml-if destination_section_uid>\n
+  AND stock.mirror_section_uid = <dtml-sqlvar destination_section_uid type="int">\n
+</dtml-if>\n
+<dtml-if no_destination_section_uid>\n
+  AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n

@@ -39,13 +39,41 @@
                     <item>
                         <key> <string>_data</string> </key>
                         <value>
-                          <dictionary/>
+                          <dictionary>
+                            <item>
+                                <key> <string>at_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>node_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                          </dictionary>
                         </value>
                     </item>
                     <item>
                         <key> <string>_keys</string> </key>
                         <value>
-                          <list/>
+                          <list>
+<string>node_uid</string>
+<string>at_date</string>
+<string>simulation_state</string>
+                          </list>
                         </value>
                     </item>
                   </dictionary>
@@ -104,7 +132,9 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string></string> </value>
+            <value> <string>node_uid\r\n
+at_date\r\n
+simulation_state:list</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -140,16 +170,34 @@
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>SELECT DISTINCT\n
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT DISTINCT\n
   catalog.uid,\n
-  catalog.path\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.title, \n
+  catalog.portal_type\n
 FROM\n
   catalog,\n
   stock\n
 WHERE\n
   stock.mirror_section_uid = catalog.uid\n
+<dtml-if node_uid>\n
+  AND stock.node_uid = <dtml-sqlvar node_uid type="string">\n
+</dtml-if>\n
+<dtml-if at_date>\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
+</dtml-if>\n
+<dtml-if simulation_state>\n
+  AND ( <dtml-in simulation_state>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end>OR </dtml-unless>\n
+  </dtml-in> )\n
+</dtml-if>\n
 ORDER BY\n
-  catalog.title</string> </value>
+  catalog.portal_type, catalog.title
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -183,16 +231,34 @@ ORDER BY\n
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>SELECT DISTINCT\n
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT DISTINCT\n
   catalog.uid,\n
-  catalog.path\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.title, \n
+  catalog.portal_type\n
 FROM\n
   catalog,\n
   stock\n
 WHERE\n
   stock.mirror_section_uid = catalog.uid\n
+<dtml-if node_uid>\n
+  AND stock.node_uid = <dtml-sqlvar node_uid type="string">\n
+</dtml-if>\n
+<dtml-if at_date>\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
+</dtml-if>\n
+<dtml-if simulation_state>\n
+  AND ( <dtml-in simulation_state>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end>OR </dtml-unless>\n
+  </dtml-in> )\n
+</dtml-if>\n
 ORDER BY\n
-  catalog.title</string> </value>
+  catalog.portal_type, catalog.title
+
+]]></string> </value>
                     </item>
                   </dictionary>
                 </state>
