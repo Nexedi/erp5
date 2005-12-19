@@ -81,7 +81,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -120,7 +122,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -152,9 +156,7 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -262,7 +264,7 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>6</int> </value>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -290,6 +292,25 @@
     <pickle>
       <tuple>
         <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>AccountingTransactionModule_getTranslatedPortalTypeItemList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
           <string>Products.Formulator.TALESField</string>
           <string>TALESMethod</string>
         </tuple>
@@ -300,7 +321,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(here.translation_service.translate(\'ui\', pt).encode(\'utf8\'), pt) for pt in (\'Accounting Transaction\', \'Sale Invoice Transaction\', \'Purchase Invoice Transaction\',  \'Pay Sheet Transaction\', \'Payment Transaction\', \'Balance Transaction\')]</string> </value>
+            <value> <string>python: [ x[1] for x in here.AccountingTransactionModule_getTranslatedPortalTypeItemList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

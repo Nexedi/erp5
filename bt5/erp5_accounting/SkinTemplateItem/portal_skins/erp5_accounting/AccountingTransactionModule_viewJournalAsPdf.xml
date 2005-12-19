@@ -55,30 +55,59 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <?xml version="1.0" encoding="latin1"?>\n
-<document filename="journal.pdf" tal:define="portal python:here.portal_url.getPortalObject()">\n
-    <title>Title</title>\n
-    <author>Author</author>\n
-    <subject>Subject</subject>\n
+<document filename="journal.pdf" tal:define="portal here/portal_url/getPortalObject;\n
+                                             transaction_list here/AccountingTransactionModule_getJournalAccountingTransactionList">\n
+    <title>Journal</title>\n
+    <author>ERP5</author>\n
+    <subject>Journal</subject>\n
     <content xmlns:tal="http://xml.zope.org/namespaces/tal">\n
+        <para style="Title" i18n:translate="" i18n:domain="ui">Journal</para>\n
+        <action name="nextPageTemplate">\n
+         <parameter>FirstPage</parameter>\n
+        </action>\n
+        <spacer height="50"/>\n
+        \n
+        <table splitbyrow="1" repeatrows="0" repeatcols="0"  style="AttributesTable" >\n
+          <tr tal:condition="python: request.get(\'from_date\', 0)">\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'From Date\')"/> </td>\n
+            <td colwidth="15cm"> <para style="TableStandardRightAligned" tal:content="python: here.Base_FormatDate(request.get(\'from_date\'))"/></td> </tr>\n
+          <tr>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'At Date\')"/> </td>\n
+            <td colwidth="15cm"> <para style="TableStandardRightAligned" tal:content="python: here.Base_FormatDate(request.get(\'at_date\'))"/></td> </tr>\n
+          <tr>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'Section\')"/> </td>\n
+            <td colwidth="15cm"> <para style="TableStandardRightAligned" tal:content="python: here.portal_categories.restrictedTraverse(request.get(\'transaction_section_category\')).getLogicalPath()"/></td> </tr>\n
+          <tr>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'Transactions Simulation State\')"/> </td>\n
+            <td colwidth="15cm"> <tal:block tal:repeat="state python:request.get(\'transaction_simulation_state\', [])">\n
+                 <para style="TableStandardRightAligned" tal:content="state"/> </tal:block> </td> </tr>\n
+          <tr>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'Journal Type\')"/> </td>\n
+            <td colwidth="15cm"> <tal:block tal:repeat="type python:request.get(\'transaction_portal_type\', [])">\n
+                 <para style="TableStandardRightAligned" tal:content="python: here.Base_TranslateString(type)"/> </tal:block> </td> </tr>\n
+\n
+       </table>\n
+        <spacer height="10"/>\n
+\n
         <table style="top_of_page" splitbyrow="1" repeatrows="0" repeatcols="0">\n
             <tr rowheight="0.512cm">\n
                 <td colwidth="1.5cm">Debit</td>\n
                 <td colwidth="1.5cm">Credit</td>\n
-                <td colwidth="13cm">Account Title</td>\n
-                <td colwidth="2cm">Debit</td>\n
-                <td colwidth="2cm">Credit</td>\n
+                <td colwidth="12cm">Account Title</td>\n
+                <td colwidth="2.5cm">Debit</td>\n
+                <td colwidth="2.5cm">Credit</td>\n
             </tr>\n
         </table>\n
-        <tal:block tal:repeat="transaction python:here.AccountingTransactionModule_getJournalAccountingTransactionList()">\n
+        <tal:block tal:repeat="transaction python:transaction_list[:-1]">\n
             <table style="transaction_header" splitbyrow="1" repeatrows="0" repeatcols="0">\n
                 <tr rowheight="0.5cm">\n
                     <td colwidth="1.5cm"/>\n
                     <td colwidth="1.5cm"/>\n
-                    <td colwidth="5cm"/>\n
+                    <td colwidth="4.5cm"/>\n
                     <td colwidth="3cm" tal:content="transaction/date">Date</td>\n
-                    <td colwidth="5cm"/>\n
-                    <td colwidth="2cm"/>\n
-                    <td colwidth="2cm"/>\n
+                    <td colwidth="4.5cm"/>\n
+                    <td colwidth="2.5cm"/>\n
+                    <td colwidth="2.5cm"/>\n
                 </tr>\n
             </table>\n
             <tal:block tal:repeat="line transaction/lines">\n
@@ -90,9 +119,9 @@
                             <td colwidth="2cm"/>\n
                         </tal:block>\n
                         <td colwidth="modified"\n
-                            tal:attributes="colwidth python: line[\'debtor\'] and \'13cm\' or \'11cm\' ;" tal:content="python:line[\'account_name\']"/>\n
-                        <td colwidth="2cm" tal:content="python:line[\'debtor\'] and line[\'amount\'] or \' \' "/>\n
-                        <td colwidth="2cm" tal:content="python:line[\'debtor\'] and \' \' or line[\'amount\'] "/>\n
+                            tal:attributes="colwidth python: line[\'debtor\'] and \'12cm\' or \'10cm\' ;" tal:content="python:line[\'account_name\']"/>\n
+                        <td colwidth="2.5cm" tal:content="python:line[\'debtor\'] and here.ERP5Accounting_FormatMonetaryValue(line[\'amount\']) or \' \' "/>\n
+                        <td colwidth="2.5cm" tal:content="python:line[\'debtor\'] and \' \' or here.ERP5Accounting_FormatMonetaryValue(line[\'amount\']) "/>\n
                     </tr>\n
                 </table>\n
             </tal:block>\n
@@ -101,9 +130,35 @@
                     <td colwidth="1.5cm"/>\n
                     <td colwidth="1.5cm"/>\n
                     <td colwidth="0.5cm"/>\n
-                    <td colwidth="12.5cm" tal:content="transaction/description"/>\n
+                    <td colwidth="11.5cm" tal:content="transaction/description"/>\n
+                    <td colwidth="2.5cm"/>\n
+                    <td colwidth="2.5cm"/>\n
+                </tr>\n
+            </table>\n
+        </tal:block>\n
+         \n
+        <tal:block tal:replace="nothing"> Summary.\n
+        </tal:block>\n
+        <tal:block>\n
+            <table style="transaction_header" splitbyrow="1" repeatrows="0" repeatcols="0">\n
+                <tr rowheight="0.5cm">\n
+                    <td colwidth="1.5cm"/>\n
+                    <td colwidth="1.5cm"/>\n
+                    <td colwidth="4.5cm"/>\n
+                    <td colwidth="3cm"/>\n
+                    <td colwidth="4.5cm"/>\n
+                    <td colwidth="2.5cm"/>\n
+                    <td colwidth="2.5cm"/>\n
+                </tr>\n
+            </table>\n
+            <table style="transaction_body" splitbyrow="1" repeatrows="0" repeatcols="0">\n
+                <tr rowheight="1.5cm">\n
+                    <td colwidth="1.5cm"/>\n
+                    <td colwidth="1.5cm"/>\n
                     <td colwidth="2cm"/>\n
-                    <td colwidth="2cm"/>\n
+                    <td colwidth="10cm" > Total </td>\n
+                    <td colwidth="2.5cm" tal:content="python:  here.ERP5Accounting_FormatMonetaryValue(transaction_list[-1][\'journal_total_debit\']) "/>\n
+                    <td colwidth="2.5cm" tal:content="python:  here.ERP5Accounting_FormatMonetaryValue(transaction_list[-1][\'journal_total_credit\']) "/>\n
                 </tr>\n
             </table>\n
         </tal:block>\n

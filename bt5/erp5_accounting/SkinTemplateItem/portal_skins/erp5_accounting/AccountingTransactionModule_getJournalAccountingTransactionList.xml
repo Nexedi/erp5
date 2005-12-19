@@ -76,6 +76,7 @@ return a list of dictionnaries like that : \n
 {\n
   \'date\' : Date\n
   \'description\' : String\n
+  \'currency\' : String\n
   \'lines\' : {\n
      \'debtor\' : Bool, \n
      \'account_gap_id\' : String\n
@@ -93,7 +94,7 @@ transaction_portal_type = request[\'transaction_portal_type\']\n
 from_date = request.get(\'from_date\', None)\n
 \n
 params = {\n
-  \'sort_on\' : \'delivery.stop_date\',\n
+  \'sort_on\' : \'delivery.start_date\',\n
   \'at_date\' : at_date,\n
   \'simulation_state\': transaction_simulation_state,\n
   \'section_category\' : transaction_section_category,\n
@@ -103,17 +104,22 @@ if from_date:\n
   params[\'from_date\'] = from_date\n
 \n
 result=[]\n
+journal_total_debit = 0\n
+journal_total_credit = 0\n
 for transaction in context\\\n
         .AccountingTransactionModule_zGetAccountingTransactionList(\n
         selection_params = params, selection=None, **params):\n
     transaction = transaction.getObject()\n
     lines = []\n
-    date = transaction.getStopDate() or transaction.getStartDate()\n
-    transaction_dict={\'date\'       : str(date)[:10], #XXX dangerous for i18n\n
-                      \'description\':"%s (source reference: %s)"%(\n
-                                      transaction.getTitle() or \'\',\n
-                                      transaction.getSourceReference() or \'\'),\n
-                      \'lines\'      : lines  }\n
+    transaction_dict={\'date\'        : context.Base_FormatDate(transaction.getStartDate()),\n
+                      \'description\' : context.Base_TranslateString(\n
+                                       "${transaction_title} (Transaction Reference = ${transaction_source_reference},\\n Creation Date = ${creation_date} \\n Currency = ${currency_title})" ,\n
+                                       mapping = { "transaction_title": unicode(transaction.getTitle() or \'\', \'utf8\'),\n
+                                                   "transaction_source_reference": unicode(transaction.getSourceReference() or \'\', \'utf8\'),\n
+                                                   "creation_date" : context.Base_FormatDate(transaction.getCreationDate()),\n
+                                                   "currency_title" : transaction.getResourceTitle() or \'\'}),\n
+                      \'lines\'       : lines, }\n
+\n
     result.append(transaction_dict)\n
     transaction_lines = transaction.contentValues(\n
       filter = {\'portal_type\' : [ \'Accounting Transaction Line\',\n
@@ -150,7 +156,11 @@ for transaction in context\\\n
                               or (line.getSourceCredit() \\\n
                                     - line.getSourceDebit())\n
        })\n
-\n
+       if debtor :\n
+         journal_total_debit += line.getSourceDebit()\n
+       else:\n
+         journal_total_credit += line.getSourceCredit()\n
+       \n
        # internal mouvements, ie when we are destination and source\n
        if line.getDestinationSection() == line.getSourceSection() :\n
          debtor = (line.getDestinationDebit() > line.getDestinationCredit())\n
@@ -177,8 +187,12 @@ for transaction in context\\\n
                                 or (line.getDestinationCredit() \\\n
                                         - line.getDestinationDebit())\n
             })\n
-\n
-return result\n
+         if debtor :\n
+           journal_total_debit += line.getSourceDebit()\n
+         else:\n
+           journal_total_credit += line.getSourceCredit()\n
+         \n
+return result + [{"journal_total_debit": journal_total_debit, "journal_total_credit": journal_total_credit}]\n
 # vim: syntax=python\n
 
 
@@ -186,79 +200,91 @@ return result\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABkAAABCAAAAQwAA
-AHMyBQAAdAAAdAEAZAEAgwIAfQIAdAMAfAIAZAIAgwIAfQQAdAMAfAIAZAMAgwIAfQUAdAMAfAIA
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABoAAABKAAAAQwAA
+AHMVBgAAdAAAdAEAZAEAgwIAfQIAdAMAfAIAZAIAgwIAfQQAdAMAfAIAZAMAgwIAfQUAdAMAfAIA
 ZAQAgwIAfQYAdAMAfAIAZAUAgwIAfQcAdAAAfAIAZAYAgwIAZAcAdAgAgwIAfQkAaAAABGQIAGQJ
 AAM8BGQCAHwEAAM8BGQKAHwGAAM8BGQLAHwFAAM8BGQMAHwHAAM8fQoAfAkAbxQAAXwJAHQLAHwK
-AIMBAGQHADxuAQABZwAAfQwAeHAEdA0AdA4AdAAAdAEAZA0AgwIAZA4AfAoAZA8AdAgAfAoAjQEC
-gwEARF1EBH0PAHQAAHwPAGQQAIMCAIMAAH0PAGcAAH0QAHQAAHwPAGQRAIMCAIMAAHAQAAF0AAB8
-DwBkEgCDAgCDAAB9EQBoAAAEZBMAdAMAdBIAfBEAgwEAZAAAZBQAhQIAgwIAAzwEZBUAZBYAdAAA
-fA8AZBcAgwIAgwAAcAQAAWQYAHQAAHwPAGQZAIMCAIMAAHAEAAFkGABmAgAWAzwEZBoAfBAAAzx9
-EwB0AAB8DABkGwCDAgB8EwCDAQABdAAAfA8AZBwAgwIAZB0AaAAABGQMAGQeAGQfAGQgAGQhAGQi
-AGcFAAM8gwABfRQAdAAAfBQAZCMAgwIAZCQAhAAAgwEAAXg/A3QNAHwUAIMBAERdMQN9FQB0AAB8
-FQBkEACDAgCDAAB9FQB0AAB8FQBkJQCDAgCDAAB0AAB8FQBkJgCDAgCDAABqBAB9FgB0AAB8FQBk
-JwCDAgCDAAB9FwB8FwB0CABqCABvBwABcfEBbgEAAXQAAHwXAGQoAIMCAIMAAGQpAGQqAGYCAGoG
-AG8sAAFkKwB0AAB8FQBkLACDAgCDAAB0AAB8FQBkLQCDAgCDAABmAgAWfRgAbl4AAXQAAHwXAGQo
-AIMCAIMAAGQuAGQvAGYCAGoGAG8sAAFkKwB0AAB8FQBkLACDAgCDAAB0AAB8FQBkMACDAgCDAABm
-AgAWfRgAbhMAAXQAAHwVAGQsAIMCAIMAAH0YAHQAAHwQAGQbAIMCAGgAAARkMQB8FgADPARkMgB0
-AAB8FwBkMwCDAgCDAAADPARkNAB8GAADPARkNQB8FgBvIAABdAAAfBUAZCUAgwIAgwAAdAAAfBUA
-ZCYAgwIAgwAAGHAgAAF0AAB8FQBkJgCDAgCDAAB0AAB8FQBkJQCDAgCDAAAYAzyDAQABdAAAfBUA
-ZDYAgwIAgwAAdAAAfBUAZDcAgwIAgwAAagIAb3kBAXQAAHwVAGQ4AIMCAIMAAHQAAHwVAGQ5AIMC
-AIMAAGoEAH0WAHQAAHwVAGQ6AIMCAIMAAH0XAHwXAHQIAGoIAG8HAAFx8QFuAQABdAAAfBcAZCgA
-gwIAgwAAZDsAagIAbywAAWQrAHQAAHwVAGQ8AIMCAIMAAHQAAHwVAGQ9AIMCAIMAAGYCABZ9GABu
-XgABdAAAfBcAZCgAgwIAgwAAZC4AZC8AZgIAagYAbywAAWQrAHQAAHwVAGQ8AIMCAIMAAHQAAHwV
-AGQ+AIMCAIMAAGYCABZ9GABuEwABdAAAfBUAZDwAgwIAgwAAfRgAdAAAfBAAZBsAgwIAaAAABGQx
-AHwWAAM8BGQyAHQAAHwXAGQzAIMCAIMAAAM8BGQ0AHwYAAM8BGQ1AHwWAG8gAAF0AAB8FQBkOACD
-AgCDAAB0AAB8FQBkOQCDAgCDAAAYcCAAAXQAAHwVAGQ5AIMCAIMAAHQAAHwVAGQ4AIMCAIMAABgD
-PIMBAAFx8QEBcfEBV3HiAFd8DABTZAAAUyg/AAAATnMHAAAAUkVRVUVTVHMHAAAAYXRfZGF0ZXMc
-AAAAdHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25fc2ltdWxhdGlv
-bl9zdGF0ZXMXAAAAdHJhbnNhY3Rpb25fcG9ydGFsX3R5cGVzAwAAAGdldHMJAAAAZnJvbV9kYXRl
-cwcAAABzb3J0X29ucxIAAABkZWxpdmVyeS5zdG9wX2RhdGVzEAAAAHNpbXVsYXRpb25fc3RhdGVz
-EAAAAHNlY3Rpb25fY2F0ZWdvcnlzCwAAAHBvcnRhbF90eXBlczkAAABBY2NvdW50aW5nVHJhbnNh
-Y3Rpb25Nb2R1bGVfekdldEFjY291bnRpbmdUcmFuc2FjdGlvbkxpc3RzEAAAAHNlbGVjdGlvbl9w
-YXJhbXNzCQAAAHNlbGVjdGlvbnMJAAAAZ2V0T2JqZWN0cwsAAABnZXRTdG9wRGF0ZXMMAAAAZ2V0
-U3RhcnREYXRlcwQAAABkYXRlaQoAAABzCwAAAGRlc2NyaXB0aW9ucxkAAAAlcyAoc291cmNlIHJl
-ZmVyZW5jZTogJXMpcwgAAABnZXRUaXRsZXMAAAAAcxIAAABnZXRTb3VyY2VSZWZlcmVuY2VzBQAA
-AGxpbmVzcwYAAABhcHBlbmRzDQAAAGNvbnRlbnRWYWx1ZXNzBgAAAGZpbHRlcnMbAAAAQWNjb3Vu
-dGluZyBUcmFuc2FjdGlvbiBMaW5lcx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZXMh
-AAAAUHVyY2hhc2UgSW52b2ljZSBUcmFuc2FjdGlvbiBMaW5lcxoAAABQYXkgU2hlZXQgVHJhbnNh
-Y3Rpb24gTGluZXMYAAAAQmFsYW5jZSBUcmFuc2FjdGlvbiBMaW5lcwQAAABzb3J0YwIAAAAEAAAA
-BgAAAEMAAABzPQAAAHQAAHQBAHQBAHwBAGQBAIMCAIMAAGQCAIMCAIMAAHQBAHQBAHwAAGQBAIMC
-AIMAAGQCAIMCAIMAAIMCAFMoAwAAAE5zCQAAAGdldE9iamVjdHMOAAAAZ2V0U291cmNlRGViaXQo
-BAAAAHMDAAAAY21wcwkAAABfZ2V0YXR0cl9zAQAAAHlzAQAAAHgoBAAAAHMBAAAAeHMBAAAAeXMD
-AAAAY21wcwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxs
-YW1iZGEuND43AAAAcwIAAAAkAXMOAAAAZ2V0U291cmNlRGViaXRzDwAAAGdldFNvdXJjZUNyZWRp
-dHMOAAAAZ2V0U291cmNlVmFsdWVzDgAAAGdldEFjY291bnRUeXBlcwoAAABhc3NldC9iYW5rcw8A
-AABhc3NldC9iYW5rL2Nhc2hzBwAAACVzICglcylzDgAAAGdldFNvdXJjZVRpdGxlcxUAAABnZXRT
-b3VyY2VQYXltZW50VGl0bGVzEAAAAGFzc2V0L3JlY2VpdmFibGVzEQAAAGxpYWJpbGl0eS9wYXlh
-YmxlcxoAAABnZXREZXN0aW5hdGlvblNlY3Rpb25UaXRsZXMGAAAAZGVidG9ycw4AAABhY2NvdW50
-X2dhcF9pZHMIAAAAZ2V0R2FwSWRzDAAAAGFjY291bnRfbmFtZXMGAAAAYW1vdW50cxUAAABnZXRE
-ZXN0aW5hdGlvblNlY3Rpb25zEAAAAGdldFNvdXJjZVNlY3Rpb25zEwAAAGdldERlc3RpbmF0aW9u
-RGViaXRzFAAAAGdldERlc3RpbmF0aW9uQ3JlZGl0cxMAAABnZXREZXN0aW5hdGlvblZhbHVlcwoA
-AABhc3NldC9jYXNocxMAAABnZXREZXN0aW5hdGlvblRpdGxlcxoAAABnZXREZXN0aW5hdGlvblBh
-eW1lbnRUaXRsZXMVAAAAZ2V0U291cmNlU2VjdGlvblRpdGxlKBkAAABzCQAAAF9nZXRhdHRyX3MH
-AAAAY29udGV4dHMHAAAAcmVxdWVzdHMJAAAAX2dldGl0ZW1fcwcAAABhdF9kYXRlcxwAAAB0cmFu
-c2FjdGlvbl9zZWN0aW9uX2NhdGVnb3J5cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRl
-cxcAAAB0cmFuc2FjdGlvbl9wb3J0YWxfdHlwZXMEAAAATm9uZXMJAAAAZnJvbV9kYXRlcwYAAABw
-YXJhbXNzBwAAAF93cml0ZV9zBgAAAHJlc3VsdHMJAAAAX2dldGl0ZXJfcwcAAABfYXBwbHlfcwsA
-AAB0cmFuc2FjdGlvbnMFAAAAbGluZXNzBAAAAGRhdGVzAwAAAHN0cnMQAAAAdHJhbnNhY3Rpb25f
-ZGljdHMRAAAAdHJhbnNhY3Rpb25fbGluZXNzBAAAAGxpbmVzBgAAAGRlYnRvcnMHAAAAYWNjb3Vu
-dHMTAAAAYWNjb3VudF9kZXNjcmlwdGlvbigZAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
-BwAAAHJlcXVlc3RzCQAAAF9nZXRpdGVtX3MHAAAAYXRfZGF0ZXMcAAAAdHJhbnNhY3Rpb25fc2Vj
-dGlvbl9jYXRlZ29yeXMcAAAAdHJhbnNhY3Rpb25fc2ltdWxhdGlvbl9zdGF0ZXMXAAAAdHJhbnNh
-Y3Rpb25fcG9ydGFsX3R5cGVzBAAAAE5vbmVzCQAAAGZyb21fZGF0ZXMGAAAAcGFyYW1zcwcAAABf
-d3JpdGVfcwYAAAByZXN1bHRzCQAAAF9nZXRpdGVyX3MHAAAAX2FwcGx5X3MLAAAAdHJhbnNhY3Rp
-b25zBQAAAGxpbmVzcwQAAABkYXRlcwMAAABzdHJzEAAAAHRyYW5zYWN0aW9uX2RpY3RzEQAAAHRy
-YW5zYWN0aW9uX2xpbmVzcwQAAABsaW5lcwYAAABkZWJ0b3JzBwAAAGFjY291bnRzEwAAAGFjY291
-bnRfZGVzY3JpcHRpb24oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzPwAAAEFjY291bnRp
-bmdUcmFuc2FjdGlvbk1vZHVsZV9nZXRKb3VybmFsQWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdAEA
-AABzkgAAAAARDwEPAQ8BDwEPARgCEAIJAQkBCQEIAgcBFAIGARgCGQESAQYBJQEoAQMBFgEdAQsB
-EAEPASQGEwINAAYBEgEkARIBFAEfAQYBDwEXAR8DBgEPARcCFQEQAQwBEgEJARkBFAEPARMEJQEk
-ARIBFAEZAQYBDwEXAR8DBgEPARcCFQEQAQwBEgEJARkBFAEPAR8DKAEAAABzPwAAAEFjY291bnRp
-bmdUcmFuc2FjdGlvbk1vZHVsZV9nZXRKb3VybmFsQWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdCgB
-AAAAcz8AAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfZ2V0Sm91cm5hbEFjY291bnRpbmdU
-cmFuc2FjdGlvbkxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
-AQAAAHMAAAAA</string> </value>
+AIMBAGQHADxuAQABZwAAfQwAZA0AfQ0AZA0AfQ4AeC4FdA8AdBAAdAAAdAEAZA4AgwIAZA8AfAoA
+ZBAAdAgAfAoAjQECgwEARF0CBX0RAHQAAHwRAGQRAIMCAIMAAH0RAGcAAH0SAGgAAARkEgB0AAB0
+AQBkEwCDAgB0AAB8EQBkFACDAgCDAACDAQADPARkFQB0AAB0AQBkFgCDAgBkFwBkGABoAAAEZBkA
+dBMAdAAAfBEAZBoAgwIAgwAAcAQAAWQbAGQcAIMCAAM8BGQdAHQTAHQAAHwRAGQeAIMCAIMAAHAE
+AAFkGwBkHACDAgADPARkHwB0AAB0AQBkEwCDAgB0AAB8EQBkIACDAgCDAACDAQADPARkIQB0AAB8
+EQBkIgCDAgCDAABwBAABZBsAAzyDAQEDPARkIwB8EgADPH0UAHQAAHwMAGQkAIMCAHwUAIMBAAF0
+AAB8EQBkJQCDAgBkJgBoAAAEZAwAZCcAZCgAZCkAZCoAZCsAZwUAAzyDAAF9FQB0AAB8FQBkLACD
+AgBkLQCEAACDAQABeK0DdA8AfBUAgwEARF2fA30WAHQAAHwWAGQRAIMCAIMAAH0WAHQAAHwWAGQu
+AIMCAIMAAHQAAHwWAGQvAIMCAIMAAGoEAH0XAHQAAHwWAGQwAIMCAIMAAH0YAHwYAHQIAGoIAG8H
+AAFxTQJuAQABdAAAfBgAZDEAgwIAgwAAZDIAZDMAZgIAagYAbywAAWQ0AHQAAHwWAGQ1AIMCAIMA
+AHQAAHwWAGQ2AIMCAIMAAGYCABZ9GQBuXgABdAAAfBgAZDEAgwIAgwAAZDcAZDgAZgIAagYAbywA
+AWQ0AHQAAHwWAGQ1AIMCAIMAAHQAAHwWAGQ5AIMCAIMAAGYCABZ9GQBuEwABdAAAfBYAZDUAgwIA
+gwAAfRkAdAAAfBIAZCQAgwIAaAAABGQ6AHwXAAM8BGQ7AHQAAHwYAGQ8AIMCAIMAAAM8BGQ9AHwZ
+AAM8BGQ+AHwXAG8gAAF0AAB8FgBkLgCDAgCDAAB0AAB8FgBkLwCDAgCDAAAYcCAAAXQAAHwWAGQv
+AIMCAIMAAHQAAHwWAGQuAIMCAIMAABgDPIMBAAF8FwBvGgABfA0AdAAAfBYAZC4AgwIAgwAAN30N
+AG4XAAF8DgB0AAB8FgBkLwCDAgCDAAA3fQ4AdAAAfBYAZD8AgwIAgwAAdAAAfBYAZEAAgwIAgwAA
+agIAb7ABAXQAAHwWAGRBAIMCAIMAAHQAAHwWAGRCAIMCAIMAAGoEAH0XAHQAAHwWAGRDAIMCAIMA
+AH0YAHwYAHQIAGoIAG8HAAFxTQJuAQABdAAAfBgAZDEAgwIAgwAAZEQAagIAbywAAWQ0AHQAAHwW
+AGRFAIMCAIMAAHQAAHwWAGRGAIMCAIMAAGYCABZ9GQBuXgABdAAAfBgAZDEAgwIAgwAAZDcAZDgA
+ZgIAagYAbywAAWQ0AHQAAHwWAGRFAIMCAIMAAHQAAHwWAGRHAIMCAIMAAGYCABZ9GQBuEwABdAAA
+fBYAZEUAgwIAgwAAfRkAdAAAfBIAZCQAgwIAaAAABGQ6AHwXAAM8BGQ7AHQAAHwYAGQ8AIMCAIMA
+AAM8BGQ9AHwZAAM8BGQ+AHwXAG8gAAF0AAB8FgBkQQCDAgCDAAB0AAB8FgBkQgCDAgCDAAAYcCAA
+AXQAAHwWAGRCAIMCAIMAAHQAAHwWAGRBAIMCAIMAABgDPIMBAAF8FwBvGgABfA0AdAAAfBYAZC4A
+gwIAgwAAN30NAHHsBQF8DgB0AAB8FgBkLwCDAgCDAAA3fQ4AcU0CAXFNAldx7gBXfAwAaAAABGRI
+AHwNAAM8BGRJAHwOAAM8ZwEAF1NkAABTKEoAAABOcwcAAABSRVFVRVNUcwcAAABhdF9kYXRlcxwA
+AAB0cmFuc2FjdGlvbl9zZWN0aW9uX2NhdGVnb3J5cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0aW9u
+X3N0YXRlcxcAAAB0cmFuc2FjdGlvbl9wb3J0YWxfdHlwZXMDAAAAZ2V0cwkAAABmcm9tX2RhdGVz
+BwAAAHNvcnRfb25zEwAAAGRlbGl2ZXJ5LnN0YXJ0X2RhdGVzEAAAAHNpbXVsYXRpb25fc3RhdGVz
+EAAAAHNlY3Rpb25fY2F0ZWdvcnlzCwAAAHBvcnRhbF90eXBlaQAAAABzOQAAAEFjY291bnRpbmdU
+cmFuc2FjdGlvbk1vZHVsZV96R2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdHMQAAAAc2VsZWN0
+aW9uX3BhcmFtc3MJAAAAc2VsZWN0aW9ucwkAAABnZXRPYmplY3RzBAAAAGRhdGVzDwAAAEJhc2Vf
+Rm9ybWF0RGF0ZXMMAAAAZ2V0U3RhcnREYXRlcwsAAABkZXNjcmlwdGlvbnMUAAAAQmFzZV9UcmFu
+c2xhdGVTdHJpbmdzkAAAACR7dHJhbnNhY3Rpb25fdGl0bGV9IChUcmFuc2FjdGlvbiBSZWZlcmVu
+Y2UgPSAke3RyYW5zYWN0aW9uX3NvdXJjZV9yZWZlcmVuY2V9LAogQ3JlYXRpb24gRGF0ZSA9ICR7
+Y3JlYXRpb25fZGF0ZX0gCiBDdXJyZW5jeSA9ICR7Y3VycmVuY3lfdGl0bGV9KXMHAAAAbWFwcGlu
+Z3MRAAAAdHJhbnNhY3Rpb25fdGl0bGVzCAAAAGdldFRpdGxlcwAAAABzBAAAAHV0ZjhzHAAAAHRy
+YW5zYWN0aW9uX3NvdXJjZV9yZWZlcmVuY2VzEgAAAGdldFNvdXJjZVJlZmVyZW5jZXMNAAAAY3Jl
+YXRpb25fZGF0ZXMPAAAAZ2V0Q3JlYXRpb25EYXRlcw4AAABjdXJyZW5jeV90aXRsZXMQAAAAZ2V0
+UmVzb3VyY2VUaXRsZXMFAAAAbGluZXNzBgAAAGFwcGVuZHMNAAAAY29udGVudFZhbHVlc3MGAAAA
+ZmlsdGVycxsAAABBY2NvdW50aW5nIFRyYW5zYWN0aW9uIExpbmVzHQAAAFNhbGUgSW52b2ljZSBU
+cmFuc2FjdGlvbiBMaW5lcyEAAABQdXJjaGFzZSBJbnZvaWNlIFRyYW5zYWN0aW9uIExpbmVzGgAA
+AFBheSBTaGVldCBUcmFuc2FjdGlvbiBMaW5lcxgAAABCYWxhbmNlIFRyYW5zYWN0aW9uIExpbmVz
+BAAAAHNvcnRjAgAAAAQAAAAGAAAAQwAAAHM9AAAAdAAAdAEAdAEAfAEAZAEAgwIAgwAAZAIAgwIA
+gwAAdAEAdAEAfAAAZAEAgwIAgwAAZAIAgwIAgwAAgwIAUygDAAAATnMJAAAAZ2V0T2JqZWN0cw4A
+AABnZXRTb3VyY2VEZWJpdCgEAAAAcwMAAABjbXBzCQAAAF9nZXRhdHRyX3MBAAAAeXMBAAAAeCgE
+AAAAcwEAAAB4cwEAAAB5cwMAAABjbXBzCQAAAF9nZXRhdHRyXygAAAAAKAAAAABzDwAAAFNjcmlw
+dCAoUHl0aG9uKXMKAAAAPGxhbWJkYS45Pj0AAABzAgAAACQBcw4AAABnZXRTb3VyY2VEZWJpdHMP
+AAAAZ2V0U291cmNlQ3JlZGl0cw4AAABnZXRTb3VyY2VWYWx1ZXMOAAAAZ2V0QWNjb3VudFR5cGVz
+CgAAAGFzc2V0L2JhbmtzDwAAAGFzc2V0L2JhbmsvY2FzaHMHAAAAJXMgKCVzKXMOAAAAZ2V0U291
+cmNlVGl0bGVzFQAAAGdldFNvdXJjZVBheW1lbnRUaXRsZXMQAAAAYXNzZXQvcmVjZWl2YWJsZXMR
+AAAAbGlhYmlsaXR5L3BheWFibGVzGgAAAGdldERlc3RpbmF0aW9uU2VjdGlvblRpdGxlcwYAAABk
+ZWJ0b3JzDgAAAGFjY291bnRfZ2FwX2lkcwgAAABnZXRHYXBJZHMMAAAAYWNjb3VudF9uYW1lcwYA
+AABhbW91bnRzFQAAAGdldERlc3RpbmF0aW9uU2VjdGlvbnMQAAAAZ2V0U291cmNlU2VjdGlvbnMT
+AAAAZ2V0RGVzdGluYXRpb25EZWJpdHMUAAAAZ2V0RGVzdGluYXRpb25DcmVkaXRzEwAAAGdldERl
+c3RpbmF0aW9uVmFsdWVzCgAAAGFzc2V0L2Nhc2hzEwAAAGdldERlc3RpbmF0aW9uVGl0bGVzGgAA
+AGdldERlc3RpbmF0aW9uUGF5bWVudFRpdGxlcxUAAABnZXRTb3VyY2VTZWN0aW9uVGl0bGVzEwAA
+AGpvdXJuYWxfdG90YWxfZGViaXRzFAAAAGpvdXJuYWxfdG90YWxfY3JlZGl0KBoAAABzCQAAAF9n
+ZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMJAAAAX2dldGl0ZW1fcwcAAABhdF9kYXRl
+cxwAAAB0cmFuc2FjdGlvbl9zZWN0aW9uX2NhdGVnb3J5cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0
+aW9uX3N0YXRlcxcAAAB0cmFuc2FjdGlvbl9wb3J0YWxfdHlwZXMEAAAATm9uZXMJAAAAZnJvbV9k
+YXRlcwYAAABwYXJhbXNzBwAAAF93cml0ZV9zBgAAAHJlc3VsdHMTAAAAam91cm5hbF90b3RhbF9k
+ZWJpdHMUAAAAam91cm5hbF90b3RhbF9jcmVkaXRzCQAAAF9nZXRpdGVyX3MHAAAAX2FwcGx5X3ML
+AAAAdHJhbnNhY3Rpb25zBQAAAGxpbmVzcwcAAAB1bmljb2RlcxAAAAB0cmFuc2FjdGlvbl9kaWN0
+cxEAAAB0cmFuc2FjdGlvbl9saW5lc3MEAAAAbGluZXMGAAAAZGVidG9ycwcAAABhY2NvdW50cxMA
+AABhY2NvdW50X2Rlc2NyaXB0aW9uKBoAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAA
+cmVxdWVzdHMJAAAAX2dldGl0ZW1fcwcAAABhdF9kYXRlcxwAAAB0cmFuc2FjdGlvbl9zZWN0aW9u
+X2NhdGVnb3J5cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRlcxcAAAB0cmFuc2FjdGlv
+bl9wb3J0YWxfdHlwZXMEAAAATm9uZXMJAAAAZnJvbV9kYXRlcwYAAABwYXJhbXNzBwAAAF93cml0
+ZV9zBgAAAHJlc3VsdHMTAAAAam91cm5hbF90b3RhbF9kZWJpdHMUAAAAam91cm5hbF90b3RhbF9j
+cmVkaXRzCQAAAF9nZXRpdGVyX3MHAAAAX2FwcGx5X3MLAAAAdHJhbnNhY3Rpb25zBQAAAGxpbmVz
+cwcAAAB1bmljb2RlcxAAAAB0cmFuc2FjdGlvbl9kaWN0cxEAAAB0cmFuc2FjdGlvbl9saW5lc3ME
+AAAAbGluZXMGAAAAZGVidG9ycwcAAABhY2NvdW50cxMAAABhY2NvdW50X2Rlc2NyaXB0aW9uKAAA
+AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcz8AAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1
+bGVfZ2V0Sm91cm5hbEFjY291bnRpbmdUcmFuc2FjdGlvbkxpc3QBAAAAc6QAAAAAEg8BDwEPAQ8B
+DwEYAhACCQEJAQkBCAIHARQCBgEGAQYBGAIZARIBBgEuAQ8CLAEoASQBHgELAhABDwEkBhMCDQAG
+ARIBJAESARQBHwEGAQ8BFwEfAwYBDwEXAhUBEAEMARIBCQEZARQBDwETAgcBGgIWAyUBJAESARQB
+GQEGAQ8BFwEfAwYBDwEXAhUBEAEMARIBCQEZARQBDwETAgcBGgIiAigBAAAAcz8AAABBY2NvdW50
+aW5nVHJhbnNhY3Rpb25Nb2R1bGVfZ2V0Sm91cm5hbEFjY291bnRpbmdUcmFuc2FjdGlvbkxpc3Qo
+AQAAAHM/AAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX2dldEpvdXJuYWxBY2NvdW50aW5n
+VHJhbnNhY3Rpb25MaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxl
+PgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -268,7 +294,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransactionModule_getJournalAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_getJournalAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -311,12 +337,13 @@ AQAAAHMAAAAA</string> </value>
                             <string>params</string>
                             <string>_write_</string>
                             <string>result</string>
+                            <string>journal_total_debit</string>
+                            <string>journal_total_credit</string>
                             <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>transaction</string>
                             <string>lines</string>
-                            <string>date</string>
-                            <string>str</string>
+                            <string>unicode</string>
                             <string>transaction_dict</string>
                             <string>transaction_lines</string>
                             <string>line</string>
