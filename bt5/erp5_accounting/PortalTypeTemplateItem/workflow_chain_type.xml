@@ -1,14 +1,18 @@
 <workflow_chain>
  <chain>
   <type>Account</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, account_workflow</workflow>
  </chain>
  <chain>
   <type>Account Module</type>
   <workflow></workflow>
  </chain>
  <chain>
-  <type>Accounting Period Delimiter</type>
+  <type>Accounting Period</type>
+  <workflow>accounting_period_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Accounting Period Module</type>
   <workflow>(Default)</workflow>
  </chain>
  <chain>
@@ -34,6 +38,10 @@
  <chain>
   <type>Balance Transaction Line</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Cash Register</type>
+  <workflow>(Default)</workflow>
  </chain>
  <chain>
   <type>Invoice Cell</type>
