@@ -350,20 +350,20 @@
                           <string>Count</string>
                         </tuple>
                         <tuple>
-                          <string>debit</string>
-                          <string>Debit</string>
+                          <string>opening_balance</string>
+                          <string>Openning Balance</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
-                          <string>Credit</string>
+                          <string>debit_movement</string>
+                          <string>Debit Movements</string>
                         </tuple>
                         <tuple>
-                          <string>debit_balance</string>
-                          <string>Debit Balance</string>
+                          <string>credit_movement</string>
+                          <string>Credit Movements</string>
                         </tuple>
                         <tuple>
-                          <string>credit_balance</string>
-                          <string>Credit Balance</string>
+                          <string>closing_balance</string>
+                          <string>Closing Balance</string>
                         </tuple>
                       </list>
                     </value>
@@ -509,11 +509,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_movement</string>
                           <string>AccountModule_statTotalSourceDebit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_movement</string>
                           <string>AccountModule_statTotalSourceCredit</string>
                         </tuple>
                       </list>
