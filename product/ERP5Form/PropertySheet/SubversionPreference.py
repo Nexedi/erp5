@@ -35,9 +35,11 @@ class SubversionPreference:
     { 'id'          : 'preferred_subversion_working_directory',
       'description' : 'The working directory for Subversion',
       'type'        : 'string',
+      'preference'  : 1,
       'mode'        : 'w' },
     { 'id'          : 'preferred_subversion_user',
       'description' : 'The user name for Subversion',
       'type'        : 'string',
+      'preference'  : 1,
       'mode'        : 'w' },
   )

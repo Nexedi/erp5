@@ -36,13 +36,13 @@ class Preference :
       'description' : 'List of modules visible from the main page '\
                       '(useful to filter uninteresting modules)',
       'type'        : 'lines',
+      'preference'  : 1,
       'mode'        : 'w' },
     { 'id'          : 'preferred_section_category',
       'description' : 'The section category for documents; '\
                          'usually something like group/nexedi.',
       'type'        : 'string',
+      'preference'  : 1,
       'mode'        : 'w'},
-  )
-  _categories = (
   )
 
