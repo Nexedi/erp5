@@ -27,6 +27,7 @@
                 <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
               </tuple>
             </value>
         </item>
@@ -113,7 +114,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -124,7 +125,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
             </value>
         </item>
         <item>
@@ -178,7 +179,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -189,7 +190,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
             </value>
         </item>
         <item>
@@ -243,7 +244,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -254,7 +255,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
             </value>
         </item>
         <item>
@@ -308,7 +309,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -319,7 +320,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -384,7 +385,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
             </value>
         </item>
         <item>
@@ -438,8 +439,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>
@@ -447,8 +448,56 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransaction_view</string> </value>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_action</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>create_reversal</string> </value>
+        </item>
+        <item>
+            <key> <string>optional</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Create Reversal Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -467,7 +516,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransaction_viewDetails</string> </value>
+            <value> <string>string:${object_url}/AccountingTransaction_view</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -486,7 +535,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_printPdf</string> </value>
+            <value> <string>string:${object_url}/AccountingTransaction_viewDetails</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -505,7 +554,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewHistory</string> </value>
+            <value> <string>string:${object_url}/Base_printPdf</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -524,7 +573,64 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/Base_viewHistory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="12" aka="AAAAAAAAAAw=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
             <value> <string>string:${object_url}/Base_viewMetadata</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="13" aka="AAAAAAAAAA0=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/AccountingTransaction_createReversalTransaction</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="14" aka="AAAAAAAAAA4=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python:object.getSimulationState() in (\'delivered\', )</string> </value>
         </item>
       </dictionary>
     </pickle>
