@@ -342,15 +342,15 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>getStopDate</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>Type</string>
+                          <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>getReference</string>
+                          <string>reference</string>
                           <string>Invoice Number</string>
                         </tuple>
                         <tuple>
@@ -358,7 +358,7 @@
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
-                          <string>simulation_state</string>
+                          <string>translated_simulation_state</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
