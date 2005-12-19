@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>request = context.REQUEST\n
+\n
+currency = context.getResourceId()\n
+currency = context.getResourceId()\n
+\n
+if currency is None :\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , \'view\'\n
+                              , \'portal_status_message=Please+select+a+currency.\'\n
+                              )\n
+  return request.RESPONSE.redirect( redirect_url )\n
+\n
+cashStatus = None\n
+emissionLetter = None\n
+variation = None\n
+if currency != context.Baobab_getPortalReferenceCurrencyID():\n
+  cashStatus = [\'not_defined\']\n
+  emissionLetter = [\'not_defined\']\n
+  variation = \'not_defined\'\n
+\n
+CashMovement_cashDetail_parameter = {\'line_portalType\'        : \'Cash Transfer Line\'             # The portal type that the fastinput will create\n
+, \'operation_currency\'     : currency                      # The operation currenty\n
+, \'cashStatus_list\'        : cashStatus                      # List of possible cashStatus or None if all\n
+, \'emissionLetter_list\'    : emissionLetter                       # List of possible emissionLetter or None if all\n
+, \'variation_list\'         : [\'2003\']                  # List of possible variation or None if all\n
+, \'currencyCash_portalType\': None                       # \'Coin\' or \'Banknote\' or None if both\n
+, \'updatePossible\'         : True                       # If true, the fastinput will not allow change\n
+, \'columnBase\'             : \'variation\'                # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
+#, \'columnBase\'            : \'emissionLetter\'           # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
+#, \'columnBase\'            : \'cashStatus\'               # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
+}\n
+\n
+return context.CashDetail_fastInputUpdate( listbox = None\n
+                                   , cashDetail_parameter = CashMovement_cashDetail_parameter\n
+                                   , destination = context.getObject().absolute_url()\n
+                                   )\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAsAAAASAAAAQwAA
+AHNVAQAAdAAAdAEAZAEAgwIAfQIAdAAAdAEAZAIAgwIAgwAAfQMAdAAAdAEAZAIAgwIAgwAAfQMA
+fAMAdAQAaggAbz8AAWQDAHQAAHQBAGQEAIMCAIMAAGQFAGQGAGYDABZ9BQB0AAB0AAB8AgBkBwCD
+AgBkCACDAgB8BQCDAQBTbgEAAXQEAH0GAHQEAH0HAHQEAH0IAHwDAHQAAHQBAGQJAIMCAIMAAGoD
+AG8cAAFkCgBnAQB9BgBkCgBnAQB9BwBkCgB9CABuAQABaAAABGQLAGQMAAM8BGQNAHwDAAM8BGQO
+AHwGAAM8BGQPAHwHAAM8BGQQAGQRAGcBAAM8BGQSAHQEAAM8BGQTAHQJAAM8BGQUAGQVAAM8fQoA
+dAAAdAEAZBYAgwIAZBcAdAQAZBgAfAoAZBkAdAAAdAAAdAEAZBoAgwIAgwAAZAQAgwIAgwAAgwAD
+U2QAAFMoGwAAAE5zBwAAAFJFUVVFU1RzDQAAAGdldFJlc291cmNlSWRzCAAAACVzLyVzPyVzcwwA
+AABhYnNvbHV0ZV91cmxzBAAAAHZpZXdzLwAAAHBvcnRhbF9zdGF0dXNfbWVzc2FnZT1QbGVhc2Ur
+c2VsZWN0K2ErY3VycmVuY3kucwgAAABSRVNQT05TRXMIAAAAcmVkaXJlY3RzIwAAAEJhb2JhYl9n
+ZXRQb3J0YWxSZWZlcmVuY2VDdXJyZW5jeUlEcwsAAABub3RfZGVmaW5lZHMPAAAAbGluZV9wb3J0
+YWxUeXBlcxIAAABDYXNoIFRyYW5zZmVyIExpbmVzEgAAAG9wZXJhdGlvbl9jdXJyZW5jeXMPAAAA
+Y2FzaFN0YXR1c19saXN0cxMAAABlbWlzc2lvbkxldHRlcl9saXN0cw4AAAB2YXJpYXRpb25fbGlz
+dHMEAAAAMjAwM3MXAAAAY3VycmVuY3lDYXNoX3BvcnRhbFR5cGVzDgAAAHVwZGF0ZVBvc3NpYmxl
+cwoAAABjb2x1bW5CYXNlcwkAAAB2YXJpYXRpb25zGgAAAENhc2hEZXRhaWxfZmFzdElucHV0VXBk
+YXRlcwcAAABsaXN0Ym94cxQAAABjYXNoRGV0YWlsX3BhcmFtZXRlcnMLAAAAZGVzdGluYXRpb25z
+CQAAAGdldE9iamVjdCgLAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3Rz
+CAAAAGN1cnJlbmN5cwQAAABOb25lcwwAAAByZWRpcmVjdF91cmxzCgAAAGNhc2hTdGF0dXNzDgAA
+AGVtaXNzaW9uTGV0dGVycwkAAAB2YXJpYXRpb25zBAAAAFRydWVzIQAAAENhc2hNb3ZlbWVudF9j
+YXNoRGV0YWlsX3BhcmFtZXRlcigLAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJl
+cXVlc3RzCAAAAGN1cnJlbmN5cwQAAABOb25lcwwAAAByZWRpcmVjdF91cmxzCgAAAGNhc2hTdGF0
+dXNzDgAAAGVtaXNzaW9uTGV0dGVycwkAAAB2YXJpYXRpb25zBAAAAFRydWVzIQAAAENhc2hNb3Zl
+bWVudF9jYXNoRGV0YWlsX3BhcmFtZXRlcigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMr
+AAAAQ2FzaFRyYW5zZmVyX0Nhc2hUcmFuc2ZlckxpbmVfZmFzdElucHV0Q2FsbAEAAABzLAAAAA8C
+EgESAg0BHwQgAgYBBgEGARkBCQEJAQoCEAEJAQkBCQEMAQkBEQYVAQwBKAEAAABzKwAAAENhc2hU
+cmFuc2Zlcl9DYXNoVHJhbnNmZXJMaW5lX2Zhc3RJbnB1dENhbGwoAQAAAHMrAAAAQ2FzaFRyYW5z
+ZmVyX0Nhc2hUcmFuc2ZlckxpbmVfZmFzdElucHV0Q2FsbCgAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash_transfer/CashTransfer_CashTransferLine_fastInputCall</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>currency</string>
+                            <string>None</string>
+                            <string>redirect_url</string>
+                            <string>cashStatus</string>
+                            <string>emissionLetter</string>
+                            <string>variation</string>
+                            <string>True</string>
+                            <string>CashMovement_cashDetail_parameter</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashTransfer_CashTransferLine_fastInputCall</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
