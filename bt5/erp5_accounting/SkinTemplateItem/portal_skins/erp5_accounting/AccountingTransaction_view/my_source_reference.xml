@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Section Transaction Reference</string> </value>
+                    <value> <string>Transaction Reference</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

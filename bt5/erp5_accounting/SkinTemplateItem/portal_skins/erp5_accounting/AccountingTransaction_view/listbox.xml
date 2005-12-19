@@ -343,7 +343,7 @@
                         </tuple>
                         <tuple>
                           <string>getDestinationSectionTitle</string>
-                          <string>Destination</string>
+                          <string>Third Party</string>
                         </tuple>
                         <tuple>
                           <string>source_debit</string>
@@ -503,12 +503,23 @@
                 <item>
                     <key> <string>stat_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>source_debit</string>
+                          <string>AccountingTransactionLine_statSourceDebit</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_credit</string>
+                          <string>AccountingTransactionLine_statSourceCredit</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -527,6 +538,25 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>AccountingTransaction_searchInvoiceTransactionLines</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <tuple>

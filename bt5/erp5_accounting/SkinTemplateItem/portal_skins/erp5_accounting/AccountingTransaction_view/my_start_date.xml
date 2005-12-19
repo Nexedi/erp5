@@ -307,7 +307,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Operation Date</string> </value>
+                    <value> <string>Accounting Operation Date</string> </value>
                 </item>
               </dictionary>
             </value>
