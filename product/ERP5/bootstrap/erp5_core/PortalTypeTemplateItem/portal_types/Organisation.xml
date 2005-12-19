@@ -31,7 +31,6 @@
                 <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
-                <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
               </tuple>
             </value>
         </item>
@@ -139,7 +138,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -204,7 +203,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
             </value>
         </item>
         <item>
@@ -269,7 +268,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
             </value>
         </item>
         <item>
@@ -334,74 +333,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
-        </item>
-        <item>
-            <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>transactions</string> </value>
-        </item>
-        <item>
-            <key> <string>optional</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>View</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Transactions</string> </value>
-        </item>
-        <item>
-            <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5Type.patches.ActionInformation</string>
-          <string>PatchedActionInformation</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>action</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
             </value>
         </item>
         <item>
@@ -451,7 +383,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <tuple>
@@ -466,7 +398,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
             </value>
         </item>
         <item>
@@ -516,7 +448,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <tuple>
@@ -531,7 +463,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
             </value>
         </item>
         <item>
@@ -581,7 +513,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="9" aka="AAAAAAAAAAk=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <tuple>
         <tuple>
@@ -596,7 +528,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
             </value>
         </item>
         <item>
@@ -646,7 +578,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="10" aka="AAAAAAAAAAo=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <tuple>
         <tuple>
@@ -661,7 +593,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -711,7 +643,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="11" aka="AAAAAAAAAAs=">
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <tuple>
         <tuple>
@@ -726,7 +658,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -776,7 +708,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="12" aka="AAAAAAAAAAw=">
+  <record id="11" aka="AAAAAAAAAAs=">
     <pickle>
       <tuple>
         <tuple>
@@ -795,7 +727,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="13" aka="AAAAAAAAAA0=">
+  <record id="12" aka="AAAAAAAAAAw=">
     <pickle>
       <tuple>
         <tuple>
@@ -814,7 +746,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="14" aka="AAAAAAAAAA4=">
+  <record id="13" aka="AAAAAAAAAA0=">
     <pickle>
       <tuple>
         <tuple>
@@ -833,45 +765,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="15" aka="AAAAAAAAAA8=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Entity_viewAccountingTransactionList?form_id=Entity_viewAccountingTransactionList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="16" aka="AAAAAAAAABA=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:portal.restrictedTraverse(\'accounting_module\', None) is not None</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="17" aka="AAAAAAAAABE=">
+  <record id="14" aka="AAAAAAAAAA4=">
     <pickle>
       <tuple>
         <tuple>
@@ -890,7 +784,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="18" aka="AAAAAAAAABI=">
+  <record id="15" aka="AAAAAAAAAA8=">
     <pickle>
       <tuple>
         <tuple>
@@ -909,7 +803,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="19" aka="AAAAAAAAABM=">
+  <record id="16" aka="AAAAAAAAABA=">
     <pickle>
       <tuple>
         <tuple>
@@ -928,7 +822,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="20" aka="AAAAAAAAABQ=">
+  <record id="17" aka="AAAAAAAAABE=">
     <pickle>
       <tuple>
         <tuple>
@@ -947,7 +841,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="21" aka="AAAAAAAAABU=">
+  <record id="18" aka="AAAAAAAAABI=">
     <pickle>
       <tuple>
         <tuple>
@@ -966,7 +860,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="22" aka="AAAAAAAAABY=">
+  <record id="19" aka="AAAAAAAAABM=">
     <pickle>
       <tuple>
         <tuple>
