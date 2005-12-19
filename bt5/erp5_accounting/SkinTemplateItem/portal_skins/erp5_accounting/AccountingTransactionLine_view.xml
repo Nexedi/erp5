@@ -95,6 +95,7 @@
                         <string>my_source_title</string>
                         <string>my_source_payment</string>
                         <string>my_source_section_title</string>
+                        <string>hack_redirect_to_parent_on_creation</string>
                       </list>
                     </value>
                 </item>
@@ -103,7 +104,7 @@
                     <value>
                       <list>
                         <string>my_source_credit</string>
-                        <string>my_resource</string>
+                        <string>my_resource_id</string>
                       </list>
                     </value>
                 </item>
