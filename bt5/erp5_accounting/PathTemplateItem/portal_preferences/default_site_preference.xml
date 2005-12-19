@@ -69,6 +69,23 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_accounting_transaction_gap_root</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -106,11 +123,21 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             <value> <string>Preference</string> </value>
         </item>
         <item>
+            <key> <string>preferred_accounting_transaction_at_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>preferred_accounting_transaction_currency</string> </key>
             <value> <string>currency_module/EUR</string> </value>
         </item>
         <item>
             <key> <string>preferred_accounting_transaction_gap</string> </key>
+            <value> <string>gap/france/pcg</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_accounting_transaction_gap_root</string> </key>
             <value> <string>gap/france/pcg</string> </value>
         </item>
         <item>
