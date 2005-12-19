@@ -42,6 +42,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple>
@@ -61,7 +65,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Packing List</string> </value>
+            <value> <string>BAOBAB Cash Delivery</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -69,11 +73,17 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addPackingList</string> </value>
+            <value> <string>addCashDelivery</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -106,7 +116,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cash Transfer</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -115,7 +125,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -180,7 +190,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -245,7 +255,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -314,7 +324,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -379,7 +389,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -421,7 +431,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage portal</string>
               </tuple>
             </value>
         </item>

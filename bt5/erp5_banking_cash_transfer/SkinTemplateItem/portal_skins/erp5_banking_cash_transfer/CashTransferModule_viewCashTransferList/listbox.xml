@@ -432,12 +432,21 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>source/site</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination/site</string>
+                          <string>Destination</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
