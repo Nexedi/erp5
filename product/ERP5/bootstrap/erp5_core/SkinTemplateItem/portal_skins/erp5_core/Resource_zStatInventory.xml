@@ -297,19 +297,19 @@ WHERE\n
   AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   <dtml-if from_date>\n
-    AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+    AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
   </dtml-if>\n
   <dtml-if at_date>\n
-    AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+    AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
   </dtml-if>\n
   <dtml-if to_date>\n
-    AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+    AND stock.date < <dtml-sqlvar to_date type="datetime">\n
   </dtml-if>\n
   <dtml-if omit_simulation>\n
     AND child.portal_type != "Simulation Movement"\n
   </dtml-if>\n
   <dtml-if omit_input>\n
-    AND stock.quantity > 0\n
+    AND stock.quantity < 0\n
     AND (movement.source_uid <> movement.destination_uid \n
      OR  stock.section_uid <> stock.mirror_section_uid\n
      OR  movement.destination_uid IS NULL\n
@@ -317,7 +317,7 @@ WHERE\n
     )\n
   </dtml-if>\n
   <dtml-if omit_output>\n
-    AND stock.quantity < 0\n
+    AND stock.quantity > 0\n
     AND (movement.source_uid <> movement.destination_uid \n
      OR  stock.section_uid <> stock.mirror_section_uid\n
      OR  movement.destination_uid IS NULL\n
@@ -442,19 +442,19 @@ WHERE\n
   AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   <dtml-if from_date>\n
-    AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+    AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
   </dtml-if>\n
   <dtml-if at_date>\n
-    AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+    AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
   </dtml-if>\n
   <dtml-if to_date>\n
-    AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+    AND stock.date < <dtml-sqlvar to_date type="datetime">\n
   </dtml-if>\n
   <dtml-if omit_simulation>\n
     AND child.portal_type != "Simulation Movement"\n
   </dtml-if>\n
   <dtml-if omit_input>\n
-    AND stock.quantity > 0\n
+    AND stock.quantity < 0\n
     AND (movement.source_uid <> movement.destination_uid \n
      OR  stock.section_uid <> stock.mirror_section_uid\n
      OR  movement.destination_uid IS NULL\n
@@ -462,7 +462,7 @@ WHERE\n
     )\n
   </dtml-if>\n
   <dtml-if omit_output>\n
-    AND stock.quantity < 0\n
+    AND stock.quantity > 0\n
     AND (movement.source_uid <> movement.destination_uid \n
      OR  stock.section_uid <> stock.mirror_section_uid\n
      OR  movement.destination_uid IS NULL\n
