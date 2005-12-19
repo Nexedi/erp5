@@ -68,7 +68,6 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Builds the delivery.\n
-\n
 """\n
 \n
 delivery = sci[\'object\']\n
@@ -84,56 +83,59 @@ if builder_by_ptype.has_key(delivery_portal_type) : \n
   builder = getattr(portal_deliveries, builder_by_ptype[delivery_portal_type], None)\n
   if builder is None :\n
     context.log(\'accounting_workflow/scripts/Delivery_build\', \n
-                \'unable to build : no builder in %s\' %builder_by_ptype[delivery_portal_type])\n
+                \'unable to build : no builder in %s\' % builder_by_ptype[delivery_portal_type])\n
     return\n
-\n
-  # build accounting line\n
+  \n
+  # FIXME after_method_id is not enough here. \n
+  \n
+  # build accounting lines\n
   builder.activate(\n
-      after_method_id=(\'expand\',\'edit\',\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
+      after_method_id=(\'expand\', \'updateAppliedRule\', \'edit\',\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
       .build()\n
 \n
   # build related payment transactions\n
   portal_deliveries.payment_transaction_builder.activate(\n
-      after_method_id=(\'expand\',\'edit\',\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
+      after_method_id=(\'expand\', \'edit\', \'updateAppliedRule\', \'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
       .build()\n
+\n
+  # set the object in building state.\n
+  delivery.startBuilding()\n
+  delivery.activate( after_path_and_method_id = (builder.getPath(), [\'build\']) ).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAsAAAAPAAAAQwAA
-AHMqAQAAdAAAfAAAZAEAgwIAfQIAdAMAfAIAZAIAgwIAgwAAfQQAdAMAdAMAfAAAZAMAgwIAgwAA
-ZAQAgwIAfQUAaAAABGQFAGQGAAM8BGQHAGQIAAM8fQYAdAMAfAYAZAkAgwIAfAQAgwEAb7wAAXQH
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAsAAAAQAAAAQwAA
+AHN3AQAAdAAAfAAAZAEAgwIAfQIAdAMAfAIAZAIAgwIAgwAAfQQAdAMAdAMAfAAAZAMAgwIAgwAA
+ZAQAgwIAfQUAaAAABGQFAGQGAAM8BGQHAGQIAAM8fQYAdAMAfAYAZAkAgwIAfAQAgwEAbwkBAXQH
 AHwFAHQAAHwGAHwEAIMCAHQIAIMDAH0JAHwJAHQIAGoIAG8rAAF0AwB0CgBkCgCDAgBkCwBkDAB0
-AAB8BgB8BACDAgAWgwIAAWQAAFNuAQABdAMAdAMAfAkAZA0AgwIAZA4AZA8AZBAAZBEAZBIAZgQA
-gwABZBMAgwIAgwAAAXQDAHQDAHQDAHwFAGQUAIMCAGQNAIMCAGQOAGQPAGQQAGQRAGQSAGYEAIMA
-AWQTAIMCAIMAAAFuAQABZAAAUygVAAAATnMGAAAAb2JqZWN0cw0AAABnZXRQb3J0YWxUeXBlcwkA
-AABnZXRQb3J0YWxzEQAAAHBvcnRhbF9kZWxpdmVyaWVzcxgAAABTYWxlIEludm9pY2UgVHJhbnNh
-Y3Rpb25zIAAAAHNhbGVfaW52b2ljZV90cmFuc2FjdGlvbl9idWlsZGVycxUAAABQYXkgU2hlZXQg
-VHJhbnNhY3Rpb25zHQAAAHBheV9zaGVldF90cmFuc2FjdGlvbl9idWlsZGVycwcAAABoYXNfa2V5
-cwMAAABsb2dzKgAAAGFjY291bnRpbmdfd29ya2Zsb3cvc2NyaXB0cy9EZWxpdmVyeV9idWlsZHMi
-AAAAdW5hYmxlIHRvIGJ1aWxkIDogbm8gYnVpbGRlciBpbiAlc3MIAAAAYWN0aXZhdGVzDwAAAGFm
-dGVyX21ldGhvZF9pZHMGAAAAZXhwYW5kcwQAAABlZGl0cx8AAAByZWN1cnNpdmVJbW1lZGlhdGVS
-ZWluZGV4T2JqZWN0cxYAAABpbW1lZGlhdGVSZWluZGV4T2JqZWN0cwUAAABidWlsZHMbAAAAcGF5
-bWVudF90cmFuc2FjdGlvbl9idWlsZGVyKAsAAABzCQAAAF9nZXRpdGVtX3MDAAAAc2NpcwgAAABk
-ZWxpdmVyeXMJAAAAX2dldGF0dHJfcxQAAABkZWxpdmVyeV9wb3J0YWxfdHlwZXMRAAAAcG9ydGFs
-X2RlbGl2ZXJpZXNzEAAAAGJ1aWxkZXJfYnlfcHR5cGVzBwAAAGdldGF0dHJzBAAAAE5vbmVzBwAA
-AGJ1aWxkZXJzBwAAAGNvbnRleHQoCwAAAHMDAAAAc2NpcwkAAABfZ2V0aXRlbV9zCAAAAGRlbGl2
-ZXJ5cwkAAABfZ2V0YXR0cl9zFAAAAGRlbGl2ZXJ5X3BvcnRhbF90eXBlcxEAAABwb3J0YWxfZGVs
-aXZlcmllc3MQAAAAYnVpbGRlcl9ieV9wdHlwZXMHAAAAZ2V0YXR0cnMEAAAATm9uZXMHAAAAYnVp
-bGRlcnMHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMOAAAARGVsaXZl
-cnlfYnVpbGQBAAAAcxwAAAAABQ8BEgEbAhsFEwEbARABEgEOAQ4DDAElBBIBKAEAAABzDgAAAERl
-bGl2ZXJ5X2J1aWxkKAEAAABzDgAAAERlbGl2ZXJ5X2J1aWxkKAAAAAAoAAAAAHMPAAAAU2NyaXB0
-IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+AAB8BgB8BACDAgAWgwIAAWQAAFNuAQABdAMAdAMAfAkAZA0AgwIAZA4AZA8AZBAAZBEAZBIAZBMA
+ZgUAgwABZBQAgwIAgwAAAXQDAHQDAHQDAHwFAGQVAIMCAGQNAIMCAGQOAGQPAGQRAGQQAGQSAGQT
+AGYFAIMAAWQUAIMCAIMAAAF0AwB8AgBkFgCDAgCDAAABdAMAdAMAfAIAZA0AgwIAZBcAdAMAfAkA
+ZBgAgwIAgwAAZBQAZwEAZgIAgwABZBkAgwIAgwAAAW4BAAFkAABTKBoAAABOcwYAAABvYmplY3Rz
+DQAAAGdldFBvcnRhbFR5cGVzCQAAAGdldFBvcnRhbHMRAAAAcG9ydGFsX2RlbGl2ZXJpZXNzGAAA
+AFNhbGUgSW52b2ljZSBUcmFuc2FjdGlvbnMgAAAAc2FsZV9pbnZvaWNlX3RyYW5zYWN0aW9uX2J1
+aWxkZXJzFQAAAFBheSBTaGVldCBUcmFuc2FjdGlvbnMdAAAAcGF5X3NoZWV0X3RyYW5zYWN0aW9u
+X2J1aWxkZXJzBwAAAGhhc19rZXlzAwAAAGxvZ3MqAAAAYWNjb3VudGluZ193b3JrZmxvdy9zY3Jp
+cHRzL0RlbGl2ZXJ5X2J1aWxkcyIAAAB1bmFibGUgdG8gYnVpbGQgOiBubyBidWlsZGVyIGluICVz
+cwgAAABhY3RpdmF0ZXMPAAAAYWZ0ZXJfbWV0aG9kX2lkcwYAAABleHBhbmRzEQAAAHVwZGF0ZUFw
+cGxpZWRSdWxlcwQAAABlZGl0cx8AAAByZWN1cnNpdmVJbW1lZGlhdGVSZWluZGV4T2JqZWN0cxYA
+AABpbW1lZGlhdGVSZWluZGV4T2JqZWN0cwUAAABidWlsZHMbAAAAcGF5bWVudF90cmFuc2FjdGlv
+bl9idWlsZGVycw0AAABzdGFydEJ1aWxkaW5ncxgAAABhZnRlcl9wYXRoX2FuZF9tZXRob2RfaWRz
+BwAAAGdldFBhdGhzFAAAAHVwZGF0ZUNhdXNhbGl0eVN0YXRlKAsAAABzCQAAAF9nZXRpdGVtX3MD
+AAAAc2NpcwgAAABkZWxpdmVyeXMJAAAAX2dldGF0dHJfcxQAAABkZWxpdmVyeV9wb3J0YWxfdHlw
+ZXMRAAAAcG9ydGFsX2RlbGl2ZXJpZXNzEAAAAGJ1aWxkZXJfYnlfcHR5cGVzBwAAAGdldGF0dHJz
+BAAAAE5vbmVzBwAAAGJ1aWxkZXJzBwAAAGNvbnRleHQoCwAAAHMDAAAAc2NpcwkAAABfZ2V0aXRl
+bV9zCAAAAGRlbGl2ZXJ5cwkAAABfZ2V0YXR0cl9zFAAAAGRlbGl2ZXJ5X3BvcnRhbF90eXBlcxEA
+AABwb3J0YWxfZGVsaXZlcmllc3MQAAAAYnVpbGRlcl9ieV9wdHlwZXMHAAAAZ2V0YXR0cnMEAAAA
+Tm9uZXMHAAAAYnVpbGRlcnMHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
+KXMOAAAARGVsaXZlcnlfQnVpbGQBAAAAcyAAAAAABA8BEgEbAhsFEwEbARABEgEOAQ4FDAEoBBIB
+IgQTASgBAAAAcw4AAABEZWxpdmVyeV9CdWlsZCgBAAAAcw4AAABEZWxpdmVyeV9CdWlsZCgAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/Delivery_build</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/hopital/portal_workflow/accounting_workflow/scripts/Delivery_Build</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -190,7 +192,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_build</string> </value>
+            <value> <string>Delivery_Build</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
