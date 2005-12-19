@@ -139,12 +139,6 @@ AAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
             <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/validateBalanceTransaction</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

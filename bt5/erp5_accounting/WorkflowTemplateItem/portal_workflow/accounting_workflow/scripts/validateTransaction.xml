@@ -73,22 +73,30 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 error_message = \'\'\n
 \n
 # Purchase Invoice Transaction or Sale Invoice Transaction.\n
-transaction = state_change.object\n
+transaction = state_change[\'object\']\n
+skip_period_validation = state_change[\'kwargs\'].get(\'skip_period_validation\', 0)\n
 \n
 if transaction.getStopDate() in (None, \'\') : \n
   error_message = \'date is not defined\'\n
 else: \n
-  # check the date is not in a closed period\n
-  for apd in context.portal_catalog(\n
-         portal_type="Accounting Period Delimiter", \n
-         simulation_state="delivered") : \n
-    apd = apd.getObject()\n
-    if apd.getStartDate() < transaction.getStopDate() < apd.getStopDate():\n
-      error_message = \'date is in a closed period\'\n
+  if not skip_period_validation :\n
+    valid_date = 0\n
+    # check the date is in an opened period\n
+    transaction_date = DateTime( transaction.getStopDate().year(),\n
+                                                      transaction.getStopDate().month(),\n
+                                                      transaction.getStopDate().day() ) # we don\'t care about hour:minutes\n
+    for apd in context.portal_catalog(\n
+         portal_type = "Accounting Period", \n
+         simulation_state = "planned") : \n
+      apd = apd.getObject()\n
+      if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
+        valid_date = 1\n
+    if not valid_date :\n
+      error_message = "Date is not in an openned Accounting Period" \n
 \n
 # Get sections and a currency.\n
-source_section = transaction.getSourceSection(portal_type = [\'Organisation\'])\n
-destination_section = transaction.getDestinationSection(portal_type = [\'Organisation\', \'Person\'])\n
+source_section = transaction.getSourceSection()\n
+destination_section = transaction.getDestinationSection()\n
 currency = transaction.getResource()\n
 \n
 if source_section in (None, \'\'):\n
@@ -96,51 +104,54 @@ if source_section in (None, \'\'):\n
 elif transaction.getPortalType() not in (\'Balance Transaction\', \'Accounting Transaction\'):\n
   if destination_section in (None, \'\'):\n
     error_message = \'destination_section is not defined\'\n
-    if transaction.getDestinationSection() not in (None, \'\'):\n
-      error_message = \'destination_section is not an Organisation or a Person\'\n
   elif currency in (None, \'\'):\n
     error_message = \'currency is not defined\'\n
 \n
 if error_message != \'\':\n
-  raise ValidationFailed, \'Action impossible : \' + error_message\n
+  raise ValidationFailed, \'Action impossible : \'+error_message\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAA0AAAASAAAAQwAA
-AHPoAQAAZAEAawAAbAEAfQIAAWQCAH0DAHQDAHwAAGQDAIMCAH0FAHQDAHwFAGQEAIMCAIMAAHQG
-AGQCAGYCAGoGAG8KAAFkBQB9AwBujgABeIoAdAcAdAMAdAgAZAYAgwIAZAcAZAgAZAkAZAoAgwAC
-gwEARF1kAH0JAHQDAHwJAGQLAIMCAIMAAH0JAHQDAHwJAGQMAIMCAIMAAHQDAHwFAGQEAIMCAIMA
-AAQDagAAbxYAAXQDAHwJAGQEAIMCAIMAAGoAAG4CAAIBbwoAAWQNAH0DAHFwAAFxcABXdAMAfAUA
-ZA4AgwIAZAcAZA8AZwEAgwABfQoAdAMAfAUAZBAAgwIAZAcAZA8AZBEAZwIAgwABfQsAdAMAfAUA
-ZBIAgwIAgwAAfQwAfAoAdAYAZAIAZgIAagYAbwoAAWQTAH0DAG6HAAF0AwB8BQBkFACDAgCDAABk
-FQBkFgBmAgBqBwBvZwABfAsAdAYAZAIAZgIAagYAbzMAAWQXAH0DAHQDAHwFAGQQAIMCAIMAAHQG
-AGQCAGYCAGoHAG8KAAFkGAB9AwBxwgEBccYBAXwMAHQGAGQCAGYCAGoGAG8KAAFkGQB9AwBxxgEB
-bgEAAXwDAGQCAGoDAG8RAAF8AgBkGgB8AwAXggIAbgEAAWQAAFMoGwAAAE4oAQAAAHMQAAAAVmFs
-aWRhdGlvbkZhaWxlZHMAAAAAcwYAAABvYmplY3RzCwAAAGdldFN0b3BEYXRlcxMAAABkYXRlIGlz
-IG5vdCBkZWZpbmVkcw4AAABwb3J0YWxfY2F0YWxvZ3MLAAAAcG9ydGFsX3R5cGVzGwAAAEFjY291
-bnRpbmcgUGVyaW9kIERlbGltaXRlcnMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMJAAAAZGVsaXZlcmVk
-cwkAAABnZXRPYmplY3RzDAAAAGdldFN0YXJ0RGF0ZXMaAAAAZGF0ZSBpcyBpbiBhIGNsb3NlZCBw
-ZXJpb2RzEAAAAGdldFNvdXJjZVNlY3Rpb25zDAAAAE9yZ2FuaXNhdGlvbnMVAAAAZ2V0RGVzdGlu
-YXRpb25TZWN0aW9ucwYAAABQZXJzb25zCwAAAGdldFJlc291cmNlcx0AAABzb3VyY2Vfc2VjdGlv
-biBpcyBub3QgZGVmaW5lZHMNAAAAZ2V0UG9ydGFsVHlwZXMTAAAAQmFsYW5jZSBUcmFuc2FjdGlv
-bnMWAAAAQWNjb3VudGluZyBUcmFuc2FjdGlvbnMiAAAAZGVzdGluYXRpb25fc2VjdGlvbiBpcyBu
-b3QgZGVmaW5lZHM2AAAAZGVzdGluYXRpb25fc2VjdGlvbiBpcyBub3QgYW4gT3JnYW5pc2F0aW9u
-IG9yIGEgUGVyc29ucxcAAABjdXJyZW5jeSBpcyBub3QgZGVmaW5lZHMUAAAAQWN0aW9uIGltcG9z
-c2libGUgOiAoDQAAAHMeAAAAUHJvZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxp
-ZGF0aW9uRmFpbGVkcw0AAABlcnJvcl9tZXNzYWdlcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2No
-YW5nZXMLAAAAdHJhbnNhY3Rpb25zBAAAAE5vbmVzCQAAAF9nZXRpdGVyX3MHAAAAY29udGV4dHMD
-AAAAYXBkcw4AAABzb3VyY2Vfc2VjdGlvbnMTAAAAZGVzdGluYXRpb25fc2VjdGlvbnMIAAAAY3Vy
-cmVuY3koDQAAAHMMAAAAc3RhdGVfY2hhbmdlcx4AAABQcm9kdWN0cy5EQ1dvcmtmbG93LkRDV29y
-a2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzDQAAAGVycm9yX21lc3NhZ2VzCQAAAF9nZXRhdHRy
-X3MLAAAAdHJhbnNhY3Rpb25zBAAAAE5vbmVzCQAAAF9nZXRpdGVyX3MHAAAAY29udGV4dHMDAAAA
-YXBkcw4AAABzb3VyY2Vfc2VjdGlvbnMTAAAAZGVzdGluYXRpb25fc2VjdGlvbnMIAAAAY3VycmVu
-Y3koAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzEwAAAHZhbGlkYXRlVHJhbnNhY3Rpb24B
-AAAAcy4AAAANAgYDDwIfAQoDJQAGAxIBQgEOAxsBHgESAhMBCgEfARMBBgEfAQ4BEwEOAg0BKAEA
-AABzEwAAAHZhbGlkYXRlVHJhbnNhY3Rpb24oAQAAAHMTAAAAdmFsaWRhdGVUcmFuc2FjdGlvbigA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABIAAAAPAAAAQwAA
+AHM9AgAAZAEAawAAbAEAfQIAAWQCAH0DAHQDAHwAAGQDAIMCAH0FAHQGAHQDAHwAAGQEAIMCAGQF
+AIMCAGQGAGQHAIMCAH0HAHQGAHwFAGQIAIMCAIMAAHQIAGQCAGYCAGoGAG8KAAFkCQB9AwBuAAEB
+fAcADG/3AAFkBwB9CQB0CgB0BgB0BgB8BQBkCACDAgCDAABkCgCDAgCDAAB0BgB0BgB8BQBkCACD
+AgCDAABkCwCDAgCDAAB0BgB0BgB8BQBkCACDAgCDAABkDACDAgCDAACDAwB9CwB4fgB0DAB0BgB0
+DQBkDQCDAgBkDgBkDwBkEABkEQCDAAKDAQBEXVgAfQ4AdAYAfA4AZBIAgwIAgwAAfQ4AdAYAfA4A
+ZBMAgwIAgwAAfAsABANqAQBvFgABdAYAfA4AZAgAgwIAgwAAagEAbgIAAgFvCgABZBQAfQkAcfkA
+AXH5AFd8CQAMbwoAAWQVAH0DAHFrAQFuAQABdAYAfAUAZBYAgwIAgwAAfQ8AdAYAfAUAZBcAgwIA
+gwAAfRAAdAYAfAUAZBgAgwIAgwAAfREAfA8AdAgAZAIAZgIAagYAbwoAAWQZAH0DAG5eAAF0BgB8
+BQBkGgCDAgCDAABkGwBkHABmAgBqBwBvPgABfBAAdAgAZAIAZgIAagYAbwoAAWQdAH0DAHEbAgF8
+EQB0CABkAgBmAgBqBgBvCgABZB4AfQMAcRsCAW4BAAF8AwBkAgBqAwBvEQABfAIAZB8AfAMAF4IC
+AG4BAAFkAABTKCAAAABOKAEAAABzEAAAAFZhbGlkYXRpb25GYWlsZWRzAAAAAHMGAAAAb2JqZWN0
+cwYAAABrd2FyZ3NzAwAAAGdldHMWAAAAc2tpcF9wZXJpb2RfdmFsaWRhdGlvbmkAAAAAcwsAAABn
+ZXRTdG9wRGF0ZXMTAAAAZGF0ZSBpcyBub3QgZGVmaW5lZHMEAAAAeWVhcnMFAAAAbW9udGhzAwAA
+AGRheXMOAAAAcG9ydGFsX2NhdGFsb2dzCwAAAHBvcnRhbF90eXBlcxEAAABBY2NvdW50aW5nIFBl
+cmlvZHMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMHAAAAcGxhbm5lZHMJAAAAZ2V0T2JqZWN0cwwAAABn
+ZXRTdGFydERhdGVpAQAAAHMrAAAARGF0ZSBpcyBub3QgaW4gYW4gb3Blbm5lZCBBY2NvdW50aW5n
+IFBlcmlvZHMQAAAAZ2V0U291cmNlU2VjdGlvbnMVAAAAZ2V0RGVzdGluYXRpb25TZWN0aW9ucwsA
+AABnZXRSZXNvdXJjZXMdAAAAc291cmNlX3NlY3Rpb24gaXMgbm90IGRlZmluZWRzDQAAAGdldFBv
+cnRhbFR5cGVzEwAAAEJhbGFuY2UgVHJhbnNhY3Rpb25zFgAAAEFjY291bnRpbmcgVHJhbnNhY3Rp
+b25zIgAAAGRlc3RpbmF0aW9uX3NlY3Rpb24gaXMgbm90IGRlZmluZWRzFwAAAGN1cnJlbmN5IGlz
+IG5vdCBkZWZpbmVkcxQAAABBY3Rpb24gaW1wb3NzaWJsZSA6ICgSAAAAcx4AAABQcm9kdWN0cy5E
+Q1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzDQAAAGVycm9yX21lc3Nh
+Z2VzCQAAAF9nZXRpdGVtX3MMAAAAc3RhdGVfY2hhbmdlcwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dl
+dGF0dHJfcxYAAABza2lwX3BlcmlvZF92YWxpZGF0aW9ucwQAAABOb25lcwoAAAB2YWxpZF9kYXRl
+cwgAAABEYXRlVGltZXMQAAAAdHJhbnNhY3Rpb25fZGF0ZXMJAAAAX2dldGl0ZXJfcwcAAABjb250
+ZXh0cwMAAABhcGRzDgAAAHNvdXJjZV9zZWN0aW9ucxMAAABkZXN0aW5hdGlvbl9zZWN0aW9ucwgA
+AABjdXJyZW5jeSgSAAAAcwwAAABzdGF0ZV9jaGFuZ2VzHgAAAFByb2R1Y3RzLkRDV29ya2Zsb3cu
+RENXb3JrZmxvd3MQAAAAVmFsaWRhdGlvbkZhaWxlZHMNAAAAZXJyb3JfbWVzc2FnZXMJAAAAX2dl
+dGl0ZW1fcwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dldGF0dHJfcxYAAABza2lwX3BlcmlvZF92YWxp
+ZGF0aW9ucwQAAABOb25lcwoAAAB2YWxpZF9kYXRlcwgAAABEYXRlVGltZXMQAAAAdHJhbnNhY3Rp
+b25fZGF0ZXMJAAAAX2dldGl0ZXJfcwcAAABjb250ZXh0cwMAAABhcGRzDgAAAHNvdXJjZV9zZWN0
+aW9ucxMAAABkZXN0aW5hdGlvbl9zZWN0aW9ucwgAAABjdXJyZW5jeSgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMTAAAAdmFsaWRhdGVUcmFuc2FjdGlvbgEAAABzOgAAAA0CBgMPASECHwEK
+AggBBgIkARsBGwElAAYDEgE2AQ4BCAEOAxIBEgESAhMBCgEfARMBCgETAQ4CDQEoAQAAAHMTAAAA
+dmFsaWRhdGVUcmFuc2FjdGlvbigBAAAAcxMAAAB2YWxpZGF0ZVRyYW5zYWN0aW9uKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -159,7 +170,19 @@ AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -190,9 +213,14 @@ AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>error_message</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>transaction</string>
+                            <string>_getattr_</string>
+                            <string>skip_period_validation</string>
                             <string>None</string>
+                            <string>valid_date</string>
+                            <string>DateTime</string>
+                            <string>transaction_date</string>
                             <string>_getiter_</string>
                             <string>context</string>
                             <string>apd</string>
