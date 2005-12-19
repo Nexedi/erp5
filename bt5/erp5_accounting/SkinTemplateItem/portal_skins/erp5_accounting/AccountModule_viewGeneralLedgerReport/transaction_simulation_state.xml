@@ -317,7 +317,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getPortalObject().portal_categories.resolveCategory(here.REQUEST.transaction_section_category).getLogicalPath()</string> </value>
+            <value> <string>python:[here.translation_service.translate(\'ui\', x).encode(\'utf8\') for x in here.REQUEST.get(\'transaction_simulation_state\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
