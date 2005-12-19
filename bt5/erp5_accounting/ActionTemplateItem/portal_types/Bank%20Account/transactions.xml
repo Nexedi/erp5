@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_jump</string> </value>
+            <value> <string>object_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jump_active_accounting_pref</string> </value>
+            <value> <string>transactions</string> </value>
         </item>
         <item>
             <key> <string>optional</string> </key>
@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Accounting Preference</string> </value>
+            <value> <string>Transactions</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -87,7 +87,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransactionModule_jumpToActiveAccountingPreference</string> </value>
+            <value> <string>string:${object_url}/BankAccount_viewAccountingTransactionList</string> </value>
         </item>
       </dictionary>
     </pickle>
