@@ -1,3 +1,5 @@
 Bank Account[id=jump_active_accounting_pref]
+Bank Account[id=transactions]
 Organisation[id=jump_active_accounting_pref]
 Organisation[id=jump_to_accounting]
+Organisation[id=transactions]

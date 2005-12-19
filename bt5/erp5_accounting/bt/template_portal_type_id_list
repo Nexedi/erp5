@@ -1,12 +1,14 @@
 Account
 Account Module
-Accounting Period Delimiter
+Accounting Period
+Accounting Period Module
 Accounting Rule Cell
 Accounting Transaction
 Accounting Transaction Line
 Accounting Transaction Module
 Balance Transaction
 Balance Transaction Line
+Cash Register
 Invoice Cell
 Invoice Line
 Invoice Rule

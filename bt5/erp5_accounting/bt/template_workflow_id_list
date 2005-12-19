@@ -1,4 +1,4 @@
-accounting_closing_period_workflow
+account_workflow
+accounting_period_workflow
 accounting_workflow
 invoice_causality_workflow
-rule_interaction_workflow
