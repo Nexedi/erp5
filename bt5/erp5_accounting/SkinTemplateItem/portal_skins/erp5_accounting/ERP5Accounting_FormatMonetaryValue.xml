@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Format a monetary value in a string.\n
+\n
+A big localization issue currently partially solved by this script. \n
+Needs reflexion / reimplementation for example for the \'precision\' \n
+parameter, which is related to the currency.\n
+"""\n
+\n
+# XXX copy & pasted code ...\n
+value = str(value)\n
+if \'.\' in value :\n
+  integer, reminder = value.split(\'.\')\n
+  if precision == 0 :\n
+    value = str(integer)\n
+  else :\n
+    value = "%s.%s" % (integer, str(reminder)[:precision])\n
+\n
+old_value = list(value)\n
+old_value.reverse()\n
+value = []\n
+i = 0\n
+for char in old_value : \n
+  value.insert(0, char)\n
+  i += 1\n
+  if not i % 3 :\n
+    value.insert(0, \' \')\n
+formatted_value = "".join(value)\n
+if nbsp : \n
+ formatted_value = formatted_value.replace(\' \', \'&nbsp;\')\n
+\n
+return formatted_value\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQBAGQCAIQCAFoAAGQAAFMoAwAAAE5pAAAAAGMDAAAA
+DgAAAAoAAABDAAAAc0YBAAB0AAB8AACDAQB9AABkAQB8AABqBgBvaAABdAIAfAAAZAIAgwIAZAEA
+gwEAdAMAAoMBAFwCAH0GAH0HAHwCAGQDAGoCAG8QAAF0AAB8BgCDAQB9AABxgQABZAQAfAYAdAcA
+dAAAfAcAgwEAZAAAfAIAhQIAgwIAZgIAFn0AAG4BAAF0CAB8AACDAQB9CgB0AgB8CgBkBQCDAgCD
+AAABZwAAfQAAZAMAfQsAeFoAdAMAfAoAgwEARF1MAH0MAHQCAHwAAGQGAIMCAGQDAHwMAIMCAAF8
+CwBkBwA3fQsAfAsAZAgAFgxvGgABdAIAfAAAZAYAgwIAZAMAZAkAgwIAAXG2AAFxtgBXdAIAZAoA
+ZAsAgwIAfAAAgwEAfQ0AfAEAbxwAAXQCAHwNAGQMAIMCAGQJAGQNAIMCAH0NAG4BAAF8DQBTZAAA
+UygOAAAATnMBAAAALnMFAAAAc3BsaXRpAAAAAHMFAAAAJXMuJXNzBwAAAHJldmVyc2VzBgAAAGlu
+c2VydGkBAAAAaQMAAABzAQAAACBzAAAAAHMEAAAAam9pbnMHAAAAcmVwbGFjZXMGAAAAJm5ic3A7
+KA4AAABzAwAAAHN0cnMFAAAAdmFsdWVzCQAAAF9nZXRhdHRyX3MJAAAAX2dldGl0ZXJfcwcAAABp
+bnRlZ2VycwgAAAByZW1pbmRlcnMJAAAAcHJlY2lzaW9ucwkAAABfZ2V0aXRlbV9zBAAAAGxpc3Rz
+CQAAAG9sZF92YWx1ZXMBAAAAaXMEAAAAY2hhcnMPAAAAZm9ybWF0dGVkX3ZhbHVlcwQAAABuYnNw
+KA4AAABzBQAAAHZhbHVlcwQAAABuYnNwcwkAAABwcmVjaXNpb25zAwAAAHN0cnMJAAAAX2dldGF0
+dHJfcwkAAABfZ2V0aXRlcl9zBwAAAGludGVnZXJzCAAAAHJlbWluZGVycwkAAABfZ2V0aXRlbV9z
+BAAAAGxpc3RzCQAAAG9sZF92YWx1ZXMBAAAAaXMEAAAAY2hhcnMPAAAAZm9ybWF0dGVkX3ZhbHVl
+KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyIAAABFUlA1QWNjb3VudGluZ19Gb3JtYXRN
+b25ldGFyeVZhbHVlAQAAAHMoAAAAAAgMAQ0BIgENARACKQIPAQ0BBgEGAQ0ACQETAQoBDwEbARUB
+BwEcAigBAAAAcyIAAABFUlA1QWNjb3VudGluZ19Gb3JtYXRNb25ldGFyeVZhbHVlKAEAAABzIgAA
+AEVSUDVBY2NvdW50aW5nX0Zvcm1hdE1vbmV0YXJ5VmFsdWUoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/ERP5Accounting_FormatMonetaryValue</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>value, nbsp=0, precision=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>value</string>
+                            <string>nbsp</string>
+                            <string>precision</string>
+                            <string>str</string>
+                            <string>_getattr_</string>
+                            <string>_getiter_</string>
+                            <string>integer</string>
+                            <string>reminder</string>
+                            <string>_getitem_</string>
+                            <string>list</string>
+                            <string>old_value</string>
+                            <string>i</string>
+                            <string>char</string>
+                            <string>formatted_value</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Accounting_FormatMonetaryValue</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
