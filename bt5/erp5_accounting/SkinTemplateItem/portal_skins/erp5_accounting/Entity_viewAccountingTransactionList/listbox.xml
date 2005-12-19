@@ -316,7 +316,12 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>destination_reference</string>
+                          <string>Destination Reference</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -342,7 +347,7 @@
                           <string>Section</string>
                         </tuple>
                         <tuple>
-                          <string>getStopDate</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -362,11 +367,7 @@
                           <string>Source Reference</string>
                         </tuple>
                         <tuple>
-                          <string>destination_reference</string>
-                          <string>Destination Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>simulation_state</string>
+                          <string>translated_simulation_state</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
