@@ -71,6 +71,7 @@
 # after the sale_invoice_builder delivery builder has created\n
 # the new Sale Invoice Transaction\n
 #\n
+from ZODB.POSException import ConflictError \n
 \n
 sale_invoice = context\n
 \n
@@ -92,17 +93,23 @@ sale_invoice.edit(\n
   title = related_packing_list.getTitle(),\n
   resource = price_currency,\n
   price_currency = price_currency,\n
+  reference = related_packing_list.getReference(),\n
 )\n
 \n
 # initialize accounting_workflow to planned state\n
 if sale_invoice.getSimulationState() == \'draft\' : \n
-  context.getPortalObject().portal_workflow.doActionFor(\n
-    sale_invoice, \'plan_action\', wf_id=\'accounting_workflow\',\n
-    comment = \'Initialized by Delivery Builder\'\n
-  )\n
+  try :\n
+    context.getPortalObject().portal_workflow.doActionFor(\n
+      sale_invoice, \'plan_action\', wf_id=\'accounting_workflow\',\n
+      comment = \'Initialized by Delivery Builder\',\n
+      skip_period_validation = 1 )\n
+  except (ConflictError, RuntimeError), e : raise\n
+  except Exception, e :\n
+    LOG(\'Exception in plan_action\', e)\n
+    # call the workflow method, if the user cannot perform this operation.\n
+    sale_invoice.plan()\n
 \n
 # First set the invoice in the building state on the causality workflow\n
-#context.getPortalObject().portal_workflow.doActionFor(sale_invoice, \'start_building\', wf_id=\'invoice_causality_workflow\')\n
 sale_invoice.startBuilding()\n
 \n
 # Then an activity should put the causality state in diverged or solved\n
@@ -110,44 +117,50 @@ sale_invoice.startBuilding()\n
 sale_invoice.activate(\n
         after_method_id = ( \'immediateReindexObject\',\n
                             \'recursiveImmediateReindexObject\',\n
-                            \'Delivery_confirm\'\n
                           )).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAQAAAACwAA
-AHMzAQAAdAAAiQAAhwAAZAEAhgAAfQMAdAMAiAAAZAIAgwIAgwAAAXQDAIgAAGQDAIMCAIMAAH0F
-AHwDAGQEAHQDAIgAAGQFAIMCAIMAABaDAQABdAMAfAUAZAMAgwIAgwAAfQYAdAMAfAYAZAYAgwIA
-gwAAfQcAdAMAiAAAZAcAgwIAZAgAdAMAfAUAZAkAgwIAgwAAZAoAfAcAZAsAfAcAgwADAXQDAIgA
-AGQMAIMCAIMAAGQNAGoCAG87AAF0AwB0AwB0AwB0AABkDgCDAgCDAABkDwCDAgBkEACDAgCIAABk
-EQBkEgBkEwBkFABkFQCDAgIBbgEAAXQDAIgAAGQWAIMCAIMAAAF0AwB0AwCIAABkFwCDAgBkGABk
-GQBkGgBkGwBmAwCDAAFkHACDAgCDAAABZAAAUygdAAAATmMBAAAABAAAAAUAAAADAAAAcyYAAAB0
-AAB0AQBkAQCDAgBkAgB0AACIAABkAwCDAgCDAAAWfAAAgwIAUygEAAAATnMDAAAAbG9nczMAAABT
-YWxlSW52b2ljZVRyYW5zYWN0aW9uX3Bvc3RHZW5lcmF0aW9uQWN0aXZpdHkgb24gJXNzBwAAAGdl
-dFBhdGgoBAAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwwAAABzYWxlX2ludm9pY2VzAwAA
-AG1zZygEAAAAcwMAAABtc2dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMMAAAAc2FsZV9pbnZv
-aWNlKAEAAABzDAAAAHNhbGVfaW52b2ljZSgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxs
-YW1iZGEuMz4JAAAAcwIAAAAPAXMjAAAARGVsaXZlcnlfc2V0Q2F1c2FsaXR5RnJvbVNpbXVsYXRp
-b25zGAAAAGdldERlZmF1bHRDYXVzYWxpdHlWYWx1ZXMNAAAAY2F1c2FsaXR5ICVzIHMVAAAAZ2V0
-Q2F1c2FsaXR5VmFsdWVMaXN0cxAAAABnZXRQcmljZUN1cnJlbmN5cwQAAABlZGl0cwUAAAB0aXRs
-ZXMIAAAAZ2V0VGl0bGVzCAAAAHJlc291cmNlcw4AAABwcmljZV9jdXJyZW5jeXMSAAAAZ2V0U2lt
-dWxhdGlvblN0YXRlcwUAAABkcmFmdHMPAAAAZ2V0UG9ydGFsT2JqZWN0cw8AAABwb3J0YWxfd29y
-a2Zsb3dzCwAAAGRvQWN0aW9uRm9ycwsAAABwbGFuX2FjdGlvbnMFAAAAd2ZfaWRzEwAAAGFjY291
-bnRpbmdfd29ya2Zsb3dzBwAAAGNvbW1lbnRzHwAAAEluaXRpYWxpemVkIGJ5IERlbGl2ZXJ5IEJ1
-aWxkZXJzDQAAAHN0YXJ0QnVpbGRpbmdzCAAAAGFjdGl2YXRlcw8AAABhZnRlcl9tZXRob2RfaWRz
-FgAAAGltbWVkaWF0ZVJlaW5kZXhPYmplY3RzHwAAAHJlY3Vyc2l2ZUltbWVkaWF0ZVJlaW5kZXhP
-YmplY3RzEAAAAERlbGl2ZXJ5X2NvbmZpcm1zFAAAAHVwZGF0ZUNhdXNhbGl0eVN0YXRlKAcAAABz
-BwAAAGNvbnRleHRzDAAAAHNhbGVfaW52b2ljZXMDAAAATE9HcwkAAABfZ2V0YXR0cl9zFAAAAHJl
-bGF0ZWRfcGFja2luZ19saXN0cw0AAAByZWxhdGVkX29yZGVycw4AAABwcmljZV9jdXJyZW5jeSgI
-AAAAcwIAAABrd3MHAAAAY29udGV4dHMMAAAAc2FsZV9pbnZvaWNlcwMAAABMT0dzCQAAAF9nZXRh
-dHRyX3MUAAAAcmVsYXRlZF9wYWNraW5nX2xpc3RzDQAAAHJlbGF0ZWRfb3JkZXJzDgAAAHByaWNl
-X2N1cnJlbmN5KAAAAAAoAQAAAHMMAAAAc2FsZV9pbnZvaWNlcw8AAABTY3JpcHQgKFB5dGhvbilz
-LQAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25fcG9zdEdlbmVyYXRpb25BY3Rpdml0eQEAAABzIgAA
-AAAGBgIPBA0CEgEaAxIBFQMPAQ8BBgEHBCIBGAEdBhMEDAEoAQAAAHMtAAAAU2FsZUludm9pY2VU
-cmFuc2FjdGlvbl9wb3N0R2VuZXJhdGlvbkFjdGl2aXR5KAEAAABzLQAAAFNhbGVJbnZvaWNlVHJh
-bnNhY3Rpb25fcG9zdEdlbmVyYXRpb25BY3Rpdml0eSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
-aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA0AAAAYAAAACwAA
+AHOrAQAAZAEAawAAbAEAfQIAAXQCAIkAAIcAAGQCAIYAAH0FAHQFAIgAAGQDAIMCAIMAAAF0BQCI
+AABkBACDAgCDAAB9BwB8BQBkBQB0BQCIAABkBgCDAgCDAAAWgwEAAXQFAHwHAGQEAIMCAIMAAH0I
+AHQFAHwIAGQHAIMCAIMAAH0JAHQFAIgAAGQIAIMCAGQJAHQFAHwHAGQKAIMCAIMAAGQLAHwJAGQM
+AHwJAGQNAHQFAHwHAGQOAIMCAIMAAIMABAF0BQCIAABkDwCDAgCDAABkEABqAgBvlwABeUEAdAUA
+dAUAdAUAdAIAZBEAgwIAgwAAZBIAgwIAZBMAgwIAiAAAZBQAZBUAZBYAZBcAZBgAZBkAZBoAgwID
+AVdxbwEEfAIAdAkAZgIAagoAbwwAAQF9CwABggAAcW8BAQR0CwBqCgBvJgABAX0LAAF8BQBkGwB8
+CwCDAgABdAUAiAAAZBwAgwIAgwAAAXFvAQFYbgEAAXQFAIgAAGQdAIMCAIMAAAF0BQB0BQCIAABk
+HgCDAgBkHwBkIABkIQBmAgCDAAFkIgCDAgCDAAABZAAAUygjAAAATigBAAAAcw0AAABDb25mbGlj
+dEVycm9yYwEAAAAEAAAABQAAAAMAAABzJgAAAHQAAHQBAGQBAIMCAGQCAHQAAIgAAGQDAIMCAIMA
+ABZ8AACDAgBTKAQAAABOcwMAAABsb2dzMwAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25fcG9zdEdl
+bmVyYXRpb25BY3Rpdml0eSBvbiAlc3MHAAAAZ2V0UGF0aCgEAAAAcwkAAABfZ2V0YXR0cl9zBwAA
+AGNvbnRleHRzDAAAAHNhbGVfaW52b2ljZXMDAAAAbXNnKAQAAABzAwAAAG1zZ3MJAAAAX2dldGF0
+dHJfcwcAAABjb250ZXh0cwwAAABzYWxlX2ludm9pY2UoAQAAAHMMAAAAc2FsZV9pbnZvaWNlKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMKAAAAPGxhbWJkYS4wPgoAAABzAgAAAA8BcyMAAABEZWxp
+dmVyeV9zZXRDYXVzYWxpdHlGcm9tU2ltdWxhdGlvbnMYAAAAZ2V0RGVmYXVsdENhdXNhbGl0eVZh
+bHVlcw0AAABjYXVzYWxpdHkgJXMgcxUAAABnZXRDYXVzYWxpdHlWYWx1ZUxpc3RzEAAAAGdldFBy
+aWNlQ3VycmVuY3lzBAAAAGVkaXRzBQAAAHRpdGxlcwgAAABnZXRUaXRsZXMIAAAAcmVzb3VyY2Vz
+DgAAAHByaWNlX2N1cnJlbmN5cwkAAAByZWZlcmVuY2VzDAAAAGdldFJlZmVyZW5jZXMSAAAAZ2V0
+U2ltdWxhdGlvblN0YXRlcwUAAABkcmFmdHMPAAAAZ2V0UG9ydGFsT2JqZWN0cw8AAABwb3J0YWxf
+d29ya2Zsb3dzCwAAAGRvQWN0aW9uRm9ycwsAAABwbGFuX2FjdGlvbnMFAAAAd2ZfaWRzEwAAAGFj
+Y291bnRpbmdfd29ya2Zsb3dzBwAAAGNvbW1lbnRzHwAAAEluaXRpYWxpemVkIGJ5IERlbGl2ZXJ5
+IEJ1aWxkZXJzFgAAAHNraXBfcGVyaW9kX3ZhbGlkYXRpb25pAQAAAHMYAAAARXhjZXB0aW9uIGlu
+IHBsYW5fYWN0aW9ucwQAAABwbGFucw0AAABzdGFydEJ1aWxkaW5ncwgAAABhY3RpdmF0ZXMPAAAA
+YWZ0ZXJfbWV0aG9kX2lkcxYAAABpbW1lZGlhdGVSZWluZGV4T2JqZWN0cx8AAAByZWN1cnNpdmVJ
+bW1lZGlhdGVSZWluZGV4T2JqZWN0cxQAAAB1cGRhdGVDYXVzYWxpdHlTdGF0ZSgMAAAAcxEAAABa
+T0RCLlBPU0V4Y2VwdGlvbnMNAAAAQ29uZmxpY3RFcnJvcnMHAAAAY29udGV4dHMMAAAAc2FsZV9p
+bnZvaWNlcwMAAABMT0dzCQAAAF9nZXRhdHRyX3MUAAAAcmVsYXRlZF9wYWNraW5nX2xpc3RzDQAA
+AHJlbGF0ZWRfb3JkZXJzDgAAAHByaWNlX2N1cnJlbmN5cwwAAABSdW50aW1lRXJyb3JzAQAAAGVz
+CQAAAEV4Y2VwdGlvbigNAAAAcwIAAABrd3MRAAAAWk9EQi5QT1NFeGNlcHRpb25zDQAAAENvbmZs
+aWN0RXJyb3JzBwAAAGNvbnRleHRzDAAAAHNhbGVfaW52b2ljZXMDAAAATE9HcwkAAABfZ2V0YXR0
+cl9zFAAAAHJlbGF0ZWRfcGFja2luZ19saXN0cw0AAAByZWxhdGVkX29yZGVycw4AAABwcmljZV9j
+dXJyZW5jeXMMAAAAUnVudGltZUVycm9ycwEAAABlcwkAAABFeGNlcHRpb24oAAAAACgBAAAAcwwA
+AABzYWxlX2ludm9pY2VzDwAAAFNjcmlwdCAoUHl0aG9uKXMtAAAAU2FsZUludm9pY2VUcmFuc2Fj
+dGlvbl9wb3N0R2VuZXJhdGlvbkFjdGl2aXR5AQAAAHMwAAAAAAUNAgYCDwQNAhIBGgMSARUDDwEP
+AQYBCQEQBBkBDAEYASADHQEQARACGQMTBAwBKAEAAABzLQAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rp
+b25fcG9zdEdlbmVyYXRpb25BY3Rpdml0eSgBAAAAcy0AAABTYWxlSW52b2ljZVRyYW5zYWN0aW9u
+X3Bvc3RHZW5lcmF0aW9uQWN0aXZpdHkoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAA
+ADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -182,6 +195,8 @@ aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
                             <string>context</string>
                             <string>sale_invoice</string>
                             <string>LOG</string>
@@ -189,6 +204,9 @@ aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
                             <string>related_packing_list</string>
                             <string>related_order</string>
                             <string>price_currency</string>
+                            <string>RuntimeError</string>
+                            <string>e</string>
+                            <string>Exception</string>
                           </tuple>
                         </value>
                     </item>
