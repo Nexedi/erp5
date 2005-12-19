@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+account = sci[\'object\']\n
+\n
+if account.getGap() in (None, \'\') : \n
+  raise ValidationFailed, account.Base_TranslateString("GAP is unset.")\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAcAAAAGAAAAQwAA
+AHNbAAAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQFAHwEAGQDAIMCAIMAAHQGAGQEAGYC
+AGoGAG8cAAF8AgB0BQB8BABkBQCDAgBkBgCDAQCCAgBuAQABZAAAUygHAAAATigBAAAAcxAAAABW
+YWxpZGF0aW9uRmFpbGVkcwYAAABvYmplY3RzBgAAAGdldEdhcHMAAAAAcxQAAABCYXNlX1RyYW5z
+bGF0ZVN0cmluZ3MNAAAAR0FQIGlzIHVuc2V0LigHAAAAcx4AAABQcm9kdWN0cy5EQ1dvcmtmbG93
+LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzCQAAAF9nZXRpdGVtX3MDAAAAc2NpcwcA
+AABhY2NvdW50cwkAAABfZ2V0YXR0cl9zBAAAAE5vbmUoBwAAAHMDAAAAc2Npcx4AAABQcm9kdWN0
+cy5EQ1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzCQAAAF9nZXRpdGVt
+X3MHAAAAYWNjb3VudHMJAAAAX2dldGF0dHJfcwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcxAAAABBY2NvdW50X1ZhbGlkYXRlAQAAAHMGAAAADQEPAh8BKAEAAABzEAAAAEFj
+Y291bnRfVmFsaWRhdGUoAQAAAHMQAAAAQWNjb3VudF9WYWxpZGF0ZSgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/hopital/portal_workflow/account_validation_workflow/scripts/Account_Validate</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>sci</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>sci</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getitem_</string>
+                            <string>account</string>
+                            <string>_getattr_</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Account_Validate</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
