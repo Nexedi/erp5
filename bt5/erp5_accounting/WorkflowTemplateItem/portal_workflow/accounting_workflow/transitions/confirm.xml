@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>Delivery_build</string> </value>
+            <value> <string>Delivery_Build</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Confirm</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

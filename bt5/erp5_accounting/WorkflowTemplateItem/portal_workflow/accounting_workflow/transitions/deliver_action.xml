@@ -90,7 +90,6 @@
             <value>
               <tuple>
                 <string>Assignor</string>
-                <string>Assignee</string>
               </tuple>
             </value>
         </item>
@@ -111,7 +110,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: here.getPortalType() != \'Balance Transaction\'</string> </value>
+            <value> <string>python: here.getProperty(\'causality_state\', \'default\') != \'building\'</string> </value>
         </item>
       </dictionary>
     </pickle>
