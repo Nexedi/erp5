@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_categories.account_type.getCategoryChildLogicalPathItemList(base=0)</string> </value>
+            <value> <string>python:here.portal_categories.account_type.getCategoryChildTranslatedLogicalPathItemList(base=0)</string> </value>
         </item>
       </dictionary>
     </pickle>
