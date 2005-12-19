@@ -68,6 +68,10 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = context\n
 \n
+if hasattr(context, \'startBuilding\') :\n
+  context.startBuilding()\n
+  context.updateCausalityState()\n
+\n
 transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
 #                       source=\'account/prestation_service\',\n
                        id=\'income\',\n
@@ -89,23 +93,26 @@ context.AccountingTransaction_InitFromPreferences()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAKAAAATwAA
-AHOSAAAAdAAAfQMAdAIAfAMAZAEAgwIAZAIAZAMAZAQAZAUAZAYAZAcAZAgAZAkAgwAEAXQCAHwD
-AGQBAIMCAGQCAGQDAGQEAGQKAGQGAGQHAGQIAGQJAIMABAF0AgB8AwBkAQCDAgBkAgBkAwBkBABk
-CwBkBgBkBwBkCABkCQCDAAQBdAIAdAAAZAwAgwIAgwAAAWQAAFMoDQAAAE5zCgAAAG5ld0NvbnRl
-bnRzCwAAAHBvcnRhbF90eXBlcx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZXMCAAAA
-aWRzBgAAAGluY29tZXMIAAAAcXVhbnRpdHlpAAAAAHMRAAAAaW1tZWRpYXRlX3JlaW5kZXhpAQAA
-AHMKAAAAcmVjZWl2YWJsZXMNAAAAY29sbGVjdGVkX3ZhdHMpAAAAQWNjb3VudGluZ1RyYW5zYWN0
-aW9uX0luaXRGcm9tUHJlZmVyZW5jZXMoAwAAAHMHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25z
-CQAAAF9nZXRhdHRyXygFAAAAcwQAAABhcmdzcwIAAABrd3MHAAAAY29udGV4dHMLAAAAdHJhbnNh
-Y3Rpb25zCQAAAF9nZXRhdHRyXygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMbAAAAU2Fs
-ZUludm9pY2VUcmFuc2FjdGlvbl9pbml0AQAAAHMIAAAACQIoBSgFKAYoAQAAAHMbAAAAU2FsZUlu
-dm9pY2VUcmFuc2FjdGlvbl9pbml0KAEAAABzGwAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25faW5p
-dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAANAAAATwAA
+AHPGAAAAdAAAfQMAdAIAdAAAZAEAgwIAbyQAAXQDAHQAAGQBAIMCAIMAAAF0AwB0AABkAgCDAgCD
+AAABbgEAAXQDAHwDAGQDAIMCAGQEAGQFAGQGAGQHAGQIAGQJAGQKAGQLAIMABAF0AwB8AwBkAwCD
+AgBkBABkBQBkBgBkDABkCABkCQBkCgBkCwCDAAQBdAMAfAMAZAMAgwIAZAQAZAUAZAYAZA0AZAgA
+ZAkAZAoAZAsAgwAEAXQDAHQAAGQOAIMCAIMAAAFkAABTKA8AAABOcw0AAABzdGFydEJ1aWxkaW5n
+cxQAAAB1cGRhdGVDYXVzYWxpdHlTdGF0ZXMKAAAAbmV3Q29udGVudHMLAAAAcG9ydGFsX3R5cGVz
+HQAAAFNhbGUgSW52b2ljZSBUcmFuc2FjdGlvbiBMaW5lcwIAAABpZHMGAAAAaW5jb21lcwgAAABx
+dWFudGl0eWkAAAAAcxEAAABpbW1lZGlhdGVfcmVpbmRleGkBAAAAcwoAAAByZWNlaXZhYmxlcw0A
+AABjb2xsZWN0ZWRfdmF0cykAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25fSW5pdEZyb21QcmVmZXJl
+bmNlcygEAAAAcwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlvbnMHAAAAaGFzYXR0cnMJAAAAX2dl
+dGF0dHJfKAYAAABzBAAAAGFyZ3NzAgAAAGt3cwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlvbnMH
+AAAAaGFzYXR0cnMJAAAAX2dldGF0dHJfKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxsA
+AABTYWxlSW52b2ljZVRyYW5zYWN0aW9uX2luaXQBAAAAcw4AAAAGAhMBEAEUAigFKAUoBigBAAAA
+cxsAAABTYWxlSW52b2ljZVRyYW5zYWN0aW9uX2luaXQoAQAAAHMbAAAAU2FsZUludm9pY2VUcmFu
+c2FjdGlvbl9pbml0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEA
+AABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/SaleInvoiceTransaction_init</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/SaleInvoiceTransaction_init</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -139,6 +146,7 @@ dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string
                             <string>kw</string>
                             <string>context</string>
                             <string>transaction</string>
+                            <string>hasattr</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>

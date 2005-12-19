@@ -68,6 +68,10 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = context\n
 \n
+if hasattr(context, \'startBuilding\') :\n
+  context.startBuilding()\n
+  context.updateCausalityState()\n
+\n
 transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
                        immediate_reindex=1)\n
 transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
@@ -78,21 +82,23 @@ context.AccountingTransaction_InitFromPreferences()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAGAAAATwAA
-AHNSAAAAdAAAfQMAdAIAfAMAZAEAgwIAZAIAZAMAZAQAZAUAgwACAXQCAHwDAGQBAIMCAGQCAGQD
-AGQEAGQFAIMAAgF0AgB0AABkBgCDAgCDAAABZAAAUygHAAAATnMKAAAAbmV3Q29udGVudHMLAAAA
-cG9ydGFsX3R5cGVzGwAAAEFjY291bnRpbmcgVHJhbnNhY3Rpb24gTGluZXMRAAAAaW1tZWRpYXRl
-X3JlaW5kZXhpAQAAAHMpAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX0luaXRGcm9tUHJlZmVyZW5j
-ZXMoAwAAAHMHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRhdHRyXygFAAAAcwQA
-AABhcmdzcwIAAABrd3MHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRhdHRyXygA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2lu
-aXQBAAAAcwYAAAAJAhwCHAMoAQAAAHMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2luaXQoAQAA
-AHMaAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2luaXQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
-dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAAJAAAATwAA
+AHOGAAAAdAAAfQMAdAIAdAAAZAEAgwIAbyQAAXQDAHQAAGQBAIMCAIMAAAF0AwB0AABkAgCDAgCD
+AAABbgEAAXQDAHwDAGQDAIMCAGQEAGQFAGQGAGQHAIMAAgF0AwB8AwBkAwCDAgBkBABkBQBkBgBk
+BwCDAAIBdAMAdAAAZAgAgwIAgwAAAWQAAFMoCQAAAE5zDQAAAHN0YXJ0QnVpbGRpbmdzFAAAAHVw
+ZGF0ZUNhdXNhbGl0eVN0YXRlcwoAAABuZXdDb250ZW50cwsAAABwb3J0YWxfdHlwZXMbAAAAQWNj
+b3VudGluZyBUcmFuc2FjdGlvbiBMaW5lcxEAAABpbW1lZGlhdGVfcmVpbmRleGkBAAAAcykAAABB
+Y2NvdW50aW5nVHJhbnNhY3Rpb25fSW5pdEZyb21QcmVmZXJlbmNlcygEAAAAcwcAAABjb250ZXh0
+cwsAAAB0cmFuc2FjdGlvbnMHAAAAaGFzYXR0cnMJAAAAX2dldGF0dHJfKAYAAABzBAAAAGFyZ3Nz
+AgAAAGt3cwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlvbnMHAAAAaGFzYXR0cnMJAAAAX2dldGF0
+dHJfKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxoAAABBY2NvdW50aW5nVHJhbnNhY3Rp
+b25faW5pdAEAAABzDAAAAAYCEwEQARQCHAIcAygBAAAAcxoAAABBY2NvdW50aW5nVHJhbnNhY3Rp
+b25faW5pdCgBAAAAcxoAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25faW5pdCgAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransaction_init</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_init</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -126,6 +132,7 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                             <string>kw</string>
                             <string>context</string>
                             <string>transaction</string>
+                            <string>hasattr</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
