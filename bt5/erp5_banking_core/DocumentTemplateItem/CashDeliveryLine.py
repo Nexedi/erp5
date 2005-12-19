@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -35,85 +35,85 @@ out_portal_type_list = ('Cash Exchange Line Out', 'Cash To Currency Sale Line Ou
 
 
 class CashDeliveryLine(DeliveryLine):
+  """
+    A Cash DeliveryLine object allows to implement lines
+      in Cash Deliveries (packing list, Check payment, Cash Movement, etc.).
+
+    It may include a price (for insurance, for customs, for invoices,
+      for orders).
+  """
+
+  meta_type = 'BAOBAB Cash Delivery Line'
+  portal_type = 'Cash Delivery Line'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
+
+  # Declarative interfaces
+  __implements__ = ( Interface.Variated, )
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.VariationRange
+                    , PropertySheet.ItemAggregation
+                    , PropertySheet.CashDeliveryLine
+                    )
+
+  security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid')
+  def getBaobabSourceSectionUid(self):
     """
-      A Cash DeliveryLine object allows to implement lines in
-      Cash Deliveries (packing list, Check payment, Cash Movement, etc.)
-
-      It may include a price (for insurance, for customs, for invoices,
-      for orders)
+      Returns a calculated source section
     """
+    return self.getSourceSectionUid()
 
-    meta_type = 'BAOBAB Cash Delivery Line'
-    portal_type = 'Cash Delivery Line'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
+  def getBaobabDestinationSectionUid(self):
+    """
+      Returns a calculated destination section
+    """
+    return self.getDestinationSectionUid()
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+  security.declareProtected(Permissions.View, 'getBaobabSource')
+  def getBaobabSource(self):
+    """
+      Returns a calculated source
+    """
+    if self.portal_type in out_portal_type_list:
+      return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getRelativeUrl()
+    elif self.portal_type in in_portal_type_list:
+      return None
+    return self.getSource()
 
-    # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+  security.declareProtected(Permissions.View, 'getBaobabSourceUid')
+  def getBaobabSourceUid(self):
+    """
+      Returns a calculated source
+    """
+    if self.portal_type in out_portal_type_list:
+      return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getUid()
+    elif self.portal_type in in_portal_type_list:
+      return None
+    return self.getSourceUid()
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.VariationRange
-                      , PropertySheet.ItemAggregation
-                      , PropertySheet.CashDeliveryLine
-                      )
-
-    security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid')
-    def getBaobabSourceSectionUid(self):
-        """
-            Returns a calculated source section
-        """
-        return self.getSourceSectionUid()
-
-    security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
-    def getBaobabDestinationSectionUid(self):
-        """
-            Returns a calculated destination section
-        """
-        return self.getDestinationSectionUid()
-
-    security.declareProtected(Permissions.View, 'getBaobabSource')
-    def getBaobabSource(self):
-        """
-            Returns a calculated source
-        """
-        if self.portal_type in out_portal_type_list:
-          return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getRelativeUrl()
-        elif self.portal_type in in_portal_type_list:
-          return None
-        return self.getSource()
-
-    security.declareProtected(Permissions.View, 'getBaobabSourceUid')
-    def getBaobabSourceUid(self):
-        """
-            Returns a calculated source
-        """
-        if self.portal_type in out_portal_type_list:
-          return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getUid()
-        elif self.portal_type in in_portal_type_list:
-          return None
-        return self.getSourceUid()
-
-    security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
-    def getBaobabDestinationUid(self):
-        """
-            Returns a calculated destination
-        """
-        if self.portal_type in in_portal_type_list:
-          return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('entrante').getUid()
-        elif self.portal_type in out_portal_type_list :
-          return None
-        return self.getDestinationUid()
+  security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
+  def getBaobabDestinationUid(self):
+    """
+      Returns a calculated destination
+    """
+    if self.portal_type in in_portal_type_list:
+      return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('entrante').getUid()
+    elif self.portal_type in out_portal_type_list :
+      return None
+    return self.getDestinationUid()
 

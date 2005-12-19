@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\',\'\')]+map(lambda x:(x.id,\'currency/%s\' %x.id),here.currency.objectValues())</string> </value>
+            <value> <string>python:[(\'\',\'\')]+map(lambda x:(x.id,\'currency_module/%s\' %x.id),here.currency_module.objectValues())</string> </value>
         </item>
       </dictionary>
     </pickle>

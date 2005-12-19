@@ -66,33 +66,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency_list = [(\'%s - %s\' % (x.getId(), x.getTitle()), x.getRelativeUrl())\n
-  for x in context.currency_module.objectValues()]\n
-\n
-currency_list.insert(0, (\'\',\'\'))\n
-\n
-return currency_list\n
+            <value> <string>lineTotalPrice_list = [x.getObject().getTotalPrice() for x in context.searchFolder(portal_type="Container Line")]\n
+totalPrice = 0\n
+for x in lineTotalPrice_list :\n
+  totalPrice += x\n
+return totalPrice\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAMAAAAQwAA
-AHOaAAAAZwAABGkAAH0BAHQCAHQDAHQDAHQEAGQBAIMCAGQCAIMCAIMAAIMBAERdRAB9BQB8AQBk
-AwB0AwB8BQBkBACDAgCDAAB0AwB8BQBkBQCDAgCDAABmAgAWdAMAfAUAZAYAgwIAgwAAZgIAgwEA
-AXEpAH4BAH0GAHQDAHwGAGQHAIMCAGQIAGQJAGQJAGYCAIMCAAF8BgBTZAAAUygKAAAATnMPAAAA
-Y3VycmVuY3lfbW9kdWxlcwwAAABvYmplY3RWYWx1ZXNzBwAAACVzIC0gJXNzBQAAAGdldElkcwgA
-AABnZXRUaXRsZXMOAAAAZ2V0UmVsYXRpdmVVcmxzBgAAAGluc2VydGkAAAAAcwAAAAAoBwAAAHMG
-AAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzAQAAAHhzDQAAAGN1cnJlbmN5X2xpc3QoBwAAAHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
-MHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzDQAAAGN1cnJl
-bmN5X2xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIAAAAEN1cnJlbmN5RXhjaGFu
-Z2VfZ2V0Q3VycmVuY3lMaXN0AQAAAHMIAAAAEwEWAFACGQIoAQAAAHMgAAAAQ3VycmVuY3lFeGNo
-YW5nZV9nZXRDdXJyZW5jeUxpc3QoAQAAAHMgAAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRDdXJyZW5j
-eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAoAAAAKAAAA
+SwAAAHOGAAAAZwAABGkAAH0DAHQCAHQDAHQEAGQBAIMCAGQCAGQDAIMAAYMBAERdKAB9BwB8AwB0
+AwB0AwB8BwBkBACDAgCDAABkBQCDAgCDAACDAQABcSYAfgMAfQgAZAYAfQkAeB4AdAIAfAgAgwEA
+RF0QAH0HAHwJAHwHADd9CQBxagBXfAkAU2QAAFMoBwAAAE5zDAAAAHNlYXJjaEZvbGRlcnMLAAAA
+cG9ydGFsX3R5cGVzDgAAAENvbnRhaW5lciBMaW5lcwkAAABnZXRPYmplY3RzDQAAAGdldFRvdGFs
+UHJpY2VpAAAAACgIAAAAcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zCQAA
+AF9nZXRhdHRyX3MHAAAAY29udGV4dHMBAAAAeHMTAAAAbGluZVRvdGFsUHJpY2VfbGlzdHMKAAAA
+dG90YWxQcmljZSgKAAAAcwcAAABsaXN0Ym94cwIAAABrd3MGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
+MHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzEwAAAGxpbmVU
+b3RhbFByaWNlX2xpc3RzCgAAAHRvdGFsUHJpY2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzIAAAAENvbnRhaW5lcl9nZXRDb250YWluZWVUb3RhbFByaWNlAQAAAHMMAAAAJgAxAQYBDQAG
+AQ4BKAIAAABzBAAAAE5vbmVzIAAAAENvbnRhaW5lcl9nZXRDb250YWluZWVUb3RhbFByaWNlKAIA
+AABzBAAAAE5vbmVzIAAAAENvbnRhaW5lcl9nZXRDb250YWluZWVUb3RhbFByaWNlKAAAAAAoAAAA
+AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CurrencyExchange_getCurrencyList</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Container_getContaineeTotalPrice</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -102,7 +102,7 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>listbox=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,19 +122,22 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>x</string>
-                            <string>currency_list</string>
+                            <string>lineTotalPrice_list</string>
+                            <string>totalPrice</string>
                           </tuple>
                         </value>
                     </item>
@@ -146,16 +149,14 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CurrencyExchange_getCurrencyList</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Move this to erp5_core ???</string> </value>
+            <value> <string>Container_getContaineeTotalPrice</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

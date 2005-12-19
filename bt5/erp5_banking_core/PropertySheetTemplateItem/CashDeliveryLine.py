@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,12 +27,14 @@
 ##############################################################################
 
 class CashDeliveryLine:
-    """
-        VariationRange which allows to define possible
-        variations for a Resource, a Transformation, etc.
-    """
+  """
+    VariationRange which allows to define possible
+    variations for a Resource, a Transformation, etc.
+  """
 
-    _properties = (
-    )
+  _properties = (
+                )
 
-    _categories = ('emission_letter','cash_status')
+  _categories = ( 'emission_letter'
+                , 'cash_status'
+                )

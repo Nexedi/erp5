@@ -1,0 +1,502 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+def lowerCase(s):\n
+  return s.replace(\' \', \'_\').lower()\n
+\n
+def upperCase(s):\n
+  s = \' \'.join([x.capitalize() for x in lowerCase(s).split(\'_\') if len(x) > 0])\n
+  s = \'/\'.join([x[0].upper() + x[1:] for x in s.split(\'/\') if len(x) > 0])\n
+  item_list = s.split(\' \')\n
+  if len(item_list) > 1:\n
+    new_list = []\n
+    for item in item_list :\n
+      if item in (\'A\', \'Chez\', \'De\', \'Des\', \'En\', \'Et\', \'La\', \'Par\', \'Pour\') :\n
+        item = item.lower()\n
+      new_list.append(item)\n
+    item_list = new_list\n
+  return \' \'.join(item_list)\n
+\n
+def l_clean(line) :\n
+  if line.endswith(\'\\n\') :\n
+    line = line[:-1]\n
+  return line\n
+\n
+def l_split(line) :\n
+  e_list = line.split(\',\')\n
+  new_e_list = []\n
+  for e in e_list :\n
+    if len(e) > 0 :\n
+      if e[0] == \'"\' and e[-1] == \'"\' :\n
+        e = e[1:-1]\n
+      new_e_list.append(e)\n
+  return new_e_list\n
+\n
+def create_category(cat) :\n
+\n
+  cat_list = lowerCase(cat).split(\'/\')\n
+  cat_len = len(cat_list)\n
+  \n
+  if cat_len == 1 :\n
+    # base_category\n
+    return context.portal_categories.newContent(portal_type = \'Base Category\',\n
+        id = lowerCase(cat_list[0]),\n
+        title = upperCase(cat_list[0]))\n
+\n
+  elif cat_len > 1 :\n
+    # sub_category\n
+    relative_category = context.portal_categories.getCategoryValue(lowerCase(\'/\'.join(cat_list[:-1])))\n
+\n
+    if relative_category is None :\n
+      relative_category = create_category(lowerCase(\'/\'.join(cat_list[:-1])))\n
+\n
+    cat = relative_category.get(lowerCase(cat_list[-1]))\n
+    if cat is not None :\n
+      return cat\n
+    else :\n
+      return relative_category.newContent(portal_type = \'Category\',\n
+          id = lowerCase(cat_list[-1]),\n
+          title = upperCase(cat_list[-1]))\n
+\n
+def generate_vault_dict() :\n
+  c_list = context.portal_categories.vault_type.getCategoryChildValueList()\n
+  vault_dict = {}\n
+  for c in c_list :\n
+    code = c.getProperty(\'codification\')\n
+    if code is not None :\n
+      vault_dict[code]=c.getRelativeUrl()\n
+  return vault_dict\n
+\n
+##########################################\n
+request  = context.REQUEST\n
+\n
+import_type = getattr(request,\'my_import_type\',None) or getattr(request,\'field_my_import_type\',None)\n
+line_list = import_file.readlines()\n
+\n
+line_list = [l_clean(line) for line in line_list]\n
+line_list = [l_split(line) for line in line_list]\n
+\n
+#return \'\\n\'.join([l for l in line_list])\n
+\n
+\n
+if import_type == \'create_category\' :\n
+  if context.portal_categories.get(lowerCase(line_list[0][0])) :\n
+    context.portal_categories.deleteContent(lowerCase(line_list[0][0]))\n
+  for e_list in line_list :\n
+    if len(e_list) > 0 :\n
+      e = e_list[0]\n
+      try :\n
+        print \'trying to create %s ...\' % lowerCase(e),\n
+        create_category(e)\n
+        print \'done\'\n
+      except :\n
+        print \'Failed\'\n
+        return printed\n
+\n
+\n
+elif import_type == \'assign_codification\' :\n
+  for e_list in line_list :\n
+    if len(e_list) == 2 :\n
+      try :\n
+        print \'trying to assign to %s ...\' % lowerCase(e_list[0]) ,\n
+        category = context.portal_categories.getCategoryValue(lowerCase(e_list[0]))\n
+        category.setCodification(e_list[1])\n
+        print \'done %s\' % repr(e_list)\n
+      except :\n
+        print \'Failed\'\n
+        return printed\n
+\n
+\n
+elif import_type == \'assign_vault_type\' :\n
+  vault_type_dict = generate_vault_dict()\n
+  vault_type_list = vault_type_dict.keys()\n
+  for e_list in line_list :\n
+    if len(e_list) == 2 and e_list[1] in vault_type_list :\n
+      category = context.portal_categories.getCategoryValue(lowerCase(e_list[0]))\n
+      category.setCategoryList([vault_type_dict[e_list[1]]])\n
+      print \'set %s to %s\' % ([vault_type_dict[e_list[1]]], category)\n
+\n
+elif import_type == \'create_subvaults\' :\n
+#Encaisse des Billets Restitues par Tiers a Detruire# seulemnt sur sites disposant de tri tiers\n
+#Encaisse des Billets Recus pour Ventilation# seulement sur sites principaux\n
+  subvault_dict = {}\n
+  for e_list in line_list :\n
+    if len(e_list) == 3 :\n
+      vault = lowerCase(e_list[0])\n
+      subvault = upperCase(e_list[1])\n
+      subvault_code = upperCase(e_list[2])\n
+      if not subvault_dict.has_key(vault) :\n
+        subvault_dict[vault] = []\n
+      subvault_dict[vault].append([subvault, subvault_code])\n
+      if subvault == \'Encaisse des Devises\' :\n
+        for c in context.currency.objectValues() :\n
+          if c.getId() != context.Baobab_getPortalReferenceCurrencyID():\n
+            subvault_dict[vault].append([\'%s/%s\' % (subvault, c.getTitle()), None])\n
+      if subvault == \'Encaisse des Billets Recus pour Ventilation\' :\n
+        for c in context.portal_categories.site.agence.principale.objectIds() :\n
+          subvault_dict[vault].append([\'%s/%s\' % (subvault, upperCase(c)), None])\n
+\n
+  vault_type_list = subvault_dict.keys()\n
+\n
+  for c in context.portal_categories.site.getCategoryChildValueList() :\n
+    for vault_type in vault_type_list :\n
+      if context.portal_categories.isMemberOf(c, vault_type, strict=1) :\n
+        print c.getRelativeUrl(), \'is\', vault_type\n
+        for subvault_data in subvault_dict[vault_type] :\n
+          subvault_path = subvault_data[0]\n
+          subvault_code = subvault_data[1]\n
+          if \'Encaisse des Billets Recus pour Ventilation\' in subvault_path or \'Encaisse des Billets Restitues par Tiers a Detruire\' in subvault_path :\n
+            if not context.portal_categories.isMemberOf(c, \'site/agence/principale\', strict=0) :\n
+              #print \'XXXXXXXX is not principale, not creating\', subvault_path\n
+              pass\n
+            elif subvault_path.find(\'/\') > 0 and lowerCase(subvault_path).split(\'/\')[1] in c.getRelativeUrl() :\n
+              #print \'XXXXXXXX is itself, not creating\', subvault_path\n
+              pass\n
+            else :\n
+              print \'  creating\', subvault_path\n
+              new_category_obj = create_category(\'%s/%s\' % (c.getRelativeUrl(), subvault_path))\n
+              if subvault_code not in (None, \'\'):\n
+                new_category_obj.setCodification(subvault_code)\n
+          else :\n
+            print \'  creating\', subvault_path\n
+            new_category_obj = create_category(\'%s/%s\' % (c.getRelativeUrl(), subvault_path))\n
+            if subvault_code not in (None, \'\'):\n
+              new_category_obj.setCodification(subvault_code)\n
+        print\n
+        break\n
+    else : print c.getRelativeUrl(), \'not here\'\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+print \'ok\'\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">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
+ZBAAZBEAZBIAZgkAagYAbxYAAXQAAHwLAGQTAIMCAIMAAH0LAG4BAAF0AAB8CgBkFACDAgB8CwCD
+AQABcTkBV3wKAH0JAG4BAAF0AABkAQBkAgCDAgB8CQCDAQBTZAAAUygVAAAATnMBAAAAIHMEAAAA
+am9pbnMFAAAAc3BsaXRzAQAAAF9pAAAAAHMKAAAAY2FwaXRhbGl6ZXMBAAAAL3MFAAAAdXBwZXJp
+AQAAAHMBAAAAQXMEAAAAQ2hlenMCAAAARGVzAwAAAERlc3MCAAAARW5zAgAAAEV0cwIAAABMYXMD
+AAAAUGFycwQAAABQb3VycwUAAABsb3dlcnMGAAAAYXBwZW5kKAwAAABzCQAAAF9nZXRhdHRyX3MG
+AAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwkAAABsb3dlckNhc2VzAQAAAHNz
+AQAAAHhzAwAAAGxlbnMJAAAAX2dldGl0ZW1fcwkAAABpdGVtX2xpc3RzCAAAAG5ld19saXN0cwQA
+AABpdGVtKAwAAABzAQAAAHNzCQAAAF9nZXRhdHRyX3MGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJ
+AAAAX2dldGl0ZXJfcwkAAABsb3dlckNhc2VzAQAAAHhzAwAAAGxlbnMJAAAAX2dldGl0ZW1fcwkA
+AABpdGVtX2xpc3RzCAAAAG5ld19saXN0cwQAAABpdGVtKAEAAABzCQAAAGxvd2VyQ2FzZSgAAAAA
+cw8AAABTY3JpcHQgKFB5dGhvbilzCQAAAHVwcGVyQ2FzZQQAAABzIAAAAAABNQAGADkBLwAGAFUB
+FQETAQYBDQAGASgBGQEUAQoBYwEAAAADAAAABgAAAEMAAABzOAAAAHQAAHwAAGQBAIMCAGQCAIMB
+AG8aAAF0AgB8AABkAABkAwALhQIAgwIAfQAAbgEAAXwAAFNkAABTKAQAAABOcwgAAABlbmRzd2l0
+aHMBAAAACmkBAAAAKAMAAABzCQAAAF9nZXRhdHRyX3MEAAAAbGluZXMJAAAAX2dldGl0ZW1fKAMA
+AABzBAAAAGxpbmVzCQAAAF9nZXRhdHRyX3MJAAAAX2dldGl0ZW1fKAAAAAAoAAAAAHMPAAAAU2Ny
+aXB0IChQeXRob24pcwcAAABsX2NsZWFuEQAAAHMGAAAAAwETARoBYwEAAAAIAAAACgAAAEMAAABz
+qwAAAHQAAHwAAGQBAIMCAGQCAIMBAH0CAGcAAH0DAHiFAHQEAHwCAIMBAERddwB9BQB0BgB8BQCD
+AQBkAwBqBABvXgABdAcAfAUAZAMAgwIAZAQAagIAbxQAAXQHAHwFAGQFAAuDAgBkBABqAgBvGgAB
+dAcAfAUAZAUAZAUAC4UCAIMCAH0FAG4BAAF0AAB8AwBkBgCDAgB8BQCDAQABcSgAAXEoAFd8AwBT
+ZAAAUygHAAAATnMFAAAAc3BsaXRzAQAAACxpAAAAAHMBAAAAImkBAAAAcwYAAABhcHBlbmQoCAAA
+AHMJAAAAX2dldGF0dHJfcwQAAABsaW5lcwYAAABlX2xpc3RzCgAAAG5ld19lX2xpc3RzCQAAAF9n
+ZXRpdGVyX3MBAAAAZXMDAAAAbGVucwkAAABfZ2V0aXRlbV8oCAAAAHMEAAAAbGluZXMJAAAAX2dl
+dGF0dHJfcwYAAABlX2xpc3RzCgAAAG5ld19lX2xpc3RzCQAAAF9nZXRpdGVyX3MBAAAAZXMDAAAA
+bGVucwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzBwAAAGxfc3Bs
+aXQWAAAAcxIAAAAAARUBBgENAAYBFgEqAR0BGAFjAQAAAAwAAAAYAAAAAwAAAHOXAQAAdAAAiAIA
+fAAAgwEAZAEAgwIAZAIAgwEAfQMAdAQAfAMAgwEAfQUAfAUAZAMAagIAb00AAXQAAHQAAHQGAGQE
+AIMCAGQFAIMCAGQGAGQHAGQIAIgCAHQHAHwDAGQJAIMCAIMBAGQKAIgBAHQHAHwDAGQJAIMCAIMB
+AIMAA1NuEwEBfAUAZAMAagQAbwUBAXQAAHQAAHQGAGQEAIMCAGQLAIMCAIgCAHQAAGQCAGQMAIMC
+AHQHAHwDAGQAAGQDAAuFAgCDAgCDAQCDAQCDAQB9CQB8CQB0CgBqCABvNQABiAAAiAIAdAAAZAIA
+ZAwAgwIAdAcAfAMAZAAAZAMAC4UCAIMCAIMBAIMBAIMBAH0JAG4BAAF0AAB8CQBkDQCDAgCIAgB0
+BwB8AwBkAwALgwIAgwEAgwEAfQAAfAAAdAoAagkAbwgAAXwAAFNxkwEBdAAAfAkAZAUAgwIAZAYA
+ZA4AZAgAiAIAdAcAfAMAZAMAC4MCAIMBAGQKAIgBAHQHAHwDAGQDAAuDAgCDAQCDAANTbgEAAWQA
+AFMoDwAAAE5zBQAAAHNwbGl0cwEAAAAvaQEAAABzEQAAAHBvcnRhbF9jYXRlZ29yaWVzcwoAAABu
+ZXdDb250ZW50cwsAAABwb3J0YWxfdHlwZXMNAAAAQmFzZSBDYXRlZ29yeXMCAAAAaWRpAAAAAHMF
+AAAAdGl0bGVzEAAAAGdldENhdGVnb3J5VmFsdWVzBAAAAGpvaW5zAwAAAGdldHMIAAAAQ2F0ZWdv
+cnkoDAAAAHMJAAAAX2dldGF0dHJfcwkAAABsb3dlckNhc2VzAwAAAGNhdHMIAAAAY2F0X2xpc3Rz
+AwAAAGxlbnMHAAAAY2F0X2xlbnMHAAAAY29udGV4dHMJAAAAX2dldGl0ZW1fcwkAAAB1cHBlckNh
+c2VzEQAAAHJlbGF0aXZlX2NhdGVnb3J5cwQAAABOb25lcw8AAABjcmVhdGVfY2F0ZWdvcnkoDAAA
+AHMDAAAAY2F0cwkAAABfZ2V0YXR0cl9zCQAAAGxvd2VyQ2FzZXMIAAAAY2F0X2xpc3RzAwAAAGxl
+bnMHAAAAY2F0X2xlbnMHAAAAY29udGV4dHMJAAAAX2dldGl0ZW1fcwkAAAB1cHBlckNhc2VzEQAA
+AHJlbGF0aXZlX2NhdGVnb3J5cwQAAABOb25lcw8AAABjcmVhdGVfY2F0ZWdvcnkoAwAAAHMPAAAA
+Y3JlYXRlX2NhdGVnb3J5cwkAAAB1cHBlckNhc2VzCQAAAGxvd2VyQ2FzZSgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzDwAAAGNyZWF0ZV9jYXRlZ29yeSAAAABzIAAAAAACGwEMAg0CHgEVARoCDQJD
+Ag0BNQIlAQ0BCAIVARYBYwAAAAAJAAAACgAAAEMAAABziwAAAHQAAHQAAHQAAHQBAGQBAIMCAGQC
+AIMCAGQDAIMCAIMAAH0CAGgAAH0DAHhWAHQEAHwCAIMBAERdSAB9BQB0AAB8BQBkBACDAgBkBQCD
+AQB9BgB8BgB0BwBqCQBvIAABdAAAfAUAZAYAgwIAgwAAdAgAfAMAgwEAfAYAPHE3AAFxNwBXfAMA
+U2QAAFMoBwAAAE5zEQAAAHBvcnRhbF9jYXRlZ29yaWVzcwoAAAB2YXVsdF90eXBlcxkAAABnZXRD
+YXRlZ29yeUNoaWxkVmFsdWVMaXN0cwsAAABnZXRQcm9wZXJ0eXMMAAAAY29kaWZpY2F0aW9ucw4A
+AABnZXRSZWxhdGl2ZVVybCgJAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBgAAAGNfbGlz
+dHMKAAAAdmF1bHRfZGljdHMJAAAAX2dldGl0ZXJfcwEAAABjcwQAAABjb2RlcwQAAABOb25lcwcA
+AABfd3JpdGVfKAkAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMGAAAAY19saXN0cwoAAAB2
+YXVsdF9kaWN0cwkAAABfZ2V0aXRlcl9zAQAAAGNzBAAAAGNvZGVzBAAAAE5vbmVzBwAAAF93cml0
+ZV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzEwAAAGdlbmVyYXRlX3ZhdWx0X2RpY3Q6
+AAAAcxAAAAAAASQBBgENAAYBFQENASQBcwcAAABSRVFVRVNUcw4AAABteV9pbXBvcnRfdHlwZXMU
+AAAAZmllbGRfbXlfaW1wb3J0X3R5cGVzCQAAAHJlYWRsaW5lc3MPAAAAY3JlYXRlX2NhdGVnb3J5
+cxEAAABwb3J0YWxfY2F0ZWdvcmllc3MDAAAAZ2V0aQAAAABzDQAAAGRlbGV0ZUNvbnRlbnRzFwAA
+AHRyeWluZyB0byBjcmVhdGUgJXMgLi4ucwQAAABkb25lcwYAAABGYWlsZWRzEwAAAGFzc2lnbl9j
+b2RpZmljYXRpb25pAgAAAHMaAAAAdHJ5aW5nIHRvIGFzc2lnbiB0byAlcyAuLi5zEAAAAGdldENh
+dGVnb3J5VmFsdWVzDwAAAHNldENvZGlmaWNhdGlvbmkBAAAAcwcAAABkb25lICVzcxEAAABhc3Np
+Z25fdmF1bHRfdHlwZXMEAAAAa2V5c3MPAAAAc2V0Q2F0ZWdvcnlMaXN0cwwAAABzZXQgJXMgdG8g
+JXNzEAAAAGNyZWF0ZV9zdWJ2YXVsdHNpAwAAAHMHAAAAaGFzX2tleXMGAAAAYXBwZW5kcxQAAABF
+bmNhaXNzZSBkZXMgRGV2aXNlc3MIAAAAY3VycmVuY3lzDAAAAG9iamVjdFZhbHVlc3MFAAAAZ2V0
+SWRzIwAAAEJhb2JhYl9nZXRQb3J0YWxSZWZlcmVuY2VDdXJyZW5jeUlEcwUAAAAlcy8lc3MIAAAA
+Z2V0VGl0bGVzKwAAAEVuY2Fpc3NlIGRlcyBCaWxsZXRzIFJlY3VzIHBvdXIgVmVudGlsYXRpb25z
+BAAAAHNpdGVzBgAAAGFnZW5jZXMKAAAAcHJpbmNpcGFsZXMJAAAAb2JqZWN0SWRzcxkAAABnZXRD
+YXRlZ29yeUNoaWxkVmFsdWVMaXN0cwoAAABpc01lbWJlck9mcwYAAABzdHJpY3RzDgAAAGdldFJl
+bGF0aXZlVXJscwIAAABpc3MzAAAARW5jYWlzc2UgZGVzIEJpbGxldHMgUmVzdGl0dWVzIHBhciBU
+aWVycyBhIERldHJ1aXJlcxYAAABzaXRlL2FnZW5jZS9wcmluY2lwYWxlcwQAAABmaW5kcwEAAAAv
+cwUAAABzcGxpdHMKAAAAICBjcmVhdGluZ3MAAAAAcwgAAABub3QgaGVyZXMCAAAAb2soJgAAAHMH
+AAAAX3ByaW50X3MGAAAAX3ByaW50cwkAAABsb3dlckNhc2VzCQAAAHVwcGVyQ2FzZXMHAAAAbF9j
+bGVhbnMHAAAAbF9zcGxpdHMPAAAAY3JlYXRlX2NhdGVnb3J5cxMAAABnZW5lcmF0ZV92YXVsdF9k
+aWN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzBwAAAGdldGF0dHJzBAAA
+AE5vbmVzCwAAAGltcG9ydF90eXBlcwsAAABpbXBvcnRfZmlsZXMJAAAAbGluZV9saXN0cwYAAABh
+cHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zBAAAAGxpbmVzCQAAAF9nZXRpdGVtX3MG
+AAAAZV9saXN0cwMAAABsZW5zAQAAAGVzCAAAAGNhdGVnb3J5cwQAAAByZXBycw8AAAB2YXVsdF90
+eXBlX2RpY3RzDwAAAHZhdWx0X3R5cGVfbGlzdHMNAAAAc3VidmF1bHRfZGljdHMFAAAAdmF1bHRz
+CAAAAHN1YnZhdWx0cw0AAABzdWJ2YXVsdF9jb2RlcwcAAABfd3JpdGVfcwEAAABjcwoAAAB2YXVs
+dF90eXBlcw0AAABzdWJ2YXVsdF9kYXRhcw0AAABzdWJ2YXVsdF9wYXRocxAAAABuZXdfY2F0ZWdv
+cnlfb2JqKCcAAABzCwAAAGltcG9ydF9maWxlcwIAAABrd3MHAAAAX3ByaW50X3MGAAAAX3ByaW50
+cwkAAABsb3dlckNhc2VzCQAAAHVwcGVyQ2FzZXMHAAAAbF9jbGVhbnMHAAAAbF9zcGxpdHMPAAAA
+Y3JlYXRlX2NhdGVnb3J5cxMAAABnZW5lcmF0ZV92YXVsdF9kaWN0cwkAAABfZ2V0YXR0cl9zBwAA
+AGNvbnRleHRzBwAAAHJlcXVlc3RzBwAAAGdldGF0dHJzBAAAAE5vbmVzCwAAAGltcG9ydF90eXBl
+cwkAAABsaW5lX2xpc3RzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MEAAAA
+bGluZXMJAAAAX2dldGl0ZW1fcwYAAABlX2xpc3RzAwAAAGxlbnMBAAAAZXMIAAAAY2F0ZWdvcnlz
+BAAAAHJlcHJzDwAAAHZhdWx0X3R5cGVfZGljdHMPAAAAdmF1bHRfdHlwZV9saXN0cw0AAABzdWJ2
+YXVsdF9kaWN0cwUAAAB2YXVsdHMIAAAAc3VidmF1bHRzDQAAAHN1YnZhdWx0X2NvZGVzBwAAAF93
+cml0ZV9zAQAAAGNzCgAAAHZhdWx0X3R5cGVzDQAAAHN1YnZhdWx0X2RhdGFzDQAAAHN1YnZhdWx0
+X3BhdGhzEAAAAG5ld19jYXRlZ29yeV9vYmooAAAAACgDAAAAcw8AAABjcmVhdGVfY2F0ZWdvcnlz
+CQAAAHVwcGVyQ2FzZXMJAAAAbG93ZXJDYXNlcw8AAABTY3JpcHQgKFB5dGhvbilzFQAAAEltcG9y
+dENzdlRvQ2F0ZWdvcmllcwEAAABzvAAAABIDDA0JBQkKEhoJCg8CJQESAhQAHwEUAB8FEwE3ATIB
+DQAGARMBDwEDARQBCgERAgoBFwMNAQ0ABgETAQMBHQEwARkBGwIKARcDDQEJARIBDQAGASkBMAEl
+ATUCDQMGAQ0ABgETARUBFQEVARcBGgEcAQ0BIgAGASsBPgENAT0ADAE8AhICKwAGAQ0ADAEiASIB
+FgAGAQ8BEgEXASkCBwFQAgQCEAEiARYBGAIQASIBFgEYAQQBCQEkCAoBKAEAAABzFQAAAEltcG9y
+dENzdlRvQ2F0ZWdvcmllcygBAAAAcxUAAABJbXBvcnRDc3ZUb0NhdGVnb3JpZXMoAAAAACgAAAAA
+cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/ImportCsvToCategories</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>import_file, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>import_file</string>
+                            <string>kw</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>lowerCase</string>
+                            <string>upperCase</string>
+                            <string>l_clean</string>
+                            <string>l_split</string>
+                            <string>create_category</string>
+                            <string>generate_vault_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>import_type</string>
+                            <string>line_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>e_list</string>
+                            <string>len</string>
+                            <string>e</string>
+                            <string>category</string>
+                            <string>repr</string>
+                            <string>vault_type_dict</string>
+                            <string>vault_type_list</string>
+                            <string>subvault_dict</string>
+                            <string>vault</string>
+                            <string>subvault</string>
+                            <string>subvault_code</string>
+                            <string>_write_</string>
+                            <string>c</string>
+                            <string>vault_type</string>
+                            <string>subvault_data</string>
+                            <string>subvault_path</string>
+                            <string>new_category_obj</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ImportCsvToCategories</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Move to erp5_core ?</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

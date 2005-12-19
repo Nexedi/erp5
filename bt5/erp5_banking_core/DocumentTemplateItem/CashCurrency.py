@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -35,80 +35,80 @@ from zLOG import LOG
 
 
 class CashCurrency(Resource):
+  """
+    A Resource
+  """
+
+  meta_type = 'BAOBAB Cash Currency'
+  portal_type = 'Cash Currency'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
+
+  # Declarative interfaces
+  __implements__ = ( Interface.Variated, )
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Price
+                    , PropertySheet.Resource
+                    , PropertySheet.Reference
+                    , PropertySheet.FlowCapacity
+                    , PropertySheet.VariationRange
+                    , PropertySheet.CashCurrency
+                    )
+
+  security.declareProtected(Permissions.View,'getTitle')
+  def getTitle(self,**kw):
     """
-      A Resource
-    """
-
-    meta_type = 'BAOBAB Cash Currency'
-    portal_type = 'Cash Currency'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
-
-    # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Price
-                      , PropertySheet.Resource
-                      , PropertySheet.Reference
-                      , PropertySheet.FlowCapacity
-                      , PropertySheet.VariationRange
-                      , PropertySheet.CashCurrency
-                      )
-
-    security.declareProtected(Permissions.View,'getTitle')
-    def getTitle(self,**kw):
-      """
       The title will depend on the Portal Type and the value, for example :
-      Piece de 500
-      """
-      title = self.portal_types[self.getPortalType()].title
-      price = self.getBasePrice()
-      if price is None:
-        price = 'Not Defined'
-      else:
-        price = '%i' % int(price)
-      title = '%s de %s' % (title, price)
-      return title
+        Piece de 500
+    """
+    title = self.portal_types[self.getPortalType()].title
+    price = self.getBasePrice()
+    if price is None:
+      price = 'Not Defined'
+    else:
+      price = '%i' % int(price)
+    title = '%s de %s' % (title, price)
+    return title
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setVariationList')
-    def _setVariationList(self,value):
-      """
+  security.declareProtected(Permissions.ModifyPortalContent, '_setVariationList')
+  def _setVariationList(self,value):
+    """
       We will create cells by the same time
-      """
-      LOG('_setVariationList, value',0,value)
-      self._categorySetVariationList(value)
-      self.setVariationBaseCategoryList(('cash_status','emission_letter','variation'))
-      #all_variation_list = self.OrderLine_getMatrixItemList()
-      #emission_letter_list = [x for x in all_variation_list if x.startswith('emission_letter')]
-      emission_letter_list = [x[1] for x in self.portal_categories.emission_letter.getCategoryChildTitleItemList()[1:]]
-      self._categorySetEmissionLetterList(emission_letter_list)
-      #cash_status_list = [x for x in all_variation_list if x.startswith('cash_status')]
-      cash_status_list = [x[1] for x in self.portal_categories.cash_status.getCategoryChildTitleItemList()[1:]]
-      self._categorySetCashStatusList(cash_status_list)
+    """
+    LOG('_setVariationList, value',0,value)
+    self._categorySetVariationList(value)
+    self.setVariationBaseCategoryList(('cash_status','emission_letter','variation'))
+    #all_variation_list = self.OrderLine_getMatrixItemList()
+    #emission_letter_list = [x for x in all_variation_list if x.startswith('emission_letter')]
+    emission_letter_list = [x[1] for x in self.portal_categories.emission_letter.getCategoryChildTitleItemList()[1:]]
+    self._categorySetEmissionLetterList(emission_letter_list)
+    #cash_status_list = [x for x in all_variation_list if x.startswith('cash_status')]
+    cash_status_list = [x[1] for x in self.portal_categories.cash_status.getCategoryChildTitleItemList()[1:]]
+    self._categorySetCashStatusList(cash_status_list)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'setVariationList')
-    def setVariationList(self,value):
-      """
+  security.declareProtected(Permissions.ModifyPortalContent, 'setVariationList')
+  def setVariationList(self,value):
+    """
       Call the private method
-      """
-      self._setVariationList(value)
+    """
+    self._setVariationList(value)
 
-    # Cell Related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id):
-      """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name="Set Mapped Value",id=id)
-      return self.get(id)
+  # Cell Related
+  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+  def newCellContent(self, id):
+    """
+      This method can be overriden
+    """
+    self.invokeFactory(type_name="Set Mapped Value",id=id)
+    return self.get(id)
 

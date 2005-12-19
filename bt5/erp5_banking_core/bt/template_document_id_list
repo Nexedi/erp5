@@ -1,6 +1,7 @@
 CashCurrency
 CashDeliveryLine
+BankingOperation
 CashContainer
 BankingOperationLine
 AccountingTransactionRule
-BankingOperation
+CashDelivery

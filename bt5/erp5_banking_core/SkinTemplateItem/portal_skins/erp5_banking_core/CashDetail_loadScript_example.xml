@@ -66,33 +66,58 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency_list = [(\'%s - %s\' % (x.getId(), x.getTitle()), x.getRelativeUrl())\n
-  for x in context.currency_module.objectValues()]\n
+            <value> <string>CashMovement_cashDetail_parameter = { \'line_portalType\'     : \'Cash Movement Line\'\n
+, \'operation_currency\'  : \'EUR\'\n
+, \'variation_list\'      : None\n
+, \'cashStatus_list\'     : [\'not_defined\']\n
+, \'emissionLetter_list\' : None\n
+}\n
 \n
-currency_list.insert(0, (\'\',\'\'))\n
+CashMovement_cashDetail_parameter = { \'line_portalType\' : \'Cash Movement Line\'             # The portal type that the fastinput will create\n
+, \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()                      # The operation currency\n
+, \'cashStatus_list\'          : None                       # List of possible cashStatus or None if all\n
+, \'emissionLetter_list\'      : None                       # List of possible emissionLetter or None if all\n
+, \'variation_list\'           : None                       # List of possible variation or None if all\n
+, \'currencyCash_portalType\'  : None                       # \'Coin\' or \'Banknote\' or None if both\n
+, \'updatePossible\'           : True                       # If true, the fastinput will not allow change\n
+, \'columnBase\'               : \'variation\'                # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
+#, \'columnBase\'              : \'emissionLetter\'           # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
+#, \'columnBase\'              : \'cashStatus\'               # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
+}\n
 \n
-return currency_list\n
+\n
+\n
+\n
+return context.CashDetail_fastInputUpdate( listbox = None\n
+                                   , cashDetail_parameter = CashMovement_cashDetail_parameter\n
+                                   , destination = context.getObject().absolute_url())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAMAAAAQwAA
-AHOaAAAAZwAABGkAAH0BAHQCAHQDAHQDAHQEAGQBAIMCAGQCAIMCAIMAAIMBAERdRAB9BQB8AQBk
-AwB0AwB8BQBkBACDAgCDAAB0AwB8BQBkBQCDAgCDAABmAgAWdAMAfAUAZAYAgwIAgwAAZgIAgwEA
-AXEpAH4BAH0GAHQDAHwGAGQHAIMCAGQIAGQJAGQJAGYCAIMCAAF8BgBTZAAAUygKAAAATnMPAAAA
-Y3VycmVuY3lfbW9kdWxlcwwAAABvYmplY3RWYWx1ZXNzBwAAACVzIC0gJXNzBQAAAGdldElkcwgA
-AABnZXRUaXRsZXMOAAAAZ2V0UmVsYXRpdmVVcmxzBgAAAGluc2VydGkAAAAAcwAAAAAoBwAAAHMG
-AAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzAQAAAHhzDQAAAGN1cnJlbmN5X2xpc3QoBwAAAHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
-MHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzDQAAAGN1cnJl
-bmN5X2xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIAAAAEN1cnJlbmN5RXhjaGFu
-Z2VfZ2V0Q3VycmVuY3lMaXN0AQAAAHMIAAAAEwEWAFACGQIoAQAAAHMgAAAAQ3VycmVuY3lFeGNo
-YW5nZV9nZXRDdXJyZW5jeUxpc3QoAQAAAHMgAAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRDdXJyZW5j
-eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAALAAAAQwAA
+AHPOAAAAaAAABGQBAGQCAAM8BGQDAGQEAAM8BGQFAHQAAAM8BGQGAGQHAGcBAAM8BGQIAHQAAAM8
+fQEAaAAABGQBAGQCAAM8BGQDAHQCAHQDAGQJAIMCAIMAAAM8BGQGAHQAAAM8BGQIAHQAAAM8BGQF
+AHQAAAM8BGQKAHQAAAM8BGQLAHQEAAM8BGQMAGQNAAM8fQEAdAIAdAMAZA4AgwIAZA8AdAAAZBAA
+fAEAZBEAdAIAdAIAdAMAZBIAgwIAgwAAZBMAgwIAgwAAgwADU2QAAFMoFAAAAE5zDwAAAGxpbmVf
+cG9ydGFsVHlwZXMSAAAAQ2FzaCBNb3ZlbWVudCBMaW5lcxIAAABvcGVyYXRpb25fY3VycmVuY3lz
+AwAAAEVVUnMOAAAAdmFyaWF0aW9uX2xpc3RzDwAAAGNhc2hTdGF0dXNfbGlzdHMLAAAAbm90X2Rl
+ZmluZWRzEwAAAGVtaXNzaW9uTGV0dGVyX2xpc3RzIwAAAEJhb2JhYl9nZXRQb3J0YWxSZWZlcmVu
+Y2VDdXJyZW5jeUlEcxcAAABjdXJyZW5jeUNhc2hfcG9ydGFsVHlwZXMOAAAAdXBkYXRlUG9zc2li
+bGVzCgAAAGNvbHVtbkJhc2VzCQAAAHZhcmlhdGlvbnMaAAAAQ2FzaERldGFpbF9mYXN0SW5wdXRV
+cGRhdGVzBwAAAGxpc3Rib3hzFAAAAGNhc2hEZXRhaWxfcGFyYW1ldGVycwsAAABkZXN0aW5hdGlv
+bnMJAAAAZ2V0T2JqZWN0cwwAAABhYnNvbHV0ZV91cmwoBQAAAHMEAAAATm9uZXMhAAAAQ2FzaE1v
+dmVtZW50X2Nhc2hEZXRhaWxfcGFyYW1ldGVycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBAAA
+AFRydWUoBQAAAHMEAAAATm9uZXMhAAAAQ2FzaE1vdmVtZW50X2Nhc2hEZXRhaWxfcGFyYW1ldGVy
+cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBAAAAFRydWUoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzHQAAAENhc2hEZXRhaWxfbG9hZFNjcmlwdF9leGFtcGxlAQAAAHMaAAAAGQIJAQwB
+CAMTARIBCQEJAQkBCQERCRUBDAEoAQAAAHMdAAAAQ2FzaERldGFpbF9sb2FkU2NyaXB0X2V4YW1w
+bGUoAQAAAHMdAAAAQ2FzaERldGFpbF9sb2FkU2NyaXB0X2V4YW1wbGUoAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CurrencyExchange_getCurrencyList</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_loadScript_example</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -128,13 +153,11 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
+                            <string>None</string>
+                            <string>CashMovement_cashDetail_parameter</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>x</string>
-                            <string>currency_list</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,11 +174,7 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CurrencyExchange_getCurrencyList</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Move this to erp5_core ???</string> </value>
+            <value> <string>CashDetail_loadScript_example</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

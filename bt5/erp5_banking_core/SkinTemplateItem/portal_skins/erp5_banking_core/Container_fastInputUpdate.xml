@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>base_list=(\'variation\')\n
+default_variation_category_list =  [\'emission_letter/k\',\'cash_status/valid\']\n
+\n
+currency_list = [x.getObject() for x in context.portal_catalog(portal_type=(\'Banknote\',\'Coin\')) \\\n
+                                   if x.getObject().getPriceCurrencyId() == cashMovement_currency] \n
+\n
+currency_list = [x.getObject() for x in context.portal_catalog(portal_type=(\'Banknote\',\'Coin\'))] \n
+\n
+currency_list = context.sort_currency(currency_list)\n
+\n
+variation_list =  context.portal_categories.variation.getCategoryChildTitleItemList()[1:]\n
+\n
+total_price = 0\n
+if listbox is None:\n
+  listbox = []\n
+  for x in currency_list :\n
+    currency_dict = {\'resource\':x.getTitle(),\'Id_resource\':x.getId()}\n
+    total_quantity = 0\n
+    counter = 1\n
+    find_currencyLine = context.searchContainerLineByResource(x.getId())  # Search container line with resource X\n
+    for y in variation_list:\n
+       quantity = 0\n
+       if not find_currencyLine is None :                         # If Check Payment line is found\n
+          cell = find_currencyLine.getCell(\'variation/\'+y[1])\n
+          if not cell is None:\n
+             quantity = cell.getQuantity()\n
+             total_quantity += quantity\n
+\n
+       currency_dict[\'variation\'+str(counter)]= quantity \n
+       counter += 1\n
+    resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id= x.getId())\n
+    resource_price = resource_list[0].getObject().getPrice()\n
+    currency_dict[\'price\']= context.Integer_toString(int(total_quantity * resource_price))\n
+    total_price += int(total_quantity * resource_price)\n
+    listbox.append(currency_dict)\n
+\n
+else :\n
+  new_lineList = []\n
+  counter = 0\n
+  price_list = []\n
+  for x in listbox :\n
+    resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id = x[\'Id_resource\'])\n
+    resource_price = resource_list[0].getObject().getPrice()\n
+    quantity = 0\n
+    counter = 1\n
+    for y in variation_list:\n
+      cell_quantity = int(x[\'variation\'+str(counter)] or 0)\n
+      quantity = quantity + cell_quantity\n
+      counter  += 1\n
+    x[\'price\'] = context.Integer_toString(int(quantity * resource_price))\n
+    total_price += int(quantity * resource_price)\n
+    new_lineList.append(x) \n
+    price_list.append(resource_price)\n
+    price_list.append(x[\'resource\'])\n
+    listbox = new_lineList \n
+total_price = context.Integer_toString(total_price)\n
+context.Base_updateDialogForm(listbox=listbox,calculated_price=total_price, empty_line_number=0)\n
+\n
+return context.asContext(context=None,portal_type=context.getPortalType(),calculated_price=total_price, **kw).Container_fastInputForm(**kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAACEAAAAh
+AAAASwAAAHPgBAAAZAEAfQMAZAIAZAMAZwIAfQQAZwAABGkCAH0GAHQEAHQFAHQGAGQEAIMCAGQF
+AGQGAGQHAGYCAIMAAYMBAERdRQB9CgB0BQB0BQB8CgBkCACDAgCDAABkCQCDAgCDAAB0CABqAgBv
+GgABfAYAdAUAfAoAZAgAgwIAgwAAgwEAAXE+AAFxPgB+BgB9DABnAAAEaQIAfQYAdAQAdAUAdAYA
+ZAQAgwIAZAUAZAYAZAcAZgIAgwABgwEARF0cAH0KAHwGAHQFAHwKAGQIAIMCAIMAAIMBAAFxuAB+
+BgB9DAB0BQB0BgBkCgCDAgB8DACDAQB9DAB0CgB0BQB0BQB0BQB0BgBkCwCDAgBkAQCDAgBkDACD
+AgCDAABkDQBkAACFAgCDAgB9DgBkDgB9DwB8AQB0DgBqCABvyAEBZwAAfQEAeB4DdAQAfAwAgwEA
+RF2tAX0KAGgAAARkDwB0BQB8CgBkEACDAgCDAAADPARkEQB0BQB8CgBkEgCDAgCDAAADPH0RAGQO
+AH0SAGQNAH0TAHQFAHQGAGQTAIMCAHQFAHwKAGQSAIMCAIMAAIMBAH0UAHigAHQEAHwOAIMBAERd
+kgB9FQBkDgB9FgB8FAB0DgBqCAAMb1QAAXQFAHwUAGQUAIMCAGQVAHQKAHwVAGQNAIMCABeDAQB9
+FwB8FwB0DgBqCAAMbyAAAXQFAHwXAGQWAIMCAIMAAH0WAHwSAHwWADd9EgBxKQIBbgEAAXwWAHQW
+AHwRAIMBAGQBAHQXAHwTAIMBABc8fBMAZA0AN30TAHG7AVd0BQB0BgBkBACDAgBkBQBkBgBkBwBm
+AgBkFwB0BQB8CgBkEgCDAgCDAACDAAJ9GgB0BQB0BQB0CgB8GgBkDgCDAgBkCACDAgCDAABkGACD
+AgCDAAB9GwB0BQB0BgBkGQCDAgB0GgB8EgB8GwAUgwEAgwEAdBYAfBEAgwEAZBoAPHwPAHQaAHwS
+AHwbABSDAQA3fQ8AdAUAfAEAZBsAgwIAfBEAgwEAAXFLAVduYAEBZwAAfR0AZA4AfRMAZwAAfR4A
+eEoBdAQAfAEAgwEARF08AX0KAHQFAHQGAGQEAIMCAGQFAGQGAGQHAGYCAGQXAHQKAHwKAGQRAIMC
+AIMAAn0aAHQFAHQFAHQKAHwaAGQOAIMCAGQIAIMCAIMAAGQYAIMCAIMAAH0bAGQOAH0WAGQNAH0T
+AHhOAHQEAHwOAIMBAERdQAB9FQB0GgB0CgB8CgBkAQB0FwB8EwCDAQAXgwIAcAQAAWQOAIMBAH0f
+AHwWAHwfABd9FgB8EwBkDQA3fRMAcZIDV3QFAHQGAGQZAIMCAHQaAHwWAHwbABSDAQCDAQB0FgB8
+CgCDAQBkGgA8fA8AdBoAfBYAfBsAFIMBADd9DwB0BQB8HQBkGwCDAgB8CgCDAQABdAUAfB4AZBsA
+gwIAfBsAgwEAAXQFAHweAGQbAIMCAHQKAHwKAGQPAIMCAIMBAAF8HQB9AQBxHwNXdAUAdAYAZBkA
+gwIAfA8AgwEAfQ8AdAUAdAYAZBwAgwIAZB0AfAEAZB4AfA8AZB8AZA4AgwADAXQeAHQFAHQeAHQF
+AHQGAGQgAIMCAGQhAHQOAGQFAHQFAHQGAGQiAIMCAIMAAGQeAHwPAHwCAI0BA2QjAIMCAHwCAI0B
+AFNkAABTKCQAAABOcwkAAAB2YXJpYXRpb25zEQAAAGVtaXNzaW9uX2xldHRlci9rcxEAAABjYXNo
+X3N0YXR1cy92YWxpZHMOAAAAcG9ydGFsX2NhdGFsb2dzCwAAAHBvcnRhbF90eXBlcwgAAABCYW5r
+bm90ZXMEAAAAQ29pbnMJAAAAZ2V0T2JqZWN0cxIAAABnZXRQcmljZUN1cnJlbmN5SWRzDQAAAHNv
+cnRfY3VycmVuY3lzEQAAAHBvcnRhbF9jYXRlZ29yaWVzcx0AAABnZXRDYXRlZ29yeUNoaWxkVGl0
+bGVJdGVtTGlzdGkBAAAAaQAAAABzCAAAAHJlc291cmNlcwgAAABnZXRUaXRsZXMLAAAASWRfcmVz
+b3VyY2VzBQAAAGdldElkcx0AAABzZWFyY2hDb250YWluZXJMaW5lQnlSZXNvdXJjZXMHAAAAZ2V0
+Q2VsbHMKAAAAdmFyaWF0aW9uL3MLAAAAZ2V0UXVhbnRpdHlzAgAAAGlkcwgAAABnZXRQcmljZXMQ
+AAAASW50ZWdlcl90b1N0cmluZ3MFAAAAcHJpY2VzBgAAAGFwcGVuZHMVAAAAQmFzZV91cGRhdGVE
+aWFsb2dGb3JtcwcAAABsaXN0Ym94cxAAAABjYWxjdWxhdGVkX3ByaWNlcxEAAABlbXB0eV9saW5l
+X251bWJlcnMJAAAAYXNDb250ZXh0cwcAAABjb250ZXh0cw0AAABnZXRQb3J0YWxUeXBlcxcAAABD
+b250YWluZXJfZmFzdElucHV0Rm9ybSggAAAAcwkAAABiYXNlX2xpc3RzHwAAAGRlZmF1bHRfdmFy
+aWF0aW9uX2NhdGVnb3J5X2xpc3RzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVy
+X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwEAAAB4cxUAAABjYXNoTW92ZW1lbnRfY3VycmVu
+Y3lzDQAAAGN1cnJlbmN5X2xpc3RzCQAAAF9nZXRpdGVtX3MOAAAAdmFyaWF0aW9uX2xpc3RzCwAA
+AHRvdGFsX3ByaWNlcwcAAABsaXN0Ym94cwQAAABOb25lcw0AAABjdXJyZW5jeV9kaWN0cw4AAAB0
+b3RhbF9xdWFudGl0eXMHAAAAY291bnRlcnMRAAAAZmluZF9jdXJyZW5jeUxpbmVzAQAAAHlzCAAA
+AHF1YW50aXR5cwQAAABjZWxscwcAAABfd3JpdGVfcwMAAABzdHJzDQAAAHJlc291cmNlX2xpc3Rz
+DgAAAHJlc291cmNlX3ByaWNlcwMAAABpbnRzDAAAAG5ld19saW5lTGlzdHMKAAAAcHJpY2VfbGlz
+dHMNAAAAY2VsbF9xdWFudGl0eXMHAAAAX2FwcGx5X3MCAAAAa3coIQAAAHMCAAAAbXlzBwAAAGxp
+c3Rib3hzAgAAAGt3cwkAAABiYXNlX2xpc3RzHwAAAGRlZmF1bHRfdmFyaWF0aW9uX2NhdGVnb3J5
+X2xpc3RzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0dHJf
+cwcAAABjb250ZXh0cwEAAAB4cxUAAABjYXNoTW92ZW1lbnRfY3VycmVuY3lzDQAAAGN1cnJlbmN5
+X2xpc3RzCQAAAF9nZXRpdGVtX3MOAAAAdmFyaWF0aW9uX2xpc3RzCwAAAHRvdGFsX3ByaWNlcwQA
+AABOb25lcw0AAABjdXJyZW5jeV9kaWN0cw4AAAB0b3RhbF9xdWFudGl0eXMHAAAAY291bnRlcnMR
+AAAAZmluZF9jdXJyZW5jeUxpbmVzAQAAAHlzCAAAAHF1YW50aXR5cwQAAABjZWxscwcAAABfd3Jp
+dGVfcwMAAABzdHJzDQAAAHJlc291cmNlX2xpc3RzDgAAAHJlc291cmNlX3ByaWNlcwMAAABpbnRz
+DAAAAG5ld19saW5lTGlzdHMKAAAAcHJpY2VfbGlzdHMNAAAAY2VsbF9xdWFudGl0eXMHAAAAX2Fw
+cGx5XygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMZAAAAQ29udGFpbmVyX2Zhc3RJbnB1
+dFVwZGF0ZQEAAABzbgAAAAYBDAIsAAYBSAIsACUCFQIzAgYBDQEGAQ0ABgEwAQYBBgEhAQ0ABgEG
+AQ4BIgEOARIBEgIaAQ4BMAEnASkBFwEYAwYBBgEGAQ0ABgEtAScBBgEGAQ0ABgEmAQoBDgEpARcB
+EwETARkBCgEYAR8CKAIAAABzBAAAAE5vbmVzGQAAAENvbnRhaW5lcl9mYXN0SW5wdXRVcGRhdGUo
+AgAAAHMEAAAATm9uZXMZAAAAQ29udGFpbmVyX2Zhc3RJbnB1dFVwZGF0ZSgAAAAAKAAAAABzDwAA
+AFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Container_fastInputUpdate</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>my=None, listbox=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>my</string>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>base_list</string>
+                            <string>default_variation_category_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>cashMovement_currency</string>
+                            <string>currency_list</string>
+                            <string>_getitem_</string>
+                            <string>variation_list</string>
+                            <string>total_price</string>
+                            <string>None</string>
+                            <string>currency_dict</string>
+                            <string>total_quantity</string>
+                            <string>counter</string>
+                            <string>find_currencyLine</string>
+                            <string>y</string>
+                            <string>quantity</string>
+                            <string>cell</string>
+                            <string>_write_</string>
+                            <string>str</string>
+                            <string>resource_list</string>
+                            <string>resource_price</string>
+                            <string>int</string>
+                            <string>new_lineList</string>
+                            <string>price_list</string>
+                            <string>cell_quantity</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Container_fastInputUpdate</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

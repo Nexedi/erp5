@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -24,22 +24,25 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-class CashContainer:
-    """
-        VariationRange which allows to define possible
-        variations for a Resource, a Transformation, etc.
-    """
 
-    _properties = (
-                     {   'id'          : 'cash_number_range_start',
-                         'description' : '',
-                         'type'        : 'string',
-                         'mode'        : 'w'
-                     },
-                     {   'id'          : 'cash_number_range_stop',
-                         'description' : '',
-                         'type'        : 'string',
-                         'mode'        : 'w'
-                     }
-                  )
-    _categories = ( 'emission_letter','cash_status','variation')
+
+class CashContainer:
+  """
+    VariationRange which allows to define possible
+    variations for a Resource, a Transformation, etc.
+  """
+
+  _properties = (
+                   {   'id'          : 'cash_number_range_start',
+                       'description' : '',
+                       'type'        : 'string',
+                       'mode'        : 'w'
+                   },
+                   {   'id'          : 'cash_number_range_stop',
+                       'description' : '',
+                       'type'        : 'string',
+                       'mode'        : 'w'
+                   }
+                )
+                
+  _categories = ( 'emission_letter','cash_status','variation')

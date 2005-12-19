@@ -66,8 +66,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency_list = [(\'%s - %s\' % (x.getId(), x.getTitle()), x.getRelativeUrl())\n
-  for x in context.currency_module.objectValues()]\n
+            <value> <string>reference_currency = context.Baobab_getPortalReferenceCurrencyID()\n
+\n
+currency_list = [(\'%s - %s\' % (x.getId(), x.getTitle()), x.getRelativeUrl())\n
+  for x in context.currency.objectValues()\n
+  if x.getId() != reference_currency]\n
 \n
 currency_list.insert(0, (\'\',\'\'))\n
 \n
@@ -76,23 +79,26 @@ return currency_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAMAAAAQwAA
-AHOaAAAAZwAABGkAAH0BAHQCAHQDAHQDAHQEAGQBAIMCAGQCAIMCAIMAAIMBAERdRAB9BQB8AQBk
-AwB0AwB8BQBkBACDAgCDAAB0AwB8BQBkBQCDAgCDAABmAgAWdAMAfAUAZAYAgwIAgwAAZgIAgwEA
-AXEpAH4BAH0GAHQDAHwGAGQHAIMCAGQIAGQJAGQJAGYCAIMCAAF8BgBTZAAAUygKAAAATnMPAAAA
-Y3VycmVuY3lfbW9kdWxlcwwAAABvYmplY3RWYWx1ZXNzBwAAACVzIC0gJXNzBQAAAGdldElkcwgA
-AABnZXRUaXRsZXMOAAAAZ2V0UmVsYXRpdmVVcmxzBgAAAGluc2VydGkAAAAAcwAAAAAoBwAAAHMG
-AAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzAQAAAHhzDQAAAGN1cnJlbmN5X2xpc3QoBwAAAHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
-MHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzDQAAAGN1cnJl
-bmN5X2xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIAAAAEN1cnJlbmN5RXhjaGFu
-Z2VfZ2V0Q3VycmVuY3lMaXN0AQAAAHMIAAAAEwEWAFACGQIoAQAAAHMgAAAAQ3VycmVuY3lFeGNo
-YW5nZV9nZXRDdXJyZW5jeUxpc3QoAQAAAHMgAAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRDdXJyZW5j
-eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAMAAAAQwAA
+AHPJAAAAdAAAdAEAZAEAgwIAgwAAfQIAZwAABGkDAH0EAHQFAHQAAHQAAHQBAGQCAIMCAGQDAIMC
+AIMAAIMBAERdYQB9BgB0AAB8BgBkBACDAgCDAAB8AgBqAwBvQgABfAQAZAUAdAAAfAYAZAQAgwIA
+gwAAdAAAfAYAZAYAgwIAgwAAZgIAFnQAAHwGAGQHAIMCAIMAAGYCAIMBAAFxOwABcTsAfgQAfQcA
+dAAAfAcAZAgAgwIAZAkAZAoAZAoAZgIAgwIAAXwHAFNkAABTKAsAAABOcyMAAABCYW9iYWJfZ2V0
+UG9ydGFsUmVmZXJlbmNlQ3VycmVuY3lJRHMIAAAAY3VycmVuY3lzDAAAAG9iamVjdFZhbHVlc3MF
+AAAAZ2V0SWRzBwAAACVzIC0gJXNzCAAAAGdldFRpdGxlcw4AAABnZXRSZWxhdGl2ZVVybHMGAAAA
+aW5zZXJ0aQAAAABzAAAAACgIAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzEgAAAHJlZmVy
+ZW5jZV9jdXJyZW5jeXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwEAAAB4
+cw0AAABjdXJyZW5jeV9saXN0KAgAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMSAAAAcmVm
+ZXJlbmNlX2N1cnJlbmN5cwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAA
+AHhzDQAAAGN1cnJlbmN5X2xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzJwAAAEN1
+cnJlbmN5RXhjaGFuZ2VfZ2V0Rm9yZWlnbkN1cnJlbmN5TGlzdAEAAABzDAAAABICEwEWAAYBZwIZ
+AigBAAAAcycAAABDdXJyZW5jeUV4Y2hhbmdlX2dldEZvcmVpZ25DdXJyZW5jeUxpc3QoAQAAAHMn
+AAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRGb3JlaWduQ3VycmVuY3lMaXN0KAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CurrencyExchange_getCurrencyList</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CurrencyExchange_getForeignCurrencyList</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -128,11 +134,12 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>reference_currency</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>x</string>
                             <string>currency_list</string>
                           </tuple>
@@ -151,11 +158,11 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CurrencyExchange_getCurrencyList</string> </value>
+            <value> <string>CurrencyExchange_getForeignCurrencyList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Move this to erp5_core ???</string> </value>
+            <value> <string>Move This to erp5_core ?</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

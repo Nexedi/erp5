@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -31,35 +31,35 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.AccountingTransactionLine import AccountingTransactionLine
 
+
 class BankingOperationLine(AccountingTransactionLine):
-    # CMF Type Definition
-    meta_type = 'BAOBAB Banking Operation Line'
-    portal_type = 'Banking Operation Line'
-    isPortalContent = 1
-    isRADContent = 1
+  # CMF Type Definition
+  meta_type = 'BAOBAB Banking Operation Line'
+  portal_type = 'Banking Operation Line'
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    )
 
-    security.declareProtected(Permissions.View, 'getBaobabSourceUid')
-    def getBaobabSourceUid(self):
-        """
-            Returns a calculated source
-        """
-        return self.getSourceUid()
+  security.declareProtected(Permissions.View, 'getBaobabSourceUid')
+  def getBaobabSourceUid(self):
+    """
+      Returns a calculated source.
+    """
+    return self.getSourceUid()
 
-    security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
-    def getBaobabDestinationUid(self):
-        """
-            Returns a calculated destination
-        """
-        return self.getDestinationUid()
-
+  security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
+  def getBaobabDestinationUid(self):
+    """
+      Returns a calculated destination.
+    """
+    return self.getDestinationUid()

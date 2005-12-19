@@ -66,33 +66,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency_list = [(\'%s - %s\' % (x.getId(), x.getTitle()), x.getRelativeUrl())\n
-  for x in context.currency_module.objectValues()]\n
-\n
-currency_list.insert(0, (\'\',\'\'))\n
-\n
-return currency_list\n
+            <value> <string># Return the currency used as a reference for banking transaction.\n
+return \'EUR\'\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAMAAAAQwAA
-AHOaAAAAZwAABGkAAH0BAHQCAHQDAHQDAHQEAGQBAIMCAGQCAIMCAIMAAIMBAERdRAB9BQB8AQBk
-AwB0AwB8BQBkBACDAgCDAAB0AwB8BQBkBQCDAgCDAABmAgAWdAMAfAUAZAYAgwIAgwAAZgIAgwEA
-AXEpAH4BAH0GAHQDAHwGAGQHAIMCAGQIAGQJAGQJAGYCAIMCAAF8BgBTZAAAUygKAAAATnMPAAAA
-Y3VycmVuY3lfbW9kdWxlcwwAAABvYmplY3RWYWx1ZXNzBwAAACVzIC0gJXNzBQAAAGdldElkcwgA
-AABnZXRUaXRsZXMOAAAAZ2V0UmVsYXRpdmVVcmxzBgAAAGluc2VydGkAAAAAcwAAAAAoBwAAAHMG
-AAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzAQAAAHhzDQAAAGN1cnJlbmN5X2xpc3QoBwAAAHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
-MHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzDQAAAGN1cnJl
-bmN5X2xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIAAAAEN1cnJlbmN5RXhjaGFu
-Z2VfZ2V0Q3VycmVuY3lMaXN0AQAAAHMIAAAAEwEWAFACGQIoAQAAAHMgAAAAQ3VycmVuY3lFeGNo
-YW5nZV9nZXRDdXJyZW5jeUxpc3QoAQAAAHMgAAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRDdXJyZW5j
-eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAAAAAACAAAAQwAA
+AHMIAAAAZAEAU2QAAFMoAgAAAE5zAwAAAEVVUigAAAAAKAAAAAAoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzIwAAAEJhb2JhYl9nZXRQb3J0YWxSZWZlcmVuY2VDdXJyZW5jeUlEAQAAAHMC
+AAAAAAEoAQAAAHMjAAAAQmFvYmFiX2dldFBvcnRhbFJlZmVyZW5jZUN1cnJlbmN5SUQoAQAAAHMj
+AAAAQmFvYmFiX2dldFBvcnRhbFJlZmVyZW5jZUN1cnJlbmN5SUQoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CurrencyExchange_getCurrencyList</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getPortalReferenceCurrencyID</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -127,15 +116,7 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>x</string>
-                            <string>currency_list</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -151,11 +132,7 @@ eUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</st
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CurrencyExchange_getCurrencyList</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Move this to erp5_core ???</string> </value>
+            <value> <string>Baobab_getPortalReferenceCurrencyID</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

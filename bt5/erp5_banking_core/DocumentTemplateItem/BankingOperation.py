@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -34,61 +34,63 @@ from Products.ERP5Type.Document.DeliveryCell import DeliveryCell
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 
-class BankingOperation(Delivery,AccountingTransaction):
 
-    # CMF Type Definition
-    meta_type = 'BAOBAB Banking Operation'
-    portal_type = 'Banking Operation'
-    isPortalContent = 1
-    isRADContent = 1
+class BankingOperation(Delivery, AccountingTransaction):
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+  # CMF Type Definition
+  meta_type = 'BAOBAB Banking Operation'
+  portal_type = 'Banking Operation'
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.BankingOperation
-                      , PropertySheet.ItemAggregation
-                      , PropertySheet.Amount
-                      )
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.BankingOperation
+                    , PropertySheet.ItemAggregation
+                    , PropertySheet.Amount
+                    )
+
+  # Special index methods
+  security.declareProtected(Permissions.View, 'getBaobabSourceUid')
+  def getBaobabSourceUid(self):
+    """
+      Returns a calculated source.
+    """
+    return self.getSourceUid()
+
+  security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
+  def getBaobabDestinationUid(self):
+    """
+      Returns a calculated destination.
+    """
+    return self.getDestinationUid()
+
+  security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid')
+  def getBaobabSourceSectionUid(self):
+    """
+      Returns a calculated source section.
+    """
+    return self.getSourceSectionUid()
+
+  security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
+  def getBaobabDestinationSectionUid(self):
+    """
+      Returns a calculated destination section.
+    """
+    return self.getDestinationSectionUid()
 
 
-    # Special index methods
-    security.declareProtected(Permissions.View, 'getBaobabSourceUid')
-    def getBaobabSourceUid(self):
-        """
-            Returns a calculated source
-        """
-        return self.getSourceUid()
 
-    security.declareProtected(Permissions.View, 'getBaobabDestinationUid')
-    def getBaobabDestinationUid(self):
-        """
-            Returns a calculated destination
-        """
-        return self.getDestinationUid()
-
-    security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid')
-    def getBaobabSourceSectionUid(self):
-        """
-            Returns a calculated source section
-        """
-        return self.getSourceSectionUid()
-
-    security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
-    def getBaobabDestinationSectionUid(self):
-        """
-            Returns a calculated destination section
-        """
-        return self.getDestinationSectionUid()
-
-# Dynamic patch
+### Dynamic patch
 Delivery.getBaobabSource = lambda x: x.getSource()
 Delivery.security.declareProtected(Permissions.View, 'getBaobabSource')
 Delivery.getBaobabSourceUid = lambda x: x.getSourceUid()
@@ -100,8 +102,7 @@ Delivery.security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid'
 Delivery.getBaobabDestinationSectionUid = lambda x: x.getDestinationSectionUid()
 Delivery.security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
 
-
-# Overload Movement
+### Overload Movement
 Movement.getBaobabSource = lambda x: x.getSource()
 Movement.security.declareProtected(Permissions.View, 'getBaobabSource')
 Movement.getBaobabSourceUid = lambda x: x.getSourceUid()
@@ -113,7 +114,7 @@ Movement.security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid'
 Movement.getBaobabDestinationSectionUid = lambda x: x.getDestinationSectionUid()
 Movement.security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
 
-# Acquire Baobab source / destination uids from parent line
+### Acquire Baobab source / destination uids from parent line
 DeliveryCell.getBaobabSource = lambda x: x.aq_parent.getBaobabSource()
 DeliveryCell.security.declareProtected(Permissions.View, 'getBaobabSource')
 DeliveryCell.getBaobabSourceUid = lambda x: x.aq_parent.getBaobabSourceUid()
@@ -124,7 +125,3 @@ DeliveryCell.getBaobabSourceSectionUid = lambda x: x.aq_parent.getBaobabSourceSe
 DeliveryCell.security.declareProtected(Permissions.View, 'getBaobabSourceSectionUid')
 DeliveryCell.BaobabDestinationSectionUid = lambda x: x.aq_parent.getBaobabDestinationSectionUid()
 DeliveryCell.security.declareProtected(Permissions.View, 'getBaobabDestinationSectionUid')
-
-
-
-

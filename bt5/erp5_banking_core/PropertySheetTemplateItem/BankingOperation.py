@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    K. Toure <ktoure@nexedi.com>
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                    K. Toure <ktoure_AT_nexedi_DOT_com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,20 +28,20 @@
 
 
 class BankingOperation:
-    """
-        Person properties and categories
-    """
+  """
+    Person properties and categories
+  """
 
-    _properties = (
-        # Subordination properties
-        { 'id'          : 'movement',
-          'storage_id'  : 'movement',
-          'description' : 'The current amount',
-          'type'        : 'content',
-          'portal_type' : ('Accounting Transaction Line'),
-          'acquired_property_id'       : ('source_debit', 'source_credit'),
-          'mode'        : 'w' }, 
-        )
+  _properties = (
+      # Subordination properties
+      { 'id'          : 'movement',
+        'storage_id'  : 'movement',
+        'description' : 'The current amount',
+        'type'        : 'content',
+        'portal_type' : ('Accounting Transaction Line'),
+        'acquired_property_id'       : ('source_debit', 'source_credit'),
+        'mode'        : 'w' },
+      )
 
-    _categories = ()
+  _categories = ()
 

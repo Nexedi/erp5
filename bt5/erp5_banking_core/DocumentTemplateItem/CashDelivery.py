@@ -1,6 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Kevin Deldycke <kevin_AT_nexedi_DOT_com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,20 +28,15 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.Container import Container
+from Products.ERP5.Document.Delivery import Delivery
 
 
-class CashContainer(Container):
+class CashDelivery(Delivery):
   """
-    A Cash DeliveryLine object allows to implement lines
-      in Cash Deliveries (packing list, Check payment, Cash Movement, etc.).
-
-    It may include a price (for insurance, for customs, for invoices,
-      for orders).
   """
 
-  meta_type = 'BAOBAB Cash Container'
-  portal_type = 'Cash Container'
+  meta_type = 'BAOBAB Cash Delivery'
+  portal_type = 'Cash Delivery'
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
@@ -48,6 +44,9 @@ class CashContainer(Container):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.View)
+
+  # Declarative interfaces
+  __implements__ = ( Interface.Variated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
@@ -60,7 +59,5 @@ class CashContainer(Container):
                     , PropertySheet.Price
                     , PropertySheet.VariationRange
                     , PropertySheet.ItemAggregation
-                    , PropertySheet.Container
-                    , PropertySheet.CashContainer
-                    , PropertySheet.Reference
                     )
+
