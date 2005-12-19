@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delivered</string> </value>
+            <value> <string>BookKeeped</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -67,7 +67,6 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
@@ -98,10 +97,8 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
