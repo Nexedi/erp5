@@ -84,8 +84,7 @@ def sortInvoiceTransactionLine(a, b):\n
 \n
 \n
 object_list = []\n
-#for obj in context.objectValues() : \n
-for obj in context.searchFolder() :  ## FIXME: objectValues is broken, displayed lines are not always indexed correctly\n
+for obj in context.objectValues() : \n
   obj = obj.getObject()\n
   if kw.has_key(\'portal_type\') : \n
     if obj.getPortalType() in kw[\'portal_type\'] : \n
@@ -114,7 +113,7 @@ AABhX2lkcwkAAABzb3J0X2RpY3RzCQAAAF9nZXRpdGVtX3MBAAAAYnMEAAAAYl9pZHMDAAAAY21w
 KAgAAABzAQAAAGFzAQAAAGJzCQAAAF9nZXRhdHRyX3MEAAAAYV9pZHMJAAAAc29ydF9kaWN0cwkA
 AABfZ2V0aXRlbV9zBAAAAGJfaWRzAwAAAGNtcCgBAAAAcwkAAABzb3J0X2RpY3QoAAAAAHMPAAAA
 U2NyaXB0IChQeXRob24pcxoAAABzb3J0SW52b2ljZVRyYW5zYWN0aW9uTGluZQgAAABzDgAAAAAB
-EgENARMBEgENARMBcwwAAABzZWFyY2hGb2xkZXJzCQAAAGdldE9iamVjdHMHAAAAaGFzX2tleXML
+EgENARMBEgENARMBcwwAAABvYmplY3RWYWx1ZXNzCQAAAGdldE9iamVjdHMHAAAAaGFzX2tleXML
 AAAAcG9ydGFsX3R5cGVzDQAAAGdldFBvcnRhbFR5cGVzBgAAAGFwcGVuZHMEAAAAc29ydCgJAAAA
 cwkAAABzb3J0X2RpY3RzGgAAAHNvcnRJbnZvaWNlVHJhbnNhY3Rpb25MaW5lcwsAAABvYmplY3Rf
 bGlzdHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAwAAAG9ianMCAAAA
@@ -122,14 +121,14 @@ a3dzCQAAAF9nZXRpdGVtXygJAAAAcwIAAABrd3MJAAAAc29ydF9kaWN0cxoAAABzb3J0SW52b2lj
 ZVRyYW5zYWN0aW9uTGluZXMLAAAAb2JqZWN0X2xpc3RzCQAAAF9nZXRpdGVyX3MJAAAAX2dldGF0
 dHJfcwcAAABjb250ZXh0cwMAAABvYmpzCQAAAF9nZXRpdGVtXygAAAAAKAEAAABzCQAAAHNvcnRf
 ZGljdHMPAAAAU2NyaXB0IChQeXRob24pczMAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25fc2VhcmNo
-SW52b2ljZVRyYW5zYWN0aW9uTGluZXMBAAAAcxYAAAA8BwwKBgIZAAYBFQETASUBGwIXAhABKAEA
+SW52b2ljZVRyYW5zYWN0aW9uTGluZXMBAAAAcxYAAAA8BwwKBgEZAAYBFQETASUBGwIXAhABKAEA
 AABzMwAAAEFjY291bnRpbmdUcmFuc2FjdGlvbl9zZWFyY2hJbnZvaWNlVHJhbnNhY3Rpb25MaW5l
 cygBAAAAczMAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25fc2VhcmNoSW52b2ljZVRyYW5zYWN0aW9u
 TGluZXMoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransaction_searchInvoiceTransactionLines</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_searchInvoiceTransactionLines</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
