@@ -71,65 +71,69 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 closing_period = state_change.object\n
+portal = closing_period.getPortalObject()\n
+N_ = portal.Base_TranslateString\n
+accounting_module = portal.accounting_module\n
+valid_states = [\'cancelled\', \'stopped\', \'delivered\']\n
 \n
 start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n
-if stop_date < start_date :\n
-  raise ValidationFailed, "Action Impossible: stop_date is before start_date"\n
+search_params = { \'delivery.start_date\' : \'>= %s\' % start_date,\n
+                                \'delivery.stop_date\'  : \'<= %s\' % stop_date, }\n
+transaction_list = accounting_module.searchFolder( **search_params)\n
 \n
-for cpd in context.portal_catalog(\n
-         portal_type="Accounting Period Delimiter", \n
-         simulation_state="delivered") : \n
-   cpd = cpd.getObject()\n
-   if cpd.getStartDate() < start_date <  cpd.getStopDate():\n
-     raise ValidationFailed, "Action Impossible: start_date is in a closed period"\n
-   if cpd.getStartDate() < stop_date <  cpd.getStopDate():\n
-     raise ValidationFailed, "Action Impossible: stop_date is in a closed period"\n
-\n
-# TODO: deliver every transaction in the period (in accounting_workflow)\n
+for transaction in transaction_list : \n
+  transaction = transaction.getObject()\n
+  if transaction.getSimulationState() not in valid_states :\n
+    raise ValidationFailed, N_("Transaction ${transaction_path} is in invalid state (${transaction_translated_state})",\n
+                                mapping =  { \'transaction_path\' : transaction.getPath(),\n
+                                             \'transaction_translated_state\' : unicode(transaction.getTranslatedSimulationStateTitle(), \'utf8\')})\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAoAAAARAAAAQwAA
-AHMlAQAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQCAHwEAGQDAIMCAIMAAH0FAHQCAHwE
-AGQEAIMCAIMAAH0GAHwGAHwFAGoAAG8NAAF8AgBkBQCCAgBuAQABeMQAdAcAdAIAdAgAZAYAgwIA
-ZAcAZAgAZAkAZAoAgwACgwEARF2eAH0JAHQCAHwJAGQLAIMCAIMAAH0JAHQCAHwJAGQDAIMCAIMA
-AHwFAAQDagAAbxYAAXQCAHwJAGQEAIMCAIMAAGoAAG4CAAIBbw0AAXwCAGQMAIICAG4BAAF0AgB8
-CQBkAwCDAgCDAAB8BgAEA2oAAG8WAAF0AgB8CQBkBACDAgCDAABqAABuAgACAW8NAAF8AgBkDQCC
-AgBxfwABcX8AV2QAAFMoDgAAAE4oAQAAAHMQAAAAVmFsaWRhdGlvbkZhaWxlZHMGAAAAb2JqZWN0
-cwwAAABnZXRTdGFydERhdGVzCwAAAGdldFN0b3BEYXRlczEAAABBY3Rpb24gSW1wb3NzaWJsZTog
-c3RvcF9kYXRlIGlzIGJlZm9yZSBzdGFydF9kYXRlcw4AAABwb3J0YWxfY2F0YWxvZ3MLAAAAcG9y
-dGFsX3R5cGVzGwAAAEFjY291bnRpbmcgUGVyaW9kIERlbGltaXRlcnMQAAAAc2ltdWxhdGlvbl9z
-dGF0ZXMJAAAAZGVsaXZlcmVkcwkAAABnZXRPYmplY3RzMwAAAEFjdGlvbiBJbXBvc3NpYmxlOiBz
-dGFydF9kYXRlIGlzIGluIGEgY2xvc2VkIHBlcmlvZHMyAAAAQWN0aW9uIEltcG9zc2libGU6IHN0
-b3BfZGF0ZSBpcyBpbiBhIGNsb3NlZCBwZXJpb2QoCgAAAHMeAAAAUHJvZHVjdHMuRENXb3JrZmxv
-dy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRl
-X2NoYW5nZXMOAAAAY2xvc2luZ19wZXJpb2RzCgAAAHN0YXJ0X2RhdGVzCQAAAHN0b3BfZGF0ZXMJ
-AAAAX2dldGl0ZXJfcwcAAABjb250ZXh0cwMAAABjcGQoCgAAAHMMAAAAc3RhdGVfY2hhbmdlcx4A
-AABQcm9kdWN0cy5EQ1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzCQAA
-AF9nZXRhdHRyX3MOAAAAY2xvc2luZ19wZXJpb2RzCgAAAHN0YXJ0X2RhdGVzCQAAAHN0b3BfZGF0
-ZXMJAAAAX2dldGl0ZXJfcwcAAABjb250ZXh0cwMAAABjcGQoAAAAACgAAAAAcw8AAABTY3JpcHQg
-KFB5dGhvbilzCwAAAGNsb3NlUGVyaW9kAQAAAHMYAAAADQIPAhIBEgINAQ0CJQAGAxIBNgENATYB
-KAEAAABzCwAAAGNsb3NlUGVyaW9kKAEAAABzCwAAAGNsb3NlUGVyaW9kKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABEAAAASAAAAQwAA
+AHNJAQAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQCAHwEAGQDAIMCAIMAAH0FAHQCAHwF
+AGQEAIMCAH0GAHQCAHwFAGQFAIMCAH0HAGQGAGQHAGQIAGcDAH0IAHQCAHwEAGQJAIMCAIMAAH0J
+AHQCAHwEAGQKAIMCAIMAAH0KAGgAAARkCwBkDAB8CQAWAzwEZA0AZA4AfAoAFgM8fQsAdAwAdAIA
+fAcAZA8AgwIAfAsAjQEAfQ0AeIsAdA4AfA0AgwEARF19AH0PAHQCAHwPAGQQAIMCAIMAAH0PAHQC
+AHwPAGQRAIMCAIMAAHwIAGoHAG9MAAF8AgB8BgBkEgBkEwBoAAAEZBQAdAIAfA8AZBUAgwIAgwAA
+AzwEZBYAdBAAdAIAfA8AZBcAgwIAgwAAZBgAgwIAAzyDAQGCAgBxxAABccQAV2QAAFMoGQAAAE4o
+AQAAAHMQAAAAVmFsaWRhdGlvbkZhaWxlZHMGAAAAb2JqZWN0cw8AAABnZXRQb3J0YWxPYmplY3Rz
+FAAAAEJhc2VfVHJhbnNsYXRlU3RyaW5ncxEAAABhY2NvdW50aW5nX21vZHVsZXMJAAAAY2FuY2Vs
+bGVkcwcAAABzdG9wcGVkcwkAAABkZWxpdmVyZWRzDAAAAGdldFN0YXJ0RGF0ZXMLAAAAZ2V0U3Rv
+cERhdGVzEwAAAGRlbGl2ZXJ5LnN0YXJ0X2RhdGVzBQAAAD49ICVzcxIAAABkZWxpdmVyeS5zdG9w
+X2RhdGVzBQAAADw9ICVzcwwAAABzZWFyY2hGb2xkZXJzCQAAAGdldE9iamVjdHMSAAAAZ2V0U2lt
+dWxhdGlvblN0YXRlc1UAAABUcmFuc2FjdGlvbiAke3RyYW5zYWN0aW9uX3BhdGh9IGlzIGluIGlu
+dmFsaWQgc3RhdGUgKCR7dHJhbnNhY3Rpb25fdHJhbnNsYXRlZF9zdGF0ZX0pcwcAAABtYXBwaW5n
+cxAAAAB0cmFuc2FjdGlvbl9wYXRocwcAAABnZXRQYXRocxwAAAB0cmFuc2FjdGlvbl90cmFuc2xh
+dGVkX3N0YXRlcyEAAABnZXRUcmFuc2xhdGVkU2ltdWxhdGlvblN0YXRlVGl0bGVzBAAAAHV0Zjgo
+EQAAAHMeAAAAUHJvZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFp
+bGVkcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMOAAAAY2xvc2luZ19wZXJpb2RzBgAA
+AHBvcnRhbHMCAAAATl9zEQAAAGFjY291bnRpbmdfbW9kdWxlcwwAAAB2YWxpZF9zdGF0ZXNzCgAA
+AHN0YXJ0X2RhdGVzCQAAAHN0b3BfZGF0ZXMNAAAAc2VhcmNoX3BhcmFtc3MHAAAAX2FwcGx5X3MQ
+AAAAdHJhbnNhY3Rpb25fbGlzdHMJAAAAX2dldGl0ZXJfcwsAAAB0cmFuc2FjdGlvbnMHAAAAdW5p
+Y29kZSgRAAAAcwwAAABzdGF0ZV9jaGFuZ2VzHgAAAFByb2R1Y3RzLkRDV29ya2Zsb3cuRENXb3Jr
+Zmxvd3MQAAAAVmFsaWRhdGlvbkZhaWxlZHMJAAAAX2dldGF0dHJfcw4AAABjbG9zaW5nX3Blcmlv
+ZHMGAAAAcG9ydGFscwIAAABOX3MRAAAAYWNjb3VudGluZ19tb2R1bGVzDAAAAHZhbGlkX3N0YXRl
+c3MKAAAAc3RhcnRfZGF0ZXMJAAAAc3RvcF9kYXRlcw0AAABzZWFyY2hfcGFyYW1zcwcAAABfYXBw
+bHlfcxAAAAB0cmFuc2FjdGlvbl9saXN0cwkAAABfZ2V0aXRlcl9zCwAAAHRyYW5zYWN0aW9ucwcA
+AAB1bmljb2RlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcycAAABBY2NvdW50aW5nUGVy
+aW9kX0NoZWNrVHJhbnNhY3Rpb25zU3RhdGUBAAAAcyIAAAANAg8BEgEPAQ8BDwISARICFwEJARgC
+DQAGARIBGQEMARwBKAEAAABzJwAAAEFjY291bnRpbmdQZXJpb2RfQ2hlY2tUcmFuc2FjdGlvbnNT
+dGF0ZSgBAAAAcycAAABBY2NvdW50aW5nUGVyaW9kX0NoZWNrVHJhbnNhY3Rpb25zU3RhdGUoAAAA
+ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_closing_period_workflow/scripts/closePeriod</string> </value>
+            <value> <string>Script (Python):/hopital/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckTransactionsState</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -160,11 +164,18 @@ U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>closing_period</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>accounting_module</string>
+                            <string>valid_states</string>
                             <string>start_date</string>
                             <string>stop_date</string>
+                            <string>search_params</string>
+                            <string>_apply_</string>
+                            <string>transaction_list</string>
                             <string>_getiter_</string>
-                            <string>context</string>
-                            <string>cpd</string>
+                            <string>transaction</string>
+                            <string>unicode</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,7 +192,7 @@ U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>closePeriod</string> </value>
+            <value> <string>AccountingPeriod_CheckTransactionsState</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

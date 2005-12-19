@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+closing_period = state_change.object\n
+portal = closing_period.getPortalObject()\n
+N_ = portal.Base_TranslateString\n
+accounting_module = portal.accounting_module\n
+valid_states = [\'cancelled\', \'stopped\', \'delivered\']\n
+\n
+# validate all transactions states.\n
+container.AccountingPeriod_CheckTransactionsState(state_change)\n
+\n
+start_date = closing_period.getStartDate()\n
+stop_date = closing_period.getStopDate()\n
+\n
+search_params = { \'delivery.start_date\' : \'>= %s\' % start_date,\n
+                                \'delivery.stop_date\'  : \'<= %s\' % stop_date, }\n
+transaction_list = accounting_module.searchFolder( **search_params)\n
+\n
+for transaction in transaction_list : \n
+  transaction = transaction.getObject()\n
+  if transaction.getSimulationState() == \'stopped\' : \n
+    portal.portal_workflow.doActionFor( transaction, \'deliver_action\', \n
+                                                               wf_id="accounting_workflow",\n
+                                                               skip_period_validation = 1)\n
+    if transaction.getSimulationState() != \'delivered\' : \n
+      raise ValidationFailed, N_("Unable to change state for ${transaction_path}, check this transaction history",\n
+                                  mapping = {\'transaction_path\' : transaction.getPath()})\n
+    else :\n
+      transaction.log(\'AccountingPeriod_DeliverTransaction\', \'deliver %s\' % transaction.getPath())\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABEAAAAXAAAAQwAA
+AHOsAQAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQCAHwEAGQDAIMCAIMAAH0FAHQCAHwF
+AGQEAIMCAH0GAHQCAHwFAGQFAIMCAH0HAGQGAGQHAGQIAGcDAH0IAHQCAHQJAGQJAIMCAHwAAIMB
+AAF0AgB8BABkCgCDAgCDAAB9CgB0AgB8BABkCwCDAgCDAAB9CwBoAAAEZAwAZA0AfAoAFgM8BGQO
+AGQPAHwLABYDPH0MAHQNAHQCAHwHAGQQAIMCAHwMAI0BAH0OAHjbAHQPAHwOAIMBAERdzQB9EAB0
+AgB8EABkEQCDAgCDAAB9EAB0AgB8EABkEgCDAgCDAABkBwBqAgBvnAABdAIAdAIAfAUAZBMAgwIA
+ZBQAgwIAfBAAZBUAZBYAZBcAZBgAZBkAgwICAXQCAHwQAGQSAIMCAIMAAGQIAGoDAG8uAAF8AgB8
+BgBkGgBkGwBoAAAEZBwAdAIAfBAAZB0AgwIAgwAAAzyDAQGCAgBxpAEBdAIAfBAAZB4AgwIAZB8A
+ZCAAdAIAfBAAZB0AgwIAgwAAFoMCAAFx1wABcdcAV2QAAFMoIQAAAE4oAQAAAHMQAAAAVmFsaWRh
+dGlvbkZhaWxlZHMGAAAAb2JqZWN0cw8AAABnZXRQb3J0YWxPYmplY3RzFAAAAEJhc2VfVHJhbnNs
+YXRlU3RyaW5ncxEAAABhY2NvdW50aW5nX21vZHVsZXMJAAAAY2FuY2VsbGVkcwcAAABzdG9wcGVk
+cwkAAABkZWxpdmVyZWRzJwAAAEFjY291bnRpbmdQZXJpb2RfQ2hlY2tUcmFuc2FjdGlvbnNTdGF0
+ZXMMAAAAZ2V0U3RhcnREYXRlcwsAAABnZXRTdG9wRGF0ZXMTAAAAZGVsaXZlcnkuc3RhcnRfZGF0
+ZXMFAAAAPj0gJXNzEgAAAGRlbGl2ZXJ5LnN0b3BfZGF0ZXMFAAAAPD0gJXNzDAAAAHNlYXJjaEZv
+bGRlcnMJAAAAZ2V0T2JqZWN0cxIAAABnZXRTaW11bGF0aW9uU3RhdGVzDwAAAHBvcnRhbF93b3Jr
+Zmxvd3MLAAAAZG9BY3Rpb25Gb3JzDgAAAGRlbGl2ZXJfYWN0aW9ucwUAAAB3Zl9pZHMTAAAAYWNj
+b3VudGluZ193b3JrZmxvd3MWAAAAc2tpcF9wZXJpb2RfdmFsaWRhdGlvbmkBAAAAc04AAABVbmFi
+bGUgdG8gY2hhbmdlIHN0YXRlIGZvciAke3RyYW5zYWN0aW9uX3BhdGh9LCBjaGVjayB0aGlzIHRy
+YW5zYWN0aW9uIGhpc3RvcnlzBwAAAG1hcHBpbmdzEAAAAHRyYW5zYWN0aW9uX3BhdGhzBwAAAGdl
+dFBhdGhzAwAAAGxvZ3MjAAAAQWNjb3VudGluZ1BlcmlvZF9EZWxpdmVyVHJhbnNhY3Rpb25zCgAA
+AGRlbGl2ZXIgJXMoEQAAAHMeAAAAUHJvZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABW
+YWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMOAAAAY2xvc2lu
+Z19wZXJpb2RzBgAAAHBvcnRhbHMCAAAATl9zEQAAAGFjY291bnRpbmdfbW9kdWxlcwwAAAB2YWxp
+ZF9zdGF0ZXNzCQAAAGNvbnRhaW5lcnMKAAAAc3RhcnRfZGF0ZXMJAAAAc3RvcF9kYXRlcw0AAABz
+ZWFyY2hfcGFyYW1zcwcAAABfYXBwbHlfcxAAAAB0cmFuc2FjdGlvbl9saXN0cwkAAABfZ2V0aXRl
+cl9zCwAAAHRyYW5zYWN0aW9uKBEAAABzDAAAAHN0YXRlX2NoYW5nZXMeAAAAUHJvZHVjdHMuRENX
+b3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0cl9zDgAA
+AGNsb3NpbmdfcGVyaW9kcwYAAABwb3J0YWxzAgAAAE5fcxEAAABhY2NvdW50aW5nX21vZHVsZXMM
+AAAAdmFsaWRfc3RhdGVzcwkAAABjb250YWluZXJzCgAAAHN0YXJ0X2RhdGVzCQAAAHN0b3BfZGF0
+ZXMNAAAAc2VhcmNoX3BhcmFtc3MHAAAAX2FwcGx5X3MQAAAAdHJhbnNhY3Rpb25fbGlzdHMJAAAA
+X2dldGl0ZXJfcwsAAAB0cmFuc2FjdGlvbigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMk
+AAAAQWNjb3VudGluZ1BlcmlvZF9EZWxpdmVyVHJhbnNhY3Rpb25zAQAAAHMoAAAADQIPARIBDwEP
+ARIDEAISARICFwEJARgCDQAGARIBHwElAxkBDAElAigBAAAAcyQAAABBY2NvdW50aW5nUGVyaW9k
+X0RlbGl2ZXJUcmFuc2FjdGlvbnMoAQAAAHMkAAAAQWNjb3VudGluZ1BlcmlvZF9EZWxpdmVyVHJh
+bnNhY3Rpb25zKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABz
+AAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/hopital/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_DeliverTransactions</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>closing_period</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>accounting_module</string>
+                            <string>valid_states</string>
+                            <string>container</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>search_params</string>
+                            <string>_apply_</string>
+                            <string>transaction_list</string>
+                            <string>_getiter_</string>
+                            <string>transaction</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingPeriod_DeliverTransactions</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

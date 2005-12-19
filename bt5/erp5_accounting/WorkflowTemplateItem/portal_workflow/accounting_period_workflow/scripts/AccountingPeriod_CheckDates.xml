@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+closing_period = state_change.object\n
+portal = closing_period.getPortalObject()\n
+N_ = portal.Base_TranslateString\n
+accounting_period_module = portal.accounting_period_module\n
+valid_states = [\'planned\', \'confirmed\', \'delivered\']\n
+\n
+start_date = closing_period.getStartDate()\n
+stop_date = closing_period.getStopDate()\n
+\n
+if start_date > stop_date : \n
+  raise ValidationFailed, "Start Date is After Stop Date"\n
+\n
+period_list = portal.accounting_period_module\\\n
+                            .searchFolder( simulation_state = [\'planned\', \'confirmed\', \'delivered\'],\n
+                                                    sort_on = \'delivery.start_date\')\n
+\n
+for period in period_list :\n
+  period = period.getObject()\n
+  portal.log("period", "id:%s start:%s stop:%s" % (period.getId(), period.getStartDate(), period.getStopDate()))\n
+  if period.getSimulationState() in valid_states :\n
+    if start_date <= period.getStopDate() :\n
+      raise ValidationFailed, N_("%s is already in an opened accounting period") % period.Base_FormatDate(start_date)\n
+if len(period_list) > 1 :\n
+  last_period  = period_list[-1].getObject()\n
+  if last_period.getId() == closing_period.getId() :\n
+    last_period  = period_list[-2].getObject() \n
+  if (start_date - last_period.getStopDate()) > 1:\n
+      raise ValidationFailed, N_("Last opened period ends on ${last_openned_date}, this period starts on ${this_period_start_date}."+\n
+          " Accounting Periods must be consecutive.", \n
+          mapping = { \'last_openned_date\' : period.Base_FormatDate(last_period.getStopDate()),\n
+                                \'this_period_start_date\' : period.Base_FormatDate(start_date) } )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABEAAAAbAAAAQwAA
+AHOHAgAAZAEAawAAbAEAfQIAAXQCAHwAAGQCAIMCAH0EAHQCAHwEAGQDAIMCAIMAAH0FAHQCAHwF
+AGQEAIMCAH0GAHQCAHwFAGQFAIMCAH0HAGQGAGQHAGQIAGcDAH0IAHQCAHwEAGQJAIMCAIMAAH0J
+AHQCAHwEAGQKAIMCAIMAAH0KAHwJAHwKAGoEAG8NAAF8AgBkCwCCAgBuAQABdAIAdAIAfAUAZAUA
+gwIAZAwAgwIAZA0AZAYAZAcAZAgAZwMAZA4AZA8AgwACfQsAeMkAdAwAfAsAgwEARF27AH0NAHQC
+AHwNAGQQAIMCAIMAAH0NAHQCAHwFAGQRAIMCAGQSAGQTAHQCAHwNAGQUAIMCAIMAAHQCAHwNAGQJ
+AIMCAIMAAHQCAHwNAGQKAIMCAIMAAGYDABaDAgABdAIAfA0AZBUAgwIAgwAAfAgAagYAb0MAAXwJ
+AHQCAHwNAGQKAIMCAIMAAGoBAG8mAAF8AgB8BgBkFgCDAQB0AgB8DQBkFwCDAgB8CQCDAQAWggIA
+cZEBAXHWAAFx1gBXdA4AfAsAgwEAZBgAagQAb9sAAXQCAHQPAHwLAGQYAAuDAgBkEACDAgCDAAB9
+EAB0AgB8EABkFACDAgCDAAB0AgB8BABkFACDAgCDAABqAgBvIAABdAIAdA8AfAsAZBkAC4MCAGQQ
+AIMCAIMAAH0QAG4BAAF8CQB0AgB8EABkCgCDAgCDAAAYZBgAagQAb1kAAXwCAHwGAGQaAGQbABdk
+HABoAAAEZB0AdAIAfA0AZBcAgwIAdAIAfBAAZAoAgwIAgwAAgwEAAzwEZB4AdAIAfA0AZBcAgwIA
+fAkAgwEAAzyDAQGCAgBxgwIBbgEAAWQAAFMoHwAAAE4oAQAAAHMQAAAAVmFsaWRhdGlvbkZhaWxl
+ZHMGAAAAb2JqZWN0cw8AAABnZXRQb3J0YWxPYmplY3RzFAAAAEJhc2VfVHJhbnNsYXRlU3RyaW5n
+cxgAAABhY2NvdW50aW5nX3BlcmlvZF9tb2R1bGVzBwAAAHBsYW5uZWRzCQAAAGNvbmZpcm1lZHMJ
+AAAAZGVsaXZlcmVkcwwAAABnZXRTdGFydERhdGVzCwAAAGdldFN0b3BEYXRlcx0AAABTdGFydCBE
+YXRlIGlzIEFmdGVyIFN0b3AgRGF0ZXMMAAAAc2VhcmNoRm9sZGVycxAAAABzaW11bGF0aW9uX3N0
+YXRlcwcAAABzb3J0X29ucxMAAABkZWxpdmVyeS5zdGFydF9kYXRlcwkAAABnZXRPYmplY3RzAwAA
+AGxvZ3MGAAAAcGVyaW9kcxYAAABpZDolcyBzdGFydDolcyBzdG9wOiVzcwUAAABnZXRJZHMSAAAA
+Z2V0U2ltdWxhdGlvblN0YXRlcywAAAAlcyBpcyBhbHJlYWR5IGluIGFuIG9wZW5lZCBhY2NvdW50
+aW5nIHBlcmlvZHMPAAAAQmFzZV9Gb3JtYXREYXRlaQEAAABpAgAAAHNhAAAATGFzdCBvcGVuZWQg
+cGVyaW9kIGVuZHMgb24gJHtsYXN0X29wZW5uZWRfZGF0ZX0sIHRoaXMgcGVyaW9kIHN0YXJ0cyBv
+biAke3RoaXNfcGVyaW9kX3N0YXJ0X2RhdGV9LnMoAAAAIEFjY291bnRpbmcgUGVyaW9kcyBtdXN0
+IGJlIGNvbnNlY3V0aXZlLnMHAAAAbWFwcGluZ3MRAAAAbGFzdF9vcGVubmVkX2RhdGVzFgAAAHRo
+aXNfcGVyaW9kX3N0YXJ0X2RhdGUoEQAAAHMeAAAAUHJvZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtm
+bG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMO
+AAAAY2xvc2luZ19wZXJpb2RzBgAAAHBvcnRhbHMCAAAATl9zGAAAAGFjY291bnRpbmdfcGVyaW9k
+X21vZHVsZXMMAAAAdmFsaWRfc3RhdGVzcwoAAABzdGFydF9kYXRlcwkAAABzdG9wX2RhdGVzCwAA
+AHBlcmlvZF9saXN0cwkAAABfZ2V0aXRlcl9zBgAAAHBlcmlvZHMDAAAAbGVucwkAAABfZ2V0aXRl
+bV9zCwAAAGxhc3RfcGVyaW9kKBEAAABzDAAAAHN0YXRlX2NoYW5nZXMeAAAAUHJvZHVjdHMuRENX
+b3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0aW9uRmFpbGVkcwkAAABfZ2V0YXR0cl9zDgAA
+AGNsb3NpbmdfcGVyaW9kcwYAAABwb3J0YWxzAgAAAE5fcxgAAABhY2NvdW50aW5nX3BlcmlvZF9t
+b2R1bGVzDAAAAHZhbGlkX3N0YXRlc3MKAAAAc3RhcnRfZGF0ZXMJAAAAc3RvcF9kYXRlcwsAAABw
+ZXJpb2RfbGlzdHMJAAAAX2dldGl0ZXJfcwYAAABwZXJpb2RzAwAAAGxlbnMJAAAAX2dldGl0ZW1f
+cwsAAABsYXN0X3BlcmlvZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMbAAAAQWNjb3Vu
+dGluZ1BlcmlvZF9DaGVja0RhdGVzAQAAAHM0AAAADQIPARIBDwEPAQ8CEgESAg0BDQIYARgDDQAG
+ARUBRAEZARkBLgETARwBJQEgAR0BEAIuASgBAAAAcxsAAABBY2NvdW50aW5nUGVyaW9kX0NoZWNr
+RGF0ZXMoAQAAAHMbAAAAQWNjb3VudGluZ1BlcmlvZF9DaGVja0RhdGVzKAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/hopital/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckDates</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>closing_period</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>accounting_period_module</string>
+                            <string>valid_states</string>
+                            <string>start_date</string>
+                            <string>stop_date</string>
+                            <string>period_list</string>
+                            <string>_getiter_</string>
+                            <string>period</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>last_period</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingPeriod_CheckDates</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

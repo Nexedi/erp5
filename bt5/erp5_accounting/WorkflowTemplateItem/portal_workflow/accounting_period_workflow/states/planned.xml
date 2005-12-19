@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delivered</string> </value>
+            <value> <string>planned</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,10 +34,19 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Closed Period</string> </value>
+            <value> <string>Open</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>confirm</string>
+                <string>confirm_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
             <value>
               <tuple/>
             </value>
@@ -69,8 +78,8 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -88,8 +97,9 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
+                        <string>Member</string>
                       </tuple>
                     </value>
                 </item>

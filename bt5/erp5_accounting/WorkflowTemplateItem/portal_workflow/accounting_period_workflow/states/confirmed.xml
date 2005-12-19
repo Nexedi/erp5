@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>confirmed</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -34,16 +34,16 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Closed Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>cancel</string>
-                <string>cancel_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
+                <string>plan</string>
+                <string>reopen_action</string>
               </tuple>
             </value>
         </item>
@@ -74,20 +74,15 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
@@ -98,8 +93,9 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
+                        <string>Member</string>
                       </tuple>
                     </value>
                 </item>

@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>accounting_closing_period_workflow</string> </value>
+            <value> <string>accounting_period_workflow</string> </value>
         </item>
         <item>
             <key> <string>initial_state</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Accounting Closing Period Workflow</string> </value>
+            <value> <string>Accounting Period Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>
