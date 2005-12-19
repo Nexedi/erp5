@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" Create a reversal transaction from current tansaction. """\n
+\n
+N_ = context.Base_TranslateString\n
+\n
+\n
+\n
+accounting_module = context.getPortalObject().accounting_module\n
+reversal = accounting_module.newContent (\n
+  portal_type = \'Accounting Transaction\',\n
+  source_section = context.getSourceSection(), \n
+  destination_section = context.getDestinationSection(),\n
+  source_payment = context.getSourcePayment(),\n
+  stop_date = context.getStopDate(),\n
+  start_date = context.getStartDate(),\n
+  title = N_("Reversal Transaction for ${title}",\n
+                                      mapping={\'title\' : unicode(context.getTitle(), \'utf8\')}),\n
+  description = N_("Reversal Transaction for ${title} (${source_reference})",\n
+                                      mapping={\'title\' : unicode(context.getTitle(), \'utf8\'), \n
+                                                         \'source_reference\' : context.getSourceReference()}),\n
+  resource = context.getResource(), \n
+  reference = context.getReference(),\n
+  bypass_init_script = 1\n
+)\n
+\n
+for line in context.objectValues(portal_type = context.getPortalAccountingMovementTypeList()) : \n
+  reversal.newContent(\n
+    id = line.getId(),\n
+    portal_type = line.getPortalType(),\n
+    source = line.getSource(),\n
+    destination = line.getDestination(),\n
+    destination_section = line.getDestinationSection(),\n
+    source_payment = line.getSourcePayment(),\n
+    quantity = - line.getQuantity()\n
+  )\n
+\n
+return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
+              (reversal.getPath(),\n
+               N_("Reversal Transaction for ${source_reference} created.",\n
+                       mapping={\'source_reference\' : context.getSourceReference()})))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAArAAAAQwAA
+AHNfAgAAdAAAdAEAZAEAgwIAfQIAdAAAdAAAdAEAZAIAgwIAgwAAZAMAgwIAfQMAdAAAfAMAZAQA
+gwIAZAUAZAYAZAcAdAAAdAEAZAgAgwIAgwAAZAkAdAAAdAEAZAoAgwIAgwAAZAsAdAAAdAEAZAwA
+gwIAgwAAZA0AdAAAdAEAZA4AgwIAgwAAZA8AdAAAdAEAZBAAgwIAgwAAZBEAfAIAZBIAZBMAaAAA
+BGQRAHQEAHQAAHQBAGQUAIMCAIMAAGQVAIMCAAM8gwEBZBYAfAIAZBcAZBMAaAAABGQRAHQEAHQA
+AHQBAGQUAIMCAIMAAGQVAIMCAAM8BGQYAHQAAHQBAGQZAIMCAIMAAAM8gwEBZBoAdAAAdAEAZBsA
+gwIAgwAAZBwAdAAAdAEAZB0AgwIAgwAAZB4AZB8AgwALfQUAeMEAdAYAdAAAdAEAZCAAgwIAZAUA
+dAAAdAEAZCEAgwIAgwAAgwABgwEARF2VAH0HAHQAAHwFAGQEAIMCAGQiAHQAAHwHAGQjAIMCAIMA
+AGQFAHQAAHwHAGQkAIMCAIMAAGQlAHQAAHwHAGQmAIMCAIMAAGQnAHQAAHwHAGQoAIMCAIMAAGQJ
+AHQAAHwHAGQKAIMCAIMAAGQLAHQAAHwHAGQMAIMCAIMAAGQpAHQAAHwHAGQqAIMCAIMAAAuDAAcB
+cWYBV3QAAHQAAHQAAHQBAGQrAIMCAGQsAIMCAGQtAIMCAGQuAHQAAHwFAGQvAIMCAIMAAHwCAGQw
+AGQTAGgAAARkGAB0AAB0AQBkGQCDAgCDAAADPIMBAWYCABaDAQBTZAAAUygxAAAATnMUAAAAQmFz
+ZV9UcmFuc2xhdGVTdHJpbmdzDwAAAGdldFBvcnRhbE9iamVjdHMRAAAAYWNjb3VudGluZ19tb2R1
+bGVzCgAAAG5ld0NvbnRlbnRzCwAAAHBvcnRhbF90eXBlcxYAAABBY2NvdW50aW5nIFRyYW5zYWN0
+aW9ucw4AAABzb3VyY2Vfc2VjdGlvbnMQAAAAZ2V0U291cmNlU2VjdGlvbnMTAAAAZGVzdGluYXRp
+b25fc2VjdGlvbnMVAAAAZ2V0RGVzdGluYXRpb25TZWN0aW9ucw4AAABzb3VyY2VfcGF5bWVudHMQ
+AAAAZ2V0U291cmNlUGF5bWVudHMJAAAAc3RvcF9kYXRlcwsAAABnZXRTdG9wRGF0ZXMKAAAAc3Rh
+cnRfZGF0ZXMMAAAAZ2V0U3RhcnREYXRlcwUAAAB0aXRsZXMhAAAAUmV2ZXJzYWwgVHJhbnNhY3Rp
+b24gZm9yICR7dGl0bGV9cwcAAABtYXBwaW5ncwgAAABnZXRUaXRsZXMEAAAAdXRmOHMLAAAAZGVz
+Y3JpcHRpb25zNwAAAFJldmVyc2FsIFRyYW5zYWN0aW9uIGZvciAke3RpdGxlfSAoJHtzb3VyY2Vf
+cmVmZXJlbmNlfSlzEAAAAHNvdXJjZV9yZWZlcmVuY2VzEgAAAGdldFNvdXJjZVJlZmVyZW5jZXMI
+AAAAcmVzb3VyY2VzCwAAAGdldFJlc291cmNlcwkAAAByZWZlcmVuY2VzDAAAAGdldFJlZmVyZW5j
+ZXMSAAAAYnlwYXNzX2luaXRfc2NyaXB0aQEAAABzDAAAAG9iamVjdFZhbHVlc3MjAAAAZ2V0UG9y
+dGFsQWNjb3VudGluZ01vdmVtZW50VHlwZUxpc3RzAgAAAGlkcwUAAABnZXRJZHMNAAAAZ2V0UG9y
+dGFsVHlwZXMGAAAAc291cmNlcwkAAABnZXRTb3VyY2VzCwAAAGRlc3RpbmF0aW9ucw4AAABnZXRE
+ZXN0aW5hdGlvbnMIAAAAcXVhbnRpdHlzCwAAAGdldFF1YW50aXR5cwcAAABSRVFVRVNUcwgAAABS
+RVNQT05TRXMIAAAAcmVkaXJlY3RzIAAAACVzL3ZpZXc/cG9ydGFsX3N0YXR1c19tZXNzYWdlPSVz
+cwcAAABnZXRQYXRoczUAAABSZXZlcnNhbCBUcmFuc2FjdGlvbiBmb3IgJHtzb3VyY2VfcmVmZXJl
+bmNlfSBjcmVhdGVkLigIAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAgAAAE5fcxEAAABh
+Y2NvdW50aW5nX21vZHVsZXMHAAAAdW5pY29kZXMIAAAAcmV2ZXJzYWxzCQAAAF9nZXRpdGVyX3ME
+AAAAbGluZSgIAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAgAAAE5fcxEAAABhY2NvdW50
+aW5nX21vZHVsZXMHAAAAdW5pY29kZXMIAAAAcmV2ZXJzYWxzCQAAAF9nZXRpdGVyX3MEAAAAbGlu
+ZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMvAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9u
+X2NyZWF0ZVJldmVyc2FsVHJhbnNhY3Rpb24BAAAAczoAAAAAAg8EGwEYAhIBEgESARIBDwEJAScB
+CQEoARcBEgEYBCsACQEPARIBEgESARIBEgESARUDIQEPAQkBKAEAAABzLwAAAEFjY291bnRpbmdU
+cmFuc2FjdGlvbl9jcmVhdGVSZXZlcnNhbFRyYW5zYWN0aW9uKAEAAABzLwAAAEFjY291bnRpbmdU
+cmFuc2FjdGlvbl9jcmVhdGVSZXZlcnNhbFRyYW5zYWN0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_createReversalTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>N_</string>
+                            <string>accounting_module</string>
+                            <string>unicode</string>
+                            <string>reversal</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransaction_createReversalTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
