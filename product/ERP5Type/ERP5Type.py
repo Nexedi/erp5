@@ -139,6 +139,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
       'discount', 'invoice', 'invoice_movement', 'item',
       'order', 'order_movement', 'node', 'payment_condition',
       'resource', 'supply', 'transformation', 'variation',
+      'sub_variation'
     )
     group_list = ()
 
