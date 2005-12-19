@@ -101,7 +101,6 @@
             <key> <string>delivery_cell_separate_order</string> </key>
             <value>
               <tuple>
-                <string>calculateAddQuantity</string>
                 <string>calculateSeparatePrice</string>
               </tuple>
             </value>
