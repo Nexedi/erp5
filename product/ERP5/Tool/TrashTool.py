@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Aur√lien Calonne <aurel@nexedi.com>
+#                    Aurelien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -64,7 +64,7 @@ class TrashTool(BaseTool):
         if 'portal' in path:
           path += '_items'
         if path not in backup_object_container.objectIds():
-          backup_object_container = backup_object_container.newContent(portal_type='Trash Folder', id=path, isIndexable=0)
+          backup_object_container = backup_object_container.newContent(portal_type='Trash Folder', id=path, is_indexable=0)
           backup_object_container.edit(isHidden=1)
         else:
           backup_object_container = backup_object_container._getOb(path)

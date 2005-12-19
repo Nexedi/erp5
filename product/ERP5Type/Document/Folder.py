@@ -64,7 +64,7 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
-          container=None, bypass_init_script=0, activate_kw=None, isIndexable=None, **kw):
+          container=None, bypass_init_script=0, activate_kw=None, is_indexable=None, **kw):
     """
       Creates a new content
     """
@@ -83,7 +83,7 @@ class FolderMixIn(ExtensionClass.Base):
                                        id=new_id,
                                        bypass_init_script=bypass_init_script,
                                        activate_kw=activate_kw,
-                                       isIndexable=isIndexable
+                                       is_indexable=is_indexable
                                        ) # **kw) removed due to CMF bug
     new_instance = container[new_id]
     if kw != {} : new_instance._edit(force_update=1, **kw)
