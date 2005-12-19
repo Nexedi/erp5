@@ -192,7 +192,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     self.tar = tarfile.open('', 'w:gz', self.fobj)
 
   def addFolder(self, name=''):
-     if not os.path.exists(name):
+    if not os.path.exists(name):
       os.makedirs(name)
 
   def addObject(self, obj, name, path=None, ext='.xml'):
@@ -338,7 +338,13 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj = self._objects[key]
       # create folder and subfolders
       folders, id = os.path.split(key)
-      path = os.path.join(root_path, folders)
+      encode_folders = []
+      for folder in folders.split('/'):
+        if '%' not in folder:
+          encode_folders.append(pathname2url(folder))
+        else:
+          encode_folders.append(folder)
+      path = os.path.join(root_path, (os.sep).join(encode_folders))
       bta.addFolder(name=path)
       # export object in xml
       f=StringIO()
