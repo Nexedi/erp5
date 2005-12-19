@@ -187,6 +187,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -319,11 +323,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>ID</string>
+                          <string>id</string>
                         </tuple>
                         <tuple>
                           <string>gap_title</string>
-                          <string>GAP Title</string>
+                          <string>Gap</string>
                         </tuple>
                         <tuple>
                           <string>preferred_gap_id</string>
@@ -399,6 +403,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
                           <string>AccountModule_getAccountingTransactionCount</string>
                           <string>Count</string>
                         </tuple>
@@ -439,10 +447,6 @@
                     <key> <string>default_params</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>preferred_gap_id</string>
-                          <string encoding="base64">Jyc=</string>
-                        </tuple>
                         <tuple>
                           <string>id</string>
                           <string encoding="base64">Jyc=</string>
@@ -492,12 +496,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>preferred_gap_id</string>
-                          <string>preferred_gap_id</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -520,7 +519,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>15</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -581,12 +580,20 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>id</string>
+                          <string>id</string>
+                        </tuple>
+                        <tuple>
                           <string>preferred_gap_id</string>
                           <string>preferred_gap_id</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>state</string>
                         </tuple>
                       </list>
                     </value>
