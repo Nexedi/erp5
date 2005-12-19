@@ -66,21 +66,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.AccountModule_statBalance(brain, selection, omit_input=1, float_value=1, **kw)\n
+            <value> <string>return context.AccountModule_statBalance(brain, selection, omit_output=1, float_value=1, **kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAKAAAA
 SwAAAHMsAAAAdAAAdAEAdAIAZAEAgwIAfAEAfAAAZAIAZAMAZAQAZAMAfAIAjQMCU2QAAFMoBQAA
-AE5zGQAAAEFjY291bnRNb2R1bGVfc3RhdEJhbGFuY2VzCgAAAG9taXRfaW5wdXRpAQAAAHMLAAAA
-ZmxvYXRfdmFsdWUoBgAAAHMHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwUA
-AABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrdygGAAAAcwkAAABzZWxlY3Rpb25zBQAAAGJyYWlu
-cwIAAABrd3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMP
-AAAAU2NyaXB0IChQeXRob24pcyIAAABBY2NvdW50TW9kdWxlX3N0YXRUb3RhbFNvdXJjZURlYml0
-AQAAAHMAAAAAKAIAAABzBAAAAE5vbmVzIgAAAEFjY291bnRNb2R1bGVfc3RhdFRvdGFsU291cmNl
-RGViaXQoAgAAAHMEAAAATm9uZXMiAAAAQWNjb3VudE1vZHVsZV9zdGF0VG90YWxTb3VyY2VEZWJp
-dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+AE5zGQAAAEFjY291bnRNb2R1bGVfc3RhdEJhbGFuY2VzCwAAAG9taXRfb3V0cHV0aQEAAABzCwAA
+AGZsb2F0X3ZhbHVlKAYAAABzBwAAAF9hcHBseV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMF
+AAAAYnJhaW5zCQAAAHNlbGVjdGlvbnMCAAAAa3coBgAAAHMJAAAAc2VsZWN0aW9ucwUAAABicmFp
+bnMCAAAAa3dzBwAAAF9hcHBseV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABz
+DwAAAFNjcmlwdCAoUHl0aG9uKXMiAAAAQWNjb3VudE1vZHVsZV9zdGF0VG90YWxTb3VyY2VEZWJp
+dAEAAABzAAAAACgCAAAAcwQAAABOb25lcyIAAABBY2NvdW50TW9kdWxlX3N0YXRUb3RhbFNvdXJj
+ZURlYml0KAIAAABzBAAAAE5vbmVzIgAAAEFjY291bnRNb2R1bGVfc3RhdFRvdGFsU291cmNlRGVi
+aXQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -90,7 +90,7 @@ dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_statTotalSourceDebit</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_statTotalSourceDebit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

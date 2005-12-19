@@ -66,25 +66,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return - context.AccountModule_statBalance(brain, selection, omit_output=1, **kw)\n
+            <value> <string>return - context.AccountModule_statBalance(brain, selection, omit_input=1, **kw) or 0\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAIAAAA
-SwAAAHMnAAAAdAAAdAEAdAIAZAEAgwIAfAEAfAAAZAIAZAMAfAIAjQMBC1NkAABTKAQAAABOcxkA
-AABBY2NvdW50TW9kdWxlX3N0YXRCYWxhbmNlcwsAAABvbWl0X291dHB1dGkBAAAAKAYAAABzBwAA
-AF9hcHBseV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAYnJhaW5zCQAAAHNlbGVjdGlv
-bnMCAAAAa3coBgAAAHMJAAAAc2VsZWN0aW9ucwUAAABicmFpbnMCAAAAa3dzBwAAAF9hcHBseV9z
-CQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMj
-AAAAQWNjb3VudE1vZHVsZV9zdGF0VG90YWxTb3VyY2VDcmVkaXQBAAAAcwAAAAAoAgAAAHMEAAAA
-Tm9uZXMjAAAAQWNjb3VudE1vZHVsZV9zdGF0VG90YWxTb3VyY2VDcmVkaXQoAgAAAHMEAAAATm9u
-ZXMjAAAAQWNjb3VudE1vZHVsZV9zdGF0VG90YWxTb3VyY2VDcmVkaXQoAAAAACgAAAAAcw8AAABT
-Y3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+SwAAAHMuAAAAdAAAdAEAdAIAZAEAgwIAfAEAfAAAZAIAZAMAfAIAjQMBC3AEAAFkBABTZAAAUygF
+AAAATnMZAAAAQWNjb3VudE1vZHVsZV9zdGF0QmFsYW5jZXMKAAAAb21pdF9pbnB1dGkBAAAAaQAA
+AAAoBgAAAHMHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwUAAABicmFpbnMJ
+AAAAc2VsZWN0aW9ucwIAAABrdygGAAAAcwkAAABzZWxlY3Rpb25zBQAAAGJyYWlucwIAAABrd3MH
+AAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcyMAAABBY2NvdW50TW9kdWxlX3N0YXRUb3RhbFNvdXJjZUNyZWRpdAEAAABzAAAA
+ACgCAAAAcwQAAABOb25lcyMAAABBY2NvdW50TW9kdWxlX3N0YXRUb3RhbFNvdXJjZUNyZWRpdCgC
+AAAAcwQAAABOb25lcyMAAABBY2NvdW50TW9kdWxlX3N0YXRUb3RhbFNvdXJjZUNyZWRpdCgAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_statTotalSourceCredit</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_statTotalSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

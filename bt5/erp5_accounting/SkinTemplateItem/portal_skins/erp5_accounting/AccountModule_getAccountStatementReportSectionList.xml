@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+Get the report sections for account statement.\n
+Account is the combination of :\n
+   - node (the Account in account module)\n
+   - destination_section (the Entity in organisation / person module)\n
+   - source_payment (the Bank account for the organisation)\n
+"""\n
+\n
+from Products.ERP5Form.Report import ReportSection\n
+request = context.REQUEST\n
+\n
+\n
+at_date = request[\'at_date\']\n
+transaction_section_category = request[\'transaction_section_category\']\n
+account = request.get(\'account\', None)\n
+destination_section = request.get(\'destination_section\', None)\n
+source_payment = request.get(\'source_payment\', None)\n
+transaction_simulation_state = request[\'transaction_simulation_state\']\n
+from_date = request.get(\'from_date\', None)\n
+omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
+\n
+params = {\n
+  \'at_date\'                      : at_date,\n
+  \'section_category\'             : transaction_section_category,\n
+  \'transaction_section_category\' : transaction_section_category,\n
+  \'simulation_state\'             : transaction_simulation_state,\n
+  \'accounting_transaction_line_currency\' : None,\n
+  \'omit_grouping_reference\'      : omit_grouping_reference,\n
+  \'from_date_summary\' : 1\n
+}\n
+\n
+preferences = {\n
+  \'preferred_accounting_transaction_at_date\'          : at_date,\n
+  \'preferred_accounting_transaction_simulation_state\' :\n
+                    transaction_simulation_state,\n
+  \'preferred_accounting_transaction_section_category\' :\n
+                    transaction_section_category,\n
+  # XXX put omit_grouping_reference in preferences ?\n
+  \'preferred_accounting_omit_grouping_reference\' : omit_grouping_reference,\n
+}\n
+\n
+if from_date:\n
+  params[\'from_date\'] = from_date\n
+  preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
+if source_payment :\n
+  params[\'source_payment_uid\'] = context.restrictedTraverse(source_payment).getUid()\n
+if destination_section :\n
+  params[\'destination_section_uid\'] = context.restrictedTraverse(destination_section).getUid()\n
+if account:\n
+  params[\'node_uid\'] = context.restrictedTraverse(account).getUid()\n
+\n
+from Products.ERP5Type.Cache import clearCache\n
+clearCache() # for preferences\n
+\n
+result = []\n
+portal = context.portal_url.getPortalObject()\n
+\n
+account_columns = (\n
+  (\'delivery.start_date\', \'Accounting Operation Date\'),\n
+  (\'title\', \'Title\'),\n
+#  (\'translated_portal_type\', \'Type\'),\n
+#  (\'third_party\', \'Third Party\'),\n
+#  (\'translated_simulation_state_title\', \'State\'),\n
+  (\'source_debit\', \'Debit\'),\n
+  (\'source_credit\', \'Credit\'),\n
+  (\'reference\', \'Accounting Transaction Reference\'),\n
+  (\'net_balance\', \'Balance\'),\n
+)\n
+\n
+return [ReportSection(\n
+              path = context.getPhysicalPath(),\n
+              #title = \'Account Statement Report\',\n
+              form_id = \'Account_viewAccountingTransactionList\',\n
+              selection_name = \'acount_preference_selection\',\n
+              selection_params = params,\n
+              selection_columns = account_columns,\n
+              listbox_display_mode = \'FlatListMode\',\n
+              selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
+              preferences = preferences )]\n
+# vim: syntax=python\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABcAAAAZAAAAQwAA
+AHPBAgAAZAEAawAAbAEAfQEAAXQCAHQDAGQCAIMCAH0EAHQFAHwEAGQDAIMCAH0GAHQFAHwEAGQE
+AIMCAH0HAHQCAHwEAGQFAIMCAGQGAHQIAIMCAH0JAHQCAHwEAGQFAIMCAGQHAHQIAIMCAH0KAHQC
+AHwEAGQFAIMCAGQIAHQIAIMCAH0LAHQFAHwEAGQJAIMCAH0MAHQCAHwEAGQFAIMCAGQKAHQIAIMC
+AH0NAHQCAHwEAGQFAIMCAGQLAGQMAIMCAH0OAGgAAARkAwB8BgADPARkDQB8BwADPARkBAB8BwAD
+PARkDgB8DAADPARkDwB0CAADPARkCwB8DgADPARkEABkEQADPH0PAGgAAARkEgB8BgADPARkEwB8
+DAADPARkFAB8BwADPARkFQB8DgADPH0QAHwNAG8kAAF8DQB0EQB8DwCDAQBkCgA8fA0AdBEAfBAA
+gwEAZBYAPG4BAAF8CwBvLwABdAIAdAIAdAMAZBcAgwIAfAsAgwEAZBgAgwIAgwAAdBEAfA8AgwEA
+ZBkAPG4BAAF8CgBvLwABdAIAdAIAdAMAZBcAgwIAfAoAgwEAZBgAgwIAgwAAdBEAfA8AgwEAZBoA
+PG4BAAF8CQBvLwABdAIAdAIAdAMAZBcAgwIAfAkAgwEAZBgAgwIAgwAAdBEAfA8AgwEAZBsAPG4B
+AAFkHABrEgBsEwB9EwABfBMAgwAAAWcAAH0UAHQCAHQCAHQDAGQdAIMCAGQeAIMCAIMAAH0VAGQf
+AGQgAGYCAGQhAGQiAGYCAGQjAGQkAGYCAGQlAGQmAGYCAGQnAGQoAGYCAGQpAGQqAGYCAGYGAH0W
+AHwBAGQrAHQCAHQDAGQsAIMCAIMAAGQtAGQuAGQvAGQwAGQxAHwPAGQyAHwWAGQzAGQ0AGQ1AGQ2
+AGQ3AGYCAGcBAGQ4AHwQAIMACGcBAFNkAABTKDkAAABOKAEAAABzDQAAAFJlcG9ydFNlY3Rpb25z
+BwAAAFJFUVVFU1RzBwAAAGF0X2RhdGVzHAAAAHRyYW5zYWN0aW9uX3NlY3Rpb25fY2F0ZWdvcnlz
+AwAAAGdldHMHAAAAYWNjb3VudHMTAAAAZGVzdGluYXRpb25fc2VjdGlvbnMOAAAAc291cmNlX3Bh
+eW1lbnRzHAAAAHRyYW5zYWN0aW9uX3NpbXVsYXRpb25fc3RhdGVzCQAAAGZyb21fZGF0ZXMXAAAA
+b21pdF9ncm91cGluZ19yZWZlcmVuY2VpAAAAAHMQAAAAc2VjdGlvbl9jYXRlZ29yeXMQAAAAc2lt
+dWxhdGlvbl9zdGF0ZXMkAAAAYWNjb3VudGluZ190cmFuc2FjdGlvbl9saW5lX2N1cnJlbmN5cxEA
+AABmcm9tX2RhdGVfc3VtbWFyeWkBAAAAcygAAABwcmVmZXJyZWRfYWNjb3VudGluZ190cmFuc2Fj
+dGlvbl9hdF9kYXRlczEAAABwcmVmZXJyZWRfYWNjb3VudGluZ190cmFuc2FjdGlvbl9zaW11bGF0
+aW9uX3N0YXRlczEAAABwcmVmZXJyZWRfYWNjb3VudGluZ190cmFuc2FjdGlvbl9zZWN0aW9uX2Nh
+dGVnb3J5cywAAABwcmVmZXJyZWRfYWNjb3VudGluZ19vbWl0X2dyb3VwaW5nX3JlZmVyZW5jZXMq
+AAAAcHJlZmVycmVkX2FjY291bnRpbmdfdHJhbnNhY3Rpb25fZnJvbV9kYXRlcxIAAAByZXN0cmlj
+dGVkVHJhdmVyc2VzBgAAAGdldFVpZHMSAAAAc291cmNlX3BheW1lbnRfdWlkcxcAAABkZXN0aW5h
+dGlvbl9zZWN0aW9uX3VpZHMIAAAAbm9kZV91aWQoAQAAAHMKAAAAY2xlYXJDYWNoZXMKAAAAcG9y
+dGFsX3VybHMPAAAAZ2V0UG9ydGFsT2JqZWN0cxMAAABkZWxpdmVyeS5zdGFydF9kYXRlcxkAAABB
+Y2NvdW50aW5nIE9wZXJhdGlvbiBEYXRlcwUAAAB0aXRsZXMFAAAAVGl0bGVzDAAAAHNvdXJjZV9k
+ZWJpdHMFAAAARGViaXRzDQAAAHNvdXJjZV9jcmVkaXRzBgAAAENyZWRpdHMJAAAAcmVmZXJlbmNl
+cyAAAABBY2NvdW50aW5nIFRyYW5zYWN0aW9uIFJlZmVyZW5jZXMLAAAAbmV0X2JhbGFuY2VzBwAA
+AEJhbGFuY2VzBAAAAHBhdGhzDwAAAGdldFBoeXNpY2FsUGF0aHMHAAAAZm9ybV9pZHMlAAAAQWNj
+b3VudF92aWV3QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdHMOAAAAc2VsZWN0aW9uX25hbWVzGwAA
+AGFjb3VudF9wcmVmZXJlbmNlX3NlbGVjdGlvbnMQAAAAc2VsZWN0aW9uX3BhcmFtc3MRAAAAc2Vs
+ZWN0aW9uX2NvbHVtbnNzFAAAAGxpc3Rib3hfZGlzcGxheV9tb2RlcwwAAABGbGF0TGlzdE1vZGVz
+FAAAAHNlbGVjdGlvbl9zb3J0X29yZGVycxIAAABkZWxpdmVyeS5zdG9wX2RhdGVzCQAAAGFzY2Vu
+ZGluZ3MLAAAAcHJlZmVyZW5jZXMoFwAAAHMYAAAAUHJvZHVjdHMuRVJQNUZvcm0uUmVwb3J0cw0A
+AABSZXBvcnRTZWN0aW9ucwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAHJlcXVlc3RzCQAA
+AF9nZXRpdGVtX3MHAAAAYXRfZGF0ZXMcAAAAdHJhbnNhY3Rpb25fc2VjdGlvbl9jYXRlZ29yeXME
+AAAATm9uZXMHAAAAYWNjb3VudHMTAAAAZGVzdGluYXRpb25fc2VjdGlvbnMOAAAAc291cmNlX3Bh
+eW1lbnRzHAAAAHRyYW5zYWN0aW9uX3NpbXVsYXRpb25fc3RhdGVzCQAAAGZyb21fZGF0ZXMXAAAA
+b21pdF9ncm91cGluZ19yZWZlcmVuY2VzBgAAAHBhcmFtc3MLAAAAcHJlZmVyZW5jZXNzBwAAAF93
+cml0ZV9zFwAAAFByb2R1Y3RzLkVSUDVUeXBlLkNhY2hlcwoAAABjbGVhckNhY2hlcwYAAAByZXN1
+bHRzBgAAAHBvcnRhbHMPAAAAYWNjb3VudF9jb2x1bW5zKBcAAABzGAAAAFByb2R1Y3RzLkVSUDVG
+b3JtLlJlcG9ydHMNAAAAUmVwb3J0U2VjdGlvbnMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcA
+AAByZXF1ZXN0cwkAAABfZ2V0aXRlbV9zBwAAAGF0X2RhdGVzHAAAAHRyYW5zYWN0aW9uX3NlY3Rp
+b25fY2F0ZWdvcnlzBAAAAE5vbmVzBwAAAGFjY291bnRzEwAAAGRlc3RpbmF0aW9uX3NlY3Rpb25z
+DgAAAHNvdXJjZV9wYXltZW50cxwAAAB0cmFuc2FjdGlvbl9zaW11bGF0aW9uX3N0YXRlcwkAAABm
+cm9tX2RhdGVzFwAAAG9taXRfZ3JvdXBpbmdfcmVmZXJlbmNlcwYAAABwYXJhbXNzCwAAAHByZWZl
+cmVuY2VzcwcAAABfd3JpdGVfcxcAAABQcm9kdWN0cy5FUlA1VHlwZS5DYWNoZXMKAAAAY2xlYXJD
+YWNoZXMGAAAAcmVzdWx0cwYAAABwb3J0YWxzDwAAAGFjY291bnRfY29sdW1ucygAAAAAKAAAAABz
+DwAAAFNjcmlwdCAoUHl0aG9uKXMyAAAAQWNjb3VudE1vZHVsZV9nZXRBY2NvdW50U3RhdGVtZW50
+UmVwb3J0U2VjdGlvbkxpc3QBAAAAc2AAAAAACA0BDwMPAQ8BGAEYARgBDwEYARgCBwEJAQkBCQEJ
+AQkBEQQHAQkCCQIJAggDBwEQARQBBwEvAQcBLwEHAS8CDQEHAgYBGwIAAQkBCQQJAQkBCQEPAwkB
+GwQGAQwCDwEoAQAAAHMyAAAAQWNjb3VudE1vZHVsZV9nZXRBY2NvdW50U3RhdGVtZW50UmVwb3J0
+U2VjdGlvbkxpc3QoAQAAAHMyAAAAQWNjb3VudE1vZHVsZV9nZXRBY2NvdW50U3RhdGVtZW50UmVw
+b3J0U2VjdGlvbkxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
+AQAAAHMAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getAccountStatementReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>_getitem_</string>
+                            <string>at_date</string>
+                            <string>transaction_section_category</string>
+                            <string>None</string>
+                            <string>account</string>
+                            <string>destination_section</string>
+                            <string>source_payment</string>
+                            <string>transaction_simulation_state</string>
+                            <string>from_date</string>
+                            <string>omit_grouping_reference</string>
+                            <string>params</string>
+                            <string>preferences</string>
+                            <string>_write_</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>clearCache</string>
+                            <string>result</string>
+                            <string>portal</string>
+                            <string>account_columns</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountModule_getAccountStatementReportSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

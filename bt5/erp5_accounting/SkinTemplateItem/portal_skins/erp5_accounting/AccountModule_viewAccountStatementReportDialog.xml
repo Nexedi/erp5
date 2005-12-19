@@ -46,8 +46,14 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>AccountModule_viewAccountStatementReport</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -61,10 +67,10 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>Default</string>
                 <string>left</string>
-                <string>right</string>
-                <string>center</string>
                 <string>bottom</string>
+                <string>diabled</string>
               </list>
             </value>
         </item>
@@ -73,13 +79,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_transaction_section_category</string>
+                        <string>my_from_date</string>
+                        <string>my_at_date</string>
+                        <string>my_portal_skin</string>
+                      </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>my_account</string>
+                        <string>my_destination_section</string>
+                        <string>my_source_payment</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>diabled</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -88,14 +109,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>my_transaction_simulation_state</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -103,7 +118,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountModule_viewAccountList</string> </value>
+            <value> <string>AccountModule_viewAccountStatementReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -111,11 +126,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>AccountModule_viewAccountList</string> </value>
+            <value> <string>AccountModule_viewGeneralLedgerReportDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -127,7 +142,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Accounts</string> </value>
+            <value> <string>Account Statement</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

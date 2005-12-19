@@ -66,38 +66,49 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script returns the gap id for this account according to the current gap\n
+            <value> <string>account = context\n
+destination_section_set = {}\n
 \n
-current_gap = context.getPortalObject().portal_preferences.getPreferredAccountingTransactionGap()\n
+for line in account.Account_getAccountingTransactionList(**kw) :\n
+   movement_path = line.current_transaction_line_path\n
+   movement = context.restrictedTraverse(movement_path)\n
+   destination_section_set[movement.getDestinationSection()] = 1 \n
 \n
-for gap in context.getGapValueList() : \n
-  if current_gap in gap.getPath() : \n
-     return gap.getId()\n
-return \'\'\n
+return destination_section_set.keys()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAALAAAAQwAA
-AHN/AAAAdAAAdAAAdAAAdAEAZAEAgwIAgwAAZAIAgwIAZAMAgwIAgwAAfQIAeE0AdAMAdAAAdAEA
-ZAQAgwIAgwAAgwEARF0zAH0EAHwCAHQAAHwEAGQFAIMCAIMAAGoGAG8UAAF0AAB8BABkBgCDAgCD
-AABTcUAAAXFAAFdkBwBTZAAAUygIAAAATnMPAAAAZ2V0UG9ydGFsT2JqZWN0cxIAAABwb3J0YWxf
-cHJlZmVyZW5jZXNzJAAAAGdldFByZWZlcnJlZEFjY291bnRpbmdUcmFuc2FjdGlvbkdhcHMPAAAA
-Z2V0R2FwVmFsdWVMaXN0cwcAAABnZXRQYXRocwUAAABnZXRJZHMAAAAAKAUAAABzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dHMLAAAAY3VycmVudF9nYXBzCQAAAF9nZXRpdGVyX3MDAAAAZ2FwKAUA
-AABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMLAAAAY3VycmVudF9nYXBzCQAAAF9nZXRpdGVy
-X3MDAAAAZ2FwKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxAAAABBY2NvdW50X2dldEdh
-cElkAQAAAHMMAAAAAAInAhkABgEZARgBKAEAAABzEAAAAEFjY291bnRfZ2V0R2FwSWQoAQAAAHMQ
-AAAAQWNjb3VudF9nZXRHYXBJZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1v
-ZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAsAAAAKAAAASwAA
+AHOJAAAAdAAAfQIAaAAAfQMAeGYAdAMAdAQAdAUAfAIAZAEAgwIAfAAAjQEAgwEARF1GAH0HAHQF
+AHwHAGQCAIMCAH0IAHQFAHQAAGQDAIMCAHwIAIMBAH0JAGQEAHQKAHwDAIMBAHQFAHwJAGQFAIMC
+AIMAADxxKwBXdAUAfAMAZAYAgwIAgwAAU2QAAFMoBwAAAE5zJAAAAEFjY291bnRfZ2V0QWNjb3Vu
+dGluZ1RyYW5zYWN0aW9uTGlzdHMdAAAAY3VycmVudF90cmFuc2FjdGlvbl9saW5lX3BhdGhzEgAA
+AHJlc3RyaWN0ZWRUcmF2ZXJzZWkBAAAAcxUAAABnZXREZXN0aW5hdGlvblNlY3Rpb25zBAAAAGtl
+eXMoCwAAAHMHAAAAY29udGV4dHMHAAAAYWNjb3VudHMXAAAAZGVzdGluYXRpb25fc2VjdGlvbl9z
+ZXRzCQAAAF9nZXRpdGVyX3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwIAAABrd3MEAAAAbGlu
+ZXMNAAAAbW92ZW1lbnRfcGF0aHMIAAAAbW92ZW1lbnRzBwAAAF93cml0ZV8oCwAAAHMCAAAAa3dz
+BwAAAGNvbnRleHRzBwAAAGFjY291bnRzFwAAAGRlc3RpbmF0aW9uX3NlY3Rpb25fc2V0cwkAAABf
+Z2V0aXRlcl9zBwAAAF9hcHBseV9zCQAAAF9nZXRhdHRyX3MEAAAAbGluZXMNAAAAbW92ZW1lbnRf
+cGF0aHMIAAAAbW92ZW1lbnRzBwAAAF93cml0ZV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
+bilzIQAAAEFjY291bnRfZ2V0RGVzdGluYXRpb25TZWN0aW9uTGlzdAEAAABzDgAAAAYBBgIfAAYB
+DwEVASACKAEAAABzIQAAAEFjY291bnRfZ2V0RGVzdGluYXRpb25TZWN0aW9uTGlzdCgBAAAAcyEA
+AABBY2NvdW50X2dldERlc3RpbmF0aW9uU2VjdGlvbkxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQg
+KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Account_getGapId</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Account_getDestinationSectionList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,11 +134,17 @@ ZHVsZT4BAAAAcwAAAAA=</string> </value>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
+                            <string>kw</string>
                             <string>context</string>
-                            <string>current_gap</string>
+                            <string>account</string>
+                            <string>destination_section_set</string>
                             <string>_getiter_</string>
-                            <string>gap</string>
+                            <string>_apply_</string>
+                            <string>_getattr_</string>
+                            <string>line</string>
+                            <string>movement_path</string>
+                            <string>movement</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,7 +161,7 @@ ZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account_getGapId</string> </value>
+            <value> <string>Account_getDestinationSectionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

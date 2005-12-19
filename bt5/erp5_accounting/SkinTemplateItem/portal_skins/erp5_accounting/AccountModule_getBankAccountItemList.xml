@@ -66,38 +66,55 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script returns the gap id for this account according to the current gap\n
+            <value> <string>portal = context.getPortalObject()\n
+if organisation == \'\' :\n
+  organisation = context.REQUEST.get(\'organisation\', None)\n
+if organisation is None : \n
+  organisation = portal.portal_preferences.getPreferredAccountingTransactionSourceSection()\n
 \n
-current_gap = context.getPortalObject().portal_preferences.getPreferredAccountingTransactionGap()\n
+organisation = portal.restrictedTraverse(organisation)\n
+item_list = [(\'\', \'\')]\n
+for bank in organisation.objectValues(portal_type = [\'Bank Account\', \'Cash Register\']):\n
+  item_list.append((bank.getTitle(), bank.getRelativeUrl()))\n
 \n
-for gap in context.getGapValueList() : \n
-  if current_gap in gap.getPath() : \n
-     return gap.getId()\n
-return \'\'\n
+return item_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAALAAAAQwAA
-AHN/AAAAdAAAdAAAdAAAdAEAZAEAgwIAgwAAZAIAgwIAZAMAgwIAgwAAfQIAeE0AdAMAdAAAdAEA
-ZAQAgwIAgwAAgwEARF0zAH0EAHwCAHQAAHwEAGQFAIMCAIMAAGoGAG8UAAF0AAB8BABkBgCDAgCD
-AABTcUAAAXFAAFdkBwBTZAAAUygIAAAATnMPAAAAZ2V0UG9ydGFsT2JqZWN0cxIAAABwb3J0YWxf
-cHJlZmVyZW5jZXNzJAAAAGdldFByZWZlcnJlZEFjY291bnRpbmdUcmFuc2FjdGlvbkdhcHMPAAAA
-Z2V0R2FwVmFsdWVMaXN0cwcAAABnZXRQYXRocwUAAABnZXRJZHMAAAAAKAUAAABzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dHMLAAAAY3VycmVudF9nYXBzCQAAAF9nZXRpdGVyX3MDAAAAZ2FwKAUA
-AABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMLAAAAY3VycmVudF9nYXBzCQAAAF9nZXRpdGVy
-X3MDAAAAZ2FwKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxAAAABBY2NvdW50X2dldEdh
-cElkAQAAAHMMAAAAAAInAhkABgEZARgBKAEAAABzEAAAAEFjY291bnRfZ2V0R2FwSWQoAQAAAHMQ
-AAAAQWNjb3VudF9nZXRHYXBJZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1v
-ZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5zAAAAAGMBAAAACAAA
+AA8AAABDAAAAc/wAAAB0AAB0AQBkAQCDAgCDAAB9AwB8AABkAgBqAgBvJQABdAAAdAAAdAEAZAMA
+gwIAZAQAgwIAZAUAdAQAgwIAfQAAbgEAAXwAAHQEAGoIAG8fAAF0AAB0AAB8AwBkBgCDAgBkBwCD
+AgCDAAB9AABuAQABdAAAfAMAZAgAgwIAfAAAgwEAfQAAZAIAZAIAZgIAZwEAfQUAeF0AdAYAdAAA
+fAAAZAkAgwIAZAoAZAsAZAwAZwIAgwABgwEARF03AH0HAHQAAHwFAGQNAIMCAHQAAHwHAGQOAIMC
+AIMAAHQAAHwHAGQPAIMCAIMAAGYCAIMBAAFxuQBXfAUAU2QAAFMoEAAAAE5zDwAAAGdldFBvcnRh
+bE9iamVjdHMAAAAAcwcAAABSRVFVRVNUcwMAAABnZXRzDAAAAG9yZ2FuaXNhdGlvbnMSAAAAcG9y
+dGFsX3ByZWZlcmVuY2Vzcy4AAABnZXRQcmVmZXJyZWRBY2NvdW50aW5nVHJhbnNhY3Rpb25Tb3Vy
+Y2VTZWN0aW9ucxIAAAByZXN0cmljdGVkVHJhdmVyc2VzDAAAAG9iamVjdFZhbHVlc3MLAAAAcG9y
+dGFsX3R5cGVzDAAAAEJhbmsgQWNjb3VudHMNAAAAQ2FzaCBSZWdpc3RlcnMGAAAAYXBwZW5kcwgA
+AABnZXRUaXRsZXMOAAAAZ2V0UmVsYXRpdmVVcmwoCAAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250
+ZXh0cwYAAABwb3J0YWxzDAAAAG9yZ2FuaXNhdGlvbnMEAAAATm9uZXMJAAAAaXRlbV9saXN0cwkA
+AABfZ2V0aXRlcl9zBAAAAGJhbmsoCAAAAHMMAAAAb3JnYW5pc2F0aW9ucwkAAABfZ2V0YXR0cl9z
+BwAAAGNvbnRleHRzBgAAAHBvcnRhbHMEAAAATm9uZXMJAAAAaXRlbV9saXN0cwkAAABfZ2V0aXRl
+cl9zBAAAAGJhbmsoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzJAAAAEFjY291bnRNb2R1
+bGVfZ2V0QmFua0FjY291bnRJdGVtTGlzdAEAAABzFAAAABIBDQElAQ0BHwIVAQ8BJQAJATICKAEA
+AABzJAAAAEFjY291bnRNb2R1bGVfZ2V0QmFua0FjY291bnRJdGVtTGlzdCgBAAAAcyQAAABBY2Nv
+dW50TW9kdWxlX2dldEJhbmtBY2NvdW50SXRlbUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
+dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Account_getGapId</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getBankAccountItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>organisation = \'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,17 +134,20 @@ ZHVsZT4BAAAAcwAAAAA=</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>organisation</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>current_gap</string>
+                            <string>portal</string>
+                            <string>None</string>
+                            <string>item_list</string>
                             <string>_getiter_</string>
-                            <string>gap</string>
+                            <string>bank</string>
                           </tuple>
                         </value>
                     </item>
@@ -139,12 +159,14 @@ ZHVsZT4BAAAAcwAAAAA=</string> </value>
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string></string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account_getGapId</string> </value>
+            <value> <string>AccountModule_getBankAccountItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

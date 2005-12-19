@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>account = None\n
+if account == \'\' : \n
+  if (hasattr(context, \'getPortalType\') and context.getPortalType() == \'Account\') :\n
+    account = context\n
+elif same_type(account, \'\') : \n
+  account = context.getPortalObject().restrictedTraverse(account)\n
+\n
+node_uid = None\n
+if account is not None :  \n
+  node_uid = account.getUid()\n
+\n
+ptype_translated_dict = {}\n
+def translatePortalType(ptype) : \n
+   if not ptype_translated_dict.has_key(ptype) : \n
+     ptype_translated_dict[ptype] = context.Base_TranslateString(ptype)\n
+   return ptype_translated_dict[ptype]\n
+\n
+item_list = [("", "")]\n
+for entity in context.Account_zDistinctSectionList(node_uid = node_uid): \n
+  item_list.append(("%s (%s)" % (entity[\'title\'], translatePortalType(entity[\'portal_type\'])), entity[\'relative_url\']))\n
+\n
+return item_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5zAAAAAGMBAAAADQAA
+ABMAAAADAAAAcz4BAAB0AAB9AAB8AABkAQBqAgBvNwABdAIAdAMAZAIAgwIAbxYAAXQEAHQDAGQC
+AIMCAIMAAGQDAGoCAG8KAAF0AwB9AABxfwABbjYAAXQFAHwAAGQBAIMCAG8lAAF0BAB0BAB0AwBk
+BACDAgCDAABkBQCDAgB8AACDAQB9AABuAQABdAAAfQYAfAAAdAAAagkAbxYAAXQEAHwAAGQGAIMC
+AIMAAH0GAG4BAAFoAACJAACHAABkBwCGAAB9CABkAQBkAQBmAgBnAQB9CQB4agB0CgB0BAB0AwBk
+CACDAgBkCQB8BgCDAAGDAQBEXUoAfQsAdAQAfAkAZAoAgwIAZAsAdAwAfAsAZAwAgwIAfAgAdAwA
+fAsAZA0AgwIAgwEAZgIAFnQMAHwLAGQOAIMCAGYCAIMBAAFx6ABXfAkAU2QAAFMoDwAAAE5zAAAA
+AHMNAAAAZ2V0UG9ydGFsVHlwZXMHAAAAQWNjb3VudHMPAAAAZ2V0UG9ydGFsT2JqZWN0cxIAAABy
+ZXN0cmljdGVkVHJhdmVyc2VzBgAAAGdldFVpZGMBAAAABgAAAAcAAAADAAAAc0sAAAB0AACIAABk
+AQCDAgB8AACDAQAMbyMAAXQAAHQDAGQCAIMCAHwAAIMBAHQEAIgAAIMBAHwAADxuAQABdAUAiAAA
+fAAAgwIAU2QAAFMoAwAAAE5zBwAAAGhhc19rZXlzFAAAAEJhc2VfVHJhbnNsYXRlU3RyaW5nKAYA
+AABzCQAAAF9nZXRhdHRyX3MVAAAAcHR5cGVfdHJhbnNsYXRlZF9kaWN0cwUAAABwdHlwZXMHAAAA
+Y29udGV4dHMHAAAAX3dyaXRlX3MJAAAAX2dldGl0ZW1fKAYAAABzBQAAAHB0eXBlcwkAAABfZ2V0
+YXR0cl9zFQAAAHB0eXBlX3RyYW5zbGF0ZWRfZGljdHMHAAAAY29udGV4dHMHAAAAX3dyaXRlX3MJ
+AAAAX2dldGl0ZW1fKAEAAABzFQAAAHB0eXBlX3RyYW5zbGF0ZWRfZGljdCgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzEwAAAHRyYW5zbGF0ZVBvcnRhbFR5cGUNAAAAcwYAAAAAARcBIwFzHAAAAEFj
+Y291bnRfekRpc3RpbmN0U2VjdGlvbkxpc3RzCAAAAG5vZGVfdWlkcwYAAABhcHBlbmRzBwAAACVz
+ICglcylzBQAAAHRpdGxlcwsAAABwb3J0YWxfdHlwZXMMAAAAcmVsYXRpdmVfdXJsKA0AAABzBAAA
+AE5vbmVzBwAAAGFjY291bnRzBwAAAGhhc2F0dHJzBwAAAGNvbnRleHRzCQAAAF9nZXRhdHRyX3MJ
+AAAAc2FtZV90eXBlcwgAAABub2RlX3VpZHMVAAAAcHR5cGVfdHJhbnNsYXRlZF9kaWN0cxMAAAB0
+cmFuc2xhdGVQb3J0YWxUeXBlcwkAAABpdGVtX2xpc3RzCQAAAF9nZXRpdGVyX3MGAAAAZW50aXR5
+cwkAAABfZ2V0aXRlbV8oDQAAAHMHAAAAYWNjb3VudHMEAAAATm9uZXMHAAAAaGFzYXR0cnMHAAAA
+Y29udGV4dHMJAAAAX2dldGF0dHJfcwkAAABzYW1lX3R5cGVzCAAAAG5vZGVfdWlkcxUAAABwdHlw
+ZV90cmFuc2xhdGVkX2RpY3RzEwAAAHRyYW5zbGF0ZVBvcnRhbFR5cGVzCQAAAGl0ZW1fbGlzdHMJ
+AAAAX2dldGl0ZXJfcwYAAABlbnRpdHlzCQAAAF9nZXRpdGVtXygAAAAAKAEAAABzFQAAAHB0eXBl
+X3RyYW5zbGF0ZWRfZGljdHMPAAAAU2NyaXB0IChQeXRob24pcyUAAABBY2NvdW50X2dldERlc3Rp
+bmF0aW9uU2VjdGlvbkl0ZW1MaXN0AQAAAHMeAAAABgENASkBDgEQASUCBgENARYCBgEMBQ8BHwAJ
+AUUCKAEAAABzJQAAAEFjY291bnRfZ2V0RGVzdGluYXRpb25TZWN0aW9uSXRlbUxpc3QoAQAAAHMl
+AAAAQWNjb3VudF9nZXREZXN0aW5hdGlvblNlY3Rpb25JdGVtTGlzdCgAAAAAKAAAAABzDwAAAFNj
+cmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Account_getDestinationSectionItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>account = \'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>account</string>
+                            <string>None</string>
+                            <string>hasattr</string>
+                            <string>context</string>
+                            <string>_getattr_</string>
+                            <string>same_type</string>
+                            <string>node_uid</string>
+                            <string>ptype_translated_dict</string>
+                            <string>translatePortalType</string>
+                            <string>item_list</string>
+                            <string>_getiter_</string>
+                            <string>entity</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Account_getDestinationSectionItemList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

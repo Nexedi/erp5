@@ -73,7 +73,7 @@ name = selection.getName()\n
 object = brain.getObject()\n
 object = object.getDestinationValue()\n
 if object is None:\n
-  url = "#"\n
+  url = None\n
 else:\n
   url = object.absolute_url() + \'/view?selection_index=%s&selection_name=%s&reset=1\' % (index, name)\n
 \n
@@ -86,22 +86,22 @@ return url\n
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAgAAAAI
 AAAAQwAAAHOHAAAAdAAAfAEAZAEAgwIAgwAAfQMAdAAAfAEAZAIAgwIAgwAAfQQAdAAAfAAAZAMA
-gwIAgwAAfQUAdAAAfAUAZAQAgwIAgwAAfQUAfAUAdAYAaggAbwoAAWQFAH0HAG4hAAF0AAB8BQBk
-BgCDAgCDAABkBwB8AwB8BABmAgAWF30HAHwHAFNkAABTKAgAAABOcwgAAABnZXRJbmRleHMHAAAA
-Z2V0TmFtZXMJAAAAZ2V0T2JqZWN0cxMAAABnZXREZXN0aW5hdGlvblZhbHVlcwEAAAAjcwwAAABh
-YnNvbHV0ZV91cmxzMgAAAC92aWV3P3NlbGVjdGlvbl9pbmRleD0lcyZzZWxlY3Rpb25fbmFtZT0l
-cyZyZXNldD0xKAgAAABzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwUAAABpbmRleHMEAAAA
-bmFtZXMFAAAAYnJhaW5zBgAAAG9iamVjdHMEAAAATm9uZXMDAAAAdXJsKAgAAABzBQAAAGJyYWlu
-cwkAAABzZWxlY3Rpb25zCQAAAF9nZXRhdHRyX3MFAAAAaW5kZXhzBAAAAG5hbWVzBgAAAG9iamVj
-dHMEAAAATm9uZXMDAAAAdXJsKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyEAAABBY2Nv
-dW50TW9kdWxlX2dldE1pcnJvckFjY291bnRVcmwBAAAAcw4AAAASARIBEgESAQ0BCgIgAigCAAAA
-cwQAAABOb25lcyEAAABBY2NvdW50TW9kdWxlX2dldE1pcnJvckFjY291bnRVcmwoAgAAAHMEAAAA
-Tm9uZXMhAAAAQWNjb3VudE1vZHVsZV9nZXRNaXJyb3JBY2NvdW50VXJsKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+gwIAgwAAfQUAdAAAfAUAZAQAgwIAgwAAfQUAfAUAdAYAaggAbwoAAXQGAH0HAG4hAAF0AAB8BQBk
+BQCDAgCDAABkBgB8AwB8BABmAgAWF30HAHwHAFNkAABTKAcAAABOcwgAAABnZXRJbmRleHMHAAAA
+Z2V0TmFtZXMJAAAAZ2V0T2JqZWN0cxMAAABnZXREZXN0aW5hdGlvblZhbHVlcwwAAABhYnNvbHV0
+ZV91cmxzMgAAAC92aWV3P3NlbGVjdGlvbl9pbmRleD0lcyZzZWxlY3Rpb25fbmFtZT0lcyZyZXNl
+dD0xKAgAAABzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwUAAABpbmRleHMEAAAAbmFtZXMF
+AAAAYnJhaW5zBgAAAG9iamVjdHMEAAAATm9uZXMDAAAAdXJsKAgAAABzBQAAAGJyYWlucwkAAABz
+ZWxlY3Rpb25zCQAAAF9nZXRhdHRyX3MFAAAAaW5kZXhzBAAAAG5hbWVzBgAAAG9iamVjdHMEAAAA
+Tm9uZXMDAAAAdXJsKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyEAAABBY2NvdW50TW9k
+dWxlX2dldE1pcnJvckFjY291bnRVcmwBAAAAcw4AAAASARIBEgESAQ0BCgIgAigCAAAAcwQAAABO
+b25lcyEAAABBY2NvdW50TW9kdWxlX2dldE1pcnJvckFjY291bnRVcmwoAgAAAHMEAAAATm9uZXMh
+AAAAQWNjb3VudE1vZHVsZV9nZXRNaXJyb3JBY2NvdW50VXJsKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getMirrorAccountUrl</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getMirrorAccountUrl</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
