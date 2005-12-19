@@ -35,6 +35,7 @@
                 <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
               </tuple>
             </value>
         </item>
@@ -87,7 +88,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -98,7 +99,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
             </value>
         </item>
         <item>
@@ -152,7 +153,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -163,7 +164,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
             </value>
         </item>
         <item>
@@ -217,7 +218,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -228,7 +229,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -282,7 +283,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -293,7 +294,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -347,7 +348,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -358,7 +359,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -412,7 +413,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -423,7 +424,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
             </value>
         </item>
         <item>
@@ -477,7 +478,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -488,7 +489,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
             </value>
         </item>
         <item>
@@ -542,7 +543,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -553,7 +554,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABc=</string> </persistent>
             </value>
         </item>
         <item>
@@ -607,7 +608,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -618,7 +619,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABc=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABg=</string> </persistent>
             </value>
         </item>
         <item>
@@ -672,7 +673,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -683,7 +684,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABk=</string> </persistent>
             </value>
         </item>
         <item>
@@ -737,7 +738,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -748,7 +749,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABo=</string> </persistent>
             </value>
         </item>
         <item>
@@ -802,7 +803,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -813,7 +814,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -867,7 +868,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -878,7 +879,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAABs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAABw=</string> </persistent>
             </value>
         </item>
         <item>
@@ -932,8 +933,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>
@@ -941,8 +942,54 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountModule_viewAccountList</string> </value>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAB0=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_report</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>account_statement_report</string> </value>
+        </item>
+        <item>
+            <key> <string>optional</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Account Statement</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -961,7 +1008,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_printPdf</string> </value>
+            <value> <string>string:${object_url}/AccountModule_viewAccountList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -980,7 +1027,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountModule_viewSearchDialog</string> </value>
+            <value> <string>string:${object_url}/Base_printPdf</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -999,7 +1046,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewUIDialog</string> </value>
+            <value> <string>string:${object_url}/AccountModule_viewSearchDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1018,7 +1065,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Folder_viewSortOnDialog</string> </value>
+            <value> <string>string:${object_url}/Base_viewUIDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1037,7 +1084,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_exportCsvFileForm</string> </value>
+            <value> <string>string:${object_url}/Folder_viewSortOnDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1056,7 +1103,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountModule_viewGeneralLedgerReportDialog</string> </value>
+            <value> <string>string:${object_url}/Base_exportCsvFileForm</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1075,7 +1122,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountModule_viewTrialBalanceReportDialog</string> </value>
+            <value> <string>string:${object_url}/AccountModule_viewGeneralLedgerReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1094,7 +1141,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransactionModule_viewJournalDialog</string> </value>
+            <value> <string>string:${object_url}/AccountModule_viewTrialBalanceReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1113,7 +1160,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransactionModule_viewFiscalReportDialog</string> </value>
+            <value> <string>string:${object_url}/AccountingTransactionModule_viewJournalDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1132,7 +1179,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountModule_viewOtherPartiesReportDialog</string> </value>
+            <value> <string>string:${object_url}/AccountingTransactionModule_viewFiscalReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1151,7 +1198,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountModule_viewBankAccountsReportDialog</string> </value>
+            <value> <string>string:${object_url}/AccountModule_viewOtherPartiesReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1170,7 +1217,45 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/AccountModule_viewBankAccountsReportDialog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="28" aka="AAAAAAAAABw=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
             <value> <string>string:${object_url}/AccountingTransactionModule_jumpToActiveAccountingPreference</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="29" aka="AAAAAAAAAB0=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/AccountModule_viewAccountStatementReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
