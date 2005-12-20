@@ -94,6 +94,14 @@ class SubversionTool(UniqueObject, Folder):
     if not path.startswith(self.top_working_path):
       raise Unauthorized, 'unauthorized access to path %s' % path
     return path
+
+  def getDefaultUserName(self):
+    """Return a default user name.
+    """
+    name = self.portal_preferences.getPreferredSubversionUserName()
+    if not name:
+      name = self.portal_membership.getAuthenticatedMember().getUserName()
+    return name
     
   def _encodeLogin(self, realm, user, password):
     # Encode login information.
