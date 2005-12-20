@@ -1212,7 +1212,8 @@ class TestAccountingRules(ERP5TypeTestCase):
     invoice = sequence.get('invoice')
     self.getPortal().portal_workflow.doActionFor(
       invoice, 'plan_action',
-      wf_id = 'accounting_workflow'
+      wf_id = 'accounting_workflow',
+      skip_period_validation = 1
     )
     self.assertEquals(invoice.getSimulationState(), 'planned')
 
@@ -1222,7 +1223,8 @@ class TestAccountingRules(ERP5TypeTestCase):
     invoice = sequence.get('invoice')
     self.getPortal().portal_workflow.doActionFor(
       invoice, 'confirm_action',
-      wf_id = 'accounting_workflow'
+      wf_id = 'accounting_workflow',
+      skip_period_validation = 1
     )
     self.assertEquals(invoice.getSimulationState(), 'confirmed')
   
