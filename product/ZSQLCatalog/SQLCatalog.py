@@ -29,7 +29,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
-from zLOG import LOG
+from zLOG import LOG, WARNING, INFO
 from ZODB.POSException import ConflictError
 from DocumentTemplate.DT_Var import sql_quote
 
@@ -266,8 +266,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_object',
-      'description' : 'Methods to be called to catalog an object',
+    { 'id'      : 'sql_catalog_object_list',
+      'description' : 'Methods to be called to catalog the list of objects',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
@@ -276,18 +276,18 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    { 'id'      : 'sql_update_object',
-      'description' : 'Methods will be called to updat a catalogued object',
-      'type'    : 'multiple selection',
+    { 'id'      : 'sql_catalog_translation_list',
+      'description' : 'Methods to be called to catalog the list of translation objects',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_delete_translation_list',
+      'description' : 'Methods to be called to delete translations',
+      'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
     { 'id'      : 'sql_clear_catalog',
       'description' : 'The methods which should be called to clear the catalog',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_object_list',
-      'description' : 'Methods to be called to catalog the list of objects',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
@@ -395,11 +395,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
   sql_catalog_clear_reserved = 'z_clear_reserved'
   sql_catalog_reserve_uid = 'z_reserve_uid'
-  sql_catalog_object = ('z_catalog_object',)
-  sql_uncatalog_object = ('z_uncatalog_object',)
-  sql_update_object = ('z_update_object',)
-  sql_clear_catalog = ('z_drop_catalog', 'z_create_catalog')
   sql_catalog_object_list = ('z_catalog_object_list',)
+  sql_uncatalog_object = ('z_uncatalog_object',)
+  sql_clear_catalog = ('z_drop_catalog', 'z_create_catalog')
+  sql_catalog_translation_list = 'z_catalog_translation_list'
+  sql_delete_translation_list = 'z_delete_translation_list'
   sql_record_catalog_object_list = 'z_record_catalog_object_list'
   sql_record_uncatalog_object = 'z_record_uncatalog_object'
   sql_read_recorded_object_list = 'z_read_recorded_object_list'
@@ -943,7 +943,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     self.catalogObjectList([object])
 
-  def catalogObjectList(self, object_list,method_id_list=None,disable_cache=0):
+  def catalogObjectList(self, object_list, method_id_list=None, disable_cache=0):
     """
       Add objects to the Catalog by calling
       all SQL methods and providing needed arguments.
@@ -1129,7 +1129,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if not disable_cache:
         disableTransactionCache(self)
 
-      
   if psyco is not None: psyco.bind(catalogObjectList)
 
   def uncatalogObject(self, path):
@@ -1162,6 +1161,24 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         LOG("SQLCatalog Warning: could not uncatalog object uid %s with method %s" %
                                                (uid, method_name),0,str(path))
 
+  def catalogTranslationList(self, object_list):
+    """Catalog translations.
+    """
+    method_name = self.sql_catalog_translation_list
+    return self.catalogObjectList(object_list, method_id_list = (method_name,))
+    
+  def deleteTranslationList(self):
+    """Delete translations.
+    """
+    method_name = self.sql_delete_translation_list
+    method = getattr(self, method_name)
+    try:
+      method()
+    except ConflictError:
+      raise
+    except:
+      LOG('SQLCatalog', WARNING, 'could not delete translations', error=sys.exc_info())
+    
   def uniqueValuesFor(self, name):
     """ return unique values for FieldIndex name """
     method = getattr(self, self.sql_unique_values)
