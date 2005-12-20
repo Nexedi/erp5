@@ -605,7 +605,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except ConflictError:
         raise
       except:
-        LOG('SQLCatalog Warning: could not clear catalog', 0, method_name, error=sys.exc_info())
+        LOG('SQLCatalog', WARNING, 'could not clear catalog with %s' % method_name, error=sys.exc_info())
         pass
 
     # Reserved uids have been removed.
@@ -696,7 +696,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except ConflictError:
         raise
       except:
-        LOG('WARNING SQLCatalog._getCatalogSchema failed with the method', 0, method_name, error=sys.exc_info())
+        LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
         pass
       catalog_schema_dict[table] = tuple(result_list)
       self._v_catalog_schema_dict= catalog_schema_dict
@@ -963,7 +963,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
       XXX: For now newUid is used to allocated UIDs. Is this good? Is it better to INSERT then SELECT?
     """
-    LOG('catalogObjectList', 0, 'called with %d objects' % len(object_list))
+    LOG('SQLCatalog', INFO, 'catalogging %d objects' % len(object_list))
     #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
 
     if withCMF:
@@ -997,7 +997,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
         if index:
           if uid != index:
-            LOG('SQLCatalog Warning:', 0, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
+            LOG('SQLCatalog', WARNING, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
             uid = index
             object.uid = uid
         else:
@@ -1029,7 +1029,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           elif catalog_path is not None:
             # An uid conflict happened... Why?
             object.uid = self.newUid()
-            LOG('SQLCatalog Warning:', 0, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid))
+            LOG('SQLCatalog', WARNING,
+                'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid))
 
     if method_id_list is None:
       method_id_list = self.sql_catalog_object_list
@@ -1122,7 +1123,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         except ConflictError:
           raise
         except:
-          LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list),
+          LOG('SQLCatalog', WARNING, 'could not catalog objects %s with method %s' % (object_list, method_name),
               error=sys.exc_info())
           raise
     finally:
@@ -1158,8 +1159,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except:
         # This is a real LOG message
         # which is required in order to be able to import .zexp files
-        LOG("SQLCatalog Warning: could not uncatalog object uid %s with method %s" %
-                                               (uid, method_name),0,str(path))
+        LOG('SQLCatalog', WARNING,
+            'could not uncatalog object %s uid %s with method %s' % (path, uid, method_name))
 
   def catalogTranslationList(self, object_list):
     """Catalog translations.
@@ -1207,7 +1208,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     except:
       # This is a real LOG message
       # which is required in order to be able to import .zexp files
-      LOG("Warning: could not find uid from path",0,str(path))
+      LOG('SQLCatalog', WARNING, "could not find uid from path %s" % (path,))
       return None
 
   def hasPath(self, path):
@@ -1236,7 +1237,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     except:
       # This is a real LOG message
       # which is required in order to be able to import .zexp files
-      LOG("Warning: could not find path from uid",0,str(uid))
+      LOG('SQLCatalog', WARNING, "could not find path from uid %s" % (uid,))
       return None
 
   def getMetadataForUid(self, uid):
@@ -1272,7 +1273,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     except:
       # This is a real LOG message
       # which is required in order to be able to import .zexp files
-      LOG("Warning: could not find uid from path",0,str(path))
+      LOG('SQLCatalog', WARNING, "could not find uid from path %s" % (path,))
       return None
 
   def getIndexDataForPath(self, path):
@@ -1463,7 +1464,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         except ConflictError:
           raise
         except:
-          LOG('SQLCatalog.buildSQLQuery',0,'WARNING, Unable to build the new sort index', error=sys.exc_info())
+          LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
           pass
 
       # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
@@ -1684,7 +1685,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     except ConflictError:
       raise
     except:
-      LOG("Warning: could not search catalog",0,self.sql_search_results, error=sys.exc_info())
+      LOG('SQLCatalog', WARNING, "could not search catalog", error=sys.exc_info())
       return []
 
   __call__ = searchResults
@@ -1702,7 +1703,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     except ConflictError:
       raise
     except:
-      LOG("Warning: could not count catalog",0,self.sql_count_results, error=sys.exc_info())
+      LOG('SQLCatalog', WARNING, "could not count catalog", error=sys.exc_info())
       return [[0]]
 
   def recordCatalogObjectList(self, path_list):
