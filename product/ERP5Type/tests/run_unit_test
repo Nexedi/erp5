@@ -23,6 +23,7 @@ $DIRECTORY/ERP5Type/tests/runUnitTest.py testPackingList >> $DIRECTORY/test_full
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testTransformation >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testProductionOrder >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInventory >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testInventoryModule >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5HR >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testBase >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testBusinessTemplate >> $DIRECTORY/test_full_output 2>&1
