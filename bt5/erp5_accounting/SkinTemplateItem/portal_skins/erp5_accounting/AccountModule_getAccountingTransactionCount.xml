@@ -69,35 +69,34 @@
             <value> <string>LOG=lambda message: context.log("AccountModule_getAccountingTransactionCount", message)\n
 \n
 params = selection.getParams()\n
-kwd = dict(params)\n
+kwd = {} \n
 \n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
+from_date = params.get(\'from_date\', preference.getPreferredAccountingTransactionFromDate())\n
 if from_date :\n
   kwd[\'from_date\'] = from_date\n
-at_date = preference.getPreferredAccountingTransactionAtDate()\n
+at_date = params.get(\'at_date\', preference.getPreferredAccountingTransactionAtDate())\n
 if at_date :\n
   kwd[\'at_date\'] = at_date\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
+section_category = params.get(\'section_category\', preference.getPreferredAccountingTransactionSectionCategory())\n
 if section_category :\n
   kwd[\'section_category\'] = section_category\n
 \n
-query = context.portal_catalog.buildSQLQuery(**kwd)\n
-\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
+simulation_state = params.get(\'simulation_state\', preference.getPreferredAccountingTransactionSimulationStateList())\n
 if simulation_state :\n
   kwd[\'simulation_state\'] = simulation_state\n
-\n
-if query.get(\'where_expression\'):\n
-  kwd[\'where_expression\'] = query[\'where_expression\']\n
-if query.get(\'from_table_list\'):\n
-  kwd[\'from_table_list\'] = query[\'from_table_list\']\n
 \n
 resource = params.get(\'accounting_transaction_line_currency\')\n
 if resource:\n
   currency = context.portal_categories.resolveCategory(resource)\n
   kwd[\'resource_uid\'] = [currency.getUid()]\n
+\n
+query = {} #context.portal_catalog.buildSQLQuery(query_table=\'node\', **kwd)\n
+if query.get(\'where_expression\'):\n
+  kwd[\'where_expression\'] = query[\'where_expression\']\n
+if query.get(\'from_table_list\'):\n
+  kwd[\'from_table_list\'] = query[\'from_table_list\']\n
 \n
 if kw.get(\'stat\') :\n
   if selection.getDomain() :\n
@@ -109,63 +108,63 @@ if kw.get(\'stat\') :\n
   if selection.isInvertMode() :\n
     kwd[\'selection_uids\'] = selection.getInvertModeUidList()\n
   return context.portal_simulation.getInventoryStat(omit_simulation=1,\n
-                                         **kwd)\n
+                                               **kwd)\n
 \n
-return context.portal_simulation.getInventory(node_uid=context.getUid(),\n
+return context.portal_simulation.getInventoryStat(node_uid=context.getUid(),\n
                                                omit_simulation=1,\n
                                                **kwd)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAABQAAAArAAAASwAA
-AHMgAwAAZAEAhAAAfQMAdAEAfAAAZAIAgwIAgwAAfQUAdAQAfAUAgwEAfQcAdAEAdAEAdAYAZAMA
-gwIAgwAAZAQAgwIAfQkAdAEAfAkAZAUAgwIAgwAAfQoAfAoAbxQAAXwKAHQJAHwHAIMBAGQGADxu
-AQABdAEAfAkAZAcAgwIAgwAAfQwAfAwAbxQAAXwMAHQJAHwHAIMBAGQIADxuAQABdAEAfAkAZAkA
-gwIAgwAAfQ0AfA0AbxQAAXwNAHQJAHwHAIMBAGQKADxuAQABdAwAdAEAdAEAdAYAZAsAgwIAZAwA
-gwIAfAcAjQEAfQ8AdAEAfAkAZA0AgwIAgwAAfRAAfBAAbxQAAXwQAHQJAHwHAIMBAGQOADxuAQAB
-dAEAfA8AZA8AgwIAZBAAgwEAbx0AAXQPAHwPAGQQAIMCAHQJAHwHAIMBAGQQADxuAQABdAEAfA8A
-ZA8AgwIAZBEAgwEAbx0AAXQPAHwPAGQRAIMCAHQJAHwHAIMBAGQRADxuAQABdAEAfAUAZA8AgwIA
-ZBIAgwEAfRIAfBIAb0EAAXQBAHQBAHQGAGQTAIMCAGQUAIMCAHwSAIMBAH0TAHQBAHwTAGQVAIMC
-AIMAAGcBAHQJAHwHAIMBAGQWADxuAQABdAEAfAIAZA8AgwIAZBcAgwEAb/UAAXQBAHwAAGQYAIMC
-AIMAAG8gAAF0AQB8AABkGACDAgCDAAB0CQB8BwCDAQBkGQA8bgEAAXQBAHwAAGQaAIMCAIMAAG8g
-AAF0AQB8AABkGgCDAgCDAAB0CQB8BwCDAQBkGwA8bgEAAXQBAHwFAGQPAIMCAGQcAIMBAG8dAAF0
-DwB8BQBkHACDAgB0CQB8BwCDAQBkHAA8bgEAAXQBAHwAAGQdAIMCAIMAAG8gAAF0AQB8AABkHgCD
-AgCDAAB0CQB8BwCDAQBkHwA8bgEAAXQMAHQBAHQBAHQGAGQgAIMCAGQhAIMCAGQiAGQjAHwHAI0B
-AVNuAQABdAwAdAEAdAEAdAYAZCAAgwIAZCQAgwIAZCUAdAEAdAYAZBUAgwIAgwAAZCIAZCMAfAcA
-jQECU2QAAFMoJgAAAE5jAQAAAAMAAAADAAAAQwAAAHMWAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwIA
-UygDAAAATnMDAAAAbG9ncysAAABBY2NvdW50TW9kdWxlX2dldEFjY291bnRpbmdUcmFuc2FjdGlv
-bkNvdW50KAMAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAbWVzc2FnZSgDAAAAcwcA
-AABtZXNzYWdlcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQg
-KFB5dGhvbilzCgAAADxsYW1iZGEuMD4BAAAAcwAAAABzCQAAAGdldFBhcmFtc3MPAAAAZ2V0UG9y
-dGFsT2JqZWN0cxIAAABwb3J0YWxfcHJlZmVyZW5jZXNzKQAAAGdldFByZWZlcnJlZEFjY291bnRp
-bmdUcmFuc2FjdGlvbkZyb21EYXRlcwkAAABmcm9tX2RhdGVzJwAAAGdldFByZWZlcnJlZEFjY291
-bnRpbmdUcmFuc2FjdGlvbkF0RGF0ZXMHAAAAYXRfZGF0ZXMwAAAAZ2V0UHJlZmVycmVkQWNjb3Vu
-dGluZ1RyYW5zYWN0aW9uU2VjdGlvbkNhdGVnb3J5cxAAAABzZWN0aW9uX2NhdGVnb3J5cw4AAABw
-b3J0YWxfY2F0YWxvZ3MNAAAAYnVpbGRTUUxRdWVyeXM0AAAAZ2V0UHJlZmVycmVkQWNjb3VudGlu
-Z1RyYW5zYWN0aW9uU2ltdWxhdGlvblN0YXRlTGlzdHMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMDAAAA
-Z2V0cxAAAAB3aGVyZV9leHByZXNzaW9ucw8AAABmcm9tX3RhYmxlX2xpc3RzJAAAAGFjY291bnRp
-bmdfdHJhbnNhY3Rpb25fbGluZV9jdXJyZW5jeXMRAAAAcG9ydGFsX2NhdGVnb3JpZXNzDwAAAHJl
-c29sdmVDYXRlZ29yeXMGAAAAZ2V0VWlkcwwAAAByZXNvdXJjZV91aWRzBAAAAHN0YXRzCQAAAGdl
-dERvbWFpbnMQAAAAc2VsZWN0aW9uX2RvbWFpbnMJAAAAZ2V0UmVwb3J0cxAAAABzZWxlY3Rpb25f
-cmVwb3J0cw4AAABjbG9zZWRfc3VtbWFyeXMMAAAAaXNJbnZlcnRNb2RlcxQAAABnZXRJbnZlcnRN
-b2RlVWlkTGlzdHMOAAAAc2VsZWN0aW9uX3VpZHNzEQAAAHBvcnRhbF9zaW11bGF0aW9ucxAAAABn
-ZXRJbnZlbnRvcnlTdGF0cw8AAABvbWl0X3NpbXVsYXRpb25pAQAAAHMMAAAAZ2V0SW52ZW50b3J5
-cwgAAABub2RlX3VpZCgTAAAAcwMAAABMT0dzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwYA
-AABwYXJhbXNzBAAAAGRpY3RzAwAAAGt3ZHMHAAAAY29udGV4dHMKAAAAcHJlZmVyZW5jZXMJAAAA
-ZnJvbV9kYXRlcwcAAABfd3JpdGVfcwcAAABhdF9kYXRlcxAAAABzZWN0aW9uX2NhdGVnb3J5cwcA
-AABfYXBwbHlfcwUAAABxdWVyeXMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMJAAAAX2dldGl0ZW1fcwgA
-AAByZXNvdXJjZXMIAAAAY3VycmVuY3lzAgAAAGt3KBQAAABzCQAAAHNlbGVjdGlvbnMFAAAAYnJh
-aW5zAgAAAGt3cwMAAABMT0dzCQAAAF9nZXRhdHRyX3MGAAAAcGFyYW1zcwQAAABkaWN0cwMAAABr
-d2RzBwAAAGNvbnRleHRzCgAAAHByZWZlcmVuY2VzCQAAAGZyb21fZGF0ZXMHAAAAX3dyaXRlX3MH
-AAAAYXRfZGF0ZXMQAAAAc2VjdGlvbl9jYXRlZ29yeXMHAAAAX2FwcGx5X3MFAAAAcXVlcnlzEAAA
-AHNpbXVsYXRpb25fc3RhdGVzCQAAAF9nZXRpdGVtX3MIAAAAcmVzb3VyY2VzCAAAAGN1cnJlbmN5
-KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcysAAABBY2NvdW50TW9kdWxlX2dldEFjY291
-bnRpbmdUcmFuc2FjdGlvbkNvdW50AQAAAHNKAAAACQISAQwDGwESAQcBFAESAQcBFAESAQcBFAIh
-AhIBBwEXAhMBIAETAR0CFQEHAR4BJgIWARABIwEQASMBEwEgARABIAEeAQsCMAIoAQAAAHMrAAAA
-QWNjb3VudE1vZHVsZV9nZXRBY2NvdW50aW5nVHJhbnNhY3Rpb25Db3VudCgBAAAAcysAAABBY2Nv
-dW50TW9kdWxlX2dldEFjY291bnRpbmdUcmFuc2FjdGlvbkNvdW50KAAAAAAoAAAAAHMPAAAAU2Ny
-aXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAABMAAAAwAAAASwAA
+AHNHAwAAZAEAhAAAfQMAdAEAfAAAZAIAgwIAgwAAfQUAaAAAfQYAdAEAdAEAdAUAZAMAgwIAgwAA
+ZAQAgwIAfQgAdAEAfAUAZAUAgwIAZAYAdAEAfAgAZAcAgwIAgwAAgwIAfQkAfAkAbxQAAXwJAHQI
+AHwGAIMBAGQGADxuAQABdAEAfAUAZAUAgwIAZAgAdAEAfAgAZAkAgwIAgwAAgwIAfQsAfAsAbxQA
+AXwLAHQIAHwGAIMBAGQIADxuAQABdAEAfAUAZAUAgwIAZAoAdAEAfAgAZAsAgwIAgwAAgwIAfQwA
+fAwAbxQAAXwMAHQIAHwGAIMBAGQKADxuAQABdAEAfAUAZAUAgwIAZAwAdAEAfAgAZA0AgwIAgwAA
+gwIAfQ0AfA0AbxQAAXwNAHQIAHwGAIMBAGQMADxuAQABdAEAfAUAZAUAgwIAZA4AgwEAfQ4AfA4A
+b0EAAXQBAHQBAHQFAGQPAIMCAGQQAIMCAHwOAIMBAH0PAHQBAHwPAGQRAIMCAIMAAGcBAHQIAHwG
+AIMBAGQSADxuAQABaAAAfRAAdAEAfBAAZAUAgwIAZBMAgwEAbx0AAXQPAHwQAGQTAIMCAHQIAHwG
+AIMBAGQTADxuAQABdAEAfBAAZAUAgwIAZBQAgwEAbx0AAXQPAHwQAGQUAIMCAHQIAHwGAIMBAGQU
+ADxuAQABdAEAfAIAZAUAgwIAZBUAgwEAb/UAAXQBAHwAAGQWAIMCAIMAAG8gAAF0AQB8AABkFgCD
+AgCDAAB0CAB8BgCDAQBkFwA8bgEAAXQBAHwAAGQYAIMCAIMAAG8gAAF0AQB8AABkGACDAgCDAAB0
+CAB8BgCDAQBkGQA8bgEAAXQBAHwFAGQFAIMCAGQaAIMBAG8dAAF0DwB8BQBkGgCDAgB0CAB8BgCD
+AQBkGgA8bgEAAXQBAHwAAGQbAIMCAIMAAG8gAAF0AQB8AABkHACDAgCDAAB0CAB8BgCDAQBkHQA8
+bgEAAXQRAHQBAHQBAHQFAGQeAIMCAGQfAIMCAGQgAGQhAHwGAI0BAVNuAQABdBEAdAEAdAEAdAUA
+ZB4AgwIAZB8AgwIAZCIAdAEAdAUAZBEAgwIAgwAAZCAAZCEAfAYAjQECU2QAAFMoIwAAAE5jAQAA
+AAMAAAADAAAAQwAAAHMWAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwIAUygDAAAATnMDAAAAbG9ncysA
+AABBY2NvdW50TW9kdWxlX2dldEFjY291bnRpbmdUcmFuc2FjdGlvbkNvdW50KAMAAABzCQAAAF9n
+ZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAbWVzc2FnZSgDAAAAcwcAAABtZXNzYWdlcwkAAABfZ2V0
+YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCgAAADxsYW1i
+ZGEuMD4BAAAAcwAAAABzCQAAAGdldFBhcmFtc3MPAAAAZ2V0UG9ydGFsT2JqZWN0cxIAAABwb3J0
+YWxfcHJlZmVyZW5jZXNzAwAAAGdldHMJAAAAZnJvbV9kYXRlcykAAABnZXRQcmVmZXJyZWRBY2Nv
+dW50aW5nVHJhbnNhY3Rpb25Gcm9tRGF0ZXMHAAAAYXRfZGF0ZXMnAAAAZ2V0UHJlZmVycmVkQWNj
+b3VudGluZ1RyYW5zYWN0aW9uQXREYXRlcxAAAABzZWN0aW9uX2NhdGVnb3J5czAAAABnZXRQcmVm
+ZXJyZWRBY2NvdW50aW5nVHJhbnNhY3Rpb25TZWN0aW9uQ2F0ZWdvcnlzEAAAAHNpbXVsYXRpb25f
+c3RhdGVzNAAAAGdldFByZWZlcnJlZEFjY291bnRpbmdUcmFuc2FjdGlvblNpbXVsYXRpb25TdGF0
+ZUxpc3RzJAAAAGFjY291bnRpbmdfdHJhbnNhY3Rpb25fbGluZV9jdXJyZW5jeXMRAAAAcG9ydGFs
+X2NhdGVnb3JpZXNzDwAAAHJlc29sdmVDYXRlZ29yeXMGAAAAZ2V0VWlkcwwAAAByZXNvdXJjZV91
+aWRzEAAAAHdoZXJlX2V4cHJlc3Npb25zDwAAAGZyb21fdGFibGVfbGlzdHMEAAAAc3RhdHMJAAAA
+Z2V0RG9tYWlucxAAAABzZWxlY3Rpb25fZG9tYWlucwkAAABnZXRSZXBvcnRzEAAAAHNlbGVjdGlv
+bl9yZXBvcnRzDgAAAGNsb3NlZF9zdW1tYXJ5cwwAAABpc0ludmVydE1vZGVzFAAAAGdldEludmVy
+dE1vZGVVaWRMaXN0cw4AAABzZWxlY3Rpb25fdWlkc3MRAAAAcG9ydGFsX3NpbXVsYXRpb25zEAAA
+AGdldEludmVudG9yeVN0YXRzDwAAAG9taXRfc2ltdWxhdGlvbmkBAAAAcwgAAABub2RlX3VpZCgS
+AAAAcwMAAABMT0dzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwYAAABwYXJhbXNzAwAAAGt3
+ZHMHAAAAY29udGV4dHMKAAAAcHJlZmVyZW5jZXMJAAAAZnJvbV9kYXRlcwcAAABfd3JpdGVfcwcA
+AABhdF9kYXRlcxAAAABzZWN0aW9uX2NhdGVnb3J5cxAAAABzaW11bGF0aW9uX3N0YXRlcwgAAABy
+ZXNvdXJjZXMIAAAAY3VycmVuY3lzBQAAAHF1ZXJ5cwkAAABfZ2V0aXRlbV9zAgAAAGt3cwcAAABf
+YXBwbHlfKBMAAABzCQAAAHNlbGVjdGlvbnMFAAAAYnJhaW5zAgAAAGt3cwMAAABMT0dzCQAAAF9n
+ZXRhdHRyX3MGAAAAcGFyYW1zcwMAAABrd2RzBwAAAGNvbnRleHRzCgAAAHByZWZlcmVuY2VzCQAA
+AGZyb21fZGF0ZXMHAAAAX3dyaXRlX3MHAAAAYXRfZGF0ZXMQAAAAc2VjdGlvbl9jYXRlZ29yeXMQ
+AAAAc2ltdWxhdGlvbl9zdGF0ZXMIAAAAcmVzb3VyY2VzCAAAAGN1cnJlbmN5cwUAAABxdWVyeXMJ
+AAAAX2dldGl0ZW1fcwcAAABfYXBwbHlfKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcysA
+AABBY2NvdW50TW9kdWxlX2dldEFjY291bnRpbmdUcmFuc2FjdGlvbkNvdW50AQAAAHNKAAAACQIS
+AQYDGwEkAQcBFAEkAQcBFAEkAQcBFAIkAQcBFAIVAQcBHgEjAgkBEwEgARMBIAIWARABIwEQASMB
+EwEgARABIAEeAQsCMAIoAQAAAHMrAAAAQWNjb3VudE1vZHVsZV9nZXRBY2NvdW50aW5nVHJhbnNh
+Y3Rpb25Db3VudCgBAAAAcysAAABBY2NvdW50TW9kdWxlX2dldEFjY291bnRpbmdUcmFuc2FjdGlv
+bkNvdW50KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAA
+AA==</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -211,7 +210,6 @@ aXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                             <string>LOG</string>
                             <string>_getattr_</string>
                             <string>params</string>
-                            <string>dict</string>
                             <string>kwd</string>
                             <string>context</string>
                             <string>preference</string>
@@ -219,12 +217,12 @@ aXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                             <string>_write_</string>
                             <string>at_date</string>
                             <string>section_category</string>
-                            <string>_apply_</string>
-                            <string>query</string>
                             <string>simulation_state</string>
-                            <string>_getitem_</string>
                             <string>resource</string>
                             <string>currency</string>
+                            <string>query</string>
+                            <string>_getitem_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
