@@ -29,6 +29,7 @@ CREATE TABLE `stock` (
   `portal_type` VARCHAR(255),
   `simulation_state` varchar(255) default '',
   `variation_text` VARCHAR(255),
+  `sub_variation_text` VARCHAR(255),
   KEY `uid` (`uid`),
   KEY `quantity` (`quantity`),
   KEY `section_uid` (`section_uid`),
