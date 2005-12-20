@@ -51,7 +51,6 @@ from DateTime import DateTime
 from OFS.Traversable import NotFound
 from OFS import XMLExportImport
 from cStringIO import StringIO
-import difflib
 from copy import deepcopy
 from App.config import getConfiguration
 import OFS.XMLExportImport
@@ -306,9 +305,6 @@ class BaseTemplateItem(Implicit, Persistent):
   def trash(self, context, new_item, **kw):
     # trash is quite similar to uninstall.
     return self.uninstall(context, new_item=new_item, trash=1, **kw)
-
-  def diff(self, **kw):
-    return ''
 
   def export(self, context, bta, **kw):
     pass
@@ -860,11 +856,8 @@ class SkinTemplateItem(ObjectTemplateItem):
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
     # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
     context.getPortalObject().changeSkin(None)
-
     ObjectTemplateItem.uninstall(self, context, **kw)
 
-  def diff(self, max_deep=1, **kw):
-    return ObjectTemplateItem.diff(self, max_deep=max_deep, **kw)
 
 class WorkflowTemplateItem(ObjectTemplateItem):
 
@@ -1602,9 +1595,6 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     bta.addObject(obj=xml_data, name='properties', path=root_path)
 
 class ModuleTemplateItem(BaseTemplateItem):
-
-  def diff(self, max_deep=1, **kw):
-    return ''
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
@@ -2424,13 +2414,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           , 'permissions'   : (
               Permissions.View, )
           }
-        , { 'id'            : 'diff'
-          , 'name'          : 'Diff'
-          , 'category'      : 'object_view'
-          , 'action'        : 'BusinessTemplate_viewDiff'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
         , { 'id'            : 'history'
           , 'name'          : 'History'
           , 'category'      : 'object_view'
@@ -2883,22 +2866,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_message_translation')
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'diff')
-    def diff(self, verbose=0):
-      """
-        Return a 'diff' of the business template compared to the
-        __btsave__ version.
-      """
-      diff_message = '%s : %s\n%s\n' % (self.getPath(), DateTime(),
-                                        '='*80)
-      # Diff everything
-      for item_name in self._item_name_list:
-        item = getattr(self, item_name)
-        if item is not None:
-          diff_message += item.diff(verbose=verbose)
-      return diff_message
 
     security.declareProtected(Permissions.ManagePortal, 'export')
     def export(self, path=None, local=0, **kw):
