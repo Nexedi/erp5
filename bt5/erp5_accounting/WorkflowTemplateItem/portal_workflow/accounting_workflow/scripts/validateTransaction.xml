@@ -83,8 +83,8 @@ else: \n
     valid_date = 0\n
     # check the date is in an opened period\n
     transaction_date = DateTime( transaction.getStopDate().year(),\n
-                                                      transaction.getStopDate().month(),\n
-                                                      transaction.getStopDate().day() ) # we don\'t care about hour:minutes\n
+                                 transaction.getStopDate().month(),\n
+                                 transaction.getStopDate().day() ) # we don\'t care about hour:minutes\n
     for apd in context.portal_catalog(\n
          portal_type = "Accounting Period", \n
          simulation_state = "planned") : \n
@@ -95,20 +95,22 @@ else: \n
       error_message = "Date is not in an openned Accounting Period" \n
 \n
 # Get sections and a currency.\n
-source_section = transaction.getSourceSection()\n
-destination_section = transaction.getDestinationSection()\n
+source_section = transaction.getSourceSection(portal_type = [\'Organisation\'])\n
+destination_section = transaction.getDestinationSection(portal_type = [\'Organisation\', \'Person\'])\n
 currency = transaction.getResource()\n
 \n
 if source_section in (None, \'\'):\n
-  error_message = \'source_section is not defined\'\n
+  error_message = \'Source Section is not defined\'\n
 elif transaction.getPortalType() not in (\'Balance Transaction\', \'Accounting Transaction\'):\n
   if destination_section in (None, \'\'):\n
-    error_message = \'destination_section is not defined\'\n
+    error_message = \'Destination Section is not defined\'\n
+    if transaction.getDestinationSection() not in (None, \'\'):\n
+      error_message = \'Destination Section is not an Organisation or a Person\'\n
   elif currency in (None, \'\'):\n
     error_message = \'currency is not defined\'\n
 \n
 if error_message != \'\':\n
-  raise ValidationFailed, \'Action impossible : \'+error_message\n
+  raise ValidationFailed, \'Action impossible : \' + error_message\n
 
 
 ]]></string> </value>
@@ -116,42 +118,45 @@ if error_message != \'\':\n
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABIAAAAPAAAAQwAA
-AHM9AgAAZAEAawAAbAEAfQIAAWQCAH0DAHQDAHwAAGQDAIMCAH0FAHQGAHQDAHwAAGQEAIMCAGQF
+AHN7AgAAZAEAawAAbAEAfQIAAWQCAH0DAHQDAHwAAGQDAIMCAH0FAHQGAHQDAHwAAGQEAIMCAGQF
 AIMCAGQGAGQHAIMCAH0HAHQGAHwFAGQIAIMCAIMAAHQIAGQCAGYCAGoGAG8KAAFkCQB9AwBuAAEB
 fAcADG/3AAFkBwB9CQB0CgB0BgB0BgB8BQBkCACDAgCDAABkCgCDAgCDAAB0BgB0BgB8BQBkCACD
 AgCDAABkCwCDAgCDAAB0BgB0BgB8BQBkCACDAgCDAABkDACDAgCDAACDAwB9CwB4fgB0DAB0BgB0
 DQBkDQCDAgBkDgBkDwBkEABkEQCDAAKDAQBEXVgAfQ4AdAYAfA4AZBIAgwIAgwAAfQ4AdAYAfA4A
 ZBMAgwIAgwAAfAsABANqAQBvFgABdAYAfA4AZAgAgwIAgwAAagEAbgIAAgFvCgABZBQAfQkAcfkA
-AXH5AFd8CQAMbwoAAWQVAH0DAHFrAQFuAQABdAYAfAUAZBYAgwIAgwAAfQ8AdAYAfAUAZBcAgwIA
-gwAAfRAAdAYAfAUAZBgAgwIAgwAAfREAfA8AdAgAZAIAZgIAagYAbwoAAWQZAH0DAG5eAAF0BgB8
-BQBkGgCDAgCDAABkGwBkHABmAgBqBwBvPgABfBAAdAgAZAIAZgIAagYAbwoAAWQdAH0DAHEbAgF8
-EQB0CABkAgBmAgBqBgBvCgABZB4AfQMAcRsCAW4BAAF8AwBkAgBqAwBvEQABfAIAZB8AfAMAF4IC
-AG4BAAFkAABTKCAAAABOKAEAAABzEAAAAFZhbGlkYXRpb25GYWlsZWRzAAAAAHMGAAAAb2JqZWN0
-cwYAAABrd2FyZ3NzAwAAAGdldHMWAAAAc2tpcF9wZXJpb2RfdmFsaWRhdGlvbmkAAAAAcwsAAABn
-ZXRTdG9wRGF0ZXMTAAAAZGF0ZSBpcyBub3QgZGVmaW5lZHMEAAAAeWVhcnMFAAAAbW9udGhzAwAA
-AGRheXMOAAAAcG9ydGFsX2NhdGFsb2dzCwAAAHBvcnRhbF90eXBlcxEAAABBY2NvdW50aW5nIFBl
-cmlvZHMQAAAAc2ltdWxhdGlvbl9zdGF0ZXMHAAAAcGxhbm5lZHMJAAAAZ2V0T2JqZWN0cwwAAABn
-ZXRTdGFydERhdGVpAQAAAHMrAAAARGF0ZSBpcyBub3QgaW4gYW4gb3Blbm5lZCBBY2NvdW50aW5n
-IFBlcmlvZHMQAAAAZ2V0U291cmNlU2VjdGlvbnMVAAAAZ2V0RGVzdGluYXRpb25TZWN0aW9ucwsA
-AABnZXRSZXNvdXJjZXMdAAAAc291cmNlX3NlY3Rpb24gaXMgbm90IGRlZmluZWRzDQAAAGdldFBv
-cnRhbFR5cGVzEwAAAEJhbGFuY2UgVHJhbnNhY3Rpb25zFgAAAEFjY291bnRpbmcgVHJhbnNhY3Rp
-b25zIgAAAGRlc3RpbmF0aW9uX3NlY3Rpb24gaXMgbm90IGRlZmluZWRzFwAAAGN1cnJlbmN5IGlz
-IG5vdCBkZWZpbmVkcxQAAABBY3Rpb24gaW1wb3NzaWJsZSA6ICgSAAAAcx4AAABQcm9kdWN0cy5E
-Q1dvcmtmbG93LkRDV29ya2Zsb3dzEAAAAFZhbGlkYXRpb25GYWlsZWRzDQAAAGVycm9yX21lc3Nh
-Z2VzCQAAAF9nZXRpdGVtX3MMAAAAc3RhdGVfY2hhbmdlcwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dl
-dGF0dHJfcxYAAABza2lwX3BlcmlvZF92YWxpZGF0aW9ucwQAAABOb25lcwoAAAB2YWxpZF9kYXRl
-cwgAAABEYXRlVGltZXMQAAAAdHJhbnNhY3Rpb25fZGF0ZXMJAAAAX2dldGl0ZXJfcwcAAABjb250
-ZXh0cwMAAABhcGRzDgAAAHNvdXJjZV9zZWN0aW9ucxMAAABkZXN0aW5hdGlvbl9zZWN0aW9ucwgA
-AABjdXJyZW5jeSgSAAAAcwwAAABzdGF0ZV9jaGFuZ2VzHgAAAFByb2R1Y3RzLkRDV29ya2Zsb3cu
-RENXb3JrZmxvd3MQAAAAVmFsaWRhdGlvbkZhaWxlZHMNAAAAZXJyb3JfbWVzc2FnZXMJAAAAX2dl
-dGl0ZW1fcwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dldGF0dHJfcxYAAABza2lwX3BlcmlvZF92YWxp
-ZGF0aW9ucwQAAABOb25lcwoAAAB2YWxpZF9kYXRlcwgAAABEYXRlVGltZXMQAAAAdHJhbnNhY3Rp
-b25fZGF0ZXMJAAAAX2dldGl0ZXJfcwcAAABjb250ZXh0cwMAAABhcGRzDgAAAHNvdXJjZV9zZWN0
-aW9ucxMAAABkZXN0aW5hdGlvbl9zZWN0aW9ucwgAAABjdXJyZW5jeSgAAAAAKAAAAABzDwAAAFNj
-cmlwdCAoUHl0aG9uKXMTAAAAdmFsaWRhdGVUcmFuc2FjdGlvbgEAAABzOgAAAA0CBgMPASECHwEK
-AggBBgIkARsBGwElAAYDEgE2AQ4BCAEOAxIBEgESAhMBCgEfARMBCgETAQ4CDQEoAQAAAHMTAAAA
-dmFsaWRhdGVUcmFuc2FjdGlvbigBAAAAcxMAAAB2YWxpZGF0ZVRyYW5zYWN0aW9uKAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+AXH5AFd8CQAMbwoAAWQVAH0DAHFrAQFuAQABdAYAfAUAZBYAgwIAZA4AZBcAZwEAgwABfQ8AdAYA
+fAUAZBgAgwIAZA4AZBcAZBkAZwIAgwABfRAAdAYAfAUAZBoAgwIAgwAAfREAfA8AdAgAZAIAZgIA
+agYAbwoAAWQbAH0DAG6HAAF0BgB8BQBkHACDAgCDAABkHQBkHgBmAgBqBwBvZwABfBAAdAgAZAIA
+ZgIAagYAbzMAAWQfAH0DAHQGAHwFAGQYAIMCAIMAAHQIAGQCAGYCAGoHAG8KAAFkIAB9AwBxVQIB
+cVkCAXwRAHQIAGQCAGYCAGoGAG8KAAFkIQB9AwBxWQIBbgEAAXwDAGQCAGoDAG8RAAF8AgBkIgB8
+AwAXggIAbgEAAWQAAFMoIwAAAE4oAQAAAHMQAAAAVmFsaWRhdGlvbkZhaWxlZHMAAAAAcwYAAABv
+YmplY3RzBgAAAGt3YXJnc3MDAAAAZ2V0cxYAAABza2lwX3BlcmlvZF92YWxpZGF0aW9uaQAAAABz
+CwAAAGdldFN0b3BEYXRlcxMAAABkYXRlIGlzIG5vdCBkZWZpbmVkcwQAAAB5ZWFycwUAAABtb250
+aHMDAAAAZGF5cw4AAABwb3J0YWxfY2F0YWxvZ3MLAAAAcG9ydGFsX3R5cGVzEQAAAEFjY291bnRp
+bmcgUGVyaW9kcxAAAABzaW11bGF0aW9uX3N0YXRlcwcAAABwbGFubmVkcwkAAABnZXRPYmplY3Rz
+DAAAAGdldFN0YXJ0RGF0ZWkBAAAAcysAAABEYXRlIGlzIG5vdCBpbiBhbiBvcGVubmVkIEFjY291
+bnRpbmcgUGVyaW9kcxAAAABnZXRTb3VyY2VTZWN0aW9ucwwAAABPcmdhbmlzYXRpb25zFQAAAGdl
+dERlc3RpbmF0aW9uU2VjdGlvbnMGAAAAUGVyc29ucwsAAABnZXRSZXNvdXJjZXMdAAAAU291cmNl
+IFNlY3Rpb24gaXMgbm90IGRlZmluZWRzDQAAAGdldFBvcnRhbFR5cGVzEwAAAEJhbGFuY2UgVHJh
+bnNhY3Rpb25zFgAAAEFjY291bnRpbmcgVHJhbnNhY3Rpb25zIgAAAERlc3RpbmF0aW9uIFNlY3Rp
+b24gaXMgbm90IGRlZmluZWRzNgAAAERlc3RpbmF0aW9uIFNlY3Rpb24gaXMgbm90IGFuIE9yZ2Fu
+aXNhdGlvbiBvciBhIFBlcnNvbnMXAAAAY3VycmVuY3kgaXMgbm90IGRlZmluZWRzFAAAAEFjdGlv
+biBpbXBvc3NpYmxlIDogKBIAAABzHgAAAFByb2R1Y3RzLkRDV29ya2Zsb3cuRENXb3JrZmxvd3MQ
+AAAAVmFsaWRhdGlvbkZhaWxlZHMNAAAAZXJyb3JfbWVzc2FnZXMJAAAAX2dldGl0ZW1fcwwAAABz
+dGF0ZV9jaGFuZ2VzCwAAAHRyYW5zYWN0aW9ucwkAAABfZ2V0YXR0cl9zFgAAAHNraXBfcGVyaW9k
+X3ZhbGlkYXRpb25zBAAAAE5vbmVzCgAAAHZhbGlkX2RhdGVzCAAAAERhdGVUaW1lcxAAAAB0cmFu
+c2FjdGlvbl9kYXRlcwkAAABfZ2V0aXRlcl9zBwAAAGNvbnRleHRzAwAAAGFwZHMOAAAAc291cmNl
+X3NlY3Rpb25zEwAAAGRlc3RpbmF0aW9uX3NlY3Rpb25zCAAAAGN1cnJlbmN5KBIAAABzDAAAAHN0
+YXRlX2NoYW5nZXMeAAAAUHJvZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0
+aW9uRmFpbGVkcw0AAABlcnJvcl9tZXNzYWdlcwkAAABfZ2V0aXRlbV9zCwAAAHRyYW5zYWN0aW9u
+cwkAAABfZ2V0YXR0cl9zFgAAAHNraXBfcGVyaW9kX3ZhbGlkYXRpb25zBAAAAE5vbmVzCgAAAHZh
+bGlkX2RhdGVzCAAAAERhdGVUaW1lcxAAAAB0cmFuc2FjdGlvbl9kYXRlcwkAAABfZ2V0aXRlcl9z
+BwAAAGNvbnRleHRzAwAAAGFwZHMOAAAAc291cmNlX3NlY3Rpb25zEwAAAGRlc3RpbmF0aW9uX3Nl
+Y3Rpb25zCAAAAGN1cnJlbmN5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxMAAAB2YWxp
+ZGF0ZVRyYW5zYWN0aW9uAQAAAHM+AAAADQIGAw8BIQIfAQoCCAEGAiQBGwEbASUABgMSATYBDgEI
+AQ4DGwEeARICEwEKAR8BEwEGAR8BDgETAQ4CDQEoAQAAAHMTAAAAdmFsaWRhdGVUcmFuc2FjdGlv
+bigBAAAAcxMAAAB2YWxpZGF0ZVRyYW5zYWN0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
+b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
