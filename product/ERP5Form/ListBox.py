@@ -1105,7 +1105,7 @@ class ListBoxWidget(Widget.Widget):
         total_size = 0
         for s in report_sections:
           total_size += s[4]
-        if render_format == 'list':
+        if render_format == 'list' or lines == 0:
           end = total_size
           total_pages = 1
           current_page = 0
