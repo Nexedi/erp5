@@ -56,10 +56,8 @@ from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
-  """
-    Test business template erp5_mrp
-  """
+class TestProductionOrderMixin(TestOrderMixin):
+
   run_all_test = 1
   order_portal_type = 'Production Order'
   order_line_portal_type = 'Production Order Line'
@@ -72,23 +70,6 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
                         'Apparel Transformation Transformed Resource'
   operation_line_portal_type = 'Apparel Transformation Operation'
   order_workflow_id='production_order_workflow'
-
-  def getTitle(self):
-    return "Production Order"
-
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
 
   def getBusinessTemplateList(self):
     """
@@ -306,11 +287,16 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
       sequence.edit(simulation_movement_list=simulation_movement_list)
 
   def checkObjectAttributes(self, object, attribute_list):
+    LOG('checkObjectAttributes object.getPath',0,object.getPath())
     for value, attribute in attribute_list:
       try:
         self.assertEquals(value,
                           getattr(object, attribute)())
       except AssertionError:
+        LOG('Raise Assertion error',0,'')
+        LOG('object.getQuantity()',0,object.getQuantity())
+        LOG('object.__dict__',0,object.__dict__)
+        LOG('object.getOrderValue().getQuantity()',0,object.getOrderValue().getQuantity())
         raise AssertionError, "Attribute: %s, Value: %s, Result: %s" %\
                     (attribute, value, getattr(object, attribute)())
 
@@ -381,30 +367,6 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
              (production_organisation1, 'getDestinationSectionValue'),
              (None, 'getSourceValue'),
              (None, 'getSourceSectionValue')))
-
-  def test_01_testProductionSimulationExpand(self, quiet=0, run=run_all_test):
-    """
-      Test generation and update of order applied rule.
-    """
-    if not run: return
-    sequence_list = SequenceList()
-    # Test when order is 
-    sequence_string = '\
-                      CreateProductionOrganisation1 \
-                      CreateProductionSC \
-                      CreateVariatedResource \
-                      CreateComponent1 \
-                      CreateTransformation \
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateOrderLine \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      CheckProductionSimulation \
-                      '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
 
   def stepCreateSupplyOrganisation1(self, sequence=None, sequence_list=None, 
                                         **kw):
@@ -559,32 +521,6 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
              (supply_organisation1, 'getSourceValue'),
              (supply_organisation1, 'getSourceSectionValue')))
     self.assertEquals(0, len(supply_movement.objectValues()))
-
-  def test_02_testSourcingSimulationExpand(self, quiet=0, 
-                                                     run=run_all_test):
-    """
-      Test generation and update of order applied rule.
-    """
-    if not run: return
-    sequence_list = SequenceList()
-    # Test when order is 
-    sequence_string = '\
-                      CreateProductionOrganisation1 \
-                      CreateSupplyOrganisation1 \
-                      CreateSourcingSC \
-                      CreateVariatedResource \
-                      CreateComponent1 \
-                      CreateTransformation \
-                      CreateOrganisation \
-                      CreateOrder \
-                      CreateOrderLine \
-                      Tic \
-                      OrderOrder \
-                      Tic \
-                      CheckSourcingSimulation \
-                      '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
 
   def stepCreateProductionOrganisation2(self, sequence=None, 
                                         sequence_list=None, **kw):
@@ -906,6 +842,65 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(0, len(supply_movement.objectValues()))
 
     
+class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
+  """
+    Test business template erp5_mrp
+  """
+  run_all_test = 1
+
+  def getTitle(self):
+    return "Production Order"
+
+  def test_01_testProductionSimulationExpand(self, quiet=0, run=run_all_test):
+    """
+      Test generation and update of order applied rule.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test when order is 
+    sequence_string = '\
+                      CreateProductionOrganisation1 \
+                      CreateProductionSC \
+                      CreateVariatedResource \
+                      CreateComponent1 \
+                      CreateTransformation \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckProductionSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_02_testSourcingSimulationExpand(self, quiet=0, 
+                                                     run=run_all_test):
+    """
+      Test generation and update of order applied rule.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test when order is 
+    sequence_string = '\
+                      CreateProductionOrganisation1 \
+                      CreateSupplyOrganisation1 \
+                      CreateSourcingSC \
+                      CreateVariatedResource \
+                      CreateComponent1 \
+                      CreateTransformation \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckSourcingSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
   def test_03_testIndustrialPhase(self, quiet=0, run=run_all_test):
     """
     """
@@ -933,11 +928,3 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestProductionOrder))
-        return suite
