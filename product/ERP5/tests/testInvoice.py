@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
+#          Jerome Perrin <jerome@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,14 +27,14 @@
 #
 ##############################################################################
 
+"""
+  Tests invoice creation from simulation.
 
-
-#
-# Skeleton ZopeTestCase
-#
-
-from random import randint
-
+TODO:
+  * check empty related Delivery Rule
+  * check divergence 
+  
+"""
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -42,420 +43,388 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
 from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
+from testPackingList import TestPackingListMixin
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-import time
-import os
-from Products.ERP5Type import product_path
-from DateTime import DateTime
 
-class TestInvoice(ERP5TypeTestCase):
-  """
-  This is the list of test
+class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
+  """Test invoice are created from orders then packing lists. """
+  
+  # XXX
+  def playSequence(self, sequence_string) :
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+ 
+  RUN_ALL_TESTS = 1
 
-  test setNextStartDate : 
-  - every hour
-  - at 6, 10, 15, 21 every day
-  - every day at 10
-  - every 3 days at 14 and 15 and 17
-  - every monday and friday, at 6 and 15
-  - every 1st and 15th every month, at 12 and 14
-  - every 1st day of every 2 month, at 6
-  
-  WARNING:
-  
-  make sure Coramy Product is not installed (because it changes the meta_types
-  of many order/delivery types)
-  
-  """
+  sale_invoice_portal_type      = 'Sale Invoice Transaction'
+  sale_invoice_line_portal_type = 'Sale Invoice Line' 
+  sale_invoice_cell_portal_type = 'Invoice Cell'
 
-  # Different variables used for this test
-  run_all_test = 0
-  source_company_id = 'Nexedi'
-  destination_company_id = 'MyOrg'
-  account1 = 'prestation_service'
-  account2 = 'creance_client'
-  account3 = 'tva_collectee_196'
-  account1_mirror = 'fourniture_service' # Not used
-  account2_mirror = 'dette_client'       # Not used
-  account3_mirror = 'tva_collectee_196'  # Not used
-  quantity1 = 3.0
-  price1 = 72.0
-  total_price1 = 216.0
+  default_region = "europe/west/france"
 
   def getTitle(self):
     return "Invoices"
-
-  def getBusinessTemplateList(self):
-    """
-    """
-    return ('erp5_accounting', 'erp5_trade', 'erp5_pdm')
-
-  def enableLightInstall(self):
-    """
-    You can override this. Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this. Return if we should create (1) or not (0) an activity tool
-    """
-    return 1
-
-  def getActivityTool(self):
-    return getattr(self.getPortal(), 'portal_activities', None)
-
-  def getRuleTool(self):
-    return getattr(self.getPortal(), 'portal_rules', None)
-
-  def getWorkflowTool(self):
-    return getattr(self.getPortal(), 'portal_workflow', None)
-
-  def getSaleOrderModule(self):
-    return getattr(self.getPortal(),'sale_order',None)
-
-  def getSalePackingListModule(self):
-    return getattr(self.getPortal(),'sale_packing_list',None)
-
-  def getProductModule(self):
-    return getattr(self.getPortal(),'product',None)
-
-  def getAccountModule(self):
-    return getattr(self.getPortal(),'account',None)
-
-  def getAccountingModule(self):
-    return getattr(self.getPortal(),'accounting',None)
-
-  def getCurrencyModule(self):
-    return getattr(self.getPortal(), 'currency', None)
-
-  def login(self, quiet=0, run=run_all_test):
+  
+  def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
-    uf._doAddUser('alex', '', ['Manager'], [])
+    # FIXME: unittest user should not have the Manager role
+    uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
+                               'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
-
-  def afterSetUp(self, quiet=1, run=1):
-    """
-    """
-    self.login()
-    # Must add some accounts, accounting transactions, products, etc.
-    account_module = self.getAccountModule()
-    self.accounting_module = self.getAccountingModule()
-    self.currency_module = self.getCurrencyModule()
-    self.organisation_module = self.getOrganisationModule()
-    product_module = self.getProductModule()
-    self.activity_tool = self.getActivityTool()
-    self.catalog_tool = self.getCatalogTool()
-    self.category_tool = self.getCategoryTool()
-    self.simulation_tool = self.getSimulationTool()
-    self.workflow_tool = self.getWorkflowTool()
-    self.portal = self.getPortal()
-    # flush activities
-    get_transaction().commit()
-    self.tic()
-    # When using light install, only base categories are created
-    if len(self.category_tool.region.contentValues()) == 0 :
-      self.category_tool.region.newContent(portal_type='Category', id='africa')
-      o = self.category_tool.region.newContent(portal_type='Category', id='europe')
-      o = o.newContent(portal_type='Category', id='west')
-      o.newContent(portal_type='Category', id='france')
-
-      self.category_tool.pcg.newContent(portal_type='Category', id='1')
-
-      self.category_tool.product_line.newContent(portal_type='Category', id='erp5')
-      o = self.category_tool.product_line.newContent(portal_type='Category', id='storever')
-      o.newContent(portal_type='Category', id='barebone')
-      o.newContent(portal_type='Category', id='notebook')
-      o.newContent(portal_type='Category', id='openbrick')
-    # If currency/EUR already exists, it means that the afterSetUp actions were already commited. Then, we just need to link to them.
-    old_euro = getattr( self.currency_module, 'EUR', None)
-    if old_euro is not None :
-      self.invoice_transaction_rule = getattr(self.getRuleTool(), 'default_invoice_transaction_rule')
-      self.predicate_product1 = getattr(self.invoice_transaction_rule, 'product_1')
-      self.predicate_region1 = getattr(self.invoice_transaction_rule, 'region_1')
-      return
-    # Create some currencies
-    euro = self.currency_module.newContent(id='EUR', title='Euro', portal_type='Currency')
-    # Create some accounts
-    account_module.newContent(portal_type='Account',id='prestation_service')
-    account_module.newContent(portal_type='Account',id='creance_client')
-    account_module.newContent(portal_type='Account',id='tva_collectee_196')
-    account_module.newContent(portal_type='Account',id='dette_fournisseur')
-    account_module.newContent(portal_type='Account',id='banques_etablissements_financiers')
-    account_module.newContent(portal_type='Account',id='account1')
-    account_module.newContent(portal_type='Account',id='account2')
-    account_module.newContent(portal_type='Account',id='account3')
-    account_module.newContent(portal_type='Account',id='account4')                          
-    # Create a product
-    product_module = self.getProductModule()
-    product = product_module.newContent(portal_type='Product',id='1', product_line='storever/notebook')
-    product.setPricedQuantity(1.0)
-    product.setBasePrice(self.price1)
-    # Create a destination with region
-    organisation_module = self.getOrganisationModule()
-    organisation = organisation_module.newContent(portal_type='Organisation',id=self.destination_company_id)
-    organisation.newContent(id='default_address', portal_type='Address', region='europe/west/france')
-    organisation = organisation_module.newContent(portal_type='Organisation',id=self.source_company_id)    
-    # Create some predicates
-    self.invoice_transaction_rule = self.getRuleTool().default_invoice_transaction_rule
-    self.invoice_transaction_rule.deleteContent(self.invoice_transaction_rule.contentIds()) # delete anything inside the rule first
-    self.predicate_product1 = self.invoice_transaction_rule.newContent(
-                    id='product_1',
-                    title='product_1',
-                    portal_type='Predicate Group',
-                    string_index='product',
-                    int_index='1', 
-                    membership_criterion_base_category_list=['product_line',], 
-                    membership_criterion_category_list=['product_line/storever/notebook'], 
-                    immediate_reindex=1)
-    self.predicate_region1 = self.invoice_transaction_rule.newContent(
-                    id='region_1',
-                    title='region_1', 
-                    portal_type='Predicate Group', 
-                    string_index='region', 
-                    int_index='1', 
-                    membership_criterion_base_category_list=['destination_region',], 
-                    membership_criterion_category_list=['destination_region/region/europe/west/france'], 
-                    immediate_reindex=1)
-    #self.invoice_transaction_rule.recursiveImmediateReindexObject()
-    # Update the matrix   
-    
-    # flush activities
-    get_transaction().commit()
-    self.tic()
-    
-    self.invoice_transaction_rule.updateMatrix()
-          
-    # add some values to the transaction lines in the accounting rule cell
-    cell_list = self.invoice_transaction_rule.contentValues(filter={'portal_type':'Accounting Rule Cell'})   
-    self.assertEqual(len(cell_list), 1) # Check that the rule is here
-    self.product1_region1_cell = getattr(self.invoice_transaction_rule, 'vat_per_region_0_0', None)
-    self.failUnless(self.product1_region1_cell != None)
-
-    self.product1_region1_line1 = getattr(self.product1_region1_cell, 'income', None)
-    self.failUnless(self.product1_region1_line1 != None)
-    self.product1_region1_line1.edit(title='income', source='account/prestation_service', destination='account/account1', quantity=1)
-
-    self.product1_region1_line2 = getattr(self.product1_region1_cell, 'receivable', None)
-    self.failUnless(self.product1_region1_line2 != None)
-    self.product1_region1_line2.edit(title='receivable', source='account/prestation_service', destination='account/account2', quantity=0.5)
-    
-    # flush activities
-    get_transaction().commit()
-    self.tic()
+  
+  def createCategories(self):
+    """Create the categories for our test. """
+    TestPackingListMixin.createCategories(self)
+    # create categories
+    for cat_string in self.getNeededCategoryList() :
+      base_cat = cat_string.split("/")[0]
+      path = self.getPortal().portal_categories[base_cat]
+      for cat in cat_string.split("/")[1:] :
+        if not cat in path.objectIds() :
+          path = path.newContent(
+            portal_type = 'Category',
+            id = cat,
+            immediate_reindex = 1 )
+    # check categories have been created
+    for cat_string in self.getNeededCategoryList() :
+      self.assertNotEquals(None,
+                self.getCategoryTool().restrictedTraverse(cat_string),
+                cat_string)
+                
+  def getNeededCategoryList(self):
+    """return a list of categories that should be created."""
+    return ('region/%s' % self.default_region, )
+  
+  def getBusinessTemplateList(self):
+    """ """
+    return TestPackingListMixin.getBusinessTemplateList(self) + (
+              'erp5_accounting',)
 
   def stepTic(self, **kw):
     self.tic()
 
-  def stepFirstCheck(self,sequence=None, sequence_list=None,**kw):
+  def stepCreateEntities(self, sequence, **kw) :
+    """Create a vendor and a client. """
+    self.stepCreateOrganisation1(sequence, **kw)
+    sequence.edit(client = sequence.get('organisation'))
+    self.stepCreateOrganisation2(sequence, **kw)
+    vendor = sequence.get('organisation')
+    vendor.setRegion(self.default_region)
+    self.assertNotEquals(vendor.getRegionValue(), None)
+    sequence.edit(vendor = vendor)
+  
+  def stepCreateCurrency(self, sequence, **kw) :
+    """Create a default currency. """
+    currency = self.getCurrencyModule().newContent(
+          portal_type = 'Currency',
+          id = "EUR" )
+    sequence.edit(currency = currency)
+  
+  def stepSetOrderPriceCurrency(self, sequence, **kw) :
+    """Set the price currency of the order. 
+    
+    This step is not necessary. 
+    TODO : - include a test without this step.
+           - include a test with this step late.
     """
-    Do some basics checking
-    """
-    # Check the default delivery rule
-    portal_rules = self.getRuleTool()
-    self.failUnless('default_order_rule' in portal_rules.objectIds())
-    # Check defaults accounts
-    account_module = self.getAccountModule()
-    self.failUnless(self.account1 in account_module.objectIds())
-    self.failUnless(self.account2 in account_module.objectIds())
-    self.failUnless(self.account3 in account_module.objectIds())
-    # Check product 
-    product_module = self.getProductModule()
-    product = product_module['1']
-    sequence.edit(product=product)
-    self.assertEquals(product.getBasePrice(),self.price1)
+    currency = sequence.get('currency')
+    order = sequence.get('order')
+    order.setPriceCurrency(currency.getRelativeUrl())
+  
+  def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
+    """Create the rule for accounting. """
+    invoice_rule = self.getPortal().portal_rules.default_invoice_transaction_rule
+    invoice_rule.deleteContent([x.getId() for x in invoice_rule.objectValues()])
+    region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
+    product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
+    region_predicate.edit(
+      membership_criterion_base_category_list = ['destination_region'],
+      membership_criterion_category_list =
+                             ['destination_region/region/%s' % self.default_region ],
+      int_index = 1,
+      string_index = 'region'
+    )
+    product_line_predicate.edit(
+      membership_criterion_base_category_list = ['product_line'],
+      membership_criterion_category_list =
+                            ['product_line/apparel'],
+      int_index = 1,
+      string_index = 'product'
+    )
+    invoice_rule.updateMatrix()
+    # TODO create Accounts and cell ?
+    
+  def modifyPackingListState(self, transition_name, sequence):
+    """ calls the workflow for the packing list """
+    packing_list = sequence.get('packing_list')
+    packing_list.portal_workflow.doActionFor(packing_list,
+          transition_name, wf_id='packing_list_workflow')
+  
+  def stepSetReadyPackingList(self, sequence=None, sequence_list=None, **kw):
+    """ set the Packing List as Ready. This must build the invoice. """
+    self.modifyPackingListState('set_ready_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'ready')
 
-  def stepCreateSaleOrder(self,sequence=None, sequence_list=None,**kw):
+  def stepStartPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('start_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'started')
+    
+  def stepStopPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('stop_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'stopped')
+    
+  def stepCancelPackingList(self, sequence=None, sequence_list=None, **kw):
+    self.modifyPackingListState('cancel_action', sequence=sequence)
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'cancelled')
+
+  def stepPackingListSimulation(self, sequence=None, sequence_list=None, **kw):
+    """ checks that simulation movements related to the packing list are OK """
+    packing_list = sequence.get('packing_list')
+    order = sequence.get('order')
+    order_root_applied_rule = order.getCausalityRelatedValueList(
+                                  portal_type = 'Applied Rule')[0]
+
+    # check simulation movements from this packing list
+    for movement in packing_list.getMovementList() :
+      simulation_movement_list = movement.getOrderRelatedValueList()
+      self.assertNotEquals(len(simulation_movement_list), 0)
+      total_quantity = 0
+      for simulation_movement in simulation_movement_list :
+        total_quantity += simulation_movement.getQuantity()
+        # check that those movements come from the same root applied
+        # rule than the order.
+        self.assertEquals( simulation_movement.getRootAppliedRule(),
+                           order_root_applied_rule)
+      self.assertEquals(total_quantity, movement.getQuantity())
+    
+  def stepCheckInvoiceBuilding(self, sequence=None, sequence_list=None, **kw):
+    """ checks that the invoice is built with the default_invoice_builder """
+    packing_list = sequence.get('packing_list')
+    related_applied_rule_list = packing_list.getCausalityRelatedValueList(
+                                   portal_type=self.applied_rule_portal_type)
+    related_invoice_list = packing_list.getCausalityRelatedValueList(
+                                   portal_type=self.sale_invoice_portal_type)
+
+    packing_list_building_state = 'started'
+    packing_list_state = packing_list.getSimulationState()
+    if packing_list_state != packing_list_building_state :
+      self.assertEquals(0, len(related_invoice_list))
+    else:
+      self.assertEquals(1, len(related_invoice_list))
+
+      invoice = related_invoice_list[0].getObject()
+      self.failUnless(invoice is not None)
+      # Invoices created by Delivery Builder are in planned state
+      self.assertEquals(invoice.getSimulationState(), 'planned')
+      
+      # Get the list of simulation movements of packing list ...
+      packing_list_simulation_movement_list = []
+      for packing_list_movement in packing_list.getMovementList():
+           packing_list_simulation_movement_list.extend(
+                packing_list_movement.getDeliveryRelatedValueList())
+      # ... invoice simulation movement are their childrens.
+      simulation_movement_list = []
+      for p_l_simulation_movement in packing_list_simulation_movement_list :
+        for applied_rule in p_l_simulation_movement.objectValues() :
+          simulation_movement_list.extend(applied_rule.objectValues())
+      
+      # First, test if each Simulation Movement is related to an
+      # Invoice Movement
+      invoice_relative_url = invoice.getRelativeUrl()
+      for simulation_movement in simulation_movement_list:
+        invoice_movement_list = simulation_movement.getDeliveryValueList()
+        self.assertEquals(len(invoice_movement_list), 1)
+        invoice_movement = invoice_movement_list[0]
+        self.failUnless(invoice_movement is not None)
+        self.assert_(invoice_movement.getRelativeUrl().\
+                              startswith(invoice_relative_url))
+
+      # Then, test if each Invoice movement is equals to the sum of somes
+      # Simulation Movemen
+      for invoice_movement in invoice.getMovementList(portal_type = [
+                          self.sale_invoice_cell_portal_type,
+                          self.sale_invoice_line_portal_type]) :
+        related_simulation_movement_list = invoice_movement.\
+                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
+        quantity = 0
+        total_price = 0
+        invoice_movement_quantity = invoice_movement.getQuantity()
+        for related_simulation_movement in related_simulation_movement_list:
+          quantity += related_simulation_movement.getQuantity()
+          total_price += related_simulation_movement.getPrice() *\
+                         related_simulation_movement.getQuantity()
+          # Test resource
+          self.assertEquals(invoice_movement.getResource(), \
+                            related_simulation_movement.getResource())
+          # Test resource variation
+          self.assertEquals(invoice_movement.getVariationText(), \
+                            related_simulation_movement.getVariationText())
+          self.assertEquals(invoice_movement.getVariationCategoryList(), \
+                        related_simulation_movement.getVariationCategoryList())
+          # Test acquisition
+          self.checkAcquisition(invoice_movement,
+                                related_simulation_movement)
+          # Test delivery ratio
+          self.assertEquals(related_simulation_movement.getQuantity() /\
+                            invoice_movement_quantity, \
+                            related_simulation_movement.getDeliveryRatio())
+
+        self.assertEquals(quantity, invoice_movement.getQuantity())
+        # Test price
+        self.assertEquals(total_price / quantity, invoice_movement.getPrice())
+
+      sequence.edit(invoice = invoice)
+      
+      # Test causality
+      self.assertEquals(len(invoice.getCausalityValueList(
+                      portal_type = self.packing_list_portal_type)), 1)
+      self.assertEquals(invoice.getCausalityValue(), packing_list)
+      
+      # Finally, test getTotalQuantity and getTotalPrice on Invoice
+      self.assertEquals(packing_list.getTotalQuantity(),
+                        invoice.getTotalQuantity())
+      self.assertEquals(packing_list.getTotalPrice(),
+                        invoice.getTotalPrice())
+
+
+  def stepCreateSimpleSaleOrder(self, sequence, **kw):
+    """ create the Order for our test.
+      It contains one line :
+        resource : product_module/notebook
+        quantity : 10
+        price : 100
     """
-    """
+    source_section = sequence.get('source_section')
+    source = sequence.get('source')
+    destination_section = sequence.get('destination_section')
+    destination = sequence.get('destination')
+    product = sequence.get('product')
+    
     order_module = self.getSaleOrderModule()
     order = order_module.newContent(portal_type='Sale Order')
     order.setStartDate(DateTime('2004-11-20'))
     order.setStopDate(DateTime('2004-11-24'))
-    destination_organisation = self.getOrganisationModule()[self.destination_company_id]
-    order.setDestinationValue(destination_organisation)
-    source_organisation = self.getOrganisationModule()[self.source_company_id]
-    order.setSourceValue(source_organisation)
-    line1 = order.newContent(portal_type='Sale Order Line',id='1')
-    product = sequence.get('product')
-    line1.setResourceValue(product)
-    line1.setQuantity(self.quantity1)
-    line1.setPrice(self.price1)
-    sequence.edit(order=order)
-    self.assertEquals(line1.getTotalPrice(),self.total_price1)
+    order.setDestinationValue(destination)
+    order.setDestinationSectionValue(destination_section)
+    order.setSourceValue(source)
+    order.setSourceSectionValue(source_section)
+    order_line = order.newContent(portal_type = 'Sale Order Line', id = '1')
+    order_line.setResourceValue(product)
+    order_line.setQuantity(10)
+    order_line.setPrice(100)
+    sequence.edit(
+      order = order,
+      order_line = order_line,
+      order_line_list = [order_line])
+    self.assertEquals(order_line.getTotalPrice(), 10*100)
 
-  def stepCreateOrderRule(self,sequence=None, sequence_list=None,**kw):
-    """
-    """
-    order = sequence.get('order')
-    order.plan() # Orders should be planned in order to be simulated
-    order._createOrderRule()
-
-  def stepCreateDeliveryRule(self,sequence=None, sequence_list=None,**kw):
-    """
-    Only if we want a packing list with no order
-    """
-    packing_list = sequence.get('packing_list')
-    packing_list._createDeliveryRule()
-
-  def stepCheckOrderRule(self,sequence=None, sequence_list=None,**kw):
+  def stepCheckOrderRule(self, sequence=None, sequence_list=None, **kw):
     order = sequence.get('order')
     simulation_tool = self.getSimulationTool()
     # Check that there is an applied rule for our packing list
-    rule_list = [x for x in simulation_tool.objectValues() if x.getCausalityValue()==order]
-    self.assertEquals(len(rule_list),1)
-    order_rule = rule_list[0]
-    #order_rule.expand()
-    #ZopeTestCase._print('\norder_rule %s' % str(order_rule.getCausality()))
-    
-    sequence.edit(order_rule=order_rule)
+    rule_list = [x for x in simulation_tool.objectValues()
+                            if x.getCausalityValue()==order]
+    self.assertNotEquals(len(rule_list), 0)
+    sequence.edit(order_rule_list = rule_list)
+    # TODO
+    return 
+    """
     rule_line_list = order_rule.objectValues()
     order_line_list = order.objectValues()
-    self.assertEquals(len(order_line_list,),len(rule_line_list))
-    self.assertEquals(1,len(rule_line_list))
+    self.assertEquals(len(order_line_list), len(rule_line_list))
+    self.assertEquals(1, len(rule_line_list))
     rule_line = rule_line_list[0]
     sequence.edit(order_rule_line=rule_line)
     order_line = order_line_list[0]
-    self.assertEquals(rule_line.getQuantity(),self.quantity1)
-    self.assertEquals(rule_line.getPrice(),self.price1)
-    self.assertEquals(rule_line.getOrderValue(),order_line)
-    self.assertEquals(rule_line.getStartDate(),order_line.getStartDate())
-    self.assertEquals(rule_line.getStopDate(),order_line.getStopDate())
-    self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
-    self.assertEquals(rule_line.getResourceValue(),order_line.getResourceValue())
-
-  def stepCheckInvoicingRule(self,sequence=None, sequence_list=None,**kw):
-    order_rule_line = sequence.get('order_rule_line')
-    invoicing_rule_list = order_rule_line.objectValues()
-    self.assertEquals(len(invoicing_rule_list),1)
-    invoicing_rule = invoicing_rule_list[0]
-    sequence.edit(invoicing_rule=invoicing_rule)
-    self.assertEquals(invoicing_rule.getSpecialiseId(),'default_invoicing_rule')
-    self.assertEquals(invoicing_rule.getPortalType(),'Applied Rule')
-    rule_line_list = invoicing_rule.objectValues()
-    self.assertEquals(len(rule_line_list),1)
-    rule_line = rule_line_list[0]
-    sequence.edit(invoicing_rule_line=rule_line)
-    product = sequence.get('product')
-    self.assertEquals(rule_line.getQuantity(),self.quantity1)
-    self.assertEquals(rule_line.getPrice(),self.price1)
-    self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
-    self.assertEquals(rule_line.getResourceValue(), product)
+    self.assertEquals(rule_line.getQuantity(), 10)
+    self.assertEquals(rule_line.getPrice(), 100)
+    self.assertEquals(rule_line.getOrderValue(), order_line)
+    self.assertEquals(rule_line.getStartDate(), order_line.getStartDate())
+    self.assertEquals(rule_line.getStopDate(), order_line.getStopDate())
+    self.assertEquals(rule_line.getPortalType(), 'Simulation Movement')
+    self.assertEquals(rule_line.getResourceValue(),
+                      order_line.getResourceValue())
+    """
     
-
-  def stepCheckDeliveryRule(self,sequence=None, sequence_list=None,**kw):
+  def stepCheckInvoicingRule(self, sequence=None, sequence_list=None, **kw):
+    """ Checks that the invoicing rule is applied and its values are
+        correct. """
+    order_rule_list = sequence.get('order_rule_list')
+    for order_rule in order_rule_list :
+      for order_simulation_movement in order_rule.objectValues() :
+        invoicing_rule_list = order_simulation_movement.objectValues()
+        self.assertEquals(len(invoicing_rule_list), 1)
+        invoicing_rule = invoicing_rule_list[0]
+        sequence.edit(invoicing_rule = invoicing_rule)
+        self.assertEquals(invoicing_rule.getSpecialiseId(),
+                         'default_invoicing_rule')
+        self.assertEquals(invoicing_rule.getPortalType(),
+                         'Applied Rule')
+    
+        simulation_movement_list = invoicing_rule.objectValues()
+        self.assertNotEquals(len(simulation_movement_list), 0)
+        for simulation_movement in simulation_movement_list :
+          resource = sequence.get('resource')
+          self.assertEquals(simulation_movement.getPortalType(),
+                            'Simulation Movement')
+          self.assertEquals(simulation_movement.getResourceValue(),
+                            resource)
+          # TODO: What is the invoice dates supposed to be ?
+          # is this done through profiles ?
+          self.assertEquals(simulation_movement.getStartDate(),
+                     sequence.get('order').getStartDate())
+          self.assertEquals(simulation_movement.getStopDate(),
+                      sequence.get('order').getStopDate())
+          
+  def stepCheckDeliveryRuleForDeferred(
+                      self, sequence=None, sequence_list=None, **kw):
+    """ Checks that a delivery rule has been created when we took 'split
+        and defer' decision on the divergeant Packing List. """
+  
+  def stepCheckDeliveryRuleIsEmpty(
+                      self, sequence=None, sequence_list=None, **kw):
+    """ Checks that an empty delivery rule is created for the
+        convergeant Packing List"""
     packing_list = sequence.get('packing_list')
     self.failUnless(packing_list is not None)
     simulation_tool = self.getSimulationTool()
     # Check that there is an applied rule for our packing list
-    rule_list = [x for x in simulation_tool.objectValues() if x.getCausalityValue()==packing_list]
+    rule_list = [x for x in simulation_tool.objectValues()
+                          if x.getCausalityValue()==packing_list]
     self.assertEquals(len(rule_list),1)
     packing_list_rule = rule_list[0]
     sequence.edit(packing_list_rule=packing_list_rule)
     rule_line_list = packing_list_rule.objectValues()
     packing_list_line_list = packing_list.objectValues()
-    self.assertEquals(len(packing_list_line_list,),len(rule_line_list))
-    self.assertEquals(1,len(rule_line_list))
+    self.assertEquals(len(packing_list_line_list),
+                      len(rule_line_list))
+    self.assertEquals(1, len(rule_line_list))
     rule_line = rule_line_list[0]
     packing_list_line = packing_list_line_list[0]
-    self.assertEquals(rule_line.getQuantity(),self.quantity1)
-    self.assertEquals(rule_line.getPrice(),self.price1)
-    self.assertEquals(rule_line.getDeliveryValue(),packing_list_line)
-    self.assertEquals(rule_line.getStartDate(),packing_list_line.getStartDate())
-    self.assertEquals(rule_line.getStopDate(),packing_list_line.getStopDate())
-    self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
+    self.assertEquals(rule_line.getQuantity(), 10)
+    self.assertEquals(rule_line.getPrice(), 100)
+    self.assertEquals(rule_line.getDeliveryValue(),
+                      packing_list_line)
+    self.assertEquals(rule_line.getStartDate(),
+                      packing_list_line.getStartDate())
+    self.assertEquals(rule_line.getStopDate(),
+                      packing_list_line.getStopDate())
+    self.assertEquals(rule_line.getPortalType(),
+                      'Simulation Movement')
 
-  def stepCheckInvoiceTransactionRule(self, sequence=None, sequence_list=None, **kw) :
-    invoicing_rule_line = sequence.get('invoicing_rule_line')
-    
-    
-    invoice_transaction_rule_list = invoicing_rule_line.objectValues()    
-    self.assertEquals(invoicing_rule_line.getDestinationRegion(),'region/europe/west/france')    
-    self.assertEquals(len(invoice_transaction_rule_list),1)
-    invoice_transaction_rule = invoice_transaction_rule_list[0]
-    sequence.edit(invoice_transaction_rule=invoice_transaction_rule)
-    self.assertEquals(invoice_transaction_rule.getSpecialiseId(),'default_invoice_transaction_rule')
-    self.assertEquals(invoice_transaction_rule.getPortalType(),'Applied Rule')
-    rule_line_list = invoice_transaction_rule.objectValues()
-    self.assertEquals(len(rule_line_list),3)
-    for rule_line in rule_line_list :
-      if rule_line.getId() == 'income' :
-        self.assertEquals(rule_line.getSourceValue(), self.getAccountModule()['prestation_service'])
-        self.assertEquals(rule_line.getDestinationValue(), self.getAccountModule()['account1'])
-        self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
-        self.assertEquals(rule_line.getQuantity(), 3 * 72 * 1)
-      elif rule_line.getId() == 'receivable' :
-        self.assertEquals(rule_line.getSourceValue(), self.getAccountModule()['prestation_service'])
-        self.assertEquals(rule_line.getDestinationValue(), self.getAccountModule()['account2'])
-        self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
-        self.assertEquals(rule_line.getQuantity(), 3 * 72 * 0.5)
-        sequence.edit(invoice_transaction_rule_line_revceivable=rule_line)
-      elif rule_line.getId() == 'collected_vat' :
-        self.assertEquals(rule_line.getSourceValue(), self.getAccountModule()['tva_collectee_196']) # this is defined in SaleInvoiceTransaction_init in ERP5 skins.
-      else :
-        raise self.failureException, 'Unknown movement : %s' % repr(rule_line)
-
-  def stepCheckPaymentRule(self, sequence=None, sequence_list=None, **kw) :
-    invoice_transaction_rule_line_revceivable = sequence.get('invoice_transaction_rule_line_revceivable')
-    payment_rule_list = invoice_transaction_rule_line_revceivable.objectValues()
-    self.assertEquals(len(payment_rule_list),1)
-    payment_rule = payment_rule_list[0]
-    sequence.edit(payment_rule=payment_rule)
-    self.assertEquals(payment_rule.getSpecialiseId(),'default_payment_rule')
-    self.assertEquals(payment_rule.getPortalType(),'Applied Rule')
-    rule_line_list = payment_rule.objectValues()
-    self.assertEquals(len(rule_line_list),2)
-    for rule_line in rule_line_list :
-      if rule_line.getId() == 'receivable' :
-        self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
-        self.assertEquals(rule_line.getQuantity(), 0 - invoice_transaction_rule_line_revceivable.getQuantity())
-        sequence.edit(payment_rule_line_receivable=rule_line)
-      elif rule_line.getId() == 'bank' :
-        self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
-        self.assertEquals(rule_line.getQuantity(), invoice_transaction_rule_line_revceivable.getQuantity())
-        sequence.edit(payment_rule_line_bank=rule_line)
-      else :
-        raise self.failureException, 'Unknown movement : %s' % repr(rule_line)
-
-  def stepBuildDeliveryList(self,sequence=None, sequence_list=None,**kw):
-    """
-    """
-    order = sequence.get('order')
-
-    # It should be in a script inside the workflow
-    order.buildDeliveryList()
-
-  def stepBuildInvoiceList(self,sequence=None, sequence_list=None,**kw):
-    """
-    """
-    packing_list = sequence.get('packing_list')
-
-    # It should be in a script inside the workflow
-    packing_list.buildInvoiceList()
-
-  def stepBuildInvoiceTransactionList(self, sequence=None, sequence_list=None, **kw) :
-    invoice = sequence.get('invoice')
-
-    # It should be in a script inside the workflow
-    invoice.buildInvoiceTransactionList()    
-
-  def stepBuildPaymentTransactionList(self, sequence=None, sequence_list=None, **kw) :
-    invoice = sequence.get('invoice')
-
-    # It should be in a script inside the workflow
-    invoice.buildPaymentTransactionList()
 
   def stepCheckPackingList(self,sequence=None, sequence_list=None,**kw):
-    """
-    """
+    """  """
     packing_list_module = self.getSalePackingListModule()
     order_rule = sequence.get('order_rule')
     order = sequence.get('order')
@@ -463,119 +432,158 @@ class TestInvoice(ERP5TypeTestCase):
     for o in packing_list_module.objectValues():
       if o.getCausalityValue() == order:
         sale_packing_list_list.append(o)
-    self.assertEquals(len(sale_packing_list_list),1)
+    self.assertEquals(len(sale_packing_list_list), 1)
     sale_packing_list = sale_packing_list_list[0]
     sale_packing_list_line_list = sale_packing_list.objectValues()
     self.assertEquals(len(sale_packing_list_line_list),1)
     sale_packing_list_line = sale_packing_list_line_list[0]
-    product = sequence.get('product')
-    self.assertEquals(sale_packing_list_line.getResourceValue(),product)
-    self.assertEquals(sale_packing_list_line.getPrice(),self.price1)
-    LOG('sale_packing_list_line.showDict()',0,sale_packing_list_line.showDict())
-    self.assertEquals(sale_packing_list_line.getQuantity(),self.quantity1)
-    self.assertEquals(sale_packing_list_line.getTotalPrice(),self.total_price1)
-    sequence.edit(packing_list=sale_packing_list)
+    product = sequence.get('resource')
+    self.assertEquals(sale_packing_list_line.getResourceValue(),
+                      product)
+    self.assertEquals(sale_packing_list_line.getPrice(),
+                      self.price1)
+    LOG('sale_packing_list_line.showDict()',0,
+          sale_packing_list_line.showDict())
+    self.assertEquals(sale_packing_list_line.getQuantity(),
+                      self.quantity1)
+    self.assertEquals(sale_packing_list_line.getTotalPrice(),
+                      self.total_price1)
+    sequence.edit(packing_list = sale_packing_list)
 
-
-  def stepCheckInvoice(self,sequence=None, sequence_list=None,**kw):
-    """
-    """
+  def stepCheckInvoice(self,sequence=None, sequence_list=None, **kw):
+    """ checks invoice properties are well set. """
+    # XXX need to clear the accounting module.
     accounting_module = self.getAccountingModule()
-    #invoicing_rule = sequence.get('invoicing_rule')
     sale_invoice_transaction_list = accounting_module.objectValues()
-    #for o in accounting_module.objectValues():
-      #if invoicing_rule.getDeliveryValue() == o:
-        #sale_invoice_transaction_list.append(o)
     self.assertEquals(len(sale_invoice_transaction_list),1)
+    packing_list = sequence.get("packing_list")
+    
     sale_invoice = sale_invoice_transaction_list[0]
     sequence.edit(invoice=sale_invoice)
-    sale_invoice_line_list = sale_invoice.contentValues(filter={'portal_type':'Invoice Line'})
-    LOG('IL', 0, repr([[i, i.getQuantity(), i.getPrice()] for i in sale_invoice_line_list]))
+    sale_invoice_line_list = sale_invoice.contentValues(
+                filter={'portal_type':'Invoice Line'})
     self.assertEquals(len(sale_invoice_line_list),1)
     sale_invoice_line = sale_invoice_line_list[0]
     sequence.edit(invoice_line=sale_invoice_line)
-    product = sequence.get('product')
-    self.assertEquals(sale_invoice_line.getResourceValue(),product)
-    self.assertEquals(sale_invoice_line.getPrice(),self.price1)
-    self.assertEquals(sale_invoice_line.getQuantity(),self.quantity1)
-    self.assertEquals(sale_invoice_line.getTotalPrice(),self.total_price1)
-    LOG('ILR', 0, sale_invoice_line.getDeliveryRelatedValueList())
-
-
-  def stepCheckInvoiceTransaction(self,sequence=None, sequence_list=None,**kw):
-    """
-    """
+    product = sequence.get('resource')
+    self.assertEquals(sale_invoice_line.getResourceValue(), product)
+    self.assertEquals(sale_invoice_line.getPrice(), self.price1)
+    self.assertEquals(sale_invoice_line.getQuantity(), self.quantity1)
+    self.assertEquals(sale_invoice_line.getTotalPrice(), self.total_price1)
+    self.assertEquals(sale_invoice.getCausalityValue(), packing_list)
+    
+  def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
+                                           sequence_list=None, **kw):
+    """Rebuilds with sale_invoice_builder and checks nothing more is
+    created. """
+    return 'TODO' #XXX
     accounting_module = self.getAccountingModule()
     sale_invoice_transaction_list = accounting_module.objectValues()
-    self.assertEquals(len(sale_invoice_transaction_list),1)
-    sale_invoice = sale_invoice_transaction_list[0]
-    sale_invoice_line_list = sale_invoice.contentValues(filter={'portal_type':'Sale Invoice Transaction Line'})
-    LOG('SITL', 0, repr([[i, i.getQuantity(), i.getPrice()] for i in sale_invoice_line_list]))
-    self.assertEquals(len(sale_invoice_line_list),3)
-
-    for transaction_line in sale_invoice_line_list :
-      if transaction_line.getId() == 'income' :
-        self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['prestation_service'])
-        self.assertEquals(transaction_line.getDestinationValue(), self.getAccountModule()['account1'])
-        self.assertEquals(transaction_line.getQuantity(), 3 * 72 * 1)
-      elif transaction_line.getId() == 'receivable' :
-        self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['prestation_service'])
-        self.assertEquals(transaction_line.getDestinationValue(), self.getAccountModule()['account2'])
-        self.assertEquals(transaction_line.getQuantity(), 3 * 72 * 0.5)
-        sequence.edit(invoice_transaction_line_receivable=transaction_line)
-      elif transaction_line.getId() == 'collected_vat' :
-        simulation_movement = transaction_line.getDeliveryRelatedValueList()[0].getObject()
-        self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['tva_collectee_196']) # this is defined in SaleInvoiceTransaction_init in ERP5 skins.
-      else :
-        raise self.failureException
-
-  def stepCheckPaymentTransaction(self, sequence=None, sequence_list=None, **kw) :
+    self.assertEquals(len(sale_invoice_transaction_list), 1)
+    #self.getPortal().
+    
+  # default sequence for one line of not varianted resource.
+  PACKING_LIST_DEFAULT_SEQUENCE = """
+      stepCreateSaleInvoiceTransactionRule
+      stepCreateEntities
+      stepCreateCurrency
+      stepCreateOrder
+      stepSetOrderProfile
+      stepSetOrderPriceCurrency
+      stepCreateNotVariatedResource
+      stepTic
+      stepCreateOrderLine
+      stepSetOrderLineResource
+      stepSetOrderLineDefaultValues
+      stepOrderOrder
+      stepTic
+      stepCheckDeliveryBuilding
+      stepConfirmOrder
+      stepTic
+      stepCheckOrderRule
+      stepCheckOrderSimulation
+      stepCheckDeliveryBuilding
+      stepAddPackingListContainer
+      stepAddPackingListContainerLine
+      stepSetContainerLineFullQuantity
+      stepTic
+      stepCheckPackingListIsPacked
     """
-    """
-    accounting_module = self.getAccountingModule()
-    payment_transaction_list = accounting_module.contentValues(filter={'portal_type':'Payment Transaction'})
-    self.assertEquals(len(payment_transaction_list),1)
-    payment_transaction = payment_transaction_list[0]
-    payment_transaction_line_list = payment_transaction.objectValues()
-    LOG('ATL', 0, repr([[i, i.getQuantity()] for i in payment_transaction_line_list]))
-    self.assertEquals(len(payment_transaction_line_list),3)
-
-    invoice_transaction_line_receivable = sequence.get('invoice_transaction_line_receivable')
-    for transaction_line in payment_transaction_line_list :
       
-      if transaction_line.getId() == 'receivable' :
-        self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['creance_client'])
-        self.assertEquals(transaction_line.getQuantity(), 0 - invoice_transaction_line_receivable.getQuantity())
-      elif transaction_line.getId() == 'bank' :
-        self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['banques_etablissements_financiers'])
-        self.assertEquals(transaction_line.getQuantity(), invoice_transaction_line_receivable.getQuantity())
-      elif transaction_line.getId() == 'payable' :
-        self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['dette_fournisseur']) # this is defined in SaleInvoiceTransaction_init in ERP5 skins.
-      else :
-        raise self.failureException
-      
-      # Make sure payment and simulation are consistent
-      for simulation_movement in transaction_line.getDeliveryRelatedValueList():
-        self.assertEquals(simulation_movement.getSource(), transaction_line.getSource())            
-        self.assertEquals(simulation_movement.getDestination(), transaction_line.getDestination())            
-        self.assertEquals(simulation_movement.getSourceSection(), transaction_line.getSourceSection())            
-        self.assertEquals(simulation_movement.getDestinationSection(), transaction_line.getDestinationSection())            
-                
-  def testInvoice(self, quiet=0,run=1):
-    """
-    We will play many sequences
-    """
-    sequence_list = SequenceList()
-    # Simple sequence 
-    # ... Fails
-    sequence_string = 'FirstCheck CreateSaleOrder CreateOrderRule Tic' \
-                    + ' CheckOrderRule BuildDeliveryList Tic' \
-                    + ' CheckPackingList CheckInvoicingRule BuildInvoiceList Tic' \
-                    + ' CheckInvoice CheckInvoiceTransactionRule BuildInvoiceTransactionList Tic ' \
-                    + ' CheckInvoiceTransaction CheckPaymentRule BuildPaymentTransactionList Tic' \
-                    + ' CheckPaymentTransaction'
-    sequence_list.addSequenceString(sequence_string)
+  def test_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+    """Checks that a Simple Invoice is created from a Packing List"""
+    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      self.playSequence(
+        base_sequence +
+      """
+        stepSetReadyPackingList
+        stepTic
+        stepStartPackingList
+        stepCheckInvoicingRule
+        stepTic
+        stepCheckInvoiceBuilding
+        stepRebuildAndCheckNothingIsCreated
+      """)
 
-    sequence_list.play(self)
+  def DISABLEDtest_InvoiceEditPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
+    """Checks that editing a Packing List Line still creates a correct
+      Invoice"""
+    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      self.playSequence(
+        base_sequence +
+    """
+      stepEditPackingListLine
+      stepSetReadyPackingList
+      stepTic
+      stepStartPackingList
+      stepCheckInvoicingRule
+      stepTic
+      stepCheckInvoiceBuilding
+      stepRebuildAndCheckNothingIsCreated
+    """)
 
+  def DISABLEDtest_InvoiceDeletePackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
+    """Checks that deleting a Packing List Line still creates a correct
+    Invoice"""
+    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+                # XXX use another sequence that creates 2 lines
+      self.playSequence(
+        base_sequence +
+    """
+      stepDeletePackingListLine
+      stepSetReadyPackingList
+      stepTic
+      stepStartPackingList
+      stepCheckInvoicingRule
+      stepTic
+      stepCheckInvoiceBuilding
+      stepRebuildAndCheckNothingIsCreated
+    """)
+
+  def DISABLEDtest_InvoiceAddPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
+    """Checks that adding a Packing List Line still creates a correct
+    Invoice"""
+    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+                # XXX use another sequence that creates 2 lines
+      self.playSequence(
+        base_sequence +
+    """
+      stepAddPackingListLine
+      stepSetReadyPackingList
+      stepTic
+      stepStartPackingList
+      stepCheckInvoicingRule
+      stepTic
+      stepCheckInvoiceBuilding
+      stepRebuildAndCheckNothingIsCreated
+    """)
+    
+if __name__ == '__main__':
+  framework()
+else:
+  import unittest
+  def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestInvoice))
+    return suite
 
