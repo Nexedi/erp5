@@ -71,6 +71,11 @@ class TestOrderMixin:
   packing_list_cell_portal_type = 'Sale Packing List Cell'
   delivery_builder_id = 'sale_packing_list_builder'
   order_workflow_id='order_workflow'
+  size_list = ['Baby','Child/32','Child/34','Man','Woman'] 
+
+  def stepCommit(self,**kw):
+    get_transaction().commit()
+
 
   def getBusinessTemplateList(self):
     """
@@ -161,8 +166,7 @@ class TestOrderMixin:
       industrial_phase_list=["phase1", "phase2"],
       product_line = 'apparel'
     )
-    size_list = ['Baby','Child/32','Child/34','Man','Woman'] 
-    resource.setSizeList(size_list) 
+    resource.setSizeList(self.size_list) 
     # Add colour variation
     colour_variation_count = 3
     for i in range(colour_variation_count):
@@ -1722,6 +1726,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       ConfirmOrder \
                       Tic \
                       Tic \
+                      Commit \
                       CheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
