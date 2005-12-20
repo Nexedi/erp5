@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_preferred_gap_id</string> </value>
         </item>
@@ -245,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_gap_id</string> </value>
+                    <value> <string encoding="base64">R2FwIE7CsA==</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +285,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getObject().Account_getGapId()</string> </value>
+            <value> <string>cell/Account_getGapId</string> </value>
         </item>
       </dictionary>
     </pickle>
