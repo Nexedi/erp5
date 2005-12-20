@@ -95,6 +95,7 @@
             <value>
               <tuple>
                 <string>item</string>
+                <string>sub_variation</string>
               </tuple>
             </value>
         </item>
@@ -262,7 +263,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -304,7 +305,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>
