@@ -592,6 +592,30 @@ class PathTemplateItem(ObjectTemplateItem):
     for id in id_list:
       self._path_archive[id] = None
 
+  def uninstall(self, context, **kw):
+    portal = context.getPortalObject()
+    trash = kw.get('trash', 0)
+    trashbin = kw.get('trashbin', None)
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._path_archive.keys()
+    p = context.getPortalObject()
+    for path in object_keys:
+      for relative_url in self._resolvePath(p, [], path.split('/')):
+        container_path = relative_url.split('/')[0:-1]
+        object_id = relative_url.split('/')[-1]
+        try:        
+          container = portal.unrestrictedTraverse(container_path)
+          if trash and trashbin is not None:
+            self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
+          container.manage_delObjects([object_id])
+        except (NotFound, KeyError):
+          # object is already backup and/or removed
+          pass
+    BaseTemplateItem.uninstall(self, context, **kw)
+
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
       This method calls itself recursively.
