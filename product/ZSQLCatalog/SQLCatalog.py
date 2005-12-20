@@ -1038,7 +1038,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     expression_cache = {}
 
     try:
-      enableTransactionCache(self)
+      if not disable_cache:
+        enableTransactionCache(self)
       
       method_kw_dict = {}
       for method_name in method_id_list:
@@ -1125,7 +1126,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               error=sys.exc_info())
           raise
     finally:
-      disableTransactionCache(self)
+      if not disable_cache:
+        disableTransactionCache(self)
 
       
   if psyco is not None: psyco.bind(catalogObjectList)

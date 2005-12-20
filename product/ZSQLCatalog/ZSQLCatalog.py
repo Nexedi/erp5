@@ -607,7 +607,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """ wrapper around catalog """
     self.catalogObjectList([obj], sql_catalog_id=sql_catalog_id)
 
-  def catalogObjectList(self, object_list, sql_catalog_id=None):
+  def catalogObjectList(self, object_list, sql_catalog_id=None,**kw):
     """Catalog a list of objects.
     """
     hot_reindexing = 0
@@ -641,7 +641,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      catalog.catalogObjectList(wrapped_object_list)
+      catalog.catalogObjectList(wrapped_object_list,**kw)
 
       if hot_reindexing:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
@@ -649,7 +649,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           destination_catalog.recordCatalogObjectList(url_list)
         else:
           destination_catalog.deleteRecordedObjectList(url_list) # Prevent this object from being replayed.
-          destination_catalog.catalogObjectList(wrapped_object_list)
+          destination_catalog.catalogObjectList(wrapped_object_list,**kw)
           
     object_list[:] = failed_object_list[:]
           
