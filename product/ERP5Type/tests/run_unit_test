@@ -11,6 +11,7 @@ $DIRECTORY/update_cvs
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testCMFActivity >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAlarm >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testAccountingRules >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testInvoice >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testResource >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInteractionWorkflow >> $DIRECTORY/test_full_output 2>&1
 #$DIRECTORY/ERP5Type/tests/runUnitTest.py testImmobilisation >> $DIRECTORY/test_full_output 2>&1
