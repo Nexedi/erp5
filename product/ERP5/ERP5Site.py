@@ -319,6 +319,21 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalGroupedTypeList('resource') or self._getPortalConfiguration('portal_resource_type_list')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalSubVariationTypeList')
+    def getPortalSubVariationTypeList(self):
+      """
+        Return resource types.
+      """
+      return self._getPortalGroupedTypeList('sub_variation')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                                       'getPortalSubVariationBaseCategoryList')
+    def getPortalSubVariationBaseCategoryList(self):
+      """
+        Return variation base categories.
+      """
+      return self._getPortalGroupedCategoryList('sub_variation')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalVariationTypeList')
     def getPortalVariationTypeList(self):
       """
