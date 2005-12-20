@@ -60,9 +60,9 @@ class TestResource(ERP5TypeTestCase):
   resource_portal_type = 'Apparel Model'
   product_portal_type = 'Product'
   supply_line_portal_type = 'Supply Line'
-  variation_base_category_list = ['colour', 'size', 'morphology', 
+  variation_base_category_list = ['colour', 'size', 'morphology',
                                   'industrial_phase']
-  size_list = ['size/Child','size/Man'] 
+  size_list = ['size/Child','size/Man']
   variation_property_list = []
 
   def getBusinessTemplateList(self):
@@ -77,7 +77,7 @@ class TestResource(ERP5TypeTestCase):
 
   def enableLightInstall(self):
     """
-    You can override this. 
+    You can override this.
     Return if we should do a light install (1) or not (0)
     """
     return 1
@@ -104,8 +104,8 @@ class TestResource(ERP5TypeTestCase):
     self.createCategories()
 
   def createCategories(self):
-    """ 
-      Light install create only base categories, so we create 
+    """
+      Light install create only base categories, so we create
       some categories for testing them
     """
     size_category_list = ['Baby', 'Child', 'Man', 'Woman']
@@ -113,7 +113,7 @@ class TestResource(ERP5TypeTestCase):
       for category_id in size_category_list:
         o = self.category_tool.size.newContent(portal_type='Category',
                                                id=category_id)
-    self.size_category_list = map(lambda x: 'size/%s' % x, 
+    self.size_category_list = map(lambda x: 'size/%s' % x,
                                   size_category_list)
 
     colour_category_list = ['blue', 'green']
@@ -121,7 +121,7 @@ class TestResource(ERP5TypeTestCase):
       for category_id in colour_category_list:
         o = self.category_tool.colour.newContent(portal_type='Category',
                                                id=category_id)
-    self.colour_category_list = map(lambda x: 'colour/%s' % x, 
+    self.colour_category_list = map(lambda x: 'colour/%s' % x,
                                     colour_category_list)
 
     ind_phase_category_list = ['phase1', 'phase2']
@@ -131,7 +131,7 @@ class TestResource(ERP5TypeTestCase):
                                                portal_type='Category',
                                                id=category_id)
     self.industrial_phase_category_list = map(
-                                    lambda x: 'industrial_phase/%s' % x, 
+                                    lambda x: 'industrial_phase/%s' % x,
                                     ind_phase_category_list)
 
     self.morphology_category_list = []
@@ -162,7 +162,7 @@ class TestResource(ERP5TypeTestCase):
     for base_category in resource.getVariationBaseCategoryList():
       sequence.edit(**{base_category:None})
 
-  def stepCheckGetVariationBaseCategoryList(self, sequence=None, 
+  def stepCheckGetVariationBaseCategoryList(self, sequence=None,
                                              sequence_list=None, **kw):
     """
       Check if getVariationBaseCategoryList returns the good result
@@ -171,7 +171,7 @@ class TestResource(ERP5TypeTestCase):
     vbcl = resource.getVariationBaseCategoryList()
     self.failIfDifferentSet(self.variation_base_category_list, vbcl)
 
-  def stepCheckGetVariationRangeCategoryList(self, sequence=None, 
+  def stepCheckGetVariationRangeCategoryList(self, sequence=None,
                                              sequence_list=None, **kw):
     """
       Check if getVariationRangeCategoryList returns the good result
@@ -197,13 +197,13 @@ class TestResource(ERP5TypeTestCase):
     """
     resource = sequence.get('resource')
     size_list = map(lambda x: x[len('size/'):], self.size_list)
-    resource.setSizeList(size_list) 
+    resource.setSizeList(size_list)
     self.category_list = self.size_list[:]
 
-  def stepSetIndividualVariationWithEmptyBase(self, sequence=None, 
+  def stepSetIndividualVariationWithEmptyBase(self, sequence=None,
                                               sequence_list=None, **kw):
     """
-      Set individual variation to current resource with empty base 
+      Set individual variation to current resource with empty base
       category
     """
     resource = sequence.get('resource')
@@ -220,15 +220,15 @@ class TestResource(ERP5TypeTestCase):
     # store individual resource
     sequence.edit(morphology=morphology_list)
 
-  def stepSetIndividualVariationWithFillBase(self, sequence=None, 
+  def stepSetIndividualVariationWithFillBase(self, sequence=None,
                                               sequence_list=None, **kw):
     """
-      Set individual variation to current resource with fill base 
+      Set individual variation to current resource with fill base
       category
     """
     resource = sequence.get('resource')
     colour_list = []
-    colour_variation_count = 1 
+    colour_variation_count = 1
     for i in range(colour_variation_count) :
       variation_portal_type = 'Apparel Model Colour Variation'
       variation = resource.newContent(portal_type=variation_portal_type)
@@ -308,7 +308,7 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     self.genericTest('CheckGetVariationRangeCategoryList')
 
-  def stepCheckGetVariationRangeCategoryItemList(self, sequence=None, 
+  def stepCheckGetVariationRangeCategoryItemList(self, sequence=None,
                                                  sequence_list=None, **kw):
     """
       Check if getVariationRangeCategoryItemList returns the good result.
@@ -320,7 +320,7 @@ class TestResource(ERP5TypeTestCase):
     vrcil = resource.getVariationRangeCategoryItemList()
     self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
 
-  def test_03_getVariationRangeCategoryItemList(self, quiet=0, 
+  def test_03_getVariationRangeCategoryItemList(self, quiet=0,
                                                 run=run_all_test):
     """
       Test the method getVariationRangeCategoryItemList on a resource.
@@ -328,7 +328,7 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     self.genericTest('CheckGetVariationRangeCategoryItemList')
 
-  def stepCheckGetVariationCategoryList(self, sequence=None, 
+  def stepCheckGetVariationCategoryList(self, sequence=None,
                                                  sequence_list=None, **kw):
     """
       Check if getVariationCategoryList returns the good result,
@@ -347,7 +347,7 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     self.genericTest('CheckGetVariationCategoryList')
 
-  def stepCheckGetVariationCategoryListWithoutOmit(self, sequence=None, 
+  def stepCheckGetVariationCategoryListWithoutOmit(self, sequence=None,
                                                  sequence_list=None, **kw):
     """
       Check if getVariationCategoryList returns the good result,
@@ -372,7 +372,7 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     self.genericTest('CheckGetVariationCategoryListWithoutOmit')
 
-  def stepCheckGetVariationCategoryItemList(self, sequence=None, 
+  def stepCheckGetVariationCategoryItemList(self, sequence=None,
                                                  sequence_list=None, **kw):
     """
       Check if getVariationCategoryItemList returns the good result,
@@ -390,7 +390,7 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     self.genericTest('CheckGetVariationCategoryItemList')
 
-  def stepCheckGetVariationCategoryItemListWithoutOmit(self, sequence=None, 
+  def stepCheckGetVariationCategoryItemListWithoutOmit(self, sequence=None,
                                                  sequence_list=None, **kw):
     """
       Check if getVariationCategoryItemList returns the good result,
@@ -409,7 +409,7 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     self.genericTest('CheckGetVariationCategoryItemListWithoutOmit')
 
-  def stepCheckGetVariationPropertyList(self, sequence=None, 
+  def stepCheckGetVariationPropertyList(self, sequence=None,
                                         sequence_list=None, **kw):
     """
       Check if GetVariationPropertyList exists on a resource.
@@ -419,7 +419,7 @@ class TestResource(ERP5TypeTestCase):
     self.failIfDifferentSet(resource.getVariationPropertyList(),
                             vpl)
 
-  def stepCheckSetVariationPropertyList(self, sequence=None, 
+  def stepCheckSetVariationPropertyList(self, sequence=None,
                                         sequence_list=None, **kw):
     """
       Check if SetVariationPropertyList exists on a resource.
@@ -585,7 +585,7 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     i = 1
     self.logMessage("Starting New Option Pricing Case %i..." % i)
-    # Create another product/supply, in order to be sure that the 
+    # Create another product/supply, in order to be sure that the
     # nothing will be generated from this supply!
     self.logMessage("Creating fake product...", tab=1)
     product_module = self.portal.getDefaultModule(self.product_portal_type)
@@ -642,7 +642,6 @@ class TestResource(ERP5TypeTestCase):
     self.tic()
     # Check resource price
     self.logMessage("Check product price without option...", tab=1)
-    import pdb; pdb.set_trace()
     self.assertEquals(1, product.getPrice(context=supply_line))
     # Check resource option price
     self.logMessage("Check product price with option: %s..." % \
