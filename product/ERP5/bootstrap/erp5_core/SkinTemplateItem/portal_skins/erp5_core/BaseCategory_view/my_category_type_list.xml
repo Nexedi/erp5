@@ -257,6 +257,10 @@
                           <string>variation</string>
                           <string>variation</string>
                         </tuple>
+                        <tuple>
+                          <string>sub_variation</string>
+                          <string>sub_variation</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

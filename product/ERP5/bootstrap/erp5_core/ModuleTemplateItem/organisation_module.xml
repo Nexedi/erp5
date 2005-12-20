@@ -132,6 +132,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add ERP5 OOo Templates</name>
+  </permission>
+  <permission>
    <name>Add ERP5 PDF Forms</name>
   </permission>
   <permission>

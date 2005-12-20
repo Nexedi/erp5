@@ -66,13 +66,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>supported_languages = context.Localizer.get_supported_languages()\n
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+\n
+supported_languages = context.Localizer.get_supported_languages()\n
 translated_keys = {} # This dict prevents entering the same key twice\n
 \n
-context.Translation_delete()\n
+context.portal_catalog.deleteTranslationList(sql_catalog_id=sql_catalog_id)\n
+\n
+i = 0\n
 \n
 # Translate every workflow state in the context of the state variable\n
 for wf in context.portal_workflow.objectValues():\n
+  object_list = []\n
   state_var = wf.variables.getStateVar()\n
   if wf.states:\n
     for state_id, state in wf.states.items():\n
@@ -80,9 +85,12 @@ for wf in context.portal_workflow.objectValues():\n
         key = (lang, state_var, state_id)\n
         if not translated_keys.has_key(key):\n
           translated_keys[key] = None # mark as translated\n
-          context.Translation_addMessage(language=lang, message_context=state_var,\n
-                                       original_message = state_id,\n
-                                       translated_message = context.translation_service.translate(\'ui\', state_id, target_language=lang).encode(\'utf-8\'))\n
+          obj = newTempBase(context, \'temp_translation_%d\' % i, \n
+                            language=lang, message_context=state_var, original_message=state_id,\n
+                            translated_message = context.translation_service.translate(\'ui\', state_id, target_language=lang).encode(\'utf-8\'))\n
+          obj.setUid(\'temp_%d\' % i)\n
+          i += 1\n
+          object_list.append(obj)\n
 \n
         # translate state title as well\n
         if state.title != \'\' :\n
@@ -90,21 +98,36 @@ for wf in context.portal_workflow.objectValues():\n
           translated_message = context.translation_service.translate(\'ui\', state.title, target_language=lang).encode(\'utf-8\')\n
           key = (lang, state_var_title, translated_message)\n
           if not translated_keys.has_key(key):\n
-             translated_keys[key] = None # mark as translated\n
-             context.Translation_addMessage(language=lang, message_context=state_var_title,\n
-                                          original_message = state_id, translated_message = translated_message )\n
-\n
+            translated_keys[key] = None # mark as translated\n
+            obj = newTempBase(context, \'temp_translation_%d\' % i,\n
+                              language=lang, message_context=state_var_title,\n
+                              original_message = state_id, translated_message = translated_message )\n
+            obj.setUid(\'temp_%d\' % i)\n
+            i += 1\n
+            object_list.append(obj)\n
+            \n
+  if object_list:\n
+    context.portal_catalog.catalogTranslationList(object_list, sql_catalog_id=sql_catalog_id)\n
+    \n
 # Translate every portal type in the context of the portal type \n
 for ptype in context.portal_types.objectValues():\n
   title = ptype.title\n
   if not title: title = ptype.id\n
+  object_list = []\n
   for lang in supported_languages:\n
     key = (lang, \'portal_type\', title)\n
     if not translated_keys.has_key(key):\n
       translated_keys[key] = None # mark as translated\n
-      context.Translation_addMessage(language=lang, message_context="portal_type",\n
-                                   original_message = title,\n
-                                   translated_message = context.translation_service.translate(\'ui\', title, target_language=lang).encode(\'utf-8\'))\n
+      obj = newTempBase(context, \'temp_translation_%d\' % i,\n
+                        language=lang, message_context="portal_type",\n
+                        original_message = title,\n
+                        translated_message = context.translation_service.translate(\'ui\', title, target_language=lang).encode(\'utf-8\'))\n
+      obj.setUid(\'temp_%d\' % i)\n
+      i += 1\n
+      object_list.append(obj)\n
+      \n
+  if object_list:\n
+    context.portal_catalog.catalogTranslationList(object_list, sql_catalog_id=sql_catalog_id)\n
 \n
 print \'Done\'\n
 return printed\n
@@ -112,44 +135,56 @@ return printed\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAABMAAAAiAAAAQwAA
-AHNQAwAAdAAAgwAAfQEAdAIAdAIAdAMAZAEAgwIAZAIAgwIAgwAAfQQAaAAAfQUAdAIAdAMAZAMA
-gwIAgwAAAXj/AXQGAHQCAHQCAHQDAGQEAIMCAGQFAIMCAIMAAIMBAERd3AF9BwB0AgB0AgB8BwBk
-BgCDAgBkBwCDAgCDAAB9CAB0AgB8BwBkCACDAgBvqwEBeKgBdAYAdAIAdAIAfAcAZAgAgwIAZAkA
-gwIAgwAAgwEARF2BAXQGAAKDAQBcAgB9CQB9CgB4awF0BgB8BACDAQBEXV0BfQsAfAsAfAgAfAkA
-ZgMAfQwAdAIAfAUAZAoAgwIAfAwAgwEADG9sAAF0DQB0DgB8BQCDAQB8DAA8dAIAdAMAZAsAgwIA
-ZAwAfAsAZA0AfAgAZA4AfAkAZA8AdAIAdAIAdAIAdAMAZBAAgwIAZBEAgwIAZBIAfAkAZBMAfAsA
-gwIBZBQAgwIAZBUAgwEAgwAEAW4BAAF0AgB8CgBkFgCDAgBkFwBqAwBvrwABZBgAfAgAFn0PAHQC
-AHQCAHQCAHQDAGQQAIMCAGQRAIMCAGQSAHQCAHwKAGQWAIMCAGQTAHwLAIMCAWQUAIMCAGQVAIMB
-AH0QAHwLAHwPAHwQAGYDAH0MAHQCAHwFAGQKAIMCAHwMAIMBAAxvPAABdA0AdA4AfAUAgwEAfAwA
-PHQCAHQDAGQLAIMCAGQMAHwLAGQNAHwPAGQOAHwJAGQPAHwQAIMABAFxLAIBcc8AAXHPAFdxrwBX
-cVwAAXFcAFd4/AB0BgB0AgB0AgB0AwBkGQCDAgBkBQCDAgCDAACDAQBEXdkAfREAdAIAfBEAZBYA
-gwIAfRIAfBIADG8TAAF0AgB8EQBkGgCDAgB9EgBuAQABeKYAdAYAfAQAgwEARF2YAH0LAHwLAGQb
-AHwSAGYDAH0MAHQCAHwFAGQKAIMCAHwMAIMBAAxvbAABdA0AdA4AfAUAgwEAfAwAPHQCAHQDAGQL
-AIMCAGQMAHwLAGQNAGQbAGQOAHwSAGQPAHQCAHQCAHQCAHQDAGQQAIMCAGQRAIMCAGQSAHwSAGQT
-AHwLAIMCAWQUAIMCAGQVAIMBAIMABAFxmwIBcZsCV3FeAld8AQAEZBwAAklKfAEAgwAAU2QAAFMo
-HQAAAE5zCQAAAExvY2FsaXplcnMXAAAAZ2V0X3N1cHBvcnRlZF9sYW5ndWFnZXNzEgAAAFRyYW5z
-bGF0aW9uX2RlbGV0ZXMPAAAAcG9ydGFsX3dvcmtmbG93cwwAAABvYmplY3RWYWx1ZXNzCQAAAHZh
-cmlhYmxlc3MLAAAAZ2V0U3RhdGVWYXJzBgAAAHN0YXRlc3MFAAAAaXRlbXNzBwAAAGhhc19rZXlz
-FgAAAFRyYW5zbGF0aW9uX2FkZE1lc3NhZ2VzCAAAAGxhbmd1YWdlcw8AAABtZXNzYWdlX2NvbnRl
-eHRzEAAAAG9yaWdpbmFsX21lc3NhZ2VzEgAAAHRyYW5zbGF0ZWRfbWVzc2FnZXMTAAAAdHJhbnNs
-YXRpb25fc2VydmljZXMJAAAAdHJhbnNsYXRlcwIAAAB1aXMPAAAAdGFyZ2V0X2xhbmd1YWdlcwYA
-AABlbmNvZGVzBQAAAHV0Zi04cwUAAAB0aXRsZXMAAAAAcwgAAAAlc190aXRsZXMMAAAAcG9ydGFs
-X3R5cGVzcwIAAABpZHMLAAAAcG9ydGFsX3R5cGVzBAAAAERvbmUoEwAAAHMHAAAAX3ByaW50X3MG
-AAAAX3ByaW50cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzEwAAAHN1cHBvcnRlZF9sYW5ndWFn
-ZXNzDwAAAHRyYW5zbGF0ZWRfa2V5c3MJAAAAX2dldGl0ZXJfcwIAAAB3ZnMJAAAAc3RhdGVfdmFy
-cwgAAABzdGF0ZV9pZHMFAAAAc3RhdGVzBAAAAGxhbmdzAwAAAGtleXMEAAAATm9uZXMHAAAAX3dy
-aXRlX3MPAAAAc3RhdGVfdmFyX3RpdGxlcxIAAAB0cmFuc2xhdGVkX21lc3NhZ2VzBQAAAHB0eXBl
-cwUAAAB0aXRsZSgTAAAAcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzCQAAAF9nZXRhdHRyX3MHAAAA
-Y29udGV4dHMTAAAAc3VwcG9ydGVkX2xhbmd1YWdlc3MPAAAAdHJhbnNsYXRlZF9rZXlzcwkAAABf
-Z2V0aXRlcl9zAgAAAHdmcwkAAABzdGF0ZV92YXJzCAAAAHN0YXRlX2lkcwUAAABzdGF0ZXMEAAAA
-bGFuZ3MDAAAAa2V5cwQAAABOb25lcwcAAABfd3JpdGVfcw8AAABzdGF0ZV92YXJfdGl0bGVzEgAA
-AHRyYW5zbGF0ZWRfbWVzc2FnZXMFAAAAcHR5cGVzBQAAAHRpdGxlKAAAAAAoAAAAAHMPAAAAU2Ny
-aXB0IChQeXRob24pcx8AAABFUlA1U2l0ZV91cGRhdGVUcmFuc2xhdGlvblRhYmxlAQAAAHNMAAAA
-JAEJAg0DIgAGAR4BDQEiABMBDQAGAQ8BFwETARgBDwEyAxYBCgE/AQ8BFwETARgBJQMiAAYBDwEb
-AQ0ABgEPARcBEwEYAQ8BOgIKASgBAAAAcx8AAABFUlA1U2l0ZV91cGRhdGVUcmFuc2xhdGlvblRh
-YmxlKAEAAABzHwAAAEVSUDVTaXRlX3VwZGF0ZVRyYW5zbGF0aW9uVGFibGUoAAAAACgAAAAAcw8A
-AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAABkAAAAkAAAA
+QwAAAHN9BAAAdAAAgwAAfQIAZAEAawIAbAMAfQQAAXQEAHQEAHQFAGQCAIMCAGQDAIMCAIMAAH0H
+AGgAAH0IAHQEAHQEAHQFAGQEAIMCAGQFAIMCAGQGAHwAAIMAAQFkBwB9CQB4oAJ0CgB0BAB0BAB0
+BQBkCACDAgBkCQCDAgCDAACDAQBEXX0CfQsAZwAAfQwAdAQAdAQAfAsAZAoAgwIAZAsAgwIAgwAA
+fQ0AdAQAfAsAZAwAgwIAbxkCAXgWAnQKAHQEAHQEAHwLAGQMAIMCAGQNAIMCAIMAAIMBAERd7wF0
+CgACgwEAXAIAfQ4AfQ8AeNkBdAoAfAcAgwEARF3LAX0QAHwQAHwNAHwOAGYDAH0RAHQEAHwIAGQO
+AIMCAHwRAIMBAAxvowABdBIAdBMAfAgAgwEAfBEAPHwEAHQFAGQPAHwJABZkEAB8EABkEQB8DQBk
+EgB8DgBkEwB0BAB0BAB0BAB0BQBkFACDAgBkFQCDAgBkFgB8DgBkFwB8EACDAgFkGACDAgBkGQCD
+AQCDAgR9FAB0BAB8FABkGgCDAgBkGwB8CQAWgwEAAXwJAGQcADd9CQB0BAB8DABkHQCDAgB8FACD
+AQABbgEAAXQEAHwPAGQeAIMCAGQfAGoDAG/mAAFkIAB8DQAWfRUAdAQAdAQAdAQAdAUAZBQAgwIA
+ZBUAgwIAZBYAdAQAfA8AZB4AgwIAZBcAfBAAgwIBZBgAgwIAZBkAgwEAfRYAfBAAfBUAfBYAZgMA
+fREAdAQAfAgAZA4AgwIAfBEAgwEADG9zAAF0EgB0EwB8CACDAQB8EQA8fAQAdAUAZA8AfAkAFmQQ
+AHwQAGQRAHwVAGQSAHwOAGQTAHwWAIMCBH0UAHQEAHwUAGQaAIMCAGQbAHwJABaDAQABfAkAZBwA
+N30JAHQEAHwMAGQdAIMCAHwUAIMBAAFxwgIBcfcAAXH3AFdx1wBXbgEAAXwMAG8mAAF0BAB0BAB0
+BQBkBACDAgBkIQCDAgB8DABkBgB8AACDAQEBcX4AAXF+AFd4ZgF0CgB0BAB0BAB0BQBkIgCDAgBk
+CQCDAgCDAACDAQBEXUMBfRcAdAQAfBcAZB4AgwIAfRgAfBgADG8TAAF0BAB8FwBkIwCDAgB9GABu
+AQABZwAAfQwAeN0AdAoAfAcAgwEARF3PAH0QAHwQAGQkAHwYAGYDAH0RAHQEAHwIAGQOAIMCAHwR
+AIMBAAxvowABdBIAdBMAfAgAgwEAfBEAPHwEAHQFAGQPAHwJABZkEAB8EABkEQBkJABkEgB8GABk
+EwB0BAB0BAB0BAB0BQBkFACDAgBkFQCDAgBkFgB8GABkFwB8EACDAgFkGACDAgBkGQCDAQCDAgR9
+FAB0BAB8FABkGgCDAgBkGwB8CQAWgwEAAXwJAGQcADd9CQB0BAB8DABkHQCDAgB8FACDAQABcWQD
+AXFkA1d8DABvJgABdAQAdAQAdAUAZAQAgwIAZCEAgwIAfAwAZAYAfAAAgwEBAXEhAwFxIQNXfAIA
+BGQlAAJJSnwCAIMAAFNkAABTKCYAAABOKAEAAABzCwAAAG5ld1RlbXBCYXNlcwkAAABMb2NhbGl6
+ZXJzFwAAAGdldF9zdXBwb3J0ZWRfbGFuZ3VhZ2Vzcw4AAABwb3J0YWxfY2F0YWxvZ3MVAAAAZGVs
+ZXRlVHJhbnNsYXRpb25MaXN0cw4AAABzcWxfY2F0YWxvZ19pZGkAAAAAcw8AAABwb3J0YWxfd29y
+a2Zsb3dzDAAAAG9iamVjdFZhbHVlc3MJAAAAdmFyaWFibGVzcwsAAABnZXRTdGF0ZVZhcnMGAAAA
+c3RhdGVzcwUAAABpdGVtc3MHAAAAaGFzX2tleXMTAAAAdGVtcF90cmFuc2xhdGlvbl8lZHMIAAAA
+bGFuZ3VhZ2VzDwAAAG1lc3NhZ2VfY29udGV4dHMQAAAAb3JpZ2luYWxfbWVzc2FnZXMSAAAAdHJh
+bnNsYXRlZF9tZXNzYWdlcxMAAAB0cmFuc2xhdGlvbl9zZXJ2aWNlcwkAAAB0cmFuc2xhdGVzAgAA
+AHVpcw8AAAB0YXJnZXRfbGFuZ3VhZ2VzBgAAAGVuY29kZXMFAAAAdXRmLThzBgAAAHNldFVpZHMH
+AAAAdGVtcF8lZGkBAAAAcwYAAABhcHBlbmRzBQAAAHRpdGxlcwAAAABzCAAAACVzX3RpdGxlcxYA
+AABjYXRhbG9nVHJhbnNsYXRpb25MaXN0cwwAAABwb3J0YWxfdHlwZXNzAgAAAGlkcwsAAABwb3J0
+YWxfdHlwZXMEAAAARG9uZSgZAAAAcwcAAABfcHJpbnRfcwYAAABfcHJpbnRzGgAAAFByb2R1Y3Rz
+LkVSUDVUeXBlLkRvY3VtZW50cwsAAABuZXdUZW1wQmFzZXMJAAAAX2dldGF0dHJfcwcAAABjb250
+ZXh0cxMAAABzdXBwb3J0ZWRfbGFuZ3VhZ2Vzcw8AAAB0cmFuc2xhdGVkX2tleXNzDgAAAHNxbF9j
+YXRhbG9nX2lkcwEAAABpcwkAAABfZ2V0aXRlcl9zAgAAAHdmcwsAAABvYmplY3RfbGlzdHMJAAAA
+c3RhdGVfdmFycwgAAABzdGF0ZV9pZHMFAAAAc3RhdGVzBAAAAGxhbmdzAwAAAGtleXMEAAAATm9u
+ZXMHAAAAX3dyaXRlX3MDAAAAb2Jqcw8AAABzdGF0ZV92YXJfdGl0bGVzEgAAAHRyYW5zbGF0ZWRf
+bWVzc2FnZXMFAAAAcHR5cGVzBQAAAHRpdGxlKBkAAABzDgAAAHNxbF9jYXRhbG9nX2lkcwcAAABf
+cHJpbnRfcwYAAABfcHJpbnRzGgAAAFByb2R1Y3RzLkVSUDVUeXBlLkRvY3VtZW50cwsAAABuZXdU
+ZW1wQmFzZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cxMAAABzdXBwb3J0ZWRfbGFuZ3VhZ2Vz
+cw8AAAB0cmFuc2xhdGVkX2tleXNzAQAAAGlzCQAAAF9nZXRpdGVyX3MCAAAAd2ZzCwAAAG9iamVj
+dF9saXN0cwkAAABzdGF0ZV92YXJzCAAAAHN0YXRlX2lkcwUAAABzdGF0ZXMEAAAAbGFuZ3MDAAAA
+a2V5cwQAAABOb25lcwcAAABfd3JpdGVfcwMAAABvYmpzDwAAAHN0YXRlX3Zhcl90aXRsZXMSAAAA
+dHJhbnNsYXRlZF9tZXNzYWdlcwUAAABwdHlwZXMFAAAAdGl0bGUoAAAAACgAAAAAcw8AAABTY3Jp
+cHQgKFB5dGhvbilzHwAAAEVSUDVTaXRlX3VwZGF0ZVRyYW5zbGF0aW9uVGFibGUBAAAAc3IAAAAW
+AhsBDAIZAgYDIgAGAQYBHgENASIAEwENAAYBDwEXARABEAEbATMBFAENARQDFgEKAT8BDwEXARAB
+EAEMARIBFAENASQCDQEkAyIABgEPARsBBgENAAYBDwEXARABEAEMAQ8BMwEUAQ0BGAINASQCCgEo
+AgAAAHMEAAAATm9uZXMfAAAARVJQNVNpdGVfdXBkYXRlVHJhbnNsYXRpb25UYWJsZSgCAAAAcwQA
+AABOb25lcx8AAABFUlA1U2l0ZV91cGRhdGVUcmFuc2xhdGlvblRhYmxlKAAAAAAoAAAAAHMPAAAA
+U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -157,7 +192,7 @@ AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>sql_catalog_id=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -177,20 +212,25 @@ AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>sql_catalog_id</string>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>supported_languages</string>
                             <string>translated_keys</string>
+                            <string>i</string>
                             <string>_getiter_</string>
                             <string>wf</string>
+                            <string>object_list</string>
                             <string>state_var</string>
                             <string>state_id</string>
                             <string>state</string>
@@ -198,6 +238,7 @@ AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                             <string>key</string>
                             <string>None</string>
                             <string>_write_</string>
+                            <string>obj</string>
                             <string>state_var_title</string>
                             <string>translated_message</string>
                             <string>ptype</string>
@@ -213,7 +254,9 @@ AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
