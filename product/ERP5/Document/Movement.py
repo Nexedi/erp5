@@ -36,6 +36,8 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Document.Amount import Amount
 
+from zLOG import LOG
+
 class Movement(XMLObject, Amount):
   """
     The Movement class allows to implement ERP5 universal accounting model.
@@ -623,6 +625,21 @@ class Movement(XMLObject, Amount):
     """
     quantity = self.getTotalQuantity()
     return self.getConsumptionQuantity(quantity=quantity)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getSubVariationText')
+  def getSubVariationText(self,**kw):
+    """
+    Provide a string representation of XXX
+    """
+    base_category_list = self.getPortalSubVariationBaseCategoryList()
+    portal_type_list = self.getPortalSubVariationTypeList()
+    return_list = []
+    for base_category in base_category_list:
+      variation_list = self.getAcquiredCategoryMembershipList(base_category,
+          portal_type=portal_type_list,base=1)
+      return_list.extend(variation_list)
+    return "\n".join(return_list)
 
   # SKU vs. CU
 #   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
