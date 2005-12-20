@@ -188,7 +188,8 @@ class SimulationTool (BaseTool):
         section_category=None, mirror_section_category=None,
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
         input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+        variation_text=None, sub_variation_text=None,
+        variation_category=None,
         **kw) :
       """
       generates keywork and calls buildSqlQuery
@@ -239,6 +240,10 @@ class SimulationTool (BaseTool):
       variation_text_list = self._generatePropertyUidList(variation_text, as_text=1)
       if len(variation_text_list) :
         new_kw[table + '.variation_text'] = variation_text_list
+
+      sub_variation_text_list = self._generatePropertyUidList(sub_variation_text, as_text=1)
+      if len(sub_variation_text_list) :
+        new_kw[table + '.sub_variation_text'] = sub_variation_text_list
 
       resource_category_uid_list = self._generatePropertyUidList(resource_category)
       if len(resource_category_uid_list) :
@@ -323,6 +328,8 @@ class SimulationTool (BaseTool):
       group_by_expression_list = []
       if kw.get('group_by_node',0):
         group_by_expression_list.append('stock.node_uid')
+      if kw.get('group_by_sub_variation',0):
+        group_by_expression_list.append('stock.sub_variation_text')
       if kw.get('group_by_variation',0):
         group_by_expression_list.append('stock.variation_text')
       if len(group_by_expression_list):
@@ -372,6 +379,8 @@ class SimulationTool (BaseTool):
                        this needs to be extended with some kind of variation_category ?
                        XXX this way of implementing variation selection is far from perfect
 
+      sub_variation_text - only take rows in stock table with specified variation_text
+
       variation_category - variation or list of possible variations (it is not a cross-search ; SQL query uses OR)
 
       simulation_state - only take rows with specified simulation_state
@@ -400,6 +409,8 @@ class SimulationTool (BaseTool):
       group_by_variation (useless on getInventory, but useful on getInventoryList)
 
       group_by_node (useless on getInventory, but useful on getInventoryList)
+
+      group_by_sub_variation (useless on getInventory, but useful on getInventoryList)
 
       **kw  - if we want extended selection with more keywords (but bad performance)
               check what we can do with buildSqlQuery
