@@ -55,6 +55,14 @@
             </value>
         </item>
         <item>
+            <key> <string>category_type</string> </key>
+            <value>
+              <tuple>
+                <string>sub_variation</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
