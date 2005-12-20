@@ -566,10 +566,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     if object_path is not None:
       object_keys = [object_path]
     else:
-      if context.getTemplateFormatVersion() == 1:
-        object_keys = self._objects.keys()
-      else:
-        object_keys = self._archive.keys()
+      object_keys = self._archive.keys()
     for relative_url in object_keys:
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
