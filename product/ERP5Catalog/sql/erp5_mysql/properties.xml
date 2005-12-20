@@ -11,17 +11,6 @@
   </property>
   <property id="sql_catalog_multivalue_keys" type="tuple">
   </property>
-  <property id="sql_catalog_object" type="tuple">
-    <item type="str">z_catalog_category</item>
-    <item type="str">z_catalog_item</item>
-    <item type="str">z_catalog_movement</item>
-    <item type="str">z_catalog_predicate</item>
-    <item type="str">z_catalog_predicate_category</item>
-    <item type="str">z_catalog_roles_and_users</item>
-    <item type="str">z_catalog_stock</item>
-    <item type="str">z_update_delivery</item>
-    <item type="str">z_update_object</item>
-  </property>
   <property id="sql_catalog_object_list" type="tuple">
     <item type="str">z_catalog_delivery_list</item>
     <item type="str">z_catalog_item_list</item>
@@ -145,23 +134,8 @@
     <item type="str">z_uncatalog_object</item>
   </property>
   <property id="sql_unique_values" type="str">z_unique_values</property>
-  <property id="sql_update_object" type="tuple">
-    <item type="str">z0_uncatalog_category</item>
-    <item type="str">z0_uncatalog_item</item>
-    <item type="str">z0_uncatalog_movement</item>
-    <item type="str">z0_uncatalog_predicate</item>
-    <item type="str">z0_uncatalog_predicate_category</item>
-    <item type="str">z0_uncatalog_stock</item>
-    <item type="str">z_catalog_category</item>
-    <item type="str">z_catalog_item</item>
-    <item type="str">z_catalog_movement</item>
-    <item type="str">z_catalog_predicate</item>
-    <item type="str">z_catalog_predicate_category</item>
-    <item type="str">z_catalog_roles_and_users</item>
-    <item type="str">z_catalog_stock</item>
-    <item type="str">z_update_delivery</item>
-    <item type="str">z_update_object</item>
-  </property>
+  <property id="sql_catalog_translation_list" type="str">z_catalog_translation_list</property>
+  <property id="sql_delete_translation_list" type="str">z_delete_translation_list</property>
   <property id="title" type="str">ERP5/MySQL</property>
   <filter id="z_catalog_delivery_list" expression="python: isDelivery" />
   <filter id="z_catalog_item_list" expression="python: isMovement" />
