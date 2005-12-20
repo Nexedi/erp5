@@ -32,7 +32,7 @@ class SubversionPreference:
   """
   
   _properties = (
-    { 'id'          : 'preferred_subversion_user',
+    { 'id'          : 'preferred_subversion_user_name',
       'description' : 'The user name for Subversion',
       'type'        : 'string',
       'preference'  : 1,
