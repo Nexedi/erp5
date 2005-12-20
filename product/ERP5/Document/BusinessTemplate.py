@@ -68,8 +68,8 @@ from urllib import pathname2url, url2pathname
 from difflib import unified_diff
 
 
-catalog_method_list = ('_is_catalog_method_archive', '_is_catalog_list_method_archive',
-                       '_is_uncatalog_method_archive', '_is_update_method_archive',
+catalog_method_list = ('_is_catalog_list_method_archive',
+                       '_is_uncatalog_method_archive',
                        '_is_clear_method_archive', '_is_filtered_archive')
 
 catalog_method_filter_list = ('_filter_expression_archive', '_filter_expression_instance_archive',
@@ -1094,10 +1094,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_catalog', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
-    self._is_catalog_method_archive = PersistentMapping()
+#     self._is_catalog_method_archive = PersistentMapping()
     self._is_catalog_list_method_archive = PersistentMapping()
     self._is_uncatalog_method_archive = PersistentMapping()
-    self._is_update_method_archive = PersistentMapping()
+#     self._is_update_method_archive = PersistentMapping()
     self._is_clear_method_archive = PersistentMapping()
     self._is_filtered_archive = PersistentMapping()
     self._filter_expression_archive = PersistentMapping()
@@ -1115,10 +1115,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       return
     for obj in self._objects.values():
       method_id = obj.id
-      self._is_catalog_method_archive[method_id] = method_id in catalog.sql_catalog_object
+#       self._is_catalog_method_archive[method_id] = method_id in catalog.sql_catalog_object
       self._is_catalog_list_method_archive[method_id] = method_id in catalog.sql_catalog_object_list
       self._is_uncatalog_method_archive[method_id] = method_id in catalog.sql_uncatalog_object
-      self._is_update_method_archive[method_id] = method_id in catalog.sql_update_object
+#       self._is_update_method_archive[method_id] = method_id in catalog.sql_update_object
       self._is_clear_method_archive[method_id] = method_id in catalog.sql_clear_catalog
       self._is_filtered_archive[method_id] = 0
       if catalog.filter_dict.has_key(method_id):
@@ -1182,10 +1182,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     # Make copies of attributes of the default catalog of portal_catalog.
-    sql_catalog_object = list(catalog.sql_catalog_object)
+#     sql_catalog_object = list(catalog.sql_catalog_object)
     sql_catalog_object_list = list(catalog.sql_catalog_object_list)
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
-    sql_update_object = list(catalog.sql_update_object)
+#     sql_update_object = list(catalog.sql_update_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
 
     update_dict = kw.get('object_to_update')
@@ -1217,17 +1217,17 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     for obj in values:
       method_id = obj.id
 
-      is_catalog_method = int(self._is_catalog_method_archive[method_id])
+#       is_catalog_method = int(self._is_catalog_method_archive[method_id])
       is_catalog_list_method = int(self._is_catalog_list_method_archive[method_id])
       is_uncatalog_method = int(self._is_uncatalog_method_archive[method_id])
-      is_update_method = int(self._is_update_method_archive[method_id])
+#       is_update_method = int(self._is_update_method_archive[method_id])
       is_clear_method = int(self._is_clear_method_archive[method_id])
       is_filtered = int(self._is_filtered_archive[method_id])
 
-      if is_catalog_method and method_id not in sql_catalog_object:
-        sql_catalog_object.append(method_id)
-      elif not is_catalog_method and method_id in sql_catalog_object:
-        sql_catalog_object.remove(method_id)
+#       if is_catalog_method and method_id not in sql_catalog_object:
+#         sql_catalog_object.append(method_id)
+#       elif not is_catalog_method and method_id in sql_catalog_object:
+#         sql_catalog_object.remove(method_id)
 
       if is_catalog_list_method and method_id not in sql_catalog_object_list:
         sql_catalog_object_list.append(method_id)
@@ -1239,10 +1239,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       elif not is_uncatalog_method and method_id in sql_uncatalog_object:
         sql_uncatalog_object.remove(method_id)
 
-      if is_update_method and method_id not in sql_update_object:
-        sql_update_object.append(method_id)
-      elif not is_update_method and method_id in sql_update_object:
-        sql_update_object.remove(method_id)
+#       if is_update_method and method_id not in sql_update_object:
+#         sql_update_object.append(method_id)
+#       elif not is_update_method and method_id in sql_update_object:
+#         sql_update_object.remove(method_id)
 
       if is_clear_method and method_id not in sql_clear_catalog:
         sql_clear_catalog.append(method_id)
@@ -1264,14 +1264,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       elif method_id in catalog.filter_dict.keys():
         catalog.filter_dict[method_id]['filtered'] = 0
 
-    sql_catalog_object.sort()
-    catalog.sql_catalog_object = tuple(sql_catalog_object)
+#     sql_catalog_object.sort()
+#     catalog.sql_catalog_object = tuple(sql_catalog_object)
     sql_catalog_object_list.sort()
     catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
     sql_uncatalog_object.sort()
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
-    sql_update_object.sort()
-    catalog.sql_update_object = tuple(sql_update_object)
+#     sql_update_object.sort()
+#     catalog.sql_update_object = tuple(sql_update_object)
     sql_clear_catalog.sort()
     catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
@@ -1296,17 +1296,17 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       values.append(self._archive[object_path])
 
     # Make copies of attributes of the default catalog of portal_catalog.
-    sql_catalog_object = list(catalog.sql_catalog_object)
+#     sql_catalog_object = list(catalog.sql_catalog_object)
     sql_catalog_object_list = list(catalog.sql_catalog_object_list)
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
-    sql_update_object = list(catalog.sql_update_object)
+#     sql_update_object = list(catalog.sql_update_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
 
     for obj in values:
       method_id = obj.id
 
-      if method_id in sql_catalog_object:
-        sql_catalog_object.remove(method_id)
+#       if method_id in sql_catalog_object:
+#         sql_catalog_object.remove(method_id)
 
       if method_id in sql_catalog_object_list:
         sql_catalog_object_list.remove(method_id)
@@ -1314,8 +1314,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       if method_id in sql_uncatalog_object:
         sql_uncatalog_object.remove(method_id)
 
-      if method_id in sql_update_object:
-        sql_update_object.remove(method_id)
+#       if method_id in sql_update_object:
+#         sql_update_object.remove(method_id)
 
       if method_id in sql_clear_catalog:
         sql_clear_catalog.remove(method_id)
@@ -1323,10 +1323,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       if catalog.filter_dict.has_key(method_id):
         del catalog.filter_dict[method_id]
 
-    catalog.sql_catalog_object = tuple(sql_catalog_object)
+#     catalog.sql_catalog_object = tuple(sql_catalog_object)
     catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
-    catalog.sql_update_object = tuple(sql_update_object)
+#     catalog.sql_update_object = tuple(sql_update_object)
     catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
     ObjectTemplateItem.uninstall(self, context, **kw)
