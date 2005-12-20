@@ -59,14 +59,19 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
   """
     Test business template erp5_trade 
   """
-  run_all_test = 0
+  run_all_test = 1
   inventory_portal_type = 'Inventory'
   inventory_line_portal_type = 'Inventory Line'
   inventory_cell_portal_type = 'Inventory Cell'
+  item_portal_type = 'Apparel Bath'
   first_date_string = '2005/12/09' # First Inventory
   second_date_string = '2005/12/29' # Next Inventory
   view_stock_date = '2005/12/31' # The day where we are looking for stock
   size_list = ['Child/32','Child/34'] 
+
+  def logMessage(self,message):
+    ZopeTestCase._print('\n%s' % message)
+    LOG('Testing... ',0,message)
 
   def getInventoryModule(self):
     return getattr(self.getPortal(), 'inventory_module',None)
@@ -135,7 +140,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     date = DateTime(self.view_stock_date)
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
-                        to_date=date)
+                        to_date=date,simulation_state='delivered')
     self.assertEquals(self.default_quantity,quantity)
 
   def stepCheckSecondNotVariatedInventory(self, start_date=None,quantity=None,
@@ -148,10 +153,10 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
                         to_date=date,src__=1))
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
-                        to_date=date)
+                        to_date=date,simulation_state='delivered')
     self.assertEquals(self.default_quantity-2,quantity)
 
-  def test_01_NotVariatedInventory(self, quiet=0, run=1):
+  def test_01_NotVariatedInventory(self, quiet=0, run=run_all_test):
     """
     We will create an inventory with the default quantity for
     a particular resource. Then we will check if the is correct.
@@ -159,6 +164,8 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     stock value
     """
     if not run: return
+    self.logMessage('Test Not Variated Inventory')
+
     sequence_list = SequenceList()
 
     # Test with a simple inventory without cell
@@ -174,8 +181,9 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def createVariatedInventoryLine(self, sequence=None, sequence_list=None, \
-                                 start_date=None,quantity=None,**kw):
+  def createVariatedInventoryLine(self, sequence=None, sequence_list=None, 
+                                 start_date=None,quantity=None,item_list=None,
+                                 **kw):
     """
     We will put default values for an inventory
     """
@@ -189,7 +197,6 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
                                    omit_individual_variation=1,omit_option_base_category=1))
     resource_vcl.sort()
     self.assertEquals(len(resource_vcl),2)
-    LOG('resource_vcl',0,resource_vcl)
     inventory_line.setVariationCategoryList(resource_vcl)
     base_id = 'movement'
     cell_key_list = list(inventory_line.getCellKeyList(base_id=base_id))
@@ -201,7 +208,9 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
       cell.edit(mapped_value_property_list=['price','inventory'],
                 price=price, inventory=quantity,
                 predicate_category_list=cell_key,
-                variation_category_list=cell_key)
+                variation_category_list=cell_key,)
+      if item_list is not None:
+        cell.setAggregateValueList(item_list)
       price += 1
       quantity += 1
 
@@ -214,7 +223,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     date = DateTime(self.first_date_string)
     inventory = self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity
-    inventory = self.createVariatedInventoryLine(start_date=date,
+    self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
 
   def stepCreateSecondVariatedInventory(self, sequence=None, sequence_list=None, \
@@ -226,7 +235,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     date = DateTime(self.second_date_string)
     inventory = self.createInventory(start_date=date,sequence=sequence)
     quantity = self.default_quantity - 10
-    inventory = self.createVariatedInventoryLine(start_date=date,
+    self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
 
   def createVariatedInventory(self, start_date=None,quantity=None,
@@ -261,7 +270,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         variation_text=variation_text,
-                        to_date=date)
+                        to_date=date,simulation_state='delivered')
     self.assertEquals(total_quantity,quantity)
 
   def stepCheckSecondVariatedInventory(self, start_date=None,quantity=None,
@@ -276,20 +285,19 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     self.assertEquals(total_quantity,quantity)
     variation_text = 'size/Child/32'
     total_quantity = 89
-    LOG('CheckSecondVariatedInventory',0, self.getSimulationTool().getInventory(node_uid=node_uid,
-                        resource=resource_url,variation_text=variation_text,
-                        to_date=date,src__=1))
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                         resource=resource_url,
                         variation_text=variation_text,
-                        to_date=date)
+                        to_date=date,simulation_state='delivered')
     self.assertEquals(total_quantity,quantity)
 
-  def test_02_VariatedInventory(self, quiet=0, run=1):
+  def test_02_VariatedInventory(self, run=run_all_test):
     """
     Same thing as test_01 with variation
     """
     if not run: return
+    self.logMessage('Test Variated Inventory')
+
     sequence_list = SequenceList()
 
     # Test with a variated inventory
@@ -305,14 +313,141 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def test_02_VariatedAggregatedInventory(self, quiet=0, run=run_all_test):
+  def stepCreateItem(self, start_date=None,quantity=None,
+                                             sequence=None,**kw):
     """
+    Create an Apparel Bath
+    """
+    portal = self.getPortal()
+    item_list = sequence.get('item_list',[])
+    item_module = portal.getDefaultModule(self.item_portal_type)
+    item = item_module.newContent(portal_type=self.item_portal_type)
+    item_list.append(item)
+    sequence.edit(item_list=item_list)
+
+  def stepCreateFirstVariatedAggregatedInventory(self, sequence=None, sequence_list=None, \
+                                 **kw):
+    """
+    We will put default values for an inventory
+    - size/Child/32 99
+    - size/Child/34 100
+    - size/Child/32 99    item1,item2
+    - size/Child/34 100   item1,item2
+    """
+    portal = self.getPortal()
+    date = DateTime(self.first_date_string)
+    inventory = self.createInventory(start_date=date,sequence=sequence)
+    quantity = self.default_quantity
+    self.createVariatedInventoryLine(start_date=date,
+                  sequence=sequence, quantity=quantity)
+    item_list = sequence.get('item_list')
+    self.createVariatedInventoryLine(start_date=date,
+                  sequence=sequence, quantity=quantity,
+                  item_list=item_list)
+
+  def getAggregateRelativeUrlText(self,item_list):
+    relative_url_list = ['aggregate/%s' % x.getRelativeUrl() for x in item_list]
+    relative_url_list.sort()
+    relative_url_text = '\n'.join(relative_url_list)
+    return relative_url_text
+
+  def stepCheckFirstVariatedAggregatedInventory(self, start_date=None,quantity=None,
+                                             sequence=None,**kw):
+    node_uid = sequence.get('organisation').getUid()
+    resource_url = sequence.get('resource').getRelativeUrl()
+    date = DateTime(self.view_stock_date)
+    total_quantity = (99 + 100) * 2
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                        resource=resource_url,
+                        to_date=date)
+    self.assertEquals(total_quantity,quantity)
+    variation_text = 'size/Child/32'
+    total_quantity = (99) * 2
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                        resource=resource_url,
+                        variation_text=variation_text,
+                        to_date=date)
+    self.assertEquals(total_quantity,quantity)
+    # Also check when we look stock for a particular aggregate
+    sub_variation_text = self.getAggregateRelativeUrlText( 
+                                            sequence.get('item_list'))
+    total_quantity = 99
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                        resource=resource_url,
+                        variation_text=variation_text,
+                        to_date=date,
+                        sub_variation_text=sub_variation_text)
+    self.assertEquals(total_quantity,quantity)
+
+  def stepCreateSecondVariatedAggregatedInventory(self, sequence=None, sequence_list=None, \
+                                 **kw):
+    """
+    We will put default values for an inventory
+    - size/Child/32 89    item1,item2
+    - size/Child/34 90    item1,item2
+    - size/Child/32 89    item1
+    - size/Child/34 90    item1
+    """
+    portal = self.getPortal()
+    date = DateTime(self.second_date_string)
+    inventory = self.createInventory(start_date=date,sequence=sequence)
+    quantity = self.default_quantity - 10
+    item_list = sequence.get('item_list')
+    self.createVariatedInventoryLine(start_date=date,
+                  sequence=sequence, quantity=quantity)
+    item_list = sequence.get('item_list')[:1]
+    self.createVariatedInventoryLine(start_date=date,
+                  sequence=sequence, quantity=quantity,
+                  item_list=item_list)
+
+  def stepCheckSecondVariatedAggregatedInventory(self, start_date=None,quantity=None,
+                                             sequence=None,**kw):
+    node_uid = sequence.get('organisation').getUid()
+    resource_url = sequence.get('resource').getRelativeUrl()
+    date = DateTime(self.view_stock_date)
+    total_quantity = (89 + 90) * 2
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                        resource=resource_url,
+                        to_date=date)
+    self.assertEquals(total_quantity,quantity)
+    variation_text = 'size/Child/32'
+    total_quantity = (89) * 2
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                        resource=resource_url,
+                        variation_text=variation_text,
+                        to_date=date,simulation_state='delivered')
+    self.assertEquals(total_quantity,quantity)
+    # Also check when we look stock for a particular aggregate
+    sub_variation_text = self.getAggregateRelativeUrlText(sequence.get('item_list'))
+    total_quantity = 0
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                        resource=resource_url,
+                        to_date=date,
+                        sub_variation_text=sub_variation_text,
+                        simulation_state='delivered')
+    self.assertEquals(total_quantity,quantity)
+    sub_variation_text = self.getAggregateRelativeUrlText(sequence.get('item_list')[:1])
+
+  def test_03_VariatedAggregatedInventory(self, run=run_all_test):
+    """
+    Same thing as test_01 with variation and aggregate
     """
     if not run: return
+    self.logMessage('Test Variated Aggregated Inventory')
+
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
-    sequence_string = ''
+    # Test with a variated inventory with some aggregate
+    sequence_string = 'CreateVariatedResource \
+                       CreateOrganisation \
+                       CreateItem \
+                       CreateItem \
+                       CreateFirstVariatedAggregatedInventory \
+                       Tic \
+                       CheckFirstVariatedAggregatedInventory \
+                       CreateSecondVariatedAggregatedInventory \
+                       Tic \
+                       CheckSecondVariatedAggregatedInventory'
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
