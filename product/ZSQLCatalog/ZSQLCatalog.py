@@ -668,6 +668,20 @@ class ZCatalog(Folder, Persistent, Implicit):
         destination_catalog.deleteRecordedObjectList([uid]) # Prevent this object from being replayed.
         destination_catalog.uncatalogObject(uid)
 
+  def catalogTranslationList(self, object_list, sql_catalog_id=None):
+    """Catalog translations.
+    """
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.catalogTranslationList(object_list)
+
+  def deleteTranslationList(self, sql_catalog_id=None):
+    """Delete translations.
+    """
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.deleteTranslationList()
+
   def uniqueValuesFor(self, name, sql_catalog_id=None):
     """ returns the unique values for a given FieldIndex """
     catalog = self.getSQLCatalog(sql_catalog_id)
