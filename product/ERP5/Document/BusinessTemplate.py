@@ -280,7 +280,6 @@ class BaseTemplateItem(Implicit, Persistent):
           modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
 
-
   def install(self, context, trashbin, **kw):
     pass
 
@@ -447,6 +446,15 @@ class ObjectTemplateItem(BaseTemplateItem):
       Backup the object in portal trash if necessery and return its subobjects
     """
     subobjects_dict = {}
+    if trashbin is None: #m ust return subobjects
+      object_path = container_path + [object_id]
+      obj = self.unrestrictedTraverse(object_path)
+      for subobject_id in list(obj.objectIds()):
+        subobject_path = object_path + [subobject_id]
+        subobject = self.unrestrictedTraverse(subobject_path)
+        subobject_copy = subobject._p_jar.exportFile(subobject._p_oid)
+        subobjects_dict[subobject_id] = subobject_copy      
+      return subobjects_dict
     # XXX btsave is for backward compatibility
     if action == 'backup' or action == 'btsave':
       subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, object_id, save=1)
@@ -568,45 +576,13 @@ class ObjectTemplateItem(BaseTemplateItem):
       object_id = relative_url.split('/')[-1]
       try:        
         container = portal.unrestrictedTraverse(container_path)
-        if trash:
+        if trash and trashbin is not None:
           self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
         container.manage_delObjects([object_id])
       except (NotFound, KeyError):
         # object is already backup and/or removed
         pass
     BaseTemplateItem.uninstall(self, context, **kw)
-
-  def _compareObjects(self, object1, object2, btsave_object_included=0):
-    """
-      Execute a diff between 2 objects,
-      and return a string diff.
-    """
-    xml_dict = {
-      str(object1): None,
-      str(object2): None,
-    }
-    # Generate XML
-    for obj in (object1, object2):
-      string_io = StringIO()
-      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, string_io)
-      object_xml = string_io.getvalue()
-      string_io.close()
-      object_xml_lines = object_xml.splitlines(1)
-      xml_dict[str(obj)] = object_xml_lines
-    # Make diff between XML
-    diff_instance = difflib.Differ()
-    diff_list = list(diff_instance.compare(xml_dict[str(object1)],
-                                           xml_dict[str(object2)]))
-    diff_list = [x for x in diff_list if x[0] != ' ']
-#     # Dirty patch to remove useless diff message (id different)
-#     if btsave_object_included==1:
-#       if len(diff_list) == 3:
-#         if '_btsave_' in diff_list[1]:
-#           diff_list = []
-    # Return string
-    result = '%s' % ''.join(diff_list)
-    return result
-
 
 class PathTemplateItem(ObjectTemplateItem):
   """
@@ -795,12 +771,29 @@ class CategoryTemplateItem(ObjectTemplateItem):
           container = category_tool.unrestrictedTraverse(container_path)
           container_ids = container.objectIds()
           if category_id in container_ids:    # Object already exists
-            subobjects_dict = self.portal_trash.backupObject(trashbin, container_path, category_id, save=1)
+            # XXX call backup here
+            subobjects_dict = self._backupObject('backup', trashbin, container_path, category_id)
             container.manage_delObjects([category_id])
           category = container.newContent(portal_type=obj.getPortalType(), id=category_id)
           for property in obj.propertyIds():
             if property not in ('id', 'uid'):
               category.setProperty(property, obj.getProperty(property, evaluate=0))
+          # import sub objects if there is
+          if len(subobjects_dict) > 0:
+            # get a jar
+            connection = obj._p_jar
+            o = category
+            while connection is None:
+              o = o.aq_parent
+              connection = o._p_jar
+            # import subobjects
+            for subobject_id in subobjects_dict.keys():
+              subobject_data = subobjects_dict[subobject_id]
+              subobject_data.seek(0)
+              subobject = connection.importFile(subobject_data)
+              if subobject_id not in category.objectIds():
+                category._setObject(subobject_id, subobject)
+
 
 class SkinTemplateItem(ObjectTemplateItem):
 
@@ -1738,7 +1731,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     for id in keys:
       if id in id_list:
         try:
-          if trash:
+          if trash and trashbin is not None:
             container_path = id.split('/')
             self.portal_trash.backupObject(trashbin, container_path, id, save=1, keep_subobjects=1)
           p.manage_delObjects([id])
@@ -2670,11 +2663,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if len(object_to_update) == 0:
           # nothing to be done
           return
-        
+      trash_tool = getToolByName(self, 'portal_trash', None)
       # always created a trash bin because we may to save object already present
       # but not in a previous business templates apart at creation of a new site
-      if len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1:
-        trashbin = self.portal_trash.newTrashBin(self.getTitle(), self)
+      if trash_tool is not None and len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1:
+        trashbin = trash_tool.newTrashBin(self.getTitle(), self)
       else:
         trashbin = None
         
