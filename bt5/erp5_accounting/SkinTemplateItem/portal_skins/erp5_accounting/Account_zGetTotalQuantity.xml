@@ -262,13 +262,13 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity > 0.0\n
@@ -308,8 +308,7 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
 AND <dtml-var query>\n
-</dtml-if>\n
-
+</dtml-if>
 
 ]]></string> </value>
         </item>
@@ -375,13 +374,13 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity > 0.0\n
@@ -421,8 +420,7 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
 AND <dtml-var query>\n
-</dtml-if>\n
-
+</dtml-if>
 
 ]]></string> </value>
                     </item>
