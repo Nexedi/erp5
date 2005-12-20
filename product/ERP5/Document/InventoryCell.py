@@ -104,22 +104,6 @@ class InventoryCell(DeliveryCell):
         # Make sure inventory is defined somewhere (here or parent)
         if getattr(aq_base(self), 'inventory', None) is None:
           return 0.0 # No inventory defined, so no quantity
-        # Find total of movements in the past - XXX
-        resource_value = self.getResourceValue()
-        if resource_value is not None:
-          # Inventories can only be done in "real" locations / sectinos, not categories thereof
-          #  -> therefore we use node and section
-          current_inventory = resource_value.getInventory( \
-                                  to_date          = self.getStartDate()
-                                , variation_text   = self.getVariationText()
-                                , node             = self.getDestination()
-                                , section_category = self.getDestinationSection()
-                                , simulation_state = self.getPortalCurrentInventoryStateList()
-                                )
-          inventory = self.getInventory()
-          if current_inventory in (None, ''):
-            current_inventory = 0.0
-          return self.getInventory() - current_inventory
         return self.getInventory()
       else:
         return None
