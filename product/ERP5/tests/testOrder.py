@@ -119,6 +119,13 @@ class TestOrderMixin:
                                                  portal_type='Category',
                                                  id=category_id)
 
+    product_line_category_list = ['apparel', ]
+    if len(self.category_tool.product_line.contentValues()) == 0:
+      for category_id in product_line_category_list:
+        o = self.category_tool.product_line.newContent(
+                                                 portal_type='Category',
+                                                 id=category_id)
+  
   def stepTic(self,**kw):
     self.tic()
 
@@ -132,7 +139,8 @@ class TestOrderMixin:
     resource = resource_module.newContent(portal_type=self.resource_portal_type)
     resource.edit(
       title = "NotVariatedResource",
-      industrial_phase_list=["phase1", "phase2"]
+      industrial_phase_list=["phase1", "phase2"],
+      product_line = 'apparel'
     )
 
     sequence.edit( resource = resource )
@@ -150,7 +158,8 @@ class TestOrderMixin:
     resource = resource_module.newContent(portal_type=self.resource_portal_type)
     resource.edit(
       title = "VariatedResource",
-      industrial_phase_list=["phase1", "phase2"]
+      industrial_phase_list=["phase1", "phase2"],
+      product_line = 'apparel'
     )
     size_list = ['Baby','Child/32','Child/34','Man','Woman'] 
     resource.setSizeList(size_list) 
