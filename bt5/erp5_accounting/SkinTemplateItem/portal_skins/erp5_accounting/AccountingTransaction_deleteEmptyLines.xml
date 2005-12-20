@@ -79,7 +79,7 @@ lines_portal_type = (\'Accounting Transaction Line\', \n
 \n
 transaction = context.getObject()\n
 \n
-for line in transaction.searchFolder(portal_type=lines_portal_type) : \n
+for line in transaction.objectValues(portal_type=lines_portal_type) : \n
   line = line.getObject()\n
   # Do not delete lines involved in simulation\n
   if len( line.getDeliveryRelatedValueList(portal_type = \'Simulation Movement\') + \n
@@ -87,31 +87,40 @@ for line in transaction.searchFolder(portal_type=lines_portal_type) : \n
     balance = line.getSourceDebit() - line.getSourceCredit()\n
     if balance == 0 : \n
       transaction.deleteContent(line.getId())\n
+\n
+if redirect :\n
+  context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
+      transaction.getPath(), context.Base_TranslateString(\'Empty Lines Deleted.\')))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAARAAAAQwAA
-AHP6AAAAZAEAZAIAZAMAZAQAZAUAZAYAZgYAfQAAdAEAdAIAZAcAgwIAgwAAfQMAeMkAdAQAdAEA
-fAMAZAgAgwIAZAkAfAAAgwABgwEARF2pAH0FAHQBAHwFAGQHAIMCAIMAAH0FAHQGAHQBAHwFAGQK
-AIMCAGQJAGQLAIMAAXQBAHwFAGQMAIMCAGQJAGQLAIMAAReDAQBkDQBqAgBvVgABdAEAfAUAZA4A
-gwIAgwAAdAEAfAUAZA8AgwIAgwAAGH0HAHwHAGQNAGoCAG8jAAF0AQB8AwBkEACDAgB0AQB8BQBk
-EQCDAgCDAACDAQABcfIAAXFJAAFxSQBXZAAAUygSAAAATnMbAAAAQWNjb3VudGluZyBUcmFuc2Fj
-dGlvbiBMaW5lcx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZXMhAAAAUHVyY2hhc2Ug
-SW52b2ljZSBUcmFuc2FjdGlvbiBMaW5lcxoAAABQYXkgU2hlZXQgVHJhbnNhY3Rpb24gTGluZXMY
-AAAAUGF5bWVudCBUcmFuc2FjdGlvbiBMaW5lcxgAAABCYWxhbmNlIFRyYW5zYWN0aW9uIExpbmVz
-CQAAAGdldE9iamVjdHMMAAAAc2VhcmNoRm9sZGVycwsAAABwb3J0YWxfdHlwZXMbAAAAZ2V0RGVs
-aXZlcnlSZWxhdGVkVmFsdWVMaXN0cxMAAABTaW11bGF0aW9uIE1vdmVtZW50cxgAAABnZXRPcmRl
-clJlbGF0ZWRWYWx1ZUxpc3RpAAAAAHMOAAAAZ2V0U291cmNlRGViaXRzDwAAAGdldFNvdXJjZUNy
-ZWRpdHMNAAAAZGVsZXRlQ29udGVudHMFAAAAZ2V0SWQoCAAAAHMRAAAAbGluZXNfcG9ydGFsX3R5
-cGVzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRpdGVy
-X3MEAAAAbGluZXMDAAAAbGVucwcAAABiYWxhbmNlKAgAAABzEQAAAGxpbmVzX3BvcnRhbF90eXBl
-cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCwAAAHRyYW5zYWN0aW9ucwkAAABfZ2V0aXRlcl9z
-BAAAAGxpbmVzAwAAAGxlbnMHAAAAYmFsYW5jZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
-KXMmAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2RlbGV0ZUVtcHR5TGluZXMBAAAAcxQAAAAABBgH
-EgIfAAYBEgMbACABIgEQASgBAAAAcyYAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25fZGVsZXRlRW1w
-dHlMaW5lcygBAAAAcyYAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25fZGVsZXRlRW1wdHlMaW5lcygA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMBAAAACgAA
+ABEAAABDAAAAc08BAABkAQBkAgBkAwBkBABkBQBkBgBmBgB9AQB0AQB0AgBkBwCDAgCDAAB9BAB4
+yQB0BAB0AQB8BABkCACDAgBkCQB8AQCDAAGDAQBEXakAfQYAdAEAfAYAZAcAgwIAgwAAfQYAdAYA
+dAEAfAYAZAoAgwIAZAkAZAsAgwABdAEAfAYAZAwAgwIAZAkAZAsAgwABF4MBAGQNAGoCAG9WAAF0
+AQB8BgBkDgCDAgCDAAB0AQB8BgBkDwCDAgCDAAAYfQgAfAgAZA0AagIAbyMAAXQBAHwEAGQQAIMC
+AHQBAHwGAGQRAIMCAIMAAIMBAAFx8gABcUkAAXFJAFd0CABvTgABdAEAdAEAdAEAdAIAZBIAgwIA
+ZBMAgwIAZBQAgwIAZBUAdAEAfAQAZBYAgwIAgwAAdAEAdAIAZBcAgwIAZBgAgwEAZgIAFoMBAAFu
+AQABZAAAUygZAAAATnMbAAAAQWNjb3VudGluZyBUcmFuc2FjdGlvbiBMaW5lcx0AAABTYWxlIElu
+dm9pY2UgVHJhbnNhY3Rpb24gTGluZXMhAAAAUHVyY2hhc2UgSW52b2ljZSBUcmFuc2FjdGlvbiBM
+aW5lcxoAAABQYXkgU2hlZXQgVHJhbnNhY3Rpb24gTGluZXMYAAAAUGF5bWVudCBUcmFuc2FjdGlv
+biBMaW5lcxgAAABCYWxhbmNlIFRyYW5zYWN0aW9uIExpbmVzCQAAAGdldE9iamVjdHMMAAAAb2Jq
+ZWN0VmFsdWVzcwsAAABwb3J0YWxfdHlwZXMbAAAAZ2V0RGVsaXZlcnlSZWxhdGVkVmFsdWVMaXN0
+cxMAAABTaW11bGF0aW9uIE1vdmVtZW50cxgAAABnZXRPcmRlclJlbGF0ZWRWYWx1ZUxpc3RpAAAA
+AHMOAAAAZ2V0U291cmNlRGViaXRzDwAAAGdldFNvdXJjZUNyZWRpdHMNAAAAZGVsZXRlQ29udGVu
+dHMFAAAAZ2V0SWRzBwAAAFJFUVVFU1RzCAAAAFJFU1BPTlNFcwgAAAByZWRpcmVjdHMgAAAAJXMv
+dmlldz9wb3J0YWxfc3RhdHVzX21lc3NhZ2U9JXNzBwAAAGdldFBhdGhzFAAAAEJhc2VfVHJhbnNs
+YXRlU3RyaW5ncxQAAABFbXB0eSBMaW5lcyBEZWxldGVkLigJAAAAcxEAAABsaW5lc19wb3J0YWxf
+dHlwZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dldGl0
+ZXJfcwQAAABsaW5lcwMAAABsZW5zBwAAAGJhbGFuY2VzCAAAAHJlZGlyZWN0KAoAAABzCAAAAHJl
+ZGl0ZWN0cxEAAABsaW5lc19wb3J0YWxfdHlwZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsA
+AAB0cmFuc2FjdGlvbnMJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwMAAABsZW5zBwAAAGJhbGFuY2Vz
+CAAAAHJlZGlyZWN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyYAAABBY2NvdW50aW5n
+VHJhbnNhY3Rpb25fZGVsZXRlRW1wdHlMaW5lcwEAAABzGgAAAAAEGAcSAh8ABgESAxsAIAEiARAB
+KAIQARsBKAEAAABzJgAAAEFjY291bnRpbmdUcmFuc2FjdGlvbl9kZWxldGVFbXB0eUxpbmVzKAEA
+AABzJgAAAEFjY291bnRpbmdUcmFuc2FjdGlvbl9kZWxldGVFbXB0eUxpbmVzKAAAAAAoAAAAAHMP
+AAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -119,7 +128,7 @@ AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>reditect = 0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,12 +148,13 @@ AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>reditect</string>
                             <string>lines_portal_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -153,6 +163,7 @@ AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </
                             <string>line</string>
                             <string>len</string>
                             <string>balance</string>
+                            <string>redirect</string>
                           </tuple>
                         </value>
                     </item>
@@ -164,7 +175,9 @@ AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
