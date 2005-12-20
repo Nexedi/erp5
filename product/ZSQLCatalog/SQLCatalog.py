@@ -1219,6 +1219,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     try:
       if uid is None:
         return None
+      try:
+        int(uid)
+      except ValueError:
+        return None
       # Get the appropriate SQL Method
       method = getattr(self, self.sql_getitem_by_uid)
       search_result = method(uid = uid)
