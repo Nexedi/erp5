@@ -1,3 +1,8 @@
+2005-12-21 Kevin
+* "Section Category" in AccountingPreferences_view is no longer required.
+* Display None category in Section Category list of Preference_view form.
+* Add default_site_preference from erp5_accounting.
+
 2005-12-20 jerome
 * replace id by reference for Currency Code in the UI.
 
