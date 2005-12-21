@@ -1,3 +1,6 @@
+2005-12-20 jerome
+* replace id by reference for Currency Code in the UI.
+
 2005-12-20 yo
 * Add an optional parameter sql_catalog_id into ERP5Site_reindexAll, ERP5Site_updateTranslationTable, and InventoryModule_reindexMovementList, and pass sql_catalog_id to catalog methods.
 * ERP5Site_updateTranslationTable does not use Translation_addMessage or Translation_delete any longer. Instead, use portal_catalog.
