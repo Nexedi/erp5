@@ -422,26 +422,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
          current_bt=new_bt,
          new_bt=None)
 
-  def stepCheckEmptyDiff(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check if the diff of the new BT is empty
-    """
-    new_bt = sequence.get('new_bt')
-#     self.assertEquals('', new_bt.diff(verbose=1))
-    diff = new_bt.diff(verbose=1)
-#     diff_list = diff.split('\n')
-#     self.assertEquals(3, len(diff_list))
-
-  def stepCheckNoEmptyDiff(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check if the diff of the new BT is empty
-    """
-    new_bt = sequence.get('new_bt')
-#     self.assertEquals('', new_bt.diff(verbose=1))
-    diff = new_bt.diff(verbose=1)
-    diff_list = diff.split('\n')
-#     self.assertEquals(4, len(diff_list))
-
   def stepRemoveBaseCategoryFromNewBT(self, sequence=None, 
                                       sequence_list=None, **kw):
     """
@@ -506,7 +486,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       CopyBusinessTemplate \
                       Tic \
                       InstallNewBT \
-                      CheckEmptyDiff \
                       SwitchBT \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -532,7 +511,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       ImportNewBT \
                       Tic \
                       InstallNewBT \
-                      CheckEmptyDiff \
                       SwitchBT \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -561,7 +539,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       ImportNewBT \
                       Tic \
                       InstallNewBT \
-                      CheckNoEmptyDiff \
                       CheckIfBaseCategoryIsInstalled \
                       SwitchBT \
                       '
@@ -590,7 +567,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       ImportNewBT \
                       Tic \
                       InstallNewBT \
-                      CheckNoEmptyDiff \
                       CheckIfBaseCategoryIsInstalled \
                       SwitchBT \
                       '
@@ -616,7 +592,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       CheckBuiltBuildingState \
                       Tic \
                       InstallNewBT \
-                      CheckEmptyDiff \
                       SwitchBT \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -648,7 +623,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                       ImportNewBT \
                       Tic \
                       InstallNewBT \
-                      CheckNoEmptyDiff \
                       CheckIfBaseCategoryIsInstalled \
                       CheckIfSubCategoryExists \
                       CheckIfTrashBinExists \
