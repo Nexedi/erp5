@@ -80,6 +80,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
+                <string>accounting_transaction</string>
                 <string>delivery</string>
               </tuple>
             </value>
