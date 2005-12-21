@@ -560,6 +560,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalGroupedTypeList('accounting_movement') or self._getPortalConfiguration('portal_accounting_movement_type_list')
 
+    def getPortalAccountingTransactionTypeList(self) :
+      """
+        Return accounting transaction movement type list.
+      """
+      return self._getPortalGroupedTypeList('accounting_transaction') or \
+          self._getPortalConfiguration('portal_accounting_transaction_type_list')
+          
     def getPortalAssignmentBaseCategoryList(self):
       """
         Return List of category values to generate security groups.

@@ -103,6 +103,13 @@ portal_order_movement_type_list = (
                       'Delivery Cell',
                        )  # Delivery Cell is both used for orders and deliveries XXX
 
+portal_accounting_transaction_type_list = (
+                      'Accounting Transaction',
+                      'Sale Invoice Transaction',
+                      'Purchase Invoice Transaction',
+                      'Payment Transaction',
+                      'Pay Sheet Transaction',
+                      'Amortisation Transaction')
 
 portal_accounting_movement_type_list = (
                       'Purchase Invoice Transaction Line',
