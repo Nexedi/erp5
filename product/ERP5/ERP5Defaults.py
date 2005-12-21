@@ -161,16 +161,6 @@ portal_supply_type_list = ('Supply Line','Supply Cell')
 # This transaction lines are special because destination must be None.
 portal_balance_transaction_line_type_list = ('Balance Transaction Line',)
 
-## Inventory States
-
-portal_current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoiced') # invoiced is Coramy specific and should be removed
-portal_draft_order_state_list =  ('cancelled', 'draft', 'auto_planned' )
-portal_planned_order_state_list =  ('planned', 'ordered', )
-portal_reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
-# ????
-# portal_reserved_inventory_state_list2 = ('ready',)
-portal_future_inventory_state_list = ('planned', 'ordered',)
-
 ## Default Order of base_category in Columns and Lines
 # Goal: always show information the same way
 # Rule: always try to represent a variation the same way
