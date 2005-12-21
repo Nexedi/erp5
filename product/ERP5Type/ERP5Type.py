@@ -134,7 +134,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
 
     # Groups are used to classify portal types (e.g. resource).
     defined_group_list = (
-      'accounting_movement', 'alarm', 'balance_transaction_line',
+      'accounting_transaction', 'accounting_movement', 'alarm', 'balance_transaction_line',
       'container', 'container_line', 'delivery', 'delivery_movement',
       'discount', 'invoice', 'invoice_movement', 'item',
       'order', 'order_movement', 'node', 'payment_condition',
