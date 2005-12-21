@@ -312,6 +312,19 @@ class BaseTemplateItem(Implicit, Persistent):
   def importFile(self, bta, **kw):
     bta.importFiles(klass=self)
 
+  def removeProperties(self, obj):
+    """
+    Remove unneeded properties for export
+    """  
+    if hasattr(obj, '__ac_local_roles__'):
+      # remove local roles
+      obj.__ac_local_roles__ = None
+    if hasattr(obj, '_owner'):
+      obj._owner = None
+    if hasattr(aq_base(obj), 'uid'):
+      obj.uid = None
+    return obj      
+    
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -353,20 +366,14 @@ class ObjectTemplateItem(BaseTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
+      obj = self.removeProperties(obj)
       id_list = obj.objectIds()
-      if hasattr(obj, '__ac_local_roles__'):
-        # remove local roles
-        obj.__ac_local_roles__ = None
-      if hasattr(obj, '_owner'):
-        obj._owner = None
       if hasattr(aq_base(obj), 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
         obj.manage_delObjects(list(id_list))
-      if hasattr(aq_base(obj), 'uid'):
-        obj.uid = None
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
       self._objects[relative_url] = obj
@@ -379,20 +386,14 @@ class ObjectTemplateItem(BaseTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
+      obj = self.removeProperties(obj)
       id_list = obj.objectIds()
-      if hasattr(obj, '__ac_local_roles__'):
-        # remove local roles
-        obj.__ac_local_roles__ = None
-      if hasattr(obj, '_owner'):
-        obj._owner = None
       if hasattr(aq_base(obj), 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
         obj.manage_delObjects(list(id_list))
-      if hasattr(aq_base(obj), 'uid'):
-        obj.uid = None
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
       self._objects[relative_url] = obj
@@ -649,13 +650,7 @@ class PathTemplateItem(ObjectTemplateItem):
         obj = p.unrestrictedTraverse(relative_url)
         obj = obj._getCopy(context)
         id_list = obj.objectIds()
-        if hasattr(obj, '__ac_local_roles__'):
-          # remove local roles
-          obj.__ac_local_roles__ = None
-        if hasattr(obj, '_owner'):
-          obj._owner = None
-        if hasattr(aq_base(obj), 'uid'):
-          obj.uid = None
+        obj = self.removeProperties(obj)
         if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
@@ -679,17 +674,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      if hasattr(obj, '__ac_local_roles__'):
-        # remove local roles
-        obj.__ac_local_roles__ = None
-      if hasattr(obj, '_owner'):
-        obj._owner = None
+      obj = self.removeProperties(obj)
       id_list = obj.objectIds()
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
         obj.manage_delObjects(list(id_list))
-      if hasattr(aq_base(obj), 'uid'):
-        obj.uid = None
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
@@ -699,11 +688,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      if hasattr(obj, '__ac_local_roles__'):
-        # remove local roles
-        obj.__ac_local_roles__ = None
-      if hasattr(obj, '_owner'):
-        obj._owner = None
+      obj = self.removeProperties(obj)
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
@@ -711,8 +696,6 @@ class CategoryTemplateItem(ObjectTemplateItem):
         obj.manage_delObjects(list(id_list))
       else:
         obj.manage_delObjects(list(id_list))
-      if hasattr(aq_base(obj), 'uid'):
-        obj.uid = None
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
       
@@ -1011,13 +994,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           optional_action_list.append(index)
       if len(optional_action_list) > 0:
         obj.deleteActions(selections=optional_action_list)
-      if hasattr(obj, '__ac_local_roles__'):
-        # remove local roles
-        obj.__ac_local_roles__ = None
-      if hasattr(obj, '_owner'):
-        obj._owner = None
-      if hasattr(aq_base(obj), 'uid'):
-        obj.uid = None
+      obj = self.removeProperties(obj)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
     # also export workflow chain
@@ -1394,13 +1371,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           url = os.path.split(relative_url)
           key = os.path.join(url[-2], url[-1], value)
           action = ai._getCopy(context)
-          if hasattr(action, '__ac_local_roles__'):
-            # remove local roles
-            action.__ac_local_roles__ = None
-          if hasattr(action, '_owner'):
-            action._owner = None
-          if hasattr(aq_base(action), 'uid'):
-            action.uid = None
+          action = self.removeProperties(action)
           self._objects[key] = action
           self._objects[key].wl_clearLocks()
           break
