@@ -82,28 +82,33 @@ for country in countries : \n
 \n
     results += [(title, path)]\n
 \n
+if include_empty_item == 1:\n
+  results = [(\'\', \'\')] + results\n
+\n
 return results\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAQAAAGMBAAAACgAA
-ABAAAABDAAAAc+QAAABnAAB9AQB0AQB0AQB0AQB0AgBkAQCDAgBkAgCDAgBkAwCDAgCDAAB9BAB4
-rwB0BAB8BACDAQBEXaEAfQYAeJgAdAQAdAEAfAYAZAMAgwIAgwAAgwEARF1+AH0HAHQBAHQBAHwH
-AGQEAIMCAGQFAIMCAIMAAGQGABd0AQB8BwBkBQCDAgCDAAAXfQgAdAEAfAcAZAcAgwIAgwAAfQkA
-fAAADG8cAAF0AQB8CQBkCACDAgBkCQBkCgCDAgB9CQBuAQABfAEAfAgAfAkAZgIAZwEAN30BAHFW
-AFdxNwBXfAEAU2QAAFMoCwAAAE5zEQAAAHBvcnRhbF9jYXRlZ29yaWVzcwMAAABnYXBzDAAAAG9i
-amVjdFZhbHVlc3MJAAAAYXFfcGFyZW50cwgAAABnZXRUaXRsZXMBAAAAL3MOAAAAZ2V0UmVsYXRp
-dmVVcmxzBwAAAHJlcGxhY2VzBAAAAGdhcC9zAAAAACgKAAAAcwcAAAByZXN1bHRzcwkAAABfZ2V0
-YXR0cl9zBwAAAGNvbnRleHRzCQAAAGNvdW50cmllc3MJAAAAX2dldGl0ZXJfcwcAAABjb3VudHJ5
-cwMAAABnYXBzBQAAAHRpdGxlcwQAAABwYXRocxMAAABpbmNsdWRlX2dhcF9pbl9wYXRoKAoAAABz
-EwAAAGluY2x1ZGVfZ2FwX2luX3BhdGhzBwAAAHJlc3VsdHNzCQAAAF9nZXRhdHRyX3MHAAAAY29u
-dGV4dHMJAAAAY291bnRyaWVzcwkAAABfZ2V0aXRlcl9zBwAAAGNvdW50cnlzAwAAAGdhcHMFAAAA
-dGl0bGVzBAAAAHBhdGgoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIQAAAEFjY291bnRN
-b2R1bGVfZ2V0QXZhaWxhYmxlR2FwTGlzdAEAAABzGAAAAAAFBgEkAQ0ABgEZAAYBLwESAQgBHAIb
-AigBAAAAcyEAAABBY2NvdW50TW9kdWxlX2dldEF2YWlsYWJsZUdhcExpc3QoAQAAAHMhAAAAQWNj
-b3VudE1vZHVsZV9nZXRBdmFpbGFibGVHYXBMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
-b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGQBAGQCAGQDAIQCAFoAAGQAAFMoBAAAAE5pAQAAAGkAAAAA
+YwIAAAALAAAAEAAAAEMAAABzCAEAAGcAAH0CAHQBAHQBAHQBAHQCAGQBAIMCAGQCAIMCAGQDAIMC
+AIMAAH0FAHivAHQEAHwFAIMBAERdoQB9BwB4mAB0BAB0AQB8BwBkAwCDAgCDAACDAQBEXX4AfQgA
+dAEAdAEAfAgAZAQAgwIAZAUAgwIAgwAAZAYAF3QBAHwIAGQFAIMCAIMAABd9CQB0AQB8CABkBwCD
+AgCDAAB9CgB8AAAMbxwAAXQBAHwKAGQIAIMCAGQJAGQKAIMCAH0KAG4BAAF8AgB8CQB8CgBmAgBn
+AQA3fQIAcVYAV3E3AFd8AQBkCwBqAgBvFwABZAoAZAoAZgIAZwEAfAIAF30CAG4BAAF8AgBTZAAA
+UygMAAAATnMRAAAAcG9ydGFsX2NhdGVnb3JpZXNzAwAAAGdhcHMMAAAAb2JqZWN0VmFsdWVzcwkA
+AABhcV9wYXJlbnRzCAAAAGdldFRpdGxlcwEAAAAvcw4AAABnZXRSZWxhdGl2ZVVybHMHAAAAcmVw
+bGFjZXMEAAAAZ2FwL3MAAAAAaQEAAAAoCwAAAHMHAAAAcmVzdWx0c3MJAAAAX2dldGF0dHJfcwcA
+AABjb250ZXh0cwkAAABjb3VudHJpZXNzCQAAAF9nZXRpdGVyX3MHAAAAY291bnRyeXMDAAAAZ2Fw
+cwUAAAB0aXRsZXMEAAAAcGF0aHMTAAAAaW5jbHVkZV9nYXBfaW5fcGF0aHMSAAAAaW5jbHVkZV9l
+bXB0eV9pdGVtKAsAAABzEwAAAGluY2x1ZGVfZ2FwX2luX3BhdGhzEgAAAGluY2x1ZGVfZW1wdHlf
+aXRlbXMHAAAAcmVzdWx0c3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwkAAABjb3VudHJpZXNz
+CQAAAF9nZXRpdGVyX3MHAAAAY291bnRyeXMDAAAAZ2FwcwUAAAB0aXRsZXMEAAAAcGF0aCgAAAAA
+KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMhAAAAQWNjb3VudE1vZHVsZV9nZXRBdmFpbGFibGVH
+YXBMaXN0AQAAAHMcAAAAAAUGASQBDQAGARkABgEvARIBCAEcAhsCDQEXAigBAAAAcyEAAABBY2Nv
+dW50TW9kdWxlX2dldEF2YWlsYWJsZUdhcExpc3QoAQAAAHMhAAAAQWNjb3VudE1vZHVsZV9nZXRB
+dmFpbGFibGVHYXBMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxl
+PgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -111,7 +116,7 @@ b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_gap_in_path = 1 </string> </value>
+            <value> <string>include_gap_in_path=1, include_empty_item=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,13 +136,14 @@ b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>include_gap_in_path</string>
+                            <string>include_empty_item</string>
                             <string>results</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -160,6 +166,7 @@ b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
             <value>
               <tuple>
                 <int>1</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
