@@ -36,10 +36,14 @@ from zLOG import LOG, WARNING, INFO
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
 import os
 from DateTime import DateTime
-from base64 import b64encode, b64decode
 from cPickle import dumps, loads
 from App.config import getConfiguration
 from zExceptions import Unauthorized
+
+try:
+  from base64 import b64encode, b64decode
+except ImportError:
+  from base64 import encode, decode
  
 class SubversionTool(UniqueObject, Folder):
   """The SubversionTool provides a Subversion interface to ERP5.
