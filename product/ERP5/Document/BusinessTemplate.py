@@ -1297,25 +1297,24 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
   def uninstall(self, context, **kw):
-
-    ObjectTemplateItem.uninstall(self, context, **kw)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
       catalog = None
-
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
-
+    
     values = []
     object_path = kw.get('object_path', None)
     # get required values
     if object_path is None:
-      values = self._archive.values()
+      if context.getTemplateFormatVersion() == 1:
+        values = self._objects.values()
+      else:
+        values = self._archive.values()
     else:      
       values.append(self._archive[object_path])
-
     # Make copies of attributes of the default catalog of portal_catalog.
 #     sql_catalog_object = list(catalog.sql_catalog_object)
     sql_catalog_object_list = list(catalog.sql_catalog_object_list)
@@ -1325,31 +1324,25 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     for obj in values:
       method_id = obj.id
-
 #       if method_id in sql_catalog_object:
 #         sql_catalog_object.remove(method_id)
-
       if method_id in sql_catalog_object_list:
         sql_catalog_object_list.remove(method_id)
-
       if method_id in sql_uncatalog_object:
         sql_uncatalog_object.remove(method_id)
-
 #       if method_id in sql_update_object:
 #         sql_update_object.remove(method_id)
-
       if method_id in sql_clear_catalog:
         sql_clear_catalog.remove(method_id)
-
       if catalog.filter_dict.has_key(method_id):
         del catalog.filter_dict[method_id]
-
+        
 #     catalog.sql_catalog_object = tuple(sql_catalog_object)
     catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
 #     catalog.sql_update_object = tuple(sql_update_object)
     catalog.sql_clear_catalog = tuple(sql_clear_catalog)
-
+    # uninstall objects
     ObjectTemplateItem.uninstall(self, context, **kw)
 
   def _importFile(self, file_name, file):
