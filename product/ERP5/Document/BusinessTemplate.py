@@ -1378,8 +1378,9 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         else:
           LOG('BusinessTemplate import CatalogMethod, type unknown', 0, key_type)
           continue
-        dict = getattr(self, key)
-        dict[id] = value
+        if key in catalog_method_list or key in catalog_method_filter_list:
+          dict = getattr(self, key)
+          dict[id] = value
 
 class ActionTemplateItem(ObjectTemplateItem):
 
