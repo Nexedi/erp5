@@ -41,6 +41,14 @@
               </tuple>
             </value>
         </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple>
+                <string>draft_order</string>
+              </tuple>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

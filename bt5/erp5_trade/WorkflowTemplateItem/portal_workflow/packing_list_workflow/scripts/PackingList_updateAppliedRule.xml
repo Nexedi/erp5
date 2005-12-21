@@ -23,16 +23,7 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>rc</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
+              <none/>
             </value>
         </item>
         <item>
@@ -95,9 +86,10 @@ packing_list.activate(after_path=after_path_list,tag=tag,\n
 \n
 \n
 # Make sure to reindex related simulation movement if we are already\n
-# simulated\n
+# simulated, call reindexObject, not immediateReindexObject so that\n
+# catalogObjectList will be called with many objects\n
 packing_list.activate(after_path=after_path_list,tag=tag,\n
-     priority=3).applyToDeliveryRelatedMovement(method_id=\'recursiveReindexObject\')\n
+     priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
 \n
 packing_list.startBuilding()\n
 packing_list.activate(\n
@@ -118,25 +110,24 @@ AGQWAHwKAIMAAWQXAIMCAIMAAAFkAABTKBgAAABOYwEAAAADAAAAAwAAAEMAAABzFgAAAHQAAHQB
 AGQBAIMCAGQCAHwAAIMCAFMoAwAAAE5zAwAAAGxvZ3MdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBw
 bGllZFJ1bGUoAwAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwMAAABtc2coAwAAAHMDAAAA
 bXNncwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
-bilzCwAAADxsYW1iZGEuNTA+AQAAAHMAAAAAYwEAAAABAAAAAQAAAEMAAABzBAAAAGQBAFMoAgAA
-AE5zCAAAAERJU0FCTEVEKAAAAAAoAQAAAHMDAAAAbXNnKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
-eXRob24pcwsAAAA8bGFtYmRhLjUxPgIAAABzAAAAAHMGAAAAb2JqZWN0cxEAAABnZXRDYXVzYWxp
-dHlWYWx1ZXMGAAAAYXBwZW5kcwcAAABnZXRQYXRocxcAAABfZmlyc3RVcGRhdGVBcHBsaWVkUnVs
-ZXMHAAAAX2V4cGFuZHMDAAAAdGFncwgAAABwcmlvcml0eWkDAAAAcwgAAABhY3RpdmF0ZXMKAAAA
-YWZ0ZXJfcGF0aHMRAAAAdXBkYXRlQXBwbGllZFJ1bGVzBwAAAHJ1bGVfaWRzFQAAAGRlZmF1bHRf
-ZGVsaXZlcnlfcnVsZXMLAAAAYWN0aXZhdGVfa3dzHgAAAGFwcGx5VG9EZWxpdmVyeVJlbGF0ZWRN
-b3ZlbWVudHMJAAAAbWV0aG9kX2lkcxYAAAByZWN1cnNpdmVSZWluZGV4T2JqZWN0cw0AAABzdGFy
-dEJ1aWxkaW5ncwkAAABhZnRlcl90YWdzFAAAAHVwZGF0ZUNhdXNhbGl0eVN0YXRlKAoAAABzAwAA
-AExPR3MJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzDAAAAHBhY2tpbmdfbGlzdHMLAAAA
-YWN0aXZhdGVfa3dzBwAAAGNvbnRleHRzDQAAAHJlbGF0ZWRfb3JkZXJzDwAAAGFmdGVyX3BhdGhf
-bGlzdHMEAAAATm9uZXMDAAAAdGFnKAsAAABzDAAAAHN0YXRlX2NoYW5nZXMCAAAAa3dzAwAAAExP
-R3MJAAAAX2dldGF0dHJfcwwAAABwYWNraW5nX2xpc3RzCwAAAGFjdGl2YXRlX2t3cwcAAABjb250
-ZXh0cw0AAAByZWxhdGVkX29yZGVycw8AAABhZnRlcl9wYXRoX2xpc3RzBAAAAE5vbmVzAwAAAHRh
-ZygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBw
-bGllZFJ1bGUBAAAAcyAAAAAJAQkCDwMGARIBBgEQASMBJAEWAR4CLQENBTEDEwEMASgBAAAAcx0A
-AABQYWNraW5nTGlzdF91cGRhdGVBcHBsaWVkUnVsZSgBAAAAcx0AAABQYWNraW5nTGlzdF91cGRh
-dGVBcHBsaWVkUnVsZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4B
-AAAAcwAAAAA=</string> </value>
+bilzCgAAADxsYW1iZGEuND4BAAAAcwAAAABjAQAAAAEAAAABAAAAQwAAAHMEAAAAZAEAUygCAAAA
+TnMIAAAARElTQUJMRUQoAAAAACgBAAAAcwMAAABtc2coAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
+dGhvbilzCgAAADxsYW1iZGEuNT4CAAAAcwAAAABzBgAAAG9iamVjdHMRAAAAZ2V0Q2F1c2FsaXR5
+VmFsdWVzBgAAAGFwcGVuZHMHAAAAZ2V0UGF0aHMXAAAAX2ZpcnN0VXBkYXRlQXBwbGllZFJ1bGVz
+BwAAAF9leHBhbmRzAwAAAHRhZ3MIAAAAcHJpb3JpdHlpAwAAAHMIAAAAYWN0aXZhdGVzCgAAAGFm
+dGVyX3BhdGhzEQAAAHVwZGF0ZUFwcGxpZWRSdWxlcwcAAABydWxlX2lkcxUAAABkZWZhdWx0X2Rl
+bGl2ZXJ5X3J1bGVzCwAAAGFjdGl2YXRlX2t3cx4AAABhcHBseVRvRGVsaXZlcnlSZWxhdGVkTW92
+ZW1lbnRzCQAAAG1ldGhvZF9pZHMNAAAAcmVpbmRleE9iamVjdHMNAAAAc3RhcnRCdWlsZGluZ3MJ
+AAAAYWZ0ZXJfdGFncxQAAAB1cGRhdGVDYXVzYWxpdHlTdGF0ZSgKAAAAcwMAAABMT0dzCQAAAF9n
+ZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwwAAABwYWNraW5nX2xpc3RzCwAAAGFjdGl2YXRlX2t3
+cwcAAABjb250ZXh0cw0AAAByZWxhdGVkX29yZGVycw8AAABhZnRlcl9wYXRoX2xpc3RzBAAAAE5v
+bmVzAwAAAHRhZygLAAAAcwwAAABzdGF0ZV9jaGFuZ2VzAgAAAGt3cwMAAABMT0dzCQAAAF9nZXRh
+dHRyX3MMAAAAcGFja2luZ19saXN0cwsAAABhY3RpdmF0ZV9rd3MHAAAAY29udGV4dHMNAAAAcmVs
+YXRlZF9vcmRlcnMPAAAAYWZ0ZXJfcGF0aF9saXN0cwQAAABOb25lcwMAAAB0YWcoAAAAACgAAAAA
+cw8AAABTY3JpcHQgKFB5dGhvbilzHQAAAFBhY2tpbmdMaXN0X3VwZGF0ZUFwcGxpZWRSdWxlAQAA
+AHMgAAAACQEJAg8DBgESAQYBEAEjASQBFgEeAi0BDQYxAxMBDAEoAQAAAHMdAAAAUGFja2luZ0xp
+c3RfdXBkYXRlQXBwbGllZFJ1bGUoAQAAAHMdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBwbGllZFJ1
+bGUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

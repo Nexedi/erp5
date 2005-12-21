@@ -355,8 +355,8 @@ a manufactured product, like a pen, a bicycle...</string> </value>
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.ActionInformation</string>
-          <string>ActionInformation</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>

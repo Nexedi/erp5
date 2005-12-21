@@ -42,6 +42,15 @@
             </value>
         </item>
         <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple>
+                <string>future_inventory</string>
+                <string>planned_order</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>

@@ -1,3 +1,22 @@
+2005-12-20 Kevin
+* Update state type of packing_list_workflow, internal_packing_list_workflow and order_workflow states.
+
+2005-12-19 Jérome
+* bug fix; don't use SQLQueue in delivery_edit_workflow
+* trigger delivery_edit on workflow transitions.
+
+2005-12-19 Seb
+* added category type 'sub_variation' on aggregate
+
+2005-12-14 Seb
+* use activity tags in packing_list_workflow/scripts/PackingList_updateAppliedRule
+
+2005-12-14 jerome
+* package the content of trade_date category, because PaymentCondition_getTradeDate depends on it
+
+2005-12-11 seb
+* fixed the duplicate applied rule problem in order_workflow
+
 2005-12-08 yo
 * Fix the LEFT JOIN syntax in Order_zSelectMovement.
 
