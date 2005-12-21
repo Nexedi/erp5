@@ -200,6 +200,7 @@ try:
     return SubversionClient(**kw).__of__(container)
     
 except ImportError:
+  from zLOG import LOG, WARNING
   LOG('SubversionTool', WARNING,
       'could not import pysvn; until pysvn is installed properly, this tool will not function.')
   def newSubversionClient(container, **kw):
