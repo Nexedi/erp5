@@ -334,7 +334,7 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.stop_date</string>
+                          <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -388,19 +388,19 @@
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Type</string>
+                          <string>Transaction Type</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Date</string>
+                          <string>delivery.start_date</string>
+                          <string>Accounting Operation Date</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>Invoice Number</string>
+                          <string>Document Reference</string>
                         </tuple>
                         <tuple>
                           <string>source_reference</string>
-                          <string>Source Reference</string>
+                          <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -458,7 +458,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Source Reference</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -497,7 +502,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>20</int> </value>
+                    <value> <int>18</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -589,7 +594,7 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.stop_date</string>
+                          <string>delivery.start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -624,8 +629,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>delivery.stop_date</string>
+                          <string>delivery.start_date</string>
+                          <string>delivery.start_date</string>
                         </tuple>
                       </list>
                     </value>

@@ -66,12 +66,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>accounting_transaction_lines_portal_types = [\'Accounting Transaction Line\', \n
-                                             \'Sale Invoice Transaction Line\',\n
-                                             \'Purchase Invoice Transaction Line\', \n
-                                             \'Pay Sheet Transaction Line\',\n
-                                             \'Payment Transaction Line\',\n
-                                             \'Balance Transaction Line\']\n
+            <value> <string>accounting_transaction_lines_portal_types = context.getPortalAccountingMovementTypeList()\n
+\n
 transaction = brain.getObject()\n
 credit = 0\n
 for line in transaction.objectValues() :\n
@@ -96,37 +92,35 @@ return float(\'%.02f\' % (row.quantity or 0.0))\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAABEAAAAQ
-AAAASwAAAHOLAQAAZAEAZAIAZAMAZAQAZAUAZAYAZwYAfQMAdAEAfAAAZAcAgwIAgwAAfQUAZAgA
-fQYAeJIAdAUAdAEAfAUAZAkAgwIAgwAAgwEARF14AH0IAHQBAHwIAGQKAIMCAIMAAHwDAGoGAG8a
-AAF8BgB0AQB8CABkCwCDAgCDAAA3fQYAbgEAAXQBAHwIAGQMAIMCAIMAAHQBAHwIAGQNAIMCAIMA
-AGoCAG8aAAF8BgB0AQB8CABkCwCDAgCDAAA3fQYAcUkAAXFJAFd8BgBTdAEAfAEAZA4AgwIAgwAA
-fQkAaAAAfQIAdAEAfAkAZA8AgwIAZBAAgwEAdAoAfAIAgwEAZBAAPGQRAHQKAHwCAIMBAGQSADxk
-EQB0CgB8AgCDAQBkEwA8dAEAdAsAZBQAgwIAgwAAdAoAfAIAgwEAZBUAPHQMAHQBAHQLAGQWAIMC
-AGQXAHwBAHwCAI0BAX0NAHQOAHwNAGQIAIMCAH0PAHQQAGQYAHQBAHwPAGQZAIMCAHAEAAFkGgAW
-gwEAU2QAAFMoGwAAAE5zGwAAAEFjY291bnRpbmcgVHJhbnNhY3Rpb24gTGluZXMdAAAAU2FsZSBJ
-bnZvaWNlIFRyYW5zYWN0aW9uIExpbmVzIQAAAFB1cmNoYXNlIEludm9pY2UgVHJhbnNhY3Rpb24g
-TGluZXMaAAAAUGF5IFNoZWV0IFRyYW5zYWN0aW9uIExpbmVzGAAAAFBheW1lbnQgVHJhbnNhY3Rp
-b24gTGluZXMYAAAAQmFsYW5jZSBUcmFuc2FjdGlvbiBMaW5lcwkAAABnZXRPYmplY3RpAAAAAHMM
-AAAAb2JqZWN0VmFsdWVzcw0AAABnZXRQb3J0YWxUeXBlcw8AAABnZXRTb3VyY2VDcmVkaXRzEAAA
-AGdldFNvdXJjZVNlY3Rpb25zFQAAAGdldERlc3RpbmF0aW9uU2VjdGlvbnMJAAAAZ2V0UGFyYW1z
-cwMAAABnZXRzEAAAAHNlY3Rpb25fY2F0ZWdvcnlpAQAAAHMEAAAAc3RhdHMLAAAAb21pdF9vdXRw
-dXRzBgAAAGdldFVpZHMLAAAAdHJhbnNhY3Rpb25zOQAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1v
-ZHVsZV96R2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdHMJAAAAc2VsZWN0aW9ucwUAAAAlLjAy
-ZnMIAAAAcXVhbnRpdHlmAzAuMCgRAAAAcykAAABhY2NvdW50aW5nX3RyYW5zYWN0aW9uX2xpbmVz
-X3BvcnRhbF90eXBlc3MJAAAAX2dldGF0dHJfcwUAAABicmFpbnMLAAAAdHJhbnNhY3Rpb25zBgAA
-AGNyZWRpdHMJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwkAAABzZWxlY3Rpb25zBgAAAHBhcmFtc3MC
-AAAAa3dzBwAAAF93cml0ZV9zBwAAAGNvbnRleHRzBwAAAF9hcHBseV9zBgAAAHJlc3VsdHMJAAAA
-X2dldGl0ZW1fcwMAAAByb3dzBQAAAGZsb2F0KBEAAABzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25z
-AgAAAGt3cykAAABhY2NvdW50aW5nX3RyYW5zYWN0aW9uX2xpbmVzX3BvcnRhbF90eXBlc3MJAAAA
-X2dldGF0dHJfcwsAAAB0cmFuc2FjdGlvbnMGAAAAY3JlZGl0cwkAAABfZ2V0aXRlcl9zBAAAAGxp
-bmVzBgAAAHBhcmFtc3MHAAAAX3dyaXRlX3MHAAAAY29udGV4dHMHAAAAX2FwcGx5X3MGAAAAcmVz
-dWx0cwkAAABfZ2V0aXRlbV9zAwAAAHJvd3MFAAAAZmxvYXQoAAAAACgAAAAAcw8AAABTY3JpcHQg
-KFB5dGhvbilzKwAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV9nZXRTb3VyY2VDcmVkaXQB
-AAAAcyQAAAAYBhIBBgEZAAYBGQEaASUBHgEEAxIBBgEfARABEAEcAh4BDwEoAgAAAHMEAAAATm9u
-ZXMrAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX2dldFNvdXJjZUNyZWRpdCgCAAAAcwQA
-AABOb25lcysAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfZ2V0U291cmNlQ3JlZGl0KAAA
-AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAABEAAAAO
+AAAASwAAAHOFAQAAdAAAdAEAZAEAgwIAgwAAfQUAdAAAfAAAZAIAgwIAgwAAfQYAZAMAfQcAeJIA
+dAYAdAAAfAYAZAQAgwIAgwAAgwEARF14AH0JAHQAAHwJAGQFAIMCAIMAAHwFAGoGAG8aAAF8BwB0
+AAB8CQBkBgCDAgCDAAA3fQcAbgEAAXQAAHwJAGQHAIMCAIMAAHQAAHwJAGQIAIMCAIMAAGoCAG8a
+AAF8BwB0AAB8CQBkBgCDAgCDAAA3fQcAcUMAAXFDAFd8BwBTdAAAfAEAZAkAgwIAgwAAfQoAaAAA
+fQIAdAAAfAoAZAoAgwIAZAsAgwEAdAsAfAIAgwEAZAsAPGQMAHQLAHwCAIMBAGQNADxkDAB0CwB8
+AgCDAQBkDgA8dAAAdAEAZA8AgwIAgwAAdAsAfAIAgwEAZBAAPHQMAHQAAHQBAGQRAIMCAGQSAHwB
+AHwCAI0BAX0NAHQOAHwNAGQDAIMCAH0PAHQQAGQTAHQAAHwPAGQUAIMCAHAEAAFkFQAWgwEAU2QA
+AFMoFgAAAE5zIwAAAGdldFBvcnRhbEFjY291bnRpbmdNb3ZlbWVudFR5cGVMaXN0cwkAAABnZXRP
+YmplY3RpAAAAAHMMAAAAb2JqZWN0VmFsdWVzcw0AAABnZXRQb3J0YWxUeXBlcw8AAABnZXRTb3Vy
+Y2VDcmVkaXRzEAAAAGdldFNvdXJjZVNlY3Rpb25zFQAAAGdldERlc3RpbmF0aW9uU2VjdGlvbnMJ
+AAAAZ2V0UGFyYW1zcwMAAABnZXRzEAAAAHNlY3Rpb25fY2F0ZWdvcnlpAQAAAHMEAAAAc3RhdHML
+AAAAb21pdF9vdXRwdXRzBgAAAGdldFVpZHMLAAAAdHJhbnNhY3Rpb25zOQAAAEFjY291bnRpbmdU
+cmFuc2FjdGlvbk1vZHVsZV96R2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdHMJAAAAc2VsZWN0
+aW9ucwUAAAAlLjAyZnMIAAAAcXVhbnRpdHlmAzAuMCgRAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNv
+bnRleHRzKQAAAGFjY291bnRpbmdfdHJhbnNhY3Rpb25fbGluZXNfcG9ydGFsX3R5cGVzcwUAAABi
+cmFpbnMLAAAAdHJhbnNhY3Rpb25zBgAAAGNyZWRpdHMJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwkA
+AABzZWxlY3Rpb25zBgAAAHBhcmFtc3MCAAAAa3dzBwAAAF93cml0ZV9zBwAAAF9hcHBseV9zBgAA
+AHJlc3VsdHMJAAAAX2dldGl0ZW1fcwMAAAByb3dzBQAAAGZsb2F0KBEAAABzBQAAAGJyYWlucwkA
+AABzZWxlY3Rpb25zAgAAAGt3cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzKQAAAGFjY291bnRp
+bmdfdHJhbnNhY3Rpb25fbGluZXNfcG9ydGFsX3R5cGVzcwsAAAB0cmFuc2FjdGlvbnMGAAAAY3Jl
+ZGl0cwkAAABfZ2V0aXRlcl9zBAAAAGxpbmVzBgAAAHBhcmFtc3MHAAAAX3dyaXRlX3MHAAAAX2Fw
+cGx5X3MGAAAAcmVzdWx0cwkAAABfZ2V0aXRlbV9zAwAAAHJvd3MFAAAAZmxvYXQoAAAAACgAAAAA
+cw8AAABTY3JpcHQgKFB5dGhvbilzKwAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV9nZXRT
+b3VyY2VDcmVkaXQBAAAAcyQAAAASAhIBBgEZAAYBGQEaASUBHgEEAxIBBgEfARABEAEcAh4BDwEo
+AgAAAHMEAAAATm9uZXMrAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX2dldFNvdXJjZUNy
+ZWRpdCgCAAAAcwQAAABOb25lcysAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfZ2V0U291
+cmNlQ3JlZGl0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABz
+AAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -163,15 +157,15 @@ AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </
                             <string>brain</string>
                             <string>selection</string>
                             <string>kw</string>
-                            <string>accounting_transaction_lines_portal_types</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>accounting_transaction_lines_portal_types</string>
                             <string>transaction</string>
                             <string>credit</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>params</string>
                             <string>_write_</string>
-                            <string>context</string>
                             <string>_apply_</string>
                             <string>result</string>
                             <string>_getitem_</string>

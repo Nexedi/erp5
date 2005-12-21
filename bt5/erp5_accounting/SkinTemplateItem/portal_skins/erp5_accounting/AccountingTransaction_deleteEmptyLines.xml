@@ -70,13 +70,7 @@
 This script deletes all empty (ie. with balance == 0) lines in an accounting transaction\n
 """\n
 \n
-lines_portal_type = (\'Accounting Transaction Line\', \n
-                     \'Sale Invoice Transaction Line\',\n
-                     \'Purchase Invoice Transaction Line\', \n
-                     \'Pay Sheet Transaction Line\',\n
-                     \'Payment Transaction Line\',\n
-                     \'Balance Transaction Line\',)\n
-\n
+lines_portal_type = context.getPortalAccountingMovementTypeList()\n
 transaction = context.getObject()\n
 \n
 for line in transaction.objectValues(portal_type=lines_portal_type) : \n
@@ -96,31 +90,28 @@ if redirect :\n
         <item>
             <key> <string>_code</string> </key>
             <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5pAAAAAGMBAAAACQAA
-ABEAAABDAAAAc08BAABkAQBkAgBkAwBkBABkBQBkBgBmBgB9AQB0AQB0AgBkBwCDAgCDAAB9BAB4
-yQB0BAB0AQB8BABkCACDAgBkCQB8AQCDAAGDAQBEXakAfQYAdAEAfAYAZAcAgwIAgwAAfQYAdAYA
-dAEAfAYAZAoAgwIAZAkAZAsAgwABdAEAfAYAZAwAgwIAZAkAZAsAgwABF4MBAGQNAGoCAG9WAAF0
-AQB8BgBkDgCDAgCDAAB0AQB8BgBkDwCDAgCDAAAYfQgAfAgAZA0AagIAbyMAAXQBAHwEAGQQAIMC
-AHQBAHwGAGQRAIMCAIMAAIMBAAFx8gABcUkAAXFJAFd8AABvTgABdAEAdAEAdAEAdAIAZBIAgwIA
-ZBMAgwIAZBQAgwIAZBUAdAEAfAQAZBYAgwIAgwAAdAEAdAIAZBcAgwIAZBgAgwEAZgIAFoMBAAFu
-AQABZAAAUygZAAAATnMbAAAAQWNjb3VudGluZyBUcmFuc2FjdGlvbiBMaW5lcx0AAABTYWxlIElu
-dm9pY2UgVHJhbnNhY3Rpb24gTGluZXMhAAAAUHVyY2hhc2UgSW52b2ljZSBUcmFuc2FjdGlvbiBM
-aW5lcxoAAABQYXkgU2hlZXQgVHJhbnNhY3Rpb24gTGluZXMYAAAAUGF5bWVudCBUcmFuc2FjdGlv
-biBMaW5lcxgAAABCYWxhbmNlIFRyYW5zYWN0aW9uIExpbmVzCQAAAGdldE9iamVjdHMMAAAAb2Jq
-ZWN0VmFsdWVzcwsAAABwb3J0YWxfdHlwZXMbAAAAZ2V0RGVsaXZlcnlSZWxhdGVkVmFsdWVMaXN0
-cxMAAABTaW11bGF0aW9uIE1vdmVtZW50cxgAAABnZXRPcmRlclJlbGF0ZWRWYWx1ZUxpc3RpAAAA
-AHMOAAAAZ2V0U291cmNlRGViaXRzDwAAAGdldFNvdXJjZUNyZWRpdHMNAAAAZGVsZXRlQ29udGVu
-dHMFAAAAZ2V0SWRzBwAAAFJFUVVFU1RzCAAAAFJFU1BPTlNFcwgAAAByZWRpcmVjdHMgAAAAJXMv
-dmlldz9wb3J0YWxfc3RhdHVzX21lc3NhZ2U9JXNzBwAAAGdldFBhdGhzFAAAAEJhc2VfVHJhbnNs
-YXRlU3RyaW5ncxQAAABFbXB0eSBMaW5lcyBEZWxldGVkLigJAAAAcxEAAABsaW5lc19wb3J0YWxf
-dHlwZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dldGl0
-ZXJfcwQAAABsaW5lcwMAAABsZW5zBwAAAGJhbGFuY2VzCAAAAHJlZGlyZWN0KAkAAABzCAAAAHJl
-ZGlyZWN0cxEAAABsaW5lc19wb3J0YWxfdHlwZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsA
-AAB0cmFuc2FjdGlvbnMJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwMAAABsZW5zBwAAAGJhbGFuY2Uo
-AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzJgAAAEFjY291bnRpbmdUcmFuc2FjdGlvbl9k
-ZWxldGVFbXB0eUxpbmVzAQAAAHMaAAAAAAQYBxICHwAGARIDGwAgASIBEAEoAhABGwEoAQAAAHMm
-AAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2RlbGV0ZUVtcHR5TGluZXMoAQAAAHMmAAAAQWNjb3Vu
-dGluZ1RyYW5zYWN0aW9uX2RlbGV0ZUVtcHR5TGluZXMoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
-dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+AA8AAABDAAAAc0kBAAB0AAB0AQBkAQCDAgCDAAB9AwB0AAB0AQBkAgCDAgCDAAB9BAB4yQB0BAB0
+AAB8BABkAwCDAgBkBAB8AwCDAAGDAQBEXakAfQYAdAAAfAYAZAIAgwIAgwAAfQYAdAYAdAAAfAYA
+ZAUAgwIAZAQAZAYAgwABdAAAfAYAZAcAgwIAZAQAZAYAgwABF4MBAGQIAGoCAG9WAAF0AAB8BgBk
+CQCDAgCDAAB0AAB8BgBkCgCDAgCDAAAYfQgAfAgAZAgAagIAbyMAAXQAAHwEAGQLAIMCAHQAAHwG
+AGQMAIMCAIMAAIMBAAFx7AABcUMAAXFDAFd8AABvTgABdAAAdAAAdAAAdAEAZA0AgwIAZA4AgwIA
+ZA8AgwIAZBAAdAAAfAQAZBEAgwIAgwAAdAAAdAEAZBIAgwIAZBMAgwEAZgIAFoMBAAFuAQABZAAA
+UygUAAAATnMjAAAAZ2V0UG9ydGFsQWNjb3VudGluZ01vdmVtZW50VHlwZUxpc3RzCQAAAGdldE9i
+amVjdHMMAAAAb2JqZWN0VmFsdWVzcwsAAABwb3J0YWxfdHlwZXMbAAAAZ2V0RGVsaXZlcnlSZWxh
+dGVkVmFsdWVMaXN0cxMAAABTaW11bGF0aW9uIE1vdmVtZW50cxgAAABnZXRPcmRlclJlbGF0ZWRW
+YWx1ZUxpc3RpAAAAAHMOAAAAZ2V0U291cmNlRGViaXRzDwAAAGdldFNvdXJjZUNyZWRpdHMNAAAA
+ZGVsZXRlQ29udGVudHMFAAAAZ2V0SWRzBwAAAFJFUVVFU1RzCAAAAFJFU1BPTlNFcwgAAAByZWRp
+cmVjdHMgAAAAJXMvdmlldz9wb3J0YWxfc3RhdHVzX21lc3NhZ2U9JXNzBwAAAGdldFBhdGhzFAAA
+AEJhc2VfVHJhbnNsYXRlU3RyaW5ncxQAAABFbXB0eSBMaW5lcyBEZWxldGVkLigJAAAAcwkAAABf
+Z2V0YXR0cl9zBwAAAGNvbnRleHRzEQAAAGxpbmVzX3BvcnRhbF90eXBlcwsAAAB0cmFuc2FjdGlv
+bnMJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwMAAABsZW5zBwAAAGJhbGFuY2VzCAAAAHJlZGlyZWN0
+KAkAAABzCAAAAHJlZGlyZWN0cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzEQAAAGxpbmVzX3Bv
+cnRhbF90eXBlcwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwMAAABsZW5z
+BwAAAGJhbGFuY2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzJgAAAEFjY291bnRpbmdU
+cmFuc2FjdGlvbl9kZWxldGVFbXB0eUxpbmVzAQAAAHMaAAAAAAQSARICHwAGARIDGwAgASIBEAEo
+AhABGwEoAQAAAHMmAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2RlbGV0ZUVtcHR5TGluZXMoAQAA
+AHMmAAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2RlbGV0ZUVtcHR5TGluZXMoAAAAACgAAAAAcw8A
+AABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -155,9 +146,9 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                         <value>
                           <tuple>
                             <string>redirect</string>
-                            <string>lines_portal_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>lines_portal_type</string>
                             <string>transaction</string>
                             <string>_getiter_</string>
                             <string>line</string>
