@@ -106,8 +106,7 @@
   <property id="sql_getitem_by_path" type="str">z_getitem_by_path</property>
   <property id="sql_getitem_by_uid" type="str">z_getitem_by_uid</property>
   <property id="sql_read_recorded_object_list" type="str">z_read_recorded_object_list</property>
-  <property id="sql_record_catalog_object_list" type="str">z_record_catalog_object_list</property>
-  <property id="sql_record_uncatalog_object" type="str">z_record_uncatalog_object</property>
+  <property id="sql_record_object_list" type="str">z_record_object_list</property>
   <property id="sql_search_result_keys" type="tuple">
     <item type="str">catalog.path</item>
     <item type="str">catalog.uid</item>
