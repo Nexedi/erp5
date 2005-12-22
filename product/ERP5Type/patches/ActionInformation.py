@@ -30,7 +30,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
                 , category='object'
                 , condition=''
                 , permissions=()
-                , priority=10
+                , priority=1.0
                 , visible=1
                 , action=''
                 , icon=''
@@ -57,7 +57,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
         self.visible = visible
         self.setActionExpression(action)
         self.setIconExpression(icon)
-	self.optional = optional
+        self.optional = optional
 
 
     def getAction( self, ec ):
@@ -79,6 +79,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
         info['category'] = self.getCategory()
         info['visible'] = self.getVisibility()
         info['optional'] = self.getOption()
+        info['priority'] = self.getPriority()
         return info
 
 
@@ -119,6 +120,12 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
         """ Return whether the action should be optional in the Business Template.
         """
         return getattr( self, 'optional', 0 )
+
+    def getPriority( self ):
+        """
+        Return the priority of the action
+        """
+        return getattr(self, 'priority', 1.0)    
 
     def clone( self ):
 

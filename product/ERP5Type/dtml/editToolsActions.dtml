@@ -170,6 +170,20 @@
 </td>
 </tr>
 
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
+  Priority
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <input type="text" name="priority_&dtml-index;:float" value="&dtml-priority;" />
+  </div>
+</td>
+</tr>
+
 </dtml-let>
 
 <tr><td colspan="3">
@@ -328,6 +342,21 @@ Add an action
   </div>
 </td>
 </tr>
+
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
+  Priority
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <input type="text" name="priority:float" value="1.0" />
+  </div>
+</td>
+</tr>
+
 
 </table>
 

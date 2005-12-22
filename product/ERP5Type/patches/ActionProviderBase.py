@@ -36,6 +36,7 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
         a1['visible'] = a.getVisibility()
         a1['action'] = a.getActionExpression()
         a1['condition'] = a.getCondition()
+        a1['priority'] = a.getPriority()
         if hasattr(a, 'getIconExpression') :
           a1['icon'] = a.getIconExpression()
         if hasattr(a, 'getOption') :
@@ -63,6 +64,7 @@ def ActionProviderBase_addAction( self
               , icon=None
               , visible=1
               , optional=0
+              , priority=1.0
               , REQUEST=None
               ):
     """ Add an action to our list.
@@ -88,6 +90,7 @@ def ActionProviderBase_addAction( self
                                   , category=str(category)
                                   , visible=int(visible)
                                   , optional=int(optional)
+                                  , priority=float(priority)
                                   )
 
     new_actions.append( new_action )
@@ -111,6 +114,7 @@ def ActionProviderBase_extractAction( self, properties, index ):
     visible     =      properties.get( 'visible_%d'     % index, 0  )
     optional    =      properties.get( 'optional_%d'    % index, 0  )
     permissions =      properties.get( 'permission_%d'  % index, () )
+    priority    = float( properties.get( 'priority_%d'    % index, 1.0 ))
 
     if not name:
         raise ValueError('A name is required.')
@@ -142,6 +146,9 @@ def ActionProviderBase_extractAction( self, properties, index ):
     if type( permissions ) is type( '' ):
         permissions = ( permissions, )
 
+    if type( priority ) is not type(1.0):
+        priority = float(priority)        
+
     return ActionInformation( id=id
                             , title=name
                             , action=action
@@ -151,6 +158,7 @@ def ActionProviderBase_extractAction( self, properties, index ):
                             , category=category
                             , visible=visible
                             , optional=optional
+                            , priority=priority
                             )
 
 ActionProviderBase.manage_editActionsForm = ActionProviderBase_manage_editActionsForm
