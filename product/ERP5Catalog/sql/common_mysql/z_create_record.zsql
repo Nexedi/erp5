@@ -14,7 +14,7 @@ class_file:
 #
 CREATE TABLE `record` (
   `path` varchar(255) NOT NULL default '',
-  `catalog` BOOL NOT NULL default 0,
+  `method_id` VARCHAR(255) NOT NULL default 'reindexObject',
   `played` BOOL NOT NULL default 0,
   `date` DATETIME NOT NULL,
   KEY `path` (`path`),

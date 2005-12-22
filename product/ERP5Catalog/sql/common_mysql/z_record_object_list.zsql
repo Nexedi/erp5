@@ -7,14 +7,15 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path_list</params>
+<params>path_list
+method_id</params>
 INSERT INTO
   record
 VALUES
 <dtml-in path_list>
 (
   <dtml-sqlvar sequence-item type="string">,
-  1,
+  <dtml-sqlvar method_id type="string">,
   0,
   NOW()
 )

@@ -9,10 +9,10 @@ class_file:
 </dtml-comment>
 <params></params>
 SELECT
-  path, catalog
+  path
 FROM
   record
 WHERE
   played = 0
 ORDER BY
-  path, date DESC
+  date
