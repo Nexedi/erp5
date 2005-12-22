@@ -291,13 +291,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    { 'id'      : 'sql_record_catalog_object_list',
+    { 'id'      : 'sql_record_object_list',
       'description' : 'Method to record catalog information',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_record_uncatalog_object',
-      'description' : 'Method to record uncatalog information',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
@@ -400,8 +395,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   sql_clear_catalog = ('z_drop_catalog', 'z_create_catalog')
   sql_catalog_translation_list = 'z_catalog_translation_list'
   sql_delete_translation_list = 'z_delete_translation_list'
-  sql_record_catalog_object_list = 'z_record_catalog_object_list'
-  sql_record_uncatalog_object = 'z_record_uncatalog_object'
+  sql_record_object_list = 'z_record_object_list'
   sql_read_recorded_object_list = 'z_read_recorded_object_list'
   sql_delete_recorded_object_list = 'z_delete_recorded_object_list'
   sql_search_results = 'z_search_results'
@@ -1706,35 +1700,26 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       LOG('SQLCatalog', WARNING, "could not count catalog", error=sys.exc_info())
       return [[0]]
 
-  def recordCatalogObjectList(self, path_list):
+  def recordObjectList(self, path_list, catalog=1):
     """
-      Record the path of an object being catalogged.
+      Record the path of an object being catalogged or uncatalogged.
     """
-    method = getattr(self, self.sql_record_catalog_object_list)
-    method(path_list=path_list)
+    method = getattr(self, self.sql_record_object_list)
+    method(path_list=path_list, catalog=catalog)
 
-  def recordUncatalogObject(self, path):
-    """
-      Record the path of an object being uncatalogged.
-    """
-    method = getattr(self, self.sql_record_uncatalog_object)
-    method(path=path)
-
-  def deleteRecordedObjectList(self, path):
+  def deleteRecordedObjectList(self, uid_list=()):
     """
       Delete all objects which contain any path.
     """
-    if type(path) == type(''):
-      path = [path]
     method = getattr(self, self.sql_delete_recorded_object_list)
-    method(path=path)
+    method(uid_list=uid_list)
 
-  def readRecordedObjectList(self):
+  def readRecordedObjectList(self, catalog=1):
     """
       Read objects. Note that this might not return all objects since ZMySQLDA limits the max rows.
     """
     method = getattr(self, self.sql_read_recorded_object_list)
-    return method()
+    return method(catalog=catalog)
 
   # Filtering
   def manage_editFilter(self, REQUEST=None, RESPONSE=None, URL1=None):
