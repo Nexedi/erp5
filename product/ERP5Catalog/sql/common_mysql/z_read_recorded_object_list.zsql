@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params>catalog</params>
 SELECT
-  path
+  uid, path
 FROM
   record
 WHERE

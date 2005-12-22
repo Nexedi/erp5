@@ -10,7 +10,7 @@ class_file:
 <params>path_list
 catalog</params>
 INSERT INTO
-  record
+  record (path, catalog, played, date)
 VALUES
 <dtml-in path_list>
 (
