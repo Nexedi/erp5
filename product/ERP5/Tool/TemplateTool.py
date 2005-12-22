@@ -49,7 +49,10 @@ import re
 from xml.dom.minidom import parse
 import struct
 import cPickle
-import base64
+try:
+  from base64 import b64encode, b64decode
+except ImportError:
+  from base64 import encodestring as b64encode, decodestring as b64decode
 
 class LocalConfiguration(Implicit):
   """
@@ -510,7 +513,7 @@ class TemplateTool (BaseTool):
     def decodeRepositoryBusinessTemplateUid(self, uid):
       """Decode the uid of a business template in a repository. Return a repository and an id.
       """
-      return cPickle.loads(base64.b64decode(uid))
+      return cPickle.loads(b64decode(uid))
       
     security.declareProtected( Permissions.AccessContentsInformation, 'getRepositoryBusinessTemplateList' )
     def getRepositoryBusinessTemplateList(self, update_only=0, **kw):
@@ -564,7 +567,7 @@ class TemplateTool (BaseTool):
           elif result < 0:
             version_state = 'old'
         version_state_title = version_state_title_dict[version_state]
-        uid = base64.b64encode(cPickle.dumps((repository, id)))
+        uid = b64encode(cPickle.dumps((repository, id)))
         obj = newTempBusinessTemplate(self, 'temp_' + uid,
                                       version_state = version_state,
                                       version_state_title = version_state_title,
