@@ -70,53 +70,53 @@
 context.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)\n
 \n
 print "#### Indexing categories ####"\n
-context.portal_categories.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+context.portal_categories.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 for o in list(context.portal_categories.objectValues()):\n
-  o.recursiveReindexObject(after_tag=\'module\',tag=\'category\', sql_catalog_id=sql_catalog_id)\n
+  o.recursiveReindexObject(after_tag=\'module\',tag=\'category\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 print "#### Indexing preferences ####"\n
-context.portal_preferences.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+context.portal_preferences.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 for o in list(context.portal_preferences.objectValues(tag=\'module\')):\n
-  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id)\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # We index simulation first to make sure we can calculate tests (ie. related quantity)\n
 print "#### Indexing simulation ####"\n
-context.portal_simulation.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+context.portal_simulation.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 for o in list(context.portal_simulation.objectValues()):\n
-  o.recursiveReindexObject(after_tag=(\'module\',\'category\',\'document\'),tag=\'simulation\',priority=3, sql_catalog_id=sql_catalog_id)\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\',\'document\'),tag=\'simulation\',priority=3, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # We index templates secondly\n
 print "#### Indexing templates ####"\n
-context.portal_templates.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+context.portal_templates.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 for o in list(context.portal_templates.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id)\n
+  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # Next we index applied rules\n
 print "#### Indexing applied rules ####"\n
-context.portal_rules.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+context.portal_rules.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 for o in list(context.portal_rules.objectValues()):\n
-  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id)\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # Next we index delivery builders\n
 print "#### Indexing delivery builders ####"\n
-context.portal_deliveries.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+context.portal_deliveries.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 for o in list(context.portal_deliveries.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id)\n
+  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # Next we index order builders\n
 print "#### Indexing order builders ####"\n
-context.portal_orders.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+context.portal_orders.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 for o in list(context.portal_orders.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id)\n
+  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # Then we index everything except inventories\n
 for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):\n
   print "#### Indexing contents inside folder %s ####" % folder.id\n
   if folder.getId() not in (\'inventory_module\',):\n
-    folder.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+    folder.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
     for o in list(folder.objectValues()):\n
       try:\n
-        o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id)\n
+        o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
       except:\n
         #raise RuntimeError, o.getRelativeUrl()\n
         raise\n
@@ -126,74 +126,77 @@ for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)
 for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):\n
   if folder.getId() in (\'inventory_module\',):\n
     print "#### Indexing contents inside folder %s ####" % folder.id\n
-    folder.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id)\n
+    folder.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
     for o in list(folder.objectValues()):\n
-      o.recursiveReindexObject(after_tag=(\'module\',\'document\',\'category\'),tag=\'inventory\',priority=2, sql_catalog_id=sql_catalog_id)\n
+      o.recursiveReindexObject(after_tag=(\'module\',\'document\',\'category\'),tag=\'inventory\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # start activty from simulation because the erp5site is not an active object\n
-context.portal_simulation.activate(after_tag=(\'inventory\',\'simulation\'),priority=3).InventoryModule_reindexMovementList(sql_catalog_id=sql_catalog_id)\n
+context.portal_simulation.activate(after_tag=(\'inventory\',\'simulation\'),priority=3).InventoryModule_reindexMovementList(sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 return printed\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAsAAABhAAAA
-QwAAAHNmBgAAdAAAgwAAfQIAfAIABGQBAAJJSnQCAHQDAGQCAIMCAGQDAHwAAIMAAQF8AgAEZAQA
-AklKdAIAdAIAdAMAZAUAgwIAZAYAgwIAZAcAZAgAZAMAfAAAgwACAXhRAHQFAHQGAHQCAHQCAHQD
-AGQFAIMCAGQJAIMCAIMAAIMBAIMBAERdKAB9BwB0AgB8BwBkCgCDAgBkCwBkCABkBwBkDABkAwB8
-AACDAAMBcYAAV3wCAARkDQACSUp0AgB0AgB0AwBkDgCDAgBkBgCDAgBkBwBkCABkAwB8AACDAAIB
-eGMAdAUAdAYAdAIAdAIAdAMAZA4AgwIAZAkAgwIAZAcAZAgAgwABgwEAgwEARF00AH0HAHQCAHwH
-AGQKAIMCAGQLAGQIAGQMAGYCAGQHAGQPAGQQAGQRAGQDAHwAAIMABAFxCQFXfAIABGQSAAJJSnQC
-AHQCAHQDAGQTAIMCAGQGAIMCAGQHAGQIAGQDAHwAAIMAAgF4YAB0BQB0BgB0AgB0AgB0AwBkEwCD
-AgBkCQCDAgCDAACDAQCDAQBEXTcAfQcAdAIAfAcAZAoAgwIAZAsAZAgAZAwAZA8AZgMAZAcAZBQA
-ZBAAZBUAZAMAfAAAgwAEAXGYAVd8AgAEZBYAAklKdAIAdAIAdAMAZBcAgwIAZAYAgwIAZAcAZAgA
-ZAMAfAAAgwACAXhdAHQFAHQGAHQCAHQCAHQDAGQXAIMCAGQJAIMCAIMAAIMBAIMBAERdNAB9BwB0
-AgB8BwBkBgCDAgBkCwBkCABkDABmAgBkBwBkDwBkEABkEQBkAwB8AACDAAQBcSoCV3wCAARkGAAC
-SUp0AgB0AgB0AwBkGQCDAgBkBgCDAgBkBwBkCABkAwB8AACDAAIBeF0AdAUAdAYAdAIAdAIAdAMA
-ZBkAgwIAZAkAgwIAgwAAgwEAgwEARF00AH0HAHQCAHwHAGQKAIMCAGQLAGQIAGQMAGYCAGQHAGQP
-AGQQAGQRAGQDAHwAAIMABAFxuQJXfAIABGQaAAJJSnQCAHQCAHQDAGQbAIMCAGQGAIMCAGQHAGQI
-AGQDAHwAAIMAAgF4XQB0BQB0BgB0AgB0AgB0AwBkGwCDAgBkCQCDAgCDAACDAQCDAQBEXTQAfQcA
-dAIAfAcAZAYAgwIAZAsAZAgAZAwAZgIAZAcAZA8AZBAAZBEAZAMAfAAAgwAEAXFIA1d8AgAEZBwA
-AklKdAIAdAIAdAMAZB0AgwIAZAYAgwIAZAcAZAgAZAMAfAAAgwACAXhdAHQFAHQGAHQCAHQCAHQD
-AGQdAIMCAGQJAIMCAIMAAIMBAIMBAERdNAB9BwB0AgB8BwBkBgCDAgBkCwBkCABkDABmAgBkBwBk
-DwBkEABkEQBkAwB8AACDAAQBcdcDV3ghAXQFAHQCAHQCAHQCAHQDAGQeAIMCAGQfAIMCAIMAAGQJ
-AIMCAGQgAGYBAIMBAIMBAERd7AB9CAB8AgAEZCEAdAIAfAgAZCIAgwIAFgJJSnQCAHwIAGQjAIMC
-AIMAAGQkAGYBAGoHAG+zAAF0AgB8CABkBgCDAgBkBwBkCABkAwB8AACDAAIBeJQAdAUAdAYAdAIA
-fAgAZAkAgwIAgwAAgwEAgwEARF1wAH0HAHkyAHQCAHwHAGQKAIMCAGQLAGQIAGQMAGYCAGQHAGQP
-AGQQAGQRAGQDAHwAAIMABAFXcbcEAQEBggAAdAkAZCUAdAoAdAIAfAgAZCMAgwIAgwAAgwEAdAoA
-fAcAgwEAZgIAFoICAHG3BFhxtwRXcUMEAXFDBFd46AB0BQB0AgB0AgB0AgB0AwBkHgCDAgBkHwCD
-AgCDAABkCQCDAgBkIABmAQCDAQCDAQBEXbMAfQgAdAIAfAgAZCMAgwIAgwAAZCQAZgEAagYAb5EA
-AXwCAARkIQB0AgB8CABkIgCDAgAWAklKdAIAfAgAZAYAgwIAZAcAZAgAZAMAfAAAgwACAXhbAHQF
-AHQGAHQCAHwIAGQJAIMCAIMAAIMBAIMBAERdNwB9BwB0AgB8BwBkCgCDAgBkCwBkCABkDwBkDABm
-AwBkBwBkJgBkEABkEQBkAwB8AACDAAQBcdsFV3FnBQFxZwVXdAIAdAIAdAIAdAMAZBMAgwIAZCcA
-gwIAZAsAZCYAZBQAZgIAZBAAZBUAgwACZCgAgwIAZAMAfAAAgwABAXwCAIMAAFNkAABTKCkAAABO
-cx8AAAAjIyMjIEluZGV4aW5nIHRyYW5zbGF0aW9ucyAjIyMjcx8AAABFUlA1U2l0ZV91cGRhdGVU
-cmFuc2xhdGlvblRhYmxlcw4AAABzcWxfY2F0YWxvZ19pZHMdAAAAIyMjIyBJbmRleGluZyBjYXRl
-Z29yaWVzICMjIyNzEQAAAHBvcnRhbF9jYXRlZ29yaWVzcw0AAAByZWluZGV4T2JqZWN0cwMAAAB0
-YWdzBgAAAG1vZHVsZXMMAAAAb2JqZWN0VmFsdWVzcxYAAAByZWN1cnNpdmVSZWluZGV4T2JqZWN0
-cwkAAABhZnRlcl90YWdzCAAAAGNhdGVnb3J5cx4AAAAjIyMjIEluZGV4aW5nIHByZWZlcmVuY2Vz
-ICMjIyNzEgAAAHBvcnRhbF9wcmVmZXJlbmNlc3MIAAAAZG9jdW1lbnRzCAAAAHByaW9yaXR5aQIA
-AABzHQAAACMjIyMgSW5kZXhpbmcgc2ltdWxhdGlvbiAjIyMjcxEAAABwb3J0YWxfc2ltdWxhdGlv
-bnMKAAAAc2ltdWxhdGlvbmkDAAAAcxwAAAAjIyMjIEluZGV4aW5nIHRlbXBsYXRlcyAjIyMjcxAA
-AABwb3J0YWxfdGVtcGxhdGVzcyAAAAAjIyMjIEluZGV4aW5nIGFwcGxpZWQgcnVsZXMgIyMjI3MM
-AAAAcG9ydGFsX3J1bGVzcyQAAAAjIyMjIEluZGV4aW5nIGRlbGl2ZXJ5IGJ1aWxkZXJzICMjIyNz
-EQAAAHBvcnRhbF9kZWxpdmVyaWVzcyEAAAAjIyMjIEluZGV4aW5nIG9yZGVyIGJ1aWxkZXJzICMj
-IyNzDQAAAHBvcnRhbF9vcmRlcnNzCgAAAHBvcnRhbF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHML
-AAAARVJQNSBGb2xkZXJzLAAAACMjIyMgSW5kZXhpbmcgY29udGVudHMgaW5zaWRlIGZvbGRlciAl
-cyAjIyMjcwIAAABpZHMFAAAAZ2V0SWRzEAAAAGludmVudG9yeV9tb2R1bGVzFgAAAGVycm9yOiBm
-b2xkZXI9JXMsIG89JXNzCQAAAGludmVudG9yeXMIAAAAYWN0aXZhdGVzIwAAAEludmVudG9yeU1v
-ZHVsZV9yZWluZGV4TW92ZW1lbnRMaXN0KAsAAABzBwAAAF9wcmludF9zBgAAAF9wcmludHMJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0cw4AAABzcWxfY2F0YWxvZ19pZHMJAAAAX2dldGl0ZXJfcwQA
-AABsaXN0cwEAAABvcwYAAABmb2xkZXJzDAAAAFJ1bnRpbWVFcnJvcnMEAAAAcmVwcigLAAAAcw4A
-AABzcWxfY2F0YWxvZ19pZHMHAAAAX3ByaW50X3MGAAAAX3ByaW50cwkAAABfZ2V0YXR0cl9zBwAA
-AGNvbnRleHRzCQAAAF9nZXRpdGVyX3MEAAAAbGlzdHMBAAAAb3MGAAAAZm9sZGVycwwAAABSdW50
-aW1lRXJyb3JzBAAAAHJlcHIoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzEwAAAEVSUDVT
-aXRlX3JlaW5kZXhBbGwBAAAAc3IAAAAWARMCEAEfASgACQEjAhABHwEuAAkBLwMQAR8BKAAJATID
-EAEfASgACQEvAxABHwEoAAkBLwMQAR8BKAAJAS8DEAEfASgACQEvAzQABgEXAR8BGQEfAAYBBgEy
-AwMBOwM0AAYBHAEaARkBHwAJAUMDNAIoAgAAAHMEAAAATm9uZXMTAAAARVJQNVNpdGVfcmVpbmRl
-eEFsbCgCAAAAcwQAAABOb25lcxMAAABFUlA1U2l0ZV9yZWluZGV4QWxsKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGQBAGQCAIQCAFoBAGQAAFMoAwAAAE5pAQAAAGMCAAAA
+DAAAAGwAAABDAAAAc9gGAAB0AACDAAB9AwB8AwAEZAEAAklKdAIAdAMAZAIAgwIAZAMAfAAAgwAB
+AXwDAARkBAACSUp0AgB0AgB0AwBkBQCDAgBkBgCDAgBkBwBkCABkAwB8AABkCQB8AQCDAAMBeFcA
+dAYAdAcAdAIAdAIAdAMAZAUAgwIAZAoAgwIAgwAAgwEAgwEARF0uAH0IAHQCAHwIAGQLAIMCAGQM
+AGQIAGQHAGQNAGQDAHwAAGQJAHwBAIMABAFxhgBXfAMABGQOAAJJSnQCAHQCAHQDAGQPAIMCAGQG
+AIMCAGQHAGQIAGQDAHwAAGQJAHwBAIMAAwF4aQB0BgB0BwB0AgB0AgB0AwBkDwCDAgBkCgCDAgBk
+BwBkCACDAAGDAQCDAQBEXToAfQgAdAIAfAgAZAsAgwIAZAwAZAgAZA0AZgIAZAcAZBAAZBEAZBIA
+ZAMAfAAAZAkAfAEAgwAFAXEbAVd8AwAEZBMAAklKdAIAdAIAdAMAZBQAgwIAZAYAgwIAZAcAZAgA
+ZAMAfAAAZAkAfAEAgwADAXhmAHQGAHQHAHQCAHQCAHQDAGQUAIMCAGQKAIMCAIMAAIMBAIMBAERd
+PQB9CAB0AgB8CABkCwCDAgBkDABkCABkDQBkEABmAwBkBwBkFQBkEQBkFgBkAwB8AABkCQB8AQCD
+AAUBcbYBV3wDAARkFwACSUp0AgB0AgB0AwBkGACDAgBkBgCDAgBkBwBkCABkAwB8AABkCQB8AQCD
+AAMBeGMAdAYAdAcAdAIAdAIAdAMAZBgAgwIAZAoAgwIAgwAAgwEAgwEARF06AH0IAHQCAHwIAGQG
+AIMCAGQMAGQIAGQNAGYCAGQHAGQQAGQRAGQSAGQDAHwAAGQJAHwBAIMABQFxVAJXfAMABGQZAAJJ
+SnQCAHQCAHQDAGQaAIMCAGQGAIMCAGQHAGQIAGQDAHwAAGQJAHwBAIMAAwF4YwB0BgB0BwB0AgB0
+AgB0AwBkGgCDAgBkCgCDAgCDAACDAQCDAQBEXToAfQgAdAIAfAgAZAsAgwIAZAwAZAgAZA0AZgIA
+ZAcAZBAAZBEAZBIAZAMAfAAAZAkAfAEAgwAFAXHvAld8AwAEZBsAAklKdAIAdAIAdAMAZBwAgwIA
+ZAYAgwIAZAcAZAgAZAMAfAAAZAkAfAEAgwADAXhjAHQGAHQHAHQCAHQCAHQDAGQcAIMCAGQKAIMC
+AIMAAIMBAIMBAERdOgB9CAB0AgB8CABkBgCDAgBkDABkCABkDQBmAgBkBwBkEABkEQBkEgBkAwB8
+AABkCQB8AQCDAAUBcYoDV3wDAARkHQACSUp0AgB0AgB0AwBkHgCDAgBkBgCDAgBkBwBkCABkAwB8
+AABkCQB8AQCDAAMBeGMAdAYAdAcAdAIAdAIAdAMAZB4AgwIAZAoAgwIAgwAAgwEAgwEARF06AH0I
+AHQCAHwIAGQGAIMCAGQMAGQIAGQNAGYCAGQHAGQQAGQRAGQSAGQDAHwAAGQJAHwBAIMABQFxJQRX
+eC0BdAYAdAIAdAIAdAIAdAMAZB8AgwIAZCAAgwIAgwAAZAoAgwIAZCEAZgEAgwEAgwEARF34AH0J
+AHwDAARkIgB0AgB8CQBkIwCDAgAWAklKdAIAfAkAZCQAgwIAgwAAZCUAZgEAagcAb78AAXQCAHwJ
+AGQGAIMCAGQHAGQIAGQDAHwAAGQJAHwBAIMAAwF4mgB0BgB0BwB0AgB8CQBkCgCDAgCDAACDAQCD
+AQBEXXYAfQgAeTgAdAIAfAgAZAsAgwIAZAwAZAgAZA0AZgIAZAcAZBAAZBEAZBIAZAMAfAAAZAkA
+fAEAgwAFAVdxEQUBAQGCAAB0CgBkJgB0CwB0AgB8CQBkJACDAgCDAACDAQB0CwB8CACDAQBmAgAW
+ggIAcREFWHERBVdxlwQBcZcEV3j0AHQGAHQCAHQCAHQCAHQDAGQfAIMCAGQgAIMCAIMAAGQKAIMC
+AGQhAGYBAIMBAIMBAERdvwB9CQB0AgB8CQBkJACDAgCDAABkJQBmAQBqBgBvnQABfAMABGQiAHQC
+AHwJAGQjAIMCABYCSUp0AgB8CQBkBgCDAgBkBwBkCABkAwB8AABkCQB8AQCDAAMBeGEAdAYAdAcA
+dAIAfAkAZAoAgwIAgwAAgwEAgwEARF09AH0IAHQCAHwIAGQLAIMCAGQMAGQIAGQQAGQNAGYDAGQH
+AGQnAGQRAGQSAGQDAHwAAGQJAHwBAIMABQFxQQZXcccFAXHHBVd0AgB0AgB0AgB0AwBkFACDAgBk
+KACDAgBkDABkJwBkFQBmAgBkEQBkFgCDAAJkKQCDAgBkAwB8AABkCQB8AQCDAAIBfAMAgwAAU2QA
+AFMoKgAAAE5zHwAAACMjIyMgSW5kZXhpbmcgdHJhbnNsYXRpb25zICMjIyNzHwAAAEVSUDVTaXRl
+X3VwZGF0ZVRyYW5zbGF0aW9uVGFibGVzDgAAAHNxbF9jYXRhbG9nX2lkcx0AAAAjIyMjIEluZGV4
+aW5nIGNhdGVnb3JpZXMgIyMjI3MRAAAAcG9ydGFsX2NhdGVnb3JpZXNzDQAAAHJlaW5kZXhPYmpl
+Y3RzAwAAAHRhZ3MGAAAAbW9kdWxlcw4AAABwYXNzaXZlX2NvbW1pdHMMAAAAb2JqZWN0VmFsdWVz
+cxYAAAByZWN1cnNpdmVSZWluZGV4T2JqZWN0cwkAAABhZnRlcl90YWdzCAAAAGNhdGVnb3J5cx4A
+AAAjIyMjIEluZGV4aW5nIHByZWZlcmVuY2VzICMjIyNzEgAAAHBvcnRhbF9wcmVmZXJlbmNlc3MI
+AAAAZG9jdW1lbnRzCAAAAHByaW9yaXR5aQIAAABzHQAAACMjIyMgSW5kZXhpbmcgc2ltdWxhdGlv
+biAjIyMjcxEAAABwb3J0YWxfc2ltdWxhdGlvbnMKAAAAc2ltdWxhdGlvbmkDAAAAcxwAAAAjIyMj
+IEluZGV4aW5nIHRlbXBsYXRlcyAjIyMjcxAAAABwb3J0YWxfdGVtcGxhdGVzcyAAAAAjIyMjIElu
+ZGV4aW5nIGFwcGxpZWQgcnVsZXMgIyMjI3MMAAAAcG9ydGFsX3J1bGVzcyQAAAAjIyMjIEluZGV4
+aW5nIGRlbGl2ZXJ5IGJ1aWxkZXJzICMjIyNzEQAAAHBvcnRhbF9kZWxpdmVyaWVzcyEAAAAjIyMj
+IEluZGV4aW5nIG9yZGVyIGJ1aWxkZXJzICMjIyNzDQAAAHBvcnRhbF9vcmRlcnNzCgAAAHBvcnRh
+bF91cmxzDwAAAGdldFBvcnRhbE9iamVjdHMLAAAARVJQNSBGb2xkZXJzLAAAACMjIyMgSW5kZXhp
+bmcgY29udGVudHMgaW5zaWRlIGZvbGRlciAlcyAjIyMjcwIAAABpZHMFAAAAZ2V0SWRzEAAAAGlu
+dmVudG9yeV9tb2R1bGVzFgAAAGVycm9yOiBmb2xkZXI9JXMsIG89JXNzCQAAAGludmVudG9yeXMI
+AAAAYWN0aXZhdGVzIwAAAEludmVudG9yeU1vZHVsZV9yZWluZGV4TW92ZW1lbnRMaXN0KAwAAABz
+BwAAAF9wcmludF9zBgAAAF9wcmludHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw4AAABzcWxf
+Y2F0YWxvZ19pZHMOAAAAcGFzc2l2ZV9jb21taXRzCQAAAF9nZXRpdGVyX3MEAAAAbGlzdHMBAAAA
+b3MGAAAAZm9sZGVycwwAAABSdW50aW1lRXJyb3JzBAAAAHJlcHIoDAAAAHMOAAAAc3FsX2NhdGFs
+b2dfaWRzDgAAAHBhc3NpdmVfY29tbWl0cwcAAABfcHJpbnRfcwYAAABfcHJpbnRzCQAAAF9nZXRh
+dHRyX3MHAAAAY29udGV4dHMJAAAAX2dldGl0ZXJfcwQAAABsaXN0cwEAAABvcwYAAABmb2xkZXJz
+DAAAAFJ1bnRpbWVFcnJvcnMEAAAAcmVwcigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMT
+AAAARVJQNVNpdGVfcmVpbmRleEFsbAEAAABzcgAAABYBEwIQASUBKAAJASkCEAElAS4ACQE1AxAB
+JQEoAAkBOAMQASUBKAAJATUDEAElASgACQE1AxABJQEoAAkBNQMQASUBKAAJATUDNAAGARcBHwEf
+AR8ABgEGATgDAwE7AzQABgEcARoBHwEfAAkBSQM6AigCAAAAcwQAAABOb25lcxMAAABFUlA1U2l0
+ZV9yZWluZGV4QWxsKAIAAABzBAAAAE5vbmVzEwAAAEVSUDVTaXRlX3JlaW5kZXhBbGwoAAAAACgA
+AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -201,7 +204,7 @@ U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None</string> </value>
+            <value> <string>sql_catalog_id=None, passive_commit=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -221,13 +224,14 @@ U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>sql_catalog_id</string>
+                            <string>passive_commit</string>
                             <string>_print_</string>
                             <string>_print</string>
                             <string>_getattr_</string>
@@ -251,6 +255,7 @@ U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
             <value>
               <tuple>
                 <none/>
+                <int>1</int>
               </tuple>
             </value>
         </item>

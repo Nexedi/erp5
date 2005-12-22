@@ -397,9 +397,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Grade is like a job classification on which the employee pay is determined. It\'s also similar to military grade.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

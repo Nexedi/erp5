@@ -159,7 +159,7 @@
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>1024</int> </value>
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>

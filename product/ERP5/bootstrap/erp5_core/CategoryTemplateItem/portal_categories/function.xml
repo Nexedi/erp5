@@ -436,9 +436,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Function correspond to the task you do day by day.</string> </value>
         </item>
         <item>
             <key> <string>fallback_base_category_list</string> </key>

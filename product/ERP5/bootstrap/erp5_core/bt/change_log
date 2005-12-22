@@ -1,3 +1,7 @@
+2005-1222 yo
+* Add an optional parameter passive_commit to InventoryModule_reindexMovementList and ERP5Site_reindexAll. passive_commit is passed to reindexObject and recursiveReindexObject.
+* index_html does load local_pt any longer, but directly defines slots.
+
 2005-12-21 Kevin
 * "Section Category" in AccountingPreferences_view is no longer required.
 * Display None category in Section Category list of Preference_view form.
