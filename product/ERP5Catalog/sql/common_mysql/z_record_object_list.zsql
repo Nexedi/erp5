@@ -8,14 +8,14 @@ class_name:
 class_file:
 </dtml-comment>
 <params>path_list
-method_id</params>
+catalog</params>
 INSERT INTO
   record
 VALUES
 <dtml-in path_list>
 (
   <dtml-sqlvar sequence-item type="string">,
-  <dtml-sqlvar method_id type="string">,
+  <dtml-sqlvar catalog type="int">,
   0,
   NOW()
 )
