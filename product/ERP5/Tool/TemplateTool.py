@@ -209,7 +209,7 @@ class TemplateTool (BaseTool):
           bt = self._getOb(id)
           prop_dict = {}
           for prop in bt.propertyMap():
-            type = prop['type']
+            prop_type = prop['type']
             pid = prop['id']
             prop_path = os.path.join(tar.members[0].name, 'bt', pid)
             try:
@@ -217,9 +217,9 @@ class TemplateTool (BaseTool):
             except KeyError:
               continue
             value = tar.extractfile(info).read()
-            if type == 'text' or type == 'string' or type == 'int':
+            if prop_type == 'text' or prop_type == 'string' or prop_type == 'int':
               prop_dict[pid] = value
-            elif type == 'lines' or type == 'tokens':
+            elif prop_type == 'lines' or prop_type == 'tokens':
               prop_dict[pid[:-5]] = value.split(str(os.linesep))
           prop_dict.pop('id', '')
           bt.edit(**prop_dict)
@@ -256,7 +256,7 @@ class TemplateTool (BaseTool):
       if REQUEST is not None:
         return self.manage_download(url, id=id, REQUEST=REQUEST)
 
-      type, name = splittype(url)
+      urltype, name = splittype(url)
       if os.path.isdir(name): # new version of business template in plain format (folder)
         file_list = []
         def callback(arg, directory, files):
@@ -274,15 +274,15 @@ class TemplateTool (BaseTool):
         # import properties
         prop_dict = {}
         for prop in bt.propertyMap():
-          type = prop['type']
+          prop_type = prop['type']
           pid = prop['id']
           prop_path = os.path.join('.', bt_path, pid)
           if not os.path.exists(prop_path):
             continue          
           value = open(prop_path, 'r').read()
-          if type in ('text', 'string', 'int'):
+          if prop_type in ('text', 'string', 'int'):
             prop_dict[pid] = value
-          elif type in ('lines', 'tokens'):
+          elif prop_type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = value.split(str(os.linesep))
         prop_dict.pop('id', '')
         bt.edit(**prop_dict)
