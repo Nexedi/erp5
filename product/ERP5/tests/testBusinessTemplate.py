@@ -62,7 +62,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     - Upgrade a template
   """
   run_all_test = 1
-
   
   def getTitle(self):
     return "Business Template"
@@ -671,9 +670,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(workflow is None)
 
   # Actions
-  def stepCreateActions(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateAction(self, sequence=None, sequence_list=None, **kw):
     """
-    Create actions
+    Create action
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
@@ -686,7 +685,17 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       , permission = ('View', )
       , category = 'object_action'
       , visible = 1
-      , optional = 0 )
+      , optional = 0
+      , priority = 2.0 )
+    sequence.edit(action_id='become_geek')
+
+  def stepCreateOptionalAction(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create optional action
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
     object_pt.addAction(
       id = 'become_nerd'
       , name = 'Become Nerd'
@@ -695,8 +704,23 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       , permission = ('View', )
       , category = 'object_action'
       , visible = 1
-      , optional = 1 )
-    sequence.edit(action_id='become_geek', opt_action_id='become_nerd')
+      , optional = 1
+      , priority = 1.5 )
+    sequence.edit(opt_action_id='become_nerd')
+
+  def stepCheckActionsOrder(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check Actions Order
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    actions_list = object_pt.listActions()
+    priority = 0
+    for action in actions_list:
+      self.failIf(action.priority < priority)
+      priority = action.priority
+
 
   def stepCheckActionExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1425,7 +1449,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
-                       CreateActions \
+                       CreateAction \
+                       CreateOptionalAction \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        CheckModifiedBuildingState \
@@ -1471,7 +1496,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
-                       CreateActions \
+                       CreateAction \
+                       CreateOptionalAction \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        CheckModifiedBuildingState \
@@ -1488,6 +1514,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        CreatePortalType \
+                       CreateAction \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
@@ -1498,8 +1525,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckBuiltBuildingState \
                        CheckTrashBin \
                        CheckSkinsLayers \
-                       CheckActionNotExists \
+                       CheckActionExists \
                        CheckOptionalActionExists \
+                       CheckActionsOrder \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -1797,7 +1825,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCategories \
                        CreateSubCategories \
                        CreateWorkflow \
-                       CreateActions \
+                       CreateAction \
+                       CreateOptionalAction \
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
@@ -1971,7 +2000,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCategories \
                        CreateSubCategories \
                        CreateWorkflow \
-                       CreateActions \
+                       CreateAction \
+                       CreateOptionalAction \
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
