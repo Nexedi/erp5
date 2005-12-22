@@ -1049,26 +1049,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         context.portal_workflow.manage_changeWorkflows(default_chain,
                                                        props=chain_dict)
 
-  def _backupObject(self, action, trashbin, container_path, object_id, **kw):
-    """
-      Backup portal type and keep the workflow chain.
-    """
-    subobjects_dict = {}
-    # XXX btsave is for backward compatibility
-    if action == 'backup' or action == 'btsave':
-      # Get the chain value
-#       (default_chain, chain_dict) = self._getChainByType(self)
-#       chain = chain_dict['chain_%s' % object_id]
-      # Backup the portal type    
-      subobjects_dict = ObjectTemplateItem._backupObject(self, action, trashbin, container_path,
-                                                        object_id, **kw)
-    return subobjects_dict
-      # Restore the chain to the backuped portal type
-#       (default_chain, chain_dict) = self._getChainByType(self)
-#       chain_dict['chain_%s' % backup_id] = chain
-#       self.portal_workflow.manage_changeWorkflows(default_chain,
-#                                                   props=chain_dict)
-
   def _importFile(self, file_name, file):
     if 'workflow_chain_type.xml' in file_name:
       # import workflow chain for portal_type
