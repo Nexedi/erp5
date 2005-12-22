@@ -1420,13 +1420,13 @@ class ActionTemplateItem(ObjectTemplateItem):
                     , icon = getattr(action, 'icon', None) and action.icon.text or ''
                     , optional = getattr(action, 'optional', 0)
                     )
-          new_priority = action.priority
-          action_list = obj.listActions()
-          move_down_list = []
-          for index in range(len(action_list)):
-            action = action_list[index]
-            if action.priority > new_priority:
-              move_down_list.append(str(index))
+        new_priority = action.priority
+        action_list = obj.listActions()
+        move_down_list = []
+        for index in range(len(action_list)):
+          action = action_list[index]
+          if action.priority > new_priority:
+            move_down_list.append(str(index))
           obj.moveDownActions(selections=tuple(move_down_list))
 
 
