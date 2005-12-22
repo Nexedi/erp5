@@ -419,7 +419,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       # Now synchronize this new database with the current one.
       # XXX It is necessary to use ActiveObject to wait for queued objects to be flushed.
       LOG('hotReindexObjectList', 0, 'Starting double indexing')
-      self.activate(passive_commit=1, after_method_id=('reindexObject', 'recursiveReindexObject', priority=5).setHotReindexingState('double indexing',
+      self.activate(passive_commit=1, after_method_id=('reindexObject', 'recursiveReindexObject'), priority=5).setHotReindexingState('double indexing',
                                  source_sql_catalog_id=source_sql_catalog_id,
                                  destination_sql_catalog_id=destination_sql_catalog_id)
 
