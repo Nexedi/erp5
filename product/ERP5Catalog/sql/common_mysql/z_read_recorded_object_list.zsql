@@ -7,12 +7,15 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params></params>
+<params>method_id</params>
 SELECT
   path
 FROM
   record
 WHERE
   played = 0
+<dtml-if method_id>
+  AND method_id = <dtml-sqlvar method_id type="string"> 
+</dtml-if>
 ORDER BY
   date
