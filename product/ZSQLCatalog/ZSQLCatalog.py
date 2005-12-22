@@ -213,7 +213,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           return default_value
       id = self.default_sql_catalog_id
 
-    return self._getOb(id)
+    return self._getOb(id, default_value)
 
   def manage_catalogExportProperties(self, REQUEST=None, RESPONSE=None, sql_catalog_id=None):
     """
