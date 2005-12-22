@@ -43,7 +43,7 @@ from zExceptions import Unauthorized
 try:
   from base64 import b64encode, b64decode
 except ImportError:
-  from base64 import encode, decode
+  from base64 import encodestring as b64encode, decodestring as b64decode
  
 class SubversionTool(UniqueObject, Folder):
   """The SubversionTool provides a Subversion interface to ERP5.
