@@ -596,6 +596,8 @@ class ZCatalog(Folder, Persistent, Implicit):
   def catalogObjectList(self, object_list, sql_catalog_id=None,**kw):
     """Catalog a list of objects.
     """
+    hot_reindexing = (self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id)
+    
     wrapped_object_list = []
     failed_object_list = []
     url_list = []
@@ -624,8 +626,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       catalog.catalogObjectList(wrapped_object_list,**kw)
-
-      if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
+      if hot_reindexing:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if destination_catalog.id != catalog.id:
           if self.hot_reindexing_state == 'recording':
