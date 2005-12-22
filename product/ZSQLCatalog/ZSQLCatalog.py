@@ -272,36 +272,46 @@ class ZCatalog(Folder, Persistent, Implicit):
       Play back must be a distinct method to activate...
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
+
+    # First, play back unindexing.
     while 1:
-      result = catalog.readRecordedObjectList()
+      result = catalog.readRecordedObjectList(catalog=0)
       if len(result) == 0:
         break
       get_transaction().commit()
 
-      path_dict = {}
       for o in result:
-        if o.path not in path_dict:
-          path_dict[o.path] = None
-          object = self.resolve_path(o.path)
-          if o.catalog:
-            if object is not None:
-              LOG('playBackRecordedObjectList, will reindexObject:',0,object.getPhysicalPath())
-              object.reindexObject(sql_catalog_id=sql_catalog_id, activity='SQLQueue')
-              #self.activate(passive_commit=1, priority=5).reindexObject(object, sql_catalog_id=sql_catalog_id)
-              # XXX We can't call reindexObject has an activate message, because we can not
-              # do pickle with acquisition wrappers
-              #self.reindexObject(object, sql_catalog_id=sql_catalog_id) # Ask YO, we must find something activated
-              # Make sure that this object has no extra reference.
-              object = None
-          else:
-            if object is None:
-              self.uncatalog_object(o.path, sql_catalog_id=sql_catalog_id)
-            else:
-              # Make sure that this object has no extra reference.
-              object = None
-        get_transaction().commit()
+        try:
+          obj = self.resolve_path(o.path)
+        except ConflictError:
+          raise
+        except:
+          obj = None
+        if obj is None:
+          self.uncatalog_object(o.path, sql_catalog_id=sql_catalog_id)
+        
+      catalog.deleteRecordedObjectList(uid_list=[o.uid for o in result])
+      get_transaction().commit()
 
-      catalog.deleteRecordedObjectList(path_dict.keys())
+    # Next, play back indexing.
+    while 1:
+      result = catalog.readRecordedObjectList(catalog=1)
+      if len(result) == 0:
+        break
+      get_transaction().commit()
+      
+      for o in result:
+        try:
+          obj = self.resolve_path(o.path)
+        except ConflictError:
+          raise
+        except:
+          obj = None
+        if obj is not None:
+          obj.reindexObject(sql_catalog_id=sql_catalog_id)
+      get_transaction().commit()
+
+      catalog.deleteRecordedObjectList(uid_list=[o.uid for o in result])
       get_transaction().commit()
 
   def exchangeDatabases(self, source_sql_catalog_id, destination_sql_catalog_id,
@@ -383,13 +393,12 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     # First of all, make sure that all root objects have uids.
     # XXX This is a workaround for tools (such as portal_simulation).
-    for path in self.portal_skins.erp5_core.Catalog_getIndexablePathList():
-      object = self.resolve_path(path)
-      if object is None: continue
-      if getattr(object, 'uid', None) is None:
-        object.getUid()
-      object = None
-      get_transaction().commit() # Should not have references to objects too long.
+    portal = self.getPortalObject()
+    for id in portal.objectIds():
+      obj = portal[id]
+      if hasattr(aq_base(obj), 'getUid'):
+        obj.getUid()
+    get_transaction().commit() # Should not have references to objects too long.
 
     # Recreate the new database.
     LOG('hotReindexObjectList', 0, 'Clearing the new database')
@@ -401,39 +410,16 @@ class ZCatalog(Folder, Persistent, Implicit):
       self.setHotReindexingState('recording',
                                  source_sql_catalog_id=source_sql_catalog_id,
                                  destination_sql_catalog_id=destination_sql_catalog_id)
+      get_transaction().commit() # Should not have references to objects too long.
 
-      # Iterate all objects recursively.
-      # XXX Commit transactions very often and use resolve_path to get objects instead of objectValues
-      # XXX This is not to be disturbed by normal user operations in the foreground.
-      # XXX Otherwise, many read conflicts happen and hot reindexing restarts again and again.
-      #for path in self.Catalog_getIndexablePathList():
-      for path in self.portal_skins.erp5_core.Catalog_getIndexablePathList():
-        object = self.resolve_path(path)
-        if object is None: continue
-        id_list = object.objectIds()
-        #LOG('will hotReindex this object:',0,object.getPhysicalPath())
-        #LOG('will hotReindex this object uid:',0,getattr(object,'uid',None))
-        object.activate(passive_commit=1, priority=5, activity='SQLQueue').queueCataloggedObject(sql_catalog_id=destination_sql_catalog_id, activity='SQLQueue')
-        object = None
-        get_transaction().commit() # Should not have references to objects too long.
-
-        LOG('hotReindexObjectList', 0, 'Catalogging %s' % path)
-        for id in id_list:
-          subpath = '/'.join([path, id])
-          o = self.resolve_path(subpath)
-          if o is not None:
-            o.activate(passive_commit=1, priority=5, activity='SQLQueue').recursiveQueueCataloggedObject(sql_catalog_id=destination_sql_catalog_id, activity='SQLQueue')
-            o = None
-            get_transaction().commit() # Should not have references to objects too long.
-
-      # Make sure that everything is catalogged.
-      LOG('hotReindexObjectList', 0, 'Flushing the queue')
-      self.activate(broadcast=1, passive_commit=1, after_method_id=('recursiveQueueCataloggedObject', 'queueCataloggedObject', 'immediateQueueCataloggedObject'), priority=5, activity='SQLQueue').flushQueuedObjectList(sql_catalog_id=destination_sql_catalog_id)
+      # Start reindexing.
+      self.ERPSite_reindexAll(sql_catalog_id=destination_sql_catalog_id)
+      get_transaction().commit() # Should not have references to objects too long.
 
       # Now synchronize this new database with the current one.
       # XXX It is necessary to use ActiveObject to wait for queued objects to be flushed.
       LOG('hotReindexObjectList', 0, 'Starting double indexing')
-      self.activate(passive_commit=1, after_method_id='flushQueuedObjectList', priority=5, activity='SQLQueue').setHotReindexingState('double indexing',
+      self.activate(passive_commit=1, after_method_id=('reindexObject', 'recursiveReindexObject', priority=5).setHotReindexingState('double indexing',
                                  source_sql_catalog_id=source_sql_catalog_id,
                                  destination_sql_catalog_id=destination_sql_catalog_id)
 
@@ -441,15 +427,15 @@ class ZCatalog(Folder, Persistent, Implicit):
       if source_sql_catalog_id != destination_sql_catalog_id:
         # If equals, then this does not make sense to reindex again.
         LOG('hotReindexObjectList', 0, 'Playing back records')
-        self.activate(passive_commit=1, after_method_id='setHotReindexingState', priority=5, activity='SQLQueue').playBackRecordedObjectList(sql_catalog_id=destination_sql_catalog_id)
+        self.activate(passive_commit=1, after_method_id='setHotReindexingState', priority=5).playBackRecordedObjectList(sql_catalog_id=destination_sql_catalog_id)
 
       # Exchange the databases.
       LOG('hotReindexObjectList', 0, 'Exchanging databases')
-      self.activate(after_method_id=('reindexObject', 'playBackRecordedObjectList', 'setHotReindexingState'), priority=5, activity='SQLQueue').exchangeDatabases(source_sql_catalog_id, destination_sql_catalog_id, skin_selection_dict, sql_connection_id_dict) # XXX Never called by activity tool, why ??? XXX
+      self.activate(after_method_id=('reindexObject', 'playBackRecordedObjectList'), priority=5).exchangeDatabases(source_sql_catalog_id, destination_sql_catalog_id, skin_selection_dict, sql_connection_id_dict) # XXX Never called by activity tool, why ??? XXX
     finally:
       # Finish.
       LOG('hotReindexObjectList', 0, 'Finishing hot reindexing')
-      self.activate(passive_commit=1, after_method_id='exchangeDatabases', priority=5, activity='SQLQueue').finishHotReindexing()
+      self.activate(passive_commit=1, after_method_id='exchangeDatabases', priority=5).finishHotReindexing()
 
     if RESPONSE is not None:
       URL1 = REQUEST.get('URL1')
@@ -610,10 +596,6 @@ class ZCatalog(Folder, Persistent, Implicit):
   def catalogObjectList(self, object_list, sql_catalog_id=None,**kw):
     """Catalog a list of objects.
     """
-    hot_reindexing = 0
-    if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
-      hot_reindexing = 1
-      
     wrapped_object_list = []
     failed_object_list = []
     url_list = []
@@ -643,13 +625,13 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.catalogObjectList(wrapped_object_list,**kw)
 
-      if hot_reindexing:
+      if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
-        if self.hot_reindexing_state == 'recording':
-          destination_catalog.recordCatalogObjectList(url_list)
-        else:
-          destination_catalog.deleteRecordedObjectList(url_list) # Prevent this object from being replayed.
-          destination_catalog.catalogObjectList(wrapped_object_list,**kw)
+        if destination_catalog.id != catalog.id:
+          if self.hot_reindexing_state == 'recording':
+            destination_catalog.recordObjectList(url_list, 1)
+          else:
+            destination_catalog.catalogObjectList(wrapped_object_list,**kw)
           
     object_list[:] = failed_object_list[:]
           
@@ -660,13 +642,13 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.uncatalogObject(uid)
 
-    if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
-      destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
-      if self.hot_reindexing_state == 'recording':
-        destination_catalog.recordUncatalogObject(uid)
-      else:
-        destination_catalog.deleteRecordedObjectList([uid]) # Prevent this object from being replayed.
-        destination_catalog.uncatalogObject(uid)
+      if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
+        destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+        if destination_catalog.id != catalog.id:
+          if self.hot_reindexing_state == 'recording':
+            destination_catalog.recordObjectList([uid], 0)
+          else:
+            destination_catalog.uncatalogObject(uid)
 
   def catalogTranslationList(self, object_list, sql_catalog_id=None):
     """Catalog translations.
