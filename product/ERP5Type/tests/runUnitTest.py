@@ -29,7 +29,7 @@ def initializeInstanceHome(tests_framework_home, real_instance_home, instance_ho
 if os.path.isdir('/usr/lib64/zope/lib/python'):
   software_home = '/usr/lib64/zope/lib/python'
 else:
-  software_home = '/usr/lib/zope/lib/python'
+  software_home = '/home/yo/tmp/zope-2.8/lib/python'
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
