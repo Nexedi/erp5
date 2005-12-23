@@ -681,10 +681,14 @@ class ERP5Generator(PortalGenerator):
           if not p.hasObject('portal_activities'):
             addTool = p.manage_addProduct['CMFActivity'].manage_addTool
             addTool('CMF Activity Tool', None) # Allow user to select active/passive
-            # Initialize Activities
-            portal_activities = getToolByName(p, 'portal_activities', None)
-            if portal_activities is not None:
-              portal_activities.manageClearActivities()
+          # Initialize Activities
+          portal_activities = getToolByName(p, 'portal_activities', None)
+          if portal_activities is not None:
+            if kw.get('update', 0):
+              keep = 1
+            else:
+              keep = 0
+            portal_activities.manageClearActivities(keep=keep)
 
     def setupTemplateTool(self, p, **kw):
       """Setup the Template Tool. Security must be set strictly.
