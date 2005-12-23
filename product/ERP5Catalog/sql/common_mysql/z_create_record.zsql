@@ -20,5 +20,5 @@ CREATE TABLE `record` (
   `date` DATETIME NOT NULL,
   PRIMARY KEY  (`uid`),
   KEY `played` (`played`)
-  KEY `date` (`date`),
+  KEY `date` (`date`)
 ) TYPE=InnoDB;
