@@ -591,6 +591,38 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
     self.assertEquals(o.getTitle(), 'cb')
         
+  def CheckClearActivities(self, activity):
+    """
+      Check if active objects are held even after clearing the tables.
+    """
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    get_transaction().commit()
+    self.tic()
+
+    def check(o):
+      message_list = portal.portal_activities.getMessageList()
+      self.assertEquals(len(message_list), 1)
+      m = message_list[0]
+      self.assertEquals(m.object_path, o.getPhysicalPath())
+      self.assertEquals(m.method_id, '_setTitle')
+      
+    o = portal.organisation._getOb(self.company_id)
+    o.activate(activity=activity)._setTitle('foo')
+    get_transaction().commit()
+    check(o)
+    
+    portal.portal_activities.manageClearActivities()
+    get_transaction().commit()
+    check(o)
+    
+    get_transaction().commit()
+    self.tic()
+
+    self.assertEquals(o.getTitle(), 'foo')
+    
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1160,7 +1192,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.CheckScheduling('SQLDict')
 
-  def test_61_CheckSchedulingWithSQLQueue(self, quiet=0, run=run_all_test):
+  def test_62_CheckSchedulingWithSQLQueue(self, quiet=0, run=run_all_test):
     # Test if scheduling is correct with SQLQueue
     if not run: return
     if not quiet:
@@ -1169,6 +1201,23 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.CheckScheduling('SQLQueue')
 
+  def test_63_CheckClearActivitiesWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if clearing tables does not remove active objects with SQLDict
+    if not run: return
+    if not quiet:
+      message = '\nCheck Clearing Activities With SQL Dict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckClearActivities('SQLDict')
+
+  def test_64_CheckClearActivitiesWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if clearing tables does not remove active objects with SQLQueue
+    if not run: return
+    if not quiet:
+      message = '\nCheck Clearing Activities With SQL Queue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckClearActivities('SQLQueue')
 
 if __name__ == '__main__':
     framework()
