@@ -498,7 +498,6 @@ class ListBoxWidget(Widget.Widget):
         # First, grasp and intialize the variables we may need later
         #
         ###############################################################
-
         here = REQUEST['here']
         reset = REQUEST.get('reset', 0)
         form = field.aq_parent
@@ -687,7 +686,12 @@ class ListBoxWidget(Widget.Widget):
             if REQUEST.form.has_key(k):
               params[k] = REQUEST.form[k]
             elif not params.has_key(k):
-              params[k] = eval(v)
+              # Probalby eval must be removed, we have tales
+              # expressions instead
+              try:
+                params[k] = eval(v)
+              except TypeError:
+                params[k] = v
 
         # Allow overriding list_method, count_method and stat_method by params
         if params.has_key('list_method_id'):
@@ -1963,7 +1967,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
 <!-- End of Table Wrapping for Select Tree -->
 </td></tr>
 </table>""" % (select_tree_html,list_html)
-
+        LOG('Listbox render end call', 0, '')
         return list_html
 
 ListBoxWidgetInstance = ListBoxWidget()
