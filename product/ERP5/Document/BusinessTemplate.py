@@ -602,6 +602,8 @@ class PathTemplateItem(ObjectTemplateItem):
       object_keys = [object_path]
     else:
       object_keys = self._path_archive.keys()
+    object_keys.sort()
+    object_keys.reverse()
     p = context.getPortalObject()
     for path in object_keys:
       for relative_url in self._resolvePath(p, [], path.split('/')):
