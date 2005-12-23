@@ -19,6 +19,6 @@ CREATE TABLE `record` (
   `played` BOOL NOT NULL default 0,
   `date` DATETIME NOT NULL,
   PRIMARY KEY  (`uid`),
-  KEY `played` (`played`)
+  KEY `played` (`played`),
   KEY `date` (`date`)
 ) TYPE=InnoDB;
