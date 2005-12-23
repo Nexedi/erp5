@@ -685,7 +685,7 @@ class ActivityTool (Folder, UniqueObject):
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivities'))
 
     security.declareProtected( CMFCorePermissions.ManagePortal, 'manageClearActivities' )
-    def manageClearActivities(self, REQUEST=None):
+    def manageClearActivities(self, keep=1, REQUEST=None):
       """
         Clear all activities and recreate tables.
       """
@@ -693,14 +693,15 @@ class ActivityTool (Folder, UniqueObject):
 
       # Obtain all pending messages.
       message_list = []
-      for activity in activity_list:
-        if hasattr(activity, 'dumpMessageList'):
-          try:
-            message_list.extend(activity.dumpMessageList(self))
-          except ConflictError:
-            raise
-          except:
-            LOG('ActivityTool', WARNING, 'could not dump messages from %s' % (activity,), error=sys.exc_info())
+      if keep:
+        for activity in activity_list:
+          if hasattr(activity, 'dumpMessageList'):
+            try:
+              message_list.extend(activity.dumpMessageList(self))
+            except ConflictError:
+              raise
+            except:
+              LOG('ActivityTool', WARNING, 'could not dump messages from %s' % (activity,), error=sys.exc_info())
             
       if hasattr(folder, 'SQLDict_createMessageTable'):
         try:
