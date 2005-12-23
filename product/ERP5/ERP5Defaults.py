@@ -182,3 +182,9 @@ portal_default_gap_root = 'gap/france/pcg'
 # Security default values: a list of base categories which security groups are based on
 # WARNING: order must be consistent with Portal Types Roles Definitions.
 portal_assignment_base_category_list = ['site', 'group', 'function']
+
+portal_current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoiced') # invoiced is Coramy specific and should be removed
+portal_draft_order_state_list =  ('cancelled', 'draft', 'auto_planned' )
+portal_planned_order_state_list =  ('planned', 'ordered', )
+portal_reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
+portal_future_inventory_state_list = ('planned', 'ordered',)
