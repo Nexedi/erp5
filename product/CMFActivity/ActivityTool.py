@@ -47,7 +47,7 @@ import sys
 from ZODB.POSException import ConflictError
 from OFS.Traversable import NotFound
 
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, WARNING
 
 try:
   from Products.TimerService import getTimerService
@@ -136,16 +136,18 @@ class Message:
     try:
 #       LOG('WARNING ActivityTool', 0,
 #            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
-      object = self.getObject(activity_tool)
+      obj = self.getObject(activity_tool)
       # Change user if required (TO BE DONE)
       # We will change the user only in order to execute this method
       current_user = str(_getAuthenticatedUser(self))
       user = self.changeUser(self.user_name, activity_tool)
-      result = getattr(object, self.method_id)(*self.args, **self.kw)
-      # Use again the previous user
-      if user is not None:
-        self.changeUser(current_user, activity_tool)
-      self.activateResult(activity_tool, result, object)
+      try:
+        result = getattr(obj, self.method_id)(*self.args, **self.kw)
+      finally:
+        # Use again the previous user
+        if user is not None:
+          self.changeUser(current_user, activity_tool)
+      self.activateResult(activity_tool, result, obj)
       self.is_executed = 1
     except:
       self.is_executed = 0
@@ -175,6 +177,21 @@ Method: %s
     #LOG('notifyUser mail_text', 0, str(mail_text))
     activity_tool.MailHost.send( mail_text )
     #LOG('notifyUser send', 0, '')
+
+  def reactivate(self, activity_tool):
+    # Reactivate the original object.
+    obj= self.getObject(activity_tool)
+    # Change user if required (TO BE DONE)
+    # We will change the user only in order to execute this method
+    current_user = str(_getAuthenticatedUser(self))
+    user = self.changeUser(self.user_name, activity_tool)
+    try:
+      active_obj = obj.activate(**self.activity_kw)
+      getattr(active_obj, self.method_id)(*self.args, **self.kw)
+    finally:
+      # Use again the previous user
+      if user is not None:
+        self.changeUser(current_user, activity_tool)
 
 class Method:
 
@@ -674,6 +691,17 @@ class ActivityTool (Folder, UniqueObject):
       """
       folder = getToolByName(self, 'portal_skins').activity
 
+      # Obtain all pending messages.
+      message_list = []
+      for activity in activity_list:
+        if hasattr(activity, 'dumpMessageList'):
+          try:
+            message_list.extend(activity.dumpMessageList(self))
+          except ConflictError:
+            raise
+          except:
+            LOG('ActivityTool', WARNING, 'could not dump messages from %s' % (activity,), error=sys.exc_info())
+            
       if hasattr(folder, 'SQLDict_createMessageTable'):
         try:
           folder.SQLDict_dropMessageTable()
@@ -681,8 +709,8 @@ class ActivityTool (Folder, UniqueObject):
           raise
         except:
           LOG('CMFActivities', 
-              0, 
-              'WARNING: could not drop the message table',
+              WARNING, 
+              'could not drop the message table',
               error=sys.exc_info())
         folder.SQLDict_createMessageTable()
 
@@ -693,10 +721,21 @@ class ActivityTool (Folder, UniqueObject):
           raise
         except:
           LOG('CMFActivities', 
-              0, 
-              'WARNING: could not drop the message queue table',
+              WARNING, 
+              'could not drop the message queue table',
               error=sys.exc_info())
         folder.SQLQueue_createMessageTable()
+
+      # Reactivate the messages.
+      for m in message_list:
+        try:
+          m.reactivate(self)
+        except ConflictError:
+          raise
+        except:
+          LOG('ActivityTool', WARNING,
+              'could not reactivate the message %r, %r' % (m.object_path, m.method_id),
+              error=sys.exc_info())
 
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivitiesAdvanced?manage_tabs_message=Activities%20Cleared')) 

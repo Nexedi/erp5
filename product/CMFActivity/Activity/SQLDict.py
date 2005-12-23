@@ -428,6 +428,16 @@ class SQLDict(RAMDict):
         message_list.append(m)
     return message_list
 
+  def dumpMessageList(self, activity_tool):
+    # Dump all messages in the table.
+    message_list = []
+    if hasattr(activity_tool, 'SQLDict_dumpMessageList'):
+      result = activity_tool.SQLDict_dumpMessageList()
+      for line in result:
+        m = self.loadMessage(line.message, uid = line.uid)
+        message_list.append(m)
+    return message_list
+
   def distribute(self, activity_tool, node_count):
     processing_node = 1
     if hasattr(activity_tool,'SQLDict_readMessageList'):
