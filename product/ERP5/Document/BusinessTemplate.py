@@ -607,9 +607,9 @@ class PathTemplateItem(ObjectTemplateItem):
     p = context.getPortalObject()
     for path in object_keys:
       for relative_url in self._resolvePath(p, [], path.split('/')):
-        container_path = relative_url.split('/')[0:-1]
-        object_id = relative_url.split('/')[-1]
         try:        
+          container_path = relative_url.split('/')[0:-1]
+          object_id = relative_url.split('/')[-1]
           container = portal.unrestrictedTraverse(container_path)
           if trash and trashbin is not None:
             self.portal_trash.backupObject(trashbin, container_path, object_id, save=1, keep_subobjects=1)
@@ -2048,15 +2048,16 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       keys = self._archive.keys()
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    for key in keys:
-      if update_dict.has_key(key) or force:
-        if not force:
-          action = update_dict[key]
-          if action == 'nothing':
-            continue          
+    # XXX must a find a better way to manage related key
+    if update_dict.has_key('key_list') or force:
+      if not force:
+        action = update_dict['key_list']
+        if action == 'nothing':
+          return
+      for key in keys:
         if key not in sql_catalog_related_keys:
           sql_catalog_related_keys.append(key)
-    catalog.sql_catalog_related_keys = sql_catalog_related_keys
+      catalog.sql_catalog_related_keys = tuple(sql_catalog_related_keys)
 
   def uninstall(self, context, **kw):
     try:
