@@ -1950,15 +1950,16 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       keys = self._archive.keys()
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    for key in keys:
-      if update_dict.has_key(key) or force:
-        if not force:
-          action = update_dict[key]
-          if action == 'nothing':
-            continue          
+    # XXX same as related key
+    if update_dict.has_key(key) or force:
+      if not force:
+        action = update_dict[key]
+        if action == 'nothing':
+          continue
+      for key in keys:
         if key not in sql_search_result_keys:
           sql_search_result_keys.append(key)
-    catalog.sql_search_result_keys = sql_search_result_keys
+      catalog.sql_search_result_keys = sql_search_result_keys
 
   def uninstall(self, context, **kw):
     try:
@@ -2147,15 +2148,16 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       keys = self._archive.keys()
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    for key in keys:
-      if update_dict.has_key(key) or force:
-        if not force:
-          action = update_dict[key]
-          if action == 'nothing':
-            continue          
+    # XXX same as related keys
+    if update_dict.has_key(key) or force:
+      if not force:
+        action = update_dict[key]
+        if action == 'nothing':
+          continue
+      for key in keys:
         if key not in sql_search_tables:
           sql_search_tables.append(key)
-    catalog.sql_search_tables = sql_search_tables
+      catalog.sql_search_tables = sql_search_tables
 
   def uninstall(self, context, **kw):
     try:
