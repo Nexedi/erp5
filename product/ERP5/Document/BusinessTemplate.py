@@ -1918,7 +1918,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'key_list'] = key_list
+      self._objects[self.__class__.__name__+os.sep+'result_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -1951,9 +1951,9 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     # XXX same as related key
-    if update_dict.has_key(key) or force:
+    if update_dict.has_key('result_key_list') or force:
       if not force:
-        action = update_dict[key]
+        action = update_dict['result_key_list']
         if action == 'nothing':
           return
       for key in keys:
@@ -2017,7 +2017,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'key_list'] = key_list
+      self._objects[self.__class__.__name__+os.sep+'related_key_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -2050,9 +2050,12 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     # XXX must a find a better way to manage related key
-    if update_dict.has_key('key_list') or force:
+    if update_dict.has_key('related_key_list') or update_dict.has_key('key_list') or force:
       if not force:
-        action = update_dict['key_list']
+        if update_dict.has_key('related_key_list'):
+          action = update_dict['related_key_list']
+        else: # XXX for backward compatibility
+          action = update_dict['key_list']
         if action == 'nothing':
           return
       for key in keys:
@@ -2116,7 +2119,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'key_list'] = key_list
+      self._objects[self.__class__.__name__+os.sep+'resutl_table_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -2149,9 +2152,9 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     # XXX same as related keys
-    if update_dict.has_key(key) or force:
+    if update_dict.has_key('result_table_list') or force:
       if not force:
-        action = update_dict[key]
+        action = update_dict['result_table_list']
         if action == 'nothing':
           return
       for key in keys:
