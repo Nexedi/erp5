@@ -1955,7 +1955,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       if not force:
         action = update_dict[key]
         if action == 'nothing':
-          continue
+          return
       for key in keys:
         if key not in sql_search_result_keys:
           sql_search_result_keys.append(key)
@@ -2153,7 +2153,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       if not force:
         action = update_dict[key]
         if action == 'nothing':
-          continue
+          return
       for key in keys:
         if key not in sql_search_tables:
           sql_search_tables.append(key)
