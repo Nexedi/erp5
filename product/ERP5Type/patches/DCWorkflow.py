@@ -275,7 +275,8 @@ def updateRoleMappingsFor(self, ob):
                   if role not in other_roles :
                     refused_roles.append(role)
             for role in refused_roles :
-              roles.remove(role)
+              if role in roles :
+                roles.remove(role)
             if role_type=='tuple':
               roles = tuple(roles)
             if modifyRolesForPermission(ob, p, roles):
