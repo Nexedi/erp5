@@ -1,4 +1,7 @@
-2005-1222 yo
+2005-12-28 jerome
+* bug fix form_view and dialog_master for i18n
+
+2005-12-22 yo
 * Add an optional parameter passive_commit to InventoryModule_reindexMovementList and ERP5Site_reindexAll. passive_commit is passed to reindexObject and recursiveReindexObject.
 * index_html does load local_pt any longer, but directly defines slots.
 
