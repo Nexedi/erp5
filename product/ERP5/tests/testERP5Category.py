@@ -100,6 +100,7 @@ class TestERP5Category(ERP5TypeTestCase):
     self.login()
     # This add the base category size
     portal_categories = self.getCategoryTool()
+    person_module = self.getPersonModule()
     bc = self.base_cat
     portal_categories.newContent(portal_type='Base Category',id=bc)
     self.cat1 = portal_categories[bc].newContent(id='1',portal_type='Category')
@@ -120,6 +121,8 @@ class TestERP5Category(ERP5TypeTestCase):
     self.organisation2 = organisation_module.newContent(id='2',portal_type=self.portal_type)
     self.organisation2.immediateReindexObject()
     self.telephone2 = self.organisation2.newContent(id='1',portal_type='Telephone')
+    self.person = person_module.newContent(portal_type = 'Person')
+    self.person.immediateReindexObject()
 
     # We have no place to put a Predicate, we will put it in the
     # Organisation Module
@@ -202,7 +205,16 @@ class TestERP5Category(ERP5TypeTestCase):
     portal_categories[self.base_cat]['1'].edit(id='3')
     self.failIfDifferentSet(predicate.getMembershipCriterionCategoryList(),self.new_cat_list)
 
-
+  def test_06(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Rename Module With an Object Related to an Object it Contains')
+    organisation_module = self.getOrganisationModule()
+    organisation = self.organisation
+    person = self.person
+    person.setSubordinationValue(organisation)
+    organisation_module.edit(id='new_id')
+    self.assertEquals(person.getSubordinationValue(),organisation)
 
 
 if __name__ == '__main__':
