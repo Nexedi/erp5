@@ -1,3 +1,13 @@
+2005-12-28 jerome
+* fix i18n on journal report dialog
+* move transaction action from erp5_core to here
+* bug fix : remove 1000 Limit in  BankAccount_zGetAccountingTransactionList
+* added missing script AccountingTransactionModule_getTranslatedPortalTypeItemList
+
+2005-12-21 Kevin
+* Add parameter to AccountModule_getAvailableGapList to add an empty item in the generated list.
+* Move default_site_preference to erp5_core.
+
 2005-12-18 jérome
 * added accounting period module and validation workflow.
 * added account validation workflow
