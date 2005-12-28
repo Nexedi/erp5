@@ -202,6 +202,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
           <span tal:condition="python: form.action!=\'\'">\n
             <input type="Submit"  value="Search"\n
                   name="Base_callDialogMethod:method"\n
+                  i18n:attributes="value" i18n:domain="ui"\n
                   tal:attributes="value form/title"/>\n
           </span>\n
         </td>\n
