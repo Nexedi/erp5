@@ -195,9 +195,7 @@ stat</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -213,7 +211,7 @@ stat</string> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>1000</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
