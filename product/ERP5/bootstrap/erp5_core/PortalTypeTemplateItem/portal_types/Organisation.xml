@@ -175,7 +175,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -240,7 +240,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -305,7 +305,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>20.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -370,7 +370,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>40.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -435,7 +435,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>50.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -500,7 +500,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>99.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -565,7 +565,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>100.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -630,7 +630,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -695,7 +695,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
