@@ -342,7 +342,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(x, x) for x in here.getPortalAccountingTransactionTypeList()]</string> </value>
+            <value> <string>here/AccountingTransactionModule_getTranslatedPortalTypeItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
