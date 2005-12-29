@@ -39,6 +39,8 @@ from string import join, replace
 
 class XMLMatrix(Folder):
     """
+   XXX plusieurs matrice associées à un identifiant (base_id), le nombre de dimensions est indépandant. Les indexs de la matrice sont des objets.
+    
         A mix-in class which provides a matrix like
         access to objects. Matrices are of any dimension
 
@@ -59,14 +61,13 @@ class XMLMatrix(Folder):
 
     # Matrix Methods
     security.declareProtected( Permissions.View, 'getCell' )
-    def getCell(self, *kw , **kwd):
+    def getCell(self, base_id="cell", *kw , **kwd):
       """
           Access a cell at row and column
       """
       if not hasattr(self, 'index'):
         return None
 
-      base_id = kwd.get('base_id', 'cell')
       if not self.index.has_key(base_id):
         return None
         
@@ -82,30 +83,29 @@ class XMLMatrix(Folder):
       return self.get(cell_id)
 
     security.declareProtected( Permissions.View, 'getCellProperty' )
-    def getCellProperty(self, *kw , **kwd):
+    def getCellProperty(self, base_id="cell", *kw , **kwd):
       """
           Get a property of a cell at row and column
       """
       cell = self.getCell(*kw, **kwd)
       if cell is None:
         return None
-        
-      base_id = kwd.get('base_id', 'cell')
+      
       return cell.getProperty(base_id)
       
     security.declareProtected( Permissions.View, 'hasCell' )
-    def hasCell(self, *kw , **kwd):
+    def hasCell(self, base_id="cell", *kw , **kwd):
       """
-          Checks if cell exists
-      """
+          Checks if matrix corresponding to base_id contains cell specified
+          by *kw coordinates.
+      """ 
       if not hasattr(self, 'index'):
         return 0
 
-      base_id = kwd.get('base_id', 'cell')
-      cell_id = base_id
-      if not self.index.has_key(cell_id):
+      if not self.index.has_key(base_id):
         return 0
 
+      cell_id = base_id
       i = 0
       for my_id in kw:
         if self.index[base_id].has_key(i):
@@ -122,7 +122,7 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='cell'):
       """
-          This method can be hasCellContent
+          Checks if matrix corresponding to base_id contains cells.
       """
       aq_self = aq_base(self)
 
@@ -139,24 +139,23 @@ class XMLMatrix(Folder):
       return 0
 
     security.declareProtected( Permissions.View, 'hasInRange' )
-    def hasInRange(self, *kw , **kwd):
+    def hasInRange(self, base_id="cell", *kw , **kwd):
       """
-          Checks if cell exists
+          Checks if cell exists TODO
+
+
+          
       """
       if not hasattr(self, 'index'):
         return 0
-
-      base_id = kwd.get('base_id', 'cell')
-      cell_id = base_id
-      if not self.index.has_key(cell_id):
+    
+      if not self.index.has_key(base_id):
         return 0
 
       i = 0
       for my_id in kw:
         if self.index[base_id].has_key(i):
-          if self.index[base_id][i].has_key(my_id):
-            cell_id += '_%s' % self.index[base_id][i][my_id]
-          else:
+          if not self.index[base_id][i].has_key(my_id):
             return 0
         else:
           return 0
@@ -164,14 +163,13 @@ class XMLMatrix(Folder):
 
       return 1
 
-    security.declareProtected( Permissions.ModifyPortalContent, '_setCellRange' )
-    def _setCellRange(self, *kw, **kwd):
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               '_setCellRange' )
+    def _setCellRange(self, base_id="cell", *kw, **kwd):
       """
           Set a new range for a matrix, this method can
           also handle a changement of the size of a matrix
       """
-      base_id = kwd.get('base_id', 'cell')
-
       movement = {}  # We will put in this dictionnary the previous and new
                      # id of a given cell
       new_index = PersistentMapping() # new_index defines the relation between keys
@@ -183,7 +181,6 @@ class XMLMatrix(Folder):
       # Return if previous range is the same
       current_range = self.getCellRange(base_id=base_id)
       if current_range == list(kw): # kw is a tuple
-        LOG('XMLMatrix',0,'return form _setCellRange - no need to change range')
         return
 
       # We must make sure the base_id exists
@@ -192,11 +189,11 @@ class XMLMatrix(Folder):
         # Create an index for this base_id
         self.index[base_id] = PersistentMapping()
 
-      new_index[base_id]=PersistentMapping() # fixed by JPS
+      new_index[base_id] = PersistentMapping()
       # Recreate a new index for the new range defined in *kw
       i = 0
       for index_ids in kw:
-        new_index[base_id][i] = PersistentMapping() #  fixed by JPS ({})
+        new_index[base_id][i] = PersistentMapping()
         j = 0
         for my_id in index_ids:
           new_index[base_id][i][my_id] = j
@@ -304,33 +301,29 @@ class XMLMatrix(Folder):
             o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
             o.isIndexable = 0 # unindexed already forced
           self._delObject('temp_' + object_id) # object will be removed from catalog automaticaly
-
       # We don't need the old index any more, we
       # can set the new index
-      self.index[base_id] = new_index[base_id]    # pb, KeyError, variation, car passage
-        # de coloris, taille ?seulement taille
-      #LOG("The End",0, '')
-
+      self.index[base_id] = new_index[base_id]
+      
     security.declareProtected( Permissions.ModifyPortalContent, 'setCellRange' )
-    def setCellRange(self, *kw, **kwd):
+    def setCellRange(self, base_id="cell", *kw, **kwd):
       """
-          Define the indices provided
-          one list per index (kw)
+          Update the matrix ranges using provided lists of indexes (kw).
 
           Any number of list can be provided
       """
-      self._setCellRange(*kw, **kwd)
+      self._setCellRange(base_id=base_id, *kw, **kwd)
       self.reindexObject()
 
     security.declareProtected(Permissions.ModifyPortalContent, 
                               'updateCellRange')
     def updateCellRange(self, base_id, script_id=None, **kw):
       """
-        The asCellRange script if PT dependent
-        whoch is not the case with this kind of code
+        The asCellRange script is Portal Type dependent
+        which is not the case with this kind of code
         a better implementation consists in defining asCellRange as a 
         generic method at matrix level (OverridableMethod(portal_type))
-        which lookuops for scipt in class, meta_type and PT form 
+        which lookups for script in class, meta_type and PT form 
         interaction could be implemented with interaction workflow
         this method should be renamed updateCellRange or updateMatrixCellRange
         base_id is parameter of updateCellRange
@@ -446,9 +439,8 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.ModifyPortalContent, 'renameCellRange' )
     def renameCellRange(self, *kw, **kwd):
       """
-          Rename the indices provided
-          one list per index (kw)
-
+          Update the matrix ranges using provided lists of indexes (kw).
+          This keep cell values if we add/remove dimensions
           Any number of list can be provided
       """
       self._renameCellRange(*kw, **kwd)
@@ -472,14 +464,13 @@ class XMLMatrix(Folder):
       return result
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
-    def newCell(self, *kw, **kwd):
+    def newCell(self, base_id="cell", *kw, **kwd):
       """
           This method creates a new cell
       """
       if not hasattr(self, 'index'):
         return None
 
-      base_id = kwd.get('base_id', 'cell')
       cell_id = base_id
       if not self.index.has_key(cell_id):
         return None
@@ -490,8 +481,8 @@ class XMLMatrix(Folder):
           cell_id += '_%s' % self.index[base_id][i][my_id]
           i += 1
         else:
-          raise KeyError, 'Invalid key: %s' % str(kw) # Is this temp ? XXX
-          return None
+          raise KeyError, 'Invalid key: %s' % str(kw)
+
       cell = self.get(cell_id)
       if cell is not None:
         return cell
@@ -499,12 +490,12 @@ class XMLMatrix(Folder):
         return self.newCellContent(cell_id,**kwd)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id,**kw):
+    def newCellContent(self, id, portal_type=None, **kw):
       """
-          This method can be overriden
+        Creates a new content as a cell.
       """
-      if kw.has_key('portal_type'):
-        type_name = kw['portal_type']
+      if portal_type is not None :
+        type_name = portal_type
       else:
         content_types = self.allowedContentTypes()
         if len(content_types) >= 1:
@@ -543,7 +534,7 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.AccessContentsInformation, 'keyToId' )
     def keyToId(self, kw, base_id = 'cell'):
       """
-        Converts a key into an id
+        Converts a key into a cell id
       """
       index = self.index[base_id]
       cell_id_list = [base_id]
@@ -558,7 +549,7 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellIdList' )
     def getCellIdList(self, base_id = 'cell'):
       """
-        Returns a list of possible keys as tuples
+        Returns a list of possible ids as tuples
       """
       if not hasattr(self, 'index'):
         return ()
@@ -586,7 +577,7 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
     def getCellValueList(self, base_id = 'cell'):
       """
-        Returns a list of possible keys as tuples
+        Returns a list of cell values as tuples
       """
       result = []
       for id in self.getCellIdList(base_id=base_id):
@@ -599,7 +590,7 @@ class XMLMatrix(Folder):
     cellValues = getCellValueList
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getMatrixList' )
-    def getMatrixList(self, base_id = 'cell'):
+    def getMatrixList(self):
       """
         Return possible base_id values
       """
@@ -628,6 +619,9 @@ class XMLMatrix(Folder):
 
     security.declareProtected( Permissions.AccessContentsInformation, '_checkConsistency' )
     def _checkConsistency(self, fixit=0):
+      """
+        Constraint API.
+      """
       # Check useless cells
       to_delete = []
       errors = []
@@ -705,8 +699,8 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
     def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
       """
-          We must do some matrix range update in the event matrix range 
-          is defined by a category
+        We must do some matrix range update in the event matrix range 
+        is defined by a category
       """
       LOG('XMLMatrix notifyAfterUpdateRelatedContent', 0, str(new_category_url))
       update_method = self.portal_categories.updateRelatedCategory
@@ -723,6 +717,8 @@ class XMLMatrix(Folder):
 
 class TempXMLMatrix(XMLMatrix):
   """
+    Temporary XMLMatrix.
+
     If we need Base services (categories, edit, etc) in temporary objects
     we shoud used TempBase
   """
