@@ -87,11 +87,12 @@ class OOoTemplate(ZopePageTemplate):
         file (zip archive) and replace content.xml at render time
         with XML dynamically generated through TAL/TALES/METAL expressions
 
-        TODO:
-          - solve content type issue (text/html currently required
-            to produce valude xml). TALParser (used if content type
-            is application/) does not produce appropriate result.
+        WARNING:
+          - In order to render in UTF-8, Template must contain the expression:
+            tal:define="dummy python:
+       request.RESPONSE.setHeader('Content-Type','text/xml;; charset=utf-8')"
 
+        TODO:
           - upload of OOo documents must be able to extract content.xml
             from the archive, remove DTD definition and include
             CR/LF to produce a nice looking XML source.
@@ -146,6 +147,11 @@ class OOoTemplate(ZopePageTemplate):
 
     # Proxy method to PageTemplate
     def pt_render(self, source=0, extra_context={}):
+      # Get request
+      request = extra_context.get('REQUEST', None)
+      if not request:
+        request = get_request()
+
       # Retrieve master document
       ooo_document = getattr(self, self.ooo_stylesheet)
       # Create a new builder instance
@@ -157,10 +163,8 @@ class OOoTemplate(ZopePageTemplate):
 
       # Get request and batch_mode
       batch_mode = extra_context.get('batch_mode', 0)
-      request = extra_context.get('REQUEST', None)
-      if not request:
-        request = get_request()
 
+      # Debug mode
       if request.get('debug',0):
         return doc_xml
 
@@ -172,16 +176,15 @@ class OOoTemplate(ZopePageTemplate):
 
       # Do not send a RESPONSE if in batch_mode
       if request and not batch_mode:
-        request.RESPONSE.setHeader('Content-Type','application/vnd.sun.xml.writer')
-        #request.RESPONSE.setHeader('Content-Type',self.content_type) # content_type is set to text/html to produce acceptable result until solution found
+        request.RESPONSE.setHeader('Content-Type','%s;; charset=utf-8' % self.content_type)
         request.RESPONSE.setHeader('Content-Length',len(ooo))
-        request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s.ooo' % self.id)
+        request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s' % self.id)
 
       return ooo
 
     def om_icons(self):
         """Return a list of icon URLs to be displayed by an ObjectManager"""
-        icons = ({'path': 'misc_/ERP5Form/OOo.png',
+        icons = ({'path': 'misc_/ERP5OOo/OOo.png',
                   'alt': self.meta_type, 'title': self.meta_type},)
         if not self._v_cooked:
             self._cook()
