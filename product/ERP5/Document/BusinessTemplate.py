@@ -3294,7 +3294,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       else:
         trashbin = None
               
+      # Install everything
+      if len(object_to_update) > 0 or force:
+        for item_name in self._item_name_list:
+          item = getattr(self, item_name, None)
+          if item is not None:
+            item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
+
       # get objects to remove
+      # do remove after because we may need backup object from installation
       remove_object_dict = {}
       for path in object_to_update.keys():
         action = object_to_update[path]
@@ -3307,12 +3315,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           item = getattr(installed_bt, item_name, None)
           if item is not None:
             item.remove(local_configuration, remove_object_dict=remove_object_dict, trashbin=trashbin)
-      # Install everything
-      if len(object_to_update) > 0 or force:
-        for item_name in self._item_name_list:
-          item = getattr(self, item_name, None)
-          if item is not None:
-            item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
+
 
       # update tools if necessary
       if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
