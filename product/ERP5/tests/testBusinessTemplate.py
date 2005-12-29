@@ -104,6 +104,37 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failIf(core_bt is None)
     sequence.edit(current_bt=core_bt)
 
+
+  def stepCopyCoreBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Copy erp5_core as new Business Template
+    """
+    template_tool = self.getTemplateTool()
+    core_bt = None
+    for bt in template_tool.objectValues(filter={'portal_type':'Business Template'}):
+      if bt.getTitle() == 'erp5_core':
+        core_bt = bt
+        break
+    self.failIf(core_bt is None)
+    # make copy
+    copy_data = template_tool.manage_copyObjects(ids=[core_bt.getId()])
+    ids = template_tool.manage_pasteObjects(copy_data)
+    LOG('id after copy', 0, ids)
+    new_id = ids[0]['new_id']
+    new_bt = template_tool._getOb(new_id)
+    LOG(new_bt, 0, str((new_bt.getTitle(), new_id)))
+    self.assertEqual(new_bt.getTitle(), 'erp5_core')
+    sequence.edit(copy_bt=new_bt)
+
+  def stepUseCopyCoreBusinessTemplate(self, sequence=None,
+                                  sequence_list=None, **kw):
+    """
+    Define erp5_core as current bt
+    """
+    bt = sequence.get('copy_bt')
+    sequence.edit(current_bt=bt, export_bt=bt)
+
   def stepUseExportBusinessTemplate(self, sequence=None,
                                   sequence_list=None, **kw):
     """
@@ -235,6 +266,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     pt.manage_addTypeInformation(ERP5TypeInformation.meta_type, id='Geek Module', typeinfo_name='ERP5Type: ERP5 Folder')
     module_type = pt._getOb('Geek Module', None)
     self.failUnless(module_type is not None)
+    module_type.filter_content_types = 1
     module_type.allowed_content_types = ('Geek Object',)
     sequence.edit(module_ptype_id=module_type.getId())
 
@@ -247,8 +279,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     ptype_ids = []
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     ptype_ids.append(sequence.get('module_ptype_id', ''))
-    self.assertEqual(len(ptype_ids), 2)
+    self.assertEqual(len(ptype_ids), 2)    
     bt.edit(template_portal_type_id_list=ptype_ids)
+    self.stepFillPortalTypesFields(sequence=sequence, sequence_list=sequence_list, **kw)
     
   def stepRemovePortalType(self, sequence=None, sequence_list=None, **kw):
     """
@@ -286,6 +319,15 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(module_type is None)
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
+
+  def stepFillPortalTypesFields(self, sequence=None, sequence_list=None, **kw):
+    """
+    Fill portal types properties field in business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.getPortalTypesProperties()
+    LOG("portal types properties added for", 0, bt.getTitle())
 
   # module
   def stepCreateModuleAndObjects(self, sequence=None, sequence_list=None, **kw):
@@ -869,7 +911,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     del catalog.filter_dict[method_id]
     self.failUnless(method_id not in catalog.filter_dict.keys())        
 
-  # Related key, Result key and table
+  # Related key, Result key and table, and others
   def stepCreateKeysAndTable(self, sequence=list, sequence_list=None, **kw):
     """
     Create some keys and tables
@@ -877,6 +919,11 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     related_key = 'fake_id | category/catalog/z_fake_method'
     result_key = 'fake_catalog.uid'
     result_table = 'fake_catalog'
+    keyword_key = 'fake_keyword'
+    full_text_key = 'fake_full_text'
+    request_key = 'fake_request'
+    multivalue_key = 'fake_multivalue'
+    topic_key = 'fake_topic'
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
     LOG("catalog is", 0, catalog.getId())
@@ -898,7 +945,40 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sql_search_tables.sort()
     catalog.sql_search_tables = tuple(sql_search_tables)
     self.failUnless(result_table in catalog.sql_search_tables)
-    sequence.edit(related_key=related_key, result_key=result_key, result_table=result_table)
+    # keyword keys
+    sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
+    sql_catalog_keyword_keys.append(keyword_key)
+    sql_catalog_keyword_keys.sort()
+    catalog.sql_catalog_keyword_search_keys = tuple(sql_catalog_keyword_keys)
+    self.failUnless(keyword_key in catalog.sql_catalog_keyword_search_keys)
+    # full_text keys
+    sql_catalog_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
+    sql_catalog_full_text_keys.append(full_text_key)
+    sql_catalog_full_text_keys.sort()
+    catalog.sql_catalog_full_text_search_keys = tuple(sql_catalog_full_text_keys)
+    self.failUnless(full_text_key in catalog.sql_catalog_full_text_search_keys)
+    # request
+    sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
+    sql_catalog_request_keys.append(request_key)
+    sql_catalog_request_keys.sort()
+    catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
+    self.failUnless(request_key in catalog.sql_catalog_request_keys)
+    # multivalue
+    sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
+    sql_catalog_multivalue_keys.append(multivalue_key)
+    sql_catalog_multivalue_keys.sort()
+    catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
+    self.failUnless(multivalue_key in catalog.sql_catalog_multivalue_keys)
+    # topic keys
+    sql_catalog_topic_keys = list(catalog.sql_catalog_topic_search_keys)
+    sql_catalog_topic_keys.append(topic_key)
+    sql_catalog_topic_keys.sort()
+    catalog.sql_catalog_topic_search_keys = tuple(sql_catalog_topic_keys)
+    self.failUnless(topic_key in catalog.sql_catalog_topic_search_keys)
+
+    sequence.edit(related_key=related_key, result_key=result_key, result_table=result_table, \
+                  keyword_key=keyword_key, full_text_key=full_text_key, request_key=request_key, \
+                  multivalue_key=multivalue_key, topic_key=topic_key)
     
   def stepAddKeysAndTableToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -912,9 +992,25 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    keyword_key = sequence.get('keyword_key', None)
+    self.failUnless(keyword_key is not None)
+    full_text_key = sequence.get('full_text_key', None)
+    self.failUnless(full_text_key is not None)
+    request_key = sequence.get('request_key', None)
+    self.failUnless(request_key is not None)
+    multivalue_key = sequence.get('multivalue_key', None)
+    self.failUnless(multivalue_key is not None)
+    topic_key = sequence.get('topic_key', None)
+    self.failUnless(topic_key is not None)
+    
     bt.edit(template_catalog_related_key_list=[related_key],
             template_catalog_result_key_list=[result_key],
-            template_catalog_result_table_list=[result_table]
+            template_catalog_result_table_list=[result_table],
+            template_catalog_keyword_key_list=[keyword_key],
+            template_catalog_full_text_key_list=[full_text_key],
+            template_catalog_request_key_list=[request_key],
+            template_catalog_multivalue_key_list=[multivalue_key],
+            template_catalog_topic_key_list=[topic_key],
             )
 
   def stepRemoveKeysAndTable(self, sequence=list, sequence_list=None, **kw):
@@ -927,8 +1023,19 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    keyword_key = sequence.get('keyword_key', None)
+    self.failUnless(keyword_key is not None)
+    full_text_key = sequence.get('full_text_key', None)
+    self.failUnless(full_text_key is not None)
+    request_key = sequence.get('request_key', None)
+    self.failUnless(request_key is not None)
+    multivalue_key = sequence.get('multivalue_key', None)
+    self.failUnless(multivalue_key is not None)
+    topic_key = sequence.get('topic_key', None)
+    self.failUnless(topic_key is not None)
+
     catalog = self.getCatalogTool().getSQLCatalog()
-    self.failUnless(catalog is not None)
+    self.failUnless(catalog is not None)    
     # result key
     sql_search_result_keys = list(catalog.sql_search_result_keys)
     sql_search_result_keys.remove(result_key)
@@ -947,6 +1054,37 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sql_search_tables.sort()
     catalog.sql_search_tables = tuple(sql_search_tables)
     self.failUnless(result_table not in catalog.sql_search_tables)
+    # keyword keys
+    sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
+    sql_catalog_keyword_keys.remove(keyword_key)
+    sql_catalog_keyword_keys.sort()
+    catalog.sql_catalog_keyword_search_keys = tuple(sql_catalog_keyword_keys)
+    self.failUnless(keyword_key not in catalog.sql_catalog_keyword_search_keys)
+    # full_text keys
+    sql_catalog_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
+    sql_catalog_full_text_keys.remove(full_text_key)
+    sql_catalog_full_text_keys.sort()
+    catalog.sql_catalog_full_text_search_keys = tuple(sql_catalog_full_text_keys)
+    self.failUnless(full_text_key not in catalog.sql_catalog_full_text_search_keys)
+    # request
+    sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
+    sql_catalog_request_keys.remove(request_key)
+    sql_catalog_request_keys.sort()
+    catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
+    self.failUnless(request_key not in catalog.sql_catalog_request_keys)
+    # multivalue
+    sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
+    sql_catalog_multivalue_keys.remove(multivalue_key)
+    sql_catalog_multivalue_keys.sort()
+    catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
+    self.failUnless(multivalue_key not in catalog.sql_catalog_multivalue_keys)
+    # topic keys
+    sql_catalog_topic_keys = list(catalog.sql_catalog_topic_search_keys)
+    sql_catalog_topic_keys.remove(topic_key)
+    sql_catalog_topic_keys.sort()
+    catalog.sql_catalog_topic_search_keys = tuple(sql_catalog_topic_keys)
+    self.failUnless(topic_key not in catalog.sql_catalog_topic_search_keys)
+
 
   def stepCheckKeysAndTableExists(self, sequence=list, sequence_list=None, **kw):
     """
@@ -958,6 +1096,17 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    keyword_key = sequence.get('keyword_key', None)
+    self.failUnless(keyword_key is not None)
+    full_text_key = sequence.get('full_text_key', None)
+    self.failUnless(full_text_key is not None)
+    request_key = sequence.get('request_key', None)
+    self.failUnless(request_key is not None)
+    multivalue_key = sequence.get('multivalue_key', None)
+    self.failUnless(multivalue_key is not None)
+    topic_key = sequence.get('topic_key', None)
+    self.failUnless(topic_key is not None)
+
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
     # result key
@@ -966,6 +1115,16 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(related_key in catalog.sql_catalog_related_keys)
     # result table
     self.failUnless(result_table in catalog.sql_search_tables)
+    # keyword key
+    self.failUnless(keyword_key in catalog.sql_catalog_keyword_search_keys)
+    # full text key
+    self.failUnless(full_text_key in catalog.sql_catalog_full_text_search_keys)
+    # request key
+    self.failUnless(request_key in catalog.sql_catalog_request_keys)
+    # multivalue key
+    self.failUnless(multivalue_key in catalog.sql_catalog_multivalue_keys)
+    # topic key
+    self.failUnless(topic_key in catalog.sql_catalog_topic_search_keys)
 
   def stepCheckKeysAndTableRemoved(self, sequence=list, sequence_list=None, **kw):
     """
@@ -977,6 +1136,17 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    keyword_key = sequence.get('keyword_key', None)
+    self.failUnless(keyword_key is not None)
+    full_text_key = sequence.get('full_text_key', None)
+    self.failUnless(full_text_key is not None)
+    request_key = sequence.get('request_key', None)
+    self.failUnless(request_key is not None)
+    multivalue_key = sequence.get('multivalue_key', None)
+    self.failUnless(multivalue_key is not None)
+    topic_key = sequence.get('topic_key', None)
+    self.failUnless(topic_key is not None)
+
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
     # result key
@@ -985,6 +1155,16 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(related_key not in catalog.sql_catalog_related_keys)
     # result table
     self.failUnless(result_table not in catalog.sql_search_tables)
+    # keyword key
+    self.failUnless(keyword_key not in catalog.sql_catalog_keyword_search_keys)
+    # full text key
+    self.failUnless(full_text_key not in catalog.sql_catalog_full_text_search_keys)
+    # request key
+    self.failUnless(request_key not in catalog.sql_catalog_request_keys)
+    # multivalue key
+    self.failUnless(multivalue_key not in catalog.sql_catalog_multivalue_keys)
+    # topic key
+    self.failUnless(topic_key not in catalog.sql_catalog_topic_search_keys)
 
   # Roles
   def stepCreateRole(self, sequence=None, sequence_list=None, **kw):
@@ -1177,6 +1357,26 @@ class TestBusinessTemplate(ERP5TypeTestCase):
           if hasattr(aq_base(data), 'uid'):
             self.failUnless(data.uid is None)
 
+  def stepSetUpdateWorkflowFlagInBusinessTemplate(self, sequence=None, sequence_list=None):
+    """
+    Set flag for update in Business Template    
+    """
+    template_tool = self.getTemplateTool()
+    bt = sequence.get('current_bt')
+    self.assertEqual(bt.getTitle(),'erp5_core')
+    bt.edit(template_update_business_template_workflow=1)
+    self.assertEqual(bt.getTemplateUpdateBusinessTemplateWorkflow(), 1)
+
+  def stepSetUpdateToolFlagInBusinessTemplate(self, sequence=None, sequence_list=None):
+    """
+    Set flag for update in Business Template    
+    """
+    template_tool = self.getTemplateTool()
+    bt = sequence.get('current_bt')
+    self.assertEqual(bt.getTitle(),'erp5_core')
+    bt.edit(template_update_tool=1)
+    self.assertEqual(bt.getTemplateUpdateTool(), 1)
+
   def stepRemoveBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
     Remove current Business Template
@@ -1211,7 +1411,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckNoTrashBin \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)    
+    sequence_list.play(self)      
 
   # test of portal types
   def test_02_BusinessTemplateWithPortalTypes(self, quiet=0, run=run_all_test):
@@ -1981,9 +2181,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-
-
-
   def test_17_upgradeBusinessTemplateWithAllItems(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -2087,6 +2284,81 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)    
+
+
+  # test specific to erp5_core
+  def test_18_checkUpdateBusinessTemplateWorkflow(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Check Update of Business Template Workflows is working'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CopyCoreBusinessTemplate \
+                       UseCopyCoreBusinessTemplate  \
+                       SetUpdateWorkflowFlagInBusinessTemplate \
+                       FillPortalTypesFields \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTrashBin \
+                       CheckSkinsLayers \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)      
+
+
+  def test_19_checkUpdateTool(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Check Update of Tool is working'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CopyCoreBusinessTemplate \
+                       UseCopyCoreBusinessTemplate  \
+                       SetUpdateToolFlagInBusinessTemplate \
+                       FillPortalTypesFields \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTrashBin \
+                       CheckSkinsLayers \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)      
 
 if __name__ == '__main__':
   framework()
