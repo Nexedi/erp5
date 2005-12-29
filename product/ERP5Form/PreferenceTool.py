@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
+from zLOG import LOG, INFO
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -125,12 +126,17 @@ class PreferenceTool(BaseTool):
         # type is not installed yet
         return []
       # 'Dynamic' property sheets added through ZMI
-      zmi_property_sheet_list = tuple(map(lambda property_sheet:
-                        getattr(__import__(property_sheet), property_sheet),
-                        pref_portal_type.property_sheet_list))
+      zmi_property_sheet_list = []
+      for property_sheet in pref_portal_type.property_sheet_list :
+        try:
+          zmi_property_sheet_list.append(
+                        getattr(__import__(property_sheet), property_sheet))
+        except ImportError, e :
+          LOG('PreferenceTool._getValidPreferenceNames', INFO,
+               'unable to import Property Sheet %s' % property_sheet, e)
       # 'Static' property sheets defined on the class
       class_property_sheet_list = Preference.property_sheets
-      for property_sheet in ( zmi_property_sheet_list +
+      for property_sheet in ( tuple(zmi_property_sheet_list) +
                               class_property_sheet_list ) :
         # then generate common method names 
         for prop in property_sheet._properties :
@@ -149,6 +155,7 @@ class PreferenceTool(BaseTool):
                          'get%s' % convertToUpperCase(attribute),
                          'get%sId' % convertToUpperCase(attribute),
                          'get%sTitle' % convertToUpperCase(attribute),
+
                          'get%sValue' % convertToUpperCase(attribute),
                          'get%sValueList' % convertToUpperCase(attribute),
                          'get%sItemList' % convertToUpperCase(attribute),
