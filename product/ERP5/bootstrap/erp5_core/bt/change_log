@@ -1,3 +1,6 @@
+2005-12-29 aurel
+* reindex trash bins in ERP5Site_reindexAll
+
 2005-12-29 jerome
 * update Resource_zGetInventory(List) to take into account changes in the stock table.
 * bug fix: Organisation default currency is "price_currency". updated Organisation_viewDetails.
