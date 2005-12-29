@@ -287,7 +287,7 @@ class Movement(XMLObject, Amount):
     if quantity > 0.0:
       return None                       # Outgoing quantity
     elif quantity < 0.0:
-      return self.getPrice() * quantity # XXX: price should be converted to the source currency
+      return self.getSourceAssetPrice() * quantity # XXX: price should be converted to the source currency
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationInventoriatedTotalAssetPrice')
@@ -304,8 +304,24 @@ class Movement(XMLObject, Amount):
     if quantity < 0.0:
       return None                       # Outgoing quantity
     elif quantity > 0.0:
-      return self.getPrice() * quantity # XXX: price should be converted to the dest. currency
+      return self.getDestinationAssetPrice() * quantity # XXX: price should be converted to the dest. currency
     return None
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
+  def getSourceAssetPrice(self):
+    """
+      Returns the price converted to the currency of the source section
+
+      This will be implemted by calling currency conversion on currency resources
+    """
+    return self.getPrice() # XXX Not implemented yet
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationAssetPrice')
+  def getDestinationAssetPrice(self):
+    """
+      Returns the price converted to the currency of the destination section
+    """
+    return self.getPrice() # XXX Not implemented yet
 
   # Causality computation
   security.declareProtected(Permissions.View, 'isConvergent')

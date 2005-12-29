@@ -161,22 +161,22 @@ class AccountingTransactionLine(DeliveryLine):
       Get the stop date.
     """
     return self.getStopDate()
-    
+ 
   # Pricing in standard currency
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None):
     """
       The inventoriated quantity converted in a default unit
-      
+
       For assortments, returns the inventoriated quantity in terms of
       number of items in the assortemnt.
-      
+
       For accounting, returns the quantity converted in a default unit
     """
     result = self.getInventoriatedQuantity()
     resource = self.getResourceValue()
     source = self.getSourceValue()
-    
+
     if source is not None and resource is not None:
       # XXX convertCurrency is not defined
       # ... so for now, we return 1
@@ -185,4 +185,22 @@ class AccountingTransactionLine(DeliveryLine):
                                       source.getPriceCurrencyValue())
     return None
 
-    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
+  def getSourceAssetPrice(self):
+    """
+      The price is set to 1.0 because we do not want to implement automatic currency
+      conversion in accounting. Users must define the conversion manually in accounting.
+      This is required by accounting law. One can not account USD (in a EUR based company)
+      without defining the equivalent in EUR.
+    """
+    return 1.0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationAssetPrice')
+  def getDestinationAssetPrice(self):
+    """
+      The price is set to 1.0 because we do not want to implement automatic currency
+      conversion in accounting. Users must define the conversion manually in accounting.
+      This is required by accounting law. One can not account USD (in a EUR based company)
+      without defining the equivalent in EUR.
+    """
+    return 1.0
