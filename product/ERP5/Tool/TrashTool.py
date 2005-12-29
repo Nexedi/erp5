@@ -85,7 +85,14 @@ class TrashTool(BaseTool):
         copy.seek(0)
         backup = connection.importFile(copy)
         backup.isIndexable = 0
-        backup_object_container._setObject(object_id, backup)
+        try:
+          backup_object_container._setObject(object_id, backup)
+        except AttributeError:
+          # XXX we can go here due to formulator because attribute field_added
+          # doesn't not exists on parent if it is a Trash Folder and not a Form
+          # so object is not backup
+          LOG("Trash Tool backupObject", 100, "Can't backup object %s" %(object_id))
+          pass
         
     keep_sub = kw.get('keep_subobjects', 0)
     subobjects_dict = {}
