@@ -264,65 +264,48 @@ class Movement(XMLObject, Amount):
     return None
 
   # Asset price calculation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
-  def getSourceAssetPrice(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceInventoriatedTotalAssetPrice')
+  def getSourceInventoriatedTotalAssetPrice(self):
     """
+      Returns a price which can be used to calculate stock value (asset)
+
       Asset price is used for calculation of inventory asset value
       and for accounting
+
+      If the asset price is specified (as in accounting for multi-currency),
+      then it is returned. If no asset price is specified, then we use
+      the price as defined on the line, but only for incoming quantities
+      (purchase price, industrial price, etc.).
+
+      For outgoing quantities, it is the responsability of database
+      to calculate asset prices based on calculation rules (FIFO,
+      FILO, AVERAGE, etc.).
     """
-    result = self._baseGetSourceAssetPrice()
+    result = self.getSourceTotalAssetPrice() # This is what we use for accounting
     if result is not None: return result
     quantity = self.getQuantity()
     if quantity > 0.0:
-      return None
+      return None                       # Outgoing quantity
     elif quantity < 0.0:
-      return self.getPrice()
+      return self.getPrice() * quantity # XXX: price should be converted to the source currency
+    return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationAssetPrice')
-  def getDestinationAssetPrice(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationInventoriatedTotalAssetPrice')
+  def getDestinationInventoriatedTotalAssetPrice(self):
     """
+      Returns a price which can be used to calculate stock value (asset)
+
       Asset price is used for calculation of inventory asset value
       and for accounting
     """
-    result = self._baseGetDestinationAssetPrice()
+    result = self.getDestinationTotalAssetPrice() # This is what we use for accounting
     if result is not None: return result
     quantity = self.getQuantity()
     if quantity < 0.0:
-      return None
+      return None                       # Outgoing quantity
     elif quantity > 0.0:
-      return self.getPrice()
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceTotalAssetPrice')
-  def getSourceTotalAssetPrice(self):
-    """
-      Returns a price which can be used to calculate stock value (asset)
-    """
-    try:
-      price = self.getSourceAssetPrice()
-      if price is None:
-        return None
-      quantity = self.getQuantity()
-      if quantity is None:
-        return None
-      return quantity * price
-    except TypeError:
-      return None
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationTotalAssetPrice')
-  def getDestinationTotalAssetPrice(self):
-    """
-      Returns a price which can be used to calculate stock value (asset)
-    """
-    try:
-      price = self.getDestinationAssetPrice()
-      if price is None:
-        return None
-      quantity = self.getQuantity()
-      if quantity is None:
-        return None
-      return quantity * price
-    except TypeError:
-      return None
+      return self.getPrice() * quantity # XXX: price should be converted to the dest. currency
+    return None
 
   # Causality computation
   security.declareProtected(Permissions.View, 'isConvergent')
