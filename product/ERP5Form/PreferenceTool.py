@@ -52,16 +52,16 @@ class PreferenceTool(BaseTool):
   security.declareProtected(
        Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainPreferenceTool', _dtmldir )
-  
+
   security.declareProtected(
        Permissions.ManagePortal, 'manage_group_preferences' )
   manage_group_preferences = DTMLFile(
        'PreferenceTool_managePreferences', _dtmldir )
-  
+
   manage_options = ( BaseTool.manage_options +
                      ( { 'label'      : 'User Groups Preferences'
                        , 'action'     : 'manage_group_preferences'},))
-  
+
   security.declarePrivate('manage_afterAdd')
   def manage_afterAdd(self, item, container) :
     """ init the permissions right after creation """
@@ -70,7 +70,7 @@ class PreferenceTool(BaseTool):
     item.manage_permission(Permissions.View,
           ['Member', 'Auditor', 'Manager'])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
-  
+
   def _aq_dynamic(self, name):
     """ if the name is a valid preference, then start a lookup on
       active preferences. """
@@ -80,16 +80,16 @@ class PreferenceTool(BaseTool):
     aq_base_name = getattr(aq_base(self), name, None)
     if aq_base_name is not None :
       return aq_base_name
-    if name in self.getValidPreferenceNames() :
+    if name in self.getValidPreferencePropertyIdList() :
       return self.getPreference(name)
-  
+
   security.declareProtected(Permissions.View, "getPreference")
   def getPreference(self, pref_name) :
     """ get the preference on the most appopriate Preference object. """
     def _getPreference(pref_name="", user_name="") :
       found = 0
       MARKER = []
-      for pref in self._getMostAppropriatePreferences() :
+      for pref in self._getSortedPreferenceList() :
         attr = getattr(pref, pref_name, MARKER)
         if attr is not MARKER :
           found = 1
@@ -106,17 +106,17 @@ class PreferenceTool(BaseTool):
                                   id='PreferenceTool.CachingMethod')
     user_name = getSecurityManager().getUser().getId()
     return _getPreference(pref_name=pref_name, user_name=user_name)
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :
     """ set the preference on the active Preference object"""
     self.getActivePreference()._edit(**{pref_name:value})
-    
-  security.declareProtected(Permissions.View, "getValidPreferenceNames")
-  def getValidPreferenceNames(self) :
+
+  security.declareProtected(Permissions.View, "getValidPreferencePropertyIdList")
+  def getValidPreferencePropertyIdList(self) :
     """ return the list of attributes that are preferences names and
        should be looked up on Preferences. """
-    def _getValidPreferenceNames(self) :
+    def _getValidPreferencePropertyIdList(self) :
       """ a cache for this method """
       attr_list = []
       try :
@@ -132,7 +132,7 @@ class PreferenceTool(BaseTool):
           zmi_property_sheet_list.append(
                         getattr(__import__(property_sheet), property_sheet))
         except ImportError, e :
-          LOG('PreferenceTool._getValidPreferenceNames', INFO,
+          LOG('PreferenceTool._getValidPreferencePropertyIdList', INFO,
                'unable to import Property Sheet %s' % property_sheet, e)
       # 'Static' property sheets defined on the class
       class_property_sheet_list = Preference.property_sheets
@@ -163,16 +163,22 @@ class PreferenceTool(BaseTool):
                          'get%sTitleList' % convertToUpperCase(attribute),
                          'get%sList' % convertToUpperCase(attribute), ]
       return attr_list
-    _getValidPreferenceNames = CachingMethod(
-                      _getValidPreferenceNames, cache_duration = 600,
+    _getValidPreferencePropertyIdList = CachingMethod(
+                      _getValidPreferencePropertyIdList, cache_duration = 600,
                       id = 'PreferenceTool._getPreferenceAttributes')
-    return _getValidPreferenceNames(self)
+    return _getValidPreferencePropertyIdList(self)
 
-  security.declarePrivate('_getMostAppropriatePreferences')
-  def _getMostAppropriatePreferences(self) :
+  security.declarePrivate('_getSortedPreferenceList')
+  def _getSortedPreferenceList(self) :
     """ return the most appropriate preferences objects,
-      sorted so that the first in the list should be applied first """
+        sorted so that the first in the list should be applied first
+    """
     prefs = []
+    # XXX This will not work with 1000000 users (searchFolder required)
+    # XXX will also cause problems with Manager (too long)
+    # XXX Use catalog instead of contentValues (ex. searchFolder)
+    # XXX For manager, create a manager specific preference
+    #                  or better solution
     for pref in self.contentValues(spec=('ERP5 Preference', )) :
       pref = pref.getObject()
       if pref.getPreferenceState() == 'enabled' :
@@ -184,16 +190,19 @@ class PreferenceTool(BaseTool):
   def getActivePreference(self) :
     """ returns the current preference for the user. 
        Note that this preference may be read only. """
-    enabled_prefs = self._getMostAppropriatePreferences()
+    enabled_prefs = self._getSortedPreferenceList()
     if len(enabled_prefs) > 0 :
       return enabled_prefs[0]
 
-  security.declareProtected(Permissions.View, 'getDocumentTemplatesForFolder')
-  def getDocumentTemplatesForFolder(self, folder) :
+  security.declareProtected(Permissions.View, 'getDocumentTemplate')
+  def getDocumentTemplate(self, folder) :
     """ returns all document templates that are in acceptable Preferences 
-      for the folder """
+        based on different criteria such as folder, portal_type, etc.
+
+        XXX This spec still needs to be refined before implementation
+    """
     acceptable_templates = []
-    for pref in self._getMostAppropriatePreferences() :
+    for pref in self._getSortedPreferenceList() :
       for doc in pref.objectValues() :
         if hasattr(doc, 'getTemplateDestinationUidList') and \
            folder.getUid() in doc.getTemplateDestinationUidList() :
@@ -201,9 +210,19 @@ class PreferenceTool(BaseTool):
     return acceptable_templates
 
   security.declareProtected(Permissions.ManagePortal,
-          'manage_updateUserGroupsPreferences')
-  def manage_updateUserGroupsPreferences(self, REQUEST) :
-    """ action edit Users Groups Preferences from the management sceen """
+          'USELESS_manage_updateUserGroupsPreferences')
+  def USELESS_manage_updateUserGroupsPreferences(self, REQUEST) :
+    """ action edit Users Groups Preferences from the
+        management sceen
+
+        XXX This is not compatible with 1,000,000 preferences
+
+        Also, the type of preference (or, better, the priority)
+        must be *stored* on the preference itself and
+        set from the preference itself.
+
+        This API is therefore useless.
+    """
     for k, v in REQUEST.items() :
       if k.startswith("preference_priority_") :
         self[k[len('preference_priority_'):]].setPriority(v)
