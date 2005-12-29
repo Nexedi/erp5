@@ -1177,9 +1177,9 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         continue
       property_list = self._objects[key]
       original_property_list = getattr(portal_type, self.class_property, ())
-      for id in propert_list:
-        if id in original_propert_list:
-          original_propert_list.remove(id)        
+      for id in property_list:
+        if id in original_property_list:
+          original_property_list.remove(id)        
       setattr(portal_type, self.class_property, list(original_property_list))
     
 class PortalTypeHiddenContentTypeTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
