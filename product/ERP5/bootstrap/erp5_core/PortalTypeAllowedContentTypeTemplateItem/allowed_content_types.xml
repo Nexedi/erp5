@@ -1,0 +1,100 @@
+<allowed_content_type_list>
+ <portal_type id="Agent">
+  <item>Agent Privilege</item>
+ </portal_type>
+ <portal_type id="Alarm Tool">
+  <item>Alarm</item>
+ </portal_type>
+ <portal_type id="Applied Rule">
+  <item>Simulation Movement</item>
+ </portal_type>
+ <portal_type id="Bank Account">
+  <item>Agent</item>
+ </portal_type>
+ <portal_type id="Base Category">
+  <item>Category</item>
+ </portal_type>
+ <portal_type id="Category">
+  <item>Category</item>
+ </portal_type>
+ <portal_type id="Category Tool">
+  <item>Base Category</item>
+ </portal_type>
+ <portal_type id="Currency">
+  <item>Currency Exchange Line</item>
+ </portal_type>
+ <portal_type id="Currency Exchange Line">
+  <item>Currency Exchange Cell</item>
+ </portal_type>
+ <portal_type id="Currency Module">
+  <item>Currency</item>
+  <item>ERP5Currency</item>
+ </portal_type>
+ <portal_type id="Delivery Builder">
+  <item>Predicate Group</item>
+ </portal_type>
+ <portal_type id="Delivery Tool">
+  <item>Delivery Builder</item>
+ </portal_type>
+ <portal_type id="Order Builder">
+  <item>Predicate Group</item>
+ </portal_type>
+ <portal_type id="Order Tool">
+  <item>Order Builder</item>
+ </portal_type>
+ <portal_type id="Organisation">
+  <item>Address</item>
+  <item>Link</item>
+  <item>Bank Account</item>
+  <item>ChatAddress</item>
+  <item>Fax</item>
+  <item>Telephone</item>
+  <item>Credit Card</item>
+  <item>Document</item>
+  <item>Email</item>
+  <item>Image</item>
+  <item>File</item>
+ </portal_type>
+ <portal_type id="Organisation Module">
+  <item>Organisation</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>Address</item>
+  <item>Assignment</item>
+  <item>ChatAddress</item>
+  <item>Telephone</item>
+  <item>Credit Card</item>
+  <item>Email</item>
+  <item>Bank Account</item>
+  <item>File</item>
+  <item>Fax</item>
+  <item>Career</item>
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Person Module">
+  <item>Person</item>
+ </portal_type>
+ <portal_type id="Predicate">
+  <item>Value Predicate</item>
+ </portal_type>
+ <portal_type id="Preference Tool">
+  <item>Preference</item>
+ </portal_type>
+ <portal_type id="Rule Tool">
+  <item>Invoice Transaction Rule</item>
+  <item>Invoice Rule</item>
+  <item>Delivery Rule</item>
+ </portal_type>
+ <portal_type id="Simulation Movement">
+  <item>Applied Rule</item>
+ </portal_type>
+ <portal_type id="Simulation Tool">
+  <item>Applied Rule</item>
+ </portal_type>
+ <portal_type id="Template Tool">
+  <item>Business Template</item>
+ </portal_type>
+ <portal_type id="Trash Tool">
+  <item>Trash Bin</item>
+ </portal_type>
+</allowed_content_type_list>
