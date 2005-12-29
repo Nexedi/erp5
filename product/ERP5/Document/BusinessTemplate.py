@@ -1162,6 +1162,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
+    p = context.getPortalObject()
     pt = p.unrestrictedTraverse('portal_types')
     if object_path is not None:
       object_keys = [object_path]
