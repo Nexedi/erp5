@@ -1,0 +1,48 @@
+Agent | Agent Privilege
+Alarm Tool | Alarm
+Applied Rule | Simulation Movement
+Bank Account | Agent
+Base Category | Category
+Category Tool | Base Category
+Category | Category
+Currency Exchange Line | Currency Exchange Cell
+Currency Module | Currency
+Currency Module | ERP5Currency
+Currency | Currency Exchange Line
+Delivery Builder | Predicate Group
+Delivery Tool | Delivery Builder
+Order Builder | Predicate Group
+Order Tool | Order Builder
+Organisation Module | Organisation
+Organisation | Address
+Organisation | Bank Account
+Organisation | ChatAddress
+Organisation | Credit Card
+Organisation | Document
+Organisation | Email
+Organisation | Fax
+Organisation | File
+Organisation | Image
+Organisation | Link
+Organisation | Telephone
+Person Module | Person
+Person | Address
+Person | Assignment
+Person | Bank Account
+Person | Career
+Person | ChatAddress
+Person | Credit Card
+Person | Email
+Person | Fax
+Person | File
+Person | Image
+Person | Telephone
+Predicate | Value Predicate
+Preference Tool | Preference
+Rule Tool | Delivery Rule
+Rule Tool | Invoice Rule
+Rule Tool | Invoice Transaction Rule
+Simulation Movement | Applied Rule
+Simulation Tool | Applied Rule
+Template Tool | Business Template
+Trash Tool | Trash Bin

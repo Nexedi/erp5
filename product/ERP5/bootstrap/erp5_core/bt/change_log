@@ -1,3 +1,12 @@
+2005-12-29 jerome
+* update Resource_zGetInventory(List) to take into account changes in the stock table.
+* bug fix: Organisation default currency is "price_currency". updated Organisation_viewDetails.
+
+2005-12-29 aurel
+* add new forms for Business Template to manage new properties and nw upgrade way
+* define Business Template actions in order to update them easily
+* save and exportof Business Template are now object_exchange
+
 2005-12-28 jerome
 * bug fix form_view and dialog_master for i18n
 
