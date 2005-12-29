@@ -24,7 +24,7 @@ CREATE TABLE `stock` (
   `resource_uid` BIGINT UNSIGNED,
   `quantity` real ,
   `date` datetime,
-  `price` real ,
+  `total_price` real ,
   `is_accountable` bool,
   `portal_type` VARCHAR(255),
   `simulation_state` varchar(255) default '',
