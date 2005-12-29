@@ -39,9 +39,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Order Builder</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

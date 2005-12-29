@@ -38,17 +38,13 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Currency Exchange Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>price_currency</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -79,9 +75,7 @@
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Currency Exchange Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

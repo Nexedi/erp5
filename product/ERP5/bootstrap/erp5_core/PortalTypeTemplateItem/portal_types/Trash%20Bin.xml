@@ -46,9 +46,7 @@
         <item>
             <key> <string>base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>causality</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -94,11 +92,7 @@
         <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
-              <tuple>
-                <string>Base</string>
-                <string>SimpleItem</string>
-                <string>Task</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

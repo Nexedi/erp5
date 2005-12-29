@@ -53,19 +53,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Address</string>
-                <string>Assignment</string>
-                <string>Bank Account</string>
-                <string>Career</string>
-                <string>ChatAddress</string>
-                <string>Credit Card</string>
-                <string>Email</string>
-                <string>Fax</string>
-                <string>File</string>
-                <string>Image</string>
-                <string>Telephone</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

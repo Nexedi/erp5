@@ -40,9 +40,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Simulation Movement</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
