@@ -581,6 +581,60 @@ class Movement(XMLObject, Amount):
     """
     return
 
+  # Debit and credit methods for asset
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetDebit')
+  def getSourceAssetDebit(self):
+    """
+      Return the debit part of the source total asset price.
+
+      This is the same as getSourceDebit where quantity is replaced
+      by source_total_asset_price
+    """
+    quantity = self.getSourceTotalAssetPrice()
+    try:
+      quantity = float(quantity)
+    except TypeError:
+      quantity = 0.0
+    if quantity < 0:
+      return - quantity
+    else:
+      return 0.0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetCredit')
+  def getSourceAssetCredit(self):
+    """
+      Return
+    """
+    quantity = self.getSourceTotalAssetPrice()
+    try:
+      quantity = float(quantity)
+    except TypeError:
+      quantity = 0.0
+    if quantity < 0:
+      return 0.0
+    else:
+      return quantity
+
+  # MISSING
+  # getDestinationAssetDebit getDestinationAssetCredit
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setSourceAssetDebit')
+  def setSourceAssetDebit(self, source_debit):
+    """
+      Set the quantity
+    """
+    if source_debit in (None, ''):
+      return 0.0
+    try:
+      source_debit = float(source_debit)
+    except TypeError:
+      source_debit = 0.0
+    self.setSourceTotalAssetPrice(- source_debit)
+
+  # MISSING
+  # setSourceAssetDebit setSourceAssetCredit
+  # setDestinationAssetDebit setDestinationAssetCredit
+
   # Item Access (tracking)
   security.declareProtected(Permissions.AccessContentsInformation, 'getTrackedItemUidList')
   def getTrackedItemUidList(self):
