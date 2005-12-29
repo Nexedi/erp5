@@ -184,8 +184,7 @@ group_by_expression</string> </value>
 SELECT\n
   SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.price * stock.quantity) AS total_price,\n
-  AVG(stock.price) AS average_price,\n
+  SUM(stock.total_price) AS total_price,\n
   COUNT(DISTINCT node.title) AS node_title,\n
   COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
   COUNT(DISTINCT section.title) AS section_title,\n
@@ -322,8 +321,7 @@ GROUP BY\n
 SELECT\n
   SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.price * stock.quantity) AS total_price,\n
-  AVG(stock.price) AS average_price,\n
+  SUM(stock.total_price) AS total_price,\n
   COUNT(DISTINCT node.title) AS node_title,\n
   COUNT(DISTINCT node.relative_url) AS node_relative_url,\n
   COUNT(DISTINCT section.title) AS section_title,\n

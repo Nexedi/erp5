@@ -222,8 +222,7 @@ output_simulation_state:list</string> </value>
 SELECT\n
   SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.price * stock.quantity) AS total_price,\n
-  stock.price AS average_price,\n
+  SUM(stock.total_price) AS total_price,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
   section.title AS section_title,\n
@@ -362,8 +361,7 @@ ORDER BY\n
 SELECT\n
   SUM(stock.quantity) AS inventory,\n
   SUM(stock.quantity) AS total_quantity,\n
-  SUM(stock.price * stock.quantity) AS total_price,\n
-  stock.price AS average_price,\n
+  SUM(stock.total_price) AS total_price,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
   section.title AS section_title,\n
