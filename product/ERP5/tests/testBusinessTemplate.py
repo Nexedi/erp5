@@ -1394,6 +1394,28 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     bt = sequence.get('current_bt')
     bt.uninstall()
 
+  def stepClearBusinessTemplateField(self, sequence=None, sequence_list=None, **kw):
+    """
+    Clear business template field
+    """
+    bt = sequence.get('current_bt')
+    prop_dict = {}
+    for prop in bt.propertyMap():
+      prop_type = prop['type']
+      pid = prop['id']
+      if pid in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id',
+                'install_object_list_list', 'title', 'version', 'description'):
+          continue
+      if prop_type == 'text' or prop_type == 'string':
+        prop_dict[pid] = ''
+      elif prop_type == 'int':
+        prop_dict[pid] = 0
+      elif prop_type == 'lines' or prop_type == 'tokens':
+        prop_dict[pid[:-5]] = ()
+    LOG('prop dict', 0, prop_dict)
+    bt.edit(**prop_dict)
+
+          
   # tests
   def test_01_checkNewSite(self, quiet=0, run=run_all_test):
     if not run: return
@@ -2297,8 +2319,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_string = '\
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
+                       ClearBusinessTemplateField \
                        SetUpdateWorkflowFlagInBusinessTemplate \
-                       FillPortalTypesFields \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        BuildBusinessTemplate \
@@ -2334,8 +2356,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_string = '\
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
+                       ClearBusinessTemplateField \
                        SetUpdateToolFlagInBusinessTemplate \
-                       FillPortalTypesFields \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        BuildBusinessTemplate \
