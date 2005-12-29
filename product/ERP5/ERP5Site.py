@@ -714,8 +714,9 @@ class ERP5Generator(PortalGenerator):
           p._delObject('portal_catalog')
 
         # Add CMF Report Tool
-        addTool = p.manage_addProduct['CMFReportTool'].manage_addTool
-        addTool('CMF Report Tool', None)
+        if not p.hasObject('portal_report'):
+          addTool = p.manage_addProduct['CMFReportTool'].manage_addTool
+          addTool('CMF Report Tool', None)
 
         # Add ERP5 Tools
         addTool = p.manage_addProduct['ERP5'].manage_addTool
@@ -731,7 +732,7 @@ class ERP5Generator(PortalGenerator):
           self.setupTemplateTool(p)
         if not p.hasObject('portal_trash'):
           addTool('ERP5 Trash Tool', None)
-        if not p.hasObject('portal_alarm'):
+        if not p.hasObject('portal_alarms'):
           addTool('ERP5 Alarm Tool', None)
         if not p.hasObject('portal_domains'):
           addTool('ERP5 Domain Tool', None)
@@ -865,7 +866,6 @@ class ERP5Generator(PortalGenerator):
         business_template_installation_workflow = os.path.join(bootstrap_dir,
                                                                'business_template_installation_workflow.xml')
         tool._importObjectFromFile(business_template_installation_workflow)
-
         tool.setChainForPortalTypes( ( 'Business Template', ),
                                      ( 'business_template_building_workflow',
                                        'business_template_installation_workflow' ) )
@@ -961,7 +961,7 @@ class ERP5Generator(PortalGenerator):
 
     def setup(self, p, create_userfolder, **kw):
         update = kw.get('update', 0)
-        
+
         self.setupTools(p, **kw)
         
         if not p.hasObject('MailHost'):
@@ -992,8 +992,8 @@ class ERP5Generator(PortalGenerator):
 
         if not p.hasObject('content_type_registry'):
           self.setupMimetypes(p)
-          
-        self.setupWorkflow(p)
+        if not update:
+          self.setupWorkflow(p)
 
         if not update:
           self.setupERP5Core(p,**kw)
