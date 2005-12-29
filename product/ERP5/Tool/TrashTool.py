@@ -50,7 +50,7 @@ class TrashTool(BaseTool):
   security = ClassSecurityInfo()
   
   security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
+  manage_overview = DTMLFile( 'explainTrashTool', _dtmldir )
 
   def backupObject(self, trashbin, container_path, object_id, save, **kw):
     """

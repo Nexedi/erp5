@@ -93,7 +93,7 @@ class TemplateTool (BaseTool):
     security = ClassSecurityInfo()
 
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
+    manage_overview = DTMLFile( 'explainTemplateTool', _dtmldir )
 
     def getInstalledBusinessTemplate(self, title, **kw):
       """
