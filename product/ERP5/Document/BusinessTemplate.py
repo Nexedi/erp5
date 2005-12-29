@@ -3568,8 +3568,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         id = prop['id']
         if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'install_object_list_list'):
           continue
-#         if id in ('template_update_business_template_workflow', 'template_update_tool') and self.getTitle() != 'erp5_core':
-#           continue
+        if id in ('template_update_business_template_workflow', 'template_update_tool') and self.getTitle() != 'erp5_core':
+          continue
         value = self.getProperty(id)
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')
