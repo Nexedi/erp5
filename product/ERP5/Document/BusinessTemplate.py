@@ -2998,57 +2998,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                       )
          , 'filter_content_types' : 1
          , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'BusinessTemplate_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'history'
-          , 'name'          : 'History'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewHistory'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewMetadata'
-          , 'permissions'   : (
-              Permissions.ManageProperties, )
-          }
-        , { 'id'            : 'update'
-          , 'name'          : 'Update Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_update'
-          , 'permissions'   : (
-              Permissions.ModifyPortalContent, )
-          }
-        , { 'id'            : 'save'
-          , 'name'          : 'Save Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_save'
-          , 'permissions'   : (
-              Permissions.ManagePortal, )
-          }
-        , { 'id'            : 'export'
-          , 'name'          : 'Export Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_export'
-          , 'permissions'   : (
-              Permissions.ManagePortal, )
-          }
-        , { 'id'            : 'unittest_run'
-          , 'name'          : 'Run Unit Tests'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_viewUnitTestRunDialog'
-          , 'permissions'   : (
-              Permissions.ManagePortal, )
-          }
-        )
       }
 
     # This is a global variable
