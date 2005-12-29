@@ -110,7 +110,7 @@
                         <string>my_destination_section_title</string>
                         <string>my_social_code</string>
                         <string>my_social_capital</string>
-                        <string>my_social_capital_currency</string>
+                        <string>my_price_currency</string>
                         <string>my_skill_list</string>
                       </list>
                     </value>
