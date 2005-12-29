@@ -280,7 +280,7 @@ class TemplateTool (BaseTool):
           if not os.path.exists(prop_path):
             continue          
           value = open(prop_path, 'r').read()
-          if prop_type in ('text', 'string', 'int'):
+          if prop_type in ('text', 'string', 'int', 'boolean'):
             prop_dict[pid] = value
           elif prop_type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = value.split(str(os.linesep))
@@ -361,7 +361,7 @@ class TemplateTool (BaseTool):
         raise TemplateConditionError, 'Business Template must be built to make diff'
       if (getattr(bt1, 'template_format_version', 0)) != 1:
         raise TemplateConditionError, 'Business Template must be in new format'
-      # check if there is a second bt is or if we compare to installed one
+      # check if there is a second bt or if we compare to installed one
       if len(uids) == 2:
         bt2 = self.portal_catalog.getObject(uids[1])
         if bt2.getBuildingState() != 'built':
@@ -382,7 +382,8 @@ class TemplateTool (BaseTool):
       # and others are just python code on filesystem
       diff_msg = 'Diff between %s-%s and %s-%s' %(bt1.getTitle(), bt1.getId(), bt2.getTitle(), bt2.getId())
       # for the one with zope exportXml
-      item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item', '_skin_item', '_action_item']
+      item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item',
+                     '_skin_item', '_action_item']
       for item_name  in item_list_1:
         item1 = getattr(bt1, item_name)        
         # build current item if we compare to installed bt
@@ -409,7 +410,11 @@ class TemplateTool (BaseTool):
               diff_msg += '\n'.join(diff_list)
 
       # for our own way to generate xml
-      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item']
+      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item',
+                     '_catalog_result_table_item', '_catalog_keyword_key_item', '_catalog_full_text_key_item',
+                     '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item',
+                     '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item',
+                     '_portal_type_property_sheet_item', '_portal_type_base_category_item',]
       for item_name  in item_list_2:
         item1 = getattr(bt1, item_name)        
         # build current item if we compare to installed bt
