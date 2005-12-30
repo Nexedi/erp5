@@ -120,10 +120,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     # make copy
     copy_data = template_tool.manage_copyObjects(ids=[core_bt.getId()])
     ids = template_tool.manage_pasteObjects(copy_data)
-    LOG('id after copy', 0, ids)
     new_id = ids[0]['new_id']
     new_bt = template_tool._getOb(new_id)
-    LOG(new_bt, 0, str((new_bt.getTitle(), new_id)))
     self.assertEqual(new_bt.getTitle(), 'erp5_core')
     sequence.edit(copy_bt=new_bt)
 
@@ -327,7 +325,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     bt.getPortalTypesProperties()
-    LOG("portal types properties added for", 0, bt.getTitle())
 
   # module
   def stepCreateModuleAndObjects(self, sequence=None, sequence_list=None, **kw):
@@ -540,7 +537,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     pc = self.getCategoryTool()
     bc_id = sequence.get('bc_id')
     base_category = pc._getOb(bc_id, None)
-    LOG('base category is', 0, base_category)
     self.failUnless(base_category is None)    
 
   # categories
@@ -863,7 +859,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     catalog = pc._getOb('erp5_mysql', None)
     self.failUnless(catalog is not None)
     method_id = sequence.get('zsql_method_id', None)
-    zsql_method = catalog._getOb(method_id, None)  
+    zsql_method = catalog._getOb(method_id, None)
     self.failUnless(zsql_method is not None)
     # check catalog properties
     self.failUnless(method_id in catalog.sql_uncatalog_object)
@@ -926,7 +922,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     topic_key = 'fake_topic'
     catalog = self.getCatalogTool().getSQLCatalog()
     self.failUnless(catalog is not None)
-    LOG("catalog is", 0, catalog.getId())
     # result key
     sql_search_result_keys = list(catalog.sql_search_result_keys)
     sql_search_result_keys.append(result_key)
@@ -1412,9 +1407,21 @@ class TestBusinessTemplate(ERP5TypeTestCase):
         prop_dict[pid] = 0
       elif prop_type == 'lines' or prop_type == 'tokens':
         prop_dict[pid[:-5]] = ()
-    LOG('prop dict', 0, prop_dict)
     bt.edit(**prop_dict)
 
+  def stepRemoveTrashTool(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove Trash Tool from site
+    """
+    p = self.getPortal()
+    p.manage_delObjects(['portal_trash'])
+    self.failUnless(p._getOb('portal_trash', None) is None)
+
+  def stepCheckTrashToolExists(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check presence of trash tool
+    """
+    self.failUnless(self.getTrashTool() is not None)
           
   # tests
   def test_01_checkNewSite(self, quiet=0, run=run_all_test):
@@ -2303,10 +2310,20 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckRoleExists \
                        CheckPropertySheetExists \
                        CheckSkinsLayers \
+                       RemovePortalType \
+                       RemoveModule \
+                       RemoveSkinFolder \
+                       RemoveBaseCategory \
+                       RemoveWorkflow \
+                       RemoveCatalogMethod \
+                       RemoveKeysAndTable \
+                       RemoveRole \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)    
-
 
   # test specific to erp5_core
   def test_18_checkUpdateBusinessTemplateWorkflow(self, quiet=0, run=run_all_test):
@@ -2317,10 +2334,34 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
+                       CreatePortalType \
+                       CreateModuleAndObjects \
+                       CreateSkinFolder \
+                       CreateBaseCategory \
+                       CreateCategories \
+                       CreateSubCategories \
+                       CreateWorkflow \
+                       CreateAction \
+                       CreateOptionalAction \
+                       CreateCatalogMethod \
+                       CreateKeysAndTable \
+                       CreateRole \
+                       CreatePropertySheet \
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
                        ClearBusinessTemplateField \
                        SetUpdateWorkflowFlagInBusinessTemplate \
+                       AddPortalTypeToBusinessTemplate \
+                       AddModuleToBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       AddBaseCategoryToBusinessTemplate \
+                       AddSubCategoriesAsPathToBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddOptionalActionToBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       AddKeysAndTableToBusinessTemplate \
+                       AddRoleToBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        BuildBusinessTemplate \
@@ -2341,6 +2382,28 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckBuiltBuildingState \
                        CheckTrashBin \
                        CheckSkinsLayers \
+                       CheckPortalTypeExists \
+                       CheckModuleExists \
+                       CheckSkinFolderExists \
+                       CheckBaseCategoryExists \
+                       CheckCategoriesExists \
+                       CheckSubCategoriesExists \
+                       CheckWorkflowExists \
+                       CheckOptionalActionExists \
+                       CheckCatalogMethodExists \
+                       CheckKeysAndTableExists \
+                       CheckRoleExists \
+                       CheckPropertySheetExists \
+                       RemovePortalType \
+                       RemoveModule \
+                       RemoveSkinFolder \
+                       RemoveBaseCategory \
+                       RemoveWorkflow \
+                       RemoveCatalogMethod \
+                       RemoveKeysAndTable \
+                       RemoveRole \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)      
@@ -2354,10 +2417,34 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
+                       CreatePortalType \
+                       CreateModuleAndObjects \
+                       CreateSkinFolder \
+                       CreateBaseCategory \
+                       CreateCategories \
+                       CreateSubCategories \
+                       CreateWorkflow \
+                       CreateAction \
+                       CreateOptionalAction \
+                       CreateCatalogMethod \
+                       CreateKeysAndTable \
+                       CreateRole \
+                       CreatePropertySheet \
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
                        ClearBusinessTemplateField \
                        SetUpdateToolFlagInBusinessTemplate \
+                       AddPortalTypeToBusinessTemplate \
+                       AddModuleToBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       AddBaseCategoryToBusinessTemplate \
+                       AddSubCategoriesAsPathToBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddOptionalActionToBusinessTemplate \
+                       AddCatalogMethodToBusinessTemplate \
+                       AddKeysAndTableToBusinessTemplate \
+                       AddRoleToBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        BuildBusinessTemplate \
@@ -2367,7 +2454,18 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
+                       RemovePortalType \
+                       RemoveModule \
+                       RemoveSkinFolder \
+                       RemoveBaseCategory \
+                       RemoveWorkflow \
+                       RemoveCatalogMethod \
+                       RemoveKeysAndTable \
+                       RemoveRole \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
                        RemoveAllTrashBins \
+                       RemoveTrashTool \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
@@ -2376,8 +2474,30 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashBin \
+                       CheckTrashToolExists \
                        CheckSkinsLayers \
+                       CheckPortalTypeExists \
+                       CheckModuleExists \
+                       CheckSkinFolderExists \
+                       CheckBaseCategoryExists \
+                       CheckCategoriesExists \
+                       CheckSubCategoriesExists \
+                       CheckWorkflowExists \
+                       CheckOptionalActionExists \
+                       CheckCatalogMethodExists \
+                       CheckKeysAndTableExists \
+                       CheckRoleExists \
+                       CheckPropertySheetExists \
+                       RemovePortalType \
+                       RemoveModule \
+                       RemoveSkinFolder \
+                       RemoveBaseCategory \
+                       RemoveWorkflow \
+                       RemoveCatalogMethod \
+                       RemoveKeysAndTable \
+                       RemoveRole \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)      
