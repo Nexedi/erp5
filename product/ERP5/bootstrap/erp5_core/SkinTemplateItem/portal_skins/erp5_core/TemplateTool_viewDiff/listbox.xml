@@ -414,7 +414,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
