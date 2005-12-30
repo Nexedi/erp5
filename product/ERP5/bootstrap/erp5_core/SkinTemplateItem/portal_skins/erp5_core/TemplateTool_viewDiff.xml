@@ -79,7 +79,7 @@
                     <key>                 <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>diffview</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>

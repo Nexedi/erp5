@@ -69,7 +69,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 if brain.object_state == \'Modified\':\n
-  return \'/\'.join(brain.getPhysicalPath()[:-1])+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class\n
+  if hasattr(brain, \'bt1\'):\n
+    return \'/\'.join(brain.getPhysicalPath()[:-1])+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class+\'&bt1=\'+brain.bt1+\'&bt2=\'+brain.bt2\n
+  else:\n
+    return \'/\'.join(brain.getPhysicalPath()[:-1])+\'/BusinessTemplate_viewObjectsDiff?object_id=\'+brain.object_id+\'&object_class=\'+brain.object_class\n
 else:\n
   return None\n
 
@@ -78,18 +81,22 @@ else:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAAUAAAAHAAAAQwAA
-AHNzAAAAdAAAfAAAZAEAgwIAZAIAagIAb1UAAXQAAGQDAGQEAIMCAHQCAHQAAHwAAGQFAIMCAIMA
-AGQAAGQGAAuFAgCDAgCDAQBkBwAXdAAAfAAAZAgAgwIAF2QJABd0AAB8AABkCgCDAgAXU24FAAF0
-AwBTZAAAUygLAAAATnMMAAAAb2JqZWN0X3N0YXRlcwgAAABNb2RpZmllZHMBAAAAL3MEAAAAam9p
-bnMPAAAAZ2V0UGh5c2ljYWxQYXRoaQEAAABzLAAAAC9CdXNpbmVzc1RlbXBsYXRlX3ZpZXdPYmpl
-Y3RzRGlmZj9vYmplY3RfaWQ9cwkAAABvYmplY3RfaWRzDgAAACZvYmplY3RfY2xhc3M9cwwAAABv
-YmplY3RfY2xhc3MoBAAAAHMJAAAAX2dldGF0dHJfcwUAAABicmFpbnMJAAAAX2dldGl0ZW1fcwQA
-AABOb25lKAUAAABzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25zCQAAAF9nZXRhdHRyX3MJAAAAX2dl
-dGl0ZW1fcwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxsAAABCdXNpbmVz
-c1RlbXBsYXRlX2dldERpZmZVcmwBAAAAcwQAAAAWAVUCKAEAAABzGwAAAEJ1c2luZXNzVGVtcGxh
-dGVfZ2V0RGlmZlVybCgBAAAAcxsAAABCdXNpbmVzc1RlbXBsYXRlX2dldERpZmZVcmwoAAAAACgA
-AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAAYAAAAJAAAAQwAA
+AHP6AAAAdAAAfAAAZAEAgwIAZAIAagIAb9wAAXQCAHwAAGQDAIMCAG93AAF0AABkBABkBQCDAgB0
+AwB0AAB8AABkBgCDAgCDAABkAABkBwALhQIAgwIAgwEAZAgAF3QAAHwAAGQJAIMCABdkCgAXdAAA
+fAAAZAsAgwIAF2QMABd0AAB8AABkAwCDAgAXZA0AF3QAAHwAAGQOAIMCABdTcfYAAXQAAGQEAGQF
+AIMCAHQDAHQAAHwAAGQGAIMCAIMAAGQAAGQHAAuFAgCDAgCDAQBkCAAXdAAAfAAAZAkAgwIAF2QK
+ABd0AAB8AABkCwCDAgAXU24FAAF0BABTZAAAUygPAAAATnMMAAAAb2JqZWN0X3N0YXRlcwgAAABN
+b2RpZmllZHMDAAAAYnQxcwEAAAAvcwQAAABqb2lucw8AAABnZXRQaHlzaWNhbFBhdGhpAQAAAHMs
+AAAAL0J1c2luZXNzVGVtcGxhdGVfdmlld09iamVjdHNEaWZmP29iamVjdF9pZD1zCQAAAG9iamVj
+dF9pZHMOAAAAJm9iamVjdF9jbGFzcz1zDAAAAG9iamVjdF9jbGFzc3MFAAAAJmJ0MT1zBQAAACZi
+dDI9cwMAAABidDIoBQAAAHMJAAAAX2dldGF0dHJfcwUAAABicmFpbnMHAAAAaGFzYXR0cnMJAAAA
+X2dldGl0ZW1fcwQAAABOb25lKAYAAABzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25zCQAAAF9nZXRh
+dHRyX3MHAAAAaGFzYXR0cnMJAAAAX2dldGl0ZW1fcwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2Ny
+aXB0IChQeXRob24pcxsAAABCdXNpbmVzc1RlbXBsYXRlX2dldERpZmZVcmwBAAAAcwgAAAAWARAB
+dwJVAigBAAAAcxsAAABCdXNpbmVzc1RlbXBsYXRlX2dldERpZmZVcmwoAQAAAHMbAAAAQnVzaW5l
+c3NUZW1wbGF0ZV9nZXREaWZmVXJsKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8
+bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -132,6 +139,7 @@ AAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                             <string>brain</string>
                             <string>selection</string>
                             <string>_getattr_</string>
+                            <string>hasattr</string>
                             <string>_getitem_</string>
                             <string>None</string>
                           </tuple>

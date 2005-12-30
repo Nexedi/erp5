@@ -142,7 +142,9 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -280,6 +282,25 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.Preference_getPriorityAsText()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.portal_membership.checkPermission("Manager", here)</string> </value>
         </item>
       </dictionary>
     </pickle>
