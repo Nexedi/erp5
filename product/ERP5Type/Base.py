@@ -1212,7 +1212,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   # categories
   security.declareProtected( Permissions.ModifyPortalContent, '_setValue' )
   def _setValue(self, id, target, spec=(), filter=None, portal_type=()):
-    if type(target) is type('a'):
+    if target is None :
+      path = target
+    elif type(target) is type('a'):
       # We have been provided a string
       path = target
     elif type(target) is type(('a','b')) or type(target) is type(['a','b']):
@@ -1336,6 +1338,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   security.declareProtected( Permissions.View, 'getRelatedValueList' )
   getRelatedValueList = _getRelatedValueList
 
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             '_getRelatedPropertyList' )
+  def _getRelatedPropertyList(self, id, property_name, spec=(), filter=None,
+                                      portal_type=(), strict_membership=0):
+    return self._getCategoryTool().getRelatedPropertyList(self, id,
+                          property_name=property_name,
+                          spec=spec, filter=filter,
+                          portal_type=portal_type,
+                          strict_membership=strict_membership)
+  
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getRelatedPropertyList' )
+  getRelatedPropertyList = _getRelatedPropertyList
+  
   security.declareProtected( Permissions.View, 'getValueUids' )
   def getValueUids(self, id, spec=(), filter=None, portal_type=()):
     uid_list = []
