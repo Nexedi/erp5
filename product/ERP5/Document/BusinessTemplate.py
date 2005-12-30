@@ -3767,23 +3767,25 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if bt2_id is not None:
         if bt2_id == self.getId():
           compare_to_zodb = 1
-          installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
-          bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
-          # update portal types properties to get last modifications
-          bt2.getPortalTypesProperties()
-          bt2.edit(description='tmp bt generated for diff')
-          installed_bt = bt2
         else:
           installed_bt = self.portal_templates._getOb(bt2_id)
       else:
         installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
         if installed_bt == new_bt:
-          return 'No diff at reinstall'
-      
+          compare_to_zodb = 1
+      if compare_to_zodb:
+        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
+        # update portal types properties to get last modifications
+        bt2.getPortalTypesProperties()
+        bt2.edit(description='tmp bt generated for diff')
+        installed_bt = bt2
+        
       new_item = getattr(new_bt, item_name)
       installed_item = getattr(installed_bt, item_name)
       if compare_to_zodb:
+        # XXX maybe only build for the given object to gain time
         installed_item.build(self)
+      LOG('compare for', 0, str((item_name, object_id, new_bt, installed_bt)))
       new_object = new_item._objects[object_id]
       installed_object = installed_item._objects[object_id]
       # make diff
@@ -3808,6 +3810,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         new_ob_xml_lines = new_obj_xml.splitlines()
         installed_ob_xml_lines = installed_obj_xml.splitlines()
         diff_list = list(unified_diff(installed_ob_xml_lines, new_ob_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
+        LOG('diff list', 0, diff_list)
         if len(diff_list) != 0:
           diff_msg += '\n\nObject %s diff :\n' %( object_id)
           diff_msg += '\n'.join(diff_list)
