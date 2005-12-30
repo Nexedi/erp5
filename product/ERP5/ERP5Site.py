@@ -707,10 +707,11 @@ class ERP5Generator(PortalGenerator):
           PortalGenerator.setupTools(self, p)
 
         # It is better to remove portal_catalog which is ZCatalog as soon as possible,
-        # because the API is not the completely same as ERP5Catalog, and ZCatalog is
+        # because the API is not the completely same as ERP5Catalog, and ZCatalog is          
         # useless for ERP5 after all.
+        update = kw.get('update', 0)
         portal_catalog = getToolByName(p, 'portal_catalog', None)
-        if portal_catalog is not None and portal_catalog.meta_type != 'ZSQLCatalog':
+        if portal_catalog is not None and portal_catalog.meta_type != 'ZSQLCatalog' and not update:
           p._delObject('portal_catalog')
 
         # Add CMF Report Tool
@@ -768,12 +769,12 @@ class ERP5Generator(PortalGenerator):
           pass
         # Create default methods in Catalog XXX
         portal_catalog = getToolByName(p, 'portal_catalog')
-        if not portal_catalog.getSQLCatalog('erp5_mysql'):
-          # FIXME: addDefaultSQLMethods should be removed.
-          portal_catalog.addDefaultSQLMethods('erp5_mysql')
+        if not portal_catalog.getSQLCatalog('erp5_mysql') and not update:
+            # FIXME: addDefaultSQLMethods should be removed.
+            portal_catalog.addDefaultSQLMethods('erp5_mysql')
 
-          # Clear Catalog
-          portal_catalog.manage_catalogClear()
+            # Clear Catalog
+            portal_catalog.manage_catalogClear()
 
         # Add ERP5Form Tools
         addTool = p.manage_addProduct['ERP5Form'].manage_addTool
