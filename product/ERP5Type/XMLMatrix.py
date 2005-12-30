@@ -39,8 +39,6 @@ from string import join, replace
 
 class XMLMatrix(Folder):
     """
-   XXX plusieurs matrice associées à un identifiant (base_id), le nombre de dimensions est indépandant. Les indexs de la matrice sont des objets.
-    
         A mix-in class which provides a matrix like
         access to objects. Matrices are of any dimension.
         A single XMLMatrix may contain multiple matrices,
@@ -147,17 +145,15 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.View, 'hasInRange' )
     def hasInRange(self, *kw , **kwd):
       """
-          Checks if cell exists TODO
-
-
-          
+          Checks if *kw coordinates are in the range of the
+        matrix in kwd['base_id'].
       """
       if not hasattr(self, 'index'):
         return 0
     
+      base_id = kwd.get('base_id', "cell")
       if not self.index.has_key(base_id):
         return 0
-      base_id= kwd.get('base_id', "cell")
       i = 0
       for my_id in kw:
         if self.index[base_id].has_key(i):
@@ -734,7 +730,7 @@ class TempXMLMatrix(XMLMatrix):
 
   def newCellContent(self, id):
     """
-          This method can be overriden
+       Creates a new content in a cell.
     """
     new_temp_object = TempBase(id)
     self._setObject(id, new_temp_object)
