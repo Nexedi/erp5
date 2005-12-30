@@ -126,7 +126,70 @@ class TestERP5Type(ERP5TypeTestCase):
       self.assertEquals(o.getTitle(), 'toto')
       self.assertEquals(str(o.getId()), str(-123))
 
-
+    def test_04_CategoryAccessors(self):
+      portal = self.getPortal()
+      region_category = self.getPortal().portal_categories.region
+      
+      category_title = "Solar System"
+      category_id = "solar_system"
+      category_object = region_category.newContent(
+              portal_type = "Category",
+              id = category_id,
+              title = category_title, )
+      category_relative_url = category_object.getRelativeUrl()
+      
+      person_title = "Toto"
+      person_id = "toto"
+      person_object = self.getPersonModule().newContent(
+              portal_type = "Person",
+              id = person_id,
+              title = person_title,)
+      person_relative_url = person_object.getRelativeUrl()
+      
+      def checkRelationSet(self):
+        get_transaction().commit()
+        person_object.reindexObject()
+        category_object.reindexObject()
+        self.tic()
+        self.assertEquals( person_object.getRegion(), category_relative_url)
+        self.assertEquals( person_object.getRegionValue(), category_object)
+        self.assertEquals( person_object.getRegionId(), category_id)
+        self.assertEquals( person_object.getRegionTitle(), category_title)
+        self.assertEquals( category_object.getRegionRelatedValueList(
+                            portal_type = "Person"), [person_object] )
+        self.assertEquals( category_object.getRegionRelatedTitleList(
+                            portal_type = "Person"), [person_title] )
+        self.assertEquals( category_object.getRegionRelatedList(
+                            portal_type = "Person"), [person_relative_url] )
+        self.assertEquals( category_object.getRegionRelatedIdList(
+                            portal_type = "Person"), [person_id] )
+      def checkRelationUnset(self):
+        get_transaction().commit()
+        person_object.reindexObject()
+        category_object.reindexObject()
+        self.tic()
+        self.assertEquals( person_object.getRegion(), None)
+        self.assertEquals( person_object.getRegionValue(), None)
+        self.assertEquals( person_object.getRegionId(), None)
+        self.assertEquals( person_object.getRegionTitle(), None)
+        self.assertEquals( category_object.getRegionRelatedValueList(
+                            portal_type = "Person"), [] )
+        self.assertEquals( category_object.getRegionRelatedTitleList(
+                            portal_type = "Person"), [] )
+        self.assertEquals( category_object.getRegionRelatedList(
+                            portal_type = "Person"), [] )
+        self.assertEquals( category_object.getRegionRelatedIdList(
+                            portal_type = "Person"), [] )
+      
+      person_object.setRegion(category_relative_url)
+      checkRelationSet(self)
+      person_object.setRegion(None)
+      checkRelationUnset(self)
+      person_object.setRegionValue(category_object)
+      checkRelationSet(self)
+      person_object.setRegionValue(None)
+      checkRelationUnset(self)
+      
 if __name__ == '__main__':
     framework()
 else:
