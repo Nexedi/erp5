@@ -42,7 +42,10 @@ class XMLMatrix(Folder):
    XXX plusieurs matrice associées à un identifiant (base_id), le nombre de dimensions est indépandant. Les indexs de la matrice sont des objets.
     
         A mix-in class which provides a matrix like
-        access to objects. Matrices are of any dimension
+        access to objects. Matrices are of any dimension.
+        A single XMLMatrix may contain multiple matrices,
+        of different dimension. Each matrix is associated to
+        a so-called 'base_id'.
 
         We still must make XMLMatrix a subclass of Base so
         that we can inherit from ExtensionClass.Base
@@ -104,10 +107,10 @@ class XMLMatrix(Folder):
       if not hasattr(self, 'index'):
         return 0
 
+      base_id= kwd.get('base_id', "cell")
       if not self.index.has_key(base_id):
         return 0
 
-      base_id= kwd.get('base_id', "cell")
       cell_id = base_id
       i = 0
       for my_id in kw:
@@ -496,7 +499,8 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
     def newCellContent(self, id, portal_type=None, **kw):
       """
-        Creates a new content as a cell.
+        Creates a new content as a cell. This method is
+        meant to be overriden by subclasses.
       """
       if portal_type is not None :
         type_name = portal_type
