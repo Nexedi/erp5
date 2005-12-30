@@ -1097,8 +1097,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         self._objects[portal_type] = [allowed_type]
 
   def generateXml(self, path=None):
-    if path is None:
-      dict = self._objects
+    dict = self._objects
     xml_data = '<%s>' %(self.xml_tag,)
     keys = dict.keys()
     keys.sort()
@@ -1119,6 +1118,34 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     path = self.__class__.__name__+os.sep+self.class_property
     xml_data = self.generateXml(path=None)
     bta.addObject(obj=xml_data, name=path, path=None)
+
+  def preinstall(self, context, installed_bt, **kw):
+    modified_object_list = {}
+    if context.getTemplateFormatVersion() == 1:
+      portal = context.getPortalObject()
+      new_keys = self._objects.keys()
+      if installed_bt.id == 'installed_bt_for_diff':
+        #must rename keys in dict
+        new_dict = PersistentMapping()
+        for key in installed_bt._objects.keys():
+          new_key = self.class_property+'/'+key
+          new_dict[new_key] = installed_bt._objects[key]
+        installed_bt._objects = new_dict
+      for path in new_keys:
+        if installed_bt._objects.has_key(path):
+          # compare object to see it there is changes
+          new_object = self._objects[path]
+          old_object = installed_bt._objects[path]          
+          if new_object != old_object:
+            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+        else: # new object
+          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+      # get removed object
+      old_keys = installed_bt._objects.keys()
+      for path in old_keys:
+        if path not in new_keys:
+          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+    return modified_object_list
 
   def _importFile(self, file_name, file):
     path, name = os.path.split(file_name)
@@ -3187,7 +3214,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       reinstall = 0
       if installed_bt == self:
         reinstall = 1
-        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt')
+        bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
+        # update portal types properties to get last modifications
+        bt2.getPortalTypesProperties()
         bt2.edit(description='tmp bt generated for diff')
         bt2.build()
         installed_bt = bt2
@@ -3221,7 +3250,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               modified_object_list.update({path : ['New', new_item.__class__.__name__[:-12]]})
 
       if reinstall:
-        self.portal_templates.manage_delObjects(ids=['installed_bt'])
+        self.portal_templates.manage_delObjects(ids=['installed_bt_for_diff'])
       
       return modified_object_list
 
@@ -3254,7 +3283,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             LOG('Business Template', 0, 'Updating Tools')
             gen.setup(site, 0, update=1)
           if self.getTitle() == 'erp5_core' and self.getTemplateUpdateBusinessTemplateWorkflow():
-            LOG('set flag to update workfow', 0, '')
+            LOG('Business Template', 0, 'Updating Business Template Workflows')
             gen.setupWorkflow(site)
           return
 
@@ -3324,7 +3353,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # check if we have to updater business template workflow
       if self.getTitle() == 'erp5_core' and self.getTemplateUpdateBusinessTemplateWorkflow():
-        LOG('set flag to update workfow', 0, '')
+        LOG('Business Template', 0, 'Updating Business Template Workflows')
         gen.setupWorkflow(site)
         # XXX keep TM in case update of workflow doesn't work
         #         self._v_txn = WorkflowUpdateTM()
