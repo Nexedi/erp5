@@ -346,114 +346,19 @@ class TemplateTool (BaseTool):
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
       return os.popen('/usr/bin/python %s %s 2>&1' % (getUnitTestFile(), ' '.join(test_list))).read()
 
-    def diff(self, **kw):
-      """
-      Make a diff between two Business Template
-      """
-      compare_to_installed = 0
-      # get the business template      
-      p = self.getPortalObject()
-      portal_selections = p.portal_selections
-      selection_name = 'business_template_selection' # harcoded because we can also get delete_selection
-      uids = portal_selections.getSelectionCheckedUidsFor(selection_name)
-      bt1 = self.portal_catalog.getObject(uids[0])
-      if bt1.getBuildingState() != 'built':
-        raise TemplateConditionError, 'Business Template must be built to make diff'
-      if (getattr(bt1, 'template_format_version', 0)) != 1:
-        raise TemplateConditionError, 'Business Template must be in new format'
-      # check if there is a second bt or if we compare to installed one
-      if len(uids) == 2:
-        bt2 = self.portal_catalog.getObject(uids[1])
-        if bt2.getBuildingState() != 'built':
-          raise TemplateConditionError, 'Business Template must be built to make diff'
-        if (getattr(bt2, 'template_format_version', 0)) != 1:
-          raise TemplateConditionError, 'Business Template must be in new format'
-      else:
-        compare_to_installed = 1
-        installed_bt = self.getInstalledBusinessTemplate(title=bt1.getTitle())
-        if installed_bt is None:
-          raise NotFound, 'Installed business template with title %s not found' %(bt1.getTitle(),)
-        LOG('compare to installed bt', 0, str((installed_bt.getTitle(), installed_bt.getId())))
-        # get a copy of the installed bt
-        bt2 = self.manage_clone(ob=installed_bt, id='installed_bt')
-        bt2.edit(description='tmp bt generated for diff')
-        
-      # separate item because somes are exported with zope exportXML and other with our own method
-      # and others are just python code on filesystem
-      diff_msg = 'Diff between %s-%s and %s-%s' %(bt1.getTitle(), bt1.getId(), bt2.getTitle(), bt2.getId())
-      # for the one with zope exportXml
-      item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item',
-                     '_skin_item', '_action_item']
-      for item_name  in item_list_1:
-        item1 = getattr(bt1, item_name)        
-        # build current item if we compare to installed bt
-        if compare_to_installed:
-          getattr(bt2, item_name).build(bt2)
-        item2 = getattr(bt2, item_name)
-        for key in  item1._objects.keys():
-          if item2._objects.has_key(key):
-            object1 = item1._objects[key]
-            object2 = item2._objects[key]
-            f1 = StringIO()
-            f2 = StringIO()
-            OFS.XMLExportImport.exportXML(object1._p_jar, object1._p_oid, f1)
-            OFS.XMLExportImport.exportXML(object2._p_jar, object2._p_oid, f2)
-            obj1_xml = f1.getvalue()
-            obj2_xml = f2.getvalue()
-            f1.close()
-            f2.close()
-            ob1_xml_lines = obj1_xml.splitlines()
-            ob2_xml_lines = obj2_xml.splitlines()
-            diff_list = list(unified_diff(ob1_xml_lines, ob2_xml_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
-            if len(diff_list) != 0:
-              diff_msg += '\n\nObject %s diff :\n' %(key)
-              diff_msg += '\n'.join(diff_list)
 
-      # for our own way to generate xml
-      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item',
-                     '_catalog_result_table_item', '_catalog_keyword_key_item', '_catalog_full_text_key_item',
-                     '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item',
-                     '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item',
-                     '_portal_type_property_sheet_item', '_portal_type_base_category_item',]
-      for item_name  in item_list_2:
-        item1 = getattr(bt1, item_name)        
-        # build current item if we compare to installed bt
-        if compare_to_installed:
-          getattr(bt2, item_name).build(bt2)
-        item2 = getattr(bt2, item_name)
-        for key in  item1._objects.keys():
-          if item2._objects.has_key(key):
-            obj1_xml = item1.generateXml(path=key)
-            obj2_xml = item2.generateXml(path=key)
-            ob1_xml_lines = obj1_xml.splitlines()
-            ob2_xml_lines = obj2_xml.splitlines()
-            diff_list = list(unified_diff(ob1_xml_lines, ob2_xml_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
-            if len(diff_list) != 0:
-              diff_msg += '\n\nObject %s diff :\n' %(key)
-              diff_msg += '\n'.join(diff_list)
-              
-      # for document located on filesystem
-      item_list_3 = ['_document_item', '_property_sheet_item', '_extension_item', '_test_item', '_message_translation_item']
-      for item_name  in item_list_3:
-        item1 = getattr(bt1, item_name)        
-        # build current item if we compare to installed bt
-        if compare_to_installed:
-          getattr(bt2, item_name).build(bt2)
-        item2 = getattr(bt2, item_name)
-        for key in  item1._objects.keys():
-          if item2._objects.has_key(key):
-            obj1_code = item1._objects[key]
-            obj2_code = item2._objects[key]
-            ob1_lines = obj1_code.splitlines()
-            ob2_lines = obj2_code.splitlines()
-            diff_list = list(unified_diff(ob1_lines, ob2_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
-            if len(diff_list) != 0:
-              diff_msg += '\n\nObject %s diff :\n' %(key)
-              diff_msg += '\n'.join(diff_list)
-              
-      if compare_to_installed:
-        self.manage_delObjects(ids=['installed_bt'])
-      return diff_msg
+    def diffObject(self, REQUEST, **kw):
+      """
+      Make diff between two objects
+      """
+      bt1_id = getattr(REQUEST, 'bt1', None)
+      bt2_id = getattr(REQUEST, 'bt2', None)
+      bt1 = self._getOb(bt1_id)
+      bt2 = self._getOb(bt2_id)
+      if self.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0: 
+        return bt2.diffObject(REQUEST, compare_with=bt1_id)
+      else:
+        return bt1.diffObject(REQUEST, compare_with=bt2_id)
 
     security.declareProtected( 'Import/Export objects', 'updateRepositoryBusinessTemplateList' )
     def updateRepositoryBusinessTemplateList(self, repository_list, REQUEST=None, RESPONSE=None, **kw):
