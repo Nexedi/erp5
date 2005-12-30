@@ -1341,7 +1341,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
             values.append(self._objects[key])
           else:
             values.append(self._archive[key])
-          
+
     for obj in values:
       method_id = obj.id
 
@@ -1404,14 +1404,16 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         values = self._objects.values()
       else:
         values = self._archive.values()
-    else:      
-      values.append(self._archive[object_path])
+    else:
+      value = self._archive[object_path]
+      if value is not None:
+        values.append(value)
     # Make copies of attributes of the default catalog of portal_catalog.
     sql_catalog_object_list = list(catalog.sql_catalog_object_list)
     sql_uncatalog_object = list(catalog.sql_uncatalog_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
 
-    for obj in values:
+    for obj in values:      
       method_id = obj.id
       if method_id in sql_catalog_object_list:
         sql_catalog_object_list.remove(method_id)
