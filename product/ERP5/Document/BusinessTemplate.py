@@ -3215,15 +3215,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 
       modified_object_list = {}
       bt_title = self.getTitle()
-      installed_bt = self.portal_templates.getInstalledBusinessTemplate(title=bt_title)
+
+      #  can be call to diff two Business Template in template tool
+      bt2 = kw.get('compare_to', None)
+      if  bt2 is not None:
+        installed_bt = bt2
+      else:
+        installed_bt = self.portal_templates.getInstalledBusinessTemplate(title=bt_title)
       if installed_bt is None:
         installed_bt_format = 0 # that will not check for modification
       else:
         installed_bt_format = installed_bt.getTemplateFormatVersion()
 
       # if reinstall business template, must compare to object in ZODB
-      # and not to those in the installed Business Template because it is itself
-      reinstall = 0
+      # and not to those in the installed Business Template because it is itself.
+      # same if we make a diff and selected only one business template
+      reinstall = 0      
       if installed_bt == self:
         reinstall = 1
         bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
@@ -3231,11 +3238,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         bt2.getPortalTypesProperties()
         bt2.edit(description='tmp bt generated for diff')
         bt2.build()
-        installed_bt = bt2
-
-      #  can be call to diff two Business Template in template tool
-      bt2 = kw.get('compare_to', None)
-      if  bt2 is not None:
         installed_bt = bt2
       
       new_bt_format = self.getTemplateFormatVersion()
@@ -3250,7 +3252,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             for path in item._objects.keys():
               modified_object_list.update({path : ['New', item.__class__.__name__[:-12]]})
         return modified_object_list
-        
+
       # get the list of modified and new object
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
@@ -3259,6 +3261,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         old_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
           if old_item is not None:
+            LOG('compare object item', 0, item_name)
             modified_object = new_item.preinstall(context=local_configuration, installed_bt=old_item)
             if len(modified_object) > 0:
               modified_object_list.update(modified_object)
@@ -3759,9 +3762,19 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       new_bt =self
       # compare with a given business template
+      compare_to_zodb = 0
       bt2_id = kw.get('compare_with', None)
       if bt2_id is not None:
-        installed_bt = self.portal_templates._getOb(bt2_id)
+        if bt2_id == self.getId():
+          compare_to_zodb = 1
+          installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
+          bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
+          # update portal types properties to get last modifications
+          bt2.getPortalTypesProperties()
+          bt2.edit(description='tmp bt generated for diff')
+          installed_bt = bt2
+        else:
+          installed_bt = self.portal_templates._getOb(bt2_id)
       else:
         installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
         if installed_bt == new_bt:
@@ -3769,6 +3782,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       
       new_item = getattr(new_bt, item_name)
       installed_item = getattr(installed_bt, item_name)
+      if compare_to_zodb:
+        installed_item.build(self)
       new_object = new_item._objects[object_id]
       installed_object = installed_item._objects[object_id]
       # make diff
@@ -3820,6 +3835,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
           diff_msg += '\n'.join(diff_list)
         else:
           diff_msg = 'No diff'                
+
+      if compare_to_zodb:
+        self.portal_templates.manage_delObjects(ids=['installed_bt_for_diff'])
       
       return diff_msg
 
