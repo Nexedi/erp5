@@ -1125,7 +1125,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       portal = context.getPortalObject()
       new_keys = self._objects.keys()
       if installed_bt.id == 'installed_bt_for_diff':
-        #must rename keys in dict
+        #must rename keys in dict if reinstall
         new_dict = PersistentMapping()
         for key in installed_bt._objects.keys():
           new_key = self.class_property+'/'+key
@@ -1969,6 +1969,13 @@ class RoleTemplateItem(BaseTemplateItem):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_roles = self._objects.keys()
+      if installed_bt.id == 'installed_bt_for_diff':
+        #must rename keys in dict if reinstall
+        new_dict = PersistentMapping()
+        old_keys = installed_bt._objects.values()[0]
+        for key in old_keys:
+          new_dict[key] = ''
+        installed_bt._objects = new_dict      
       for role in new_roles:
         if installed_bt._objects.has_key(role):
           continue
