@@ -1972,7 +1972,9 @@ class RoleTemplateItem(BaseTemplateItem):
       if installed_bt.id == 'installed_bt_for_diff':
         #must rename keys in dict if reinstall
         new_dict = PersistentMapping()
-        old_keys = installed_bt._objects.values()[0]
+        old_keys = ()
+        if len(installed_bt._objects.values()) > 0:
+          old_keys = installed_bt._objects.values()[0]
         for key in old_keys:
           new_dict[key] = ''
         installed_bt._objects = new_dict      
@@ -3207,7 +3209,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         Return the list of modified/new/removed object between a Business Template
         and the one installed if exists
-      """      
+      """
+                
       modified_object_list = {}
       bt_title = self.getTitle()
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(title=bt_title)
@@ -3226,6 +3229,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
         bt2.getPortalTypesProperties()
         bt2.edit(description='tmp bt generated for diff')
         bt2.build()
+        installed_bt = bt2
+
+      #  can be call to diff two Business Template in template tool
+      bt2 = kw.get('compare_to', None)
+      if  bt2 is not None:
         installed_bt = bt2
       
       new_bt_format = self.getTemplateFormatVersion()
@@ -3705,7 +3713,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         getattr(self, item_name).importFile(bta)
 
 
-    def diffObject(self, REQUEST):
+    def diffObject(self, REQUEST, **kw):
       """
         Make a diff between an object in the Business Template
         and the same in the Business Template installed in the site
@@ -3746,10 +3754,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
       object_class = REQUEST.object_class
       # get objects
       item_name = class_name_dict[object_class]
+      
       new_bt =self
       installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
       if installed_bt == new_bt:
         return 'No diff at reinstall'
+
+      # compare with a given business template
+      bt2_id = kw.get('compare_with', None)
+      if bt2_id is not None:
+        installed_bt = self.portal_templates._getOb(bt2_id)
+
       new_item = getattr(new_bt, item_name)
       installed_item = getattr(installed_bt, item_name)
       new_object = new_item._objects[object_id]
@@ -3781,6 +3796,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           diff_msg += '\n'.join(diff_list)
         else:
           diff_msg = 'No diff'
+          
       elif item_name in item_list_2:
         new_obj_xml = new_item.generateXml(path= object_id)
         installed_obj_xml = installed_item.generateXml(path= object_id)
@@ -3792,6 +3808,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           diff_msg += '\n'.join(diff_list)
         else:
           diff_msg = 'No diff'
+          
       elif item_name in item_list_3:
         new_obj_lines = new_object.splitlines()
         installed_obj_lines = installed_object.splitlines()
