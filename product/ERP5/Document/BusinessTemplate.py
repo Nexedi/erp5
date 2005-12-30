@@ -2935,7 +2935,7 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       obj = self._objects[key]
       path = os.path.join(root_path, key)
       bta.addFolder(name=path)
-      f = open(path+'/translation.po', 'wt')
+      f = open(path+os.sep+'translation.po', 'wt')
       f.write(str(obj))
       f.close()
 
@@ -3754,17 +3754,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
       object_class = REQUEST.object_class
       # get objects
       item_name = class_name_dict[object_class]
-      
-      new_bt =self
-      installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
-      if installed_bt == new_bt:
-        return 'No diff at reinstall'
 
+      new_bt =self
       # compare with a given business template
       bt2_id = kw.get('compare_with', None)
       if bt2_id is not None:
         installed_bt = self.portal_templates._getOb(bt2_id)
-
+      else:
+        installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
+        if installed_bt == new_bt:
+          return 'No diff at reinstall'
+      
       new_item = getattr(new_bt, item_name)
       installed_item = getattr(installed_bt, item_name)
       new_object = new_item._objects[object_id]
