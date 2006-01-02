@@ -1214,6 +1214,73 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     p = self.getPortal()
     self.failUnless(role not in p.__ac_roles__)
 
+  # Local Roles
+  def stepCreateLocalRoles(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create local roles
+    """
+    new_local_roles = {'ac':['Owner', 'Manager']}
+    new_local_group_roles = {'role:Authenticated':['Owner', 'Manager']}
+    p = self.getPortal()    
+    module_id = sequence.get('module_id')
+    module = p._getOb(module_id, None)
+    self.failUnless(module is not None)
+    module.__ac_local_roles__ = new_local_roles
+    module.__ac_local_group_roles__ = new_local_group_roles
+    self.assertEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertEquals(module.__ac_local_group_roles__, new_local_group_roles)
+    sequence.edit(local_roles=new_local_roles, local_group_roles=new_local_group_roles)
+
+  def stepRemoveLocalRoles(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove local roles
+    """
+    p = self.getPortal()    
+    module_id = sequence.get('module_id')
+    module = p._getOb(module_id, None)
+    self.failUnless(module is not None)
+    module.__ac_local_roles__ = {}
+    module.__ac_local_group_roles__ = {}
+    new_local_roles = sequence.get('local_roles')
+    new_local_group_roles = sequence.get('local_group_roles')
+    self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertNotEquals(module.__ac_local_group_roles__, new_local_group_roles)
+
+  def stepAddLocalRolesToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add Local Roles to Business Template
+    """
+    module_id = sequence.get('module_id')
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_local_roles_list=[module_id])
+
+  def stepCheckLocalRolesExists(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check presence of local roles
+    """
+    new_local_roles = sequence.get('local_roles')
+    new_local_group_roles = sequence.get('local_group_roles')
+    p = self.getPortal()
+    module_id = sequence.get('module_id')
+    module = p._getOb(module_id, None)
+    self.failUnless(module is not None)
+    self.assertEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertEquals(module.__ac_local_group_roles__, new_local_group_roles)
+    
+  def stepCheckLocalRolesRemoved(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check non-presence of local roles
+    """
+    new_local_roles = sequence.get('local_roles')
+    new_local_group_roles = sequence.get('local_group_roles')
+    p = self.getPortal()
+    module_id = sequence.get('module_id')
+    module = p._getOb(module_id, None)
+    self.failUnless(module is not None)
+    self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
+    self.assertNotEquals(module.__ac_local_group_roles__, new_local_group_roles)
+
   # Document, Property Sheet, Extension And Test
   # they use the same class so only one test is required for them
   def stepCreatePropertySheet(self, sequence=None, sequence_list=None, **kw):
@@ -1995,7 +2062,54 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)    
 
-  def test_14_BusinessTemplateWithPropertySheet(self, quiet=0, run=run_all_test):
+  def test_14_BusinessTemplateWithLocalRoles(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Local Roles'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateModuleAndObjects \
+                       CreateLocalRoles \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddLocalRolesToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveLocalRoles \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTrashBin \
+                       CheckSkinsLayers \
+                       CheckLocalRolesExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckLocalRolesRemoved \
+                       RemoveModule \
+                       RemovePortalType \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+    
+  def test_15_BusinessTemplateWithPropertySheet(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Property Sheet'
@@ -2039,7 +2153,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.play(self)    
 
 
-  def test_15_BusinessTemplateWithAllItems(self, quiet=0, run=run_all_test):
+  def test_16_BusinessTemplateWithAllItems(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With All Items'
@@ -2059,6 +2173,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
+                       CreateLocalRoles \
                        CreatePropertySheet \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
@@ -2072,6 +2187,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
+                       AddLocalRolesToBusinessTemplate \
                        AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
@@ -2114,6 +2230,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
+                       CheckLocalRolesExists \
                        CheckPropertySheetExists \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
@@ -2134,7 +2251,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
 
 
-  def test_16_SubobjectsAfterUpgradOfBusinessTemplate(self, quiet=0, run=run_all_test):
+  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Upgrade Of Business Template Keeps Subobjects'
@@ -2210,7 +2327,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_17_upgradeBusinessTemplateWithAllItems(self, quiet=0, run=run_all_test):
+  def test_18_upgradeBusinessTemplateWithAllItems(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Upgrade Business Template With All Items'
@@ -2231,6 +2348,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
+                       CreateLocalRoles \
                        CreatePropertySheet \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
@@ -2244,6 +2362,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
+                       AddLocalRolesToBusinessTemplate \
                        AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
@@ -2286,6 +2405,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
+                       CheckLocalRolesExists \
                        CheckPropertySheetExists \
                        RemoveAllTrashBins \
                        ImportBusinessTemplate \
@@ -2308,6 +2428,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
+                       CheckLocalRolesExists \
                        CheckPropertySheetExists \
                        CheckSkinsLayers \
                        RemovePortalType \
@@ -2326,7 +2447,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.play(self)    
 
   # test specific to erp5_core
-  def test_18_checkUpdateBusinessTemplateWorkflow(self, quiet=0, run=run_all_test):
+  def test_19_checkUpdateBusinessTemplateWorkflow(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check Update of Business Template Workflows is working'
@@ -2346,6 +2467,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
+                       CreateLocalRoles \
                        CreatePropertySheet \
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
@@ -2361,6 +2483,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
+                       AddLocalRolesToBusinessTemplate \
                        AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
@@ -2393,6 +2516,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
+                       CheckLocalRolesExists \
                        CheckPropertySheetExists \
                        RemovePortalType \
                        RemoveModule \
@@ -2409,7 +2533,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.play(self)      
 
 
-  def test_19_checkUpdateTool(self, quiet=0, run=run_all_test):
+  def test_20_checkUpdateTool(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Check Update of Tool is working'
@@ -2429,6 +2553,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
+                       CreateLocalRoles \
                        CreatePropertySheet \
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
@@ -2444,6 +2569,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
+                       AddLocalRolesToBusinessTemplate \
                        AddPropertySheetToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
@@ -2487,6 +2613,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
+                       CheckLocalRolesExists \
                        CheckPropertySheetExists \
                        RemovePortalType \
                        RemoveModule \
