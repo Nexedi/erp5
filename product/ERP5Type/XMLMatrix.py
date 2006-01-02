@@ -318,9 +318,9 @@ class XMLMatrix(Folder):
       self._setCellRange(*kw, **kwd)
       self.reindexObject()
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
-                              'updateCellRange')
-    def updateCellRange(self, base_id, script_id=None, **kw):
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              '_updateCellRange')
+    def _updateCellRange(self, base_id, script_id=None, **kw):
       """
         The asCellRange script is Portal Type dependent
         which is not the case with this kind of code
@@ -340,9 +340,16 @@ class XMLMatrix(Folder):
         raise UnboundLocalError,\
               "Did not find cell range script for portal type: %r" %\
               self.getPortalType()
-      self.setCellRange(base_id=base_id, *cell_range)
+      self._setCellRange(base_id=base_id, *cell_range)
+    
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'updateCellRange')
+    def updateCellRange(self, base_id='cell', script_id=None, **kw):
+      """ same as _updateCellRange, but reindex the object. """
+      self._updateCellRange(base_id=base_id, script_id=script_id, **kw)
+      self.reindexObject()
 
-
+    
     security.declareProtected( Permissions.ModifyPortalContent, '_renameCellRange' )
     def _renameCellRange(self, *kw, **kwd):
       """
