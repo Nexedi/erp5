@@ -1,3 +1,6 @@
+2006-01-02 aurel
+* rename field in BusinessTemplate_viewDetail
+
 2005-12-30 aurel
 * remove old view for diff
 * modified BusinessTemplate_getDiffUrl, TemplateTool_viewDiff
