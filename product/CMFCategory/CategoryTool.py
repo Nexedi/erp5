@@ -30,7 +30,6 @@
 ERP portal_categories tool.
 """
 
-from copy import deepcopy
 from OFS.Folder import Folder
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile
@@ -44,7 +43,7 @@ from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
 from OFS.Traversable import NotFound
 
-import string, re
+import re
 
 from zLOG import LOG, PROBLEM
 
@@ -1227,10 +1226,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
           self.updateRelatedContent(o, previous_o_category_url, new_o_category_url)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getRelatedValueList' )
-    def getRelatedValueList(self, context, base_category_list=None, 
-                                       spec=(), filter=None, base=1, **kw):
-      #LOG('getRelatedValueList',0,'base_category_list: %s, filter: %s, kw: %s' %
-      #        (str(base_category_list),str(filter),str(kw)))
+    def getRelatedValueList(self, context, base_category_list=None,
+                           spec=(), filter=None, base=1, **kw):
+      """
+        This methods returns the list of objects related to the context
+        with the given base_category_list.
+      """
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       portal_type = kw.get('portal_type')
       
@@ -1247,14 +1248,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
         elif base_category_list is () or base_category_list is None:
           base_category_list = self.getBaseCategoryList()
         category_list = []
-        #LOG('getRelatedValueList',0,'base_category_list: %s' % str(base_category_list))
         for base_category in base_category_list:
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
       
-      brain_result = self.Base_zSearchRelatedObjectsByCategoryList(category_list = category_list,
-                                                                   portal_type = portal_type,
-                                                                   strict_membership = strict_membership)
-
+      brain_result = self.Base_zSearchRelatedObjectsByCategoryList(
+                           category_list = category_list,
+                           portal_type = portal_type,
+                           strict_membership = strict_membership )
+      
       result = []
       for b in brain_result:
         o = b.getObject()
@@ -1265,7 +1266,22 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                   # XXX missing filter and **kw stuff
       #return self.search_category(category_list = category_list, portal_type = spec)
       # future implementation with brains, much more efficient
-
+    
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getRelatedPropertyList' )
+    def getRelatedPropertyList(self, context, base_category_list=None,
+                          property_name=None, spec=(), filter=None, base=1, **kw):
+      """
+        This methods returns the list of property_name on  objects
+        related to the context with the given base_category_list.
+      """
+      result = []
+      for o in self.getRelatedValueList(context=context,
+                          base_category_list=base_category_list, spec=spec,
+                          filter=filter, base=base, **kw) :
+        result.append(o.getProperty(property_name, None))
+      return result
+      
     # SQL Expression Building
     security.declareProtected(Permissions.AccessContentsInformation, 'buildSQLSelector')
     def buildSQLSelector(self, category_list, query_table='category'):
@@ -1360,7 +1376,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       This returns a title list of items belonging to a category
 
       """
-      getCategoryMemberItemList(self, context, base_category = base_category,
+      return self.getCategoryMemberItemList(self, context, base_category = base_category,
                                 spec = spec, filter=filter, portal_type=portal_type, 
                                 strict_membership = strict_membership, strict = strict,
                                 display_id = 'getTitle')
