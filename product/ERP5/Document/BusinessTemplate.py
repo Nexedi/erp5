@@ -263,7 +263,7 @@ class BaseTemplateItem(Implicit, Persistent):
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
       new_keys = self._objects.keys()
-      for path in new_keys:        
+      for path in new_keys:
         if installed_bt._objects.has_key(path):
           # compare object to see it there is changes
           new_obj_xml = self.generateXml(path=path)
@@ -2953,6 +2953,114 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     text = file.read()
     self._objects[file_name[:-3]]=text
 
+class LocalRolesTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    p = context.getPortalObject()
+    for path in self._archive.keys():
+      obj = p.unrestrictedTraverse(path)
+      local_roles_dict = getattr(obj, '__ac_local_roles__', {})
+      group_local_roles_dict = getattr(obj, '__ac_local_group_roles__', {})
+      self._objects[path] = (local_roles_dict, group_local_roles_dict)
+
+  def generateXml(self, path=None):
+    local_roles_dict, group_local_roles_dict = self._objects[path]
+    local_roles_keys = local_roles_dict.keys()
+    group_local_roles_keys = group_local_roles_dict.keys()
+    local_roles_keys.sort()
+    group_local_roles_keys.sort()
+    # local roles
+    xml_data = '<local_roles_item>'
+    xml_data += os.linesep+' <local_roles>'
+    for key in local_roles_keys:
+      xml_data += os.linesep+"  <role id='%s'>" %(key,)
+      tuple = local_roles_dict[key]
+      for item in tuple:
+        xml_data += os.linesep+"   <item>%s</item>" %(item,)
+      xml_data += os.linesep+"  </role>"
+    xml_data += os.linesep+' </local_roles>'
+    # group local roles
+    xml_data += os.linesep+' <group_local_roles>'
+    for key in group_local_roles_keys:
+      xml_data += os.linesep+"  <role id='%s'>" %(key,)
+      tuple = group_local_roles_dict[key]
+      for item in tuple:
+        xml_data += os.linesep+"   <item>%s</item>" %(item,)
+      xml_data += os.linesep+"  </role>"
+    xml_data += os.linesep+' </group_local_roles>'
+    xml_data += os.linesep+'</local_roles_item>'
+    return xml_data
+      
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    root_path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(name=root_path)
+    for key in self._objects.keys():
+      xml_data = self.generateXml(key)
+
+      folders, id = os.path.split(key)
+      encode_folders = []
+      for folder in folders.split('/'):
+        if '%' not in folder:
+          encode_folders.append(pathname2url(folder))
+        else:
+          encode_folders.append(folder)
+      path = os.path.join(root_path, (os.sep).join(encode_folders))    
+      bta.addFolder(name=path)
+      bta.addObject(obj=xml_data, name=id, path=path)
+
+  def _importFile(self, file_name, file):
+    xml = parse(file)
+    # local roles
+    local_roles = xml.getElementsByTagName('local_roles')[0]
+    local_roles_list = local_roles.getElementsByTagName('role')    
+    local_roles_dict = {}
+    for role in local_roles_list:
+      id = role.getAttribute('id')
+      item_type_list = []
+      item_list = role.getElementsByTagName('item')
+      for item in item_list:
+        item_type_list.append(str(item.childNodes[0].data))
+      local_roles_dict[id] = item_type_list
+    # group local roles
+    group_local_roles = xml.getElementsByTagName('group_local_roles')[0]
+    local_roles_list = group_local_roles.getElementsByTagName('role')    
+    group_local_roles_dict = {}
+    for role in local_roles_list:
+      id = role.getAttribute('id')
+      item_type_list = []
+      item_list = role.getElementsByTagName('item')
+      for item in item_list:
+        item_type_list.append(str(item.childNodes[0].data))
+      group_local_roles_dict[id] = item_type_list
+    self._objects['local_roles/'+file_name[:-4]] = (local_roles_dict, group_local_roles_dict)
+
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    p = context.getPortalObject()
+    for roles_path in self._objects.keys():
+      LOG('install roles_path', 0, roles_path)
+      if update_dict.has_key(roles_path) or force:
+        if not force:
+          action = update_dict[roles_path]
+          if action == 'nothing':
+            continue
+      path = roles_path.split('/')[1:]
+      obj = p.unrestrictedTraverse(path)
+      local_roles_dict, group_local_roles_dict = self._objects[roles_path]
+      setattr(obj, '__ac_local_roles__', local_roles_dict)
+      setattr(obj, '__ac_local_group_roles__', group_local_roles_dict)
+
+  def uninstall(self, context, **kw):
+    p = context.getPortalObject()
+    for roles_path in self._objects.keys():
+      path = roles_path.split('/')[1:]
+      obj = p.unrestrictedTraverse(path)
+      setattr(obj, '__ac_local_roles__', {})
+      setattr(obj, '__ac_local_group_roles__', {})
+    
 class BusinessTemplate(XMLObject):
     """
     A business template allows to construct ERP5 modules
@@ -3071,6 +3179,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_skin_item',
       '_path_item',
       '_action_item',
+      '_local_roles_item', 
       '_catalog_result_key_item',
       '_catalog_related_key_item',
       '_catalog_result_table_item',
@@ -3195,7 +3304,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_topic_key_item = \
           CatalogTopicKeyTemplateItem(
                self.getTemplateCatalogTopicKeyList())
-      
+      self._local_roles_item = \
+          LocalRolesTemplateItem(
+               self.getTemplateLocalRolesList())
+            
       # Build each part
       for item_name in self._item_name_list:
         getattr(self, item_name).build(self)
@@ -3721,6 +3833,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_topic_key_item = \
           CatalogTopicKeyTemplateItem(
                self.getTemplateCatalogTopicKeyList())
+      self._local_roles_item = \
+          LocalRolesTemplateItem(
+               self.getTemplateLocalRolesList())
       
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
@@ -3753,6 +3868,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'Skin' : '_skin_item',
         'Path' : '_path_item',
         'Action' : '_action_item',
+        'LocalRoles' : '_local_roles_item',
         'CatalogResultKey' : '_catalog_result_key_item',
         'CatalogRelatedKey' : '_catalog_related_key_item',
         'CatalogResultTable' : '_catalog_result_table_item',
@@ -3803,7 +3919,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_result_table_item',   '_catalog_keyword_key_item', '_catalog_full_text_key_item',
                      '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item',
                      '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item',
-                     '_portal_type_property_sheet_item', '_portal_type_base_category_item',]
+                     '_portal_type_property_sheet_item', '_portal_type_base_category_item', '_local_roles_item']
       item_list_3 = ['_document_item', '_property_sheet_item', '_extension_item', '_test_item', '_message_translation_item']
       if item_name in item_list_1:
         f1 = StringIO()
