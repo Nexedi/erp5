@@ -323,8 +323,11 @@ class BaseTemplateItem(Implicit, Persistent):
       obj._owner = None
     if hasattr(aq_base(obj), 'uid'):
       obj.uid = None
-    return obj      
-    
+    if getattr(obj, 'meta_type', None) == 'Script (Python)':
+      if hasattr(aq_base(obj), '_code'):
+        obj._code = None
+    return obj
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -497,6 +500,9 @@ class ObjectTemplateItem(BaseTemplateItem):
             container.manage_delObjects([object_id])
           # install object
           obj = self._objects[path]
+          if getattr(obj, 'meta_type', None) == 'Script (Python)':
+            if getattr(obj, '_code') is None:
+              obj._compile()
           if hasattr(aq_base(obj), 'groups'):
             # we must keep original order groups because they change when we add subobjects
             groups[path] = deepcopy(obj.groups)
@@ -521,7 +527,6 @@ class ObjectTemplateItem(BaseTemplateItem):
               subobject = connection.importFile(subobject_data)
               if subobject_id not in obj.objectIds():
                 obj._setObject(subobject_id, subobject)
-              
           if obj.meta_type in ('Z SQL Method',):
             # It is necessary to make sure that the sql connection
             # in this method is valid.
@@ -938,6 +943,9 @@ class WorkflowTemplateItem(ObjectTemplateItem):
             self._backupObject(action, trashbin, container_path, object_id)
             container.manage_delObjects([object_id])
           obj = self._objects[path]
+          if getattr(obj, 'meta_type', None) == 'Script (Python)':
+            if getattr(obj, '_code') is None:
+              obj._compile()
           obj = obj._getCopy(container)
           container._setObject(object_id, obj)
           obj = container._getOb(object_id)
