@@ -98,6 +98,7 @@
                         <string>my_template_site_property_id_list</string>
                         <string>my_template_document_id_list</string>
                         <string>my_template_property_sheet_id_list</string>
+                        <string>my_template_local_roles_list</string>
                       </list>
                     </value>
                 </item>
@@ -108,7 +109,6 @@
                         <string>my_template_product_id_list</string>
                         <string>my_template_test_id_list</string>
                         <string>my_template_message_translation_list</string>
-                        <string>my_template_local_role_list</string>
                       </list>
                     </value>
                 </item>
