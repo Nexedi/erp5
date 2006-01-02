@@ -222,7 +222,8 @@ class Movement(XMLObject, Amount):
   def _getTotalPrice(self, context):
     price = self.getPrice(context=context)
     quantity = self.getQuantity()
-    if type(price) in (type(1.0), type(1)) and type(quantity) in (type(1.0), type(1)):
+    if type(price) in (type(1.0), type(1)) and \
+        type(quantity) in (type(1.0), type(1)):
       return quantity * price
     else:
       return None
@@ -230,22 +231,29 @@ class Movement(XMLObject, Amount):
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None, REQUEST=None, **kw):
     """
+      Get the Price in the context.
+
+      If price is not stored locally, lookup a price and store it.
     """
     local_price = self._baseGetPrice()
     if local_price is None:
-      # We must find a price for this delivery line
-      local_price = self._getPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
+      # We must find a price for this movement
+      local_price = self._getPrice(self.asContext(
+                            context=context, REQUEST=REQUEST, **kw))
       # And store it localy
       if local_price is not None: self.setPrice(local_price)
     return local_price
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getTotalPrice')
   def getTotalPrice(self, context=None, REQUEST=None, **kw):
     """
+      Get the Total Price in the context.
     """
     return self._getTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getTotalQuantity')
   def getTotalQuantity(self):
     """
       Returns the quantity if no cell or the total quantity if cells
@@ -253,7 +261,8 @@ class Movement(XMLObject, Amount):
     return self.getQuantity()
 
   # Industrial price API
-  security.declareProtected(Permissions.AccessContentsInformation, 'getIndustrialPrice')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getIndustrialPrice')
   def getIndustrialPrice(self):
     """
       Calculates industrial price in context of this movement
@@ -264,7 +273,8 @@ class Movement(XMLObject, Amount):
     return None
 
   # Asset price calculation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceInventoriatedTotalAssetPrice')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSourceInventoriatedTotalAssetPrice')
   def getSourceInventoriatedTotalAssetPrice(self):
     """
       Returns a price which can be used to calculate stock value (asset)
@@ -307,21 +317,23 @@ class Movement(XMLObject, Amount):
       return self.getDestinationAssetPrice() * quantity # XXX: price should be converted to the dest. currency
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceAssetPrice')
   def getSourceAssetPrice(self):
     """
       Returns the price converted to the currency of the source section
 
-      This will be implemted by calling currency conversion on currency resources
+      This will be implemeted by calling currency conversion on currency resources
     """
-    return self.getPrice() # XXX Not implemented yet
+    return self.getPrice() # XXX Not implemented yet TODO
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationAssetPrice')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDestinationAssetPrice')
   def getDestinationAssetPrice(self):
     """
       Returns the price converted to the currency of the destination section
     """
-    return self.getPrice() # XXX Not implemented yet
+    return self.getPrice() # XXX Not implemented yet TODO
 
   # Causality computation
   security.declareProtected(Permissions.View, 'isConvergent')
@@ -334,6 +346,7 @@ class Movement(XMLObject, Amount):
   security.declareProtected(Permissions.View, 'isDivergent')
   def isDivergent(self):
     """
+      XXX documentation out of sync with actual use
       Returns 1 if the target is not met according to the current information
       After and edit, the isOutOfTarget will be checked. If it is 1,
       a message is emitted
@@ -345,24 +358,27 @@ class Movement(XMLObject, Amount):
         return 1
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanation')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanation')
   def getExplanation(self):
     """
-      This method allows to group Delivery movements and Simulation movements in a different way
+      Returns the relative_url of the explanation of this movement.
     """
     return self.getDelivery()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationUid')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanationUid')
   def getExplanationUid(self):
     """
-      This method allows to group Delivery movements and Simulation movements in a different way
+      Returns the uid of the explanation of this movement.
     """
     return self.getDeliveryUid()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationValue')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanationValue')
   def getExplanationValue(self):
     """
-      This method allows to group Delivery movements and Simulation movements in a different way
+      Returns the object explanation of this movement.
     """
     return self.getDeliveryValue()
 
@@ -373,147 +389,168 @@ class Movement(XMLObject, Amount):
            (len(self.getOrderRelatedValueList()) > 0)
 
   # New Causality API
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderQuantity')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderQuantity')
   def getOrderQuantity(self):
     """
       Returns the quantity of related order(s)
     """
     return self.getQuantity()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryQuantity')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryQuantity')
   def getDeliveryQuantity(self):
     """
       Returns the quantity of related delivery(s)
     """
     return self.getQuantity()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationQuantity')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationQuantity')
   def getSimulationQuantity(self):
     """
       Returns the sum of quantities in related simulation movements
     """
     return self.getQuantity()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStartDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderStartDateList')
   def getOrderStartDateList(self):
     """
-      Returns the start date of related order(s)
+      Returns the list of start date of related order(s)
     """
     return [self.getStartDate()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryStartDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryStartDateList')
   def getDeliveryStartDateList(self):
     """
-      Returns the start date of related delivery(s)
+      Returns the list of start date of related delivery(s)
     """
     return [self.getStartDate()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationStartDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationStartDateList')
   def getSimulationStartDateList(self):
     """
-      Returns the of start date related simulation movements
+      Returns the list of start date related simulation movements
     """
     return [self.getStartDate()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStopDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderStopDateList')
   def getOrderStopDateList(self):
     """
-      Returns the stop date of related order(s)
+      Returns the list of stop date of related order(s)
     """
     return [self.getStopDate()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryStopDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryStopDateList')
   def getDeliveryStopDateList(self):
     """
-      Returns the stop date of related delivery(s)
+      Returns the list of stop date of related delivery(s)
     """
     return [self.getStopDate()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationStopDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationStopDateList')
   def getSimulationStopDateList(self):
     """
-      Returns the of stop date related simulation movements
+      Returns the list of stop date related simulation movements
     """
     return [self.getStopDate()]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderSourceList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderSourceList')
   def getOrderSourceList(self):
     """
       Returns the source of related orders
     """
     return self.getSourceList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliverySourceList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliverySourceList')
   def getDeliverySourceList(self):
     """
       Returns the source of related deliveries
     """
     return self.getSourceList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSourceList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationSourceList')
   def getSimulationSourceList(self):
     """
       Returns the source of related simulation movements
     """
     return self.getSourceList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderDestinationList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderDestinationList')
   def getOrderDestinationList(self):
     """
       Returns the destination of related orders
     """
     return self.getDestinationList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryDestinationList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryDestinationList')
   def getDeliveryDestinationList(self):
     """
       Returns the destination of related deliveries
     """
     return self.getDestinationList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationDestinationList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationDestinationList')
   def getSimulationDestinationList(self):
     """
       Returns the destination of related simulation movements
     """
     return self.getDestinationList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderSourceSectionList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderSourceSectionList')
   def getOrderSourceSectionList(self):
     """
       Returns the source_section of related orders
     """
     return self.getSourceSectionList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliverySourceSectionList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliverySourceSectionList')
   def getDeliverySourceSectionList(self):
     """
       Returns the source_section of related deliveries
     """
     return self.getSourceSectionList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSourceSectionList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationSourceSectionList')
   def getSimulationSourceSectionList(self):
     """
       Returns the source_section of related simulation movements
     """
     return self.getSourceSectionList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderDestinationSectionList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderDestinationSectionList')
   def getOrderDestinationSectionList(self):
     """
       Returns the destination_section of related orders
     """
     return self.getDestinationSectionList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryDestinationSectionList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryDestinationSectionList')
   def getDeliveryDestinationSectionList(self):
     """
       Returns the destination_section of related deliveries
     """
     return self.getDestinationSectionList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationDestinationSectionList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationDestinationSectionList')
   def getSimulationDestinationSectionList(self):
     """
       Returns the destination_section of related simulation movements
@@ -521,7 +558,8 @@ class Movement(XMLObject, Amount):
     return self.getDestinationSectionList()
 
   # Debit and credit methods
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceDebit')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceDebit')
   def getSourceDebit(self):
     """
       Return the quantity
@@ -536,7 +574,8 @@ class Movement(XMLObject, Amount):
     else:
       return 0.0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceCredit')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceCredit')
   def getSourceCredit(self):
     """
       Return the quantity
@@ -551,10 +590,9 @@ class Movement(XMLObject, Amount):
     else:
       return quantity
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationDebit')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                    'getDestinationDebit', 'getDestinationCredit')
   getDestinationDebit = getSourceCredit
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationCredit')
   getDestinationCredit = getSourceDebit
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setSourceDebit')
@@ -583,22 +621,14 @@ class Movement(XMLObject, Amount):
       source_credit = 0.0
     self.setQuantity(source_credit)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setDestinationDebit')
-  def setDestinationDebit(self, destination_debit):
-    """
-      Temp
-    """
-    return
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setDestinationCredit')
-  def setDestinationCredit(self, destination_credit):
-    """
-      Temp
-    """
-    return
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'setDestinationDebit', 'setDestinationCredit' )
+  setDestinationDebit = setSourceCredit
+  setDestinationCredit = setSourceDebit
 
   # Debit and credit methods for asset
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetDebit')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceAssetDebit' )
   def getSourceAssetDebit(self):
     """
       Return the debit part of the source total asset price.
@@ -616,10 +646,14 @@ class Movement(XMLObject, Amount):
     else:
       return 0.0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetCredit')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceAssetCredit' )
   def getSourceAssetCredit(self):
     """
-      Return
+      Return the credit part of the source total asset price.
+
+      This is the same as getSourceCredit where quantity is replaced
+      by source_total_asset_price
     """
     quantity = self.getSourceTotalAssetPrice()
     try:
@@ -630,11 +664,47 @@ class Movement(XMLObject, Amount):
       return 0.0
     else:
       return quantity
+  
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDestinationAssetDebit' )
+  def getDestinationAssetDebit(self):
+    """
+      Return the debit part of the destination total asset price.
 
-  # MISSING
-  # getDestinationAssetDebit getDestinationAssetCredit
+      This is the same as getDestinationDebit where quantity is replaced
+      by destination_total_asset_price
+    """
+    quantity = self.getDestinationTotalAssetPrice()
+    try:
+      quantity = float(quantity)
+    except TypeError:
+      quantity = 0.0
+    if quantity < 0:
+      return - quantity
+    else:
+      return 0.0
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setSourceAssetDebit')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDestinationAssetCredit' )
+  def getDestinationAssetCredit(self):
+    """
+      Return the credit part of the destination total asset price.
+
+      This is the same as getDestinationCredit where quantity is replaced
+      by destination_total_asset_price
+    """
+    quantity = self.getDestinationTotalAssetPrice()
+    try:
+      quantity = float(quantity)
+    except TypeError:
+      quantity = 0.0
+    if quantity < 0:
+      return 0.0
+    else:
+      return quantity
+  
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'setSourceAssetDebit' )
   def setSourceAssetDebit(self, source_debit):
     """
       Set the quantity
@@ -647,9 +717,47 @@ class Movement(XMLObject, Amount):
       source_debit = 0.0
     self.setSourceTotalAssetPrice(- source_debit)
 
-  # MISSING
-  # setSourceAssetDebit setSourceAssetCredit
-  # setDestinationAssetDebit setDestinationAssetCredit
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'setSourceAssetCredit' )
+  def setSourceAssetCredit(self, source_credit):
+    """
+      Set the quantity
+    """
+    if source_credit in (None, ''):
+      return 0.0
+    try:
+      source_credit = float(source_credit)
+    except TypeError:
+      source_credit = 0.0
+    self.setSourceTotalAssetPrice(source_credit)
+
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'setDestinationAssetDebit' )
+  def setDestinationAssetDebit(self, destination_debit):
+    """
+      Set the quantity
+    """
+    if destination_debit in (None, ''):
+      return 0.0
+    try:
+      destination_debit = float(destination_debit)
+    except TypeError:
+      destination_debit = 0.0
+    self.setDestinationTotalAssetPrice(destination_debit)
+
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'setDestinationAssetCredit' )
+  def setDestinationAssetCredit(self, destination_credit):
+    """
+      Set the quantity
+    """
+    if destination_credit in (None, ''):
+      return 0.0
+    try:
+      destination_credit = float(destination_credit)
+    except TypeError:
+      destination_credit = 0.0
+    self.setDestinationTotalAssetPrice(- destination_credit)
 
   # Item Access (tracking)
   security.declareProtected(Permissions.AccessContentsInformation, 'getTrackedItemUidList')
