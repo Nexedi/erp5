@@ -172,7 +172,7 @@ class BusinessTemplate:
       'type'        : 'lines',
       'mode'        : 'w',
       'default'     : () },
-    { 'id'          : 'template_local_role',
+    { 'id'          : 'template_local_roles',
       'description' : 'A list of local roles used by this template',
       'type'        : 'lines',
       'mode'        : 'w',
