@@ -81,35 +81,36 @@ class Inventory(Delivery):
       node = self.getDestination()
       for movement in self.getMovementList():
         resource =  movement.getResourceValue()
-        variation_text = movement.getVariationText()
-        if (resource,variation_text) not in resource_and_variation_list:
-          resource_and_variation_list.append((resource,variation_text))
-          current_inventory_list = resource.getInventoryList( \
-                                  to_date          = start_date
-                                , variation_text   = variation_text
-                                , node             = node
-                                , simulation_state = self.getPortalCurrentInventoryStateList()
-                                , group_by_sub_variation = 1
-                                , group_by_variation = 1
-                                )
-          kwd = {'uid':self.getUid()}
-          kwd['start_date'] = start_date
-          variation_list = variation_text.split('/n')
-          for inventory in current_inventory_list:
-            sub_variation_list = []
-            if inventory.sub_variation_text is not None:
-              sub_variation_list = inventory.sub_variation_text.split('\n')
-            category_list = self.getCategoryList()
-            if inventory.total_quantity != 0:
-              temp_delivery_line = newTempDeliveryLine(self, 
-                                                       self.getId())
-              kwd['quantity'] = - inventory.total_quantity
-              category_list.append('resource/%s' % inventory.resource_relative_url)
-              category_list.extend(variation_list)
-              category_list.extend(sub_variation_list)
-              kwd['category_list'] = category_list
-              temp_delivery_line.edit(**kwd)
-              stock_object_list.append(temp_delivery_line)
+        if resource is not None:
+          variation_text = movement.getVariationText()
+          if (resource,variation_text) not in resource_and_variation_list:
+            resource_and_variation_list.append((resource,variation_text))
+            current_inventory_list = resource.getInventoryList( \
+                                    to_date          = start_date
+                                  , variation_text   = variation_text
+                                  , node             = node
+                                  , simulation_state = self.getPortalCurrentInventoryStateList()
+                                  , group_by_sub_variation = 1
+                                  , group_by_variation = 1
+                                  )
+            kwd = {'uid':self.getUid()}
+            kwd['start_date'] = start_date
+            variation_list = variation_text.split('/n')
+            for inventory in current_inventory_list:
+              sub_variation_list = []
+              if inventory.sub_variation_text is not None:
+                sub_variation_list = inventory.sub_variation_text.split('\n')
+              category_list = self.getCategoryList()
+              if inventory.total_quantity != 0:
+                temp_delivery_line = newTempDeliveryLine(self, 
+                                                         self.getId())
+                kwd['quantity'] = - inventory.total_quantity
+                category_list.append('resource/%s' % inventory.resource_relative_url)
+                category_list.extend(variation_list)
+                category_list.extend(sub_variation_list)
+                kwd['category_list'] = category_list
+                temp_delivery_line.edit(**kwd)
+                stock_object_list.append(temp_delivery_line)
       object_list = [self]
       self.portal_catalog.catalogObjectList(object_list)
       self.portal_catalog.catalogObjectList(stock_object_list,
