@@ -59,6 +59,7 @@ class TestERP5Category(ERP5TypeTestCase):
   run_all_test = 1
   portal_type = 'Organisation'
   base_cat = 'abc'
+  base_cat2 = 'efg'
   cat_list = [base_cat + '/1',base_cat + '/2']
   new_cat_list = [base_cat + '/3',base_cat + '/2']
   deep_cat_list = [base_cat + '/1/1',base_cat + '/2/1']
@@ -110,7 +111,7 @@ class TestERP5Category(ERP5TypeTestCase):
     portal_categories[self.base_cat].recursiveImmediateReindexObject()
 
     portal_type = self.getTypeTool()[self.portal_type]
-    portal_type.base_category_list = [self.base_cat]
+    portal_type.base_category_list = [self.base_cat, self.base_cat2]
     # Reset aq dynamic
     from Products.ERP5Type.Base import _aq_reset
     _aq_reset()
@@ -123,6 +124,14 @@ class TestERP5Category(ERP5TypeTestCase):
     self.telephone2 = self.organisation2.newContent(id='1',portal_type='Telephone')
     self.person = person_module.newContent(portal_type = 'Person')
     self.person.immediateReindexObject()
+
+    bc2 = self.base_cat2
+    portal_categories.newContent(portal_type='Base Category',id=bc2)
+    self.efg_l1=portal_categories[bc2].newContent(id='1',portal_type='Category')
+    self.efg_l2=self.efg_l1.newContent(id='11',portal_type='Category')
+    self.efg_l3=self.efg_l2.newContent(id='111',portal_type='Category')
+    self.efg_l4=self.efg_l3.newContent(id='1111',portal_type='Category')
+    portal_categories[self.base_cat2].recursiveImmediateReindexObject()
 
     # We have no place to put a Predicate, we will put it in the
     # Organisation Module
@@ -213,9 +222,37 @@ class TestERP5Category(ERP5TypeTestCase):
     organisation = self.organisation
     person = self.person
     person.setSubordinationValue(organisation)
+    self.assertEquals(person.getSubordinationValue(),organisation)
     organisation_module.edit(id='new_id')
     self.assertEquals(person.getSubordinationValue(),organisation)
 
+  def test_07(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Rename a Base Category with a Person Related to a Sub-Sub-Sub-Category')
+    o = self.organisation
+    o.setEfgValueList([self.efg_l4])
+    self.failIfDifferentSet(o.getEfgList(),[self.base_cat2+'/1/11/111/1111'])
+    self.efg_l1.edit(id='new_id')
+    self.failIfDifferentSet(o.getEfgList(),[self.base_cat2+'/new_id/11/111/1111'])
+
+  def test_08(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Rename a Module with Contained Objects Refering to Other Objects inside the Same Module')
+    om = self.getOrganisationModule()
+    om['1'].setAbcValue(om['2'])
+    om['1'].immediateReindexObject()
+    self.assertEquals(len(om['2'].getRelatedValueList('abc')), 1)
+    self.assertEquals(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)    
+    self.assertEquals(om['1'].getAbc(),om['2'].getRelativeUrl())
+    original_uid = om['2'].getUid()
+    om.edit(id='new_id')
+    om = self.getPortal()['new_id']
+    self.assertEquals(original_uid, om['2'].getUid())
+    self.assertEquals(len(om['2'].getRelatedValueList('abc')), 1)
+    self.assertEquals(len(om['2'].Base_zSearchRelatedObjectsByCategory(category_uid = om['2'].getUid())),1)
+    self.assertEquals(om['1'].getAbc(),om['2'].getRelativeUrl())
 
 if __name__ == '__main__':
     framework()
