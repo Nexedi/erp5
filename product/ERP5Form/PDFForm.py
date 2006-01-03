@@ -89,10 +89,10 @@ class PDFTk :
     tmpFdfFile = open(fdfFormFileName, "w")
     tmpFdfFile.write(fdfFile)
     tmpFdfFile.close()
-    
+
     out = self._getOutput(
           PDFTK_EXECUTABLE+
-          " %s fill_form %s output - flattern "%(
+          " %s fill_form %s output - flatten "%(
           pdfFormFileName, fdfFormFileName))
     os.remove(fdfFormFileName)
     os.remove(pdfFormFileName)
@@ -220,7 +220,7 @@ class CalculatedValues :
       # doesn't complain that NoneType doesn't support + when a1 not found
     return self.__values[attr]
   __getattr__ = __getitem__
-  
+
 allow_class(CalculatedValues)
 
 
@@ -330,7 +330,7 @@ class PDFForm(File):
       RESPONSE.write(content)
     return content
   manage_DAVget = manage_FTPget
-  
+
   security.declareProtected(Permissions.ManagePortal, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
     """(does not) Handle HTTP PUT requests."""
@@ -463,12 +463,12 @@ class PDFForm(File):
 
   security.declareProtected(Permissions.ManagePortal, 'deleteCell')
   def deleteCell(self, cell_name):
-    """ Delete a cell. 
+    """ Delete a cell.
     As setCellTALES add the cell if it is not present, we must have a
     way to remove cells created by mistake. """
     del self.all_cells[cell_name]
     del self.cells[cell_name]
-  
+
   security.declareProtected(Permissions.ManagePortal, 'setCellTALES')
   def setCellTALES(self, cell_name, TALES):
     """ changes the TALES expression that will be used to evaluate
@@ -481,7 +481,7 @@ class PDFForm(File):
     self.all_cells[str(cell_name)] = self.cells[str(cell_name)] = TALES
     # invalidate for persistence
     self.all_cells = self.all_cells
-    
+
   security.declareProtected(Permissions.View, 'getCellTALES')
   def getCellTALES(self, cell_name):
     """ returns the TALES expression associated with this cell """
