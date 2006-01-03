@@ -67,8 +67,8 @@ class PredicateMatrix(XMLMatrix):
     """
     total_priorities = {} # a dictionnary giving sum of int_index for a
                           # coordinate.
-    cell_key_list = self.getCellKeyList(
-                      base_id = self.predicate_matrix_base_id )
+    cell_key_list = list(self.getCellKeyList(
+                      base_id = self.predicate_matrix_base_id ))
     for coord_list in cell_key_list :
       priority = 0
       for coord in coord_list :
