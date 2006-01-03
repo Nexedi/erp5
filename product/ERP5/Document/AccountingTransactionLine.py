@@ -132,7 +132,7 @@ class AccountingTransactionLine(DeliveryLine):
     """
     if kw.has_key('source'):
       self._setSource(kw['source'])
-    if kw.has_key('destination') and not kw.has_key('source'):
+    elif kw.has_key('destination') :
       self._setDestination(kw['destination'])
     DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
 
@@ -175,14 +175,13 @@ class AccountingTransactionLine(DeliveryLine):
     """
     result = self.getInventoriatedQuantity()
     resource = self.getResourceValue()
-    source = self.getSourceValue()
+    source_section = self.getSourceSectionValue()
 
-    if source is not None and resource is not None:
-      # XXX convertCurrency is not defined
-      # ... so for now, we return 1
-      return 1
+    if source_section is not None and \
+       resource is not None and \
+       hasattr(resource, 'convertCurrency') :
       return resource.convertCurrency(result,
-                                      source.getPriceCurrencyValue())
+                                      source_section.getPriceCurrencyValue())
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
