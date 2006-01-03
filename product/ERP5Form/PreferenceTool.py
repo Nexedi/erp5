@@ -53,15 +53,6 @@ class PreferenceTool(BaseTool):
        Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainPreferenceTool', _dtmldir )
 
-  security.declareProtected(
-       Permissions.ManagePortal, 'manage_group_preferences' )
-  manage_group_preferences = DTMLFile(
-       'PreferenceTool_managePreferences', _dtmldir )
-
-  manage_options = ( BaseTool.manage_options +
-                     ( { 'label'      : 'User Groups Preferences'
-                       , 'action'     : 'manage_group_preferences'},))
-
   security.declarePrivate('manage_afterAdd')
   def manage_afterAdd(self, item, container) :
     """ init the permissions right after creation """
@@ -174,12 +165,10 @@ class PreferenceTool(BaseTool):
         sorted so that the first in the list should be applied first
     """
     prefs = []
-    # XXX This will not work with 1000000 users (searchFolder required)
     # XXX will also cause problems with Manager (too long)
-    # XXX Use catalog instead of contentValues (ex. searchFolder)
     # XXX For manager, create a manager specific preference
     #                  or better solution
-    for pref in self.contentValues(spec=('ERP5 Preference', )) :
+    for pref in self.searchFolder(spec=('ERP5 Preference', )) :
       pref = pref.getObject()
       if pref.getPreferenceState() == 'enabled' :
         prefs.append(pref)
@@ -208,27 +197,6 @@ class PreferenceTool(BaseTool):
            folder.getUid() in doc.getTemplateDestinationUidList() :
           acceptable_templates.append (doc)
     return acceptable_templates
-
-  security.declareProtected(Permissions.ManagePortal,
-          'USELESS_manage_updateUserGroupsPreferences')
-  def USELESS_manage_updateUserGroupsPreferences(self, REQUEST) :
-    """ action edit Users Groups Preferences from the
-        management sceen
-
-        XXX This is not compatible with 1,000,000 preferences
-
-        Also, the type of preference (or, better, the priority)
-        must be *stored* on the preference itself and
-        set from the preference itself.
-
-        This API is therefore useless.
-    """
-    for k, v in REQUEST.items() :
-      if k.startswith("preference_priority_") :
-        self[k[len('preference_priority_'):]].setPriority(v)
-    if REQUEST is not None:
-      return self.manage_group_preferences( self, REQUEST,
-        manage_tabs_message='Preference Priorities Updated')
 
 InitializeClass(PreferenceTool)
 
