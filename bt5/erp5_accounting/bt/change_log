@@ -1,3 +1,6 @@
+2006-01-03 jerome
+* add skins and actions for multi currency
+
 2005-12-28 jerome
 * fix i18n on journal report dialog
 * move transaction action from erp5_core to here
