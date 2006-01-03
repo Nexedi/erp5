@@ -937,7 +937,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     self.catalogObjectList([object])
 
-  def catalogObjectList(self, object_list, method_id_list=None, disable_cache=0):
+  def catalogObjectList(self, object_list, method_id_list=None, disable_cache=0,
+                              allow_duplicate_uid=0):
     """
       Add objects to the Catalog by calling
       all SQL methods and providing needed arguments.
@@ -998,7 +999,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
           # This can be very dangerous with relations stored in a category table (CMFCategory)
           # This is why we recommend completely reindexing subobjects after any change of id
-          catalog_path = self.getPathForUid(uid)
+          catalog_path = None
+          if not allow_duplicate_uid:
+            catalog_path = self.getPathForUid(uid)
           #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
           if catalog_path == "reserved":
             # Reserved line in catalog table
