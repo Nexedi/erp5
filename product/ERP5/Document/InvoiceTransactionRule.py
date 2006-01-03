@@ -181,7 +181,19 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
       
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
-      
+    
+         # Matrix related
+ 
+    security.declareProtected( Permissions.ModifyPortalContent,
+                                'newCellContent' )
+    def newCellContent(self, id, **kw):
+      """
+        Creates a new Cell.
+      """
+      self.invokeFactory(type_name='Accounting Rule Cell', id=id)
+      new_cell = self.get(id)
+      return new_cell
+    
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):
       """
