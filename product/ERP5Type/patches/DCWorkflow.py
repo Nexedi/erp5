@@ -106,6 +106,9 @@ DCWorkflow.ValidationFailed = ValidationFailed
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
 
 
+ 
+# Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed 
+# error messages in workflow history.
 def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     '''
     Private method.
