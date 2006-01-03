@@ -30,7 +30,6 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_self
 import ExtensionClass
 
-from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from Products.CMFCore.utils import _getAuthenticatedUser
 
 from Products.ERP5Type.Base import Base
@@ -55,7 +54,7 @@ def dummyFilter(object,REQUEST=None):
 def dummyTestAfter(object,REQUEST=None):
   return []
 
-class FolderMixIn(ExtensionClass.Base):
+class FolderMixIn(ExtensionClass.Base, CopyContainer):
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -297,9 +296,6 @@ be a problem)."""
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
-
-  # CPS patch circumvent
-  manage_renameObject = OriginalCopyContainer.manage_renameObject
 
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   #manage_delObjects = CopyContainer.manage_delObjects
