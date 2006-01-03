@@ -85,6 +85,8 @@ class TestAccountingRules(ERP5TypeTestCase):
                      = "Sale Invoice Transaction Line"
   sale_invoice_line_portal_type        = "Invoice Line"
   sale_invoice_cell_portal_type        = "Invoice Cell"
+  invoice_transaction_rule_portal_type \
+                    = "Invoice Transaction Rule"
   
   purchase_invoice_transaction_portal_type \
                       = "Purchase Invoice Transaction"
@@ -1462,7 +1464,7 @@ class TestAccountingRules(ERP5TypeTestCase):
       stepCreateNotMatchableSaleInvoiceMovements
       stepCheckNotMatchableSaleInvoiceMovements
     """)
-    
+  
   def test_04_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
     """ Simple Invoice.
     Try to expand an invoice containing only one simple Invoice Line.
@@ -1793,7 +1795,60 @@ class TestAccountingRules(ERP5TypeTestCase):
     #   date from trade condition
     #   quantity from sum of receivable movement
     #   link to sale invoice
-     
+ 
+  def test_08_GetMatchingCellIntIndex(self, quiet=0, run=RUN_ALL_TESTS):
+    """ Int index order in getMatchingCell.
+    When defining a matrix rule, predicates must be tested in the order 
+    defined by 'int_index' property on those predicates.
+    """
+    if not run:
+      return
+    if not quiet:
+      message = 'Int index order in getMatchingCell'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', INFO, message)
+       
+    # create a matrix
+    #     1a    2b
+    # 1x a*x   b*x 
+    # 2y a*y   b*y
+    
+    rule = self.getPortal().portal_rules.newContent(
+          portal_type = self.invoice_transaction_rule_portal_type)
+    predicate_1a = rule.newContent(
+        portal_type = self.predicate_portal_type,
+        string_index = "product",
+        id = "1a",
+        int_index = 1)
+    predicate_2b = rule.newContent(
+        portal_type = self.predicate_portal_type,
+        string_index = "product",
+        id = "2b",
+        int_index = 2)
+    predicate_1x = rule.newContent(
+        portal_type = self.predicate_portal_type,
+        string_index = "region",
+        id = "1x",
+        int_index = 1)
+    predicate_2y = rule.newContent(
+        portal_type = self.predicate_portal_type,
+        string_index = "region",
+        id = "2y",
+        int_index = 2)
+    get_transaction().commit()
+    self.tic()
+    rule.updateMatrix()
+    
+    # make sure predicates are checked in the right order
+    previous_priority = -100
+    for key_list in rule._getSortedCellKeyList():
+      priority = 0
+      for index, path in enumerate(key_list) :
+        priority += self.getPortal().restrictedTraverse(path).getIntIndex()
+      self.assert_( previous_priority <= priority,
+                    "%s <= %s" % (previous_priority, priority))
+      previous_priority = priority
+    
 if __name__ == '__main__':
   framework()
 else:
