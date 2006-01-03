@@ -115,7 +115,7 @@ class Inventory(Delivery):
       self.portal_catalog.catalogObjectList(object_list)
       self.portal_catalog.catalogObjectList(stock_object_list,
            method_id_list=('z_catalog_stock_list',),
-           disable_cache=1)
+           disable_cache=1,allow_duplicate_uid=1)
 
     security.declarePublic( 'recursiveReindexObject' )
     def recursiveReindexObject(self, *args, **kw):
