@@ -73,17 +73,9 @@ if account is not None:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAAYAAAAHAAAAQwAA
-AHNPAAAAdAAAdAAAdAEAZAEAgwIAdAAAfAAAZAIAgwIAgwEAZAMAgwIAgwAAfQQAfAQAdAQAagkA
-bxQAAXQAAHwEAGQEAIMCAIMAAFNuAQABZAAAUygFAAAATnMSAAAAcmVzdHJpY3RlZFRyYXZlcnNl
-cxUAAAB0cmFuc2FjdGlvbl9saW5lX3BhdGhzDgAAAGdldFNvdXJjZVZhbHVlcwgAAABnZXRHYXBJ
-ZCgFAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBQAAAGJyYWlucwcAAABhY2NvdW50cwQA
-AABOb25lKAYAAABzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25zCQAAAF9nZXRhdHRyX3MHAAAAY29u
-dGV4dHMHAAAAYWNjb3VudHMEAAAATm9uZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMq
-AAAARW50aXR5X2dldEFjY291bnRpbmdUcmFuc2FjdGlvblNvdXJjZUdhcElkAQAAAHMEAAAAKgEN
-ASgBAAAAcyoAAABFbnRpdHlfZ2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uU291cmNlR2FwSWQoAQAA
-AHMqAAAARW50aXR5X2dldEFjY291bnRpbmdUcmFuc2FjdGlvblNvdXJjZUdhcElkKAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

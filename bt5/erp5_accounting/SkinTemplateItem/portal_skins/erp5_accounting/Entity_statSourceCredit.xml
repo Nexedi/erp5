@@ -71,14 +71,9 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAGAAAASwAA
-AHMoAAAAdAAAdAEAdAIAZAEAgwIAZAIAZAMAfAAAjQEBC3AEAAFkBABTZAAAUygFAAAATnMYAAAA
-RW50aXR5X3N0YXRTb3VyY2VCYWxhbmNlcwsAAABvbWl0X291dHB1dGkBAAAAZgMwLjAoBAAAAHMH
-AAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwIAAABrdygEAAAAcwIAAABrd3MH
-AAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0
-IChQeXRob24pcxcAAABFbnRpdHlfc3RhdFNvdXJjZUNyZWRpdAEAAABzAAAAACgBAAAAcxcAAABF
-bnRpdHlfc3RhdFNvdXJjZUNyZWRpdCgBAAAAcxcAAABFbnRpdHlfc3RhdFNvdXJjZUNyZWRpdCgA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

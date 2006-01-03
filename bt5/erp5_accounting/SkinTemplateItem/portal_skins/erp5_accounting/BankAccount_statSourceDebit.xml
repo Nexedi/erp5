@@ -74,16 +74,9 @@ return float(\'%.02f\' % debit)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAFAAAASwAA
-AHM6AAAAZAEAdAAAfAAAgwEAZAIAPHQCAHQDAHQEAGQDAIMCAHwAAI0BAH0FAHQGAGQEAHwFABaD
-AQBTZAAAUygFAAAATmkBAAAAcwoAAABvbWl0X2lucHV0cx0AAABCYW5rQWNjb3VudF9zdGF0U291
-cmNlQmFsYW5jZXMFAAAAJS4wMmYoBwAAAHMHAAAAX3dyaXRlX3MCAAAAa3dzBwAAAF9hcHBseV9z
-CQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAZGViaXRzBQAAAGZsb2F0KAcAAABzAgAAAGt3
-cwcAAABfd3JpdGVfcwcAAABfYXBwbHlfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBQAAAGRl
-Yml0cwUAAABmbG9hdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMbAAAAQmFua0FjY291
-bnRfc3RhdFNvdXJjZURlYml0AQAAAHMEAAAAEAEYASgBAAAAcxsAAABCYW5rQWNjb3VudF9zdGF0
-U291cmNlRGViaXQoAQAAAHMbAAAAQmFua0FjY291bnRfc3RhdFNvdXJjZURlYml0KAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

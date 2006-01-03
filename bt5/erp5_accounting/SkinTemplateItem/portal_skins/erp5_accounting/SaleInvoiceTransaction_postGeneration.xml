@@ -82,18 +82,9 @@ sale_invoice.activate(\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAHAAAASwAA
-AHM4AAAAdAAAfQIAdAIAdAMAdAMAfAIAZAEAgwIAZAIAZAMAZAQAZwIAgwABZAUAgwIAfAAAjQEA
-AWQAAFMoBgAAAE5zCAAAAGFjdGl2YXRlcw8AAABhZnRlcl9tZXRob2RfaWRzFgAAAGltbWVkaWF0
-ZVJlaW5kZXhPYmplY3RzHwAAAHJlY3Vyc2l2ZUltbWVkaWF0ZVJlaW5kZXhPYmplY3RzLQAAAFNh
-bGVJbnZvaWNlVHJhbnNhY3Rpb25fcG9zdEdlbmVyYXRpb25BY3Rpdml0eSgFAAAAcwcAAABjb250
-ZXh0cwwAAABzYWxlX2ludm9pY2VzBwAAAF9hcHBseV9zCQAAAF9nZXRhdHRyX3MCAAAAa3coBQAA
-AHMCAAAAa3dzBwAAAGNvbnRleHRzDAAAAHNhbGVfaW52b2ljZXMHAAAAX2FwcGx5X3MJAAAAX2dl
-dGF0dHJfKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyUAAABTYWxlSW52b2ljZVRyYW5z
-YWN0aW9uX3Bvc3RHZW5lcmF0aW9uAQAAAHMIAAAAAAcPAgwBEgEoAQAAAHMlAAAAU2FsZUludm9p
-Y2VUcmFuc2FjdGlvbl9wb3N0R2VuZXJhdGlvbigBAAAAcyUAAABTYWxlSW52b2ljZVRyYW5zYWN0
-aW9uX3Bvc3RHZW5lcmF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9k
-dWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

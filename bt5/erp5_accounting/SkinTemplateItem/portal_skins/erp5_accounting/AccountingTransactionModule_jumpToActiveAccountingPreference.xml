@@ -75,18 +75,9 @@ return request.RESPONSE.redirect( "%s/AccountingPreferences_view" %\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAIAAAAQwAA
-AHNUAAAAdAAAdAEAZAEAgwIAfQIAdAAAdAAAfAIAZAIAgwIAZAMAgwIAZAQAdAAAdAAAdAAAdAEA
-ZAUAgwIAZAYAgwIAgwAAZAcAgwIAgwAAFoMBAFNkAABTKAgAAABOcwcAAABSRVFVRVNUcwgAAABS
-RVNQT05TRXMIAAAAcmVkaXJlY3RzHQAAACVzL0FjY291bnRpbmdQcmVmZXJlbmNlc192aWV3cxIA
-AABwb3J0YWxfcHJlZmVyZW5jZXNzEwAAAGdldEFjdGl2ZVByZWZlcmVuY2VzBwAAAGdldFBhdGgo
-AwAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAAByZXF1ZXN0KAMAAABzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
-KXM8AAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX2p1bXBUb0FjdGl2ZUFjY291bnRpbmdQ
-cmVmZXJlbmNlAQAAAHMEAAAADwEhASgBAAAAczwAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1
-bGVfanVtcFRvQWN0aXZlQWNjb3VudGluZ1ByZWZlcmVuY2UoAQAAAHM8AAAAQWNjb3VudGluZ1Ry
-YW5zYWN0aW9uTW9kdWxlX2p1bXBUb0FjdGl2ZUFjY291bnRpbmdQcmVmZXJlbmNlKAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
