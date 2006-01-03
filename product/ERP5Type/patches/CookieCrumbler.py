@@ -20,7 +20,11 @@
 #
 ##############################################################################
 
-#CookieCrumbler: remove "?came_from" from getLoginUrl (called by request.unauthorized)
+"""
+Patch CookieCrumbler to prevent came_from to appear in the URL
+when ERP5 runs in "require_referer" mode.
+"""
+
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
 
 class PatchedCookieCrumbler(CookieCrumbler):
@@ -41,8 +45,16 @@ def getLoginURL(self):
         page = getattr(parent, self.auto_login_page, None)
         if page is not None:
             retry = getattr(resp, '_auth', 0) and '1' or ''
-            url = '%s?retry=%s&disable_cookie_login__=1' % (
+            came_from = req.get('came_from', None)
+            if came_from is None:
+                came_from = req['URL']
+            if hasattr(self, 'getPortalObject') and self.getPortalObject()\
+                          .getProperty('require_referer', 0) :
+              url = '%s?retry=%s&disable_cookie_login__=1' % (
                 page.absolute_url(), retry)
+            else :
+              url = '%s?came_from=%s&retry=%s&disable_cookie_login__=1' % (
+                page.absolute_url(), quote(came_from), retry)
             return url
     return None
 
