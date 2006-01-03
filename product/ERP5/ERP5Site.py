@@ -78,7 +78,7 @@ def manage_addERP5Site(self, id, title='ERP5', description='',
     if RESPONSE is not None:
         RESPONSE.redirect(p.absolute_url())
 
-class ERP5Site ( CMFSite, FolderMixIn ):
+class ERP5Site ( FolderMixIn, CMFSite ):
     """
         The *only* function this class should have is to help in the setup
         of a new ERP5.  It should not assist in the functionality at all.
