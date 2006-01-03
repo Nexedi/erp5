@@ -35,7 +35,7 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.ERP5Type import PropertySheet
 
 from urllib import quote
-from Globals import InitializeClass, PersistentMapping, DTMLFile
+from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from ZODB.POSException import ConflictError
 
@@ -69,6 +69,7 @@ def get_value(self, id, **kw):
             container = None
         kw['field'] = self
         kw['form'] = form
+        kw['request'] = get_request()
         kw['here'] = object
         kw['container'] = container
         try :
