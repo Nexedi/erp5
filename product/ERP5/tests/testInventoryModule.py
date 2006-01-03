@@ -73,6 +73,9 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     ZopeTestCase._print('\n%s' % message)
     LOG('Testing... ',0,message)
 
+  def getTitle(self):
+    return "Inventory Module"
+
   def getInventoryModule(self):
     return getattr(self.getPortal(), 'inventory_module',None)
 
