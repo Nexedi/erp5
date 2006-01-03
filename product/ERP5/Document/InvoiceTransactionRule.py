@@ -29,11 +29,11 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 
 from zLOG import LOG, BLATHER, INFO, PROBLEM
 
-class InvoiceTransactionRule(Rule, XMLMatrix):
+class InvoiceTransactionRule(Rule, PredicateMatrix):
     """
       Invoice Transaction Rule object generates accounting movements
       for each invoice movement based on category membership and
@@ -60,16 +60,6 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       )
-
-    def _getMatchingCell(self, movement):
-      """
-        Browse all cells and test them until match found
-      """
-      for cell in self.getCellValueList(base_id = 'movement'):
-        if cell.test(movement):
-          LOG('Found Cell', BLATHER, cell.getRelativeUrl())
-          return cell
-      return None          
     
     def test(self, movement):
       """
@@ -172,7 +162,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
               if resource in (None, '') :
                 # XXX this happen in many order, so this log is probably useless
                 LOG("InvoiceTransactionRule", PROBLEM,
-                    "expanding %s: without resource"%applied_rule.getPath())
+                    "expanding %s: without resource" % applied_rule.getPath())
             my_simulation_movement._edit(
                   source = transaction_line.getSource()
                 , destination = transaction_line.getDestination()
@@ -242,44 +232,4 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       if m.getSimulationState() in self.getPortalDraftOrderStateList():
         return 0
       return 1
-
-    # Matrix related
-    security.declareProtected( Permissions.ModifyPortalContent,
-                               'newCellContent' )
-    def newCellContent(self, id, **kw):
-      """Creates a new Cell.
-         This method can be overriden
-      """
-      self.invokeFactory(type_name='Accounting Rule Cell', id=id)
-      new_cell = self.get(id)
-      return new_cell
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateMatrix')
-    def updateMatrix(self) :
-      """This methods updates the matrix so that cells are consistent
-      with the predicates.
-      """
-      base_id = 'movement'
-      kwd = {'base_id': base_id}
-      # This is a site dependent script
-      new_range = self.InvoiceTransactionRule_asCellRange()
-
-      self._setCellRange(*new_range, **kwd)
-      cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
-      if cell_range_key_list != [[None, None]] :
-        for k in cell_range_key_list :
-          c = self.newCell(*k, **kwd)
-          c.edit( mapped_value_property_list = ( 'title',),
-                  predicate_category_list = filter(
-                                    lambda k_item: k_item is not None, k),
-                  title = 'Transaction %s' % repr(map(lambda k_item : \
-                          self.restrictedTraverse(k_item).getTitle(), k)),
-                  force_update = 1
-                )
-      else :
-        # If empty matrix, delete all cells
-        cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
-        for k in cell_range_id_list :
-          if self.get(k) is not None :
-            self.deleteContent(k)
     
