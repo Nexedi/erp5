@@ -71,7 +71,7 @@ class CopyContainer:
       for uid in uids:
           ob=self.portal_catalog.getObject(uid)
           if not ob.cb_isCopyable():
-              raise CopyError, eNotSupported % id
+              raise CopyError, eNotSupported % uid
           m=Moniker.Moniker(ob)
           oblist.append(m.dump())
       cp=(0, oblist)
@@ -82,6 +82,39 @@ class CopyContainer:
           REQUEST['__cp'] = cp
           return self.manage_main(self, REQUEST)
       return cp
+
+  def _updateInternalRelatedContent(self, local_self, path, new_id):
+      """
+       Search for categories starting with path in local_self and its subobjects, and replaces the last common item in category paths by new_id.
+       Example :
+        category : "a/b/c/d/e"
+        path : "a/b/c"
+        new_id : "z"
+        result : "a/b/z/d/e"
+      """
+      for object in local_self.objectValues():
+          self._updateInternalRelatedContent(local_self=object, path=path, new_id=new_id)
+      changed=0
+      categories=local_self.getCategoryList()
+      for pos in range(len(categories)):
+          catname=categories[pos].split("/")
+          if catname[1:len(path)+1]==path: # XXX Should be possible to do this in a cleaner way
+              catname[len(path)]=new_id
+              categories[pos]="/".join(catname)
+              changed=1
+      if changed:
+          local_self.setCategoryList(categories)
+
+  security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
+  def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
+      """manage renaming an object while keeping coherency for contained and linked to objects inside the renamed object
+
+      """
+      ob=self.restrictedTraverse(id)
+      # Search for categories that have to be updated in sub objects.
+      self._updateInternalRelatedContent(local_self=ob, path=ob.getRelativeUrl().split("/"), new_id=new_id)
+      # Rename the object
+      return OriginalCopyContainer.manage_renameObject(self, id=id, new_id=new_id, REQUEST=REQUEST)
 
   security.declareProtected( Permissions.DeletePortalContent, 'manage_cutObjects' )
   def manage_cutObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
@@ -226,8 +259,9 @@ class CopyContainer:
       """
       if aq_base(container) is not aq_base(self):
           #LOG("After Add ",0, "id:%s containes:%s" % (str(item.id), str(container.id)))
-          if self.isIndexable:
+          if getattr(self, 'isIndexable', 0):
             self.reindexObject()
+          if getattr(self, 'isIndexable', 1):
             self.__recurse('manage_afterAdd', item, container)
 
   def manage_beforeDelete(self, item, container):
