@@ -1,0 +1,8 @@
+<property_sheet_list>
+ <portal_type id="Cash Register">
+  <item>BankAccount</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>TradeCondition</item>
+ </portal_type>
+</property_sheet_list>

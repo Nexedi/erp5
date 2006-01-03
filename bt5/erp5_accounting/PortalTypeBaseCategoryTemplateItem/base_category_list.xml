@@ -1,0 +1,9 @@
+<base_category_list>
+ <portal_type id="Invoice Line">
+  <item>product_line</item>
+  <item>destination_region</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>destination_region</item>
+ </portal_type>
+</base_category_list>
