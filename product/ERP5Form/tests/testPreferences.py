@@ -34,7 +34,8 @@ if __name__ == '__main__':
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager,\
+                                             getSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
 from Testing import ZopeTestCase
@@ -151,7 +152,7 @@ class TestPreferences(ERP5TypeTestCase):
     site.setPreferredAccountingTransactionSimulationState([])
     self.assertEquals(site.getPreferredAccountingTransactionSimulationState(), None)
 
-    from Products.ERP5Type.Cache import clearCache    
+    from Products.ERP5Type.Cache import clearCache
     clearCache()
     self.assertEquals(len(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state')), 0)
@@ -293,6 +294,30 @@ class TestPreferences(ERP5TypeTestCase):
     
     # check user_a's preference is still enabled
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
+    self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
+    
+    # Checks that a manager preference doesn't disable any other user
+    # preferences
+    # log as manager
+    newSecurityManager(None, uf.getUserById('manager').__of__(uf))
+    
+    self.assert_('Manager' in
+      getSecurityManager().getUser().getRolesInContext(portal_preferences))
+    
+    # create a pref for manager
+    manager_pref = portal_preferences.newContent(
+        id='manager_pref', portal_type='Preference')
+    manager_pref.setPreferredAccountingTransactionAtDate(
+                                DateTime(2012, 12, 12))
+    
+    # enable this preference
+    portal_workflow.doActionFor(
+       manager_pref, 'enable_action', wf_id='preference_workflow')
+    self.assertEquals(manager_pref.getPreferenceState(), 'enabled')
+    
+    # check users preferences are still enabled
+    self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
+    self.assertEquals(user_b_1.getPreferenceState(), 'enabled')
     self.assertEquals(user_a_2.getPreferenceState(), 'disabled')
 
 if __name__ == '__main__':
