@@ -58,12 +58,14 @@ class TestPreferences(ERP5TypeTestCase):
     uf._doAddUser('manager', '', ['Manager', 'Owner', 'Assignor'], [])
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
-    if getattr(self.getPreferenceTool(), 'person1', None) is None :
-      self.createPreferences()
+    self.createPreferences()
   
   def createPreferences(self) :
     """ create some preferences objects  """
     portal_preferences = self.getPreferenceTool()
+    if getattr(portal_preferences, 'person1', None) is not None :
+      portal_preferences.manage_delObjects([
+                            'person1', 'person2', 'group', 'site'])
     ## create initial preferences
     person1 = portal_preferences.newContent(
         id='person1', portal_type='Preference')
@@ -75,7 +77,12 @@ class TestPreferences(ERP5TypeTestCase):
     site = portal_preferences.newContent(
         id='site', portal_type='Preference')
     site.setPriority(Priority.SITE)
+    
+    # commit transaction
+    get_transaction().commit()
+    self.getPreferenceTool().recursiveReindexObject()
     self.tic()
+    
     # check preference levels are Ok
     self.assertEquals(person1.getPriority(), Priority.USER)
     self.assertEquals(person2.getPriority(), Priority.USER)
@@ -87,6 +94,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(group.getPreferenceState(),   'disabled')
     self.assertEquals(site.getPreferenceState(),    'disabled')
     
+   
   def test_EnablePreferences(self, quiet=quiet, run=run_all_tests) :
     """ tests preference workflow """
     if not run: return
@@ -113,9 +121,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(person1.getPreferenceState(), 'enabled')
     self.assertEquals(group.getPreferenceState(),   'enabled')
     self.assertEquals(site.getPreferenceState(),    'enabled')
-    
-    self.getPreferenceTool().recursiveImmediateReindexObject()
-    
+      
     portal_workflow.doActionFor(
        person2, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(person2.getPreferenceState(), 'enabled')
