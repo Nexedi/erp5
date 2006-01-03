@@ -39,9 +39,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Agent</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -76,6 +74,12 @@
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Cash Register</string> </value>
         </item>
@@ -86,9 +90,7 @@
         <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
-              <tuple>
-                <string>BankAccount</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

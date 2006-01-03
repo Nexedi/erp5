@@ -45,19 +45,13 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Discount</string>
-                <string>Invoice Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>destination_region</string>
-                <string>product_line</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

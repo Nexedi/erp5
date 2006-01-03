@@ -52,15 +52,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Accounting Period Delimiter</string>
-                <string>Accounting Transaction</string>
-                <string>Balance Transaction</string>
-                <string>Pay Sheet Transaction</string>
-                <string>Payment Transaction</string>
-                <string>Purchase Invoice Transaction</string>
-                <string>Sale Invoice Transaction</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -92,10 +84,7 @@
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Accounting Period Delimiter</string>
-                <string>Balance Transaction</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

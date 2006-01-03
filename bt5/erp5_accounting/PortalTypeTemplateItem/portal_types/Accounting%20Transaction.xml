@@ -28,6 +28,8 @@
                 <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
               </tuple>
             </value>
         </item>
@@ -44,9 +46,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Accounting Transaction Line</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -126,7 +126,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
             </value>
         </item>
         <item>
@@ -191,7 +191,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -256,7 +256,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
             </value>
         </item>
         <item>
@@ -307,136 +307,6 @@
     </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5Type.patches.ActionInformation</string>
-          <string>PatchedActionInformation</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>action</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
-        </item>
-        <item>
-            <key> <string>condition</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>history</string> </value>
-        </item>
-        <item>
-            <key> <string>optional</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>View</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>History</string> </value>
-        </item>
-        <item>
-            <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5Type.patches.ActionInformation</string>
-          <string>PatchedActionInformation</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>action</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
-        </item>
-        <item>
-            <key> <string>condition</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>metadata</string> </value>
-        </item>
-        <item>
-            <key> <string>optional</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>Manage properties</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Metadata</string> </value>
-        </item>
-        <item>
-            <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <tuple>
@@ -503,12 +373,12 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>
@@ -516,8 +386,188 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransaction_view</string> </value>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_view</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>source_asset</string> </value>
+        </item>
+        <item>
+            <key> <string>optional</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Source Conversion</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_view</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>destination_asset</string> </value>
+        </item>
+        <item>
+            <key> <string>optional</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Dest. Conversion</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_view</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>history</string> </value>
+        </item>
+        <item>
+            <key> <string>optional</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>History</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -526,8 +576,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>
@@ -535,8 +585,54 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransaction_viewDetails</string> </value>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_view</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>metadata</string> </value>
+        </item>
+        <item>
+            <key> <string>optional</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Manage properties</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Metadata</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -555,7 +651,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_printPdf</string> </value>
+            <value> <string>string:${object_url}/AccountingTransaction_view</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -574,7 +670,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewHistory</string> </value>
+            <value> <string>string:${object_url}/AccountingTransaction_viewDetails</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -593,7 +689,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewMetadata</string> </value>
+            <value> <string>string:${object_url}/Base_printPdf</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -632,6 +728,120 @@
         <item>
             <key> <string>text</string> </key>
             <value> <string>python:object.getSimulationState() in (\'delivered\', )</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="15" aka="AAAAAAAAAA8=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/AccountingTransaction_viewSourceAsset</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="16" aka="AAAAAAAAABA=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>object/AccountingTransaction_isSourceCurrencyConvertible</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="17" aka="AAAAAAAAABE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/AccountingTransaction_viewDestinationAsset</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="18" aka="AAAAAAAAABI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>object/AccountingTransaction_isDestinationCurrencyConvertible</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="19" aka="AAAAAAAAABM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/Base_viewHistory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="20" aka="AAAAAAAAABQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/Base_viewMetadata</string> </value>
         </item>
       </dictionary>
     </pickle>
