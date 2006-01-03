@@ -156,8 +156,14 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
               html_string += '<br/>'
 
         else:
+          clean_value_list = []
+          for v in value_list :
+            # rather than displaying nothing, display a marker when the
+            # property is not set
+            if v is None : v = '??? (no value)'
+            clean_value_list += [v]
           # no modification made, we can display only a lines text area widget
-          html_string += Widget.LinesTextAreaWidget.render(self, field, key, value_list, REQUEST)
+          html_string += Widget.LinesTextAreaWidget.render(self, field, key, clean_value_list, REQUEST)
 
           html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method"/>' \
               %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
@@ -435,10 +441,16 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 relation_uid_list = map(lambda x: x.uid, relation_list)
 
                 # Prepare a menu
+                if translation_service is not None:
+                  N_ = translation_service.translate
+                else :
+                  N_ = lambda catalog, msg, **kw:msg
                 menu_item_list = [('', '')]
                 new_object_menu_item_list = []
                 for p in portal_type:
-                  new_object_menu_item_list += [('New %s' % p, '%s%s' % (new_content_prefix,p))]
+                  new_object_menu_item_list += [(N_('ui', 'New ${portal_type}',
+                               mapping={'portal_type':N_('ui', p)}),
+                               '%s%s' % (new_content_prefix,p))]
 
                 if len(relation_list) >= MAX_SELECT:
                   # If the length is long, raise an error
