@@ -544,6 +544,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     source_organisation.setDestinationSectionValue(destination_organisation)
     source_organisation.recursiveReindexObject()
     destination_organisation.recursiveReindexObject()
+    get_transaction().commit()
     self.tic()
 
     # buildSQLQuery can use arbitrary table name.
@@ -551,9 +552,10 @@ class TestERP5Catalog(ERP5TypeTestCase):
     sql_squeleton = """
     SELECT %(query_table)s.uid,
            %(query_table)s.id
-    FROM catalog as %(query_table)s
+    FROM
       <dtml-in prefix="table" expr="from_table_list"> 
-        , <dtml-var table_item> AS <dtml-var table_key>
+        <dtml-var table_item> AS <dtml-var table_key>
+        <dtml-unless sequence-end>, </dtml-unless>
       </dtml-in>
     <dtml-if where_expression>
     WHERE 
@@ -581,11 +583,14 @@ class TestERP5Catalog(ERP5TypeTestCase):
     default_parametrs['where_expression'] = ""
     default_parametrs['order_by_expression'] = None
     
+    #import pdb; pdb.set_trace()
     # check that we retrieve our 2 organisations by default.
     kw = default_parametrs.copy()
     kw.update( portal_catalog.buildSQLQuery(
                   query_table = query_table,
                   **kw) )
+    LOG('kw', 0, kw)
+    LOG('SQL', 0, testMethod(src__=1, **kw))
     self.assertEquals(len(testMethod(**kw)), 2)
     
     # check we can make a simple filter on title.
@@ -594,6 +599,8 @@ class TestERP5Catalog(ERP5TypeTestCase):
                   query_table = query_table,
                   title = 'source_organisation',
                   **kw) )
+    LOG('kw', 1, kw)
+    LOG('SQL', 1, testMethod(src__=1, **kw))
     self.assertEquals( len(testMethod(**kw)), 1,
                        testMethod(src__=1, **kw) )
     self.assertEquals( testMethod(**kw)[0]['uid'],
@@ -606,6 +613,8 @@ class TestERP5Catalog(ERP5TypeTestCase):
                   query_table = query_table,
                   sort_on = [('id', 'ascending')],
                   **kw))
+    LOG('kw', 2, kw)
+    LOG('SQL', 2, testMethod(src__=1, **kw))
     brains = testMethod(**kw)
     self.assertEquals( len(brains), 2,
                        testMethod(src__=1, **kw))
@@ -618,6 +627,8 @@ class TestERP5Catalog(ERP5TypeTestCase):
                   query_table = query_table,
                   destination_section_title = 'organisation_destination'),
                   **kw)
+    LOG('kw', 3, kw)
+    LOG('SQL', 3, testMethod(src__=1, **kw))
     brains = testMethod(**kw)
     self.assertEquals( len(brains), 1, testMethod(src__=1, **kw) )
     self.assertEquals( brains[0]['uid'],
