@@ -325,7 +325,7 @@ class RelationStringFieldValidator(Validator.StringValidator):
       if translation_service is not None:
         N_ = translation_service.translate
       else :
-        N_ = lambda catalog, msg:msg
+        N_ = lambda catalog, msg, **kw:msg
       # Get the current value
       value = Validator.StringValidator.validate(self, field, key, REQUEST)
       # If the value is the same as the current field value, do nothing
@@ -384,7 +384,9 @@ class RelationStringFieldValidator(Validator.StringValidator):
       menu_item_list = [('', '')]
       new_object_menu_item_list = []
       for p in portal_type:
-        new_object_menu_item_list += [(N_('ui', 'New %s') % N_('ui', p), '%s%s' % (new_content_prefix,p))]
+        new_object_menu_item_list += [(N_('ui', 'New ${portal_type}',
+             mapping={'portal_type':N_('ui', p)}),
+             '%s%s' % (new_content_prefix,p))]
       # If the length is 1, return uid
       if len(relation_list) == 1:
         relation_uid = relation_uid_list[0]
