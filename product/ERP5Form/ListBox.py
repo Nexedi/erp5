@@ -1637,7 +1637,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                           del kw['closed_summary']
                           params = dict(kw)
                           selection.edit(params=params)
-                      except ConflictError:
+                      except (ConflictError, RuntimeError):
                         raise
                       except:
                         LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
@@ -1680,7 +1680,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     except TypeError:
                       attribute_value = attribute_value()
                       attribute_original_value = attribute_value
-                  except ConflictError:
+                  except (ConflictError, RuntimeError):
                     raise
                   except:
                     LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
@@ -1776,10 +1776,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     # Call the requested method
                     try:
                       object_url = url_method(brain=o, selection=selection)
-                    except ConflictError:
+                    except (ConflictError, RuntimeError):
                       raise
                     except:
-                      # XXX FIXME: except without Error name
                       LOG('ListBox', 0, 
                           'Could not evaluate url_method %s' % \
                               column[1], error=sys.exc_info())
@@ -1796,7 +1795,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     else:
                       try:
                         object_url = url_method(alias, i, selection_name)
-                      except ConflictError:
+                      except (ConflictError, RuntimeError):
                         raise
                       except:
                         # XXX FIXME: except without Error name
@@ -1878,7 +1877,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       #params['operator'] = stats[n]
                       #value=value(**params)
                       value=value(selection=selection)
-                    except ConflictError:
+                    except (ConflictError, RuntimeError):
                       raise
                     except:
                       LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(value), repr(params)), error=sys.exc_info())

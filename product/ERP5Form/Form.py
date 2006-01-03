@@ -72,9 +72,9 @@ def get_value(self, id, **kw):
         kw['here'] = object
         kw['container'] = container
         try :
-          kw['preferences'] = object.getPortalObject().portal_preferences
+            kw['preferences'] = object.getPortalObject().portal_preferences
         except AttributeError :
-          LOG('ERP5Form', 0,
+            LOG('ERP5Form', 0,
               'portal_preferences not put in TALES context (not installed?)')
         # This allows to pass some pointer to the local object
         # through the REQUEST parameter. Not very clean.
@@ -86,8 +86,8 @@ def get_value(self, id, **kw):
             kw['cell'] = kw['REQUEST']
         try:
             value = tales_expr.__of__(self)(**kw)
-        except ConflictError:
-            pass
+        except (ConflictError, RuntimeError):
+            raise
         except:
             # We add this safety exception to make sure we always get
             # something reasonable rather than generate plenty of errors

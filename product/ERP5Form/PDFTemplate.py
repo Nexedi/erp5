@@ -231,7 +231,7 @@ if HAS_ZODB_RESOURCE_HANDLER:
       if callable(obj):
         try:
           obj = obj()
-        except ConflictError:
+        except (ConflictError, RuntimeError):
           raise
         except:
           pass
@@ -262,7 +262,7 @@ else:
       if callable(obj):
         try:
           obj = obj()
-        except ConflictError:
+        except (ConflictError, RuntimeError):
           raise
         except:
           pass
