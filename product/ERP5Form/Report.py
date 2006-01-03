@@ -175,6 +175,15 @@ def manage_add_report(self, id, title="", unicode_mode=0, REQUEST=None):
     return ''
 
 class ReportSection:
+  """ A section in an ERP5Report.
+  
+  ERP5 Reports are made of sections, which are some standards ERP5 Forms
+  rendered in a single document.
+  To create a report section, you have to define which object will be
+  the context of the form, the id of the form, and dictionnaries to
+  override the values of the selection parameters and preference in the
+  constructor of the ReportSection.
+  """
   meta_type = "ReportSection"
   security = ClassSecurityInfo()
   
