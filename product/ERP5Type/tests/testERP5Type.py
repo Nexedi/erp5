@@ -190,6 +190,19 @@ class TestERP5Type(ERP5TypeTestCase):
       person_object.setRegionValue(None)
       checkRelationUnset(self)
       
+    def test_04_setProperty(self):
+      portal = self.getPortal()
+      module = self.getOrganisationModule()
+      organisation = module.newContent(id='1', portal_type='Organisation')
+      organisation.setDefaultTelephoneText('55 55 5555')
+      organisation.setCorporateName('Nexedi')
+      organisation.default_telephone.setProperty('corporate_name','Toto')
+      self.assertEquals(organisation.corporate_name,'Nexedi')
+      self.assertEquals(organisation.default_telephone.corporate_name,'Toto')
+
+
+
+
 if __name__ == '__main__':
     framework()
 else:
