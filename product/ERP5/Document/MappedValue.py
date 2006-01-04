@@ -156,24 +156,24 @@ identify a bank account."""
       result = None
     return result
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_setProperty' )
-  def _setProperty(self, key, value, type='string', **kw):
-    """
-      Generic accessor. Calls the real accessor
-      
-      **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
-    """
-    #try:
-    if 1:
-      # If mapped_value_attribute_list is not set
-      # then it creates an exception
-      if key in self.getMappedValuePropertyList([]):
-        return setattr(self, key, value)
-    #except:
-    #  LOG("WARNING: ERP5", 0, 'Could not set mapped value property %s' % key)
-    #  return
-
-    return Predicate._setProperty(self, key, value, type=type, **kw)
+#  security.declareProtected( Permissions.ModifyPortalContent, '_setProperty' )
+#  def _setProperty(self, key, value, type='string', **kw):
+#    """
+#      Generic accessor. Calls the real accessor
+#      
+#      **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
+#    """
+#    #try:
+#    if 1:
+#      # If mapped_value_attribute_list is not set
+#      # then it creates an exception
+#      if key in self.getMappedValuePropertyList([]):
+#        return setattr(self, key, value)
+#    #except:
+#    #  LOG("WARNING: ERP5", 0, 'Could not set mapped value property %s' % key)
+#    #  return
+#
+#    return Predicate._setProperty(self, key, value, type=type, **kw)
 
   # Compatibility method
   def getMappedValuePropertyList(self, *args):
