@@ -81,7 +81,7 @@ class Inventory(Delivery):
       node = self.getDestination()
       for movement in self.getMovementList():
         resource =  movement.getResourceValue()
-        if resource is not None:
+        if resource is not None and movement.getInventory() is not None:
           variation_text = movement.getVariationText()
           if (resource,variation_text) not in resource_and_variation_list:
             resource_and_variation_list.append((resource,variation_text))
