@@ -41,6 +41,18 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>amount_range_max</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>amount_range_min</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>at_date</string> </key>
                                 <value>
                                   <dictionary>
@@ -60,6 +72,18 @@
                                         <value> <string></string> </value>
                                     </item>
                                   </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>creation_date_range_max</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>creation_date_range_min</string> </key>
+                                <value>
+                                  <dictionary/>
                                 </value>
                             </item>
                             <item>
@@ -225,6 +249,10 @@
 <string>stat</string>
 <string>omit_input</string>
 <string>omit_output</string>
+<string>amount_range_min</string>
+<string>amount_range_max</string>
+<string>creation_date_range_min</string>
+<string>creation_date_range_max</string>
 <string>transaction</string>
 <string>section_category</string>
 <string>count</string>
@@ -265,6 +293,10 @@ entity=""\r\n
 stat=""\r\n
 omit_input\r\n
 omit_output\r\n
+amount_range_min\r\n
+amount_range_max\r\n
+creation_date_range_min\r\n
+creation_date_range_max\r\n
 transaction=""\r\n
 section_category=""\r\n
 count=""</string> </value>
@@ -355,6 +387,8 @@ WHERE\n
   <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
   <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
+  <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
+  <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
   <dtml-if "from_date or to_date or at_date or node or resource or entity or stat or section_category"> AND child.parent_uid = catalog.uid </dtml-if>\n
   <dtml-if "from_date or to_date or at_date or node or resource or stat"> AND movement.uid = child.uid </dtml-if>\n
   <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n
@@ -482,6 +516,8 @@ WHERE\n
   <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
   <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
+  <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
+  <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
   <dtml-if "from_date or to_date or at_date or node or resource or entity or stat or section_category"> AND child.parent_uid = catalog.uid </dtml-if>\n
   <dtml-if "from_date or to_date or at_date or node or resource or stat"> AND movement.uid = child.uid </dtml-if>\n
   <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n

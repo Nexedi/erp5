@@ -73,8 +73,10 @@ kw[\'stat\'] = 1\n
 kw[\'omit_output\'] = 1\n
 \n
 for keyword in [\'section_category\', \'from_date\', \'to_date\', \'source_reference\',\n
-                \'entity\', \'node\', \'amount\', \'amount_max_range_max\',\n
-                \'amount_range_min\', \'resource\', \'simulation_state\' ] :\n
+                \'entity\', \'node\', \'amount\', \'amount_range_min\', \'amount_max_range_max\',\n
+                \'creation_date_range_min\', \'creation_date_range_max\', \n
+                \'translated_simulation_state_title\', \'simulation_state\',\n
+                \'portal_type\', \'translated_portal_type\',  \'resource\' ] :\n
   if keyword in params :\n
     kw[keyword] = params[keyword]\n
 \n
