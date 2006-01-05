@@ -880,7 +880,9 @@ class ListBoxWidget(Widget.Widget):
         ###############################################################
         select_expression = ''
         if show_stat:
-          stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
+          stats = here.portal_selections.getSelectionStats(
+                                             selection_name, 
+                                             REQUEST=REQUEST)
           index = 0
 
           for (sql,title,alias) in extended_columns:
@@ -890,14 +892,15 @@ class ListBoxWidget(Widget.Widget):
                 break
             else:
               column = None
-            if column is not None and column[0] == column[1]:
+            if (column is not None) and (column[0] == column[1]):
               try:
                 if stats[index] != ' ':
-                  select_expression += stats[index] + '(' + sql + ') AS ' + alias + ','
+                  select_expression += '%s(%s) AS %s,' % (stats[index], sql, 
+                                                          alias)
                 else:
-                  select_expression += '\'&nbsp;\' AS ' + alias + ','
-              except KeyError:
-                select_expression += '\'&nbsp;\' AS ' + alias + ','
+                  select_expression += '\'&nbsp;\' AS %s,' % alias
+              except IndexError:
+                select_expression += '\'&nbsp;\' AS %s,' % alias
             index = index + 1
 
           select_expression = select_expression[:len(select_expression) - 1]
@@ -1209,17 +1212,24 @@ class ListBoxWidget(Widget.Widget):
         # to another directly from the listbox
         #LOG('ListBox', 0, 'field_title = %s, translate(\'ui\', field_title) + %s' % (repr(field_title), repr(translate('ui', field_title))))
         format_dict = {
-                        'portal_url_string' : portal_url_string,
-                        'list_action' : list_action,
-                        'field_title' : translate('ui', field_title, default = field_title),
-                        'pages' : pages,
-                        'record_number' : translate('ui', '${number} record(s)', default = '%s record(s)' % total_size,
-                                                    mapping = { 'number' : str(total_size) }),
-                        'item_number' : translate('ui', '${number} item(s) selected', default = '%s item(s) selected' % len(checked_uids),
-                                                  mapping = { 'number' : str(len(checked_uids)) }),
-                        'flat_list_title': translate('ui', 'Flat List', default = 'Flat List'),
-                        'report_tree_title': translate('ui', 'Report Tree', default = 'Report Tree'),
-                        'domain_tree_title': translate('ui', 'Domain Tree', default = 'Domain Tree'),
+          'portal_url_string' : portal_url_string,
+          'list_action' : list_action,
+          'selection_name' : selection_name,
+          'field_title' : translate('ui', field_title, default = field_title),
+          'pages' : pages,
+          'record_number' : translate('ui', '${number} record(s)', 
+                                      default = '%s record(s)' % total_size,
+                                      mapping = { 'number' : str(total_size) }),
+          'item_number' : translate('ui', '${number} item(s) selected', 
+                                     default = '%s item(s) selected' % \
+                                         len(checked_uids),
+                                    mapping = { 'number' : \
+                                        str(len(checked_uids)) }),
+          'flat_list_title': translate('ui', 'Flat List', default='Flat List'),
+          'report_tree_title': translate('ui', 'Report Tree', 
+                                         default = 'Report Tree'),
+          'domain_tree_title': translate('ui', 'Domain Tree', 
+                                         default = 'Domain Tree'),
                       }
         header = """\
 <!-- List Summary -->
@@ -1845,7 +1855,6 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           kw['select_expression'] = select_expression
           selection.edit( params = kw )
-
           count_results = selection(method = stat_method,
                           context=here, REQUEST=REQUEST)
           list_body = list_body + '<tr>'
