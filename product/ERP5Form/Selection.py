@@ -378,16 +378,21 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
     return
 
   security.declarePublic('asSqlExpression')
-  def asSqlExpression(self, table_map=None, domain_id=None, exclude_domain_id=None, strict_membership=0):
+  def asSqlExpression(self, table_map=None, domain_id=None, 
+                      exclude_domain_id=None, strict_membership=0,
+                      join_table="catalog", join_column="uid"):
     join_expression = []
     for k, d in self.domain_dict.items():
       if k == 'parent':
         # Special treatment for parent
-        join_expression.append(d.getParentSqlExpression(table = 'catalog', strict_membership=strict_membership))
+        join_expression.append(d.getParentSqlExpression(table='catalog', 
+                               strict_membership=strict_membership))
       elif k is not None and getattr(aq_base(d), 'isCategory', 0):
         # This is a category, we must join
-        join_expression.append('catalog.uid = %s_category.uid' % k)
-        join_expression.append(d.asSqlExpression(table = '%s_category' % k, strict_membership=strict_membership))
+        join_expression.append('%s.%s = %s_category.uid' % \
+                               (join_table, join_column, k))
+        join_expression.append(d.asSqlExpression(table='%s_category' % k, 
+                               strict_membership=strict_membership))
     result = "( %s )" % ' AND '.join(join_expression)
     #LOG('asSqlExpression', 0, str(result))
     return result
