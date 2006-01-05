@@ -136,7 +136,8 @@ class Delivery(XMLObject):
       aggregate = self.Delivery_zGetTotal(**kw)[0]
       return aggregate.total_price or 0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getTotalQuantity')
     def getTotalQuantity(self, fast=1, src__=0, **kw):
       """ Returns the total quantity of this order.
         if the `fast` argument is set to a true value, then it use
@@ -144,8 +145,8 @@ class Delivery(XMLObject):
         quantity of objects one by one.
       """
       if not fast :
-        kw.setdefault( 'portal_type',
-                       self.getPortalDeliveryMovementTypeList())
+        kw.setdefault('portal_type',
+                      self.getPortalDeliveryMovementTypeList())
         return sum([ line.getTotalQuantity(fast=0) for line in
                         self.objectValues(**kw) ])
       kw['explanation_uid'] = self.getUid()
@@ -316,13 +317,15 @@ class Delivery(XMLObject):
     # Stock Management
     def _getMovementResourceList(self):
       resource_dict = {}
-      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
+      for m in self.contentValues(filter={
+                      'portal_type': self.getPortalMovementTypeList()}):
         r = m.getResource()
         if r is not None:
           resource_dict[r] = 1
       return resource_dict.keys()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventory')
     def getInventory(self, **kw):
       """
       Returns inventory
@@ -330,134 +333,154 @@ class Delivery(XMLObject):
       kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventory')
     def getCurrentInventory(self, **kw):
       """
       Returns current inventory
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableInventory')
     def getAvailableInventory(self, **kw):
       """
       Returns available inventory
       (current inventory - deliverable)
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getAvailableInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventory')
     def getFutureInventory(self, **kw):
       """
       Returns inventory at infinite
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryList')
     def getInventoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventoryList')
     def getCurrentInventoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventoryList')
     def getFutureInventoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryStat')
     def getInventoryStat(self, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventoryStat')
     def getFutureInventoryStat(self, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryChart')
     def getInventoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getCurrentInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventoryChart')
     def getFutureInventoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getFutureInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryHistoryList')
     def getInventoryHistoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryHistoryChart')
     def getInventoryHistoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getInventoryHistoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getMovementHistoryList')
     def getMovementHistoryList(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getMovementHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getMovementHistoryStat')
     def getMovementHistoryStat(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      kw['category'] = self._getMovementResourceList()
+      kw['resource'] = self._getMovementResourceList()
       return self.portal_simulation.getMovementHistoryStat(**kw)
+
+
+
+
 
 # JPS: We must still decide if getInventoryAssetPrice is part of the Delivery API
 
