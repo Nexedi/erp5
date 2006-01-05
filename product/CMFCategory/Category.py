@@ -415,10 +415,13 @@ class Category(Folder):
       #LOG('asSqlExpression', 0, str(self))
       #LOG('asSqlExpression parent', 0, str(self.aq_parent))
       if strict_membership:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s AND %s.category_strict_membership = 1)' % (table, self.getUid(), table, self.getBaseCategoryUid(), table)
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s ' \
+                   'AND %s.category_strict_membership = 1)' % \
+                                 (table, self.getUid(), table, 
+                                  self.getBaseCategoryUid(), table)
       else:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % (table, self.getUid(),
-                                                                   table, self.getBaseCategoryUid())
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
+            (table, self.getUid(), table, self.getBaseCategoryUid())
       # Now useless since we precompute the mapping
       #for o in self.objectValues():
       #  sql_text += ' OR %s' % o.asSqlExpression()
@@ -542,15 +545,19 @@ class BaseCategory(Category):
         ZSQLCatalog
       """
       if strict_membership:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s AND %s.category_strict_membership = 1)' % (table, self.uid, table, self.uid, table)
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s ' \
+                   'AND %s.category_strict_membership = 1)' % \
+                                (table, self.uid, table, self.uid, table)
       else:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % (table, self.uid, table, self.uid)
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
+                               (table, self.uid, table, self.uid)
       # Now useless since we precompute the mapping
       #for o in self.objectValues():
       #  sql_text += ' OR %s' % o.asSqlExpression()
       return sql_text
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryId' )
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getBaseCategoryId')
     def getBaseCategoryId(self):
       """
         The base category of this object
@@ -559,7 +566,8 @@ class BaseCategory(Category):
       """
       return self.getBaseCategory().id
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryUid' )
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getBaseCategoryUid')
     def getBaseCategoryUid(self):
       """
         The base category uid of this object
@@ -568,7 +576,8 @@ class BaseCategory(Category):
       """
       return self.getBaseCategory().getUid()
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryValue' )
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getBaseCategoryValue')
     def getBaseCategoryValue(self):
       """
         The base category of this object
@@ -612,7 +621,8 @@ class BaseCategory(Category):
       return sortValueList(value_list, sort_on, sort_order, **kw)
 
     # Alias for compatibility
-    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategory' )
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getBaseCategory')
     getBaseCategory = getBaseCategoryValue
 
 InitializeClass( Category )
