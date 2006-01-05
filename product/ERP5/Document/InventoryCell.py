@@ -268,3 +268,9 @@ class InventoryCell(DeliveryCell):
         no inventory was defined.
       """
       return self.getInventory() # XXX quantity unit is missing
+
+    def reindexObject(self, *args, **kw):
+      """
+      Make sure to reindex the inventory
+      """
+      self.getParentValue().reindexObject()

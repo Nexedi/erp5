@@ -274,3 +274,10 @@ class InventoryLine(DeliveryLine):
         Take into account efficiency in converted target quantity
       """
       return Movement.getInventoriatedQuantity(self)
+
+    def reindexObject(self, *args, **kw):
+      """
+      Make sure to reindex the inventory
+      """
+      self.getParentValue().recursiveReindexObject()
+
