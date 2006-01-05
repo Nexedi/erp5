@@ -511,28 +511,26 @@ class SimulationTool (BaseTool):
                  list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
-    def getInventoryStat(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw) :
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryStat')
+    def getInventoryStat(self, src__=0, ignore_variation=0, standardise=0, 
+                         omit_simulation=0, omit_input=0, omit_output=0,
+                         selection_domain=None, selection_report=None, **kw):
       """
-      getInventoryStat is the pending to getInventoryList in order to provide
-      statistics on getInventoryList lines in ListBox such as: total of inventories,
-      number of variations, number of different nodes, etc.
+      getInventoryStat is the pending to getInventoryList in order to 
+      provide statistics on getInventoryList lines in ListBox such as:
+      total of inventories, number of variations, number of different 
+      nodes, etc.
       """
+      kw['group_by_variation'] = 0
       sql_kw = self._generateSQLKeywordDict(**kw)
-
-      result = self.Resource_zGetInventory(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+      result = self.Resource_zGetInventory(
+          src__=src__, ignore_variation=ignore_variation, 
+          standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-      if src__ :
-        return result
-      
-      total_result = 0
-      for row in result :
-        total_result += row.stock_uid
-      return total_result
+          selection_domain=selection_domain, 
+          selection_report=selection_report, **sql_kw)
+      return result
       
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, **kw):
@@ -542,13 +540,16 @@ class SimulationTool (BaseTool):
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventoryStat')
     def getFutureInventoryStat(self, **kw):
       """
       Returns statistics of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
-          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
+      kw['simulation_state'] = tuple(
+                 list(self.getPortalFutureInventoryStateList()) + \
+                 list(self.getPortalReservedInventoryStateList()) + \
+                 list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
@@ -660,34 +661,42 @@ class SimulationTool (BaseTool):
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
-    def getMovementHistoryList(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getMovementHistoryList')
+    def getMovementHistoryList(self, src__=0, ignore_variation=0, 
+                               standardise=0, omit_simulation=0, 
+                               omit_input=0, omit_output=0, 
+                               selection_domain=None, selection_report=None, 
+                               **kw):
       """
       Returns a list of movements which modify the inventory
       for a single or a group of resource, node, section, etc.
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
+      return self.Resource_zGetMovementHistoryList(
+                         src__=src__, ignore_variation=ignore_variation, 
+                         standardise=standardise, 
+                         omit_simulation=omit_simulation,
+                         omit_input=omit_input, omit_output=omit_output,
+                         selection_domain=selection_domain, 
+                         selection_report=selection_report, **sql_kw)
 
-      return self.Resource_zGetMovementHistoryList(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
-    def getMovementHistoryStat(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getMovementHistoryStat')
+    def getMovementHistoryStat(self, src__=0, ignore_variation=0, 
+                               standardise=0, omit_simulation=0, omit_input=0,
+                               omit_output=0, selection_domain=None, 
+                               selection_report=None, **kw):
       """
-      getMovementHistoryStat is the pending to getMovementHistoryList for ListBox stat
+      getMovementHistoryStat is the pending to getMovementHistoryList
+      for ListBox stat
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
-
       return self.Resource_zGetInventory(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+          ignore_variation=ignore_variation, standardise=standardise, 
+          omit_simulation=omit_simulation, omit_input=omit_input, 
+          omit_output=omit_output, selection_domain=selection_domain, 
+          selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, src__=0,
