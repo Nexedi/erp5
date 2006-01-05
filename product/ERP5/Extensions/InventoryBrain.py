@@ -118,12 +118,23 @@ class InventoryListBrain(ZSQLBrain):
       Returns current inventory
     """
     simulation_tool = getToolByName(self,'portal_simulation')
-    return simulation_tool.getAvailableInventory(node=self.node_relative_url,variation_text=self.variation_text,
-                                 resource=self.resource_relative_url,**kw)
+    return simulation_tool.getAvailableInventory(
+                             node=self.node_relative_url,
+                             variation_text=self.variation_text,
+                             resource=self.resource_relative_url, **kw)
 
   def getQuantity(self, **kw):
-    result = self.Delivery_zGetTotal( resource_uid = [self.resource_uid],
-                                      variation_text = self.variation_text)
+    """
+    Return the quantity of the current delivery for a resource
+    """
+    total_kw = {
+      'explanation_uid': self.getDeliveryUid(),
+      'resource_uid': self.resource_uid,
+      'variation_text': self.variation_text,
+    }
+    total_kw.update(self.portal_catalog.buildSQLQuery(query_table='movement',
+                                                      **total_kw))
+    result = self.Delivery_zGetTotal(**total_kw)
     inventory = None
     if len(result) > 0:
       inventory = result[0].inventory
@@ -134,61 +145,83 @@ class InventoryListBrain(ZSQLBrain):
 
   def getQuantityUnit(self, **kw):
     try:
-      resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
+      resource = self.portal_categories.unrestrictedTraverse(
+                                           self.resource_relative_url)
       return resource.getQuantityUnit()
     except AttributeError:
       return ''
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
+    # XXX FIXME can catch to many exceptions
     try:
       if cname_id in ('getExplanationText','getExplanation', ):
         o = self.getObject()
         if o is not None:
           explanation = o.getExplanationValue()
           if explanation is not None:
-            return '%s/%s' % (self.portal_url.getPortalObject().absolute_url(), explanation.getRelativeUrl())
+            return '%s/%s' % (self.portal_url.getPortalObject().absolute_url(),
+                              explanation.getRelativeUrl())
         else:
           return ''
-      elif cname_id in ('getAggregateList','getAggregateListText',):
-        kw = {
-               'list_method_id' : 'Resource_zGetAggregateList',
-               'explanation_uid' : self.explanation_uid,
-               'node_uid' : self.node_uid,
-               'section_uid' : self.section_uid,
-               'variation_text' : self.variation_text,
-               'resource_uid' : self.resource_uid,
-               'reset': 1
-             }
-        url_params_string = make_query(kw)
-        # should be search XXX
-        return '%s/piece_tissu?%s ' % (
-                        self.portal_url.getPortalObject().absolute_url(),
-                        url_params_string
-                        )
-      elif cname_id in ('getCurrentInventory',):
-          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
-          make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,
-                     simulation_state=list(self.getPortalCurrentInventoryStateList())))
-      elif cname_id in ('getAvailableInventory',):
-          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
-            make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,omit_simulation = 1, omit_input = 1,
-            simulation_state=list(self.getPortalReservedInventoryStateList())))
-      elif cname_id in ('getFutureInventory','inventory', ):
-          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
-             make_query(variation_text=self.variation_text,
-             selection_name=selection_name, selection_index=selection_index, simulation_state=list(self.getPortalFutureInventoryStateList())+list(self.getPortalReservedInventoryStateList())))
-      elif cname_id in ('getInventoryAtDate',):
-          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
-                 make_query(variation_text=self.variation_text, to_date=self.at_date,
-                 selection_name=selection_name, selection_index=selection_index, simulation_state=list(self.getPortalFutureInventoryStateList())+list(self.getPortalReservedInventoryStateList())))
-      else:
-        resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-        return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
-          make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index))
+        # XXX Coramy, to be deleted
+#       elif cname_id in ('getAggregateList','getAggregateListText',):
+#         kw = {
+#            'list_method_id' : 'Resource_zGetAggregateList',
+#            'explanation_uid' : self.explanation_uid,
+#            'node_uid' : self.node_uid,
+#            'section_uid' : self.section_uid,
+#            'variation_text' : self.variation_text,
+#            'resource_uid' : self.resource_uid,
+#            'reset': 1
+#         }
+#         url_params_string = make_query(kw)
+#         # should be search XXX
+#         return '%s/piece_tissu?%s ' % (
+#             self.portal_url.getPortalObject().absolute_url(),
+#             url_params_string
+#             )
+      elif (self.resource_relative_url is not None):
+        # A resource is defined, so try to display the movement list
+        resource = self.portal_categories.unrestrictedTraverse(
+                                self.resource_relative_url)
+        form_name = 'Resource_viewMovementHistory'
+        query_kw = {
+          'variation_text': self.variation_text, 
+          'selection_name': selection_name,
+          'selection_index': selection_index,
+        }
+        # Add parameters to query_kw
+        query_kw_update = {}
+        if cname_id in ('getCurrentInventory', ):
+          query_kw_update = {
+            'simulation_state': list(self.getPortalCurrentInventoryStateList())
+          }
+        elif cname_id in ('getAvailableInventory', ):
+          query_kw_update = {
+            'omit_simulation': 1, 
+            'omit_input': 1,
+            'simulation_state': \
+              list(self.getPortalReservedInventoryStateList())
+          }
+        elif cname_id in ('getFutureInventory', 'inventory', ):
+          query_kw_update = {
+            'simulation_state': \
+              list(self.getPortalFutureInventoryStateList()) + \
+              list(self.getPortalReservedInventoryStateList())
+          }
+        elif cname_id in ('getInventoryAtDate', ):
+          query_kw_update = {
+            'to_date': self.at_date,
+            'simulation_state': \
+              list(self.getPortalFutureInventoryStateList()) + \
+              list(self.getPortalReservedInventoryStateList())
+          }
+        query_kw.update(query_kw_update)
+        # Return result
+        return '%s/%s?%s&reset=1' % (
+          resource.absolute_url(),
+          form_name,
+          make_query(**query_kw))
     except (AttributeError, KeyError):
       return ''
 
@@ -207,45 +240,19 @@ class InventoryListBrain(ZSQLBrain):
   def getExplanationText(self):
     # Returns an explanation of the movement
     o = self.getObject()
+    explanation_text = 'Unknow'
     if o is not None:
-      portal_type = o.getPortalType()
-      if portal_type == "Simulation Movement":
-        order = o.getExplanationValue()
-        if order is not None:
-          if order.getPortalType() == 'Sales Order' :
-            return "%s %s %s" % ('Commande vente', order.getId(), order.getDestinationDecisionOrganisationTitle())
-          elif order.getPortalType() == 'Purchase Order' :
-            return "%s %s %s" % ('Commande achat', order.getId(), order.getSourceDecisionTitle())
-          elif order.getPortalType() == 'Production Order' :
-            return "%s %s %s %ip" % ('OF', order.getId(), order.getDescription(), order.getTotalQuantity())
-          else :
-            return "%s %s" % ('Simulated Order', order.getId()) # Tried to use unicode but failed - ListBot must use unicode in % replacements
-      else:
-        LOG("Delivery Value",0,str(self.path))
-        delivery = o.getExplanationValue()
-        LOG("Delivery Value",0,str(delivery))
-        if delivery is not None:
-          causality = delivery.getCausalityValue()
-          if causality is None:
-            if delivery.getPortalType() == 'Sales Packing List' :
-              return "%s %s %s" % ('Livraison vente', delivery.getId(), delivery.getDestinationDecisionOrganisationTitle())
-            elif delivery.getPortalType() == 'Purchase Packing List' :
-              return "%s %s %s" % ('Livraison achat', delivery.getId(), delivery.getSourceDecisionTitle())
-            else :
-              return "%s %s" % (delivery.getPortalType(), delivery.getId())
-          else:
-            if delivery.getPortalType() == 'Sales Packing List' :
-              return "%s %s %s (cde %s)" % ('Livraison vente', delivery.getId(), delivery.getDestinationDecisionOrganisationTitle(), causality.getId())
-            elif delivery.getPortalType() == 'Purchase Packing List' :
-              return "%s %s %s (cde %s)" % ('Livraison achat', delivery.getId(), delivery.getSourceDecisionTitle(), causality.getId())
-            elif delivery.getPortalType() == 'Production Packing List' :
-              return "%s %s (of %s %s %ip)" % ('Livraison fabrication', delivery.getId(), causality.getId(), causality.getDescription(), causality.getTotalQuantity())
-            elif delivery.getPortalType() == 'Production Report' :
-              return "%s %s (of %s %s %ip)" % ('Rapport fabrication', delivery.getId(), causality.getId(), causality.getDescription(), causality.getTotalQuantity())
-            else :
-              return "%s %s (%s %s)" % (delivery.getPortalType(), delivery.getId(),
-                              causality.getPortalType(), causality.getId())
-    return "Unknown"
+      # Get the delivery/order
+      delivery = o.getExplanationValue()
+      if delivery is not None:
+        explanation_text = "%s %s" % (delivery.getPortalType(),
+                                      delivery.getTitleOrId())
+        causality = delivery.getCausalityValue()
+        if causality is not None:
+          explanation_text = "%s (%s %s)" % (explanation_text,
+                                             causality.getPortalType(),
+                                             causality.getTitleOrId())
+    return explanation_text
 
 class DeliveryListBrain(InventoryListBrain):
   """
