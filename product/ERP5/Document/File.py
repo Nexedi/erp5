@@ -59,6 +59,9 @@ class File(Base, CMFFile):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.View)
 
+    # Default global values
+    content_type = '' # Required for WebDAV support (default value)
+
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.CategoryCore
@@ -67,57 +70,6 @@ class File(Base, CMFFile):
 
     # Declarative interfaces
     #__implements__ = ( , )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Document can contain text that can be formatted using 'Structured Text'.\
-or 'HTML'. Text can be automatically translated through the use of\
-'message catalogs' and provided to the user in multilple languages."""
-         , 'icon'           : 'file_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addFile'
-         , 'immediate_view' : 'file_view'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'file_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'file_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'download'
-          , 'name'          : 'Download'
-          , 'category'      : 'object_action'
-          , 'action'        : 'download'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     ### Special edit method
     security.declarePrivate( '_edit' )
@@ -153,8 +105,10 @@ or 'HTML'. Text can be automatically translated through the use of\
       CMFFile.manage_beforeDelete(self, item, container)
 
     # DAV Support
+    index_html = CMFFile.index_html
     PUT = CMFFile.PUT
+    security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
     manage_FTPget = CMFFile.manage_FTPget
     manage_FTPlist = CMFFile.manage_FTPlist
     manage_FTPstat = CMFFile.manage_FTPstat
-	    
+
