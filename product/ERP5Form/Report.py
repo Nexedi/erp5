@@ -279,9 +279,13 @@ class ReportSection:
           selection.edit(report_path=self.selection_report_path)
         if self.listbox_display_mode is not None:
           self.saved_selections[selection_name]['display_mode'] = \
-               portal_selections.getListboxDisplayMode(selection_name, REQUEST=REQUEST)
-          portal_selections.setListboxDisplayMode(REQUEST, self.listbox_display_mode,
-                                                selection_name=selection_name)
+               portal_selections.getListboxDisplayMode(selection_name, 
+                                                       REQUEST=REQUEST)
+          # XXX Dirty fix, to be able to change the display mode in form_view
+          REQUEST.list_selection_name = selection_name
+          portal_selections.setListboxDisplayMode(
+                                           REQUEST, self.listbox_display_mode,
+                                           selection_name=selection_name)
         if self.selection_params is not None:
           self.saved_selections[selection_name]['params'] =  \
                portal_selections.getSelectionParams(selection_name, REQUEST=REQUEST)
@@ -327,13 +331,12 @@ class ReportSection:
           selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
           selection.edit(report_path = self.saved_selections[selection_name]['report_path'])
         if self.listbox_display_mode is not None:
-          portal_selections.setListboxDisplayMode(REQUEST,
-                                                self.saved_selections[selection_name]['display_mode'],
-                                                selection_name=selection_name)
-        if self.listbox_display_mode is not None:
-          portal_selections.setListboxDisplayMode(REQUEST,
-                                                self.saved_selections[selection_name]['display_mode'],
-                                                selection_name=selection_name)
+          # XXX Dirty fix, to be able to change the display mode in form_view
+          REQUEST.list_selection_name = selection_name
+          portal_selections.setListboxDisplayMode(
+                       REQUEST,
+                       self.saved_selections[selection_name]['display_mode'],
+                       selection_name=selection_name)
         if self.selection_params is not None:
           # first make sure no parameters that have been pushed are erased 
           portal_selections.setSelectionParamsFor(selection_name, {}, REQUEST=REQUEST)

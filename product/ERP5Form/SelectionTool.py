@@ -678,17 +678,34 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return 'FlatListMode'
           
     security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
-    def setListboxDisplayMode(self, REQUEST,listbox_display_mode, selection_name=None,redirect=0):
+    def setListboxDisplayMode(self, REQUEST, listbox_display_mode, 
+                              selection_name=None, redirect=0):
       """
         Toogle display of the listbox
       """
-
       request = REQUEST
-      if selection_name is None: selection_name = request.list_selection_name
+      # XXX FIXME
+      # Dirty fix: we must be able to change the display mode of a listbox
+      # in form_view
+      # But, form can have multiple listbox...
+      # This need to be cleaned
+      # Beware, this fix may break the report system...
+      # and we don't have test for this
+      # Possible fix: currently, display mode icon are implemented as 
+      # method. It could be easier to generate them as link (where we 
+      # can define explicitely parameters through the url).
+      try:
+        list_selection_name = request.list_selection_name
+      except AttributeError:
+        pass
+      else:
+        if list_selection_name is not None:
+          selection_name = request.list_selection_name
+      # Get the selection
       selection = self.getSelectionFor(selection_name, REQUEST)
       if selection is None:
         selection = Selection()
-        self.setSelectionFor(selection_name,selection,REQUEST=REQUEST)
+        self.setSelectionFor(selection_name,selection, REQUEST=REQUEST)
 
       if listbox_display_mode == 'FlatListMode':
         flat_list_mode = 1
@@ -707,9 +724,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
         domain_tree_mode = 0
         report_tree_mode = 0      
         
-      selection.edit(flat_list_mode=flat_list_mode,domain_tree_mode=domain_tree_mode,
-                                                report_tree_mode=report_tree_mode)
-
+      selection.edit(flat_list_mode=flat_list_mode,
+                     domain_tree_mode=domain_tree_mode,
+                     report_tree_mode=report_tree_mode)
       # It is better to reset the query when changing the display mode.
       params = selection.getParams()
       if 'where_expression' in params: del params['where_expression']
@@ -723,32 +740,32 @@ class SelectionTool( UniqueObject, SimpleItem ):
         referer = referer.replace('reset:int=', 'noreset:int=')
         return request.RESPONSE.redirect(referer)
 
-
     security.declareProtected(ERP5Permissions.View, 'setFlatListMode')
     def setFlatListMode(self, REQUEST, selection_name=None):
       """
         Set display of the listbox to FlatList mode
       """
-
-      return self.setListboxDisplayMode(REQUEST=REQUEST, listbox_display_mode='FlatListMode', selection_name=selection_name,redirect=1)
-
+      return self.setListboxDisplayMode(
+                       REQUEST=REQUEST, listbox_display_mode='FlatListMode', 
+                       selection_name=selection_name, redirect=1)
 
     security.declareProtected(ERP5Permissions.View, 'setDomainTreeMode')
     def setDomainTreeMode(self, REQUEST, selection_name=None):
       """
          Set display of the listbox to DomainTree mode
       """
-
-      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='DomainTreeMode', selection_name=selection_name,redirect=1)
-
+      return self.setListboxDisplayMode(
+                       REQUEST=REQUEST, listbox_display_mode='DomainTreeMode', 
+                       selection_name=selection_name, redirect=1)
 
     security.declareProtected(ERP5Permissions.View, 'setReportTreeMode')
     def setReportTreeMode(self, REQUEST, selection_name=None):
       """
         Set display of the listbox to ReportTree mode
       """
-
-      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='ReportTreeMode',selection_name=selection_name,redirect=1)
+      return self.setListboxDisplayMode(
+                       REQUEST=REQUEST, listbox_display_mode='ReportTreeMode',
+                       selection_name=selection_name, redirect=1)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionSelectedValueList')
     def getSelectionSelectedValueList(self, selection_name, REQUEST=None, selection_method=None, context=None):
