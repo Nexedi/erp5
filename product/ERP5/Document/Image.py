@@ -30,11 +30,10 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
-from Products.CMFPhoto.CMFPhoto import CMFPhoto
 from Products.Photo.Photo import Photo
 
 
-class Image (Base, CMFPhoto):
+class Image (Base, Photo):
   """
     An Image can contain text that can be formatted using
     *Structured Text* or *HTML*. Text can be automatically translated
@@ -70,30 +69,34 @@ class Image (Base, CMFPhoto):
     Base.__init__(self, id=id)
     self._data = ''
     self.store = store
+    self._checkOriginal()
 
   ### Special edit method
+  def _checkOriginal(self):
+    if not hasattr(self, '_original'):
+      if self.store   == 'Image'   : from Products.Photo.PhotoImage    import PhotoImage
+      elif self.store == 'ExtImage': from Products.Photo.ExtPhotoImage import PhotoImage
+      self._original = PhotoImage(self.id, self.title, path=self.absolute_url(1))
+
   security.declarePrivate('_edit')
   def _edit(self, **kw):
     """
       This is used to edit files
     """
-    if not hasattr(self, '_original'):
-      if self.store   == 'Image'   : from Products.Photo.PhotoImage    import PhotoImage
-      elif self.store == 'ExtImage': from Products.Photo.ExtPhotoImage import PhotoImage
-      self._original = PhotoImage(self.id, self.title, path=self.absolute_url(1))
+    self._checkOriginal()
     if kw.has_key('file'):
       file = kw.get('file')
       precondition = kw.get('precondition')
-      CMFPhoto.manage_editPhoto(self, file=file)
+      Photo.manage_editPhoto(self, file=file)
       self.manage_purgeDisplays()
       del kw['file']
     Base._edit(self, **kw)
 
   security.declareProtected('View', 'index_html')
-  index_html = CMFPhoto.index_html
+  index_html = Photo.index_html
 
   security.declareProtected(Permissions.AccessContentsInformation, 'content_type')
-  content_type = CMFPhoto.content_type
+  content_type = Photo.content_type
 
   # Copy support needs to be implemented by ExtFile
   ################################
@@ -102,13 +105,13 @@ class Image (Base, CMFPhoto):
 
   def manage_afterClone(self, item):
     Base.manage_afterClone(self, item)
-    CMFPhoto.manage_afterClone(self, item)
+    Photo.manage_afterClone(self, item)
 
   def manage_afterAdd(self, item, container):
-    CMFPhoto.manage_afterAdd(self, item, container)
+    Photo.manage_afterAdd(self, item, container)
 
   def manage_beforeDelete(self, item, container):
-    CMFPhoto.manage_beforeDelete(self, item, container)
+    Photo.manage_beforeDelete(self, item, container)
 
   # Some ERPish
   def getWidth(self):
@@ -128,7 +131,8 @@ class Image (Base, CMFPhoto):
     self.manage_file_upload(self, file=file, REQUEST=None)
 
   # DAV Support
-  PUT = CMFPhoto.PUT
-  manage_FTPget = CMFPhoto.manage_FTPget
-  manage_FTPlist = CMFPhoto.manage_FTPlist
-  manage_FTPstat = CMFPhoto.manage_FTPstat
+  PUT = Photo.PUT
+  security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
+  manage_FTPget = Photo.manage_FTPget
+  manage_FTPlist = Photo.manage_FTPlist
+  manage_FTPstat = Photo.manage_FTPstat
