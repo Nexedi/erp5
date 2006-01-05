@@ -81,7 +81,7 @@ class Inventory(Delivery):
       node = self.getDestination()
       for movement in self.getMovementList():
         resource =  movement.getResourceValue()
-        if resource is not None and movement.getInventory() is not None:
+        if resource is not None and movement.getInventory() not in (None,''):
           variation_text = movement.getVariationText()
           if (resource,variation_text) not in resource_and_variation_list:
             resource_and_variation_list.append((resource,variation_text))
@@ -113,6 +113,12 @@ class Inventory(Delivery):
                 stock_object_list.append(temp_delivery_line)
       object_list = [self]
       self.portal_catalog.catalogObjectList(object_list)
+      if len(stock_object_list)==0:
+        # Make sure to remove all lines 
+        from Products.ERP5Type.Document import newTempBase
+        stock_object_list.append(newTempDeliveryLine(self,self.getId(),
+                                 uid=self.getUid()))
+      LOG('stock_object_list',0,[x.__dict__ for x in stock_object_list])
       self.portal_catalog.catalogObjectList(stock_object_list,
            method_id_list=('z_catalog_stock_list',),
            disable_cache=1,check_uid=0)
