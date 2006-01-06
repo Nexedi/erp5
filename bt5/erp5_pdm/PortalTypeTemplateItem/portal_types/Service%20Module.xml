@@ -38,9 +38,13 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Service</string>
-              </tuple>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_category_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -64,8 +68,20 @@
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>hidden_content_type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Service Module</string> </value>
+        </item>
+        <item>
+            <key> <string>property_sheet_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -192,8 +208,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.ActionInformation</string>
-          <string>ActionInformation</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>
@@ -226,7 +242,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>

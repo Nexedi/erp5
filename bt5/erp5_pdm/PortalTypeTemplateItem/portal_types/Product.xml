@@ -27,6 +27,7 @@
                 <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                 <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
               </tuple>
             </value>
         </item>
@@ -111,7 +112,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -122,7 +123,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
             </value>
         </item>
         <item>
@@ -176,7 +177,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -187,7 +188,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
             </value>
         </item>
         <item>
@@ -241,7 +242,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -252,7 +253,72 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_view</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>view_stock</string> </value>
+        </item>
+        <item>
+            <key> <string>optional</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Stock</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -302,11 +368,11 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -317,7 +383,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
             </value>
         </item>
         <item>
@@ -367,11 +433,11 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -382,7 +448,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
             </value>
         </item>
         <item>
@@ -432,7 +498,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <tuple>
         <tuple>
@@ -451,7 +517,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <tuple>
         <tuple>
@@ -470,7 +536,26 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="9" aka="AAAAAAAAAAk=">
+  <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/Resource_viewInventory</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="11" aka="AAAAAAAAAAs=">
     <pickle>
       <tuple>
         <tuple>
@@ -489,7 +574,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="10" aka="AAAAAAAAAAo=">
+  <record id="12" aka="AAAAAAAAAAw=">
     <pickle>
       <tuple>
         <tuple>
@@ -508,7 +593,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="11" aka="AAAAAAAAAAs=">
+  <record id="13" aka="AAAAAAAAAA0=">
     <pickle>
       <tuple>
         <tuple>

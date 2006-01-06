@@ -42,9 +42,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Mapped Value</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -78,9 +76,7 @@ identify a bank account.</string> </value>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Mapped Value</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -376,7 +372,7 @@ identify a bank account.</string> </value>
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -418,7 +414,7 @@ identify a bank account.</string> </value>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>

@@ -94,11 +94,7 @@
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Predicate Group</string>
-                <string>Supply Cell</string>
-                <string>Supply Line</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -112,9 +108,7 @@
         <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
-              <tuple>
-                <string>DefaultSupply</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -388,7 +382,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -430,7 +424,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>

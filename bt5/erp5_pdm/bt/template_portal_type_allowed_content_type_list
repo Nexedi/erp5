@@ -1,0 +1,9 @@
+Component Module | Component
+Product Module | Product
+Service Module | Service
+Transformation Module | Transformation
+Transformation Operation | Mapped Value
+Transformation Transformed Resource | Mapped Value
+Transformation | Transformation Operation
+Transformation | Transformation Optional Resource
+Transformation | Transformation Transformed Resource

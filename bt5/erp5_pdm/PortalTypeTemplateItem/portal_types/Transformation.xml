@@ -49,11 +49,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Transformation Operation</string>
-                <string>Transformation Optional Resource</string>
-                <string>Transformation Transformed Resource</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -515,7 +511,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -557,7 +553,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>

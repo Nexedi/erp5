@@ -1,0 +1,10 @@
+<hidden_content_type_list>
+ <portal_type id="Component">
+  <item>Predicate Group</item>
+  <item>Supply Line</item>
+  <item>Supply Cell</item>
+ </portal_type>
+ <portal_type id="Transformation Transformed Resource">
+  <item>Mapped Value</item>
+ </portal_type>
+</hidden_content_type_list>

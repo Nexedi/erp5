@@ -1,0 +1,25 @@
+<allowed_content_type_list>
+ <portal_type id="Component Module">
+  <item>Component</item>
+ </portal_type>
+ <portal_type id="Product Module">
+  <item>Product</item>
+ </portal_type>
+ <portal_type id="Service Module">
+  <item>Service</item>
+ </portal_type>
+ <portal_type id="Transformation">
+  <item>Transformation Optional Resource</item>
+  <item>Transformation Operation</item>
+  <item>Transformation Transformed Resource</item>
+ </portal_type>
+ <portal_type id="Transformation Module">
+  <item>Transformation</item>
+ </portal_type>
+ <portal_type id="Transformation Operation">
+  <item>Mapped Value</item>
+ </portal_type>
+ <portal_type id="Transformation Transformed Resource">
+  <item>Mapped Value</item>
+ </portal_type>
+</allowed_content_type_list>
