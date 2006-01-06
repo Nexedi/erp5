@@ -26,6 +26,7 @@ when ERP5 runs in "require_referer" mode.
 """
 
 from Products.CMFCore.CookieCrumbler import CookieCrumbler
+from urllib import quote
 
 class PatchedCookieCrumbler(CookieCrumbler):
   """
