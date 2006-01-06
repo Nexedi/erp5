@@ -344,10 +344,11 @@ class SimulationTool (BaseTool):
 
     #######################################################
     # Inventory management                  
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
-    def getInventory(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw) :
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventory')
+    def getInventory(self, src__=0, ignore_variation=0, standardise=0, 
+                     omit_simulation=0, omit_input=0, omit_output=0,
+                     selection_domain=None, selection_report=None, **kw):
       """
       Returns an inventory of a single or multiple resources on a single or multiple
       nodes as a single float value
@@ -425,10 +426,12 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      result = self.Resource_zGetInventory(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+      result = self.Resource_zGetInventory(
+          src__=src__, ignore_variation=ignore_variation, 
+          standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+          selection_domain=selection_domain, selection_report=selection_report,
+          **sql_kw)
       if src__ :
         return result
 
@@ -440,7 +443,8 @@ class SimulationTool (BaseTool):
 
       return total_result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventory')
     def getCurrentInventory(self, **kw):
       """
       Returns current inventory
@@ -448,24 +452,28 @@ class SimulationTool (BaseTool):
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableInventory')
     def getAvailableInventory(self, **kw):
       """
       Returns available inventory
       (current inventory - reserved)
       """
-      kw['simulation_state'] = tuple(list(self.getPortalReservedInventoryStateList())
-                                  +  list(self.getPortalCurrentInventoryStateList()))
+      kw['simulation_state'] = tuple(
+                    list(self.getPortalReservedInventoryStateList()) + \
+                    list(self.getPortalCurrentInventoryStateList()))
       return self.getInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventory')
     def getFutureInventory(self, **kw):
       """
       Returns future inventory
       """
-      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
-                                   + list(self.getPortalReservedInventoryStateList())
-                                   + list(self.getPortalCurrentInventoryStateList()))
+      kw['simulation_state'] = tuple(
+                   list(self.getPortalFutureInventoryStateList()) + \
+                   list(self.getPortalReservedInventoryStateList()) + \
+                   list(self.getPortalCurrentInventoryStateList()))
       return self.getInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 
@@ -506,8 +514,8 @@ class SimulationTool (BaseTool):
         Returns list of future inventory grouped by section or site
       """
       kw['simulation_state'] = tuple(
-                 list(self.getPortalFutureInventoryStateList()) +\
-                 list(self.getPortalReservedInventoryStateList()) +\
+                 list(self.getPortalFutureInventoryStateList()) + \
+                 list(self.getPortalReservedInventoryStateList()) + \
                  list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryList(**kw)
 
@@ -532,7 +540,8 @@ class SimulationTool (BaseTool):
           selection_report=selection_report, **sql_kw)
       return result
       
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, **kw):
       """
       Returns statistics of current inventory grouped by section or site
@@ -552,12 +561,14 @@ class SimulationTool (BaseTool):
                  list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryChart')
     def getInventoryChart(self, src__=0, **kw):
       """
       Returns a list of couples derived from getInventoryList in order
       to feed a chart renderer. Each couple consist of a label
-      (node, section, payment, combination of node & section, etc.) and an inventory value.
+      (node, section, payment, combination of node & section, etc.) 
+      and an inventory value.
       
       Mostly useful for charts in ERP5 forms.
       """
@@ -567,7 +578,8 @@ class SimulationTool (BaseTool):
 
       return map(lambda r: (r.node_title, r.inventory), result)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, **kw):
       """
       Returns list of current inventory grouped by section or site
@@ -575,19 +587,24 @@ class SimulationTool (BaseTool):
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventoryChart')
     def getFutureInventoryChart(self, **kw):
       """
       Returns list of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
-          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
+      kw['simulation_state'] = tuple(
+                      list(self.getPortalFutureInventoryStateList()) + \
+                      list(self.getPortalReservedInventoryStateList()) + \
+                      list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryAssetPrice')
-    def getInventoryAssetPrice(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryAssetPrice')
+    def getInventoryAssetPrice(self, src__=0, ignore_variation=0, 
+                               standardise=0, omit_simulation=0, omit_input=0,
+                               omit_output=0, selection_domain=None, 
+                               selection_report=None, **kw):
       """
       Same thing as getInventory but returns an asset 
       price rather than an inventory.
@@ -596,12 +613,15 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      return self.Resource_zGetInventoryAssetPrice(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+      return self.Resource_zGetInventoryAssetPrice(
+                     src__=src__, ignore_variation=ignore_variation, 
+                     standardise=standardise, omit_simulation=omit_simulation,
+                     omit_input=omit_input, omit_output=omit_output,
+                     selection_domain=selection_domain, 
+                     selection_report=selection_report, **sql_kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventoryAssetPrice')
     def getCurrentInventoryAssetPrice(self, **kw):
       """
       Returns list of current inventory grouped by section or site
@@ -609,7 +629,8 @@ class SimulationTool (BaseTool):
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableInventoryAssetPrice')
     def getAvailableInventoryAssetPrice(self, **kw):
       """
       Returns list of available inventory grouped by section or site
@@ -618,35 +639,44 @@ class SimulationTool (BaseTool):
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventoryAssetPrice')
     def getFutureInventoryAssetPrice(self, **kw):
       """
       Returns list of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
-          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
+      kw['simulation_state'] = tuple(
+               list(self.getPortalFutureInventoryStateList()) + \
+               list(self.getPortalReservedInventoryStateList()) + \
+               list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
-    def getInventoryHistoryList(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryHistoryList')
+    def getInventoryHistoryList(self, src__=0, ignore_variation=0, 
+                                standardise=0, omit_simulation=0, omit_input=0,
+                                omit_output=0, selection_domain=None, 
+                                selection_report=None, **kw):
       """
       Returns a time based serie of inventory values
       for a single or a group of resource, node, section, etc. This is useful
       to list the evolution with time of inventory values (quantity, asset price).
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
+      return self.Resource_getInventoryHistoryList(
+                      src__=src__, ignore_variation=ignore_variation, 
+                      standardise=standardise, omit_simulation=omit_simulation,
+                      omit_input=omit_input, omit_output=omit_output,
+                      selection_domain=selection_domain, 
+                      selection_report=selection_report, **sql_kw)
 
-      return self.Resource_getInventoryHistoryList(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
-    def getInventoryHistoryChart(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryHistoryChart')
+    def getInventoryHistoryChart(self, src__=0, ignore_variation=0, 
+                                 standardise=0, omit_simulation=0, 
+                                 omit_input=0, omit_output=0,
+                                 selection_domain=None, 
+                                 selection_report=None, **kw):
       """
       getInventoryHistoryChart is the pensing to getInventoryHistoryList
       to ease the rendering of time based graphs which show the evolution
@@ -656,10 +686,12 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      return self.Resource_getInventoryHistoryChart(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+      return self.Resource_getInventoryHistoryChart(
+                    src__=src__, ignore_variation=ignore_variation, 
+                    standardise=standardise, omit_simulation=omit_simulation,
+                    omit_input=omit_input, omit_output=omit_output,
+                    selection_domain=selection_domain, 
+                    selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getMovementHistoryList')
