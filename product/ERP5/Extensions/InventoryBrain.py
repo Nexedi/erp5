@@ -23,7 +23,7 @@ class InventoryBrain(ZSQLBrain):
     Global analysis (all variations and categories)
   """
   # Stock management
-  def getInventory(self, at_date = None, ignore_variation=0, 
+  def getInventory(self, at_date=None, ignore_variation=0, 
                    simulation_state=None, **kw):
     if type(simulation_state) is type('a'):
       simulation_state = [simulation_state]
@@ -96,7 +96,7 @@ class InventoryListBrain(ZSQLBrain):
     """
     Returns the inventory
     """
-    simulation_tool = getToolByName(self,'portal_simulation')
+    simulation_tool = getToolByName(self, 'portal_simulation')
     return simulation_tool.getInventory(
                    node=self.node_relative_url,
                    variation_text=self.variation_text,
@@ -106,7 +106,7 @@ class InventoryListBrain(ZSQLBrain):
     """
       Returns current inventory
     """
-    simulation_tool = getToolByName(self,'portal_simulation')
+    simulation_tool = getToolByName(self, 'portal_simulation')
     return simulation_tool.getCurrentInventory(
                              node=self.node_relative_url,
                              variation_text=self.variation_text,
@@ -198,6 +198,7 @@ class InventoryListBrain(ZSQLBrain):
           'variation_text': self.variation_text, 
           'selection_name': selection_name,
           'selection_index': selection_index,
+          'domain_name': selection_name,
         }
         # Add parameters to query_kw
         query_kw_update = {}
@@ -207,8 +208,9 @@ class InventoryListBrain(ZSQLBrain):
           }
         elif cname_id in ('getAvailableInventory', ):
           query_kw_update = {
-            'omit_simulation': 1, 
-            'omit_input': 1,
+            # XXX FIXME Not consistent with simulation tool.
+#             'omit_simulation': 1, 
+#             'omit_input': 1,
             'simulation_state': \
               list(self.getPortalReservedInventoryStateList())
           }
