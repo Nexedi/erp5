@@ -71,15 +71,9 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAAQAAAAGAAAAQwAA
-AHM2AAAAdAAAZAEAZAIAgwIAdAEAdAAAfAAAZAMAgwIAgwAAZAQAZAAAhQIAgwIAgwEAZAUAF1Nk
-AABTKAYAAABOcwEAAAAvcwQAAABqb2lucw8AAABnZXRQaHlzaWNhbFBhdGhpBAAAAHMRAAAAL21h
-bmFnZV93b3Jrc3BhY2UoAwAAAHMJAAAAX2dldGF0dHJfcwkAAABfZ2V0aXRlbV9zBQAAAGJyYWlu
-KAQAAABzBQAAAGJyYWlucwkAAABzZWxlY3Rpb25zCQAAAF9nZXRhdHRyX3MJAAAAX2dldGl0ZW1f
-KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxoAAABUcmFzaEJpbl9nZXRUcmFzaE9iamVj
-dFVybAEAAABzAAAAACgBAAAAcxoAAABUcmFzaEJpbl9nZXRUcmFzaE9iamVjdFVybCgBAAAAcxoA
-AABUcmFzaEJpbl9nZXRUcmFzaE9iamVjdFVybCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9u
-KXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

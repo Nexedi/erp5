@@ -223,9 +223,11 @@ XXX Do we want or need this ?\n
 XXX How to deal with standardize ?\n
 </dtml-comment>\n
 \n
+<dtml-comment>\n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != "Simulation Movement"\n
 </dtml-if>\n
+</dtml-comment>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
@@ -261,7 +263,8 @@ XXX How to deal with standardize ?\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSqlExpression()">\n
+  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'stock\',\n
+                                                  join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
@@ -274,13 +277,7 @@ ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
 \n
-<dtml-comment>\n
-XXX still have to sort this one out\n
-<dtml-unless ignore_variation>\n
-GROUP BY\n
-  stock.resource_uid, stock.variation_text\n
-</dtml-unless>\n
-</dtml-comment>
+
 
 ]]></string> </value>
         </item>
@@ -360,9 +357,11 @@ XXX Do we want or need this ?\n
 XXX How to deal with standardize ?\n
 </dtml-comment>\n
 \n
+<dtml-comment>\n
 <dtml-if omit_simulation>\n
   AND catalog.portal_type != "Simulation Movement"\n
 </dtml-if>\n
+</dtml-comment>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
   AND (  stock.node_uid <> stock.mirror_node_uid\n
@@ -398,7 +397,8 @@ XXX How to deal with standardize ?\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSqlExpression()">\n
+  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'stock\',\n
+                                                  join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
@@ -411,13 +411,7 @@ ORDER BY\n
   <dtml-var order_by_expression>\n
 </dtml-if>\n
 \n
-<dtml-comment>\n
-XXX still have to sort this one out\n
-<dtml-unless ignore_variation>\n
-GROUP BY\n
-  stock.resource_uid, stock.variation_text\n
-</dtml-unless>\n
-</dtml-comment>
+
 
 ]]></string> </value>
                     </item>

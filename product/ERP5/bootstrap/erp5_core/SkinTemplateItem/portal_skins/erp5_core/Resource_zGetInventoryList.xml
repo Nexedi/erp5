@@ -258,13 +258,6 @@ WHERE\n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
 \n
-<dtml-comment>\n
-XXX How to deal with standardize ?\n
-</dtml-comment>\n
-\n
-<dtml-if omit_simulation>\n
-  AND catalog.portal_type != "Simulation Movement"\n
-</dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
@@ -305,7 +298,8 @@ XXX How to deal with standardize ?\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSqlExpression()">\n
+  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'stock\',\n
+                                                  join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
@@ -397,13 +391,6 @@ WHERE\n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
 \n
-<dtml-comment>\n
-XXX How to deal with standardize ?\n
-</dtml-comment>\n
-\n
-<dtml-if omit_simulation>\n
-  AND catalog.portal_type != "Simulation Movement"\n
-</dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
@@ -444,7 +431,8 @@ XXX How to deal with standardize ?\n
 </dtml-if>\n
 \n
 <dtml-if selection_domain>\n
-  AND <dtml-var "selection_domain.asSqlExpression()">\n
+  AND <dtml-var "selection_domain.asSqlExpression(join_table=\'stock\',\n
+                                                  join_column=\'node_uid\')">\n
 </dtml-if>\n
 <dtml-if selection_report>\n
   AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n

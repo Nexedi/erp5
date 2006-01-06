@@ -71,14 +71,9 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAFAAAASwAA
-AHMgAAAAdAAAdAAAdAEAZAEAgwIAZAIAgwIAdAEAgwEAU2QAAFMoAwAAAE5zDAAAAHBvcnRhbF90
-cmFzaHMWAAAAZ2V0VHJhc2hCaW5PYmplY3RzTGlzdCgCAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHQoAwAAAHMCAAAAa3dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzDwAA
-AFNjcmlwdCAoUHl0aG9uKXMbAAAAVHJhc2hCaW5fZ2V0VHJhc2hPYmplY3RMaXN0AQAAAHMAAAAA
-KAEAAABzGwAAAFRyYXNoQmluX2dldFRyYXNoT2JqZWN0TGlzdCgBAAAAcxsAAABUcmFzaEJpbl9n
-ZXRUcmFzaE9iamVjdExpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1
-bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

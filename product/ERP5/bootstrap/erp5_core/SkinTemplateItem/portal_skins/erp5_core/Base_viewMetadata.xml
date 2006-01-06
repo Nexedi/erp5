@@ -106,7 +106,7 @@
                     <value>
                       <list>
                         <string>my_category_list</string>
-                        <string>my_contributors_list</string>
+                        <string>my_contributor_list</string>
                       </list>
                     </value>
                 </item>

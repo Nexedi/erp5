@@ -75,18 +75,9 @@ return category_tool.getRelatedValueList(context, base_category_list, portal_typ
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAAGAAAASwAA
-AHNZAAAAdAAAdAEAZAEAgwIAfQMAdAAAfAAAZAIAgwIAZAMAgwEAfQQAdAAAfAAAZAIAgwIAZAQA
-gwEAfQUAdAAAfAMAZAUAgwIAdAEAfAQAZAQAfAUAgwIBU2QAAFMoBgAAAE5zEQAAAHBvcnRhbF9j
-YXRlZ29yaWVzcwMAAABnZXRzEgAAAGJhc2VfY2F0ZWdvcnlfbGlzdHMLAAAAcG9ydGFsX3R5cGVz
-EwAAAGdldFJlbGF0ZWRWYWx1ZUxpc3QoBgAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw0A
-AABjYXRlZ29yeV90b29scwIAAABrd3MSAAAAYmFzZV9jYXRlZ29yeV9saXN0cwsAAABwb3J0YWxf
-dHlwZSgGAAAAcwIAAABrd3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw0AAABjYXRlZ29yeV90
-b29scxIAAABiYXNlX2NhdGVnb3J5X2xpc3RzCwAAAHBvcnRhbF90eXBlKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcxkAAABCYXNlX2dldFJlbGF0ZWRPYmplY3RMaXN0AQAAAHMGAAAADwEV
-ARUCKAEAAABzGQAAAEJhc2VfZ2V0UmVsYXRlZE9iamVjdExpc3QoAQAAAHMZAAAAQmFzZV9nZXRS
-ZWxhdGVkT2JqZWN0TGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVs
-ZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

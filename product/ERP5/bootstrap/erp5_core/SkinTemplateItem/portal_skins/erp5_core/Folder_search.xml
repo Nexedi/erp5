@@ -72,14 +72,9 @@ return getattr(context,form_id)(REQUEST)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5zAAAAAGMBAAAABQAA
-AAQAAABDAAAAcyYAAAB0AAB0AQBkAQCDAgB9AwB0AwB0AQB8AACDAgB8AwCDAQBTZAAAUygCAAAA
-TnMHAAAAUkVRVUVTVCgFAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAFJFUVVFU1Rz
-BwAAAGdldGF0dHJzBwAAAGZvcm1faWQoBQAAAHMHAAAAZm9ybV9pZHMJAAAAX2dldGF0dHJfcwcA
-AABjb250ZXh0cwcAAABSRVFVRVNUcwcAAABnZXRhdHRyKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
-eXRob24pcw0AAABGb2xkZXJfc2VhcmNoAQAAAHMCAAAADwEoAQAAAHMNAAAARm9sZGVyX3NlYXJj
-aCgBAAAAcw0AAABGb2xkZXJfc2VhcmNoKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgA
-AAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

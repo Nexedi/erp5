@@ -74,16 +74,9 @@ if rule.getPortalType() in (\'Invoice Transaction Rule\', \'Payment Rule\') :\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAGAAAAQwAA
-AHNSAAAAdAAAdAAAfAAAZAEAgwIAZAIAgwIAgwAAfQIAdAAAfAIAZAMAgwIAgwAAZAQAZAUAZgIA
-agYAbxQAAXQAAHwCAGQGAIMCAIMAAAFuAQABZAAAUygHAAAATnMGAAAAb2JqZWN0cwkAAABnZXRQ
-YXJlbnRzDQAAAGdldFBvcnRhbFR5cGVzGAAAAEludm9pY2UgVHJhbnNhY3Rpb24gUnVsZXMMAAAA
-UGF5bWVudCBSdWxlcwwAAAB1cGRhdGVNYXRyaXgoAwAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0
-ZV9jaGFuZ2VzBAAAAHJ1bGUoAwAAAHMMAAAAc3RhdGVfY2hhbmdlcwkAAABfZ2V0YXR0cl9zBAAA
-AHJ1bGUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFgAAAFByZWRpY2F0ZV91cGRhdGVN
-YXRyaXgBAAAAcwQAAAAbAiIBKAEAAABzFgAAAFByZWRpY2F0ZV91cGRhdGVNYXRyaXgoAQAAAHMW
-AAAAUHJlZGljYXRlX3VwZGF0ZU1hdHJpeCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMI
-AAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

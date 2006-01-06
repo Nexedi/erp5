@@ -75,17 +75,9 @@ return context.Base_callDialogMethod(cancel_url,dialog_method,selection_name,dia
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jBgAAAAgAAAAJAAAAQwAA
-AHMvAAAAfAUAfQIAdAIAdAMAZAEAgwIAfAEAfAIAfAMAfAQAfAAAZAIAZAMAgwUBU2QAAFMoBAAA
-AE5zFQAAAEJhc2VfY2FsbERpYWxvZ01ldGhvZHMNAAAAZW5hYmxlX3BpY2tsZWkBAAAAKAgAAABz
-DQAAAHVwZGF0ZV9tZXRob2RzDQAAAGRpYWxvZ19tZXRob2RzCQAAAF9nZXRhdHRyX3MHAAAAY29u
-dGV4dHMKAAAAY2FuY2VsX3VybHMOAAAAc2VsZWN0aW9uX25hbWVzCQAAAGRpYWxvZ19pZHMHAAAA
-Zm9ybV9pZCgIAAAAcwcAAABmb3JtX2lkcwoAAABjYW5jZWxfdXJscw0AAABkaWFsb2dfbWV0aG9k
-cw4AAABzZWxlY3Rpb25fbmFtZXMJAAAAZGlhbG9nX2lkcw0AAAB1cGRhdGVfbWV0aG9kcwkAAABf
-Z2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzFQAAAEJh
-c2Vfc2hvd1VwZGF0ZURpYWxvZwEAAABzBAAAAAADBgEoAQAAAHMVAAAAQmFzZV9zaG93VXBkYXRl
-RGlhbG9nKAEAAABzFQAAAEJhc2Vfc2hvd1VwZGF0ZURpYWxvZygAAAAAKAAAAABzDwAAAFNjcmlw
-dCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
