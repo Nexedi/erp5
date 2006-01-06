@@ -74,15 +74,9 @@ delivery_line.updateCellRange(base_id)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAQAAAAEAAAAQwAA
-AHMsAAAAdAAAfAAAZAEAgwIAfQIAZAIAfQMAdAAAfAIAZAMAgwIAfAMAgwEAAWQAAFMoBAAAAE5z
-BgAAAG9iamVjdHMIAAAAbW92ZW1lbnRzDwAAAHVwZGF0ZUNlbGxSYW5nZSgEAAAAcwkAAABfZ2V0
-YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMNAAAAZGVsaXZlcnlfbGluZXMHAAAAYmFzZV9pZCgEAAAA
-cwwAAABzdGF0ZV9jaGFuZ2VzCQAAAF9nZXRhdHRyX3MNAAAAZGVsaXZlcnlfbGluZXMHAAAAYmFz
-ZV9pZCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMcAAAARGVsaXZlcnlMaW5lX3VwZGF0
-ZUNlbGxSYW5nZQEAAABzBAAAAA8CCQEoAQAAAHMcAAAARGVsaXZlcnlMaW5lX3VwZGF0ZUNlbGxS
-YW5nZSgBAAAAcxwAAABEZWxpdmVyeUxpbmVfdXBkYXRlQ2VsbFJhbmdlKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

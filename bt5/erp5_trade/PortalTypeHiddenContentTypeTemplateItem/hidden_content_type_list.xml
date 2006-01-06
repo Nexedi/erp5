@@ -1,0 +1,26 @@
+<hidden_content_type_list>
+ <portal_type id="Container Line">
+  <item>Container Cell</item>
+ </portal_type>
+ <portal_type id="Internal Packing List Line">
+  <item>Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Inventory Line">
+  <item>Inventory Cell</item>
+ </portal_type>
+ <portal_type id="Purchase Order Line">
+  <item>Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Purchase Packing List Line">
+  <item>Purchase Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Sale Order Line">
+  <item>Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Sale Packing List Line">
+  <item>Sale Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Supply Line">
+  <item>Supply Cell</item>
+ </portal_type>
+</hidden_content_type_list>

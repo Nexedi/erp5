@@ -45,10 +45,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Discount</string>
-                <string>Payment Condition</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -94,10 +91,7 @@
         <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
-              <tuple>
-                <string>Comment</string>
-                <string>PaymentCondition</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

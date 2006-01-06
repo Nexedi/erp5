@@ -74,16 +74,9 @@ if order.getSimulationState() in order.getPortalPlannedOrderStateList():\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAGAAAAQwAA
-AHNSAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAdAAAfAIAZAMAgwIAgwAAagYAbxoA
-AXQAAHwCAGQEAIMCAGQFAGQGAIMAAQFuAQABZAAAUygHAAAATnMGAAAAb2JqZWN0cxIAAABnZXRT
-aW11bGF0aW9uU3RhdGVzHgAAAGdldFBvcnRhbFBsYW5uZWRPcmRlclN0YXRlTGlzdHMRAAAAdXBk
-YXRlQXBwbGllZFJ1bGVzBwAAAHJ1bGVfaWRzCgAAAG9yZGVyX3J1bGUoAwAAAHMJAAAAX2dldGF0
-dHJfcwwAAABzdGF0ZV9jaGFuZ2VzBQAAAG9yZGVyKAMAAABzDAAAAHN0YXRlX2NoYW5nZXMJAAAA
-X2dldGF0dHJfcwUAAABvcmRlcigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMXAAAAT3Jk
-ZXJfdXBkYXRlQXBwbGllZFJ1bGUBAAAAcwQAAAAPAigBKAEAAABzFwAAAE9yZGVyX3VwZGF0ZUFw
-cGxpZWRSdWxlKAEAAABzFwAAAE9yZGVyX3VwZGF0ZUFwcGxpZWRSdWxlKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

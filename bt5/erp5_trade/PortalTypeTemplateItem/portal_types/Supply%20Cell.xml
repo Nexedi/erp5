@@ -97,9 +97,7 @@
         <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
-              <tuple>
-                <string>Reference</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

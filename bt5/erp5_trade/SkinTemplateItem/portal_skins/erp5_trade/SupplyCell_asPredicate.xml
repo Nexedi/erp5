@@ -72,15 +72,9 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAGAAAATwAA
-AHMmAAAAdAAAdAEAZAEAgwIAZAIAZAMAZgEAZAQAZAUAZgEAgwACU2QAAFMoBgAAAE5zEQAAAGdl
-bmVyYXRlUHJlZGljYXRlcywAAABtdWx0aW1lbWJlcnNoaXBfY3JpdGVyaW9uX2Jhc2VfY2F0ZWdv
-cnlfbGlzdHMIAAAAcmVzb3VyY2VzFwAAAGNyaXRlcmlvbl9wcm9wZXJ0eV9saXN0cwoAAABzdGFy
-dF9kYXRlKAIAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgEAAAAcwQAAABhcmdzcwIAAABr
-d3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
-cxYAAABTdXBwbHlMaW5lX2FzUHJlZGljYXRlAQAAAHMCAAAAGAEoAQAAAHMWAAAAU3VwcGx5TGlu
-ZV9hc1ByZWRpY2F0ZSgBAAAAcxYAAABTdXBwbHlMaW5lX2FzUHJlZGljYXRlKAAAAAAoAAAAAHMP
-AAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

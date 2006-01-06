@@ -73,15 +73,9 @@ order.applyToOrderRelatedMovement(method_id=\'expand\')\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
-AHMpAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAZAMAZAQAgwABAWQAAFMoBQAAAE5zBgAA
-AG9iamVjdHMbAAAAYXBwbHlUb09yZGVyUmVsYXRlZE1vdmVtZW50cwkAAABtZXRob2RfaWRzBgAA
-AGV4cGFuZCgDAAAAcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMFAAAAb3JkZXIoAwAA
-AHMMAAAAc3RhdGVfY2hhbmdlcwkAAABfZ2V0YXR0cl9zBQAAAG9yZGVyKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcx4AAABPcmRlcl9hcHBsaWVkVG9SZWxhdGVkTW92ZW1lbnQBAAAAcwIA
-AAASAigBAAAAcx4AAABPcmRlcl9hcHBsaWVkVG9SZWxhdGVkTW92ZW1lbnQoAQAAAHMeAAAAT3Jk
-ZXJfYXBwbGllZFRvUmVsYXRlZE1vdmVtZW50KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
-cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

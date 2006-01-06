@@ -48,9 +48,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Internal Packing List Line</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -50,9 +50,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Delivery Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -97,9 +95,7 @@ a manufactured product, like a pen, a bicycle...</string> </value>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Delivery Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

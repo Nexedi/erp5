@@ -73,15 +73,9 @@ if context.getSimulationState()!=\'draft\':\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAQAAAAGAAAASwAA
-AHNMAAAAdAAAfAAAZAEAgwIAYQIAdAAAdAIAZAIAgwIAgwAAZAMAagMAbyAAAXQAAHQAAHQCAGQE
-AIMCAIMAAGQFAIMCAIMAAAFuAQABZAAAUygGAAAATnMGAAAAb2JqZWN0cxIAAABnZXRTaW11bGF0
-aW9uU3RhdGVzBQAAAGRyYWZ0cwgAAABhY3RpdmF0ZXMUAAAAdXBkYXRlQ2F1c2FsaXR5U3RhdGUo
-AwAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzBwAAAGNvbnRleHQoBAAAAHMMAAAA
-c3RhdGVfY2hhbmdlcwIAAABrd3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMP
-AAAAU2NyaXB0IChQeXRob24pcxUAAABQYWNraW5nTGlzdF9hZnRlckVkaXQBAAAAcwQAAAAPAR8B
-KAEAAABzFQAAAFBhY2tpbmdMaXN0X2FmdGVyRWRpdCgBAAAAcxUAAABQYWNraW5nTGlzdF9hZnRl
-ckVkaXQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

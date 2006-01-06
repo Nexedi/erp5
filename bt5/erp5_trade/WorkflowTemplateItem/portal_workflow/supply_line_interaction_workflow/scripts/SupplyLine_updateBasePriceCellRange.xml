@@ -75,18 +75,9 @@ supply_line.updateCellRange(base_id=base_id)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAEAAAAQwAA
-AHNIAAAAdAAAfAAAZAEAgwIAfQIAZAIAfQMAZAMAfQQAdAAAfAIAZAQAgwIAfAMAgwEAAXQAAHwC
-AGQFAIMCAGQGAHwEAIMAAQFkAABTKAcAAABOcwYAAABvYmplY3RzCgAAAGJhc2VfcHJpY2VzBAAA
-AHBhdGhzFwAAAHVwZGF0ZVF1YW50aXR5UHJlZGljYXRlcw8AAAB1cGRhdGVDZWxsUmFuZ2VzBwAA
-AGJhc2VfaWQoBQAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzCwAAAHN1cHBseV9s
-aW5lcw8AAABwcmljZV9wYXJhbWV0ZXJzBwAAAGJhc2VfaWQoBQAAAHMMAAAAc3RhdGVfY2hhbmdl
-cwkAAABfZ2V0YXR0cl9zCwAAAHN1cHBseV9saW5lcw8AAABwcmljZV9wYXJhbWV0ZXJzBwAAAGJh
-c2VfaWQoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzIwAAAFN1cHBseUxpbmVfdXBkYXRl
-QmFzZVByaWNlQ2VsbFJhbmdlAQAAAHMIAAAADwEGAQkBEwEoAQAAAHMjAAAAU3VwcGx5TGluZV91
-cGRhdGVCYXNlUHJpY2VDZWxsUmFuZ2UoAQAAAHMjAAAAU3VwcGx5TGluZV91cGRhdGVCYXNlUHJp
-Y2VDZWxsUmFuZ2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAA
-AHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

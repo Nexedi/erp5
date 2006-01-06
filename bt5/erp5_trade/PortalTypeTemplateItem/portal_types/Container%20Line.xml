@@ -43,9 +43,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Container Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -91,9 +89,7 @@
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Container Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

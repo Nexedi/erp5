@@ -43,9 +43,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Sale Supply</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

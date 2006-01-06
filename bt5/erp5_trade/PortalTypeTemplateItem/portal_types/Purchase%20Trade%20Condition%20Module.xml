@@ -41,9 +41,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Purchase Trade Condition</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

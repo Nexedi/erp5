@@ -84,17 +84,9 @@ packing_list.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAQAAAAFAAAAQwAA
-AHNhAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAAXQAAHQAAHwCAGQDAIMCAGQEAIMC
-AHwCAHQDAGQFAIMDAAF0AAB0AAB8AgBkBgCDAgCDAABkBwCDAgCDAAABZAAAUygIAAAATnMGAAAA
-b2JqZWN0cxEAAAB1cGRhdGVBcHBsaWVkUnVsZXMRAAAAcG9ydGFsX3NpbXVsYXRpb25zDQAAAHNv
-bHZlRGVsaXZlcnlzDAAAAENvcHlUb1RhcmdldHMIAAAAYWN0aXZhdGVzFAAAAHVwZGF0ZUNhdXNh
-bGl0eVN0YXRlKAQAAABzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwwAAABwYWNraW5n
-X2xpc3RzBAAAAE5vbmUoBAAAAHMMAAAAc3RhdGVfY2hhbmdlcwkAAABfZ2V0YXR0cl9zDAAAAHBh
-Y2tpbmdfbGlzdHMEAAAATm9uZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMaAAAAUGFj
-a2luZ0xpc3RfYWNjZXB0RGVjaXNpb24BAAAAcwYAAAASAxMGIgQoAQAAAHMaAAAAUGFja2luZ0xp
-c3RfYWNjZXB0RGVjaXNpb24oAQAAAHMaAAAAUGFja2luZ0xpc3RfYWNjZXB0RGVjaXNpb24oAAAA
-ACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

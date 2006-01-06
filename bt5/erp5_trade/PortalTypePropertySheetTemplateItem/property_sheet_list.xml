@@ -1,0 +1,12 @@
+<property_sheet_list>
+ <portal_type id="Sale Order">
+  <item>PaymentCondition</item>
+ </portal_type>
+ <portal_type id="Sale Trade Condition">
+  <item>PaymentCondition</item>
+  <item>Comment</item>
+ </portal_type>
+ <portal_type id="Supply Cell">
+  <item>Reference</item>
+ </portal_type>
+</property_sheet_list>

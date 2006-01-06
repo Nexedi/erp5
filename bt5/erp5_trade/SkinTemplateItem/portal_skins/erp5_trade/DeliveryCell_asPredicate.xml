@@ -72,15 +72,9 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAEAAAATwAA
-AHMdAAAAdAAAdAEAZAEAgwIAZAIAZAMAZgEAgwABU2QAAFMoBAAAAE5zEQAAAGdlbmVyYXRlUHJl
-ZGljYXRlcywAAABtdWx0aW1lbWJlcnNoaXBfY3JpdGVyaW9uX2Jhc2VfY2F0ZWdvcnlfbGlzdHMQ
-AAAAaW5kdXN0cmlhbF9waGFzZSgCAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQoBAAAAHME
-AAAAYXJnc3MCAAAAa3dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNj
-cmlwdCAoUHl0aG9uKXMYAAAARGVsaXZlcnlDZWxsX2FzUHJlZGljYXRlAQAAAHMCAAAADwEoAQAA
-AHMYAAAARGVsaXZlcnlDZWxsX2FzUHJlZGljYXRlKAEAAABzGAAAAERlbGl2ZXJ5Q2VsbF9hc1By
-ZWRpY2F0ZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAA
-AAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

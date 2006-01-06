@@ -1,0 +1,97 @@
+<allowed_content_type_list>
+ <portal_type id="Container">
+  <item>Container Line</item>
+  <item>Container</item>
+ </portal_type>
+ <portal_type id="Container Line">
+  <item>Container Cell</item>
+ </portal_type>
+ <portal_type id="Internal Packing List">
+  <item>Internal Packing List Line</item>
+ </portal_type>
+ <portal_type id="Internal Packing List Line">
+  <item>Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Internal Packing List Module">
+  <item>Internal Packing List</item>
+ </portal_type>
+ <portal_type id="Inventory">
+  <item>Inventory Line</item>
+ </portal_type>
+ <portal_type id="Inventory Line">
+  <item>Inventory Cell</item>
+ </portal_type>
+ <portal_type id="Inventory Module">
+  <item>Inventory</item>
+ </portal_type>
+ <portal_type id="Purchase Order">
+  <item>Payment Condition</item>
+  <item>Purchase Order Line</item>
+  <item>Discount</item>
+ </portal_type>
+ <portal_type id="Purchase Order Line">
+  <item>Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Purchase Order Module">
+  <item>Purchase Order</item>
+ </portal_type>
+ <portal_type id="Purchase Packing List">
+  <item>Purchase Packing List Line</item>
+ </portal_type>
+ <portal_type id="Purchase Packing List Line">
+  <item>Purchase Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Purchase Packing List Module">
+  <item>Purchase Packing List</item>
+ </portal_type>
+ <portal_type id="Purchase Supply">
+  <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Purchase Supply Module">
+  <item>Purchase Supply</item>
+ </portal_type>
+ <portal_type id="Purchase Trade Condition">
+  <item>Payment Condition</item>
+  <item>Discount</item>
+ </portal_type>
+ <portal_type id="Purchase Trade Condition Module">
+  <item>Purchase Trade Condition</item>
+ </portal_type>
+ <portal_type id="Sale Order">
+  <item>Payment Condition</item>
+  <item>Sale Order Line</item>
+  <item>Discount</item>
+ </portal_type>
+ <portal_type id="Sale Order Line">
+  <item>Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Sale Order Module">
+  <item>Sale Order</item>
+ </portal_type>
+ <portal_type id="Sale Packing List">
+  <item>Sale Packing List Line</item>
+  <item>Container</item>
+ </portal_type>
+ <portal_type id="Sale Packing List Line">
+  <item>Sale Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Sale Packing List Module">
+  <item>Sale Packing List</item>
+ </portal_type>
+ <portal_type id="Sale Supply">
+  <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Sale Supply Module">
+  <item>Sale Supply</item>
+ </portal_type>
+ <portal_type id="Sale Trade Condition">
+  <item>Payment Condition</item>
+  <item>Discount</item>
+ </portal_type>
+ <portal_type id="Sale Trade Condition Module">
+  <item>Sale Trade Condition</item>
+ </portal_type>
+ <portal_type id="Supply Line">
+  <item>Supply Cell</item>
+ </portal_type>
+</allowed_content_type_list>

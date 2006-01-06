@@ -74,17 +74,9 @@ for simulation_movement in packing_list_content.getDeliveryRelatedValueList():\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAAHAAAASwAA
-AHM9AAAAdAAAfQIAeDAAdAIAdAMAfAIAZAEAgwIAgwAAgwEARF0WAH0FAHQDAHwFAGQCAIMCAIMA
-AAFxHwBXZAAAUygDAAAATnMbAAAAZ2V0RGVsaXZlcnlSZWxhdGVkVmFsdWVMaXN0cw0AAAByZWlu
-ZGV4T2JqZWN0KAUAAABzBwAAAGNvbnRleHRzFAAAAHBhY2tpbmdfbGlzdF9jb250ZW50cwkAAABf
-Z2V0aXRlcl9zCQAAAF9nZXRhdHRyX3MTAAAAc2ltdWxhdGlvbl9tb3ZlbWVudCgGAAAAcwIAAABr
-d3MHAAAAY29udGV4dHMUAAAAcGFja2luZ19saXN0X2NvbnRlbnRzCQAAAF9nZXRpdGVyX3MJAAAA
-X2dldGF0dHJfcxMAAABzaW11bGF0aW9uX21vdmVtZW50KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
-eXRob24pcyIAAABQYWNraW5nTGlzdENvbnRlbnRfdXBkYXRlQWZ0ZXJFZGl0AQAAAHMGAAAABgIZ
-AAkBKAEAAABzIgAAAFBhY2tpbmdMaXN0Q29udGVudF91cGRhdGVBZnRlckVkaXQoAQAAAHMiAAAA
-UGFja2luZ0xpc3RDb250ZW50X3VwZGF0ZUFmdGVyRWRpdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAo
-UHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

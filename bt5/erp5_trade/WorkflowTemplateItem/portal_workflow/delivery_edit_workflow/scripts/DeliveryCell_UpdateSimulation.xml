@@ -72,14 +72,9 @@ sci[\'object\'].getParent().edit()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAGAAAAQwAA
-AHMpAAAAdAAAdAAAdAEAfAAAZAEAgwIAZAIAgwIAgwAAZAMAgwIAgwAAAWQAAFMoBAAAAE5zBgAA
-AG9iamVjdHMJAAAAZ2V0UGFyZW50cwQAAABlZGl0KAMAAABzCQAAAF9nZXRhdHRyX3MJAAAAX2dl
-dGl0ZW1fcwMAAABzY2koAwAAAHMDAAAAc2NpcwkAAABfZ2V0YXR0cl9zCQAAAF9nZXRpdGVtXygA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMdAAAARGVsaXZlcnlDZWxsX1VwZGF0ZVNpbXVs
-YXRpb24BAAAAcwIAAAAJASgBAAAAcx0AAABEZWxpdmVyeUNlbGxfVXBkYXRlU2ltdWxhdGlvbigB
-AAAAcx0AAABEZWxpdmVyeUNlbGxfVXBkYXRlU2ltdWxhdGlvbigAAAAAKAAAAABzDwAAAFNjcmlw
-dCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

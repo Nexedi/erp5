@@ -1,0 +1,37 @@
+Container Line | Container Cell
+Container | Container
+Container | Container Line
+Internal Packing List Line | Delivery Cell
+Internal Packing List Module | Internal Packing List
+Internal Packing List | Internal Packing List Line
+Inventory Line | Inventory Cell
+Inventory Module | Inventory
+Inventory | Inventory Line
+Purchase Order Line | Delivery Cell
+Purchase Order Module | Purchase Order
+Purchase Order | Discount
+Purchase Order | Payment Condition
+Purchase Order | Purchase Order Line
+Purchase Packing List Line | Purchase Packing List Cell
+Purchase Packing List Module | Purchase Packing List
+Purchase Packing List | Purchase Packing List Line
+Purchase Supply Module | Purchase Supply
+Purchase Supply | Supply Line
+Purchase Trade Condition Module | Purchase Trade Condition
+Purchase Trade Condition | Discount
+Purchase Trade Condition | Payment Condition
+Sale Order Line | Delivery Cell
+Sale Order Module | Sale Order
+Sale Order | Discount
+Sale Order | Payment Condition
+Sale Order | Sale Order Line
+Sale Packing List Line | Sale Packing List Cell
+Sale Packing List Module | Sale Packing List
+Sale Packing List | Container
+Sale Packing List | Sale Packing List Line
+Sale Supply Module | Sale Supply
+Sale Supply | Supply Line
+Sale Trade Condition Module | Sale Trade Condition
+Sale Trade Condition | Discount
+Sale Trade Condition | Payment Condition
+Supply Line | Supply Cell
