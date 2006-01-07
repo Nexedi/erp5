@@ -71,7 +71,17 @@
 <body>\n
 <div metal:fill-slot="main" i18n:domain="ui">\n
 <div class="Desktop">\n
-<h1 class="Desktop" i18n:translate="">Log in</h1>\n
+<span tal:condition="python: request.get(\'came_from\', None) is not None">\n
+  <h1 class="Desktop" i18n:translate="">You don\'t have enough permissions to access this page</h1>\n
+     <span i18n:translate=""> You can log in with another user name or \n
+     </span>\n
+     <a href="javascript:history.back();" \n
+          i18n:translate="">go back.</a>\n
+  <br/>  <br/>\n
+</span>\n
+<span tal:condition="python: request.get(\'came_from\', None) is None">\n
+  <h1 class="Desktop" i18n:translate="">Log in</h1>\n
+</span>\n
 <!-- <form action="" method="post"\n
       tal:attributes="action string:${here/portal_url}/logged_in"\n
 >\n
