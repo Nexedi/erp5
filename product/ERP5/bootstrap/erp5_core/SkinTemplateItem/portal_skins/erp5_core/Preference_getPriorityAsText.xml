@@ -66,7 +66,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getPriority() == 1 :\n
+            <value> <string># managers can edit the priority field in Preference_view, so they need to have the value\n
+if context.getPortalObject().portal_membership.checkPermission("Manage portal", context) :\n
+  #getAuthenticatedMember().hasRole(context, \'Manager\') :\n
+  return context.getPriority()\n
+\n
+# others just want a readable text.\n
+if context.getPriority() == 1 :\n
   return "Site"\n
 elif context.getPriority() == 2 : \n
   return "Group"\n
