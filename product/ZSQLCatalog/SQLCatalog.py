@@ -1311,7 +1311,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       value = sql_quote(str(value))
     return value
 
-  def buildSQLQuery(self, query_table='catalog', REQUEST=None, **kw):
+  def buildSQLQuery(self, query_table='catalog', REQUEST=None,
+                          ignore_empty_string=1,**kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
     # Get search arguments:
     if REQUEST is None and (kw is None or kw == {}):
@@ -1512,7 +1513,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             if type(value) is type('') or isinstance(value, DateTime):
               # For security.
               value = self._quoteSQLString(value)
-              if value != '':
+              if value != '' or not ignore_empty_string:
                 # we consider empty string as Non Significant
                 if value == '=':
                   # But we consider the sign = as empty string
@@ -1541,7 +1542,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               # We have to create an OR from tuple or list
               query_item = []
               for value_item in value:
-                if value_item != '':
+                if value_item != '' or not ignore_empty_string:
                   # we consider empty string as Non Significant
                   # also for lists
                   if type(value_item) in (type(1), type(1.0),
