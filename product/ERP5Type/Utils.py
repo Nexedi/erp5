@@ -1359,7 +1359,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
                 )
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
             setattr(property_holder, accessor_name, base_accessor)
-            property_holder.security.declareProtected( read_permission, accessor_name )
+            property_holder.security.declareProtected( write_permission, accessor_name )
           accessor_name = 'baseSet' + UpperCase(id)
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
             setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
