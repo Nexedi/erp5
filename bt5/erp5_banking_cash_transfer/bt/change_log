@@ -1,3 +1,6 @@
+2006-01-09 aurel
+* Define group on portal type Cash Transfer and Cash Transfer Line
+
 2005-12-13 Kevin
 * Change Cash Transfer Product Meta Type to "BAOBAB Cash Delivery".
 * Change reference to getPortalReferenceCurrencyID portal method. Use Baobab_getPortalReferenceCurrencyID instead.
