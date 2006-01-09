@@ -141,6 +141,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getSubVariationText</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>isAccountable</string> </key>
                                 <value>
                                   <dictionary/>
@@ -186,6 +192,7 @@
 <string>isAccountable</string>
 <string>getPortalType</string>
 <string>getVariationText</string>
+<string>getSubVariationText</string>
                           </list>
                         </value>
                     </item>
@@ -222,7 +229,8 @@ getStartDate\r\n
 getStopDate\r\n
 isAccountable\r\n
 getPortalType\r\n
-getVariationText</string> </value>
+getVariationText\r\n
+getSubVariationText</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -293,6 +301,7 @@ WHERE\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
+                                           , getSubVariationText[loop_item]\n
                                            ])">\n
         </dtml-if>\n
         <dtml-if "getBaobabSourceUid[loop_item]">\n
@@ -312,6 +321,7 @@ WHERE\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
+                                           , getSubVariationText[loop_item]\n
                                            ])">\n
         </dtml-if>\n
       </dtml-if>\n
@@ -339,7 +349,8 @@ VALUES\n
   <dtml-sqlvar expr="row_item[12]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
@@ -414,6 +425,7 @@ WHERE\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
+                                           , getSubVariationText[loop_item]\n
                                            ])">\n
         </dtml-if>\n
         <dtml-if "getBaobabSourceUid[loop_item]">\n
@@ -433,6 +445,7 @@ WHERE\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
+                                           , getSubVariationText[loop_item]\n
                                            ])">\n
         </dtml-if>\n
       </dtml-if>\n
@@ -460,7 +473,8 @@ VALUES\n
   <dtml-sqlvar expr="row_item[12]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n

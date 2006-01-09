@@ -1,3 +1,7 @@
+2006-01-09 aurel
+* Update z_catalog_stock_list
+* Remove base category function, group, site which are in erp5_core
+
 2005-12-19 Kevin
 * Update z_catalog_stock_list ZSQL method to follow Seb's changes.
 * Add Baobab_getPortalReferenceCurrencyID script to get the default currency.
