@@ -169,7 +169,6 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.caissier_principal = self.banking.newContent(id='caissier_principal', portal_type='Category', codification='CCP')
     self.controleur_caisse = self.banking.newContent(id='controleur_caisse', portal_type='Category', codification='CCT')
     self.void_function = self.banking.newContent(id='void_function', portal_type='Category', codification='VOID')
-
     self.gestionnaire_caisse_courante = self.banking.newContent(id='gestionnaire_caisse_courante', portal_type='Category', codification='CCO')
     self.gestionnaire_caveau = self.banking.newContent(id='gestionnaire_caveau', portal_type='Category', codification='CCV')
     self.caissier_particulier = self.banking.newContent(id='caissier_particulier', portal_type='Category', codification='CGU')
@@ -205,7 +204,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     #     'user_login': [['Global Role'], 'organisation', 'function', 'group', 'site']
     #
     user_dict = {
-        'user_1' : [[], self.organisation, 'banking/caissier_principal', 'baobab', 'testsite']
+        'user_1' : [[], self.organisation, 'banking/gestionnaire_caisse_courante', 'baobab', 'testsite']
       , 'user_2' : [[], self.organisation, 'banking/controleur_caisse' , 'baobab', 'testsite']
       , 'user_3' : [[], self.organisation, 'banking/void_function'     , 'baobab', 'testsite']
       }
@@ -217,7 +216,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       pass
       # TODO: create local roles manually with PAS (don't know how to do yet).
     else:
-      self.cash_transfer_module.manage_addLocalGroupRoles('CCP_BAOBAB_TEST', ('Author',))
+      # The group local roles must be the one for gestionnaire_caisse_courante
+      self.cash_transfer_module.manage_addLocalGroupRoles('CCO_BAOBAB_TEST', ('Author',))
 
     # Create a Currency
     self.currency_module = self.getCurrencyModule()
@@ -365,7 +365,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     for variation in self.variation_list:
       cell = line.getCell('emission_letter/k', variation, 'cash_status/valid')
       cell.setQuantity(resource_quantity_dict[variation])
-#      cell.setResourceValue(resource_object)
+#       cell.setResourceValue(resource_object)
 #       cell.setDestinationValue(self.caisse_1)
 #       LOG("XXX set Resource Value >>>>>>",0, repr(resource_object))
 #       LOG("XXX set Destination Value >>>>>>",0, repr(self.caisse_1))
