@@ -10,7 +10,7 @@
 <tr class="location-bar">
   <td colspan="2" align="left">
   <div class="std-text">
-  <strong>Catalog record at <dtml-var expr="getpath(_.int(uid))"></strong>
+  <strong>Catalog record at <dtml-var expr="getpath(_.int(REQUEST.uid))"></strong>
   </div>
   </td>
 </tr>
@@ -41,7 +41,7 @@
   Catalog gives back during searches.</p><br />
   </td>
 </tr>
-<dtml-in expr="getMetadataForUid(_.int(uid)).items()">
+<dtml-in expr="getMetadataForUid(_.int(REQUEST.uid)).items()">
 <dtml-if name="sequence-start">
 <tr class="list-header">
   <td align="left" width="5%" bgcolor="#ffffff">&nbsp;</td>
@@ -77,7 +77,7 @@ Keyword or Text indexes, the results are returned as a tuple, and will
 show as '(one, two, three)', rather than in a more normal way.</p><br />
   </td>
 </tr>
-<dtml-in expr="getIndexDataForUid(_.int(uid)).items()">
+<dtml-in expr="getIndexDataForUid(_.int(REQUEST.uid)).items()">
 <dtml-if name="sequence-start">
 <tr class="list-header">
   <td align="left" width="5%" bgcolor="#ffffff">&nbsp;</td>
