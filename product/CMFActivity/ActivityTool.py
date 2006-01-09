@@ -407,7 +407,7 @@ class ActivityTool (Folder, UniqueObject):
                 '/manageLoadBalancing?manage_tabs_message=' +
                 urllib.quote("Node(s) successfully deleted."))
         
-    def process_timer(self, tick, interval):
+    def process_timer(self, tick, interval, prev="", next=""):
         """ 
         Call distribute() if we are the Distributing Node and call tic()
         with our node number.
