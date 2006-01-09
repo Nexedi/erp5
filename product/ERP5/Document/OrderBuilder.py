@@ -91,7 +91,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                     , PropertySheet.DeliveryBuilder
                     )
  
-  security.declareProtected(Permissions.ModifyPortalContent, 'build')
+  security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
             delivery_relative_url_list=None,**kw):
     """
