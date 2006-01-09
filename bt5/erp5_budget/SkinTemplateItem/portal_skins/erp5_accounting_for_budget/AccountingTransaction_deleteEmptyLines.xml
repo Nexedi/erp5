@@ -91,31 +91,13 @@ for line in transaction.searchFolder(portal_type=lines_portal_type) : \n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAARAAAAQwAA
-AHPYAAAAZAEAZAIAZAMAZAQAZAUAZAYAZgYAfQAAdAEAdAIAZAcAgwIAgwAAfQMAdAEAfAMAZAgA
-gwIAgwAAbwoAAWQJAIIBAG4BAAF4igB0BAB0AQB8AwBkCgCDAgBkCwB8AACDAAGDAQBEXWoAfQUA
-dAEAfAUAZAcAgwIAgwAAfQUAdAEAfAUAZAwAgwIAgwAAdAEAfAUAZA0AgwIAgwAAGH0GAHwGAGQO
-AGoCAG8jAAF0AQB8AwBkDwCDAgB0AQB8BQBkEACDAgCDAACDAQABcWYAAXFmAFdkAABTKBEAAABO
-cxsAAABBY2NvdW50aW5nIFRyYW5zYWN0aW9uIExpbmVzHQAAAFNhbGUgSW52b2ljZSBUcmFuc2Fj
-dGlvbiBMaW5lcyEAAABQdXJjaGFzZSBJbnZvaWNlIFRyYW5zYWN0aW9uIExpbmVzGgAAAFBheSBT
-aGVldCBUcmFuc2FjdGlvbiBMaW5lcxgAAABQYXltZW50IFRyYW5zYWN0aW9uIExpbmVzGAAAAEJh
-bGFuY2UgVHJhbnNhY3Rpb24gTGluZXMJAAAAZ2V0T2JqZWN0cwsAAABpc1NpbXVsYXRlZHNBAAAA
-VW5hYmxlIHRvIHJlbW92ZSBsaW5lcyB3aGVuIHRyYW5hc2N0aW9uIGlzIGludm9sdmVkIGluIHNp
-bXVsYXRpb25zDAAAAHNlYXJjaEZvbGRlcnMLAAAAcG9ydGFsX3R5cGVzDgAAAGdldFNvdXJjZURl
-Yml0cw8AAABnZXRTb3VyY2VDcmVkaXRpAAAAAHMNAAAAZGVsZXRlQ29udGVudHMFAAAAZ2V0SWQo
-BwAAAHMRAAAAbGluZXNfcG9ydGFsX3R5cGVzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMLAAAA
-dHJhbnNhY3Rpb25zCQAAAF9nZXRpdGVyX3MEAAAAbGluZXMHAAAAYmFsYW5jZSgHAAAAcxEAAABs
-aW5lc19wb3J0YWxfdHlwZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlv
-bnMJAAAAX2dldGl0ZXJfcwQAAABsaW5lcwcAAABiYWxhbmNlKAAAAAAoAAAAAHMpAAAAUHl0aG9u
-IFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzJgAAAEFjY291bnRpbmdUcmFuc2Fj
-dGlvbl9kZWxldGVFbXB0eUxpbmVzAQAAAHMUAAAAAAQYBxUCEAEKAh8ABgESASIBEAEoAQAAAHMm
-AAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uX2RlbGV0ZUVtcHR5TGluZXMoAQAAAHMmAAAAQWNjb3Vu
-dGluZ1RyYW5zYWN0aW9uX2RlbGV0ZUVtcHR5TGluZXMoAAAAACgAAAAAcykAAABQeXRob24gU2Ny
-aXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_deleteEmptyLines</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountingTransaction_deleteEmptyLines</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

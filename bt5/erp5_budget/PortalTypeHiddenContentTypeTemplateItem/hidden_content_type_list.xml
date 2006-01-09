@@ -1,0 +1,8 @@
+<hidden_content_type_list>
+ <portal_type id="Budget Line">
+  <item>Budget Cell</item>
+ </portal_type>
+ <portal_type id="Budget Module">
+  <item>Mapped Value</item>
+ </portal_type>
+</hidden_content_type_list>

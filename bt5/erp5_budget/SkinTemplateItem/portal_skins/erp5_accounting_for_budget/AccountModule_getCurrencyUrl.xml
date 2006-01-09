@@ -81,27 +81,13 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAwAAAAF
-AAAAQwAAAHOCAAAAZAEAawAAbAEAfQMAAXQCAHwBAGQCAIMCAIMAAH0FAHQCAHQFAGQDAIMCAHQG
-AHwFAGQEAIMCAIMBAH0IAHQCAHwIAGQFAIMCAIMAAH0JAGQGAH0KAGgAAARkBwBkCAADPH0LAHwJ
-AGQJABd8CgAXZAoAF3wDAHwLAIMBABdTZAAAUygLAAAATigBAAAAcwoAAABtYWtlX3F1ZXJ5cwkA
-AABnZXRQYXJhbXNzEgAAAHJlc3RyaWN0ZWRUcmF2ZXJzZXMkAAAAYWNjb3VudGluZ190cmFuc2Fj
-dGlvbl9saW5lX2N1cnJlbmN5cwwAAABhYnNvbHV0ZV91cmxzBAAAAHZpZXdzBQAAAHJlc2V0cwEA
-AAAxcwEAAAAvcwEAAAA/KAsAAABzBwAAAFpUVXRpbHNzCgAAAG1ha2VfcXVlcnlzCQAAAF9nZXRh
-dHRyX3MJAAAAc2VsZWN0aW9ucwYAAABwYXJhbXNzBwAAAGNvbnRleHRzCQAAAF9nZXRpdGVtX3MG
-AAAAb2JqZWN0cwMAAAB1cmxzBgAAAG1ldGhvZHMCAAAAa3coDAAAAHMFAAAAYnJhaW5zCQAAAHNl
-bGVjdGlvbnMHAAAAWlRVdGlsc3MKAAAAbWFrZV9xdWVyeXMJAAAAX2dldGF0dHJfcwYAAABwYXJh
-bXNzBwAAAGNvbnRleHRzCQAAAF9nZXRpdGVtX3MGAAAAb2JqZWN0cwMAAAB1cmxzBgAAAG1ldGhv
-ZHMCAAAAa3coAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24g
-Q29udGV4dHMcAAAAQWNjb3VudE1vZHVsZV9nZXRDdXJyZW5jeVVybAEAAABzDAAAAA0CEgEeARIB
-BgEPBCgCAAAAcwQAAABOb25lcxwAAABBY2NvdW50TW9kdWxlX2dldEN1cnJlbmN5VXJsKAIAAABz
-BAAAAE5vbmVzHAAAAEFjY291bnRNb2R1bGVfZ2V0Q3VycmVuY3lVcmwoAAAAACgAAAAAcykAAABQ
-eXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAA
-cwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getCurrencyUrl</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getCurrencyUrl</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -196,9 +196,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Budget</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -230,9 +228,7 @@
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Mapped Value</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

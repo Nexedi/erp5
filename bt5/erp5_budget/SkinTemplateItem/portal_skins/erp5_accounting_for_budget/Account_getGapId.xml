@@ -84,27 +84,13 @@ return item_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAoAAAAMAAAAQwAA
-AHO+AAAAdAAAdAEAZAEAgwIAgwAAfQIAeF8AdAMAdAAAdAEAZAIAgwIAgwAAgwEARF1FAH0EAHwC
-AHQAAHwEAGQDAIMCAIMAAGoGAG8UAAF0AAB8BABkBACDAgCDAABTbgEAAXQAAHQBAGQFAIMCAIMA
-AH0FAHErAFd0AAB0AAB0AQBkBgCDAgBkBwCDAgB8BQCDAQB9BgB0AAB8BgBkCACDAgBkCQBkCgBk
-CwB0BwBkDAB0CACDAAN9CQB8CQBTZAAAUygNAAAATnMVAAAAZ2V0UG9ydGFsRGVmYXVsdEdhcElk
-cw8AAABnZXRHYXBWYWx1ZUxpc3RzBwAAAGdldFBhdGhzBQAAAGdldElkcxcAAABnZXRQb3J0YWxE
-ZWZhdWx0R2FwUm9vdHMRAAAAcG9ydGFsX2NhdGVnb3JpZXNzDwAAAHJlc29sdmVDYXRlZ29yeXMY
-AAAAZ2V0Q2F0ZWdvcnlDaGlsZEl0ZW1MaXN0cwQAAABiYXNlaQAAAABzDgAAAGRpc3BsYXlfbWV0
-aG9kcwsAAABzb3J0X21ldGhvZCgKAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCwAAAGN1
-cnJlbnRfZ2FwcwkAAABfZ2V0aXRlcl9zAwAAAGdhcHMIAAAAZ2FwX3Jvb3RzAwAAAG9ianMHAAAA
-ZGlzcGxheXMEAAAAc29ydHMJAAAAaXRlbV9saXN0KAoAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29u
-dGV4dHMLAAAAY3VycmVudF9nYXBzCQAAAF9nZXRpdGVyX3MDAAAAZ2FwcwgAAABnYXBfcm9vdHMD
-AAAAb2JqcwcAAABkaXNwbGF5cwQAAABzb3J0cwkAAABpdGVtX2xpc3QoAAAAACgAAAAAcykAAABQ
-eXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMQAAAAQWNjb3VudF9nZXRH
-YXBJZAEAAABzEgAAAAADEgIZAAYBGQEUAxYBHgEkASgBAAAAcxAAAABBY2NvdW50X2dldEdhcElk
-KAEAAABzEAAAAEFjY291bnRfZ2V0R2FwSWQoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdp
-dGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Account_getGapId</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Account_getGapId</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

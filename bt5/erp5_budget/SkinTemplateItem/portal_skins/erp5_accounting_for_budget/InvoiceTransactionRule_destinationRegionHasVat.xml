@@ -78,25 +78,13 @@ return 0\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAIAAAAQwAA
-AHOWAAAAdAAAdAEAZAEAgwIAgwAAfQIAdAMAfQQAfAIAdAMAagkAbxYAAXQAAHwCAGQCAIMCAIMA
-AGQDAGoCAG8WAAF0AAB8AgBkBACDAgCDAAB9BABuAQABfAQAdAMAaggAcCIAAXQAAHQBAGQFAIMC
-AIMAAHQAAHQBAGQGAIMCAIMAAGoCAG8IAAFkBwBTbgEAAWQIAFNkAABTKAkAAABOcxoAAABnZXRE
-ZWZhdWx0RGVzdGluYXRpb25WYWx1ZXMNAAAAZ2V0UG9ydGFsVHlwZXMMAAAAT3JnYW5pc2F0aW9u
-cwoAAABnZXRWYXRDb2Rlcw8AAABnZXRTb3VyY2VSZWdpb25zFAAAAGdldERlc3RpbmF0aW9uUmVn
-aW9uaQEAAABpAAAAACgFAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCwAAAGRlc3RpbmF0
-aW9ucwQAAABOb25lcwgAAAB2YXRfY29kZSgFAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRz
-CwAAAGRlc3RpbmF0aW9ucwQAAABOb25lcwgAAAB2YXRfY29kZSgAAAAAKAAAAABzKQAAAFB5dGhv
-biBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cy4AAABJbnZvaWNlVHJhbnNhY3Rp
-b25SdWxlX2Rlc3RpbmF0aW9uUmVnaW9uSGFzVmF0AQAAAHMMAAAAEgEGASYBFgIyAQgBKAEAAABz
-LgAAAEludm9pY2VUcmFuc2FjdGlvblJ1bGVfZGVzdGluYXRpb25SZWdpb25IYXNWYXQoAQAAAHMu
-AAAASW52b2ljZVRyYW5zYWN0aW9uUnVsZV9kZXN0aW5hdGlvblJlZ2lvbkhhc1ZhdCgAAAAAKAAA
-AABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9k
-dWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/InvoiceTransactionRule_destinationRegionHasVat</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/InvoiceTransactionRule_destinationRegionHasVat</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

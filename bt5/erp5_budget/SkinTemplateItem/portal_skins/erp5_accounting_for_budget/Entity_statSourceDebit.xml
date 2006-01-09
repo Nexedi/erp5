@@ -71,19 +71,13 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAGAAAASwAA
-AHMgAAAAdAAAdAEAdAIAZAEAgwIAZAIAZAMAfAAAjQEBU2QAAFMoBAAAAE5zGAAAAEVudGl0eV9z
-dGF0U291cmNlQmFsYW5jZXMKAAAAb21pdF9pbnB1dGkBAAAAKAQAAABzBwAAAF9hcHBseV9zCQAA
-AF9nZXRhdHRyX3MHAAAAY29udGV4dHMCAAAAa3coBAAAAHMCAAAAa3dzBwAAAF9hcHBseV9zCQAA
-AF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91
-dCBBY3F1aXNpdGlvbiBDb250ZXh0cxYAAABFbnRpdHlfc3RhdFNvdXJjZURlYml0AQAAAHMAAAAA
-KAEAAABzFgAAAEVudGl0eV9zdGF0U291cmNlRGViaXQoAQAAAHMWAAAARW50aXR5X3N0YXRTb3Vy
-Y2VEZWJpdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBD
-b250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_statSourceDebit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Entity_statSourceDebit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -87,30 +87,13 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAA4AAAAL
-AAAASwAAAHPEAAAAZAEAawAAbAEAfQQAAXQCAHwBAGQCAIMCAIMAAH0GAHQCAHwBAGQDAIMCAIMA
-AH0HAHQCAHwAAGQEAIMCAIMAAH0IAHwIAHQIAGoIAG8IAAF0CABTbgEAAXQCAHwIAGQFAIMCAIMA
-AH0KAHwKAHQIAGoIAG8IAAF0CABTbgEAAXQCAHwKAGQGAIMCAIMAAH0LAGQHAH0MAGgAAARkCABk
-CQADPH0NAHwLAGQKABd8DAAXZAsAF3wEAHwNAIMBABdTZAAAUygMAAAATigBAAAAcwoAAABtYWtl
-X3F1ZXJ5cwgAAABnZXRJbmRleHMHAAAAZ2V0TmFtZXMJAAAAZ2V0T2JqZWN0cxoAAABnZXREZXN0
-aW5hdGlvblNlY3Rpb25WYWx1ZXMMAAAAYWJzb2x1dGVfdXJscyQAAABFbnRpdHlfdmlld0FjY291
-bnRpbmdUcmFuc2FjdGlvbkxpc3RzBQAAAHJlc2V0cwEAAAAxcwEAAAAvcwEAAAA/KA0AAABzBwAA
-AFpUVXRpbHNzCgAAAG1ha2VfcXVlcnlzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwUAAABp
-bmRleHMEAAAAbmFtZXMFAAAAYnJhaW5zBgAAAG9iamVjdHMEAAAATm9uZXMTAAAAZGVzdGluYXRp
-b25fc2VjdGlvbnMDAAAAdXJscwYAAABtZXRob2RzAgAAAGt3KA4AAABzBQAAAGJyYWlucwkAAABz
-ZWxlY3Rpb25zAwAAAGt3ZHMHAAAAWlRVdGlsc3MKAAAAbWFrZV9xdWVyeXMJAAAAX2dldGF0dHJf
-cwUAAABpbmRleHMEAAAAbmFtZXMGAAAAb2JqZWN0cwQAAABOb25lcxMAAABkZXN0aW5hdGlvbl9z
-ZWN0aW9ucwMAAAB1cmxzBgAAAG1ldGhvZHMCAAAAa3coAAAAACgAAAAAcykAAABQeXRob24gU2Ny
-aXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHM0AAAAQWNjb3VudGluZ1RyYW5zYWN0aW9u
-TW9kdWxlX2dldERlc3RpbmF0aW9uU2VjdGlvblVybAEAAABzGAAAAA0CEgESARIBDQEIARIBDQEI
-ARIBBgEPBCgCAAAAcwQAAABOb25lczQAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfZ2V0
-RGVzdGluYXRpb25TZWN0aW9uVXJsKAIAAABzBAAAAE5vbmVzNAAAAEFjY291bnRpbmdUcmFuc2Fj
-dGlvbk1vZHVsZV9nZXREZXN0aW5hdGlvblNlY3Rpb25VcmwoAAAAACgAAAAAcykAAABQeXRob24g
-U2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_getDestinationSectionUrl</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountingTransactionModule_getDestinationSectionUrl</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -92,29 +92,9 @@ if len(resources_keys.keys()) == 1 :\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAoAAAAMAAAAQwAA
-AHPtAAAAZAEAhAAAfQAAdAEAfQIAdAMAdAMAfAIAZAIAgwIAgwAAZAMAgwIAgwAAAWgAAH0EAHhc
-AHQFAHQDAHwCAGQEAIMCAIMAAIMBAERdQgB9BgB0AwB8BgBkBQCDAgCDAABkBgBqAwBvBwABcUoA
-bgEAAWQHAHQHAHwEAIMBAHQDAHwGAGQIAIMCAIMAADxxSgBXfAAAZAkAfAQAFoMBAAF0CAB0AwB8
-BABkCgCDAgCDAACDAQBkBwBqAgBvLAABdAMAfAIAZAsAgwIAdAkAdAMAfAQAZAoAgwIAgwAAZAwA
-gwIAgwEAAW4BAAFkAABTKA0AAABOYwEAAAADAAAAAwAAAEMAAABzFgAAAHQAAHQBAGQBAIMCAGQC
-AHwAAIMCAFMoAwAAAE5zAwAAAGxvZ3MrAAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9wb3N0RGVs
-aXZlcnlCdWlsZGluZygDAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAwAAAG1zZygDAAAA
-cwMAAABtc2dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzKQAAAFB5dGhvbiBT
-Y3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwoAAAA8bGFtYmRhLjk+BgAAAHMAAAAA
-cwgAAABhY3RpdmF0ZXMEAAAAZWRpdHMMAAAAb2JqZWN0VmFsdWVzcw0AAABnZXRQb3J0YWxUeXBl
-cx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZWkBAAAAcwsAAABnZXRSZXNvdXJjZXMO
-AAAAcmVzb3VyY2VzID0gJXNzBAAAAGtleXNzCwAAAHNldFJlc291cmNlaQAAAAAoCgAAAHMDAAAA
-TE9HcwcAAABjb250ZXh0cwwAAABzYWxlX2ludm9pY2VzCQAAAF9nZXRhdHRyX3MOAAAAcmVzb3Vy
-Y2VzX2tleXNzCQAAAF9nZXRpdGVyX3MEAAAAbGluZXMHAAAAX3dyaXRlX3MDAAAAbGVucwkAAABf
-Z2V0aXRlbV8oCgAAAHMDAAAATE9HcwcAAABjb250ZXh0cwwAAABzYWxlX2ludm9pY2VzCQAAAF9n
-ZXRhdHRyX3MOAAAAcmVzb3VyY2VzX2tleXNzCQAAAF9nZXRpdGVyX3MEAAAAbGluZXMHAAAAX3dy
-aXRlX3MDAAAAbGVucwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdp
-dGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMlAAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9wb3N0
-R2VuZXJhdGlvbgEAAABzFgAAAAAFCQEMAxYFBgEZAAYBIAEgAQ4CIgEoAQAAAHMlAAAAU2FsZUlu
-dm9pY2VUcmFuc2FjdGlvbl9wb3N0R2VuZXJhdGlvbigBAAAAcyUAAABTYWxlSW52b2ljZVRyYW5z
-YWN0aW9uX3Bvc3RHZW5lcmF0aW9uKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0
-IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -124,7 +104,7 @@ IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/SaleInvoiceTransaction_postGeneration</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/SaleInvoiceTransaction_postGeneration</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

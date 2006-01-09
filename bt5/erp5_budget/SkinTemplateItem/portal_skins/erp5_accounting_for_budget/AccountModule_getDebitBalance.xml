@@ -77,21 +77,13 @@ if total > 0.0:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAcAAAAG
-AAAASwAAAHM3AAAAdAAAdAEAdAIAZAEAgwIAfAAAfAEAfAIAjQMAfQYAfAYAZAIAagQAbwgAAXwG
-AFNuAQABZAAAUygDAAAATnMYAAAAQWNjb3VudE1vZHVsZV9nZXRCYWxhbmNlZgMwLjAoBwAAAHMH
-AAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwUAAABicmFpbnMJAAAAc2VsZWN0
-aW9ucwIAAABrd3MFAAAAdG90YWwoBwAAAHMFAAAAYnJhaW5zCQAAAHNlbGVjdGlvbnMCAAAAa3dz
-BwAAAF9hcHBseV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAdG90YWwoAAAAACgAAAAA
-cykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMdAAAAQWNjb3Vu
-dE1vZHVsZV9nZXREZWJpdEJhbGFuY2UBAAAAcwQAAAAeAQ0BKAIAAABzBAAAAE5vbmVzHQAAAEFj
-Y291bnRNb2R1bGVfZ2V0RGViaXRCYWxhbmNlKAIAAABzBAAAAE5vbmVzHQAAAEFjY291bnRNb2R1
-bGVfZ2V0RGViaXRCYWxhbmNlKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFj
-cXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getDebitBalance</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getDebitBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

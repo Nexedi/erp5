@@ -44,11 +44,7 @@
         <item>
             <key> <string>base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>financial_section</string>
-                <string>function</string>
-                <string>group</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

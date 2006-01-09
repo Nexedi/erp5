@@ -91,26 +91,13 @@ transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAKAAAAQwAA
-AHOuAAAAZAAAU3QAAH0BAHQCAHwBAGQBAIMCAGQCAGQDAGQEAGQFAGQGAGQHAGQIAGQJAIMABAF0
-AgB8AQBkAQCDAgBkAgBkAwBkBABkCgBkBgBkCwBkCABkCQCDAAQBdAIAfAEAZAEAgwIAZAIAZAMA
-ZAQAZAwAZAYAZA0AZAgAZAkAgwAEAXQCAHwBAGQBAIMCAGQCAGQDAGQEAGQOAGQGAGQPAGQIAGQJ
-AIMABAFkAABTKBAAAABOcwoAAABuZXdDb250ZW50cwsAAABwb3J0YWxfdHlwZXMhAAAAUHVyY2hh
-c2UgSW52b2ljZSBUcmFuc2FjdGlvbiBMaW5lcwYAAABzb3VyY2VzGwAAAGFjY291bnQvc2Vydmlj
-ZXNfZXh0ZXJpZXVyc3MCAAAAaWRzBwAAAGV4cGVuc2VzEQAAAGltbWVkaWF0ZV9yZWluZGV4aQEA
-AABzGQAAAGFjY291bnQvZGV0dGVfZm91cm5pc3NldXJzBwAAAHBheWFibGVzGQAAAGFjY291bnQv
-dHZhX2NvbGxlY3RlZV8xOTZzDQAAAGNvbGxlY3RlZF92YXRzGwAAAGFjY291bnQvdHZhX3JlY3Vw
-ZXJhYmxlXzE5NnMOAAAAcmVmdW5kYWJsZV92YXQoAwAAAHMHAAAAY29udGV4dHMLAAAAdHJhbnNh
-Y3Rpb25zCQAAAF9nZXRhdHRyXygDAAAAcwcAAABjb250ZXh0cwsAAAB0cmFuc2FjdGlvbnMJAAAA
-X2dldGF0dHJfKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9u
-IENvbnRleHRzHwAAAFB1cmNoYXNlSW52b2ljZVRyYW5zYWN0aW9uX2luaXQBAAAAcwoAAAAEAwkC
-KAQoBCgEKAEAAABzHwAAAFB1cmNoYXNlSW52b2ljZVRyYW5zYWN0aW9uX2luaXQoAQAAAHMfAAAA
-UHVyY2hhc2VJbnZvaWNlVHJhbnNhY3Rpb25faW5pdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3Jp
-cHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/PurchaseInvoiceTransaction_init</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/PurchaseInvoiceTransaction_init</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

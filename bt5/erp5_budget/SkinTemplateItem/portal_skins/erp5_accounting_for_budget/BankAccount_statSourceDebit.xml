@@ -73,21 +73,13 @@ return float(\'%.02f\' % debit)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAFAAAASwAA
-AHM6AAAAZAEAdAAAfAAAgwEAZAIAPHQCAHQDAHQEAGQDAIMCAHwAAI0BAH0FAHQGAGQEAHwFABaD
-AQBTZAAAUygFAAAATmkBAAAAcwoAAABvbWl0X2lucHV0cx0AAABCYW5rQWNjb3VudF9zdGF0U291
-cmNlQmFsYW5jZXMFAAAAJS4wMmYoBwAAAHMHAAAAX3dyaXRlX3MCAAAAa3dzBwAAAF9hcHBseV9z
-CQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAZGViaXRzBQAAAGZsb2F0KAcAAABzAgAAAGt3
-cwcAAABfd3JpdGVfcwcAAABfYXBwbHlfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBQAAAGRl
-Yml0cwUAAABmbG9hdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNp
-dGlvbiBDb250ZXh0cxsAAABCYW5rQWNjb3VudF9zdGF0U291cmNlRGViaXQBAAAAcwQAAAAQARgB
-KAEAAABzGwAAAEJhbmtBY2NvdW50X3N0YXRTb3VyY2VEZWJpdCgBAAAAcxsAAABCYW5rQWNjb3Vu
-dF9zdGF0U291cmNlRGViaXQoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNx
-dWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/BankAccount_statSourceDebit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/BankAccount_statSourceDebit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

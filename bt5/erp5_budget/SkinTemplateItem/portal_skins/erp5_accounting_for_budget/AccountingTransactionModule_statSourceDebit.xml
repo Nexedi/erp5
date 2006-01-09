@@ -87,31 +87,13 @@ return float(\'%.02f\' % (row.quantity and - row.quantity or 0.0))\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAsAAAATAAAA
-SwAAAHM6AQAAdAAAfAAAZAEAgwIAgwAAfQMAaAAAfQEAZAIAdAQAfAEAgwEAZAMAPGQCAHQEAHwB
-AIMBAGQEADxkBQB0AAB8AwBkBgCDAgCDAABqBgBvHQABdAUAfAMAZAUAgwIAdAQAfAEAgwEAZAUA
-PG4BAAFkBwB0AAB8AwBkBgCDAgCDAABqBgBvHQABdAUAfAMAZAcAgwIAdAQAfAEAgwEAZAcAPG4B
-AAFkCAB0AAB8AwBkBgCDAgCDAABqBgBvHQABdAUAfAMAZAgAgwIAdAQAfAEAgwEAZAgAPG4BAAF0
-BgB0AAB0BwBkCQCDAgBkCgB8AAB8AQCNAQF9CAB0BQB8CABkCwCDAgB9CQB0CgBkDAB0AAB8CQBk
-DQCDAgBvDgABdAAAfAkAZA0AgwIAC3AEAAFkDgAWgwEAU2QAAFMoDwAAAE5zCQAAAGdldFBhcmFt
-c2kBAAAAcwQAAABzdGF0cwoAAABvbWl0X2lucHV0cxAAAABzZWN0aW9uX2NhdGVnb3J5cwQAAABr
-ZXlzcwYAAABlbnRpdHlzBAAAAG5vZGVzOQAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV96
-R2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdHMJAAAAc2VsZWN0aW9uaQAAAABzBQAAACUuMDJm
-cwgAAABxdWFudGl0eWYDMC4wKAsAAABzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwYAAABw
-YXJhbXNzAgAAAGt3cwcAAABfd3JpdGVfcwkAAABfZ2V0aXRlbV9zBwAAAF9hcHBseV9zBwAAAGNv
-bnRleHRzBgAAAHJlc3VsdHMDAAAAcm93cwUAAABmbG9hdCgLAAAAcwkAAABzZWxlY3Rpb25zAgAA
-AGt3cwkAAABfZ2V0YXR0cl9zBgAAAHBhcmFtc3MHAAAAX3dyaXRlX3MJAAAAX2dldGl0ZW1fcwcA
-AABfYXBwbHlfcwcAAABjb250ZXh0cwYAAAByZXN1bHRzAwAAAHJvd3MFAAAAZmxvYXQoAAAAACgA
-AAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMrAAAAQWNj
-b3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX3N0YXRTb3VyY2VEZWJpdAEAAABzGAAAABICBgEQARAC
-GQEdARkBHQEZAR0CHgIPASgCAAAAcwQAAABOb25lcysAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25N
-b2R1bGVfc3RhdFNvdXJjZURlYml0KAIAAABzBAAAAE5vbmVzKwAAAEFjY291bnRpbmdUcmFuc2Fj
-dGlvbk1vZHVsZV9zdGF0U291cmNlRGViaXQoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdp
-dGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_statSourceDebit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountingTransactionModule_statSourceDebit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

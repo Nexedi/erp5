@@ -88,28 +88,13 @@ return str(inventory.stock_uid)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAgAAAASAAAAQwAA
-AHOyAAAAdAAAfQIAZAEAggEAfAIAdAAAZAIAZgIAagYAbxwAAXQCAHQCAHQDAGQDAIMCAGQEAIMC
-AH0CAG4BAAF0AgB0AwBkBQCDAgBkBgB0AgB8AABkBwCDAgBkCABkCQBkCgB0AgB8AgBkCwCDAgCD
-AABmAQBkDABkDQBkDgBkDwBkEABkEQBmBQCDAAR9BQB0BgB8BQBkEgCDAgB9BQB0BwB0AgB8BQBk
-EwCDAgCDAQBTZAAAUygUAAAATnMKAAAAREVQUkVDQVRFRHMEAAAATm9uZXMIAAAAY3VycmVuY3lz
-AwAAAEVVUnMaAAAAUmVzb3VyY2VfekdldEludmVudG9yeV9vbGRzCAAAAG5vZGVfdWlkcwMAAAB1
-aWRzDwAAAG9taXRfc2ltdWxhdGlvbmkBAAAAcwwAAAByZXNvdXJjZV91aWRzBgAAAGdldFVpZHMQ
-AAAAc2ltdWxhdGlvbl9zdGF0ZXMFAAAAZHJhZnRzBwAAAHBsYW5uZWRzCQAAAGNvbmZpcm1lZHMH
-AAAAc3RvcHBlZHMJAAAAZGVsaXZlcmVkaQAAAABzCQAAAHN0b2NrX3VpZCgIAAAAcwQAAABOb25l
-cwgAAABjdXJyZW5jeXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwQAAABzZWxmcwkAAABpbnZl
-bnRvcnlzCQAAAF9nZXRpdGVtX3MDAAAAc3RyKAgAAABzBAAAAHNlbGZzBAAAAE5vbmVzCAAAAGN1
-cnJlbmN5cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzCQAAAGludmVudG9yeXMJAAAAX2dldGl0
-ZW1fcwMAAABzdHIoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRp
-b24gQ29udGV4dHMpAAAAQWNjb3VudE1vZHVsZV9jb3VudEFjY291bnRpbmdUcmFuc2FjdGlvbnMB
-AAAAcxAAAAAGAgYCEwEcByQBFQEYAg8BKAEAAABzKQAAAEFjY291bnRNb2R1bGVfY291bnRBY2Nv
-dW50aW5nVHJhbnNhY3Rpb25zKAEAAABzKQAAAEFjY291bnRNb2R1bGVfY291bnRBY2NvdW50aW5n
-VHJhbnNhY3Rpb25zKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0
-aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_countAccountingTransactions</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_countAccountingTransactions</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

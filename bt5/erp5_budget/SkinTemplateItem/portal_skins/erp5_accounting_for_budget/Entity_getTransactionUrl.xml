@@ -83,26 +83,13 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAoAAAAG
-AAAASwAAAHOXAAAAZAEAawAAbAEAfQQAAXQCAHQCAHQCAHwAAGQCAIMCAIMAAGQDAIMCAIMAAGQE
-AIMCAIMAAH0GAGQFAH0HAHQCAHwBAGQGAIMCAIMAAH0IAHQCAHwBAGQHAIMCAIMAAH0JAGgAAARk
-CAB8CQADPARkCQBkCgADPH0CAHwGAGQLABd8BwAXZAwAF3wEAHwCAIMBABdTZAAAUygNAAAATigB
-AAAAcwoAAABtYWtlX3F1ZXJ5cwkAAABnZXRPYmplY3RzCQAAAGdldFBhcmVudHMMAAAAYWJzb2x1
-dGVfdXJscwQAAAB2aWV3cwgAAABnZXRJbmRleHMHAAAAZ2V0TmFtZXMOAAAAc2VsZWN0aW9uX25h
-bWVzBQAAAHJlc2V0cwEAAAAxcwEAAAAvcwEAAAA/KAoAAABzBwAAAFpUVXRpbHNzCgAAAG1ha2Vf
-cXVlcnlzCQAAAF9nZXRhdHRyX3MFAAAAYnJhaW5zAwAAAHVybHMGAAAAbWV0aG9kcwkAAABzZWxl
-Y3Rpb25zBQAAAGluZGV4cwQAAABuYW1lcwIAAABrdygKAAAAcwUAAABicmFpbnMJAAAAc2VsZWN0
-aW9ucwIAAABrd3MHAAAAWlRVdGlsc3MKAAAAbWFrZV9xdWVyeXMJAAAAX2dldGF0dHJfcwMAAAB1
-cmxzBgAAAG1ldGhvZHMFAAAAaW5kZXhzBAAAAG5hbWUoAAAAACgAAAAAcykAAABQeXRob24gU2Ny
-aXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMYAAAARW50aXR5X2dldFRyYW5zYWN0aW9u
-VXJsAQAAAHMOAAAADQIqAQYBEgESAgcBEQQoAgAAAHMEAAAATm9uZXMYAAAARW50aXR5X2dldFRy
-YW5zYWN0aW9uVXJsKAIAAABzBAAAAE5vbmVzGAAAAEVudGl0eV9nZXRUcmFuc2FjdGlvblVybCgA
-AAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgA
-AAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getTransactionUrl</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Entity_getTransactionUrl</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

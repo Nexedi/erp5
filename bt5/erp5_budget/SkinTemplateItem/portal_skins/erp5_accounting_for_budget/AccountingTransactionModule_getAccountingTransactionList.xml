@@ -89,26 +89,13 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList(**param
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAPAAAASwAA
-AHO/AAAAZAEAfAAAagcAbxQAAWcAAHQBAHwAAIMBAGQBADxuAQABZAIAfAAAagcAbxQAAWcAAHQB
-AHwAAIMBAGQCADxuAQABZAMAfAAAagcAbxQAAWQEAHQBAHwAAIMBAGQDADxuAQABZAUAfAAAagcA
-bxQAAWQEAHQBAHwAAIMBAGQFADxuAQABZAYAfAAAagcAbxQAAWQEAHQBAHwAAIMBAGQGADxuAQAB
-dAIAdAMAdAQAZAcAgwIAfAAAjQEAU2QAAFMoCAAAAE5zBAAAAG5vZGVzCAAAAHJlc291cmNlcwkA
-AABmcm9tX2RhdGVzAAAAAHMHAAAAdG9fZGF0ZXMQAAAAc2VjdGlvbl9jYXRlZ29yeXM5AAAAQWNj
-b3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX3pHZXRBY2NvdW50aW5nVHJhbnNhY3Rpb25MaXN0KAUA
-AABzBgAAAHBhcmFtc3MHAAAAX3dyaXRlX3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABj
-b250ZXh0KAUAAABzBgAAAHBhcmFtc3MHAAAAX3dyaXRlX3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0
-dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVp
-c2l0aW9uIENvbnRleHRzOAAAAEFjY291bnRpbmdUcmFuc2FjdGlvbk1vZHVsZV9nZXRBY2NvdW50
-aW5nVHJhbnNhY3Rpb25MaXN0AQAAAHMWAAAAAAMNARQBDQEUAQ0BFAENARQBDQEUAigBAAAAczgA
-AABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfZ2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlz
-dCgBAAAAczgAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfZ2V0QWNjb3VudGluZ1RyYW5z
-YWN0aW9uTGlzdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlv
-biBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountingTransactionModule_getAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

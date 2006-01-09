@@ -72,20 +72,13 @@ return context.portal_categories.getCategoryValue(gap_root).getTitle()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAGAAAAQwAA
-AHM+AAAAdAAAdAEAZAEAgwIAgwAAfQIAdAAAdAAAdAAAdAEAZAIAgwIAZAMAgwIAfAIAgwEAZAQA
-gwIAgwAAU2QAAFMoBQAAAE5zFwAAAGdldFBvcnRhbERlZmF1bHRHYXBSb290cxEAAABwb3J0YWxf
-Y2F0ZWdvcmllc3MQAAAAZ2V0Q2F0ZWdvcnlWYWx1ZXMIAAAAZ2V0VGl0bGUoAwAAAHMJAAAAX2dl
-dGF0dHJfcwcAAABjb250ZXh0cwgAAABnYXBfcm9vdCgDAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzCAAAAGdhcF9yb290KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFj
-cXVpc2l0aW9uIENvbnRleHRzEwAAAEFjY291bnRfZ2V0R2FwVGl0bGUBAAAAcwIAAAASASgBAAAA
-cxMAAABBY2NvdW50X2dldEdhcFRpdGxlKAEAAABzEwAAAEFjY291bnRfZ2V0R2FwVGl0bGUoAAAA
-ACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAA
-PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/Account_getGapTitle</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Account_getGapTitle</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -42,9 +42,7 @@
         <item>
             <key> <string>base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>group</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

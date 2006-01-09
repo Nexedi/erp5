@@ -94,31 +94,13 @@ return \'%s%s.%02d\'%(sign, string.strip(), abs(fractional))\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABMAAAAOAAAAQwAA
-AHMpAQAAZAAAawAAfQEAdAEAfAEAZAEAgwIAdAIAfAAAcAQAAWQCAIMBAIMBAHQEAAKDAQBcAgB9
-BQB9BgB0BwB0CAB0CQB8BQBkAwAUgwEAgwEAgwEAfQUAfAYAZAIAagAAbwQAAWQEAHAEAAFkBQB9
-CgB0CwB0BwB0CAB8BgCDAQCDAQCDAQB9AABkBQB9DAB0DQB0DgB8AACDAQCDAQB9DwB0AQB8DwBk
-BgCDAgCDAAABZAIAfRAAeEsAdAQAfA8AgwEARF09AH0RAHwQAGQHABYMbw4AAWQIAHwMABd9DABu
-AQABdBIAfAAAfBEAgwIAfAwAF30MAHwQAGQJADd9EABxwQBXZAoAfAoAdAEAfAwAZAsAgwIAgwAA
-dAcAfAUAgwEAZgMAFlNkAABTKAwAAABOcwQAAABtb2RmaQAAAABpZAAAAHMCAAAALSBzAAAAAHMH
-AAAAcmV2ZXJzZWkDAAAAcwEAAAAgaQEAAABzCQAAACVzJXMuJTAyZHMFAAAAc3RyaXAoEwAAAHME
-AAAAbWF0aHMJAAAAX2dldGF0dHJfcwUAAABmbG9hdHMGAAAAYW1vdW50cwkAAABfZ2V0aXRlcl9z
-CgAAAGZyYWN0aW9uYWxzBwAAAGludGVnZXJzAwAAAGFic3MDAAAAaW50cwUAAAByb3VuZHMEAAAA
-c2lnbnMDAAAAc3RycwYAAABzdHJpbmdzBQAAAHJhbmdlcwMAAABsZW5zBwAAAGluZGV4ZXNzBQAA
-AGNvdW50cwEAAABpcwkAAABfZ2V0aXRlbV8oEwAAAHMGAAAAYW1vdW50cwQAAABtYXRocwkAAABf
-Z2V0YXR0cl9zBQAAAGZsb2F0cwkAAABfZ2V0aXRlcl9zCgAAAGZyYWN0aW9uYWxzBwAAAGludGVn
-ZXJzAwAAAGFic3MDAAAAaW50cwUAAAByb3VuZHMEAAAAc2lnbnMDAAAAc3RycwYAAABzdHJpbmdz
-BQAAAHJhbmdlcwMAAABsZW5zBwAAAGluZGV4ZXNzBQAAAGNvdW50cwEAAABpcwkAAABfZ2V0aXRl
-bV8oAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4
-dHMdAAAATW9uZXRhcnlBbW91bnRfZm9ybWF0QXNTdHJpbmcBAAAAcx4AAAAJAi8CHAEaARgBBgIV
-AQ0CBgENAAYBDAEOARMBDgIoAQAAAHMdAAAATW9uZXRhcnlBbW91bnRfZm9ybWF0QXNTdHJpbmco
-AQAAAHMdAAAATW9uZXRhcnlBbW91bnRfZm9ybWF0QXNTdHJpbmcoAAAAACgAAAAAcykAAABQeXRo
-b24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAA
-AAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/MonetaryAmount_formatAsString</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/MonetaryAmount_formatAsString</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

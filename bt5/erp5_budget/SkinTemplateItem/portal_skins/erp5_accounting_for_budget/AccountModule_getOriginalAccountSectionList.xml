@@ -87,28 +87,13 @@ return result\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAQAAAAQwAA
-AHOZAAAAZAEAawAAbAEAfQEAAWcAAH0CAHh7AHQDAHQEAHQEAHQEAHQFAGQCAIMCAIMAAGQDAIMC
-AGQEAIMCAIMAAIMBAERdTAB9BgB0BAB8AgBkBQCDAgB8AQBkBgB0BAB8BgBkBwCDAgCDAABkCAB0
-BAB8BgBkCQCDAgCDAABkCgBkCwBkDABkDQCDAASDAQABcUEAV3wCAFNkAABTKA4AAABOKAEAAABz
-DQAAAFJlcG9ydFNlY3Rpb25zDwAAAGdldFBvcnRhbE9iamVjdHMOAAAAYWNjb3VudF9tb2R1bGVz
-DAAAAG9iamVjdFZhbHVlc3MGAAAAYXBwZW5kcwQAAABwYXRocw8AAABnZXRQaHlzaWNhbFBhdGhz
-BQAAAHRpdGxlcwgAAABnZXRUaXRsZXMFAAAAbGV2ZWxpAQAAAHMHAAAAZm9ybV9pZHMlAAAAQWNj
-b3VudF92aWV3QWNjb3VudGluZ1RyYW5zYWN0aW9uTGlzdCgHAAAAcxgAAABQcm9kdWN0cy5FUlA1
-Rm9ybS5SZXBvcnRzDQAAAFJlcG9ydFNlY3Rpb25zBgAAAHJlc3VsdHMJAAAAX2dldGl0ZXJfcwkA
-AABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBwAAAGFjY291bnQoBwAAAHMYAAAAUHJvZHVjdHMuRVJQ
-NUZvcm0uUmVwb3J0cw0AAABSZXBvcnRTZWN0aW9ucwYAAAByZXN1bHRzCQAAAF9nZXRpdGVyX3MJ
-AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAABhY2NvdW50KAAAAAAoAAAAAHMpAAAAUHl0aG9u
-IFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzKwAAAEFjY291bnRNb2R1bGVfZ2V0
-T3JpZ2luYWxBY2NvdW50U2VjdGlvbkxpc3QBAAAAcxAAAAAAAw0CBgIuAAkBCQEbASMGKAEAAABz
-KwAAAEFjY291bnRNb2R1bGVfZ2V0T3JpZ2luYWxBY2NvdW50U2VjdGlvbkxpc3QoAQAAAHMrAAAA
-QWNjb3VudE1vZHVsZV9nZXRPcmlnaW5hbEFjY291bnRTZWN0aW9uTGlzdCgAAAAAKAAAAABzKQAA
-AFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEA
-AABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_getOriginalAccountSectionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getOriginalAccountSectionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

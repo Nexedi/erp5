@@ -71,22 +71,13 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAK
-AAAASwAAAHM0AAAAdAAAdAEAdAIAZAEAgwIAZAIAfAAAZAMAfAEAZAQAZAUAfAIAjQEDC3AEAAFk
-BgBTZAAAUygHAAAATnMYAAAAQWNjb3VudE1vZHVsZV9nZXRCYWxhbmNlcwUAAABicmFpbnMJAAAA
-c2VsZWN0aW9ucwsAAABvbWl0X291dHB1dGkBAAAAZgMwLjAoBgAAAHMHAAAAX2FwcGx5X3MJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0cwUAAABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrdygGAAAA
-cwUAAABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrd3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJf
-cwcAAABjb250ZXh0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0
-aW9uIENvbnRleHRzIgAAAEFjY291bnRNb2R1bGVfZ2V0VG90YWxTb3VyY2VDcmVkaXQBAAAAcwAA
-AAAoAgAAAHMEAAAATm9uZXMiAAAAQWNjb3VudE1vZHVsZV9nZXRUb3RhbFNvdXJjZUNyZWRpdCgC
-AAAAcwQAAABOb25lcyIAAABBY2NvdW50TW9kdWxlX2dldFRvdGFsU291cmNlQ3JlZGl0KAAAAAAo
-AAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxt
-b2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getTotalSourceCredit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getTotalSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

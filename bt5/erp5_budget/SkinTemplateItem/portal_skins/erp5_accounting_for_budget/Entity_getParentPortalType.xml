@@ -72,19 +72,13 @@ if parent is not None: return parent.getPortalType()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAFAAAAQwAA
-AHM3AAAAdAAAdAEAZAEAgwIAgwAAfQIAfAIAdAMAagkAbxQAAXQAAHwCAGQCAIMCAIMAAFNuAQAB
-ZAAAUygDAAAATnMJAAAAZ2V0UGFyZW50cw0AAABnZXRQb3J0YWxUeXBlKAQAAABzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dHMGAAAAcGFyZW50cwQAAABOb25lKAQAAABzCQAAAF9nZXRhdHRyX3MH
-AAAAY29udGV4dHMGAAAAcGFyZW50cwQAAABOb25lKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlw
-dCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzGgAAAEVudGl0eV9nZXRQYXJlbnRQb3J0YWxU
-eXBlAQAAAHMCAAAAEgEoAQAAAHMaAAAARW50aXR5X2dldFBhcmVudFBvcnRhbFR5cGUoAQAAAHMa
-AAAARW50aXR5X2dldFBhcmVudFBvcnRhbFR5cGUoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0
-IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getParentPortalType</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Entity_getParentPortalType</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

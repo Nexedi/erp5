@@ -80,30 +80,9 @@ return movement_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAsAAAAOAAAASwAA
-AHPWAAAAZAEAhAAAfQEAZAIAZAMAZwIAdAEAfAAAgwEAZAQAPGQFAHQBAHwAAIMBAGQGADx0AwB8
-AABkBwCDAgB0BAB0AwB0AwB0BQBkCACDAgBkCQCDAgB8AACNAQCDAQABZwAABGkGAH0HAHQIAHQE
-AHQDAHQFAGQKAIMCAHwAAI0BAIMBAERdHAB9CQB8BwB0AwB8CQBkCwCDAgCDAACDAQABcYMAfgcA
-fQoAfAEAZAwAdAQAdAMAdAUAZAoAgwIAZA0AZA4AfAAAjQEBFoMBAAF8CgBTZAAAUygPAAAATmMB
-AAAAAwAAAAMAAABDAAAAcxYAAAB0AAB0AQBkAQCDAgBkAgB8AACDAgBTKAMAAABOcwMAAABsb2dz
-GgAAAFNhbGVJbnZvaWNlX3NlbGVjdE1vdmVtZW50KAMAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29u
-dGV4dHMDAAAAbXNnKAMAAABzAwAAAG1zZ3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAo
-AAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCwAAADxs
-YW1iZGEuMTI+AQAAAHMAAAAAcxgAAABJbnZvaWNlIFRyYW5zYWN0aW9uIFJ1bGVzDgAAAEludm9p
-Y2luZyBSdWxlcx0AAABwYXJlbnRfc3BlY2lhbGlzZV9wb3J0YWxfdHlwZXMTAAAAU2ltdWxhdGlv
-biBNb3ZlbWVudHMLAAAAcG9ydGFsX3R5cGVzBgAAAHVwZGF0ZXMOAAAAcG9ydGFsX2NhdGFsb2dz
-DQAAAGJ1aWxkU1FMUXVlcnlzLgAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25felNlbGVjdE1vdmVt
-ZW50VGVtcEltcGxzCQAAAGdldE9iamVjdHMNAAAAU1FMIHVzZWQgPSAlc3MFAAAAc3JjX19pAQAA
-ACgLAAAAcwMAAABMT0dzBwAAAF93cml0ZV9zAgAAAGt3cwkAAABfZ2V0YXR0cl9zBwAAAF9hcHBs
-eV9zBwAAAGNvbnRleHRzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVyX3MBAAAA
-eHMNAAAAbW92ZW1lbnRfbGlzdCgLAAAAcwIAAABrd3MDAAAATE9HcwcAAABfd3JpdGVfcwkAAABf
-Z2V0YXR0cl9zBwAAAF9hcHBseV9zBwAAAGNvbnRleHRzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBz
-CQAAAF9nZXRpdGVyX3MBAAAAeHMNAAAAbW92ZW1lbnRfbGlzdCgAAAAAKAAAAABzKQAAAFB5dGhv
-biBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cyUAAABTYWxlSW52b2ljZVRyYW5z
-YWN0aW9uX3NlbGVjdE1vdmVtZW50AQAAAHMOAAAACQIWARMCKwImACUBJgEoAQAAAHMlAAAAU2Fs
-ZUludm9pY2VUcmFuc2FjdGlvbl9zZWxlY3RNb3ZlbWVudCgBAAAAcyUAAABTYWxlSW52b2ljZVRy
-YW5zYWN0aW9uX3NlbGVjdE1vdmVtZW50KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRo
-b3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -113,7 +92,7 @@ b3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/SaleInvoiceTransaction_selectMovement</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/SaleInvoiceTransaction_selectMovement</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

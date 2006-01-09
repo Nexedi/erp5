@@ -71,20 +71,13 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAIAAAAEAAAAQwAA
-AHMVAAAAdAAAdAEAZAEAgwIAgwAADFNkAABTKAIAAABOcy4AAABJbnZvaWNlVHJhbnNhY3Rpb25S
-dWxlX2Rlc3RpbmF0aW9uUmVnaW9uSGFzVmF0KAIAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4
-dCgCAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHQoAAAAACgAAAAAcykAAABQeXRob24gU2Ny
-aXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMwAAAASW52b2ljZVRyYW5zYWN0aW9uUnVs
-ZV9kZXN0aW5hdGlvblJlZ2lvbkhhc05vVmF0AQAAAHMAAAAAKAEAAABzMAAAAEludm9pY2VUcmFu
-c2FjdGlvblJ1bGVfZGVzdGluYXRpb25SZWdpb25IYXNOb1ZhdCgBAAAAczAAAABJbnZvaWNlVHJh
-bnNhY3Rpb25SdWxlX2Rlc3RpbmF0aW9uUmVnaW9uSGFzTm9WYXQoAAAAACgAAAAAcykAAABQeXRo
-b24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAA
-AAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/InvoiceTransactionRule_destinationRegionHasNoVat</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/InvoiceTransactionRule_destinationRegionHasNoVat</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

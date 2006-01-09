@@ -71,22 +71,13 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAJAAAA
-SwAAAHMpAAAAdAAAdAEAdAIAZAEAgwIAfAAAZAIAfAEAZAMAZAQAfAIAjQICU2QAAFMoBQAAAE5z
-KwAAAEFjY291bnRNb2R1bGVfZ2V0QWNjb3VudGluZ1RyYW5zYWN0aW9uQ291bnRzBQAAAGJyYWlu
-cwQAAABzdGF0aQEAAAAoBgAAAHMHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0
-cwkAAABzZWxlY3Rpb25zBQAAAGJyYWlucwIAAABrdygGAAAAcwkAAABzZWxlY3Rpb25zBQAAAGJy
-YWlucwIAAABrd3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAA
-AHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzLAAAAEFjY291
-bnRNb2R1bGVfc3RhdEFjY291bnRpbmdUcmFuc2FjdGlvbkNvdW50AQAAAHMAAAAAKAIAAABzBAAA
-AE5vbmVzLAAAAEFjY291bnRNb2R1bGVfc3RhdEFjY291bnRpbmdUcmFuc2FjdGlvbkNvdW50KAIA
-AABzBAAAAE5vbmVzLAAAAEFjY291bnRNb2R1bGVfc3RhdEFjY291bnRpbmdUcmFuc2FjdGlvbkNv
-dW50KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRl
-eHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_statAccountingTransactionCount</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_statAccountingTransactionCount</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

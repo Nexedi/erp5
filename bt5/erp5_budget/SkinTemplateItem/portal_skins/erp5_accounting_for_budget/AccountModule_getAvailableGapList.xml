@@ -80,26 +80,13 @@ return results\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAQAAAAQwAA
-AHPBAAAAZwAAfQAAdAEAdAEAdAEAdAIAZAEAgwIAZAIAgwIAZAMAgwIAgwAAfQMAeIwAdAQAfAMA
-gwEARF1+AH0FAHwAAGcAAARpBgB9BwB0BAB0AQB8BQBkAwCDAgCDAACDAQBEXUsAfQgAfAcAdAEA
-dAEAfAgAZAQAgwIAZAUAgwIAgwAAZAYAF3QBAHwIAGQFAIMCAIMAABd0AQB8CABkBwCDAgCDAABm
-AgCDAQABcWAAfgcAN30AAHE3AFd8AABTZAAAUygIAAAATnMRAAAAcG9ydGFsX2NhdGVnb3JpZXNz
-AwAAAGdhcHMMAAAAb2JqZWN0VmFsdWVzcwkAAABhcV9wYXJlbnRzCAAAAGdldFRpdGxlcwEAAAAv
-cw4AAABnZXRSZWxhdGl2ZVVybCgJAAAAcwcAAAByZXN1bHRzcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzCQAAAGNvdW50cmllc3MJAAAAX2dldGl0ZXJfcwcAAABjb3VudHJ5cwYAAABhcHBlbmRz
-CAAAACRhcHBlbmQwcwMAAABnYXAoCQAAAHMHAAAAcmVzdWx0c3MJAAAAX2dldGF0dHJfcwcAAABj
-b250ZXh0cwkAAABjb3VudHJpZXNzCQAAAF9nZXRpdGVyX3MHAAAAY291bnRyeXMGAAAAYXBwZW5k
-cwgAAAAkYXBwZW5kMHMDAAAAZ2FwKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0
-IEFjcXVpc2l0aW9uIENvbnRleHRzIQAAAEFjY291bnRNb2R1bGVfZ2V0QXZhaWxhYmxlR2FwTGlz
-dAEAAABzDgAAAAAFBgEkAQ0ABgEjAFkBKAEAAABzIQAAAEFjY291bnRNb2R1bGVfZ2V0QXZhaWxh
-YmxlR2FwTGlzdCgBAAAAcyEAAABBY2NvdW50TW9kdWxlX2dldEF2YWlsYWJsZUdhcExpc3QoAAAA
-ACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAA
-PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getAvailableGapList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getAvailableGapList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

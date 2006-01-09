@@ -71,19 +71,13 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAGAAAASwAA
-AHMoAAAAdAAAdAEAdAIAZAEAgwIAZAIAZAMAfAAAjQEBC3AEAAFkBABTZAAAUygFAAAATnMYAAAA
-RW50aXR5X3N0YXRTb3VyY2VCYWxhbmNlcwsAAABvbWl0X291dHB1dGkBAAAAZgMwLjAoBAAAAHMH
-AAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwIAAABrdygEAAAAcwIAAABrd3MH
-AAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMpAAAAUHl0aG9u
-IFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzFwAAAEVudGl0eV9zdGF0U291cmNl
-Q3JlZGl0AQAAAHMAAAAAKAEAAABzFwAAAEVudGl0eV9zdGF0U291cmNlQ3JlZGl0KAEAAABzFwAA
-AEVudGl0eV9zdGF0U291cmNlQ3JlZGl0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRo
-b3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_statSourceCredit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Entity_statSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

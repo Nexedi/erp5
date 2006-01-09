@@ -72,20 +72,13 @@ if parent is not None: return parent.getDestinationReference()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAFAAAAQwAA
-AHM3AAAAdAAAdAEAZAEAgwIAgwAAfQIAfAIAdAMAagkAbxQAAXQAAHwCAGQCAIMCAIMAAFNuAQAB
-ZAAAUygDAAAATnMJAAAAZ2V0UGFyZW50cxcAAABnZXREZXN0aW5hdGlvblJlZmVyZW5jZSgEAAAA
-cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBgAAAHBhcmVudHMEAAAATm9uZSgEAAAAcwkAAABf
-Z2V0YXR0cl9zBwAAAGNvbnRleHRzBgAAAHBhcmVudHMEAAAATm9uZSgAAAAAKAAAAABzKQAAAFB5
-dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cx4AAABFbnRpdHlfZ2V0RGVz
-dGluYXRpb25SZWZlcmVuY2UBAAAAcwIAAAASASgBAAAAcx4AAABFbnRpdHlfZ2V0RGVzdGluYXRp
-b25SZWZlcmVuY2UoAQAAAHMeAAAARW50aXR5X2dldERlc3RpbmF0aW9uUmVmZXJlbmNlKAAAAAAo
-AAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxt
-b2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getDestinationReference</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Entity_getDestinationReference</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

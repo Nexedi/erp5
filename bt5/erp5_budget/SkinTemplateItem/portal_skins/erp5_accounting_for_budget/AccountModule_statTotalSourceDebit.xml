@@ -71,21 +71,13 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAgAAAAYAAAAKAAAA
-SwAAAHMsAAAAdAAAdAEAdAIAZAEAgwIAfAEAfAAAZAIAZAMAZAQAZAMAfAIAjQMCU2QAAFMoBQAA
-AE5zGQAAAEFjY291bnRNb2R1bGVfc3RhdEJhbGFuY2VzCgAAAG9taXRfaW5wdXRpAQAAAHMLAAAA
-ZmxvYXRfdmFsdWUoBgAAAHMHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwUA
-AABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrdygGAAAAcwkAAABzZWxlY3Rpb25zBQAAAGJyYWlu
-cwIAAABrd3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMp
-AAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzIgAAAEFjY291bnRN
-b2R1bGVfc3RhdFRvdGFsU291cmNlRGViaXQBAAAAcwAAAAAoAgAAAHMEAAAATm9uZXMiAAAAQWNj
-b3VudE1vZHVsZV9zdGF0VG90YWxTb3VyY2VEZWJpdCgCAAAAcwQAAABOb25lcyIAAABBY2NvdW50
-TW9kdWxlX3N0YXRUb3RhbFNvdXJjZURlYml0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3
-aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_statTotalSourceDebit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_statTotalSourceDebit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -75,23 +75,13 @@ return total\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAgAAAAJ
-AAAASwAAAHNcAAAAdAAAdAEAdAIAZAEAgwIAZAIAfAAAZAMAfAEAfAIAjQECfQYAdAEAfAAAZAQA
-gwIAgwAAfQcAdAEAfAcAZAUAgwIAgwAAbwsAAXwGAAt9BgBuAQABfAYAU2QAAFMoBgAAAE5zGAAA
-AEFjY291bnRNb2R1bGVfZ2V0QmFsYW5jZXMFAAAAYnJhaW5zCQAAAHNlbGVjdGlvbnMJAAAAZ2V0
-T2JqZWN0cxIAAABnZXRJc0NyZWRpdEFjY291bnQoCAAAAHMHAAAAX2FwcGx5X3MJAAAAX2dldGF0
-dHJfcwcAAABjb250ZXh0cwUAAABicmFpbnMJAAAAc2VsZWN0aW9ucwIAAABrd3MFAAAAdG90YWxz
-BwAAAGFjY291bnQoCAAAAHMFAAAAYnJhaW5zCQAAAHNlbGVjdGlvbnMCAAAAa3dzBwAAAF9hcHBs
-eV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAdG90YWxzBwAAAGFjY291bnQoAAAAACgA
-AAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMeAAAAQWNj
-b3VudE1vZHVsZV9nZXROb3JtYWxCYWxhbmNlAQAAAHMIAAAAJAEVARABCwEoAgAAAHMEAAAATm9u
-ZXMeAAAAQWNjb3VudE1vZHVsZV9nZXROb3JtYWxCYWxhbmNlKAIAAABzBAAAAE5vbmVzHgAAAEFj
-Y291bnRNb2R1bGVfZ2V0Tm9ybWFsQmFsYW5jZSgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQg
-d2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getNormalBalance</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getNormalBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

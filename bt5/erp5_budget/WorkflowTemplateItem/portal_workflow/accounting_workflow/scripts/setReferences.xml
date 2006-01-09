@@ -90,33 +90,13 @@ transaction.setDestinationReference(destination_reference)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAwAAAAHAAAAQwAA
-AHMlAQAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAfQMAdAAAfAIAZAMAgwIAgwAAfQQA
-dAAAfAIAZAQAgwIAgwAAZAUAagIAb2EAAXQAAHwCAGQGAIMCAIMAAHQFAGQHAGYCAGoGAG8+AAFk
-CABkCQB8AwBmAwB9BgB0AAB8AgBkCgCDAgBkCwB8BgCDAAF9BwB0AAB8AgBkDACDAgB8BwCDAQAB
-ca0AAW4BAAFkCABkDQB8AwBmAwB9CAB0AAB8AgBkCgCDAgBkCwB8CACDAAF9CQB0AAB8AgBkDgCD
-AgB8CQCDAQABZAgAZA0AfAQAZgMAfQoAdAAAfAIAZAoAgwIAZAsAfAoAgwABfQsAdAAAfAIAZA8A
-gwIAfAsAgwEAAWQAAFMoEAAAAE5zBgAAAG9iamVjdHMQAAAAZ2V0U291cmNlU2VjdGlvbnMVAAAA
-Z2V0RGVzdGluYXRpb25TZWN0aW9ucw0AAABnZXRQb3J0YWxUeXBlcxgAAABTYWxlIEludm9pY2Ug
-VHJhbnNhY3Rpb25zDAAAAGdldFJlZmVyZW5jZXMAAAAAcwoAAABhY2NvdW50aW5ncwcAAABpbnZv
-aWNlcw0AAABnZW5lcmF0ZU5ld0lkcwgAAABpZF9ncm91cHMMAAAAc2V0UmVmZXJlbmNlcwcAAABz
-ZWN0aW9ucxIAAABzZXRTb3VyY2VSZWZlcmVuY2VzFwAAAHNldERlc3RpbmF0aW9uUmVmZXJlbmNl
-KAwAAABzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwsAAAB0cmFuc2FjdGlvbnMOAAAA
-c291cmNlX3NlY3Rpb25zEwAAAGRlc3RpbmF0aW9uX3NlY3Rpb25zBAAAAE5vbmVzEAAAAGludm9p
-Y2VfaWRfZ3JvdXBzEQAAAGludm9pY2VfcmVmZXJlbmNlcw8AAABzb3VyY2VfaWRfZ3JvdXBzEAAA
-AHNvdXJjZV9yZWZlcmVuY2VzFAAAAGRlc3RpbmF0aW9uX2lkX2dyb3VwcxUAAABkZXN0aW5hdGlv
-bl9yZWZlcmVuY2UoDAAAAHMMAAAAc3RhdGVfY2hhbmdlcwkAAABfZ2V0YXR0cl9zCwAAAHRyYW5z
-YWN0aW9ucw4AAABzb3VyY2Vfc2VjdGlvbnMTAAAAZGVzdGluYXRpb25fc2VjdGlvbnMEAAAATm9u
-ZXMQAAAAaW52b2ljZV9pZF9ncm91cHMRAAAAaW52b2ljZV9yZWZlcmVuY2VzDwAAAHNvdXJjZV9p
-ZF9ncm91cHMQAAAAc291cmNlX3JlZmVyZW5jZXMUAAAAZGVzdGluYXRpb25faWRfZ3JvdXBzFQAA
-AGRlc3RpbmF0aW9uX3JlZmVyZW5jZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMNAAAA
-c2V0UmVmZXJlbmNlcwEAAABzHAAAAAABDwMSARIDGQEfAQ8BGwEYAg8BGwEQAQ8BGwEoAQAAAHMN
-AAAAc2V0UmVmZXJlbmNlcygBAAAAcw0AAABzZXRSZWZlcmVuY2VzKAAAAAAoAAAAAHMPAAAAU2Ny
-aXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/setReferences</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/setReferences</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

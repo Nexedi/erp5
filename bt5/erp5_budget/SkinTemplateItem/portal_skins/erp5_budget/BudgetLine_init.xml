@@ -113,12 +113,9 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAAAAAABAAAAQwAA
-AHMEAAAAZAAAUygBAAAATigAAAAAKAAAAAAoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdp
-dGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMPAAAAQnVkZ2V0TGluZV9pbml0AQAAAHMAAAAAKAEA
-AABzDwAAAEJ1ZGdldExpbmVfaW5pdCgBAAAAcw8AAABCdWRnZXRMaW5lX2luaXQoAAAAACgAAAAA
-cykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMIAAAAPG1vZHVs
-ZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

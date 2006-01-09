@@ -179,9 +179,7 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Budget Transaction</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

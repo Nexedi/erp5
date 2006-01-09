@@ -72,19 +72,13 @@ if parent is not None: return parent.getTitle()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAFAAAAQwAA
-AHM3AAAAdAAAdAEAZAEAgwIAgwAAfQIAfAIAdAMAagkAbxQAAXQAAHwCAGQCAIMCAIMAAFNuAQAB
-ZAAAUygDAAAATnMJAAAAZ2V0UGFyZW50cwgAAABnZXRUaXRsZSgEAAAAcwkAAABfZ2V0YXR0cl9z
-BwAAAGNvbnRleHRzBgAAAHBhcmVudHMEAAAATm9uZSgEAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzBgAAAHBhcmVudHMEAAAATm9uZSgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0
-aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cxUAAABFbnRpdHlfZ2V0UGFyZW50VGl0bGUBAAAAcwIA
-AAASASgBAAAAcxUAAABFbnRpdHlfZ2V0UGFyZW50VGl0bGUoAQAAAHMVAAAARW50aXR5X2dldFBh
-cmVudFRpdGxlKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9u
-IENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getParentTitle</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Entity_getParentTitle</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

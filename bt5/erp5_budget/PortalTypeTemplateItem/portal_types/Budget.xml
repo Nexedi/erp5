@@ -41,18 +41,13 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Budget Line</string>
-                <string>Budget Transfert Line</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>group</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

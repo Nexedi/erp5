@@ -84,29 +84,9 @@ return filter(lambda x : x is not None, deliveries_keys.keys())\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAkAAAALAAAASwAA
-AHOuAAAAZAEAhAAAfQIAfAIAZAIAfAAAFoMBAAFoAAB9AwB4VAB0AwB8AACDAQBEXUYAfQUAZAMA
-dAUAfAMAgwEAdAYAdAYAdAYAdAYAfAUAZAQAgwIAgwAAZAQAgwIAgwAAZAQAgwIAgwAAZAUAgwIA
-gwAAPHEqAFd8AgBkBgB0BgB8AwBkBwCDAgCDAAAWgwEAAXQHAGQIAIQAAHQGAHwDAGQHAIMCAIMA
-AIMCAFNkAABTKAkAAABOYwEAAAADAAAAAwAAAEMAAABzFgAAAHQAAHQBAGQBAIMCAGQCAHwAAIMC
-AFMoAwAAAE5zAwAAAGxvZ3MkAAAAU2FsZUludm9pY2VUcmFuc2FjaW9uX3NlbGVjdERlbGl2ZXJ5
-KAMAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMDAAAAbXNnKAMAAABzAwAAAG1zZ3MJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0
-IEFjcXVpc2l0aW9uIENvbnRleHRzCwAAADxsYW1iZGEuMTA+BQAAAHMAAAAAcw4AAABtb3ZlbWVu
-dHMgPSAlc2kBAAAAcwkAAABnZXRQYXJlbnRzEQAAAGdldENhdXNhbGl0eVZhbHVlcw8AAABkZWxp
-dmVyaWVzID0gJXNzBAAAAGtleXNjAQAAAAIAAAACAAAAQwAAAHMKAAAAfAAAdAEAagkAUygBAAAA
-TigCAAAAcwEAAAB4cwQAAABOb25lKAIAAABzAQAAAHhzBAAAAE5vbmUoAAAAACgAAAAAcykAAABQ
-eXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMLAAAAPGxhbWJkYS4xMT4O
-AAAAcwAAAAAoCAAAAHMDAAAATE9Hcw0AAABtb3ZlbWVudF9saXN0cw8AAABkZWxpdmVyaWVzX2tl
-eXNzCQAAAF9nZXRpdGVyX3MIAAAAbW92ZW1lbnRzBwAAAF93cml0ZV9zCQAAAF9nZXRhdHRyX3MG
-AAAAZmlsdGVyKAkAAABzDQAAAG1vdmVtZW50X2xpc3RzAgAAAGt3cwMAAABMT0dzDwAAAGRlbGl2
-ZXJpZXNfa2V5c3MJAAAAX2dldGl0ZXJfcwgAAABtb3ZlbWVudHMHAAAAX3dyaXRlX3MJAAAAX2dl
-dGF0dHJfcwYAAABmaWx0ZXIoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNx
-dWlzaXRpb24gQ29udGV4dHMlAAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9zZWxlY3REZWxpdmVy
-eQEAAABzEAAAAAAECQIOAgYBDQAGAUQCGgEoAQAAAHMlAAAAU2FsZUludm9pY2VUcmFuc2FjdGlv
-bl9zZWxlY3REZWxpdmVyeSgBAAAAcyUAAABTYWxlSW52b2ljZVRyYW5zYWN0aW9uX3NlbGVjdERl
-bGl2ZXJ5KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENv
-bnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -116,7 +96,7 @@ bnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/SaleInvoiceTransaction_selectDelivery</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/SaleInvoiceTransaction_selectDelivery</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -72,19 +72,13 @@ if account is not None: return account.getGapId()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAQAAAAFAAAAQwAA
-AHM3AAAAdAAAdAEAZAEAgwIAgwAAfQIAfAIAdAMAagkAbxQAAXQAAHwCAGQCAIMCAIMAAFNuAQAB
-ZAAAUygDAAAATnMOAAAAZ2V0U291cmNlVmFsdWVzCAAAAGdldEdhcElkKAQAAABzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dHMHAAAAYWNjb3VudHMEAAAATm9uZSgEAAAAcwkAAABfZ2V0YXR0cl9z
-BwAAAGNvbnRleHRzBwAAAGFjY291bnRzBAAAAE5vbmUoAAAAACgAAAAAcykAAABQeXRob24gU2Ny
-aXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMVAAAARW50aXR5X2dldFNvdXJjZUdhcElk
-AQAAAHMCAAAAEgEoAQAAAHMVAAAARW50aXR5X2dldFNvdXJjZUdhcElkKAEAAABzFQAAAEVudGl0
-eV9nZXRTb3VyY2VHYXBJZCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1
-aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_getSourceGapId</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/Entity_getSourceGapId</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

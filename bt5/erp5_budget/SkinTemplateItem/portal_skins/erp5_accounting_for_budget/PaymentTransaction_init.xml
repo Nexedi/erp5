@@ -91,24 +91,13 @@ transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAKAAAAQwAA
-AHOGAAAAZAAAU3QAAH0BAHQCAHwBAGQBAIMCAGQCAGQDAGQEAGQFAGQGAGQHAGQIAGQJAIMABAF0
-AgB8AQBkAQCDAgBkAgBkAwBkBABkCgBkBgBkCwBkCABkCQCDAAQBdAIAfAEAZAEAgwIAZAIAZAMA
-ZAQAZAwAZAYAZA0AZAgAZAkAgwAEAWQAAFMoDgAAAE5zCgAAAG5ld0NvbnRlbnRzCwAAAHBvcnRh
-bF90eXBlcxsAAABBY2NvdW50aW5nIFRyYW5zYWN0aW9uIExpbmVzBgAAAHNvdXJjZXMWAAAAYWNj
-b3VudC9jcmVhbmNlX2NsaWVudHMCAAAAaWRzCgAAAHJlY2VpdmFibGVzEQAAAGltbWVkaWF0ZV9y
-ZWluZGV4aQEAAABzGQAAAGFjY291bnQvZGV0dGVfZm91cm5pc3NldXJzBwAAAHBheWFibGVzKQAA
-AGFjY291bnQvYmFucXVlc19ldGFibGlzc2VtZW50c19maW5hbmNpZXJzcwQAAABiYW5rKAMAAABz
-BwAAAGNvbnRleHRzCwAAAHRyYW5zYWN0aW9ucwkAAABfZ2V0YXR0cl8oAwAAAHMHAAAAY29udGV4
-dHMLAAAAdHJhbnNhY3Rpb25zCQAAAF9nZXRhdHRyXygAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3Jp
-cHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cxcAAABQYXltZW50VHJhbnNhY3Rpb25faW5p
-dAEAAABzCAAAAAQHCQIoBCgEKAEAAABzFwAAAFBheW1lbnRUcmFuc2FjdGlvbl9pbml0KAEAAABz
-FwAAAFBheW1lbnRUcmFuc2FjdGlvbl9pbml0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3
-aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/PaymentTransaction_init</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/PaymentTransaction_init</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

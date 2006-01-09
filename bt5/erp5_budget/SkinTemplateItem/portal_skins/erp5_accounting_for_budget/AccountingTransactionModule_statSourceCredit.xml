@@ -86,31 +86,13 @@ return float(\'%.02f\' % (row.quantity or 0.0))\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAsAAAASAAAA
-SwAAAHMpAQAAdAAAfAAAZAEAgwIAgwAAfQMAaAAAfQEAZAIAdAQAfAEAgwEAZAMAPGQCAHQEAHwB
-AIMBAGQEADxkBQB0AAB8AwBkBgCDAgCDAABqBgBvHQABdAUAfAMAZAUAgwIAdAQAfAEAgwEAZAUA
-PG4BAAFkBwB0AAB8AwBkBgCDAgCDAABqBgBvHQABdAUAfAMAZAcAgwIAdAQAfAEAgwEAZAcAPG4B
-AAFkCAB0AAB8AwBkBgCDAgCDAABqBgBvHQABdAUAfAMAZAgAgwIAdAQAfAEAgwEAZAgAPG4BAAF0
-BgB0AAB0BwBkCQCDAgBkCgB8AAB8AQCNAQF9CAB0BQB8CABkCwCDAgB9CQB0CgBkDAB0AAB8CQBk
-DQCDAgBwBAABZA4AFoMBAFNkAABTKA8AAABOcwkAAABnZXRQYXJhbXNpAQAAAHMEAAAAc3RhdHML
-AAAAb21pdF9vdXRwdXRzEAAAAHNlY3Rpb25fY2F0ZWdvcnlzBAAAAGtleXNzBgAAAGVudGl0eXME
-AAAAbm9kZXM5AAAAQWNjb3VudGluZ1RyYW5zYWN0aW9uTW9kdWxlX3pHZXRBY2NvdW50aW5nVHJh
-bnNhY3Rpb25MaXN0cwkAAABzZWxlY3Rpb25pAAAAAHMFAAAAJS4wMmZzCAAAAHF1YW50aXR5ZgMw
-LjAoCwAAAHMJAAAAX2dldGF0dHJfcwkAAABzZWxlY3Rpb25zBgAAAHBhcmFtc3MCAAAAa3dzBwAA
-AF93cml0ZV9zCQAAAF9nZXRpdGVtX3MHAAAAX2FwcGx5X3MHAAAAY29udGV4dHMGAAAAcmVzdWx0
-cwMAAAByb3dzBQAAAGZsb2F0KAsAAABzCQAAAHNlbGVjdGlvbnMCAAAAa3dzCQAAAF9nZXRhdHRy
-X3MGAAAAcGFyYW1zcwcAAABfd3JpdGVfcwkAAABfZ2V0aXRlbV9zBwAAAF9hcHBseV9zBwAAAGNv
-bnRleHRzBgAAAHJlc3VsdHMDAAAAcm93cwUAAABmbG9hdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBT
-Y3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cywAAABBY2NvdW50aW5nVHJhbnNhY3Rp
-b25Nb2R1bGVfc3RhdFNvdXJjZUNyZWRpdAEAAABzGAAAABICBgEQARACGQEdARkBHQEZAR0CHgEP
-ASgCAAAAcwQAAABOb25lcywAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfc3RhdFNvdXJj
-ZUNyZWRpdCgCAAAAcwQAAABOb25lcywAAABBY2NvdW50aW5nVHJhbnNhY3Rpb25Nb2R1bGVfc3Rh
-dFNvdXJjZUNyZWRpdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1aXNp
-dGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_statSourceCredit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountingTransactionModule_statSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -74,15 +74,9 @@ membership_criterion_base_category_list = category_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAEAAAAQwAA
-AHMmAAAAZAEAZAIAZwIAfQAAdAEAdAIAZAMAgwIAZAQAfAAAgwABAWQAAFMoBQAAAE5zEQAAAGZp
-bmFuY2lhbF9zZWN0aW9ucwgAAABmdW5jdGlvbnMEAAAAZWRpdHMnAAAAbWVtYmVyc2hpcF9jcml0
-ZXJpb25fYmFzZV9jYXRlZ29yeV9saXN0KAMAAABzDQAAAGNhdGVnb3J5X2xpc3RzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dCgDAAAAcw0AAABjYXRlZ29yeV9saXN0cwkAAABfZ2V0YXR0cl9zBwAA
-AGNvbnRleHQoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24g
-Q29udGV4dHMPAAAAQnVkZ2V0Q2VsbF9pbml0AQAAAHMEAAAADwEMASgBAAAAcw8AAABCdWRnZXRD
-ZWxsX2luaXQoAQAAAHMPAAAAQnVkZ2V0Q2VsbF9pbml0KAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNj
-cmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

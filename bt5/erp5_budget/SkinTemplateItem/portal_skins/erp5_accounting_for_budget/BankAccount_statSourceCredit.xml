@@ -73,21 +73,13 @@ return float(\'%.02f\' % - credit or 0)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAAFAAAASwAA
-AHNCAAAAZAEAdAAAfAAAgwEAZAIAPHQCAHQDAHQEAGQDAIMCAHwAAI0BAH0FAHQGAGQEAHwFAAsW
-cAQAAWQFAIMBAFNkAABTKAYAAABOaQEAAABzCwAAAG9taXRfb3V0cHV0cx0AAABCYW5rQWNjb3Vu
-dF9zdGF0U291cmNlQmFsYW5jZXMFAAAAJS4wMmZpAAAAACgHAAAAcwcAAABfd3JpdGVfcwIAAABr
-d3MHAAAAX2FwcGx5X3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwYAAABjcmVkaXRzBQAAAGZs
-b2F0KAcAAABzAgAAAGt3cwcAAABfd3JpdGVfcwcAAABfYXBwbHlfcwkAAABfZ2V0YXR0cl9zBwAA
-AGNvbnRleHRzBgAAAGNyZWRpdHMFAAAAZmxvYXQoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0
-IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMcAAAAQmFua0FjY291bnRfc3RhdFNvdXJjZUNy
-ZWRpdAEAAABzBAAAABABGAEoAQAAAHMcAAAAQmFua0FjY291bnRfc3RhdFNvdXJjZUNyZWRpdCgB
-AAAAcxwAAABCYW5rQWNjb3VudF9zdGF0U291cmNlQ3JlZGl0KAAAAAAoAAAAAHMpAAAAUHl0aG9u
-IFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/BankAccount_statSourceCredit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/BankAccount_statSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

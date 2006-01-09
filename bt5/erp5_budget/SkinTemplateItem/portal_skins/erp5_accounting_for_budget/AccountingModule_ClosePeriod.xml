@@ -74,22 +74,13 @@ context.REQUEST.RESPONSE.redirect(\'%s?portal_status_message=%s\'%(apd.absolute_
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAGAAAAQwAA
-AHNXAAAAdAAAdAEAZAEAgwIAZAIAZAMAgwABfQIAdAAAdAAAdAAAdAEAZAQAgwIAZAUAgwIAZAYA
-gwIAZAcAdAAAfAIAZAgAgwIAgwAAZAkAZgIAFoMBAAFkAABTKAoAAABOcwoAAABuZXdDb250ZW50
-cwsAAABwb3J0YWxfdHlwZXMbAAAAQWNjb3VudGluZyBQZXJpb2QgRGVsaW1pdGVycwcAAABSRVFV
-RVNUcwgAAABSRVNQT05TRXMIAAAAcmVkaXJlY3RzGwAAACVzP3BvcnRhbF9zdGF0dXNfbWVzc2Fn
-ZT0lc3MMAAAAYWJzb2x1dGVfdXJscxoAAABFbnRlciBDbG9zaW5nIFBlcmlvZCBEYXRlcygDAAAA
-cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAwAAAGFwZCgDAAAAcwkAAABfZ2V0YXR0cl9zBwAA
-AGNvbnRleHRzAwAAAGFwZCgAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0aG91dCBBY3F1
-aXNpdGlvbiBDb250ZXh0cxwAAABBY2NvdW50aW5nTW9kdWxlX0Nsb3NlUGVyaW9kAQAAAHMCAAAA
-IQMoAQAAAHMcAAAAQWNjb3VudGluZ01vZHVsZV9DbG9zZVBlcmlvZCgBAAAAcxwAAABBY2NvdW50
-aW5nTW9kdWxlX0Nsb3NlUGVyaW9kKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0
-IEFjcXVpc2l0aW9uIENvbnRleHRzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingModule_ClosePeriod</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountingModule_ClosePeriod</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

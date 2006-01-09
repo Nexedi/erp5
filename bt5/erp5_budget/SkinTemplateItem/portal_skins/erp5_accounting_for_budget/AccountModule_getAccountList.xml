@@ -86,25 +86,13 @@ return context.portal_catalog(**kwd)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAJAAAASwAA
-AHOCAAAAeTIAdAAAfAAAZAEAgwIAfQIAdAAAdAMAfAIAZAIAgwIAZAMAgwEAZAQAC4MCAH0EAFdu
-DQABAQFkBQB9BABuAQBYfAQADG8KAAFkBgB9BABuAQABZAcAfAQAFnQFAHwAAIMBAGQIADx0BgB0
-AwB0BwBkCQCDAgB8AACNAQBTZAAAUygKAAAATnMkAAAAYWNjb3VudGluZ190cmFuc2FjdGlvbl9s
-aW5lX2N1cnJlbmN5cwUAAABzcGxpdHMBAAAAL2kBAAAAcwAAAABzBgAAACZuYnNwO3MsAAAAJyVz
-JyBBUyBhY2NvdW50aW5nX3RyYW5zYWN0aW9uX2xpbmVfY3VycmVuY3lzEQAAAHNlbGVjdF9leHBy
-ZXNzaW9ucw4AAABwb3J0YWxfY2F0YWxvZygIAAAAcwkAAABfZ2V0aXRlbV9zAwAAAGt3ZHMIAAAA
-Y3VycmVuY3lzCQAAAF9nZXRhdHRyX3MCAAAAaWRzBwAAAF93cml0ZV9zBwAAAF9hcHBseV9zBwAA
-AGNvbnRleHQoCAAAAHMDAAAAa3dkcwkAAABfZ2V0aXRlbV9zCAAAAGN1cnJlbmN5cwkAAABfZ2V0
-YXR0cl9zAgAAAGlkcwcAAABfd3JpdGVfcwcAAABfYXBwbHlfcwcAAABjb250ZXh0KAAAAAAoAAAA
-AHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0aW9uIENvbnRleHRzHAAAAEFjY291
-bnRNb2R1bGVfZ2V0QWNjb3VudExpc3QBAAAAcw4AAAADAQ8BJgIKAggBCgIUAigBAAAAcxwAAABB
-Y2NvdW50TW9kdWxlX2dldEFjY291bnRMaXN0KAEAAABzHAAAAEFjY291bnRNb2R1bGVfZ2V0QWNj
-b3VudExpc3QoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24g
-Q29udGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getAccountList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getAccountList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

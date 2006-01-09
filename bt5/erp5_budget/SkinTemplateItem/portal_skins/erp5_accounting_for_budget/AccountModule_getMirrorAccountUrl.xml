@@ -84,25 +84,13 @@ return url\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAwAAAEAAAABzEwAAAGUAAGUAAGQBAIQCAFoBAGQAAFMoAgAAAE5jAgAAAAgAAAAI
-AAAAQwAAAHOHAAAAdAAAfAEAZAEAgwIAgwAAfQMAdAAAfAEAZAIAgwIAgwAAfQQAdAAAfAAAZAMA
-gwIAgwAAfQUAdAAAfAUAZAQAgwIAgwAAfQUAfAUAdAYAaggAbwoAAXQGAH0HAG4hAAF0AAB8BQBk
-BQCDAgCDAABkBgB8AwB8BABmAgAWF30HAHwHAFNkAABTKAcAAABOcwgAAABnZXRJbmRleHMHAAAA
-Z2V0TmFtZXMJAAAAZ2V0T2JqZWN0cxMAAABnZXREZXN0aW5hdGlvblZhbHVlcwwAAABhYnNvbHV0
-ZV91cmxzMgAAAC92aWV3P3NlbGVjdGlvbl9pbmRleD0lcyZzZWxlY3Rpb25fbmFtZT0lcyZyZXNl
-dD0xKAgAAABzCQAAAF9nZXRhdHRyX3MJAAAAc2VsZWN0aW9ucwUAAABpbmRleHMEAAAAbmFtZXMF
-AAAAYnJhaW5zBgAAAG9iamVjdHMEAAAATm9uZXMDAAAAdXJsKAgAAABzBQAAAGJyYWlucwkAAABz
-ZWxlY3Rpb25zCQAAAF9nZXRhdHRyX3MFAAAAaW5kZXhzBAAAAG5hbWVzBgAAAG9iamVjdHMEAAAA
-Tm9uZXMDAAAAdXJsKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVpc2l0
-aW9uIENvbnRleHRzIQAAAEFjY291bnRNb2R1bGVfZ2V0TWlycm9yQWNjb3VudFVybAEAAABzDgAA
-ABIBEgESARIBDQEKAiACKAIAAABzBAAAAE5vbmVzIQAAAEFjY291bnRNb2R1bGVfZ2V0TWlycm9y
-QWNjb3VudFVybCgCAAAAcwQAAABOb25lcyEAAABBY2NvdW50TW9kdWxlX2dldE1pcnJvckFjY291
-bnRVcmwoAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdpdGhvdXQgQWNxdWlzaXRpb24gQ29u
-dGV4dHMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getMirrorAccountUrl</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountModule_getMirrorAccountUrl</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

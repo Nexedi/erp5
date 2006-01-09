@@ -81,31 +81,13 @@ return [(valid.getTitle(), valid.getRelativeUrl()) for valid in valids]\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAsAAAAOAAAAQwAA
-AHPoAAAAeSsAdAAAdAEAdAEAdAIAZAEAgwIAZAIAgwIAZAMAgwEAZAQAgwIAfQMAV24lAAR0BABq
-CgBvGQABAQEBdAEAdAIAZAUAgwIAgwAAfQMAbgIAAVh0AQB0AgBkBQCDAgCDAAB9AwB0AQB0AQB0
-AgBkBgCDAgBkBwCDAgB8AwCDAQB9BQB0AQB8BQBkCACDAgBkCQBkCgCDAAF9BgBnAAAEaQcAfQgA
-dAkAfAYAgwEARF0uAH0KAHwIAHQBAHwKAGQLAIMCAIMAAHQBAHwKAGQMAIMCAIMAAGYCAIMBAAFx
-rwB+CABTZAAAUygNAAAATnMRAAAAcG9ydGFsX3NlbGVjdGlvbnNzEgAAAGdldFNlbGVjdGlvblBh
-cmFtc3MUAAAAYWNjb3VudGluZ19zZWxlY3Rpb25zEAAAAHNlY3Rpb25fY2F0ZWdvcnlzHwAAAGdl
-dFBvcnRhbERlZmF1bHRTZWN0aW9uQ2F0ZWdvcnlzEQAAAHBvcnRhbF9jYXRlZ29yaWVzcw8AAABy
-ZXNvbHZlQ2F0ZWdvcnlzGAAAAGdldEdyb3VwUmVsYXRlZFZhbHVlTGlzdHMLAAAAcG9ydGFsX3R5
-cGVzDAAAAE9yZ2FuaXNhdGlvbnMIAAAAZ2V0VGl0bGVzDgAAAGdldFJlbGF0aXZlVXJsKAsAAABz
-CQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAABzZWN0aW9uX2NhdHMI
-AAAAS2V5RXJyb3JzDwAAAHNlY3Rpb25fY2F0X29ianMGAAAAdmFsaWRzcwYAAABhcHBlbmRzCAAA
-ACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zBQAAAHZhbGlkKAsAAABzCQAAAF9nZXRpdGVtX3MJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0cwsAAABzZWN0aW9uX2NhdHMIAAAAS2V5RXJyb3JzDwAAAHNl
-Y3Rpb25fY2F0X29ianMGAAAAdmFsaWRzcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0
-aXRlcl9zBQAAAHZhbGlkKAAAAAAoAAAAAHMpAAAAUHl0aG9uIFNjcmlwdCB3aXRob3V0IEFjcXVp
-c2l0aW9uIENvbnRleHRzLAAAAEFjY291bnRpbmdUcmFuc2FjdGlvbl9nZXRWYWxpZFNvdXJjZVNl
-Y3Rpb25zAQAAAHMQAAAAAwErAQ4BFwESAh4BGAMUACgBAAAAcywAAABBY2NvdW50aW5nVHJhbnNh
-Y3Rpb25fZ2V0VmFsaWRTb3VyY2VTZWN0aW9ucygBAAAAcywAAABBY2NvdW50aW5nVHJhbnNhY3Rp
-b25fZ2V0VmFsaWRTb3VyY2VTZWN0aW9ucygAAAAAKAAAAABzKQAAAFB5dGhvbiBTY3JpcHQgd2l0
-aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransaction_getValidSourceSections</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/AccountingTransaction_getValidSourceSections</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

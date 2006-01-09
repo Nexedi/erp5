@@ -90,24 +90,13 @@ transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAKAAAAQwAA
-AHOGAAAAZAAAU3QAAH0BAHQCAHwBAGQBAIMCAGQCAGQDAGQEAGQFAGQGAGQHAGQIAGQJAIMABAF0
-AgB8AQBkAQCDAgBkAgBkAwBkBABkCgBkBgBkCwBkCABkCQCDAAQBdAIAfAEAZAEAgwIAZAIAZAMA
-ZAQAZAwAZAYAZA0AZAgAZAkAgwAEAWQAAFMoDgAAAE5zCgAAAG5ld0NvbnRlbnRzCwAAAHBvcnRh
-bF90eXBlcx0AAABTYWxlIEludm9pY2UgVHJhbnNhY3Rpb24gTGluZXMGAAAAc291cmNlcxoAAABh
-Y2NvdW50L3ByZXN0YXRpb25fc2VydmljZXMCAAAAaWRzBgAAAGluY29tZXMRAAAAaW1tZWRpYXRl
-X3JlaW5kZXhpAQAAAHMWAAAAYWNjb3VudC9jcmVhbmNlX2NsaWVudHMKAAAAcmVjZWl2YWJsZXMZ
-AAAAYWNjb3VudC90dmFfY29sbGVjdGVlXzE5NnMNAAAAY29sbGVjdGVkX3ZhdCgDAAAAcwcAAABj
-b250ZXh0cwsAAAB0cmFuc2FjdGlvbnMJAAAAX2dldGF0dHJfKAMAAABzBwAAAGNvbnRleHRzCwAA
-AHRyYW5zYWN0aW9ucwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcykAAABQeXRob24gU2NyaXB0IHdp
-dGhvdXQgQWNxdWlzaXRpb24gQ29udGV4dHMbAAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9pbml0
-AQAAAHMIAAAABAYJAigEKAQoAQAAAHMbAAAAU2FsZUludm9pY2VUcmFuc2FjdGlvbl9pbml0KAEA
-AABzGwAAAFNhbGVJbnZvaWNlVHJhbnNhY3Rpb25faW5pdCgAAAAAKAAAAABzKQAAAFB5dGhvbiBT
-Y3JpcHQgd2l0aG91dCBBY3F1aXNpdGlvbiBDb250ZXh0cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/SaleInvoiceTransaction_init</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_for_budget/SaleInvoiceTransaction_init</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

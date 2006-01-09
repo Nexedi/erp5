@@ -84,11 +84,7 @@
         <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
-              <tuple>
-                <string>Arrow</string>
-                <string>Task</string>
-                <string>VariationRange</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

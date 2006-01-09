@@ -40,17 +40,13 @@
         <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
-              <tuple>
-                <string>Budget Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>group</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -77,9 +73,7 @@
         <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
-              <tuple>
-                <string>Budget Cell</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -93,12 +87,7 @@
         <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
-              <tuple>
-                <string>Arrow</string>
-                <string>Document</string>
-                <string>Task</string>
-                <string>VariationRange</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

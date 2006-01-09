@@ -41,9 +41,6 @@
    <role>Reviewer</role>
   </permission>
   <permission>
-   <name>AccessContentsInformation</name>
-  </permission>
-  <permission>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
    <role>Reviewer</role>
@@ -124,6 +121,9 @@
   <permission>
    <name>Add ERP5 Forms</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add ERP5 OOo Templates</name>
   </permission>
   <permission>
    <name>Add ERP5 PDF Forms</name>
@@ -228,6 +228,9 @@
   <permission>
    <name>Add Pluggable Index</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add Plugin Registrys</name>
   </permission>
   <permission>
    <name>Add Python Scripts</name>
@@ -432,6 +435,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Change user folder</name>
+  </permission>
+  <permission>
    <name>Copy or Move</name>
    <role>Assignor</role>
    <role>Manager</role>
@@ -519,6 +525,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Manage Groups</name>
+  </permission>
+  <permission>
    <name>Manage Transient Object Container</name>
    <role>Manager</role>
   </permission>
@@ -545,6 +554,9 @@
   <permission>
    <name>Manage ZCatalogIndex Entries</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Manage extensions</name>
   </permission>
   <permission>
    <name>Manage languages</name>
@@ -620,6 +632,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Search for principals</name>
+  </permission>
+  <permission>
    <name>Set own password</name>
    <role>Manager</role>
   </permission>
@@ -650,9 +665,6 @@
   <permission>
    <name>Use Factories</name>
    <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Use external editor</name>
   </permission>
   <permission>
    <name>Use mailhost services</name>
