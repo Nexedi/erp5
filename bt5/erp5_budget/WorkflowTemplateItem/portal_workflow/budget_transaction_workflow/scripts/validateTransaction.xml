@@ -97,7 +97,7 @@ budget_list = context.getPortalObject().budget_module.objectValues()\n
 max_quantity = 0\n
 for obj in budget_list:\n
   for item in obj.objectValues(): \n
-     if item.getPortalType() == \'Budget Transfert Line\' and item.getSourceValue() == source_cell and item.getDestinationValue() == destination_cell:\n
+     if item.getPortalType() == \'Budget Transfer Line\' and item.getSourceValue() == source_cell and item.getDestinationValue() == destination_cell:\n
          max_quantity = item.getQuantity()\n
 if quantity > max_quantity:\n
    raise ValidationFailed, \'Action impossible : the quantity of the transaction is greater than the transferable maximum quantity (TMQ): TMQ = %.2f\' % max_quantity\n

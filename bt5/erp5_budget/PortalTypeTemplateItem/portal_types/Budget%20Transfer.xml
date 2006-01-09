@@ -23,7 +23,6 @@
             <value>
               <tuple>
                 <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
               </tuple>
             </value>
         </item>
@@ -32,6 +31,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>allowed_content_types</string> </key>
@@ -47,24 +50,29 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>document.gif</string> </value>
+            <value> <string>folder_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Document</string> </value>
+            <value> <string>ERP5 Folder</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>       Budget Transfert Line ...\n
-</string> </value>
+            <value> <string>Budget Transfer ....</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addBudgetTransfert</string> </value>
+            <value> <string>addFolder</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -74,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Budget Transfert Line</string> </value>
+            <value> <string>Budget Transfer</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -88,7 +96,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Transfert Line</string> </value>
+            <value> <string>Budget Transfer</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -97,7 +105,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -108,7 +116,7 @@
         <item>
             <key> <string>action</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -145,7 +153,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -162,71 +170,6 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
-          <string>PatchedActionInformation</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>action</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
-        </item>
-        <item>
-            <key> <string>condition</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>icon</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>metadata</string> </value>
-        </item>
-        <item>
-            <key> <string>optional</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>permissions</string> </key>
-            <value>
-              <tuple>
-                <string>Manage properties</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Metadata</string> </value>
-        </item>
-        <item>
-            <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <tuple>
           <string>Products.CMFCore.Expression</string>
           <string>Expression</string>
         </tuple>
@@ -237,26 +180,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BudgetTransfertLine_view</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewMetadata</string> </value>
+            <value> <string>string:${object_url}/BudgetTransfer_viewBudgetTransferLine</string> </value>
         </item>
       </dictionary>
     </pickle>

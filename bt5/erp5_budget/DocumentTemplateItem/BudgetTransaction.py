@@ -34,7 +34,7 @@ from zLOG import LOG
 
 class BudgetTransaction( DeliveryLine ):
     """
-       BudgetTransaction an order or transfert of budget.
+       BudgetTransaction an order or transfer of budget.
     """
 
     # Default Properties

@@ -28,11 +28,11 @@
   <workflow></workflow>
  </chain>
  <chain>
-  <type>Budget Transfert</type>
-  <workflow></workflow>
+  <type>Budget Transfer</type>
+  <workflow>(Default)</workflow>
  </chain>
  <chain>
-  <type>Budget Transfert Line</type>
-  <workflow></workflow>
+  <type>Budget Transfer Line</type>
+  <workflow>(Default)</workflow>
  </chain>
 </workflow_chain>

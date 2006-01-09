@@ -1,6 +1,6 @@
 BudgetLine
+BudgetTransfer
 BudgetCell
 Budget
-BudgetTransfertLine
+BudgetTransferLine
 BudgetTransaction
-BudgetTransfert

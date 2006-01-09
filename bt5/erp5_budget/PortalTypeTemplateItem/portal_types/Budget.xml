@@ -39,6 +39,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -71,6 +75,12 @@
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
               <tuple/>
@@ -101,7 +111,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -149,7 +159,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -166,7 +176,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -214,11 +224,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Transfert</string> </value>
+            <value> <string>Budget Transfer</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -231,7 +241,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -279,7 +289,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -296,7 +306,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -344,7 +354,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -361,7 +371,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -409,7 +419,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -426,7 +436,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -474,7 +484,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -491,7 +501,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -539,7 +549,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -585,7 +595,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BudgetTransfert_viewBudgetTransfertLine</string> </value>
+            <value> <string>string:${object_url}/BudgetTransfer_viewBudgetTransferLine</string> </value>
         </item>
       </dictionary>
     </pickle>

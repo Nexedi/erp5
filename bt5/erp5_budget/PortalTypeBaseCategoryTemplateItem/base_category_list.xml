@@ -13,7 +13,7 @@
  <portal_type id="Budget Transaction">
   <item>group</item>
  </portal_type>
- <portal_type id="Budget Transfert Line">
+ <portal_type id="Budget Transfer Line">
   <item>group</item>
  </portal_type>
 </base_category_list>

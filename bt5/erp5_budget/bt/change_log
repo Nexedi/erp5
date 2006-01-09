@@ -1,3 +1,6 @@
+2005-01-09 Romain
+* rename Transfert to Transfer
+
 2005-10-15 Kevin
 * first "as is" public release (thanks to Mayoro, the author of the whole module)
 * rename skin folder 'erp5_accounting' to 'erp5_accounting_for_budget' to avoid confusion

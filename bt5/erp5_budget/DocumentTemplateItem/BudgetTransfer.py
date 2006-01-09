@@ -26,32 +26,33 @@
 #
 ##############################################################################
 
-
-
-from AccessControl import ClassSecurityInfo
-
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-
-from Products.ERP5.Document.SupplyLine import SupplyLine
-from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.Supply import Supply
 from zLOG import LOG
 
-class BudgetTransfertLine( SupplyLine ):
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.XMLObject import XMLObject
+
+
+class BudgetTransfer( Supply ):
     """
-       BudgetTransfertLine  ...
+       BudgetTransfer  ...
     """
 
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
-		                  , PropertySheet.Amount
+                      , PropertySheet.Folder
                       , PropertySheet.Task
-                      , PropertySheet.Arrow
+		      , PropertySheet.Arrow
+		      , PropertySheet.Movement
 		      )
+
+  
     
     # CMF Type Definition
-    meta_type='ERP5 Document'
-    portal_type='Budget Transfert Line'    
+    meta_type='ERP5 Folder'
+    portal_type='Budget Transfer'    
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1

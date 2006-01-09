@@ -342,10 +342,6 @@
                           <string>Destination</string>
                         </tuple>
                         <tuple>
-<string></string>
-<string></string>
-                        </tuple>
-                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
@@ -434,7 +430,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>BudgetTransfert_viewBudgetTransfertLine</string> </value>
+                    <value> <string>BudgetTransfer_viewBudgetTransferLine</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -457,8 +453,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Budget Transfert Line</string>
-                          <string>Budget Transfert Line</string>
+                          <string>Budget Transfer Line</string>
+                          <string>Budget Transfer Line</string>
                         </tuple>
                       </list>
                     </value>
@@ -493,7 +489,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>budget_transfert_selection</string> </value>
+                    <value> <string>budget_transfer_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -519,7 +515,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Budget Transfert</string> </value>
+                    <value> <string>Budget Transfer</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

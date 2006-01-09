@@ -101,7 +101,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -149,11 +149,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Initial</string> </value>
+            <value> <string>Initial Budget</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -166,7 +166,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -214,11 +214,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string encoding="base64">QnVkZ2V0IFLDqWVs</string> </value>
+            <value> <string>Actual Budget</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -231,7 +231,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -279,11 +279,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Consomm\xc3\xa9</string> </value>
+            <value> <string>Consumed Budget</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -296,7 +296,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -344,11 +344,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Restant</string> </value>
+            <value> <string>Available Budget</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -361,7 +361,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -409,7 +409,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -426,7 +426,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.CMFCorePatch</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
           <string>PatchedActionInformation</string>
         </tuple>
         <none/>
@@ -474,7 +474,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
