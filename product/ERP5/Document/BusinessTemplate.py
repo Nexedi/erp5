@@ -643,7 +643,8 @@ class PathTemplateItem(ObjectTemplateItem):
       return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
-      path_list.extend(self._resolvePath(folder._getOb(object_id), relative_url_list + [object_id], id_list[1:]))
+      if object_id != "":
+        path_list.extend(self._resolvePath(folder._getOb(object_id), relative_url_list + [object_id], id_list[1:]))
     return path_list
 
   def build(self, context, **kw):
