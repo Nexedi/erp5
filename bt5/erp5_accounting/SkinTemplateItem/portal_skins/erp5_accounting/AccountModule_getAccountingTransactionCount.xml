@@ -108,11 +108,11 @@ if kw.get(\'stat\') :\n
   if selection.isInvertMode() :\n
     kwd[\'selection_uids\'] = selection.getInvertModeUidList()\n
   return context.portal_simulation.getInventoryStat(omit_simulation=1,\n
-                                               **kwd)\n
+                                               **kwd)[0][\'stock_uid\']\n
 \n
 return context.portal_simulation.getInventoryStat(node_uid=context.getUid(),\n
                                                omit_simulation=1,\n
-                                               **kwd)\n
+                                               **kwd)[0][\'stock_uid\']\n
 </string> </value>
         </item>
         <item>
