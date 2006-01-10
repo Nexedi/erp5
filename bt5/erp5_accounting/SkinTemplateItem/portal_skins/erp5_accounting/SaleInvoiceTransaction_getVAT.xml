@@ -93,8 +93,8 @@ if len(accounting_movement_list) :\n
       #if vat_infos[\'ratio\'] != 0 :\n
       #  assert 1 # TODO\n
       vat_infos.setdefault(\'title\', account.getTitle())\n
-      vat_infos.setdefault(\'ratio\', movement.getTotalPrice() / (float(invoice.getTotalPrice()) or 1)) # XXX this calls catalog => bad & this does not suport multiple VAT lines either\n
-      vat_infos.update( { \'total\': vat_infos[\'total\'] + movement.getTotalPrice() } )\n
+      vat_infos.setdefault(\'ratio\', movement.getQuantity() / (float(invoice.getTotalPrice(portal_type = [\'Invoice Line\', \'Sale Invoice Line\'])) or 1)) # XXX this calls catalog => bad & this does not suport multiple VAT lines either\n
+      vat_infos.update( { \'total\': vat_infos[\'total\'] + movement.getQuantity() } )\n
 \n
 # 2) no accounting lines => we must look in the simulation\n
 if not vat_infos.has_key(\'title\') :\n
