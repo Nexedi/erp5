@@ -93,6 +93,8 @@ transaction_simulation_state = request[\'transaction_simulation_state\']\n
 transaction_portal_type = request[\'transaction_portal_type\']\n
 from_date = request.get(\'from_date\', None)\n
 \n
+N_ = context.Base_TranslateString\n
+\n
 params = {\n
   \'sort_on\' : \'delivery.start_date\',\n
   \'at_date\' : at_date,\n
@@ -111,15 +113,14 @@ for transaction in context\\\n
         selection_params = params, selection=None, **params):\n
     transaction = transaction.getObject()\n
     lines = []\n
-    transaction_dict={\'date\'        : context.Base_FormatDate(transaction.getStartDate()),\n
-                      \'description\' : context.Base_TranslateString(\n
-                                       "${transaction_title} (Transaction Reference = ${transaction_source_reference},\\n Creation Date = ${creation_date} \\n Currency = ${currency_title})" ,\n
-                                       mapping = { "transaction_title": unicode(transaction.getTitle() or \'\', \'utf8\'),\n
-                                                   "transaction_source_reference": unicode(transaction.getSourceReference() or \'\', \'utf8\'),\n
-                                                   "creation_date" : context.Base_FormatDate(transaction.getCreationDate()),\n
-                                                   "currency_title" : transaction.getResourceTitle() or \'\'}),\n
-                      \'lines\'       : lines, }\n
-\n
+    transaction_dict={ \'date\'        : context.Base_FormatDate(transaction.getStartDate()),\n
+                       \'description\' : N_("${transaction_title} (Transaction Reference = ${transaction_source_reference},\\n Creation Date = ${creation_date} \\n Currency = ${currency_title})" ,\n
+           mapping = { "transaction_title": unicode(transaction.getTitle() or \'\', \'utf8\'),\n
+                       "transaction_source_reference": unicode(transaction.getSourceReference() or \'\', \'utf8\'),\n
+                       "creation_date" : context.Base_FormatDate(transaction.getCreationDate()),\n
+                       "currency_title" : transaction.getResourceTitle() or \'\'}),\n
+                       \'lines\'       : lines, }\n
+    \n
     result.append(transaction_dict)\n
     transaction_lines = transaction.contentValues(\n
       filter = {\'portal_type\' : context.getPortalAccountingMovementTypeList()})\n
@@ -131,7 +132,7 @@ for transaction in context\\\n
        debtor = (line.getSourceDebit() > line.getSourceCredit())\n
        account = line.getSourceValue()\n
        if account is None: continue\n
-       if account.getAccountType() in (\'asset/bank\', \'asset/bank/cash\') :\n
+       if account.isMemberOf( \'account_type/asset/cash\' ) :\n
           account_description = "%s (%s)"%(\n
                                       line.getSourceTitle(),\n
                                       line.getSourcePaymentTitle())\n
@@ -145,24 +146,25 @@ for transaction in context\\\n
           account_description = line.getSourceTitle()\n
        lines.append({\n
           \'debtor\' : debtor,\n
-          \'account_gap_id\' : account.getGapId(),\n
+          \'account_gap_id\' : account.Account_getGapId(),\n
           \'account_name\' : account_description,\n
           \'amount\' : debtor  and (line.getSourceDebit() \\\n
                                     - line.getSourceCredit()) \\\n
                               or (line.getSourceCredit() \\\n
                                     - line.getSourceDebit())\n
-       })\n
+          })\n
        if debtor :\n
          journal_total_debit += line.getSourceDebit()\n
        else:\n
          journal_total_credit += line.getSourceCredit()\n
        \n
        # internal mouvements, ie when we are destination and source\n
+       # FIXME: here we should check only if we are destination.\n
        if line.getDestinationSection() == line.getSourceSection() :\n
          debtor = (line.getDestinationDebit() > line.getDestinationCredit())\n
          account = line.getDestinationValue()\n
          if account is None : continue\n
-         if account.getAccountType() == \'asset/cash\' :\n
+         if account.isMemberOf( \'account_type/asset/cash\' ) :\n
             account_description = "%s (%s)"%(\n
                                       line.getDestinationTitle(),\n
                                       line.getDestinationPaymentTitle())\n
@@ -176,7 +178,7 @@ for transaction in context\\\n
             account_description = line.getDestinationTitle()\n
          lines.append({\n
             \'debtor\' : debtor,\n
-            \'account_gap_id\' : account.getGapId(),\n
+            \'account_gap_id\' : account.Account_getGapId(),\n
             \'account_name\' : account_description,\n
             \'amount\' : debtor  and (line.getDestinationDebit() \\\n
                                         - line.getDestinationCredit()) \\\n
@@ -188,7 +190,8 @@ for transaction in context\\\n
          else:\n
            journal_total_credit += line.getSourceCredit()\n
          \n
-return result + [{"journal_total_debit": journal_total_debit, "journal_total_credit": journal_total_credit}]\n
+return result + [{ "journal_total_debit": journal_total_debit,\n
+                   "journal_total_credit": journal_total_credit }]\n
 # vim: syntax=python\n
 
 
@@ -248,6 +251,7 @@ return result + [{"journal_total_debit": journal_total_debit, "journal_total_cre
                             <string>transaction_portal_type</string>
                             <string>None</string>
                             <string>from_date</string>
+                            <string>N_</string>
                             <string>params</string>
                             <string>_write_</string>
                             <string>result</string>
