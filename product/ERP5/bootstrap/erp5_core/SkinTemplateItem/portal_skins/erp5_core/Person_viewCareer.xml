@@ -95,7 +95,7 @@
                         <string>my_id</string>
                         <string>my_title</string>
                         <string>my_career_title</string>
-                        <string>my_subordination_title</string>
+                        <string>my_career_subordination_title</string>
                         <string>my_career_role</string>
                         <string>my_career_grade</string>
                         <string>my_career_function</string>

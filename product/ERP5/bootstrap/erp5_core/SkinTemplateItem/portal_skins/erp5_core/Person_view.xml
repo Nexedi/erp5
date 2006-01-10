@@ -95,7 +95,7 @@
                         <string>my_id</string>
                         <string>my_first_name</string>
                         <string>my_last_name</string>
-                        <string>my_subordination_title</string>
+                        <string>my_career_subordination_title</string>
                         <string>my_gender</string>
                         <string>my_nationality</string>
                         <string>my_translated_validation_state_title</string>

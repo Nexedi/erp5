@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_subordination_title</string> </value>
+            <value> <string>my_career_subordination_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -360,7 +360,7 @@
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>setCareerSubordinationUid</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
