@@ -336,6 +336,27 @@ class SectionPathMovementGroup(RootMovementGroup):
 
 allow_class(SectionPathMovementGroup)
 
+class TradePathMovementGroup(RootMovementGroup):
+  """
+  Group movements that have the same source_trade and the same
+  destination_trade.
+  """
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.source_trade = movement.getSourceTrade()
+    self.destination_trade = movement.getDestinationTrade()
+
+    self.setGroupEdit(
+        source_trade_value=movement.getSourceTradeValue(),
+        destination_trade_value=movement.getDestinationTradeValue(),
+    )
+
+  def test(self, movement):
+    return movement.getSourceTrade() == self.source_trade and \
+      movement.getDestinationTrade() == self.destination_trade
+
+allow_class(TradePathMovementGroup)
+
 # XXX Naming issue ?
 class QuantitySignMovementGroup(RootMovementGroup):
   def __init__(self, movement, **kw):
