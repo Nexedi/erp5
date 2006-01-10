@@ -260,6 +260,45 @@ class Variated(Base):
       result += [column_bc]
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariationRangeCategoryItemList')
+  def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
+                                        root=1, display_id='title', 
+                                        display_base_category=1,
+                                        current_category=None):
+    """
+    Returns possible variations
+      => [(display, value)]
+    """
+    result = []
+    if base_category_list is ():
+      base_category_list = self.getVariationBaseCategoryList()
+    elif type(base_category_list) is type('a'):
+      base_category_list = (base_category_list, )
+    # Render categories
+    for base_category in base_category_list:
+      result += self.portal_categories.unrestrictedTraverse(base_category).\
+             getCategoryChildLogicalPathItemList(
+                             base=base,
+                             display_base_category=display_base_category,
+                             display_none_category=0)
+    # Return result
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariationRangeCategoryList')
+  def getVariationRangeCategoryList(self, base_category_list=(), base=1,
+                                    root=1, current_category=None):
+    """
+      Returns the range of acceptable categories
+    """
+    vrcil = self.getVariationRangeCategoryItemList(
+                               base_category_list=base_category_list,
+                               base=base, root=root, 
+                               current_category=current_category)
+    # display is on left
+    return map(lambda x: x[1], vrcil)
+
   # Context related methods
   security.declarePublic('newVariationValue')
   def newVariationValue(self, context=None, REQUEST=None, **kw):

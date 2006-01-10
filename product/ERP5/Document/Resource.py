@@ -87,6 +87,28 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
           resource.getVariationRangeCategoryItemList
             => [(display, value)]
+        
+      ## Variation API (exemple) ##
+        Base categories defined:
+          - colour
+          - morphology
+          - size
+        Categories defined:
+          - colour/blue
+          - colour/red
+          - size/Man
+          - size/Woman
+        Resource 'resource' created with variation_base_category_list:
+            (colour, morphology, size)
+
+        resource.getVariationRangeCategoryList
+        variation   | individual variation | result
+        ____________________________________________________________________________________
+                    |                      | (colour/blue, colour/red, size/Man, size/Woman)
+        size/Man    |                      | (colour/blue, colour/red, size/Man, size/Woman)
+        colour/blue |                      | (colour/blue, colour/red, size/Man, size/Woman)
+                    |  colour/1            | (colour/1, size/Man, size/Woman)
+                    |  morphology/2        | (colour/blue, colour/red, size/Man, size/Woman, morphology/2)
         """
         result = []
         if base_category_list is ():
@@ -120,51 +142,13 @@ class Resource(XMLMatrix, CoreResource, Variated):
             other_base_category_dict.items())
         other_base_category_list = map(lambda x: x[0],
             other_base_category_item_list)
-        for c in other_base_category_list:
-           result += self.portal_categories.unrestrictedTraverse(c).\
-                 getCategoryChildLogicalPathItemList(
-                                 base=base,
-                                 display_base_category=display_base_category,
-                                 display_none_category=0)
-
+        # Get category variation
+        if len(other_base_category_list) != 0:
+          result += Variated.getVariationRangeCategoryItemList(
+              self, base_category_list=other_base_category_list,
+              base=base, display_base_category=display_base_category)
+        # Return result
         return result
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                                           'getVariationRangeCategoryList')
-    def getVariationRangeCategoryList(self, base_category_list=(), base=1,
-                                      root=1, current_category=None):
-      """
-        Returns the range of acceptable categories
-        
-      ## Variation API (exemple) ##
-        Base categories defined:
-          - colour
-          - morphology
-          - size
-        Categories defined:
-          - colour/blue
-          - colour/red
-          - size/Man
-          - size/Woman
-        Resource 'resource' created with variation_base_category_list:
-            (colour, morphology, size)
-
-        resource.getVariationRangeCategoryList
-        variation   | individual variation | result
-        ____________________________________________________________________________________
-                    |                      | (colour/blue, colour/red, size/Man, size/Woman)
-        size/Man    |                      | (colour/blue, colour/red, size/Man, size/Woman)
-        colour/blue |                      | (colour/blue, colour/red, size/Man, size/Woman)
-                    |  colour/1            | (colour/1, size/Man, size/Woman)
-                    |  morphology/2        | (colour/blue, colour/red, size/Man, size/Woman, morphology/2)
-      """
-      vrcil = self.getVariationRangeCategoryItemList(
-                                 base_category_list=base_category_list,
-                                 base=base, root=root, 
-                                 current_category=current_category)
-      # display is on left
-      return map(lambda x: x[1], vrcil)
-
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationCategoryItemList')
@@ -418,6 +402,10 @@ class Resource(XMLMatrix, CoreResource, Variated):
       kw['resource'] = self.getRelativeUrl()
       return self.portal_simulation.getInventoryHistoryChart(**kw)
 
+    # XXX FIXME
+    # Method getCurrentMovementHistoryList, 
+    # getAvailableMovementHistoryList, getFutureMovementHistoryList
+    # can be added
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getMovementHistoryList')
     def getMovementHistoryList(self, **kw):
