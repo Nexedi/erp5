@@ -1921,7 +1921,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   # Hash method
   def __hash__(self):
-    return self.getUid()
+    return hash(self.getUid())
 
   #psyco.bind(getObjectMenu)
 
