@@ -1,6 +1,6 @@
 Name:               ERP5SyncML
 Summary:            SyncML for ERP5
-Version:            0.8
+Version:            0.9
 Release:            1mdk
 Group:              Development/Python
 Requires:           zope, ERP5Type, erp5diff
@@ -39,14 +39,14 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
-install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
-install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
+install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
+install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
 install %{name}-%{version}/skins/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/redd

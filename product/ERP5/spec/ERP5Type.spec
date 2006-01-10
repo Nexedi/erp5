@@ -1,6 +1,6 @@
 Name:               ERP5Type
 Summary:            Base objects for ERP5
-Version:            0.8
+Version:            0.9
 Release:            1mdk
 Group:              Development/Python
 Requires:           zope
@@ -45,19 +45,19 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
-install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
-install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
+install %{name}-%{version}/Tool/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
+install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
+install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
 install %{name}-%{version}/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
-install %{name}-%{version}/Tool/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
 %clean
 rm -rf $RPM_BUILD_ROOT
 

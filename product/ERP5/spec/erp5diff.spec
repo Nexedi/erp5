@@ -1,6 +1,6 @@
 %define name erp5diff
 %define version 0.1
-%define release 2nxd
+%define release 3nxd
 
 Summary: XUpdate Generator for ERP5
 Name: %{name}
@@ -10,6 +10,7 @@ Source0: %{name}-%{version}.tar.bz2
 License: GPL
 Group: Development/Python
 BuildRoot: %{_tmppath}/%{name}-buildroot
+Buildarch: noarch
 Url: http://erp5.org
 
 %description
@@ -42,6 +43,10 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_bindir}/%{name}
 
 %changelog
+* Fri Aug  6 2005 Yoshinori Okuji <yo@nexedi.com> 0.1-3nxd
+- rebuilt for python 2.4
+- set Buildarch to noarch
+
 * Wed Feb  4 2004 Sebastien Robin <seb@nexedi.com> 0.1-2nxd
 - just added a return between each line
 

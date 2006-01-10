@@ -1,6 +1,6 @@
 Name:               ERP5
 Summary:            A Zope framework to implement ERP software
-Version:            0.8
+Version:            0.9
 Release:            1mdk
 Group:              Development/Python
 Requires:           zope, ExtFile, ZSQLCatalog, Photo, CMFPhoto, BTreeFolder2, Formulator, Localizer, CMFReportTool, CMFMailIn, ZMySQLDA, PyXML, python-reportlab, ERP5Catalog, ERP5Form, ERP5SyncML, CMFCategory, ERP5Type, python-imaging, TranslationService, python-numeric, python-psyco, python-glpk, CMFActivity
@@ -47,7 +47,6 @@ install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Produ
 install %{name}-%{version}/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/bootstrap
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Capacity
 install %{name}-%{version}/Capacity/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Capacity
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
@@ -59,36 +58,48 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/DeliverySo
 install %{name}-%{version}/DeliverySolver/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/DeliverySolver
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
-install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Extensions
 install %{name}-%{version}/Extensions/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Extensions
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
+install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install %{name}-%{version}/PropertySheet/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Simulation
+install %{name}-%{version}/Simulation/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Simulation
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/TargetSolver
+install %{name}-%{version}/TargetSolver/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/TargetSolver
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
+install %{name}-%{version}/Tool/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool/dtml
+install %{name}-%{version}/Tool/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool/dtml
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/bootstrap
+install %{name}-%{version}/bootstrap/*.xml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/bootstrap
+install %{name}-%{version}/bootstrap/*.bt5 $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/bootstrap
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
+install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/functest
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/functest/anonymous
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/functest/member
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/import
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
-install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/patch
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
-install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
-install %{name}-%{version}/PropertySheet/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Simulation
-install %{name}-%{version}/Simulation/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Simulation
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5
-install %{name}-%{version}/skins/erp5/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5
-install %{name}-%{version}/skins/erp5/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5
-install %{name}-%{version}/skins/erp5/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5
-install %{name}-%{version}/skins/erp5/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5
-install %{name}-%{version}/skins/erp5/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
-install %{name}-%{version}/skins/erp5_accounting/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
-install %{name}-%{version}/skins/erp5_accounting/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
-install %{name}-%{version}/skins/erp5_accounting/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
-install %{name}-%{version}/skins/erp5_accounting/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
+install %{name}-%{version}/skins/erp5_test/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
+install %{name}-%{version}/skins/erp5_html_style/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
+install %{name}-%{version}/skins/erp5_html_style/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
+install %{name}-%{version}/skins/erp5_html_style/*.jpg $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
+install %{name}-%{version}/skins/erp5_html_style/*.props $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style/images
+install %{name}-%{version}/skins/erp5_html_style/images/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style/images
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
+install %{name}-%{version}/skins/erp5_trade/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
+install %{name}-%{version}/skins/erp5_trade/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
+install %{name}-%{version}/skins/erp5_trade/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
+install %{name}-%{version}/skins/erp5_trade/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
 install %{name}-%{version}/skins/erp5_crm/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
 install %{name}-%{version}/skins/erp5_crm/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
@@ -102,35 +113,14 @@ install %{name}-%{version}/skins/erp5_core/*.py $RPM_BUILD_ROOT%{_libdir}/zope/l
 install %{name}-%{version}/skins/erp5_core/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_core
 install %{name}-%{version}/skins/erp5_core/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_core
 install %{name}-%{version}/skins/erp5_core/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_core
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
-install %{name}-%{version}/skins/erp5_test/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
-install %{name}-%{version}/skins/erp5_trade/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
-install %{name}-%{version}/skins/erp5_trade/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
-install %{name}-%{version}/skins/erp5_trade/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
-install %{name}-%{version}/skins/erp5_trade/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
-install %{name}-%{version}/skins/pro/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
-install %{name}-%{version}/skins/pro/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
-install %{name}-%{version}/skins/pro/*.props $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro/images
-install %{name}-%{version}/skins/pro/images/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro/images
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
-install %{name}-%{version}/skins/erp5_html_style/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
-install %{name}-%{version}/skins/erp5_html_style/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
-install %{name}-%{version}/skins/erp5_html_style/*.jpg $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
-install %{name}-%{version}/skins/erp5_html_style/*.props $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style/images
-install %{name}-%{version}/skins/erp5_html_style/images/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_html_style/images
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
+install %{name}-%{version}/skins/erp5_accounting/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
+install %{name}-%{version}/skins/erp5_accounting/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
+install %{name}-%{version}/skins/erp5_accounting/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
+install %{name}-%{version}/skins/erp5_accounting/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/spec
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/TargetSolver
-install %{name}-%{version}/TargetSolver/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/TargetSolver
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
 install %{name}-%{version}/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
-install %{name}-%{version}/Tool/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool/dtml
-install %{name}-%{version}/Tool/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/www
 install %{name}-%{version}/www/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/www
 %clean

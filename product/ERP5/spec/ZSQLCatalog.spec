@@ -1,6 +1,6 @@
 Name:               ZSQLCatalog
 Summary:            A Zope product to search the Zope database with SQL requests
-Version:            0.8
+Version:            0.9
 Release:            1mdk
 Group:              Development/Python
 Requires:           zope
