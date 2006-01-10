@@ -163,7 +163,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -228,7 +228,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -293,7 +293,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -360,7 +360,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -559,7 +559,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -624,7 +624,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <int>10</int> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -765,7 +765,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>object/AccountingTransaction_isSourceCurrencyConvertible</string> </value>
+            <value> <string>python:object.AccountingTransaction_isSourceCurrencyConvertible()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -803,7 +803,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>object/AccountingTransaction_isDestinationCurrencyConvertible</string> </value>
+            <value> <string>python:object.AccountingTransaction_isDestinationCurrencyConvertible()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1206,7 +1206,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>object/AccountingTransaction_isSourceCurrencyConvertible</string> </value>
+            <value> <string>python:object.AccountingTransaction_isSourceCurrencyConvertible()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1244,7 +1244,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>object/AccountingTransaction_isDestinationCurrencyConvertible</string> </value>
+            <value> <string>python:object.AccountingTransaction_isDestinationCurrencyConvertible()</string> </value>
         </item>
       </dictionary>
     </pickle>
