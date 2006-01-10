@@ -74,7 +74,7 @@ category_dict = {\'income\': \'account_type/income\',\n
                  \'receivable\': \'account_type/asset/receivable\',\n
                  \'collected_vat\': \'account_type/liability/payable/collected_vat\',\n
                  \'refundable_vat\': \'account_type/asset/receivable/refundable_vat\',\n
-                 \'bank\': \'account_type/asset/bank\',\n
+                 \'bank\': \'account_type/asset/cash\',\n
                  }\n
 category = category_dict.get(context.id, \'account_type\')\n
 \n
