@@ -75,6 +75,9 @@ error_message = \'\'\n
 # Purchase Invoice Transaction or Sale Invoice Transaction.\n
 transaction = state_change[\'object\']\n
 skip_period_validation = state_change[\'kwargs\'].get(\'skip_period_validation\', 0)\n
+transition = state_change[\'transition\']\n
+if transition.id in (\'plan_action\', \'confirm_action\') :\n
+  skip_period_validation = 0\n
 \n
 if transaction.getStopDate() in (None, \'\') : \n
   error_message = \'date is not defined\'\n
@@ -117,46 +120,9 @@ if error_message != \'\':\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAABIAAAAPAAAAQwAA
-AHN7AgAAZAEAawAAbAEAfQIAAWQCAH0DAHQDAHwAAGQDAIMCAH0FAHQGAHQDAHwAAGQEAIMCAGQF
-AIMCAGQGAGQHAIMCAH0HAHQGAHwFAGQIAIMCAIMAAHQIAGQCAGYCAGoGAG8KAAFkCQB9AwBuAAEB
-fAcADG/3AAFkBwB9CQB0CgB0BgB0BgB8BQBkCACDAgCDAABkCgCDAgCDAAB0BgB0BgB8BQBkCACD
-AgCDAABkCwCDAgCDAAB0BgB0BgB8BQBkCACDAgCDAABkDACDAgCDAACDAwB9CwB4fgB0DAB0BgB0
-DQBkDQCDAgBkDgBkDwBkEABkEQCDAAKDAQBEXVgAfQ4AdAYAfA4AZBIAgwIAgwAAfQ4AdAYAfA4A
-ZBMAgwIAgwAAfAsABANqAQBvFgABdAYAfA4AZAgAgwIAgwAAagEAbgIAAgFvCgABZBQAfQkAcfkA
-AXH5AFd8CQAMbwoAAWQVAH0DAHFrAQFuAQABdAYAfAUAZBYAgwIAZA4AZBcAZwEAgwABfQ8AdAYA
-fAUAZBgAgwIAZA4AZBcAZBkAZwIAgwABfRAAdAYAfAUAZBoAgwIAgwAAfREAfA8AdAgAZAIAZgIA
-agYAbwoAAWQbAH0DAG6HAAF0BgB8BQBkHACDAgCDAABkHQBkHgBmAgBqBwBvZwABfBAAdAgAZAIA
-ZgIAagYAbzMAAWQfAH0DAHQGAHwFAGQYAIMCAIMAAHQIAGQCAGYCAGoHAG8KAAFkIAB9AwBxVQIB
-cVkCAXwRAHQIAGQCAGYCAGoGAG8KAAFkIQB9AwBxWQIBbgEAAXwDAGQCAGoDAG8RAAF8AgBkIgB8
-AwAXggIAbgEAAWQAAFMoIwAAAE4oAQAAAHMQAAAAVmFsaWRhdGlvbkZhaWxlZHMAAAAAcwYAAABv
-YmplY3RzBgAAAGt3YXJnc3MDAAAAZ2V0cxYAAABza2lwX3BlcmlvZF92YWxpZGF0aW9uaQAAAABz
-CwAAAGdldFN0b3BEYXRlcxMAAABkYXRlIGlzIG5vdCBkZWZpbmVkcwQAAAB5ZWFycwUAAABtb250
-aHMDAAAAZGF5cw4AAABwb3J0YWxfY2F0YWxvZ3MLAAAAcG9ydGFsX3R5cGVzEQAAAEFjY291bnRp
-bmcgUGVyaW9kcxAAAABzaW11bGF0aW9uX3N0YXRlcwcAAABwbGFubmVkcwkAAABnZXRPYmplY3Rz
-DAAAAGdldFN0YXJ0RGF0ZWkBAAAAcysAAABEYXRlIGlzIG5vdCBpbiBhbiBvcGVubmVkIEFjY291
-bnRpbmcgUGVyaW9kcxAAAABnZXRTb3VyY2VTZWN0aW9ucwwAAABPcmdhbmlzYXRpb25zFQAAAGdl
-dERlc3RpbmF0aW9uU2VjdGlvbnMGAAAAUGVyc29ucwsAAABnZXRSZXNvdXJjZXMdAAAAU291cmNl
-IFNlY3Rpb24gaXMgbm90IGRlZmluZWRzDQAAAGdldFBvcnRhbFR5cGVzEwAAAEJhbGFuY2UgVHJh
-bnNhY3Rpb25zFgAAAEFjY291bnRpbmcgVHJhbnNhY3Rpb25zIgAAAERlc3RpbmF0aW9uIFNlY3Rp
-b24gaXMgbm90IGRlZmluZWRzNgAAAERlc3RpbmF0aW9uIFNlY3Rpb24gaXMgbm90IGFuIE9yZ2Fu
-aXNhdGlvbiBvciBhIFBlcnNvbnMXAAAAY3VycmVuY3kgaXMgbm90IGRlZmluZWRzFAAAAEFjdGlv
-biBpbXBvc3NpYmxlIDogKBIAAABzHgAAAFByb2R1Y3RzLkRDV29ya2Zsb3cuRENXb3JrZmxvd3MQ
-AAAAVmFsaWRhdGlvbkZhaWxlZHMNAAAAZXJyb3JfbWVzc2FnZXMJAAAAX2dldGl0ZW1fcwwAAABz
-dGF0ZV9jaGFuZ2VzCwAAAHRyYW5zYWN0aW9ucwkAAABfZ2V0YXR0cl9zFgAAAHNraXBfcGVyaW9k
-X3ZhbGlkYXRpb25zBAAAAE5vbmVzCgAAAHZhbGlkX2RhdGVzCAAAAERhdGVUaW1lcxAAAAB0cmFu
-c2FjdGlvbl9kYXRlcwkAAABfZ2V0aXRlcl9zBwAAAGNvbnRleHRzAwAAAGFwZHMOAAAAc291cmNl
-X3NlY3Rpb25zEwAAAGRlc3RpbmF0aW9uX3NlY3Rpb25zCAAAAGN1cnJlbmN5KBIAAABzDAAAAHN0
-YXRlX2NoYW5nZXMeAAAAUHJvZHVjdHMuRENXb3JrZmxvdy5EQ1dvcmtmbG93cxAAAABWYWxpZGF0
-aW9uRmFpbGVkcw0AAABlcnJvcl9tZXNzYWdlcwkAAABfZ2V0aXRlbV9zCwAAAHRyYW5zYWN0aW9u
-cwkAAABfZ2V0YXR0cl9zFgAAAHNraXBfcGVyaW9kX3ZhbGlkYXRpb25zBAAAAE5vbmVzCgAAAHZh
-bGlkX2RhdGVzCAAAAERhdGVUaW1lcxAAAAB0cmFuc2FjdGlvbl9kYXRlcwkAAABfZ2V0aXRlcl9z
-BwAAAGNvbnRleHRzAwAAAGFwZHMOAAAAc291cmNlX3NlY3Rpb25zEwAAAGRlc3RpbmF0aW9uX3Nl
-Y3Rpb25zCAAAAGN1cnJlbmN5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxMAAAB2YWxp
-ZGF0ZVRyYW5zYWN0aW9uAQAAAHM+AAAADQIGAw8BIQIfAQoCCAEGAiQBGwEbASUABgMSATYBDgEI
-AQ4DGwEeARICEwEKAR8BEwEGAR8BDgETAQ4CDQEoAQAAAHMTAAAAdmFsaWRhdGVUcmFuc2FjdGlv
-bigBAAAAcxMAAAB2YWxpZGF0ZVRyYW5zYWN0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
-b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -222,6 +188,7 @@ b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                             <string>transaction</string>
                             <string>_getattr_</string>
                             <string>skip_period_validation</string>
+                            <string>transition</string>
                             <string>None</string>
                             <string>valid_date</string>
                             <string>DateTime</string>
