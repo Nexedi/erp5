@@ -74,8 +74,8 @@ category_dict = {\'income\': \'portal_categories/account_type/expense\',\n
                  \'receivable\': \'portal_categories/account_type/liability/payable\',\n
                  \'collected_vat\': \'portal_categories/account_type/asset/receivable/refundable_vat\',\n
                  \'refundable_vat\': \'portal_categories/account_type/liability/payable/collected_vat\',\n
-                 \'bank\': \'portal_categories/account_type/asset/bank\',\n
-                 \'cash\': \'portal_categories/account_type/asset/bank/cash\',\n
+                 \'bank\': \'portal_categories/account_type/asset/cash\',\n
+                 \'cash\': \'portal_categories/account_type/asset/cash\',\n
                  }\n
 \n
 if context.id in category_dict:\n
