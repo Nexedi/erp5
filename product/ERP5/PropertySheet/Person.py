@@ -169,6 +169,14 @@ class Person:
     },
   )
 
-  _categories = ( 'region', 'gender', 'product_line', 'nationality', 'marital_status',
-                  'subordination', 'destination_region' )
+  _categories = (  # set on the Person directly
+                  'gender', 'nationality', 'marital_status',
+                  'product_line', # (product interest)
+                   # acquired from address
+                  'region',
+                   # acquired from career
+                  'subordination', 'role', 'function', 'salary_level',
+                   # needed for movements having a Person as destination / source
+                  'destination_region', 'source_region',
+                 )
 
