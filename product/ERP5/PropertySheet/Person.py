@@ -155,26 +155,15 @@ class Person:
     , 'description'         : 'The default career hold some important properties of a Person.'
     , 'type'                : 'content'
     , 'portal_type'         : ( 'Career', )
-    , 'acquired_property_id': ( 'start_date', 'stop_date'
+    , 'acquired_property_id': ( 'start_date', 'stop_date', 'title', 'description'
                               , 'subordination', 'subordination_title', 'subordination_value'
-                              , 'subordination_uid_list'
+                              , 'subordination_uid_list', 'subordination_uid'
                               , 'collective_agreement_title', 'salary_coefficient'
                               , 'skill_list', 'skill_id_list', 'skill_title_list', 'skill_value_list'
                               , 'salary_level', 'salary_level_id', 'salary_level_title', 'salary_level_value'
                               , 'grade', 'grade_id', 'grade_title', 'grade_value'
                               , 'role', 'role_id', 'role_title', 'role_value'
-                              )
-    , 'mode'                : 'w'
-    },
-    # The properties in here are hold on the default career,
-    #   but are not those that are blended with Person (contrary those above).
-    { 'id'                  : 'career'
-    , 'storage_id'          : 'default_career'
-    , 'description'         : 'Properties of the default career.'
-    , 'type'                : 'content'
-    , 'portal_type'         : ( 'Career', )
-    , 'acquired_property_id': ( 'title', 'description'
-                              , 'function', 'function_title', 'function_value'
+                              , 'function', 'function_id', 'function_title', 'function_value'
                               )
     , 'mode'                : 'w'
     },
