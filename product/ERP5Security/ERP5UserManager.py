@@ -63,91 +63,83 @@ class ERP5UserManager(BasePlugin):
     security.declarePrivate( 'authenticateCredentials' )
     def authenticateCredentials(self, credentials):
         """ See IAuthenticationPlugin.
-        
+
         o We expect the credentials to be those returned by
             ILoginPasswordExtractionPlugin.
         """
         def _authenticateCredentials(login, password, path):
             if login is None or password is None:
                 return None
-            
+
             user_list = self.getUserByLogin(login)
-            
+
             if not user_list:
                 return None
-            
+
             user = user_list[0]
-            
-            if user.getPassword() == password:
-                LOG('authenticateCredentials', 0, user.getId())
-                return user.getId(), login
-            
+
+            if user.getPassword() == password and\
+                user.getCareerRole() == 'internal':
+              LOG('authenticateCredentials', 0, user.getId())
+              return login, login # use same for user_id and login
+
             return None
-        
+
         _authenticateCredentials = CachingMethod(_authenticateCredentials, id='ERP5UserManager_authenticateCredentials')
         return _authenticateCredentials(login=credentials.get('login'), password=credentials.get('password'), path=self.getPhysicalPath())
-            
+
     #
     #   IUserEnumerationPlugin implementation
     #
     security.declarePrivate( 'enumerateUsers' )
     def enumerateUsers(self, id=None, login=None, exact_match=False, sort_by=None, max_results=None, **kw):
         """ See IUserEnumerationPlugin.
-        """    
-        def _enumerateUsers(t_id, path):
+        """
+        def _enumerateUsers(id_tuple, exact_match, path):
             user_info = []
-            user_objects = []
             plugin_id = self.getId()
-                        
-            if isinstance(t_id, str):
-                t_id = (t_id,)
-                            
-            if t_id:
-                person_module = self.getPortalObject()\
-                                        .getDefaultModule('Person')
-                for user_name in t_id:
-                    user = getattr(person_module, user_name, None)
-                    if user:
-                        if user.getCareerRole() == 'internal':
-                            user_objects.append(user)
-                                        
-            elif login:
-                for user in self.getUserByLogin(login):
-                    if user.getCareerRole() == 'internal':  
-                        user_objects.append(user)
-            
+
+            if not exact_match:
+              id_tuple = tuple(['%%%s%%' % id for id in id_tuple])
+
+            user_objects = [user for user in self.getUserByLogin(id_tuple)\
+                if user.getCareerRole() == 'internal']
+                #XXX is this static check ok ?
+
             for user in user_objects:
-                LOG('enumerateUsers', 0, user.getId())
-                info = { 'id' : user.getId()
+                LOG('enumerateUsers', 0, user.getReference())
+                info = { 'id' : user.getReference()
                        , 'login' : user.getReference()
                        , 'pluginid' : plugin_id
-                       } 
-                       
+                       }
+
                 user_info.append(info)
-                                
+
             return tuple(user_info)
-        
+
         _enumerateUsers = CachingMethod(_enumerateUsers, id='ERP5UserManager_enumerateUsers')
-        
+
+        if isinstance(id, str):
+            id = (id,)
         if isinstance(id, list):
             id = tuple(id)
-        return _enumerateUsers(t_id=id, path=self.getPhysicalPath())
+        return _enumerateUsers(id_tuple=id, exact_match=exact_match, path=self.getPhysicalPath())
 
     def getUserByLogin(self, login):
-        """ 
+        """
         Search the Catalog for login and return a list of person objects
         login can be a string list or a list of strings
-        """       
+        """
         # because we aren't logged in, we have to create our own
         # SecurityManager to be able to access the Catalog
         sm = getSecurityManager()
         newSecurityManager(self, self.getPortalObject().portal_catalog.getOwner())
-        
+
         result = self.getPortalObject().portal_catalog(portal_type="Person", reference=login)
-        
+
         setSecurityManager(sm)
         return [item.getObject() for item in result]
-    
+
 classImplements( ERP5UserManager
                , IAuthenticationPlugin
                , IUserEnumerationPlugin
