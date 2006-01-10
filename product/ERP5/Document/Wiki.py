@@ -58,7 +58,7 @@ class Wiki( Document ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Compile regular expressions at load time.
     table_expr = re.compile(r"^\|\|(.+)\|\|$")

@@ -59,7 +59,7 @@ class Telephone(Coordinate, Base):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View) # ???????
+    security.declareObjectProtected(Permissions.AccessContentsInformation) # ???????
 
     # The standard parser is used to read phone numbers
     # written in a standard syntax

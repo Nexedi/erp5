@@ -50,7 +50,7 @@ class Entity:
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     security.declareProtected(Permissions.View, 'getDefaultAddressText')
     def getDefaultAddressText(self):

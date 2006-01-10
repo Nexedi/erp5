@@ -61,7 +61,7 @@ class AmountFilter(MappedValue, Amount):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
     __implements__ = ( Interface.Variated, )

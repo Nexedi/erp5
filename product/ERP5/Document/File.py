@@ -57,7 +57,7 @@ class File(Base, CMFFile):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Default global values
     content_type = '' # Required for WebDAV support (default value)

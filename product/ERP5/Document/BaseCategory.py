@@ -49,7 +49,7 @@ class BaseCategory(CMFBaseCategory, XMLObject):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
 
     property_sheets = ( PropertySheet.Base

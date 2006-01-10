@@ -133,7 +133,7 @@ class TransformationSourcingRule(Rule):
     portal_type = 'Transformation Sourcing Rule'
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject

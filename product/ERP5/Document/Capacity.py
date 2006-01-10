@@ -43,7 +43,7 @@ class Capacity(XMLObject):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'asCapacityItemList')
     def asCapacityItemList(self):

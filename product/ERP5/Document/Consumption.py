@@ -49,7 +49,7 @@ class Consumption(XMLObject, XMLMatrix, Variated):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

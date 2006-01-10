@@ -50,7 +50,7 @@ class TransformationRule(Rule):
     portal_type = 'Transformation Rule'
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject

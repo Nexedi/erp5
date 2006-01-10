@@ -81,7 +81,7 @@ class Coordinate(Base):
 
     # Declarative security (replaces __ac_permissions__)
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

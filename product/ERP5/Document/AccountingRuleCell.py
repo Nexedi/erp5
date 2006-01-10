@@ -67,4 +67,4 @@ An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Ma
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)

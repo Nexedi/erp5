@@ -44,7 +44,7 @@ class PaySheetTransaction(Invoice):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Global variables
     _transaction_line_portal_type = 'Pay Sheet Transaction Line'

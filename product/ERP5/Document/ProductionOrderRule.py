@@ -47,7 +47,7 @@ class ProductionOrderRule(OrderRule):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Default Properties
     property_sheets = ( PropertySheet.Base

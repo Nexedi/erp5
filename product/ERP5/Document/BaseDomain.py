@@ -49,6 +49,6 @@ class BaseDomain(Domain):
 
   # Declarative security
   security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.View)
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
 
