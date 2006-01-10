@@ -447,16 +447,32 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals( organisation.getDefaultAddressStreetAddress()
                      , default_address.getStreetAddress()
                      )
-#     self.assertEquals( organisation.getDefaultTelephoneText()
-#                      , default_address.getTelephoneText()
-#                      )
-#     self.assertEquals( organisation.getDefaultFaxText()
-#                      , default_address.getFaxText()
-#                      )
-#     self.assertEquals( organisation.getDefaultEmailText()
-#                      , default_address.getEmailText()
-#                      )
-
+    
+    # Organisation's region is acquired from the Address object
+    self.assertEquals( organisation.getRegion()
+                     , default_address.getRegion()
+                     )
+    
+    self.failUnless('default_telephone' in organisation.contentIds())
+    default_telephone = organisation.default_telephone
+    self.assertEquals(default_telephone.getPortalType(), 'Telephone')
+    self.assertEquals( organisation.getDefaultTelephoneText()
+                     , default_telephone.asText()
+                     )
+                     
+    self.failUnless('default_fax' in organisation.contentIds())
+    default_fax = organisation.default_fax
+    self.assertEquals(default_fax.getPortalType(), 'Fax')
+    self.assertEquals( organisation.getDefaultFaxText()
+                     , default_fax.asText()
+                     )
+    
+    self.failUnless('default_email' in organisation.contentIds())
+    default_email = organisation.default_email
+    self.assertEquals(default_email.getPortalType(), 'Email')
+    self.assertEquals( organisation.getDefaultEmailText()
+                     , default_email.asText()
+                     )
 
   def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):
     """
@@ -475,7 +491,12 @@ class TestHR(ERP5TypeTestCase):
       Set & Check default person properties acquired through default career.
     """
     person = sequence.get('person')
-
+    organisation = sequence.get('organisation')
+    
+    # Set subordination
+    person.setCareerSubordinationValue(organisation)
+    self.assertEquals(person.getCareerSubordinationValue(), organisation)
+    
     # Set & Check simple properties with 'Career' prefix
     person.setCareerTitle('A brand new career step')
     person.setCareerDescription('This career step correspond to my arrival at Nexedi as employee')
@@ -550,7 +571,7 @@ class TestHR(ERP5TypeTestCase):
     self.failIfDifferentSet(person.getCareerSkillList()     , skill_path_list)
     self.failIfDifferentSet(person.getCareerSkillTitleList(), skill_title_list)
     self.failIfDifferentSet(person.getCareerSkillValueList(), skill_object_list)
-
+    
 
   def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
     """
@@ -596,9 +617,10 @@ class TestHR(ERP5TypeTestCase):
     self.failIfDifferentSet(person.getCareerSkillTitleList(), default_career.getSkillTitleList())
     self.failIfDifferentSet(person.getCareerSkillValueList(), default_career.getSkillValueList())
 
-    # TODO: test subordination here
-
-
+    self.assertEquals(person.getCareerSubordination(), default_career.getSubordination())
+    # Person's subordination is acquired from default career
+    self.assertEquals(person.getSubordination(), default_career.getSubordination())
+    
 
   ##################################
   ##  Tests
@@ -627,6 +649,7 @@ class TestHR(ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     step_list = [ 'CreatePerson'
+                , 'CreateOrganisation'
                 , 'SetPersonCareer'
                 , 'CheckPersonCareer'
                 ]
