@@ -76,7 +76,7 @@
                       <list>
                         <string>my_source_reference</string>
                         <string>my_Title</string>
-                        <string>my_translated_simulation_state_title</string>
+                        <string>my_simulation_state</string>
                         <string>my_node</string>
                       </list>
                     </value>
