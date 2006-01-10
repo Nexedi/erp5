@@ -84,20 +84,9 @@ packing_list.portal_workflow.doActionFor(\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAYAAAAKAAAAQwAA
-AHN0AAAAdAAAfAAAZAEAgwIAfQIAdAMAdAAAfAAAZAIAgwIAZAMAgwIAfQQAdAMAdAAAfAAAZAIA
-gwIAZAQAgwIAfQUAdAAAdAAAfAIAZAUAgwIAZAYAgwIAfAIAZAcAZAgAZAkAZAQAfAUAZAMAfAQA
-gwIDAWQAAFMoCgAAAE5zBgAAAG9iamVjdHMGAAAAa3dhcmdzcwkAAABzdG9wX2RhdGVzCgAAAHN0
-YXJ0X2RhdGVzDwAAAHBvcnRhbF93b3JrZmxvd3MLAAAAZG9BY3Rpb25Gb3JzDwAAAHNwbGl0X3By
-ZXZpc2lvbnMFAAAAd2ZfaWRzHwAAAHBhY2tpbmdfbGlzdF9jYXVzYWxpdHlfd29ya2Zsb3coBgAA
-AHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzDAAAAHBhY2tpbmdfbGlzdHMJAAAAX2dl
-dGl0ZW1fcwkAAABzdG9wX2RhdGVzCgAAAHN0YXJ0X2RhdGUoBgAAAHMMAAAAc3RhdGVfY2hhbmdl
-cwkAAABfZ2V0YXR0cl9zDAAAAHBhY2tpbmdfbGlzdHMJAAAAX2dldGl0ZW1fcwkAAABzdG9wX2Rh
-dGVzCgAAAHN0YXJ0X2RhdGUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzKAAAAFBhY2tp
-bmdMaXN0X2NhbGxTcGxpdFByZXZpc2lvblRyYW5zaXRpb24BAAAAcwwAAAAPAhgBHgUPAQ8DBgEo
-AQAAAHMoAAAAUGFja2luZ0xpc3RfY2FsbFNwbGl0UHJldmlzaW9uVHJhbnNpdGlvbigBAAAAcygA
-AABQYWNraW5nTGlzdF9jYWxsU3BsaXRQcmV2aXNpb25UcmFuc2l0aW9uKAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

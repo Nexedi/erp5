@@ -72,14 +72,9 @@ context.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAQAAAAFAAAASwAA
-AHMvAAAAdAAAfAAAZAEAgwIAYQIAdAAAdAAAdAIAZAIAgwIAgwAAZAMAgwIAgwAAAWQAAFMoBAAA
-AE5zBgAAAG9iamVjdHMIAAAAYWN0aXZhdGVzFAAAAHVwZGF0ZUNhdXNhbGl0eVN0YXRlKAMAAABz
-CQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwcAAABjb250ZXh0KAQAAABzDAAAAHN0YXRl
-X2NoYW5nZXMCAAAAa3dzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNj
-cmlwdCAoUHl0aG9uKXMVAAAAUGFja2luZ0xpc3RfYWZ0ZXJFZGl0AQAAAHMCAAAAFQEoAQAAAHMV
-AAAAUGFja2luZ0xpc3RfYWZ0ZXJFZGl0KAEAAABzFQAAAFBhY2tpbmdMaXN0X2FmdGVyRWRpdCgA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
