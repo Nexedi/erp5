@@ -1,3 +1,7 @@
+2006-01-10 jerome
+* bug fix: use python: TALES expression for actions, for a old CMF bug
+* fix order of account_type category, using asset/cash/bank instead of asset/bank/cash
+
 2006-01-04 jerome
 * search transaction by creation date.
 
