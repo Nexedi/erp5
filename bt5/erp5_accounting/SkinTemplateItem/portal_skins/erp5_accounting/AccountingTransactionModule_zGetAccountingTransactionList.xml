@@ -41,15 +41,36 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>amount</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>amount_range_max</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>amount_range_min</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
@@ -77,13 +98,23 @@
                             <item>
                                 <key> <string>creation_date_range_max</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>creation_date_range_min</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
@@ -249,6 +280,7 @@
 <string>stat</string>
 <string>omit_input</string>
 <string>omit_output</string>
+<string>amount</string>
 <string>amount_range_min</string>
 <string>amount_range_max</string>
 <string>creation_date_range_min</string>
@@ -293,10 +325,11 @@ entity=""\r\n
 stat=""\r\n
 omit_input\r\n
 omit_output\r\n
-amount_range_min\r\n
-amount_range_max\r\n
-creation_date_range_min\r\n
-creation_date_range_max\r\n
+amount=""\r\n
+amount_range_min=""\r\n
+amount_range_max=""\r\n
+creation_date_range_min=""\r\n
+creation_date_range_max=""\r\n
 transaction=""\r\n
 section_category=""\r\n
 count=""</string> </value>
@@ -348,6 +381,8 @@ count=""</string> </value>
 <dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
 <dtml-let section_category="not entity and section_category or \'\'">\n
 \n
+<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max">\n
+\n
 SELECT\n
   <dtml-if stat>\n
     SUM(stock.quantity) AS quantity\n
@@ -364,8 +399,8 @@ FROM\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 \n
-  <dtml-if "from_date or to_date or at_date or node or resource or entity or stat or section_category">, catalog AS child </dtml-if>\n
-  <dtml-if "from_date or to_date or at_date or node or resource or stat">, movement </dtml-if>\n
+  <dtml-if use_movement_table>, catalog AS child\n
+                                                      , movement </dtml-if>\n
   <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
   <dtml-if node>, catalog AS source_account </dtml-if>\n
   <dtml-if resource>, catalog AS currency </dtml-if>\n
@@ -389,8 +424,8 @@ WHERE\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
   <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
   <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
-  <dtml-if "from_date or to_date or at_date or node or resource or entity or stat or section_category"> AND child.parent_uid = catalog.uid </dtml-if>\n
-  <dtml-if "from_date or to_date or at_date or node or resource or stat"> AND movement.uid = child.uid </dtml-if>\n
+  <dtml-if use_movement_table> AND child.parent_uid = catalog.uid \n
+                                                       AND movement.uid = child.uid </dtml-if>\n
   <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n
   <dtml-if node> AND source_account.uid = movement.source_uid </dtml-if>\n
   <dtml-if resource> AND currency.uid = movement.resource_uid </dtml-if>\n
@@ -426,6 +461,7 @@ WHERE\n
 </dtml-if>\n
 </dtml-unless>\n
 \n
+</dtml-let>\n
 </dtml-let>\n
 </dtml-let>\n
 </dtml-let>\n
@@ -477,6 +513,8 @@ WHERE\n
 <dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
 <dtml-let section_category="not entity and section_category or \'\'">\n
 \n
+<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max">\n
+\n
 SELECT\n
   <dtml-if stat>\n
     SUM(stock.quantity) AS quantity\n
@@ -493,8 +531,8 @@ FROM\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 \n
-  <dtml-if "from_date or to_date or at_date or node or resource or entity or stat or section_category">, catalog AS child </dtml-if>\n
-  <dtml-if "from_date or to_date or at_date or node or resource or stat">, movement </dtml-if>\n
+  <dtml-if use_movement_table>, catalog AS child\n
+                                                      , movement </dtml-if>\n
   <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
   <dtml-if node>, catalog AS source_account </dtml-if>\n
   <dtml-if resource>, catalog AS currency </dtml-if>\n
@@ -518,8 +556,8 @@ WHERE\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
   <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
   <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
-  <dtml-if "from_date or to_date or at_date or node or resource or entity or stat or section_category"> AND child.parent_uid = catalog.uid </dtml-if>\n
-  <dtml-if "from_date or to_date or at_date or node or resource or stat"> AND movement.uid = child.uid </dtml-if>\n
+  <dtml-if use_movement_table> AND child.parent_uid = catalog.uid \n
+                                                       AND movement.uid = child.uid </dtml-if>\n
   <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n
   <dtml-if node> AND source_account.uid = movement.source_uid </dtml-if>\n
   <dtml-if resource> AND currency.uid = movement.resource_uid </dtml-if>\n
@@ -555,6 +593,7 @@ WHERE\n
 </dtml-if>\n
 </dtml-unless>\n
 \n
+</dtml-let>\n
 </dtml-let>\n
 </dtml-let>\n
 </dtml-let>\n
