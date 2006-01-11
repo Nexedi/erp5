@@ -250,10 +250,13 @@ SELECT\n
 <dtml-if stat>\n
   IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
 <dtml-else>\n
-  DISTINCT catalog.uid AS uid\n
-  , catalog.path AS path\n
-  , child.path AS transaction_line_path\n
+  DISTINCT child.uid AS uid\n
+  , child.path AS path\n
   , stock.node_uid AS account_uid\n
+  , stock.date AS date\n
+  , catalog.reference AS parent_reference\n
+  , catalog.source_reference AS parent_source_reference -- FIXME\n
+  , catalog.portal_type AS portal_type\n
   , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0.00) AS source_debit\n
   , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0.00) AS source_credit\n
   , IFNULL(SUM(stock.quantity), 0.00) AS source_balance\n
@@ -306,13 +309,13 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity > 0\n
@@ -341,7 +344,7 @@ AND <dtml-var query>\n
 <dtml-unless stat>\n
 GROUP BY catalog.uid, stock.node_uid\n
 </dtml-unless>\n
-ORDER BY movement.stop_date, child.uid\n
+ORDER BY stock.date, child.uid\n
 </dtml-if>\n
 
 
@@ -386,10 +389,13 @@ SELECT\n
 <dtml-if stat>\n
   IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
 <dtml-else>\n
-  DISTINCT catalog.uid AS uid\n
-  , catalog.path AS path\n
-  , child.path AS transaction_line_path\n
+  DISTINCT child.uid AS uid\n
+  , child.path AS path\n
   , stock.node_uid AS account_uid\n
+  , stock.date AS date\n
+  , catalog.reference AS parent_reference\n
+  , catalog.source_reference AS parent_source_reference -- FIXME\n
+  , catalog.portal_type AS portal_type\n
   , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0.00) AS source_debit\n
   , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0.00) AS source_credit\n
   , IFNULL(SUM(stock.quantity), 0.00) AS source_balance\n
@@ -442,13 +448,13 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity > 0\n
@@ -477,7 +483,7 @@ AND <dtml-var query>\n
 <dtml-unless stat>\n
 GROUP BY catalog.uid, stock.node_uid\n
 </dtml-unless>\n
-ORDER BY movement.stop_date, child.uid\n
+ORDER BY stock.date, child.uid\n
 </dtml-if>\n
 
 

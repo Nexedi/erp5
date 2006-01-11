@@ -345,7 +345,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
+                          <string>parent_title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -353,7 +353,7 @@
                           <string>Section</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -365,11 +365,11 @@
                           <string>GAP</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
+                          <string>parent_reference</string>
                           <string>Invoice Number</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
+                          <string>parent_source_reference</string>
                           <string>Source Reference</string>
                         </tuple>
                         <tuple>
@@ -616,7 +616,60 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>parent_title</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_section_title</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>Entity_getAccountingTransactionSourceGapId</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_reference</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>parent_source_reference</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_debit</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_credit</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>grouping_reference</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_balance</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>net_balance</string>
+                          <string>AccountingTransactionLine_getParentUrl</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

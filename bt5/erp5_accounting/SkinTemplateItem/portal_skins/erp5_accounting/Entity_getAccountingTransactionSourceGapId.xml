@@ -66,9 +66,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>account = context.restrictedTraverse(brain.transaction_line_path).getSourceValue()\n
+            <value> <string>account = brain.getObject().getSourceValue()\n
 if account is not None:\n
-  return account.getGapId()\n
+  return account.Account_getGapId()\n
 </string> </value>
         </item>
         <item>
@@ -112,7 +112,6 @@ if account is not None:\n
                             <string>brain</string>
                             <string>selection</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                             <string>account</string>
                             <string>None</string>
                           </tuple>

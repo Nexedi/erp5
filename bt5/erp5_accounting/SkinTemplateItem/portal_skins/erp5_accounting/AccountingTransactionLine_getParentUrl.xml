@@ -66,58 +66,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kwd = {}\n
-if kw.has_key(\'hide_grouping\'):\n
-  kwd[\'hide_grouping\'] = kw[\'hide_grouping\']\n
-\n
-LOG = lambda msg : context.log(\'Entity_getAccountingTransactionList\', msg)\n
-\n
-# read settings from user preference\n
-preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
-if from_date :\n
-  kwd[\'from_date\'] = from_date\n
-at_date = preference.getPreferredAccountingTransactionAtDate()\n
-if at_date :\n
-  kwd[\'at_date\'] = at_date\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
-if simulation_state :\n
-  kwd[\'transaction_simulation_state\'] = simulation_state\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
-if section_category :\n
-  kwd[\'transaction_section_category\'] = section_category\n
-\n
-if kw.has_key(\'node_uid\'):\n
-  kwd[\'node_uid\'] = transaction_selection[\'node_uid\']\n
-if kw.has_key(\'transaction_portal_type\'):\n
-  kwd[\'transaction_portal_type\'] = kw[\'transaction_portal_type\']\n
-\n
-\n
-# FIXME: same problem as in BankAccount_getAccountingTransactionList\n
-\n
-#LOG("SQL used: %s" % context.Entity_zGetAccountingTransactionList(src__=1, **kwd))\n
-\n
-new_result = []\n
-result = context.Entity_zGetAccountingTransactionList(**kwd)\n
-if src__:\n
-  return result\n
-net_balance = 0.0\n
-for l in result:\n
-  o = l.getObject()\n
-  net_balance += l.source_balance or 0.0\n
-  if o is not None:\n
-    c = o.asContext(net_balance = net_balance,\n
-                    source_balance=l.source_balance,\n
-                    source_credit=l.source_credit,\n
-                    source_debit=l.source_debit,\n
-                    date=l.date,\n
-                    parent_reference=l.parent_reference,\n
-                    parent_source_reference=l.parent_source_reference,\n
-                    portal_type=l.portal_type )\n
-    new_result.append(c)\n
-\n
-return new_result\n
-# vim: syntax=python\n
+            <value> <string>line = brain.getObject()\n
+return "%s/view" % line.getParent().absolute_url()\n
 </string> </value>
         </item>
         <item>
@@ -127,18 +77,12 @@ return new_result\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Entity_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransactionLine_getParentUrl</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, src__=0, **kw</string> </value>
+            <value> <string>brain, selection</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -164,30 +108,10 @@ return new_result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>brain</string>
                             <string>selection</string>
-                            <string>src__</string>
-                            <string>kw</string>
-                            <string>kwd</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
-                            <string>LOG</string>
-                            <string>context</string>
-                            <string>preference</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>simulation_state</string>
-                            <string>section_category</string>
-                            <string>transaction_selection</string>
-                            <string>new_result</string>
-                            <string>_apply_</string>
-                            <string>result</string>
-                            <string>net_balance</string>
-                            <string>_getiter_</string>
-                            <string>l</string>
-                            <string>o</string>
-                            <string>None</string>
-                            <string>c</string>
+                            <string>line</string>
                           </tuple>
                         </value>
                     </item>
@@ -199,40 +123,17 @@ return new_result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_getAccountingTransactionList</string> </value>
+            <value> <string>AccountingTransactionLine_getParentUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
