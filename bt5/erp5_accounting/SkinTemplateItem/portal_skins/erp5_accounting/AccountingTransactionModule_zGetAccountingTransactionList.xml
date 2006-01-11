@@ -381,7 +381,7 @@ count=""</string> </value>
 <dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
 <dtml-let section_category="not entity and section_category or \'\'">\n
 \n
-<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max">\n
+<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category">\n
 \n
 SELECT\n
   <dtml-if stat>\n
@@ -400,7 +400,7 @@ FROM\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 \n
   <dtml-if use_movement_table>, catalog AS child\n
-                                                      , movement </dtml-if>\n
+                                      , movement </dtml-if>\n
   <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
   <dtml-if node>, catalog AS source_account </dtml-if>\n
   <dtml-if resource>, catalog AS currency </dtml-if>\n
@@ -513,7 +513,7 @@ WHERE\n
 <dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
 <dtml-let section_category="not entity and section_category or \'\'">\n
 \n
-<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max">\n
+<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category">\n
 \n
 SELECT\n
   <dtml-if stat>\n
@@ -532,7 +532,7 @@ FROM\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 \n
   <dtml-if use_movement_table>, catalog AS child\n
-                                                      , movement </dtml-if>\n
+                                      , movement </dtml-if>\n
   <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
   <dtml-if node>, catalog AS source_account </dtml-if>\n
   <dtml-if resource>, catalog AS currency </dtml-if>\n
