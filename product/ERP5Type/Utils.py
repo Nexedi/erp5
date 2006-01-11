@@ -38,6 +38,7 @@ from Products.CMFCore.DirectoryView import registerDirectory
 from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
+from Products.ZCatalog.Lazy import LazyMap
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import Constraint
@@ -116,6 +117,9 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
           break
       return result
 
+    if isinstance(value_list,LazyMap):
+      new_value_list = [x for x in value_list]
+      value_list = new_value_list
     value_list.sort(sortValues)
     
   return value_list
