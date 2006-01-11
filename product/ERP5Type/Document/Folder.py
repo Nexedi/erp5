@@ -58,7 +58,7 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
 
   # Declarative security
   security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.View)
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
@@ -252,7 +252,7 @@ class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
 
   # Declarative security
   security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.View)
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

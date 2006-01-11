@@ -98,7 +98,7 @@ class ERP5Site ( FolderMixIn, CMFSite ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     security.declareProtected(Permissions.View, 'view')
     def view(self):

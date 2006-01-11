@@ -121,7 +121,7 @@ class Category(Folder):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
     security.declareProtected(Permissions.ManagePortal,
                               'manage_editProperties',
                               'manage_changeProperties',
@@ -536,7 +536,7 @@ class BaseCategory(Category):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     def asSqlExpression(self, strict_membership=0, table='category'):
       """

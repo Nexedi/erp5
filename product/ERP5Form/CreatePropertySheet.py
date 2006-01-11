@@ -145,7 +145,7 @@ class %(class_name)s(Node, XMLObject):
 
   # Declarative Security
   security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.View)
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative Properties
   property_sheets = ( PropertySheet.Base

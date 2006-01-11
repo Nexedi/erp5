@@ -59,7 +59,7 @@ class Preference( Folder ):
   
   # Declarative security
   security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.View)
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def __init__(self, id) :
     Folder.__init__(self, id)

@@ -87,7 +87,7 @@ Attribute Sets
 
         # Declarative security
         security = ClassSecurityInfo()
-        security.declareObjectProtected(ERP5Permissions.View)
+        security.declareObjectProtected(ERP5Permissions.AccessContentsInformation)
 
         # Declarative properties
         property_sheets = ( PropertySheet.Base
