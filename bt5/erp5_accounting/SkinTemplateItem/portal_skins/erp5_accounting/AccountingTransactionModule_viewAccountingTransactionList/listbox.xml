@@ -651,12 +651,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>AccountingTransactionModule_getSourceCredit</string>
-                          <string>AccountingTransactionModule_statSourceCredit</string>
-                        </tuple>
-                        <tuple>
                           <string>AccountingTransactionModule_getSourceDebit</string>
                           <string>AccountingTransactionModule_statSourceDebit</string>
+                        </tuple>
+                        <tuple>
+                          <string>AccountingTransactionModule_getSourceCredit</string>
+                          <string>AccountingTransactionModule_statSourceCredit</string>
                         </tuple>
                       </list>
                     </value>
