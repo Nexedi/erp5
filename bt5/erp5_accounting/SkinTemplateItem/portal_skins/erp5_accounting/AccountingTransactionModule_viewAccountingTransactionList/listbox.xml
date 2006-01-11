@@ -444,7 +444,12 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>section_category</string>
+                          <string>here.portal_preferences.getPreferredAccountingTransactionSectionCategory()</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
