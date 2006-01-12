@@ -147,7 +147,7 @@ class DefaultGetter(Method):
                                                       spec=kw.get('spec',()),
                                                       filter=kw.get('filter', None),
                                                       portal_type=kw.get('portal_type',()),
-                                                      base=0, default=default)
+                                                      base=kw.get('base',0), default=default)
     psyco.bind(__call__)
 
 class ListGetter(Method):
