@@ -335,6 +335,8 @@ class SimulationTool (BaseTool):
         group_by_expression_list.append('stock.sub_variation_text')
       if kw.get('group_by_variation',0):
         group_by_expression_list.append('stock.variation_text')
+      if kw.get('group_by_mirror_node',0):
+        group_by_expression_list.append('stock.mirror_node_uid')
       if len(group_by_expression_list):
         group_by_expression_list.append('stock.resource_uid') # Always group by resource
         sql_kw['group_by_expression'] = ', '.join(group_by_expression_list)
@@ -415,6 +417,8 @@ class SimulationTool (BaseTool):
       group_by_variation (useless on getInventory, but useful on getInventoryList)
 
       group_by_node (useless on getInventory, but useful on getInventoryList)
+
+      group_by_mirror_node (useless on getInventory, but useful on getInventoryList)
 
       group_by_sub_variation (useless on getInventory, but useful on getInventoryList)
 
