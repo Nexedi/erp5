@@ -83,7 +83,6 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_template_action_path_list</string>
                         <string>my_template_path_list</string>
                       </list>
                     </value>
@@ -99,7 +98,6 @@
                         <string>my_installation_state</string>
                         <string>my_description</string>
                         <string>my_license</string>
-                        <string>my_template_update_business_template_workflow</string>
                       </list>
                     </value>
                 </item>
@@ -119,7 +117,6 @@
                         <string>my_change_log</string>
                         <string>my_dependency_list</string>
                         <string>my_copyright_list</string>
-                        <string>my_template_update_tool</string>
                       </list>
                     </value>
                 </item>

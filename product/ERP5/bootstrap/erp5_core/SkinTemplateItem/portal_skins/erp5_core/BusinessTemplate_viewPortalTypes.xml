@@ -105,6 +105,7 @@
                         <string>my_template_portal_type_hidden_content_type_list</string>
                         <string>my_template_portal_type_property_sheet_list</string>
                         <string>my_template_portal_type_base_category_list</string>
+                        <string>my_template_action_path_list</string>
                       </list>
                     </value>
                 </item>
