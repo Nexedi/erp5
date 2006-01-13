@@ -1337,9 +1337,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 <tr>%(report_popup)s
    <td class="Data" width="50" align="center" valign="middle">
     <input type="image" name="portal_selections/checkAll:method" value="1"
-      src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title=%(check_all_title)s />
+      src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title="%(check_all_title)s" />
     <input type="image" name="portal_selections/uncheckAll:method" value="1"
-      src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title=%(uncheck_all_title)s />
+      src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title="%(uncheck_all_title)s" />
 """ % format_dict)
         else:
           list_header_list_append("""\
@@ -1509,15 +1509,15 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
             is_summary = current_section[1] # Update summary type
 
-            list_body_append('<tr>')
-            o = object_list[i - current_section_base_index + index_shift] # FASTER PERFORMANCE
-            real_o = None
-
             # Define the CSS
             if not (i - start) % 2:
               td_css = 'DataA'
             else:
               td_css = 'DataB'
+
+            list_body_append('<tr class="%s">' % td_css)
+            o = object_list[i - current_section_base_index + index_shift] # FASTER PERFORMANCE
+            real_o = None
 
             list_body_append(\
   """<input type="hidden" value="%s" name="%s_uid:list"/>
