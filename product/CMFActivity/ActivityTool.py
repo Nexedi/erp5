@@ -162,7 +162,7 @@ class Message:
     #LOG('notifyUser begin', 0, str(self.user_name))
     user_email = activity_tool.portal_membership.getMemberById(self.user_name).getProperty('email')
     if user_email in ('', None):
-      user_email = activity_tool.email_from_address
+      user_email = getattr(activity_tool, 'email_to_address', activity_tool.email_from_address)
     #LOG('notifyUser user_email', 0, str(user_email))
     mail_text = """From: %s
 To: %s
