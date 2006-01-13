@@ -1377,7 +1377,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         # Create report depth_selector
         if report_tree:
           depth_selector_list = []
-          depth_selector_list.append = depth_selector_list.append
+          depth_selector_list_append = depth_selector_list.append
           for i in range(0,6):
             # XXX We may lose previous list information
             depth_selector_list_append("""&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
@@ -1603,7 +1603,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
             if o is None:
               # This line is an empty line used by reports without statistics
-              list_body_append('<td class=\"%s\">&nbsp;</td>' % td_css) * len(extended_columns)
+              list_body_append(('<td class=\"%s\">&nbsp;</td>' % td_css) * len(extended_columns))
             else:
               for cname in extended_columns:
                 # add attribute_original_value, because I need to know the type of the attribute
