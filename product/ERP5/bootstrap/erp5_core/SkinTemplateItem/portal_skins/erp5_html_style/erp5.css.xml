@@ -360,9 +360,25 @@ color:  &dtml-default_font_color;;\n
  border-bottom-width: 0px;\n
 }\n
 \n
+.ListContent tr.DataA{\n
+ background-color: #ffffff;\n
+}\n
+\n
+.ListContent tr.DataA:hover{\n
+ background-color: #c1dad2;\n
+}\n
+\n
+.ListContent tr.DataB{\n
+ background-color: &dtml-main_background_color;;\n
+}\n
+\n
+.ListContent tr.DataB:hover{\n
+ background-color: #c1dad2;\n
+}\n
+\n
 .ListContent td.DataA{\n
  font-size: 0,8em;\n
- background-color: #ffffff;\n
+ background-color: inherit;\n
  color: #000000;\n
  border-color:  &dtml-default_font_color;;\n
  border-style: solid;\n
