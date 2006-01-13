@@ -52,6 +52,7 @@ from Products.PythonScripts.Utility import allow_class
 
 import random
 import md5
+import cgi
 
 class ObjectValuesWrapper:
   """This class wraps objectValues so that objectValues behaves like portal_catalog.
@@ -1761,6 +1762,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   # it might be utf-8.
                   if type(cell_body) == type(''):
                     cell_body = unicode(cell_body, 'utf-8')
+                  if type(attribute_value) == type(u''):
+                    attribute_value = cgi.escape(attribute_value)
                   #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
                   list_body_append('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
 
@@ -1827,6 +1830,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         # XXX FIXME: except without Error name
                         pass
                   # Generate appropriate HTML
+                  if type(attribute_value) in [type(''), type(u'')]:
+                    attribute_value = cgi.escape(attribute_value)
                   if object_url is None:
                     list_body_append(
                       "<td class=\"%s\" align=\"%s\">%s</td>" % \
