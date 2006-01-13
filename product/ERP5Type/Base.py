@@ -157,17 +157,21 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     parent_object = self.aq_parent
     parent_klass = parent_object.__class__
     parent_type = parent_object.portal_type
-    if getattr(parent_klass, 'isRADContent', 0) and (ptype != parent_type or klass != parent_klass) \
-        and not Base.aq_portal_type.has_key(parent_type):
-      initializePortalTypeDynamicProperties(parent_object, parent_klass, parent_type)
+    if getattr(parent_klass, 'isRADContent', 0) and \
+       (ptype != parent_type or klass != parent_klass) and \
+       not Base.aq_portal_type.has_key(parent_type):
+      initializePortalTypeDynamicProperties(parent_object, parent_klass, 
+                                            parent_type)
     # Initiatise portal_type properties (XXX)
     ptype_object = getattr(aq_base(self.portal_types), ptype, None)
     cat_list = []
     prop_list = []
     constraint_list = []
-    if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
+    if (ptype_object is not None) and \
+       (ptype_object.meta_type == 'ERP5 Type Information'):
       # Make sure this is an ERP5Type object
-      ps_list = map(lambda p: getattr(PropertySheet, p, None), ptype_object.property_sheet_list)
+      ps_list = map(lambda p: getattr(PropertySheet, p, None), 
+                    ptype_object.property_sheet_list)
       ps_list = filter(lambda p: p is not None, ps_list)
       # Always append the klass.property_sheets to this list (for compatibility)
       # Because of the order we generate accessors, it is still possible
@@ -177,23 +181,23 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     else:
       ps_list = getClassPropertyList(klass)
     for base in ps_list:
-        if hasattr(base, '_properties'):
-          if type(base._properties) in (type(()), type([])):
-            prop_list += base._properties
+      property_sheet_definition_dict = {
+        '_properties': prop_list,
+        '_categories': cat_list,
+        '_constraints': constraint_list 
+      }
+      for ps_property_name, current_list in \
+                                    property_sheet_definition_dict.items():
+        if hasattr(base, ps_property_name):
+          ps_property = getattr(base, ps_property_name)
+          if type(ps_property) in (type(()), type([])):
+            current_list += ps_property
           else :
-            raise ValueError, "_properties is not a list for %s" % base
-        if hasattr(base, '_categories'):
-          if type(base._categories) in (type(()), type([])):
-            cat_list += base._categories
-          else:
-            cat_list += [base._categories]
-        if hasattr(base, '_constraints'):
-          if type(base._constraints) in (type(()), type([])):
-            constraint_list += base._constraints
-          else :
-            raise ValueError, "_constraints is not a list for %s" % base
+            raise ValueError, "%s is not a list for %s" % (ps_property_name, 
+                                                           base)
 
-    if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
+    if (ptype_object is not None) and \
+       (ptype_object.meta_type == 'ERP5 Type Information'):
       cat_list += ptype_object.base_category_list
     prop_holder._properties = prop_list
     prop_holder._categories = cat_list

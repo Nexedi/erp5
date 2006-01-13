@@ -73,6 +73,9 @@ def initialize( context ):
   # We should register product classes at some point
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
   initializeProductDocumentRegistry()
+  # We should register local constraints at some point
+  from Products.ERP5Type.Utils import initializeLocalConstraintRegistry
+  initializeLocalConstraintRegistry()
   # We should register local property sheets at some point
   from Products.ERP5Type.Utils import initializeLocalPropertySheetRegistry
   initializeLocalPropertySheetRegistry()

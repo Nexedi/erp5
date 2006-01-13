@@ -705,10 +705,14 @@ def importLocalDocument(class_id, document_path = None):
       m[name].append(method)
     m[name+'__roles__']=pr
 
-def initializeLocalDocumentRegistry():
+def initializeLocalRegistry(directory_name, import_local_method, 
+                            path_arg_name='path'):
+  """
+  Initialize local directory.
+  """
   if not getConfiguration: return
   instance_home = getConfiguration().instancehome
-  document_path = os.path.join(instance_home, "Document")
+  document_path = os.path.join(instance_home, directory_name)
   python_file_expr = re.compile("py$")
   # For unit testing.
   if os.access(document_path, os.F_OK):
@@ -720,34 +724,24 @@ def initializeLocalDocumentRegistry():
       if python_file_expr.search(file_name,1):
         module_name = file_name[0:-3]
         try:
-          importLocalDocument(module_name, document_path = document_path)
-          LOG('Added local document to ERP5Type repository: %s (%s)' 
-                % (module_name, document_path), 0, '')
+          # XXX Arg are not consistent
+          import_local_method(module_name, **{path_arg_name: document_path})
+          LOG('Added local %s to ERP5Type repository: %s (%s)' 
+              % (directory_name, module_name, document_path), 0, '')
         except Exception, e:
-          LOG('Failed to add local document to ERP5Type repository: %s (%s)'
-                % (module_name, document_path), PROBLEM, '', e)
+          LOG('Failed to add local %s to ERP5Type repository: %s (%s)'
+              % (directory_name, module_name, document_path), PROBLEM, '', e)
+
+def initializeLocalDocumentRegistry():
+  # XXX Arg are not consistent
+  initializeLocalRegistry("Document", importLocalDocument,
+                          path_arg_name='document_path')
 
 def initializeLocalPropertySheetRegistry():
-  if not getConfiguration: return
-  instance_home = getConfiguration().instancehome
-  document_path = os.path.join(instance_home, "PropertySheet")
-  python_file_expr = re.compile("py$")
-  # For unit testing.
-  if os.access(document_path, os.F_OK):
-    file_list = os.listdir(document_path)
-  else:
-    file_list = ()
-  for file_name in file_list:
-    if file_name != '__init__.py':
-      if python_file_expr.search(file_name,1):
-        module_name = file_name[0:-3]
-        try:
-          importLocalPropertySheet(module_name, path = document_path)
-          LOG('Added local property sheet to ERP5Type repository: %s (%s)' 
-                % (module_name, document_path), 0, '')
-        except Exception, e:
-          LOG('Failed to add local property sheet to ERP5Type repository: %s (%s)'
-                % (module_name, document_path), PROBLEM, '', e)
+  initializeLocalRegistry("PropertySheet", importLocalPropertySheet)
+
+def initializeLocalConstraintRegistry():
+  initializeLocalRegistry("Constraint", importLocalConstraint)
 
 #####################################################
 # Product initialization
@@ -879,7 +873,12 @@ def createConstraintList(property_holder, constraint_definition):
 
     constraint_definition -- the constraint with all attributes
   """
-  consistency_class = getattr(Constraint, constraint_definition['type'])
+  try:
+    consistency_class = getattr(Constraint, constraint_definition['type'])
+  except AttributeError:
+    LOG("ERP5Type", 0, "Can not find Constraint: %s" % \
+                       constraint_definition['type'])
+    raise
   consistency_instance = consistency_class(**constraint_definition)
   property_holder.constraints += [consistency_instance]
 
@@ -1033,6 +1032,7 @@ def setDefaultProperties(property_holder, object=None):
       else:
         new_cat_list.append(cat)
     cat_list = new_cat_list
+
     for const in constraint_list:
       for key,value in const.items():
         if isinstance(value, Expression):
@@ -1127,6 +1127,7 @@ def setDefaultProperties(property_holder, object=None):
     # Create the constraint method list - always check type
     property_holder.constraints = [ Constraint.PropertyTypeValidity(id='type_check',
                                     description="Type Validity Check Error") ]
+    
     for const in constraint_list:
       createConstraintList(property_holder, constraint_definition=const)
     # ERP5 _properties and Zope _properties are somehow different
