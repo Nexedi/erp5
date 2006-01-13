@@ -36,7 +36,6 @@ from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.Cache import clearCache
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from AccessControl.SecurityManagement import newSecurityManager
@@ -250,7 +249,6 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
 
     # Finally, login as user_1
     self.logout()
-    clearCache()
     self.login('user_1')
 
 
