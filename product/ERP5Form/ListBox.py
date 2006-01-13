@@ -498,6 +498,7 @@ class ListBoxWidget(Widget.Widget):
         # First, grasp and intialize the variables we may need later
         #
         ###############################################################
+        render_start = DateTime()
         here = REQUEST['here']
         reset = REQUEST.get('reset', 0)
         form = field.aq_parent
@@ -1162,16 +1163,18 @@ class ListBoxWidget(Widget.Widget):
 """ % md5_string
 
         # Create the Page Selector
+        pages_list = []
+        pages_list_append = pages_list.append
         if start == 0:
-          pages = """\
+          pages_list_append("""\
    <td nowrap valign="middle" align="center">
    </td>
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (translate('ui', 'Change Page', default='Change Page'), REQUEST.URL1)
+""" % (translate('ui', 'Change Page', default='Change Page'), REQUEST.URL1))
         else:
-          pages = """\
+          pages_list_append("""\
    <td nowrap valign="middle" align="center">
     <input type="image" src="%s/images/1leftarrowv.png"
       title="%s" name="portal_selections/previousPage:method" border="0" />
@@ -1179,38 +1182,40 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (portal_url_string, translate('ui', 'Previous Page', default='Previous Page'), translate('ui', 'Change Page', default='Change Page'), REQUEST.URL1)
+""" % (portal_url_string, translate('ui', 'Previous Page', default='Previous Page'), 
+       translate('ui', 'Change Page', default='Change Page'), REQUEST.URL1))
         for p in range(0, total_pages):
           if p == current_page:
             selected = 'selected'
           else:
             selected = ''
-          pages += '<option %s value="%s">%s</option>\n' \
+          pages_list_append('<option %s value="%s">%s</option>\n' \
                   % (selected,
                      p * lines,
                      translate('ui', '${page} of ${total_pages}', default = '%s of %s' % (p+1, total_pages),
-                               mapping = {'page' : p+1, 'total_pages': total_pages}))
+                               mapping = {'page' : p+1, 'total_pages': total_pages})))
 
         if current_page == total_pages - 1:
-          pages += """\
+          pages_list_append("""\
     </select>
    </td>
    <td nowrap valign="middle" align="center">
    </td>
-"""
+""")
         else:
-          pages += """\
+          pages_list_append("""\
     </select>
    </td>
    <td nowrap valign="middle" align="center">
     <input type="image" src="%s/images/1rightarrowv.png"
       title="%s" name="portal_selections/nextPage:method" border="0" />
    </td>
-""" % (portal_url_string, translate('ui', 'Next Page', default='Next Page'))
+""" % (portal_url_string, translate('ui', 'Next Page', default='Next Page')))
         # Create the header of the table - this should probably become DTML
         # Create also View Selector which enables to switch from a view mode
         # to another directly from the listbox
         #LOG('ListBox', 0, 'field_title = %s, translate(\'ui\', field_title) + %s' % (repr(field_title), repr(translate('ui', field_title))))
+        pages = ''.join(pages_list)
         format_dict = {
           'portal_url_string' : portal_url_string,
           'list_action' : list_action,
@@ -1231,7 +1236,9 @@ class ListBoxWidget(Widget.Widget):
           'domain_tree_title': translate('ui', 'Domain Tree', 
                                          default = 'Domain Tree'),
                       }
-        header = """\
+        header_list = []
+        header_list_append = header_list.append
+        header_list_append("""\
 <!-- List Summary -->
 <div class="ListSummary">
  <table border="0" cellpadding="0" cellspacing="0">
@@ -1251,23 +1258,23 @@ class ListBoxWidget(Widget.Widget):
         alt="spacer"/>
    </td>
    <td valign="middle" nowrap>
-""" % format_dict
+""" % format_dict)
         if len(report_root_list) or len(domain_root_list):
-          header += """
+          header_list_append("""
     <input type="image" src="%(portal_url_string)s/images/text_block.png" id="flat_list"
        title="%(flat_list_title)s" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
-""" % format_dict
+""" % format_dict)
         if len(report_root_list):
-          header += """
+          header_list_append("""
     <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="report_list"
        title="%(report_tree_title)s" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
-""" % format_dict
+""" % format_dict)
         if len(domain_root_list):
-          header += """
+          header_list_append("""
         <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="domain_list"
        title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/">
-""" % format_dict
-        header += """
+""" % format_dict)
+        header_list_append("""
        </td>
    <td width="100%%" valign="middle">&nbsp; <a href="%(list_action)s">%(field_title)s</a>:
         %(record_number)s - %(item_number)s
@@ -1279,7 +1286,7 @@ class ListBoxWidget(Widget.Widget):
 <!-- List Content -->
 <div class="ListContent">
  <table cellpadding="0" cellspacing="0" border="0">
-""" % format_dict
+""" % format_dict)
 
         # pages
 
@@ -1296,6 +1303,7 @@ class ListBoxWidget(Widget.Widget):
  </div>
 """ % (len(columns))
 
+        header = ''.join(header_list)
         # Create the header of the table with the name of the columns
         # Create also Report Tree Column if needed
         if report_tree:
@@ -1316,6 +1324,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         else:
           report_popup = ''
 
+        list_header_list = []
+        list_header_list_append = list_header_list.append
         if select:
           format_dict = {
                           'portal_url_string' : portal_url_string,
@@ -1323,18 +1333,18 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                           'check_all_title' : translate('ui', 'Check All', default = 'Check All'),
                           'uncheck_all_title' : translate('ui', 'Uncheck All', default = 'Uncheck All'),
                         }
-          list_header = """\
+          list_header_list_append("""\
 <tr>%(report_popup)s
    <td class="Data" width="50" align="center" valign="middle">
     <input type="image" name="portal_selections/checkAll:method" value="1"
       src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title=%(check_all_title)s />
     <input type="image" name="portal_selections/uncheckAll:method" value="1"
       src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title=%(uncheck_all_title)s />
-""" % format_dict
+""" % format_dict)
         else:
-          list_header = """\
+          list_header_list_append("""\
 <tr>%s
-""" % report_popup
+""" % report_popup)
 
         # csort is a list of couples
         # we should convert it into a dict because a list of couples would need
@@ -1357,24 +1367,29 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           #LOG('ListBox', 0, 'cname = %r' % (cname,))
           if cname[0] in sort_columns_id_list:
             #LOG('ListBox', 0, 'str(cname[1]) = %s, translate(\'ui\',str(cname[1])) = %s' % (repr(str(cname[1])), repr(translate('ui',str(cname[1])))))
-            list_header += ("<td class=\"Data\"><a href=\"%s/portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
+            list_header_list_append("<td class=\"Data\"><a href=\"%s/portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
                 (here.absolute_url(),str(selection_name),cname[0],translate('ui', cname[1], default = cname[1]),img))
           else:
-            list_header += ("<td class=\"Data\">%s</td>\n" % translate('ui', cname[1], default = cname[1]))
-        list_header = list_header + "</tr>"
+            list_header_list_append("<td class=\"Data\">%s</td>\n" % translate('ui', cname[1], default = cname[1]))
+        list_header_list_append("</tr>")
+        list_header = ''.join(list_header_list)
 
         # Create report depth_selector
         if report_tree:
-          depth_selector = ''
+          depth_selector_list = []
+          depth_selector_list.append = depth_selector_list.append
           for i in range(0,6):
             # XXX We may lose previous list information
-            depth_selector += """&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
-                                      (here.absolute_url(), form.id, current_selection_name, current_selection_index , i, i)
+            depth_selector_list_append("""&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
+                                      (here.absolute_url(), form.id, current_selection_name, current_selection_index , i, i))
           # In report mode, we may want to hide items, and only display stat lines.
-          depth_selector += """&nbsp;-&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&is_report_opened:int=%s">%s</a>""" % \
-                                    (here.absolute_url(), form.id, current_selection_name, current_selection_index , 1 - is_report_opened, is_report_opened and 'Hide' or 'Show')
+          depth_selector_list_append("""&nbsp;-&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&is_report_opened:int=%s">%s</a>""" % \
+                                    (here.absolute_url(), form.id, current_selection_name, current_selection_index , 1 - is_report_opened, is_report_opened and 'Hide' or 'Show'))
 
+          depth_selector = ''.join(depth_selector_list)
         # Create the search row of the table with the name of the columns
+        list_search_list = []
+        list_search_append = list_search_list.append
         if search:
           if report_tree:
             # Add empty column for report
@@ -1383,18 +1398,18 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             report_search = ""
 
           if select:
-            list_search ="""\
+            list_search_append("""\
   <tr >
    %s
    <td class="Data" width="50" align="center" valign="middle">
      <input type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="Base_doSelect:method" />
    </td>
-""" % (report_search,portal_url_string,translate('ui', 'Action', default = 'Action')) # XXX Action? Is this word appropriate here?
+""" % (report_search,portal_url_string,translate('ui', 'Action', default = 'Action'))) # XXX Action? Is this word appropriate here?
           else:
-            list_search ="""\
+            list_search_append("""\
   <tr >
   %s
-""" % report_search
+""" % report_search)
 
           for cname in extended_columns:
             if cname[0] in search_columns_id_list:
@@ -1412,22 +1427,22 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               else:
                 # Then create default rendering
                 search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, param)
-              list_search += """\
+              list_search_append("""\
      <td class="DataB">
        <font size="-3">%s</font>
      </td>
-""" % search_field_html
+""" % search_field_html)
             else:
-              list_search = list_search + (
-                "<td class=\"DataB\"></td> ")
+              list_search_append("<td class=\"DataB\"></td> ")
 
-          list_search = list_search + "</tr>"
+          list_search_append("</tr>")
         else:
           if report_tree:
-            list_search = """<td class="Data" width="50" align="left" valign="middle" colspan="%s">%s</td>""" % \
-                              (len(extended_columns) + select + 1, depth_selector)
+            list_search_append( """<td class="Data" width="50" align="left" valign="middle" colspan="%s">%s</td>""" % \
+                              (len(extended_columns) + select + 1, depth_selector))
           else:
-            list_search = ''
+            list_search_append('')
+        list_search = ''.join(list_search_list)
 
         # Build the tuple of columns
         if render_format == 'list':
@@ -1445,7 +1460,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
 
         # Build Lines
-        list_body = ''
+        list_body_list = []
+        list_body_append = list_body_list.append
 
         if render_format == 'list':
           # initialize the title line
@@ -1493,7 +1509,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
             is_summary = current_section[1] # Update summary type
 
-            list_body = list_body + '<tr>'
+            list_body_append('<tr>')
             o = object_list[i - current_section_base_index + index_shift] # FASTER PERFORMANCE
             real_o = None
 
@@ -1503,9 +1519,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             else:
               td_css = 'DataB'
 
-            list_body = list_body + \
+            list_body_append(\
   """<input type="hidden" value="%s" name="%s_uid:list"/>
-  """ % ( getattr(o, 'uid', '') , field.id ) # What happens if we list instances which are not instances of Base XXX
+  """ % ( getattr(o, 'uid', '') , field.id )) # What happens if we list instances which are not instances of Base XXX
 
             section_char = ''
             if report_tree:
@@ -1518,9 +1534,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               if current_section[5]:
                 if section_name != '':
                   section_char = '-'
-                list_body = list_body + \
+                list_body_append(
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8')))
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8'))))
 
                 if render_format == 'list':
 
@@ -1537,9 +1553,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               else:
                 if section_name != '':
                   section_char = '+'
-                list_body = list_body + \
+                list_body_append(
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8')))
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8'))))
 
                 if render_format == 'list':
 
@@ -1560,18 +1576,18 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 else:
                   selected = ''
                 if is_summary:
-                  list_body = list_body + \
+                  list_body_append(
     """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
-    """ % (td_css, )
+    """ % (td_css, ))
                 else:
-                  list_body = list_body + \
+                  list_body_append(
     """<td class="%s" width="50" align="center" valign="middle">
     <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
-    """ % (td_css, selected, o.uid , o.uid)
+    """ % (td_css, selected, o.uid , o.uid))
               else:
-                list_body = list_body + \
+                list_body_append(
     """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
-    """ % td_css
+    """ % td_css)
 
             error_list = []
 
@@ -1587,7 +1603,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
             if o is None:
               # This line is an empty line used by reports without statistics
-              list_body += ('<td class=\"%s\">&nbsp;</td>' % td_css) * len(extended_columns)
+              list_body_append('<td class=\"%s\">&nbsp;</td>' % td_css) * len(extended_columns)
             else:
               for cname in extended_columns:
                 # add attribute_original_value, because I need to know the type of the attribute
@@ -1746,7 +1762,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   if type(cell_body) == type(''):
                     cell_body = unicode(cell_body, 'utf-8')
                   #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
-                  list_body += ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
+                  list_body_append('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
 
 
                   # Add item to list_result_item for list render format
@@ -1812,12 +1828,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         pass
                   # Generate appropriate HTML
                   if object_url is None:
-                    list_body = list_body + \
-                      ("<td class=\"%s\" align=\"%s\">%s</td>" % \
+                    list_body_append(
+                      "<td class=\"%s\" align=\"%s\">%s</td>" % \
                                   (td_css, td_align, attribute_value))
                   else:
-                    list_body = list_body + \
-                      ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                    list_body_append(
+                      "<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                         (td_css, td_align, object_url, attribute_value))
 
                   if render_format == 'list':
@@ -1833,7 +1849,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
                     current_listboxline.addColumn( cname[0] , attribute_value_tmp)
 
-            list_body = list_body + '</tr>'
+            list_body_append('</tr>')
 
 
             if render_format == 'list':
@@ -1857,13 +1873,13 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           selection.edit( params = kw )
           count_results = selection(method = stat_method,
                           context=here, REQUEST=REQUEST)
-          list_body = list_body + '<tr>'
+          list_body_append('<tr>')
 
 
           if report_tree:
-            list_body += '<td class="Data">&nbsp;</td>'
+            list_body_append('<td class="Data">&nbsp;</td>')
           if select:
-            list_body += '<td class="Data">&nbsp;</td>'
+            list_body_append('<td class="Data">&nbsp;</td>')
           for n in range((len(extended_columns))):
             try:
               sql = extended_columns[n][0]
@@ -1892,11 +1908,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(value), repr(params)), error=sys.exc_info())
                       pass
                 if type(value) is type(1.0):
-                  list_body += '<td class="Data" align="right">%.2f</td>' % value
+                  list_body_append('<td class="Data" align="right">%.2f</td>' % value)
                 elif type(value) is type(1) :
-                  list_body += '<td class="Data" align="right">%s</td>' % value
+                  list_body_append('<td class="Data" align="right">%s</td>' % value)
                 else:
-                  list_body += '<td class="Data">' + str(value) + '</td>'
+                  list_body_append('<td class="Data">' + str(value) + '</td>')
 
 
                 if render_format == 'list':
@@ -1913,20 +1929,21 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   current_listboxline.addColumn( column[0] , value_tmp )
 
               else:
-                list_body += '<td class="Data">&nbsp;</td>'
+                list_body_append('<td class="Data">&nbsp;</td>')
                 if render_format == 'list':
                   current_listboxline.addColumn( extended_columns[n][0], None)
             except KeyError:
-              list_body += '<td class="Data">&nbsp;</td>'
+              list_body_append('<td class="Data">&nbsp;</td>')
               #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
               if render_format == 'list': current_listboxline.addColumn( extended_columns[n][0] , None)
-          list_body += '</tr>'
+          list_body_append('</tr>')
 
           if render_format == 'list':
             listboxline_list.append(current_listboxline)
 
         #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, list_body = %r, footer = %r' % (header, selection_line, list_header, list_search, list_body, footer))
         #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, footer = %r' % (header, selection_line, list_header, list_search, footer))
+        list_body = ''.join(list_body_list)
         list_html = header + selection_line + list_header + list_search + list_body + footer
 
 
@@ -1975,7 +1992,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
 <!-- End of Table Wrapping for Select Tree -->
 </td></tr>
 </table>""" % (select_tree_html,list_html)
-        LOG('Listbox render end call', 0, '')
+        render_end = DateTime()
+        result = (render_end-render_start) * 86400
+        LOG('Listbox render end call', 0, result)
         return list_html
 
 ListBoxWidgetInstance = ListBoxWidget()
