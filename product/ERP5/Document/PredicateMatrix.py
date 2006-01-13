@@ -59,38 +59,14 @@ class PredicateMatrix(XMLMatrix):
                     , PropertySheet.DublinCore
                     )
   
-  def _getSortedCellKeyList(self):
-    """
-      Return the list of cell keys, sorted according to int_index
-      property on Predicates.
-      TODO: cache.
-    """
-    total_priorities = {} # a dictionnary giving sum of int_index for a
-                          # coordinate.
-    cell_key_list = list(self.getCellKeyList(
-                      base_id = self.predicate_matrix_base_id ))
-    for coord_list in cell_key_list :
-      priority = 0
-      for coord in coord_list :
-        predicate = self.unrestrictedTraverse(coord, None)
-        if predicate is not None:
-          priority += predicate.getIntIndex()
-      total_priorities[tuple(coord_list)] = priority
-    
-    cell_key_list.sort(lambda c1, c2:
-        cmp(total_priorities[tuple(c1)],
-            total_priorities[tuple(c2)]))
-    return cell_key_list
-
   def _getMatchingCell(self, movement):
     """
       Browse all cells and test them until match found
     """
-    for cell_key in self._getSortedCellKeyList() :
-      if self.hasCell(base_id=self.predicate_matrix_base_id, *cell_key) :
-        cell = self.getCell(base_id=self.predicate_matrix_base_id, *cell_key)
-        if cell.test(movement):
-          return cell
+    for cell in self.getCellValueList(
+                        base_id=self.predicate_matrix_base_id) :
+      if cell.test(movement):
+        return cell
     return None          
   
   security.declareProtected( Permissions.AccessContentsInformation,
