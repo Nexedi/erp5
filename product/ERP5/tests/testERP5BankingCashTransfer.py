@@ -36,6 +36,7 @@ from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Cache import clearCache
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from AccessControl.SecurityManagement import newSecurityManager
@@ -213,8 +214,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # We must assign local roles to cash_transfer_module manually, as they are
     #   not packed in Business Templates yet.
     if self.PAS_installed:
-      pass
-      # TODO: create local roles manually with PAS (don't know how to do yet).
+      self.cash_transfer_module.manage_addLocalRoles('CCO_BAOBAB_TEST', ('Author',))
     else:
       # The group local roles must be the one for gestionnaire_caisse_courante
       self.cash_transfer_module.manage_addLocalGroupRoles('CCO_BAOBAB_TEST', ('Author',))
@@ -250,7 +250,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
 
     # Finally, login as user_1
     self.logout()
-    self.login(name='user_1')
+    clearCache()
+    self.login('user_1')
 
 
   def checkUserFolderType(self, quiet=QUIET, run=RUN_ALL_TEST):
@@ -277,26 +278,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
       Create a simple user in user_folder with manager rights.
     """
-    manager_login = 'manager'
-    manager_roles = ['Manager']
-    if self.PAS_installed:
-      # As said in PluggableAuthService/interfaces/authservice.py, userFolderAddUser()
-      #   method is "not supported out-of-the-box by the pluggable authentication service".
-      # That's why in the case of PAS we have to create and assign roles manually.
-      self.user_folder.zodb_users.manage_addUser( user_id    = manager_login
-                                                , login_name = manager_login
-                                                , password   = ''
-                                                , confirm    = ''
-                                                )
-      self.assignPASRolesToUser(manager_login, manager_roles)
-    else:
-      # Use standard Zope user folders method
-      self.user_folder.userFolderAddUser( name     = manager_login
-                                        , password = ''
-                                        , roles    = manager_roles
-                                        , domains  = []
-                                        )
-    self.login(manager_login)
+    self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
+    self.login('manager')
 
 
   def createERP5Users(self, user_dict, quiet=QUIET, run=RUN_ALL_TEST):
@@ -307,7 +290,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     for user_login, user_data in user_dict.items():
       user_roles = user_data[0]
       # Create the Person.
-      person = self.person_folder.newContent(id=user_login, portal_type='Person')
+      person = self.person_folder.newContent(id=user_login,
+          portal_type='Person', reference=user_login, career_role="internal")
       # Create the Assignment.
       assignment = person.newContent( portal_type       = 'Assignment'
                                     , destination_value = user_data[1]
@@ -331,6 +315,10 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       #   by ERP5Security PAS plugins in the context of PAS use.
       assignment.open()
 
+    if self.PAS_installed:
+      # reindexing is required for the security to work
+      get_transaction().commit()
+      self.tic()
 
 
   ##################################
@@ -682,13 +670,13 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
     # log in as bad user
     self.logout()
-    self.login(name='user_3')
+    self.login('user_3')
     # try to doActionFor
     self.workflow_tool = self.getWorkflowTool()
     self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
     # log in as default user
     self.logout()
-    self.login(name='user_1')
+    self.login('user_1')
 
 
   def stepBadInventoryConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
@@ -716,12 +704,12 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
     # log in as bad user
     self.logout()
-    self.login(name='user_3')
+    self.login('user_3')
     # try to doActionFor
     self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.cash_transfer, 'deliver_action', wf_id='cash_transfer_workflow')
     # log in as default user
     self.logout()
-    self.login(name='user_1')
+    self.login('user_1')
 
 
   def stepDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
@@ -729,14 +717,14 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
     # log in as good user
     self.logout()
-    self.login(name='user_2')
+    self.login('user_2')
     # try to doActionFor
     self.security_manager = AccessControl.getSecurityManager()
     self.user = self.security_manager.getUser()
     self.workflow_tool.doActionFor(self.cash_transfer, 'deliver_action', wf_id='cash_transfer_workflow')
     # log in as default user
     self.logout()
-    self.login(name='user_1')
+    self.login('user_1')
 
 
 
