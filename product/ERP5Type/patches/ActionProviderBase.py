@@ -36,7 +36,8 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
         a1['visible'] = a.getVisibility()
         a1['action'] = a.getActionExpression()
         a1['condition'] = a.getCondition()
-        a1['priority'] = a.getPriority()
+        if hasattr(a, 'getPriority') :
+          a1['priority'] = a.getPriority()
         if hasattr(a, 'getIconExpression') :
           a1['icon'] = a.getIconExpression()
         if hasattr(a, 'getOption') :
@@ -147,7 +148,7 @@ def ActionProviderBase_extractAction( self, properties, index ):
         permissions = ( permissions, )
 
     if type( priority ) is not type(1.0):
-        priority = float(priority)        
+        priority = float(priority)
 
     return ActionInformation( id=id
                             , title=name
