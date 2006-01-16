@@ -1,5 +1,6 @@
 %define product ERP5Form
-%define version 0.9.20060110
+%define version 0.9.20060116
+# If we get the code from the CVS, the release will be always the first
 %define release 1
 
 %define zope_home %{_prefix}/lib/zope
@@ -53,11 +54,14 @@ fi
 
 %files
 %defattr(0644, root, root, 0755)
-%doc TODO.txt VERSION.txt
+%doc VERSION.txt TODO.txt
 %{software_home}/Products/*
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 16 2006 Kevin Deldycke <kevin@nexedi.com> 0.9.20060116-1mdk
+- New build from the CVS
+
 * Tue Jan 10 2006 Kevin Deldycke <kevin@nexedi.com> 0.9.20060110-1mdk
 - New release for Mandriva 2006
 - Spec file updated

@@ -1,5 +1,6 @@
 %define product ERP5SyncML
-%define version 0.9.20060110
+%define version 0.9.20060116
+# If we get the code from the CVS, the release will be always the first
 %define release 1
 
 %define zope_home %{_prefix}/lib/zope
@@ -15,7 +16,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  zope-erp5
+Requires:  zope-erp5 zope-ERP5Type erp5diff
 
 #----------------------------------------------------------------------
 %description
@@ -56,6 +57,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 16 2006 Kevin Deldycke <kevin@nexedi.com> 0.9.20060116-1mdk
+- New build from the CVS
+
 * Tue Jan 10 2006 Kevin Deldycke <kevin@nexedi.com> 0.9.20060110-1mdk
 - New release for Mandriva 2006
 - Spec file updated
