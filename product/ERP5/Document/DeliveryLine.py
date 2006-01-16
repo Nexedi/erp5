@@ -89,6 +89,11 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
+      # XXX FIXME For now, special cases are handled in _edit methods in many
+      # documents : DeliveryLine, DeliveryCell ... Ideally, to prevent code
+      # duplication, it should be handled in a _edit method present only in
+      # Amount.py
+
       # If variations and resources are set at the same time, resource must be
       # set before any variation.
       if kw.has_key('resource_value'):
