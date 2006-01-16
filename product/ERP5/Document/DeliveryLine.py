@@ -89,6 +89,10 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
+      # If variations and resources are set at the same time, resource must be
+      # set before any variation.
+      if kw.has_key('resource_value'):
+        self._setResourceValue( kw['resource_value'] )
       # We must first prepare the variation_base_category_list before we do the edit of the rest
       #LOG('in edit', 0, str(kw))
       if kw.has_key('variation_base_category_list'):
