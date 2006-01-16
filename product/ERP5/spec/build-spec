@@ -75,8 +75,7 @@ while test $# -gt 0; do
   TODAY=`env LC_TIME=en date +"%a %b %d %Y"`
 
   # Generate the spec file
-  echo "
-%define product $NAME
+  echo "%define product $NAME
 %define version $VERSION
 # If we get the code from the CVS, the release will be always the first
 %define release 1
@@ -136,8 +135,7 @@ fi
 * $TODAY $PACKAGER <$EMAIL> $VERSION-1mdk
 - $LOG_MSG
 
-$CHANGELOG
-" >> $TMP_SPEC
+$CHANGELOG" >> $TMP_SPEC
 
   # now we can replace the spec file
   rm -f $RPM_PATH/SPECS/$NAME.spec
