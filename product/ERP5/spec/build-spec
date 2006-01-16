@@ -137,7 +137,7 @@ fi
 - $LOG_MSG
 
 $CHANGELOG
-"
+" >> $TMP_SPEC
 
   # now we can replace the spec file
   rm -f $RPM_PATH/SPECS/$NAME.spec
