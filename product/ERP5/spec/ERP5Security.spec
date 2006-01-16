@@ -1,11 +1,11 @@
-%define product ERP5SyncML
-%define version 0.9.20060110
+%define product ERP5Security
+%define version 0.1.20060110
 %define release 1
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
 
-Summary:   SyncML for ERP5
+Summary:   A collection of plugins for Pluggable Auth Service to manage ERP5 security
 Name:      zope-%{product}
 Version:   %{version}
 Release:   %mkrel %{release}
@@ -15,13 +15,13 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  zope-erp5
+Requires:  zope-erp5 zope-PluggableAuthService
 
 #----------------------------------------------------------------------
 %description
-ERP5Type contains most importants objects for ERP5. ERP5Type defines
-most of methods that will be used by every object. It also implements
-the Rapid Application Developpement feature used in ERP5.
+This zope product is a plugin to Pluggable Auth Service, to manage roles,
+groups and users in ERP5. It also add fine security management features to
+ERP5.
 
 #----------------------------------------------------------------------
 %prep
@@ -51,26 +51,9 @@ fi
 
 %files
 %defattr(0644, root, root, 0755)
-%doc VERSION.txt
 %{software_home}/Products/*
 
 #----------------------------------------------------------------------
 %changelog
-* Tue Jan 10 2006 Kevin Deldycke <kevin@nexedi.com> 0.9.20060110-1mdk
-- New release for Mandriva 2006
-- Spec file updated
-
-* Tue Sep 01 2004 Sebastien Robin <seb@nexedi.com> 0.8-1mdk
-- Final relase for Mandrake 10.1
-
-* Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-5mdk
-- New Release For Mandkrake 10.1
-
-* Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
-- Changed permissions on files
-
-* Wed Sep 05 2003 Sebastien Robin <seb@nexedi.com> 0.1-2mdk
-- Update spec in order to follows Mandrake Rules
-
-* Mon May 12 2003 Sebastien Robin <seb@nexedi.com> 0.1-1nxd
-- Create the spec file
+* Tue Jan 10 2006 Kevin Deldycke <kevin@nexedi.com> 0.1.20060110-1mdk
+- Initial release

@@ -1,52 +1,62 @@
-Name:               ERP5OOo
-Summary:            OpenOffice documents parser for ERP5
-Version:            0.1
-Release:            1nxd
-Group:              Development/Python
-Requires:           zope
-License:            GPL
-URL:                http://www.erp5.org
-Packager:           Kevin Deldycke <kevin@nexedi.com>
-BuildRoot:          %{_tmppath}/%{name}-%{version}-rootdir
-Buildarch:          noarch
+%define product ERP5Form
+%define version 0.1.20060110
+%define release 1
 
-Source: %{name}-%{version}.tar.bz2
+%define zope_home %{_prefix}/lib/zope
+%define software_home %{zope_home}/lib/python
+
+Summary:   OpenOffice documents parser for ERP5
+Name:      zope-%{product}
+Version:   %{version}
+Release:   %mkrel %{release}
+License:   GPL
+Group:     System/Servers
+URL:       http://www.erp5.org
+Source0:   %{product}-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
+BuildArch: noarch
+Requires:  zope-erp5
 
 #----------------------------------------------------------------------
 %description
-General purpose tools to parse and handle OpenOffice v1.x documents in ERP5
+General purpose tools to parse and handle OpenOffice v1.x documents in ERP5.
 
 #----------------------------------------------------------------------
 %prep
+%setup -c
 
-rm -rf $RPM_BUILD_ROOT
-%setup -a 0
-
-#----------------------------------------------------------------------
 %build
 
-#----------------------------------------------------------------------
+
 %install
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
-install %{name}-%{version}/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
-install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
-install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
-install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
-install %{name}-%{version}/skins/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/scripts
-install %{name}-%{version}/scripts/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/scripts
+%{__rm} -rf %{buildroot}
+%{__mkdir_p} %{buildroot}/%{software_home}/Products
+%{__cp} -a * %{buildroot}%{software_home}/Products/
+
+
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf %{buildroot}
+
+%post
+if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
+  service zope restart
+fi
+
+%postun
+if [ -f "%{_prefix}/bin/zopectl" ] && [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
+  service zope restart
+fi
+
+%files
+%defattr(0644, root, root, 0755)
+%doc VERSION.txt
+%{software_home}/Products/*
 
 #----------------------------------------------------------------------
-%files
-%defattr(-,zope,zope,0755)
-%doc VERSION.txt
-%{_libdir}/zope/lib/python/Products/%{name}/
-#----------------------------------------------------------------------
 %changelog
-* Sat Apr 30 2003 Kevin Deldycke <seb@nexedi.com> 0.1-1nxd
+* Tue Jan 10 2006 Kevin Deldycke <kevin@nexedi.com> 0.2-1mdk
+- New release for Mandriva 2006
+- Spec file updated
+
+* Sat Apr 30 2005 Kevin Deldycke <kevin@nexedi.com> 0.1-1nxd
 - Create the spec file
