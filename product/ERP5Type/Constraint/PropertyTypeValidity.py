@@ -46,6 +46,7 @@ class PropertyTypeValidity(Constraint):
     'boolean':            (type(1), ),
     'float':              (type(1.0), ),
     'long':               (type(1L), ),
+    'tales':              (type('string:3'), ),
     'lines':              (type([]), type(())),
     'tokens':             (type([]), type(())),
     'selection':          (type([]), type(())),
@@ -100,9 +101,7 @@ class PropertyTypeValidity(Constraint):
           wrong_type = 0
           error_message = "Attribute %s is defined with unknown type %s" % \
                           (property_id, property_type)
-          errors += [(object.getRelativeUrl(), 
-                     'PropertyTypeValidity inconsistency', 
-                     100, error_message)]
+          errors.append(self._generateError(object, error_message))
       if wrong_type:
         # Type is wrong, so, raise constraint error
         error_message = \
