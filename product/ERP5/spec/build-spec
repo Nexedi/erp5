@@ -46,7 +46,7 @@ while test $# -gt 0; do
   mv $CVS_PATH/$NAME-$VERSION/$NAME-$VERSION.tar.bz2 $CVS_PATH/
   # Remove because this does not remove files
   rm -f $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
-  cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/$NAME-$VERSION.$CVSDATE.tar.bz2
+  cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
 
   TMP_SPEC="/tmp/$NAME-$VERSION-tmp.spec"
   rm -f $TMP_SPEC
