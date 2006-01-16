@@ -4,77 +4,146 @@ PARAMS=1
 
 # Where we can find the RPM directory
 # and where we want to store the source code from cvs
-CVS_PATH=/home/$USER/cvs
-RPM_PATH=/home/$USER/rpm
-PRODUCT_PATH=%{_libdir}/zope/lib/python/Products/
-FULL_RPM_BUILD_ROOT=\$RPM_BUILD_ROOT$PRODUCT_PATH
+CVS_PATH="/home/$USER/cvs"
+RPM_PATH="/home/$USER/rpm"
+
+# TODO: The spec repository should be moved from /ERP5/spec to /spec in the CVS
+SPEC_REPOSITORY="ERP5/spec"
+
+
+# Those variables are used to build the change log
+PACKAGER="Kevin Deldycke"
+EMAIL="kevin@nexedi.com"
+LOG_MSG="New build from the CVS"
+
 
 if [ $# -lt "$PARAMS" ]
 then
   echo
   echo "build-spec PACKAGE_NAME..."
   exit 0
-fi  
+fi
+
+# Because we get the CVS version, we have to include the date in the revision number
+CVSDATE=`date +'%Y%m%d'`
 
 while test $# -gt 0; do
   NAME=$1
   shift
   echo Starting Building $NAME
-  # Retrieve the version in the source code
-  cd $CVS_PATH/$NAME/ && cvs update -RdP && cd -
+  # Retrieve the version in the source code as anonymous user to be sure we get published code only
+  cd $CVS_PATH && cvs -d:pserver:anonymous@cvs.erp5.org:/cvsroot checkout $NAME && cd -
   VERSION=`awk '{print $2}' $CVS_PATH/$NAME/VERSION.txt`
+  VERSION=$VERSION.$CVSDATE
   echo Building --$NAME-- Version --$VERSION--
   rm -rf $CVS_PATH/$NAME-$VERSION/
+  mkdir -p $CVS_PATH/$NAME-$VERSION
   cp -a $CVS_PATH/$NAME $CVS_PATH/$NAME-$VERSION
-  # remove because this does not remove files
-  cd $CVS_PATH && tar jcvf $NAME-$VERSION.tar.bz2 $NAME-$VERSION && cd -
+  # Remove CVS extra files
+  find $CVS_PATH/$NAME-$VERSION/* -name "CVS" | xargs rm -rf
+  # Create the archive
+  cd $CVS_PATH/$NAME-$VERSION && tar jcvf $NAME-$VERSION.tar.bz2 $NAME && cd -
+  mv $CVS_PATH/$NAME-$VERSION/$NAME-$VERSION.tar.bz2 $CVS_PATH/
+  # Remove because this does not remove files
   rm -f $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
-  cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/
-  #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
+  cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/$NAME-$VERSION.$CVSDATE.tar.bz2
 
-  # We will generate one part of the spec file, so we make sure
-  # to not forget any file
-  # Generate the folder tree
-  rm -f /tmp/build-rpm-install.tmp
-  rm -f /tmp/build-rpm-files.tmp
-  rm -f /tmp/build-rpm-spec.tmp
+  TMP_SPEC="/tmp/$NAME-$VERSION-tmp.spec"
+  rm -f $TMP_SPEC
+  touch $TMP_SPEC
 
-  for directory in "" `cd $CVS_PATH/$NAME && find * -type d -not -name "CVS" && cd -`
-    do echo install -d $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
-      # then add files we want to include into the rpm
-      for file_type in py dtml txt png pt stx form zsql gif jpg css html props xml bt5
-        do if (ls $CVS_PATH/$NAME/$directory/*.$file_type > /dev/null 2>&1)
-          then echo install %{name}-%{version}/$directory/*.$file_type $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
-        fi
-      done
+  # Now we will regenerate a spec file skeleton based on the one stored in the CVS.
+  # This spec file need to be modified by hand to get
+  cd $CVS_PATH && cvs -d:pserver:anonymous@cvs.erp5.org:/cvsroot checkout $SPEC_REPOSITORY/$NAME.spec
+  CVS_SPEC_FILE="$CVS_PATH/$SPEC_REPOSITORY/$NAME.spec"
 
-    done
+  # Get sumary, description and changelog from the previous spec file
+  SUMMARY=`grep "^Summary*" $CVS_SPEC_FILE`
 
-  echo $PRODUCT_PATH%{name}/ >> /tmp/build-rpm-files.tmp
+  L_SECTIONS=`grep -hn "#----------------------------------------------------------------------" $CVS_SPEC_FILE | sed -e "s/:/ /g" | awk '{print $1}'`
+  L_DESC_START=`echo $L_SECTIONS | awk '{print $1}'`
+  L_DESC_STOP=` echo $L_SECTIONS | awk '{print $2}'`
+  L_CHANGELOG=` echo $L_SECTIONS | awk '{print $3}'`
+  L_TOTAL=`wc -l $CVS_SPEC_FILE | awk '{print $1}'`
+  DESC_HEAD=`expr $L_DESC_STOP - 1`
+  DESC_TAIL=`expr $L_DESC_STOP - $L_DESC_START - 2`
+  CLOG_TAIL=`expr $L_TOTAL - $L_CHANGELOG - 2`
 
-  # now we will regenerate the spec file
-  # The line where we have %install
-  L_INSTALL=`grep -n "%install" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
-  # The line where we have %clean
-  L_CLEAN=`grep -n "%clean" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
-  # The line where we have %doc
-  L_DOC=`grep -n "%doc" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
-  # The line where we have %changelog
-  L_CHANGELOG=`grep -n "%changelog" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
-  # The total number of lines 
-  L_TOTAL=`wc -l $NAME.spec | awk '{print $1}'`
-  # Take the head of the file
-  head -n $L_INSTALL $NAME.spec | sed -e "s/^\(Version: *\).*/\1$VERSION/" > /tmp/build-rpm-spec.tmp
-  cat /tmp/build-rpm-install.tmp >> /tmp/build-rpm-spec.tmp
-  head -n $L_DOC $NAME.spec | tail -n `expr $L_DOC - $L_CLEAN + 1` >> /tmp/build-rpm-spec.tmp
-  cat /tmp/build-rpm-files.tmp >> /tmp/build-rpm-spec.tmp
-  echo "#----------------------------------------------------------------------" >> /tmp/build-rpm-spec.tmp
-  tail -n `expr $L_TOTAL - $L_CHANGELOG + 1` $NAME.spec >> /tmp/build-rpm-spec.tmp
+  DESCRIPTION=`head -n $DESC_HEAD $CVS_SPEC_FILE | tail -n $DESC_TAIL`
+  CHANGELOG=`tail -n $CLOG_TAIL $CVS_SPEC_FILE`
+
+  TODAY=`env LC_TIME=en date +"%a %b %d %Y"`
+
+  # Generate the spec file
+  echo "
+%define product $NAME
+%define version $VERSION
+# If we get the code from the CVS, the release will be always the first
+%define release 1
+
+%define zope_home %{_prefix}/lib/zope
+%define software_home %{zope_home}/lib/python
+
+$SUMMARY
+Name:      zope-%{product}
+Version:   %{version}
+Release:   %mkrel %{release}
+License:   GPL
+Group:     System/Servers
+URL:       http://www.erp5.org
+Source0:   %{product}-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
+BuildArch: noarch
+Requires:  zope-erp5
+
+#----------------------------------------------------------------------
+%description
+$DESCRIPTION
+
+#----------------------------------------------------------------------
+%prep
+%setup -c
+
+%build
+
+
+%install
+%{__rm} -rf %{buildroot}
+%{__mkdir_p} %{buildroot}/%{software_home}/Products
+%{__cp} -a * %{buildroot}%{software_home}/Products/
+
+
+%clean
+%{__rm} -rf %{buildroot}
+
+%post
+if [ \"\`%{_prefix}/bin/zopectl status\`\" != \"daemon manager not running\" ] ; then
+  service zope restart
+fi
+
+%postun
+if [ -f \"%{_prefix}/bin/zopectl\" ] && [ \"\`%{_prefix}/bin/zopectl status\`\" != \"daemon manager not running\" ] ; then
+  service zope restart
+fi
+
+%files
+%defattr(0644, root, root, 0755)
+%doc VERSION.txt
+%{software_home}/Products/*
+
+#----------------------------------------------------------------------
+%changelog
+* $TODAY $PACKAGER <$EMAIL> $VERSION-1mdk
+- $LOG_MSG
+
+$CHANGELOG
+"
 
   # now we can replace the spec file
   rm -f $RPM_PATH/SPECS/$NAME.spec
-  cp -f /tmp/build-rpm-spec.tmp $RPM_PATH/SPECS/$NAME.spec
+  cp -f $TMP_SPEC $RPM_PATH/SPECS/$NAME.spec
 
+  #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
 
 done
 
