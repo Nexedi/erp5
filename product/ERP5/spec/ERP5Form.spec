@@ -54,7 +54,7 @@ fi
 
 %files
 %defattr(0644, root, root, 0755)
-%doc VERSION.txt TODO.txt
+%doc %{product}/VERSION.txt %{product}/TODO.txt
 %{software_home}/Products/*
 
 #----------------------------------------------------------------------

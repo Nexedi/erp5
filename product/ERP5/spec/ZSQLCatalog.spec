@@ -54,7 +54,7 @@ fi
 
 %files
 %defattr(0644, root, root, 0755)
-%doc VERSION.txt README.txt INSTALL.txt CREDITS.txt GPL.txt ZPL.txt
+%doc %{product}/VERSION.txt %{product}/README.txt %{product}/INSTALL.txt %{product}/CREDITS.txt %{product}/GPL.txt %{product}/ZPL.txt
 %{software_home}/Products/*
 
 #----------------------------------------------------------------------
