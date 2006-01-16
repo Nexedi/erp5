@@ -55,6 +55,9 @@ ZopeTestCase.installProduct('NuxUserGroups')
 ZopeTestCase.installProduct('PluggableAuthService')
 ZopeTestCase.installProduct('ERP5Security')
 
+# Debugging
+ZopeTestCase.installProduct('VerboseSecurity')
+
 # ERP5
 ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5Catalog')
