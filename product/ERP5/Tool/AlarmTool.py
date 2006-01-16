@@ -189,7 +189,7 @@ TemplateTool manages Business Templates."""
     self.subscribe()
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
         
-  def process_timer(self, tick, interval):
+  def process_timer(self, tick, interval, prev="", next=""):
     """ 
     Call tic() every x seconds. x is defined in self.interval
     This method is called by TimerService in the interval given
