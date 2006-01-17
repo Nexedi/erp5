@@ -230,7 +230,9 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
       if class_name in info.name.split('/'):
         if info.isreg():
           file = tar.extractfile(info)
-          folders = string.split(info.name, os.sep)
+          tar_file_name = info.name.startswith('./') and info.name[2:] or \
+              info.name
+          folders = string.split(tar_file_name, os.sep)
           file_name = (os.sep).join(folders[2:])
           if '%' in file_name:
             file_name = url2pathname(file_name)
