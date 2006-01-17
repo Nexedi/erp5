@@ -499,7 +499,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             subobjects_dict = self._backupObject(action, trashbin, container_path, object_id)
             container.manage_delObjects([object_id])
           # install object
-          obj = self._objects[path]
+          obj = self._objects[path]          
           if getattr(obj, 'meta_type', None) == 'Script (Python)':
             if getattr(obj, '_code') is None:
               obj._compile()
@@ -1000,13 +1000,9 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
       id_list = obj.objectIds()
-      # remove optional actions and properties
-      optional_action_list = []
-      for index,ai in enumerate(obj.listActions()):
-        if ai.getOption():
-          optional_action_list.append(index)
-      if len(optional_action_list) > 0:
-        obj.deleteActions(selections=optional_action_list)
+      # remove actions and properties
+      action_len = len(obj.listActions())
+      obj.deleteActions(selections=range(action_len))
       obj = self.removeProperties(obj)
       # remove some properties
       if hasattr(obj, 'allowed_content_types'):
@@ -1478,27 +1474,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
 class ActionTemplateItem(ObjectTemplateItem):
 
-  def _splitPath(self, path):
-    """
-      Split path tries to split a complexe path such as:
-
-      "foo/bar[id=zoo]"
-
-      into
-
-      "foo/bar", "id", "zoo"
-
-      This is used mostly for generic objects
-    """
-    # Add error checking here
-    if path.find('[') >= 0 and path.find(']') > path.find('=') and path.find('=') > path.find('['):
-      relative_url = path[0:path.find('[')]
-      id_block = path[path.find('[')+1:path.find(']')]
-      key = id_block.split('=')[0]
-      value = id_block.split('=')[1]
-      return relative_url, key, value
-    return path, None, None
-
   def __init__(self, id_list, **kw):
     # XXX It's look like ObjectTemplateItem __init__
     BaseTemplateItem.__init__(self, id_list, **kw)
@@ -1511,10 +1486,10 @@ class ActionTemplateItem(ObjectTemplateItem):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for id in self._archive.keys():
-      relative_url, key, value = self._splitPath(id)
+      relative_url, value = id.split(' | ')
       obj = p.unrestrictedTraverse(relative_url)
       for ai in obj.listActions():
-        if getattr(ai, key) == value:
+        if getattr(ai, 'id') == value:
           url = os.path.split(relative_url)
           key = os.path.join(url[-2], url[-1], value)
           action = ai._getCopy(context)
@@ -1606,12 +1581,11 @@ class ActionTemplateItem(ObjectTemplateItem):
       keys = self._archive.keys()
     
     for id in keys:
-      action = self._archive[id]
-      relative_url, key, value = self._splitPath(id)
+      relative_url, value = id.split(' | ')
       obj = p.unrestrictedTraverse(relative_url)
       action_list = obj.listActions()
       for index in range(len(action_list)):
-        if getattr(action_list[index], key) == value:
+        if getattr(action_list[index], 'id') == value:
           obj.deleteActions(selections=(index,))
           break
     BaseTemplateItem.uninstall(self, context, **kw)
@@ -3042,7 +3016,6 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     p = context.getPortalObject()
     for roles_path in self._objects.keys():
-      LOG('install roles_path', 0, roles_path)
       if update_dict.has_key(roles_path) or force:
         if not force:
           action = update_dict[roles_path]
@@ -3976,6 +3949,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_hidden_content_type_list = []
       bt_property_sheet_list = []
       bt_base_category_list = []
+      bt_action_list = []
       
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())      
       p = self.getPortalObject()
@@ -3988,6 +3962,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         hidden_content_type_list = []
         property_sheet_list = []
         base_category_list = []
+        action_list = []
         if hasattr(portal_type, 'allowed_content_types'):
           allowed_content_type_list = portal_type.allowed_content_types
         if hasattr(portal_type, 'hidden_content_type_list'):
@@ -3996,7 +3971,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
           property_sheet_list = portal_type.property_sheet_list
         if hasattr(portal_type, 'base_category_list'):
           base_category_list = portal_type.base_category_list       
-
+        if hasattr(portal_type, 'listActions'):
+          action_list = [x.getId() for x in portal_type.listActions()]
+        
         for a_id in allowed_content_type_list:            
           bt_allowed_content_type_list.append(id+' | '+a_id)
         for h_id in hidden_content_type_list:
@@ -4005,16 +3982,20 @@ Business Template is a set of definitions, such as skins, portal types and categ
           bt_property_sheet_list.append(id+' | '+ps_id)
         for bc_id in base_category_list:            
           bt_base_category_list.append(id+' | '+bc_id)
-
+        for act_id in action_list:            
+          bt_action_list.append(id+' | '+act_id)
+          
       bt_allowed_content_type_list.sort()
       bt_hidden_content_type_list.sort()
       bt_property_sheet_list.sort()
       bt_base_category_list.sort()
+      bt_action_list.sort()
 
       setattr(self, 'template_portal_type_allowed_content_type', bt_allowed_content_type_list)
       setattr(self, 'template_portal_type_hidden_content_type', bt_hidden_content_type_list)
       setattr(self, 'template_portal_type_property_sheet', bt_property_sheet_list)
-      setattr(self, 'template_portal_type_base_category', bt_base_category_list)        
+      setattr(self, 'template_portal_type_base_category', bt_base_category_list)
+      setattr(self, 'template_action_path', bt_action_list)  
       return
 
 
