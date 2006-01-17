@@ -451,24 +451,15 @@ typeClasses = [
      'permission':'Manage portal'},
     ]
 
-class ERP5TypesTool(TypesTool):
-    """
-      Only used to patch standard TypesTool
-    """
-    meta_type = 'ERP5 Type Information'
-
-    security = ClassSecurityInfo()
-
-    security.declareProtected(ERP5Permissions.ManagePortal, 'manage_addERP5TIForm')
-    def manage_addERP5TIForm(self, REQUEST):
-        ' '
-        return self._addTIForm(
-            self, REQUEST,
-            add_meta_type=ERP5TypeInformation.meta_type,
-            types=self.listDefaultTypeInformation())
+def manage_addERP5TIForm(self, REQUEST):
+  ' '
+  return self._addTIForm(
+      self, REQUEST,
+      add_meta_type=ERP5TypeInformation.meta_type,
+      types=self.listDefaultTypeInformation())
 
 
 # Dynamic patch
 Products.CMFCore.TypesTool.typeClasses = typeClasses
-Products.CMFCore.TypesTool.TypesTool.manage_addERP5TIForm = ERP5TypesTool.manage_addERP5TIForm
+Products.CMFCore.TypesTool.TypesTool.manage_addERP5TIForm = manage_addERP5TIForm
 
