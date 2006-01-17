@@ -36,8 +36,27 @@ import os
 from App.config import getConfiguration
 from Globals import package_home
 from Products.ERP5 import product_path
+from Shared.DC.ZRDB.TM import TM
+from Products.ERP5.Document.BusinessTemplate import removeAll
 
 from zLOG import LOG
+
+class Deletion(TM):
+  """Remove the directory at the end of a transaction.
+  """
+  def __init__(self, path):
+    self.path = path
+    self._register()
+    
+  def _finish(self):
+    try:
+      LOG('Deletion', 0, 'removing %s' % self.path)
+      removeAll(self.path)
+    except OSError:
+      pass
+
+  def _abort(self):
+    pass
 
 class ExtFolder( XMLObject ):
     """
@@ -93,3 +112,9 @@ class ExtFolder( XMLObject ):
       status = os.system("%s/bin/genbt5list %s" % (product_path, self._getRepositoryPath()))
       if status != 0:
         raise RuntimeError, "failed in executing genbt5list"
+
+    def manage_beforeDelete(self, item, container):
+      """Called before deleting this object.
+      """
+      self._v_deletion = Deletion(self._getRepositoryPath())
+      XMLObject.manage_beforeDelete(self, item, container)
