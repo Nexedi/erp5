@@ -227,7 +227,7 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     for info in tar.getmembers():
       if 'CVS' in info.name.split('/'):
         continue
-      if class_name in info.name:
+      if class_name in info.name.split('/'):
         if info.isreg():
           file = tar.extractfile(info)
           folders = string.split(info.name, os.sep)
