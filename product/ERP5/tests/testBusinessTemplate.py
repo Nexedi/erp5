@@ -810,7 +810,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(opt_action_id is not None)
     object_ptype_id = sequence.get('object_ptype_id', None)
     self.failUnless(object_ptype_id is not None)
-    action_path = object_ptype_id+'[id='+opt_action_id+']'
+    action_path = object_ptype_id+' | '+opt_action_id
     bt.edit(template_action_path_list=[action_path])
 
   # Catalog Method
@@ -1774,7 +1774,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        CheckActionExists \
-                       CheckOptionalActionNotExists \
+                       CheckOptionalActionExists \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
