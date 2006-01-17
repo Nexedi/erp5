@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Bug">
+  <item>File</item>
+ </portal_type>
+ <portal_type id="Bug Module">
+  <item>Bug</item>
+ </portal_type>
+ <portal_type id="External Folder">
+  <item>External Folder</item>
+ </portal_type>
+ <portal_type id="Upload Module">
+  <item>External Folder</item>
+ </portal_type>
+</allowed_content_type_list>

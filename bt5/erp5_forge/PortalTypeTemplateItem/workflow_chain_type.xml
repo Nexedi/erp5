@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Bug</type>
+  <workflow>edit_workflow, bug_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Bug Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
+  <type>External Folder</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Upload Module</type>
+  <workflow>(Default)</workflow>
+ </chain>
+</workflow_chain>

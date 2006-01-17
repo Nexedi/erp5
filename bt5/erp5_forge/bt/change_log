@@ -1,0 +1,12 @@
+2006-01-17 yo
+* add upload stuff
+* update properties of portal types according to the new way
+
+2005-10-14 Jérome
+* add related keys and sql methods
+
+2005-09-16 Alex
+* Added missing Category : bug_difficulty
+
+2005-08-22 Kevin
+* Add a "my_id" field on Bug_view form

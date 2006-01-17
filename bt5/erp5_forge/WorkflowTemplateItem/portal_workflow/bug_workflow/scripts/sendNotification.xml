@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+bug = state_change.object\n
+portal = bug.getPortalObject()\n
+from_name = portal.getProperty(\'email_from_name\', \'ERP5\')\n
+from_address = portal.getProperty(\'email_from_address\', \'postmaster@localhost\')\n
+to_address = portal.getProperty(\'email_to_address\', \'yo@nexedi.com\')\n
+\n
+if not to_address:\n
+  return\n
+\n
+text="""From: "%s" <%s>\n
+To: %s\n
+Subject: [Bug #%s] %s\n
+MIME-Version: 1.0\n
+Content-Type: text/plain;\n
+  charset="utf-8"\n
+Content-Transfer-Encoding: 8bit\n
+Content-Disposition: inline\n
+\n
+Title: %s\n
+Reporter: %s\n
+Assignee: %s\n
+Status: %s\n
+Path: %s\n
+\n
+%s\n
+\n
+Follow-ups:\n
+\n
+%s\n
+""" % (from_name, from_address, to_address, bug.getId(), bug.getTitle(), \n
+       bug.getTitle(), bug.getSourceTitle(), bug.getDestinationTitle(),\n
+       bug.getValidationStateTitle(), bug.getPath(),\n
+       \'\\n\'.join([\'  \' + x for x in bug.getDescription().split(\'\\n\')]),\n
+       \'\\n\'.join([\'  \' + x for x in bug.Bug_getFollowUpListAsText().split(\'\\n\')]),\n
+      )\n
+\n
+portal.MailHost.send(text)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_workflow/bug_workflow/scripts/sendNotification</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getattr_</string>
+                            <string>bug</string>
+                            <string>portal</string>
+                            <string>from_name</string>
+                            <string>from_address</string>
+                            <string>to_address</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>text</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sendNotification</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
