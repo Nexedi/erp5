@@ -155,25 +155,6 @@
 <td></td>
 <td>
   <div class="form-label">
-  Optional?
-  </div>
-</td>
-<td>
-  <div class="form-element">
-  <input type="hidden" name="optional_&dtml-index;:int:default"
-         value="0" />
-  <dtml-let chk="optional and 'checked' or ''">
-  <input type="checkbox" name="optional_&dtml-index;:boolean"
-         &dtml-chk; value="1" />
-  </dtml-let>
-  </div>
-</td>
-</tr>
-
-<tr>
-<td></td>
-<td>
-  <div class="form-label">
   Priority
   </div>
 </td>
@@ -324,21 +305,6 @@ Add an action
   <input type="hidden" name="visible:int:default"
          value="0" />
   <input type="checkbox" name="visible:boolean" checked value="1"/>
-  </div>
-</td>
-</tr>
-
-<td></td>
-<td>
-  <div class="form-label">
-  Optional?
-  </div>
-</td>
-<td>
-  <div class="form-element">
-  <input type="hidden" name="optional:int:default"
-         value="0" />
-  <input type="checkbox" name="optional:boolean" value="0"/>
   </div>
 </td>
 </tr>
