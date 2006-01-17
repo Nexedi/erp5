@@ -716,8 +716,10 @@ class ListBoxWidget(Widget.Widget):
         if list_method not in (None, ''):
           # Only update params if list_method is defined
           # (ie. do not update params in listboxed intended to show a previously defined selection
-          params['meta_type'] = filtered_meta_types
-          params['portal_type'] = filtered_portal_types
+          if filtered_meta_types:
+            params['meta_type'] = filtered_meta_types
+          if filtered_portal_types:
+            params['portal_type'] = filtered_portal_types
 
         ###############################################################
         #
