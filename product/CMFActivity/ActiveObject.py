@@ -112,7 +112,7 @@ class ActiveObject(ExtensionClass.Base):
     self.flushActivity(invoke=invoke, **kw)
     if hasattr(aq_base(self), 'objectValues'):
       for o in self.objectValues():
-        if hasattr(aq_base(self), 'recursiveFlushActivity'):
+        if hasattr(aq_base(o), 'recursiveFlushActivity'):
           o.recursiveFlushActivity(invoke=invoke, **kw)
 
   security.declareProtected( permissions.View, 'hasActivity' )
