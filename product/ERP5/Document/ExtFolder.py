@@ -35,6 +35,7 @@ from Products.ExtFile.ExtImage import ExtImage
 import os
 from App.config import getConfiguration
 from Globals import package_home
+from Products.ERP5 import product_path
 
 from zLOG import LOG
 
@@ -74,8 +75,8 @@ class ExtFolder( XMLObject ):
       """Return the path in the filesystem.
       """
       instance_home = getConfiguration().instancehome
-      repository = os.path.join(ExtFile._repository)
-      return os.path.join(instance_home, repository, self.getPath())
+      repository = os.path.join(*ExtFile._repository)
+      return os.path.sep.join((instance_home, repository, self.getPath()))
 
     security.declareProtected('Manage portal', 'PUT_factory')
     def generateRpmHeaderList(self):
@@ -89,7 +90,6 @@ class ExtFolder( XMLObject ):
     def generateBt5HeaderList(self):
       """Run genbt5list on the directory behind this object.
       """
-      product_path = package_home( globals() )
       status = os.system("%s/bin/genbt5list %s" % (product_path, self._getRepositoryPath()))
       if status != 0:
         raise RuntimeError, "failed in executing genbt5list"
