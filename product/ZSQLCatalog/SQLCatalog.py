@@ -675,6 +675,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     return self.sql_search_tables
 
+  def getCatalogSearchResultKeys(self):
+    """Return search result keys.
+    """
+    return self.sql_search_result_keys
+  
   def _getCatalogSchema(self, table=None):
     catalog_schema_dict = getattr(aq_base(self), '_v_catalog_schema_dict', {})
 
