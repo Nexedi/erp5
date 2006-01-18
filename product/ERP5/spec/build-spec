@@ -6,8 +6,9 @@ PARAMS=1
 # and where we want to store the source code from cvs
 CVS_PATH="/home/$USER/cvs"
 RPM_PATH="/home/$USER/rpm"
+REPOSIT="cvs.erp5.org"
 
-# TODO: The spec repository should be moved from /ERP5/spec to /spec in the CVS
+# TODO: The spec repository should be moved from /ERP5/spec to /spec/Mandriva in the CVS
 SPEC_REPOSITORY="ERP5/spec"
 
 
@@ -24,12 +25,19 @@ then
   exit 0
 fi
 
+
 while test $# -gt 0; do
+
+  ####################
+  # Build the archive from the cvs files
+  ####################
+
   NAME=$1
   shift
   echo Starting Building $NAME
+
   # Retrieve the version in the source code as anonymous user to be sure we get published code only
-  cd $CVS_PATH && cvs -d:pserver:anonymous@cvs.erp5.org:/cvsroot checkout $NAME && cd -
+  cd $CVS_PATH && cvs -d:pserver:anonymous@$REPOSIT:/cvsroot checkout $NAME && cd -
   VERSION=`awk '{print $2}' $CVS_PATH/$NAME/VERSION.txt`
   echo Building --$NAME-- Version --$VERSION--
   rm -rf $CVS_PATH/$NAME-$VERSION/
@@ -37,6 +45,7 @@ while test $# -gt 0; do
   cp -a $CVS_PATH/$NAME $CVS_PATH/$NAME-$VERSION
   # Remove CVS extra files
   find $CVS_PATH/$NAME-$VERSION/* -name "CVS" | xargs rm -rf
+
   # Create the archive
   cd $CVS_PATH/$NAME-$VERSION && tar jcvf $NAME-$VERSION.tar.bz2 $NAME && cd -
   mv $CVS_PATH/$NAME-$VERSION/$NAME-$VERSION.tar.bz2 $CVS_PATH/
@@ -48,9 +57,14 @@ while test $# -gt 0; do
   rm -f $TMP_SPEC
   touch $TMP_SPEC
 
+
+  ####################
+  # Get data from the previous spec file commited in the CVS
+  ####################
+
   # Now we will regenerate a spec file skeleton based on the one stored in the CVS.
   # This spec file need to be modified by hand to get
-  cd $CVS_PATH && cvs -d:pserver:anonymous@cvs.erp5.org:/cvsroot checkout $SPEC_REPOSITORY/$NAME.spec
+  cd $CVS_PATH && cvs -d:pserver:anonymous@$REPOSIT:/cvsroot checkout $SPEC_REPOSITORY/$NAME.spec
   CVS_SPEC_FILE="$CVS_PATH/$SPEC_REPOSITORY/$NAME.spec"
 
   # Get summary and required packages
@@ -79,10 +93,23 @@ while test $# -gt 0; do
 
   TODAY=`env LC_TIME=en date +"%a %b %d %Y"`
 
-  # Generate the spec file
+  # Increase the rpm release number if needed
+  PREVIOUS_VERSION=`grep "^%define version*" $CVS_SPEC_FILE | awk '{print $3}'`
+  PREVIOUS_REL=`grep "^%define release*" $CVS_SPEC_FILE | awk '{print $3}'`
+  if test "x$VERSION" = "x$PREVIOUS_VERSION"; then
+    RELEASE=`expr $PREVIOUS_REL + 1`
+  else
+    RELEASE="1"
+  fi
+  MKREL=`rpm --with unstable --eval "%mkrel $RELEASE"`
+
+  ####################
+  # Build the spec file using the following template
+  ####################
+
   echo "%define product $NAME
 %define version $VERSION
-%define release 1
+%define release $RELEASE
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -136,7 +163,7 @@ $DOC
 
 #----------------------------------------------------------------------
 %changelog
-* $TODAY $PACKAGER <$EMAIL> $VERSION-1mdk
+* $TODAY $PACKAGER <$EMAIL> $VERSION-$MKREL
 - $LOG_MSG
 
 $CHANGELOG" >> $TMP_SPEC
@@ -146,6 +173,10 @@ $CHANGELOG" >> $TMP_SPEC
   cp -f $TMP_SPEC $RPM_PATH/SPECS/$NAME.spec
 
   #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
+
+  echo "-------------"
+  echo "Please commit the new $NAME.spec file in the Nexedi repository (http://$REPOSIT)"
+  echo "-------------"
 
 done
 
