@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.10
-%define release 2
+%define release 3
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
