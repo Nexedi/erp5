@@ -16,7 +16,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  zope-erp5 erp5-Formulator
+Requires:  erp5-zope erp5-Formulator
 
 #----------------------------------------------------------------------
 %description

@@ -16,7 +16,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  zope-erp5, MySQL-Max >= 5, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, zope-TranslationService, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo
+Requires:  erp5-zope, MySQL-Max >= 5, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, zope-TranslationService, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo
 
 #----------------------------------------------------------------------
 %description
