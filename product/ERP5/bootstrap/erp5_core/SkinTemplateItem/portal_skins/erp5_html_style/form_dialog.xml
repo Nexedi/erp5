@@ -45,6 +45,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -164,7 +170,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               i18n:translate="" i18n:domain="ui"\n
               class="required">\n
           </td>\n
-          <td tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith(\'my_\') and field.id[3:] or field.id,None)">\n
+          <td tal:define="field_key python:field.id.startswith(\'my_\') and field.id[3:] or field.id;\n
+                          value python:field.get_value(\'default\') or request.get(field_key, params.get(field_key,None))">\n
             <span tal:replace="structure python:field.render(value,request)" />\n
           </td>\n
         </tr>\n
@@ -207,7 +214,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               i18n:translate="" i18n:domain="ui"\n
               class="required">\n
           </td>\n
-          <td tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith(\'my_\') and field.id[3:] or field.id,None)">\n
+          <td tal:define="field_key python:field.id.startswith(\'my_\') and field.id[3:] or field.id;\n
+                          value python:field.get_value(\'default\') or request.get(field_key, params.get(field_key,None))">\n
             <span tal:replace="structure python:field.render(value,request)" />\n
           </td>\n
         </tr>\n
@@ -256,7 +264,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
            </td>\n
           </tr>\n
           <tr>\n
-          <td tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith(\'my_\') and field.id[3:] or field.id,None)">\n
+          <td tal:define="field_key python:field.id.startswith(\'my_\') and field.id[3:] or field.id;\n
+                          value python:field.get_value(\'default\') or request.get(field_key, params.get(field_key,None))">\n
              <span tal:replace="structure python:field.render(value,request)"/>\n
             </td>\n
           </tr>\n
@@ -274,14 +283,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
   <span tal:condition="python: len(groups)>3">\n
     <span tal:repeat="field python:form.get_fields_in_group(groups[3])">\n
-      <span tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith(\'my_\') and field.id[3:] or field.id,None)"\n
-        tal:replace="structure python:field.render(value,request)" />\n
+      <span tal:define="field_key python:field.id.startswith(\'my_\') and field.id[3:] or field.id;\n
+                        value python:field.get_value(\'default\') or request.get(field_key, params.get(field_key,None))"\n
+            tal:replace="structure python:field.render(value,request)" />\n
     </span>\n
   </span>\n
-\n
-\n
 </span>\n
-\n
           </div>\n
       </div>\n
   </body>\n
@@ -301,6 +308,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>form_dialog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>
