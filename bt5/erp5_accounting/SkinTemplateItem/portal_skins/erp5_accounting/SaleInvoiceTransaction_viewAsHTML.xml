@@ -189,13 +189,15 @@
             (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
           <td colspan=1 align=right tal:content="python: \'%.02f\' % round(here.getTotalPrice(), 2)" tal:on-error="nothing"></td>\n
         </tr>\n
-        <tr>\n
-          <td colspan=2 align=left tal:content="python:here.getDescription()"></td>\n
-          <th colspan=3 align=right> \n
-             <tal:block tal:replace="python: VAT_infos[\'title\']">TVA / VAT</tal:block> <br> \n
-             <tal:block tal:replace="python: (VAT_infos[\'ratio\'] or 0.0) * 100.0"/> % (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
-          <td colspan=1 align=right tal:content="python: \'%.02f\' % round(VAT_infos[\'total\'], 2)"></td>\n
-        </tr>\n
+        <tal:block tal:condition="python: VAT_infos[\'ratio\'] != 0">\n
+          <tr>\n
+            <td colspan=2 align=left tal:content="python:here.getDescription()"></td>\n
+            <th colspan=3 align=right>\n
+              <tal:block tal:replace="python: VAT_infos[\'title\']">TVA / VAT</tal:block> <br> \n
+              <tal:block tal:replace="python: (VAT_infos[\'ratio\'] or 0.0) * 100.0"/> % (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
+            <td colspan=1 align=right tal:content="python: \'%.02f\' % round(VAT_infos[\'total\'], 2)"></td>\n
+          </tr>\n
+        </tal:block>\n
         <tr>\n
           <td colspan=3>&nbsp;</td>\n
           <td colspan=3><hr noshade></td>\n
