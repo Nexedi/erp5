@@ -24,9 +24,6 @@ then
   exit 0
 fi
 
-# Because we get the CVS version, we have to include the date in the revision number
-CVSDATE=`date +'%Y%m%d'`
-
 while test $# -gt 0; do
   NAME=$1
   shift
@@ -34,7 +31,6 @@ while test $# -gt 0; do
   # Retrieve the version in the source code as anonymous user to be sure we get published code only
   cd $CVS_PATH && cvs -d:pserver:anonymous@cvs.erp5.org:/cvsroot checkout $NAME && cd -
   VERSION=`awk '{print $2}' $CVS_PATH/$NAME/VERSION.txt`
-  VERSION=$VERSION.$CVSDATE
   echo Building --$NAME-- Version --$VERSION--
   rm -rf $CVS_PATH/$NAME-$VERSION/
   mkdir -p $CVS_PATH/$NAME-$VERSION
@@ -57,9 +53,18 @@ while test $# -gt 0; do
   cd $CVS_PATH && cvs -d:pserver:anonymous@cvs.erp5.org:/cvsroot checkout $SPEC_REPOSITORY/$NAME.spec
   CVS_SPEC_FILE="$CVS_PATH/$SPEC_REPOSITORY/$NAME.spec"
 
-  # Get sumary, description and changelog from the previous spec file
+  # Get summary and required packages
   SUMMARY=`grep "^Summary*" $CVS_SPEC_FILE`
+  REQUIRES=`grep "^Requires*" $CVS_SPEC_FILE`
 
+  # Get the doc
+  DOC=`grep "^%doc*" $CVS_SPEC_FILE`
+  # Default value for %doc if not found in previous spec file
+  if test "x$DOC" = x; then
+    DOC="%doc %{product}/VERSION.txt"
+  fi
+
+  # Get the description and changelog from the previous spec file
   L_SECTIONS=`grep -hn "#----------------------------------------------------------------------" $CVS_SPEC_FILE | sed -e "s/:/ /g" | awk '{print $1}'`
   L_DESC_START=`echo $L_SECTIONS | awk '{print $1}'`
   L_DESC_STOP=` echo $L_SECTIONS | awk '{print $2}'`
@@ -67,7 +72,7 @@ while test $# -gt 0; do
   L_TOTAL=`wc -l $CVS_SPEC_FILE | awk '{print $1}'`
   DESC_HEAD=`expr $L_DESC_STOP - 1`
   DESC_TAIL=`expr $L_DESC_STOP - $L_DESC_START - 2`
-  CLOG_TAIL=`expr $L_TOTAL - $L_CHANGELOG - 2`
+  CLOG_TAIL=`expr $L_TOTAL - $L_CHANGELOG - 1`
 
   DESCRIPTION=`head -n $DESC_HEAD $CVS_SPEC_FILE | tail -n $DESC_TAIL`
   CHANGELOG=`tail -n $CLOG_TAIL $CVS_SPEC_FILE`
@@ -77,7 +82,6 @@ while test $# -gt 0; do
   # Generate the spec file
   echo "%define product $NAME
 %define version $VERSION
-# If we get the code from the CVS, the release will be always the first
 %define release 1
 
 %define zope_home %{_prefix}/lib/zope
@@ -93,7 +97,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  erp5-zope
+$REQUIRES
 
 #----------------------------------------------------------------------
 %description
@@ -127,7 +131,7 @@ fi
 
 %files
 %defattr(0644, root, root, 0755)
-%doc %{product}/VERSION.txt
+$DOC
 %{software_home}/Products/*
 
 #----------------------------------------------------------------------
