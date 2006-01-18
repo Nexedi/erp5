@@ -93,6 +93,16 @@ return item_list\n
             <value> <string>wf_id</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Member</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
