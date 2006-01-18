@@ -103,6 +103,7 @@ while test $# -gt 0; do
   fi
   MKREL=`rpm --with unstable --eval "%mkrel $RELEASE"`
 
+
   ####################
   # Build the spec file using the following template
   ####################
