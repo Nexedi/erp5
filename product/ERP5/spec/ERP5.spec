@@ -1,7 +1,6 @@
 %define product ERP5
-%define version 0.9.20060116
-# If we get the code from the CVS, the release will be always the first
-%define release 1
+%define version 0.10
+%define release 2
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -16,7 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  erp5-zope, MySQL-Max >= 5, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, zope-TranslationService, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo
+Requires:  erp5-zope, MySQL-Max >= 5, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, zope-TranslationService, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile
 
 #----------------------------------------------------------------------
 %description
@@ -42,10 +41,6 @@ very short time.
 %{__rm} -rf %{buildroot}
 
 %post
-mkdir /var/lib/zope/Extensions
-mkdir /var/lib/zope/PropertySheet
-mkdir /var/lib/zope/Constraint
-ln -s %{software_home}/Products/%{name}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
   service zope restart
 fi
@@ -62,6 +57,12 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-2mdk
+- Add ExtFile Zope Product as required
+
+* Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-1mdk
+- Update to version 0.10
+
 * Mon Jan 16 2006 Kevin Deldycke <kevin@nexedi.com> 0.9.20060116-1mdk
 - New build from the CVS
 
