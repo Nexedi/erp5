@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.10
-%define release 4
+%define release 5
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -15,7 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  erp5-zope >= 2.7.8, MySQL-Max >= 5, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, zope-TranslationService, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile
+Requires:  erp5-zope >= 2.7.8, MySQL-Max >= 5, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile
 
 #----------------------------------------------------------------------
 %description
@@ -61,6 +61,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 19 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-5mdk
+- Don't need Translation Service Zope product for ERP5
+
 * Thu Jan 19 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-4mdk
 - Add missing custom post-command
 
