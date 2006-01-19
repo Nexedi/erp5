@@ -98,7 +98,7 @@ else: \n
       error_message = "Date is not in an openned Accounting Period" \n
 \n
 # Get sections and a currency.\n
-source_section = transaction.getSourceSection(portal_type = [\'Organisation\'])\n
+source_section = transaction.getSourceSection(portal_type = [\'Organisation\',\'Category\'])\n
 destination_section = transaction.getDestinationSection(portal_type = [\'Organisation\', \'Person\'])\n
 currency = transaction.getResource()\n
 \n

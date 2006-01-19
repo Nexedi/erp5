@@ -78,8 +78,8 @@ N_ = transaction.Base_TranslateString\n
 container.validateTransaction(state_change)\n
 \n
 # Get sections.\n
-source_section = transaction.getSourceSection(portal_type = [\'Person\', \'Organisation\'])\n
-destination_section = transaction.getDestinationSection(portal_type = [\'Person\', \'Organisation\'])\n
+source_section = transaction.getSourceSection(portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
+destination_section = transaction.getDestinationSection(portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
 \n
 # Check transaction lines.\n
 if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
