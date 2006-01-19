@@ -444,7 +444,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>WARNING: do not modify Ids for this base category. Id is used in many places in accounting.\n
+            <value> <string>WARNING: do not modify Ids for this base category. Id is used in many places in accounting. This base category should be read-only.\n
 You can still safely change Title or (better) translate it using Localizer</string> </value>
         </item>
         <item>
