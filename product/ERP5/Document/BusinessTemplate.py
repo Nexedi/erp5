@@ -3383,6 +3383,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
           installed_bt.trash(self)
           force = 1
         installed_bt.replace(self)
+
+      # Check the format of business template, if old, force install
+      if self.getTemplateFormatVersion() == 0:
+        force = 1
         
       site = self.getPortalObject()
       from Products.ERP5.ERP5Site import ERP5Generator
