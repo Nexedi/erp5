@@ -1,6 +1,6 @@
 %define product ERP5Type
 %define version 0.10
-%define release 1
+%define release 2
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -40,6 +40,7 @@ the Rapid Application Developpement feature used in ERP5.
 %{__rm} -rf %{buildroot}
 
 %post
+mkdir /var/lib/zope/Document
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
   service zope restart
 fi
@@ -56,6 +57,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 19 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-2mdk
+- Add missing custom post-command
+
 * Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-1mdk
 - Update to version 0.10
 

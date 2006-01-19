@@ -1,6 +1,6 @@
 %define product ZSQLCatalog
 %define version 0.10
-%define release 1
+%define release 2
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -40,6 +40,8 @@ which can be connected to any SQL relationnal database through ZSQLMethods.
 %{__rm} -rf %{buildroot}
 
 %post
+mkdir /var/lib/zope/Extensions
+ln -s %{software_home}/Products/%{name}/zsqlbrain.py /var/lib/zope/Extensions/
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
   service zope restart
 fi
@@ -56,6 +58,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 19 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-2mdk
+- Add missing custom post-command
+
 * Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-1mdk
 - Update to version 0.10
 
