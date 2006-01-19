@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>listbox = kw.get(\'listbox\', ())\n
+\n
+bt_dict = {}\n
+object_to_update = {}\n
+for item in listbox:\n
+  bt_id, object_id = item[\'listbox_key\'].split(\'+\')\n
+  bt_id = item[\'object_bt_id\']\n
+  if bt_dict.has_key(bt_id):\n
+    bt_dict[bt_id][object_id] = item[\'choice\']\n
+  else:\n
+    bt_dict[bt_id] = {}\n
+    bt_dict[bt_id][object_id] = item[\'choice\']\n
+\n
+bt_title_list = []\n
+for bt_id in bt_dict.keys():\n
+  object_list = bt_dict[bt_id]\n
+  bt = context.portal_templates[bt_id]\n
+  bt.install(object_to_update=object_list)\n
+  bt_title_list.append(bt.getTitle())\n
+\n
+\n
+REQUEST = container.REQUEST\n
+RESPONSE = REQUEST.RESPONSE\n
+\n
+return RESPONSE.redirect("%s?portal_status_message=Business+Template+%s+installed" % (context.absolute_url(), \',+\'.join(bt_title_list)))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/TemplateTool_installBusinessTemplateListAction</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>listbox</string>
+                            <string>bt_dict</string>
+                            <string>object_to_update</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>_getitem_</string>
+                            <string>bt_id</string>
+                            <string>object_id</string>
+                            <string>_write_</string>
+                            <string>bt_title_list</string>
+                            <string>object_list</string>
+                            <string>context</string>
+                            <string>bt</string>
+                            <string>container</string>
+                            <string>REQUEST</string>
+                            <string>RESPONSE</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TemplateTool_installBusinessTemplateListAction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

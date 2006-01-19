@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from ZTUtils import make_query\n
+\n
+REQUEST = container.REQUEST\n
+RESPONSE = REQUEST.RESPONSE\n
+\n
+uids = getattr(REQUEST, \'uids\', ())\n
+ret_url = \'/\'.join([context.absolute_url(), REQUEST.get(\'form_id\', \'view\')])\n
+\n
+#return repr(len(uids))\n
+if len(uids) == 0:\n
+  RESPONSE.redirect("%s?portal_status_message=No+Business+Template+Specified" % ret_url)\n
+  return\n
+\n
+bt_list = []\n
+for uid in uids:\n
+  repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
+  bt = context.download(\'/\'.join([repository, id]))\n
+  bt_list.append(bt.getId())\n
+\n
+RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=BusinessTemplate_installationChoice\' %(context.absolute_url(), make_query({\'bt_list\' : bt_list})))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/TemplateTool_installRepositoryBusinessTemplateList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>_getattr_</string>
+                            <string>container</string>
+                            <string>REQUEST</string>
+                            <string>RESPONSE</string>
+                            <string>getattr</string>
+                            <string>uids</string>
+                            <string>context</string>
+                            <string>ret_url</string>
+                            <string>len</string>
+                            <string>bt_list</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>repository</string>
+                            <string>id</string>
+                            <string>bt</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TemplateTool_installRepositoryBusinessTemplateList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
