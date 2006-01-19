@@ -545,7 +545,30 @@ class ListBoxWidget(Widget.Widget):
         else:
           list_action += '&reset=1'
         object_list = []
-        translate = portal_object.translation_service.translate
+
+        #translate = portal_object.translation_service.translate
+        # This translate() method has the same prototype as the one defined in Translation Service
+        global localizer, msg_catalog_binding
+        localizer = portal_object.Localizer
+        msg_catalog_binding = { "ui"     : "erp5_ui"
+                              , "content": "erp5_content"
+                              }
+        def translate(domain, msgid, mapping=None, context=None, target_language=None, default=None):
+          global localizer, msg_catalog_binding
+          localizer_cat_id = None
+          if domain in msg_catalog_binding.keys():
+            localizer_cat_id = msg_catalog_binding[domain]
+          else:
+            localizer_cat_id = domain
+          if localizer_cat_id not in localizer.objectIds():
+            return msgid
+          localizer_cat = localizer[localizer_cat_id]
+          if default == None:
+            default = []
+          return localizer_cat.gettext( message = msgid
+                                      , lang    = None
+                                      , default = default
+                                      )
 
         # Make sure list_result_item is defined
         list_result_item = []
@@ -885,7 +908,7 @@ class ListBoxWidget(Widget.Widget):
         select_expression = ''
         if show_stat:
           stats = here.portal_selections.getSelectionStats(
-                                             selection_name, 
+                                             selection_name,
                                              REQUEST=REQUEST)
           index = 0
 
@@ -899,7 +922,7 @@ class ListBoxWidget(Widget.Widget):
             if (column is not None) and (column[0] == column[1]):
               try:
                 if stats[index] != ' ':
-                  select_expression += '%s(%s) AS %s,' % (stats[index], sql, 
+                  select_expression += '%s(%s) AS %s,' % (stats[index], sql,
                                                           alias)
                 else:
                   select_expression += '\'&nbsp;\' AS %s,' % alias
@@ -1185,7 +1208,7 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (portal_url_string, translate('ui', 'Previous Page', default='Previous Page'), 
+""" % (portal_url_string, translate('ui', 'Previous Page', default='Previous Page'),
        translate('ui', 'Change Page', default='Change Page'), REQUEST.URL1))
         for p in range(0, total_pages):
           if p == current_page:
@@ -1225,18 +1248,18 @@ class ListBoxWidget(Widget.Widget):
           'selection_name' : selection_name,
           'field_title' : translate('ui', field_title, default = field_title),
           'pages' : pages,
-          'record_number' : translate('ui', '${number} record(s)', 
+          'record_number' : translate('ui', '${number} record(s)',
                                       default = '%s record(s)' % total_size,
                                       mapping = { 'number' : str(total_size) }),
-          'item_number' : translate('ui', '${number} item(s) selected', 
+          'item_number' : translate('ui', '${number} item(s) selected',
                                      default = '%s item(s) selected' % \
                                          len(checked_uids),
                                     mapping = { 'number' : \
                                         str(len(checked_uids)) }),
           'flat_list_title': translate('ui', 'Flat List', default='Flat List'),
-          'report_tree_title': translate('ui', 'Report Tree', 
+          'report_tree_title': translate('ui', 'Report Tree',
                                          default = 'Report Tree'),
-          'domain_tree_title': translate('ui', 'Domain Tree', 
+          'domain_tree_title': translate('ui', 'Domain Tree',
                                          default = 'Domain Tree'),
                       }
         header_list = []
@@ -1796,7 +1819,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   #########################################################################
                   object_url = None
                   # Try to get a link
-                  # Check if url_columns defines a method 
+                  # Check if url_columns defines a method
                   # to retrieve the URL.
                   url_method = None
                   for column in url_columns:
@@ -1810,7 +1833,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     except (ConflictError, RuntimeError):
                       raise
                     except:
-                      LOG('ListBox', 0, 
+                      LOG('ListBox', 0,
                           'Could not evaluate url_method %s' % \
                               column[1], error=sys.exc_info())
                       pass
@@ -1955,7 +1978,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
 
         if render_format == 'list':
-          #listboxline_list.append(current_listboxline)  
+          #listboxline_list.append(current_listboxline)
           #LOG('ListBox', 0, 'listboxline_list: %s' % str(listboxline_list) )
 
           return listboxline_list

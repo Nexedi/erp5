@@ -439,20 +439,19 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 # Get the query results
                 relation_list = portal_catalog(**kw)
                 relation_uid_list = map(lambda x: x.uid, relation_list)
-                translation_service = getToolByName(field,
-                                                    'translation_service',
-                                                    None)
+                localizer = getToolByName( field
+                                         , 'Localizer'
+                                         , None
+                                         )
+                N_ = localizer.erp5_ui.gettext
                 # Prepare a menu
-                if translation_service is not None:
-                  N_ = translation_service.translate
-                else :
-                  N_ = lambda catalog, msg, **kw:msg
                 menu_item_list = [('', '')]
                 new_object_menu_item_list = []
                 for p in portal_type:
-                  new_object_menu_item_list += [(N_('ui', 'New ${portal_type}',
-                               mapping={'portal_type':N_('ui', p)}),
-                               '%s%s' % (new_content_prefix,p))]
+                  new_object_menu_item_list += [ ( N_('New %s') % (N_(p))
+                                                 , '%s%s' % (new_content_prefix,p)
+                                                 )
+                                               ]
 
                 if len(relation_list) >= MAX_SELECT:
                   # If the length is long, raise an error

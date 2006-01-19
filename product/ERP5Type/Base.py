@@ -160,7 +160,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     if getattr(parent_klass, 'isRADContent', 0) and \
        (ptype != parent_type or klass != parent_klass) and \
        not Base.aq_portal_type.has_key(parent_type):
-      initializePortalTypeDynamicProperties(parent_object, parent_klass, 
+      initializePortalTypeDynamicProperties(parent_object, parent_klass,
                                             parent_type)
     # Initiatise portal_type properties (XXX)
     ptype_object = getattr(aq_base(self.portal_types), ptype, None)
@@ -170,7 +170,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     if (ptype_object is not None) and \
        (ptype_object.meta_type == 'ERP5 Type Information'):
       # Make sure this is an ERP5Type object
-      ps_list = map(lambda p: getattr(PropertySheet, p, None), 
+      ps_list = map(lambda p: getattr(PropertySheet, p, None),
                     ptype_object.property_sheet_list)
       ps_list = filter(lambda p: p is not None, ps_list)
       # Always append the klass.property_sheets to this list (for compatibility)
@@ -184,7 +184,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
       property_sheet_definition_dict = {
         '_properties': prop_list,
         '_categories': cat_list,
-        '_constraints': constraint_list 
+        '_constraints': constraint_list
       }
       for ps_property_name, current_list in \
                                     property_sheet_definition_dict.items():
@@ -193,7 +193,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
           if type(ps_property) in (type(()), type([])):
             current_list += ps_property
           else :
-            raise ValueError, "%s is not a list for %s" % (ps_property_name, 
+            raise ValueError, "%s is not a list for %s" % (ps_property_name,
                                                            base)
 
     if (ptype_object is not None) and \
@@ -339,7 +339,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isDelivery = 0      #
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
   isPredicate = 0     #
-  
+
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
   aq_portal_type = {}
@@ -481,7 +481,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   # Utils
   def _getCategoryTool(self):
     return aq_inner(self.getPortalObject().portal_categories)
-  
+
   def _getTypesTool(self):
     return aq_inner(self.getPortalObject().portal_types)
 
@@ -1164,12 +1164,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         return cache[key]
       except KeyError:
         pass
-        
+
     result = self.portal_url.getPortalObject()
-    
+
     if cache is not None:
       cache[key] = result
-      
+
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
@@ -1351,11 +1351,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
                           spec=spec, filter=filter,
                           portal_type=portal_type,
                           strict_membership=strict_membership)
-  
+
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getRelatedPropertyList' )
   getRelatedPropertyList = _getRelatedPropertyList
-  
+
   security.declareProtected( Permissions.View, 'getValueUids' )
   def getValueUids(self, id, spec=(), filter=None, portal_type=()):
     uid_list = []
@@ -1590,9 +1590,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   security.declareProtected(Permissions.View, 'getTranslatedTitle')
   def getTranslatedTitle(self):
     """Returns the translated title. """
-    translation_service = getToolByName(self, 'translation_service')
-    return translation_service.translate('content',
-                    unicode(self.getTitle(), 'utf8')).encode('utf8')
+    localizer = getToolByName(self, 'Localizer')
+    return localizer.erp5_content.gettext(unicode(self.getTitle(), 'utf8')).encode('utf8')
 
   # This method allows to sort objects in list is a more reasonable way
   security.declareProtected(Permissions.View, 'getIntId')
@@ -1637,8 +1636,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       This returns the translated portal_type
     """
     portal_type = self.portal_type
-    translation_service = getToolByName(self, 'translation_service')
-    return translation_service.translate('ui', portal_type).encode('utf8')
+    localizer = getToolByName(self, 'Localizer')
+    return localizer.erp5_ui.gettext(portal_type).encode('utf8')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setPortalType')
   def setPortalType(self, portal_type = None):
@@ -1819,8 +1818,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Reindexes an object
       args / kw required since we must follow API
     """
-    self._reindexObject(*args, **kw)    
-    
+    self._reindexObject(*args, **kw)
+
   def _reindexObject(self, *args, **kw):
     # When the activity supports group methods, portal_catalog/catalogObjectList is called instead of
     # immediateReindexObject.
@@ -1986,18 +1985,18 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if script is not None:
       return script()
     return None
-  
+
   def _getAcquireLocalRoles(self):
     """
     This methods the value of acquire_local_roles of the object's portal_type
     True means, local roles are acquired, which is the standard behavior of
     Zope objects. False means that the role acquisition chain is cut.
-    
+
     The code to support this is in the user folder.
     """
     def cashed_getAcquireLocalRoles(portal_type):
       return self._getTypesTool()[self.getPortalType()].acquire_local_roles
-    
+
     cashed_getAcquireLocalRoles = CachingMethod(cashed_getAcquireLocalRoles, id='Base__getAcquireLocalRoles')
     return cashed_getAcquireLocalRoles(portal_type=self.getPortalType())
 
