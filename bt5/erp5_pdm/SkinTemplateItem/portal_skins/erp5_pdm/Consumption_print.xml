@@ -68,12 +68,12 @@
   <title>List Print</title>\n
   <author>Nexedi</author>\n
   <subject>Print Example</subject>\n
-  <content tal:define="translate python: here.portal_url.getPortalObject().translation_service.translate; ">\n
+  <content tal:define="localizer python: here.portal_url.getPortalObject().Localizer; ">\n
 \n
     <table splitbyrow="1" repeatrows="0" repeatcols="0"  style="AttributesTable" >\n
       <tr>\n
         <td tal:attributes="colwidth python: \'5cm\'" >\n
-          <para  style="TableHeader" tal:content="python: translate(\'ui\', here.getPortalType() )" />\n
+          <para  style="TableHeader" tal:content="python: localizer.erp5_ui.gettext(here.getPortalType())" />\n
         </td>\n
 \n
         <td tal:attributes="colwidth python: None">\n
@@ -124,10 +124,7 @@
       </tal:block>\n
 \n
   </content>\n
-</document>\n
-\n
-\n
-
+</document>
 
 ]]></string> </value>
         </item>
