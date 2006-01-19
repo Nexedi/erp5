@@ -1,3 +1,9 @@
+2006-01-19 Kevin
+* Use Localizer instead of Translation Service in ApparelFabricItem_fastInput python script.
+
+2005-12-19 Seb
+* Added group "sub_variation" on Apparel Bath portal Type
+
 2005-12-02 aurel
 * Removed site properties
 

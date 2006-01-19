@@ -1,0 +1,18 @@
+<base_category_list>
+ <portal_type id="Apparel Cloth">
+  <item>measure</item>
+ </portal_type>
+ <portal_type id="Apparel Component Variation">
+  <item>collection</item>
+ </portal_type>
+ <portal_type id="Apparel Fabric Colour Variation">
+  <item>colour</item>
+  <item>collection</item>
+ </portal_type>
+ <portal_type id="Apparel Measurement">
+  <item>measure</item>
+ </portal_type>
+ <portal_type id="Apparel Technical Drawing">
+  <item>image</item>
+ </portal_type>
+</base_category_list>

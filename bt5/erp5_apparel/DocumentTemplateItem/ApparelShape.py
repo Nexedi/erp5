@@ -43,7 +43,7 @@ class ApparelShape(Resource):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    security.declareObjectProtected(Permissions.View)
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

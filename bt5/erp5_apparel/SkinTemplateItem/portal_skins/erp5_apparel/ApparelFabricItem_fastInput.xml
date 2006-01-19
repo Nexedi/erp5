@@ -73,13 +73,13 @@
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 request=context.REQUEST\n
 \n
-translate = context.translation_service.translate\n
+localizer = context.Localizer\n
 \n
 # define the name of input\n
 new_quantity_name = \'quantity\'\n
 new_net_width_name = \'net_width\'\n
 new_source_reference_name = \'title\'\n
-new_tint_name = \'grouping_reference\'\n
+new_bath_name = \'grouping_reference\'\n
 new_comment_name = \'comment\'\n
 \n
 fabric_item_portal_type="Apparel Fabric Item"\n
@@ -99,42 +99,42 @@ try:\n
   if context.getPortalType() == fabric_item_portal_type : # we create a sub_item\n
     my_container = context\n
   else : # we create a master_item\n
-    my_container = context.getPortalObject().apparel_fabric_item_module  \n
-  # get only lines with a piece_number and a quantity  \n
-  input_list = filter( (lambda x: (x[new_quantity_name] != \'\') and (x[new_quantity_name] > 0) ) ,listbox )  \n
+    my_container = context.getPortalObject().apparel_fabric_item_module\n
+  # get only lines with a piece_number and a quantity\n
+  input_list = filter( (lambda x: (x[new_quantity_name] != \'\') and (x[new_quantity_name] > 0) ) ,listbox )\n
   error_message = \'\'\n
-  for input in input_list:      \n
-      title = input[new_source_reference_name]      \n
-      catalog_list = context.portal_catalog(portal_type=fabric_item_portal_type,title=title)            \n
-      if len(catalog_list)>0:       \n
-        error_message += translate("ui", "Warning the item ${title} already exists.", mapping = {\'title\' : title})        \n
+  for input in input_list:\n
+      title = input[new_source_reference_name]\n
+      catalog_list = context.portal_catalog(portal_type=fabric_item_portal_type,title=title)\n
+      if len(catalog_list)>0:\n
+        error_message += localizer.erp5_ui.gettext("Warning the item %s already exists.") % (title)\n
 \n
   if error_message=="":\n
-    for input in input_list:      \n
+    for input in input_list:\n
       my_quantity = input[new_quantity_name]\n
-      # first check if needed if quantity compatible with parent_item      \n
+      # first check if needed if quantity compatible with parent_item\n
       if my_container.getPortalType() == fabric_item_portal_type :\n
         context.log(\'remaining quantity\', my_container.getRemainingQuantity())\n
         if input[new_quantity_name] >= my_container.getRemainingQuantity() :\n
           my_quantity = None\n
       if my_quantity is not None :\n
         counter += 1\n
-  \n
+\n
         if context.getPortalType() in cell_portal_type_list :\n
           if context.getDestinationValue() is None:\n
-            error_message = translate("ui", "Warning select a destination.")\n
+            error_message = localizer.erp5_ui.gettext("Warning select a destination.")\n
             break\n
-        \n
+\n
         if context.getPortalType() == fabric_item_portal_type :\n
           if input[new_net_width_name] in [\'\',None]:\n
             input[new_net_width_name] = my_container.getLaizeUtile()\n
           if input[new_source_reference_name] in [\'\',None]:\n
             input[new_source_reference_name] = my_container.getSourceReference()\n
-          if input[new_tint_name] in [\'\',None]:\n
-            input[new_tint_name] = my_container.getBainTeinture()\n
+          if input[new_bath_name] in [\'\',None]:\n
+            input[new_bath_name] = my_container.getBainTeinture()\n
           if input[new_comment_name] in [\'\',None]:\n
             input[new_comment_name] = my_container.getComment()\n
-  \n
+\n
         # look if the item does not already exist\n
         title = input[new_source_reference_name]\n
         new_item = my_container.newContent(portal_type = fabric_item_portal_type,\n
@@ -142,84 +142,85 @@ try:\n
                                                   net_width = input[new_net_width_name],\n
                                                   source_reference = input[new_source_reference_name],\n
                                                   title = title,\n
-                                                  grouping_reference = input[new_tint_name],\n
+                                                  grouping_reference = input[new_bath_name],\n
                                                   comment = input[new_comment_name],)\n
-  \n
+\n
         if context.getPortalType() in cell_portal_type_list :\n
           new_item.edit(resource = context.getResource(),\n
                                       #destination = context.getDestination(),\n
                                       variation_category_list = context.getVariationCategoryList())\n
         created_item_list.append(new_item)\n
-    \n
-    # sort item by their tint    \n
-    tint_dict = {}\n
-    tint = \'\'        \n
-    for item in created_item_list:          \n
-      tint = item.grouping_reference           \n
-      if tint_dict.has_key(tint):\n
-        tint_dict[str(tint)].extend([item])\n
+\n
+    # sort item by their bath\n
+    bath_dict = {}\n
+    bath = \'\'\n
+    for item in created_item_list:\n
+      bath = str(item.grouping_reference)\n
+      if bath_dict.has_key(bath):\n
+        bath_dict[str(bath)].extend([item])\n
       else:\n
-        tint_dict[str(tint)] = [item]\n
-    \n
-    # get or create tint for each fabric item    \n
-    tint_container = context.getPortalObject().apparel_tint_item_module\n
+        bath_dict[str(bath)] = [item]\n
+\n
+    # get or create bath for each fabric item\n
+    bath_container = context.getPortalObject().apparel_bath_module\n
     resource_uid = context.getResourceUid()\n
     resource_title = context.getResourceTitle()\n
     resource = context.getResource()\n
     variation_category_list = context.getVariationCategoryList()\n
-    tint_object_list = {}\n
-    for tint_title in tint_dict.keys():          \n
-      if tint_title != "None":\n
-        tint_item_list = context.portal_catalog(portal_type=apparel_bath_portal_type, resource_uid=resource_uid, title=tint_title)                    \n
-        if len(tint_item_list) > 0:\n
-          for tint_item in tint_item_list:                        \n
-            if tint.getVariationCategoryList() == variation_category_list:\n
-              tint_item = tint_item_list\n
-              tint_object = context.portal_catalog.getObject(tint_item.uid)              \n
+    bath_object_list = {}\n
+    for bath_title in bath_dict.keys():\n
+      if bath_title != "None":\n
+        bath_list = context.portal_catalog(portal_type=apparel_bath_portal_type, resource_uid=resource_uid, title=bath_title)\n
+        if len(bath_list) > 0:\n
+          for bath in bath_list:\n
+            if bath.getVariationCategoryList() == variation_category_list:\n
+              bath = bath_list\n
+              bath_object = context.portal_catalog.getObject(bath.uid)\n
               break\n
-        else:                    \n
-          tint_object = tint_container.newContent(portal_type = apparel_bath_portal_type,\n
-                              title = tint_title,\n
+        else:\n
+          bath_object = bath_container.newContent(portal_type = apparel_bath_portal_type,\n
+                              title = bath_title,\n
                               resource = resource,\n
-                              variation_category_list = variation_category_list)          \n
-        tint_object_list[tint_title] = tint_object                                                \n
-                      \n
-    \n
-    movement = context                \n
-    # get tint on root movement\n
+                              variation_category_list = variation_category_list)\n
+        bath_object_list[bath_title] = bath_object\n
+\n
+\n
+    movement = context\n
+    # get bath on root movement\n
     aggregate_list = movement.getAggregateValueList()\n
-    movement_tint = "None"\n
+    movement_bath = "None"\n
     for item in aggregate_list:\n
       if item.getPortalType() == apparel_bath_portal_type:\n
-        movement_tint = item.getTitle()\n
-        break    \n
-    # must call splitQuantity to create new movement foreach new tint\n
-    context.updateAppliedRule()    \n
-    movement_list = []        \n
-    for tint in tint_dict.keys():          \n
-      if tint != movement_tint:\n
+        movement_bath = item.getTitle()\n
+        break\n
+    # must call splitQuantity to create new movement foreach new bath\n
+    context.updateAppliedRule()\n
+    movement_list = []\n
+    for bath in bath_dict.keys():\n
+      if bath != movement_bath:\n
         quantity = 0\n
-        context.log(\'tint\', tint)\n
-        items = tint_dict[tint]\n
+        context.log(\'bath\', bath)\n
+        items = bath_dict[bath]\n
         # get quantity for new movement\n
-        for item in items:              \n
-          quantity += item.quantity                    \n
+        for item in items:\n
+          quantity += item.quantity\n
         # create new movement\n
-        if tint != "None":\n
-          apparel_tint_list = [tint_object_list[tint].getRelativeUrl()]\n
+        if bath != "None":\n
+          apparel_bath_list = [bath_object_list[bath].getRelativeUrl()]\n
         else:\n
-          apparel_tint_list = [""]                      \n
-        new_movement = context.portal_simulation.solveMovement(movement, None, \'SplitQuantity\', additional_parameters={\'aggregate_list\':apparel_tint_list}, start_date=start_date, stop_date=stop_date, quantity=quantity)        \n
+          apparel_bath_list = [""]\n
+        new_movement = context.portal_simulation.solveMovement(movement, None, \'SplitQuantity\', additional_parameters={\'aggregate_list\':apparel_bath_list}, start_date=start_date, stop_date=stop_date, quantity=quantity)\n
         movement_list.append(new_movement[0].getRelativeUrl())\n
     # update root movement if require\n
-    if tint_dict.has_key(movement_tint):\n
-      items = tint_dict[movement_tint]\n
+    if bath_dict.has_key(movement_bath):\n
+      items = bath_dict[movement_bath]\n
       quantity = 0\n
       for item in items:\n
-        quantity += item.quantity            \n
-      movement.edit(quantity=quantity)      \n
-          \n
+        quantity += item.quantity\n
+      movement.edit(quantity=quantity)\n
+\n
     delivery_list = [context.getExplanationValue().getRelativeUrl()]\n
+    delivery = context.getExplanationValue()\n
     # update line on packing list\n
     order = context.getCausalityValue()\n
     applied_rule = order.getCausalityRelatedValue(portal_type="Applied Rule")\n
@@ -228,55 +229,55 @@ try:\n
         delivery_builder = order.portal_deliveries.sale_packing_list_builder\n
     elif order_portal_type == \'Purchase Order\':\n
         delivery_builder = order.portal_deliveries.purchase_packing_list_builder\n
-    explanation_uid_list = [order.getUid(),context.getUid()]    \n
-    delivery = delivery_builder.build(explanation_uid=explanation_uid_list, movement_relative_url_list=movement_list, delivery_relative_url_list=delivery_list)              \n
-    lines = delivery[0].objectValues()    \n
-    # udpate aggregate list on cells    \n
-    variation_text = context.getVariationText()  \n
-    for line in lines:                  \n
-      if line.getResourceUid() == resource_uid:     \n
-        # get tint from line        \n
-        line_aggregate_list = line.getAggregateValueList()        \n
-        has_tint = 0\n
+    explanation_uid_list = [order.getUid(),context.getUid()]\n
+    delivery_builder.build(explanation_uid=explanation_uid_list, movement_relative_url_list=movement_list, delivery_relative_url_list=delivery_list)\n
+    lines = delivery.objectValues()\n
+    # udpate aggregate list on cells\n
+    variation_text = context.getVariationText()\n
+    for line in lines:\n
+      if line.getResourceUid() == resource_uid:\n
+        # get bath from line\n
+        line_aggregate_list = line.getAggregateValueList()\n
+        has_bath = 0\n
         for item in line_aggregate_list:\n
           if item.getPortalType() == apparel_bath_portal_type:\n
-            has_tint = 1\n
-            line_tint = item.getTitle()                        \n
-        if not has_tint:          \n
-          line_tint = "None"                  \n
-        # update aggregate list on cell      \n
+            has_bath = 1\n
+            line_bath = item.getTitle()\n
+        if not has_bath:\n
+          line_bath = "None"\n
+        # update aggregate list on cell\n
         cells = line.objectValues()\n
         for cell in cells:\n
           if cell.getVariationText() == variation_text:\n
-            # update aggregate list with items                           \n
+            # update aggregate list with items\n
             cell_aggregate_list = cell.getAggregateValueList()\n
-            if tint_dict.has_key(line_tint):\n
+            if bath_dict.has_key(line_bath):\n
               # new items on cell\n
-              cell_item = tint_dict[line_tint]\n
-              cell_aggregate_list.extend(cell_item)                          \n
+              cell_item = bath_dict[line_bath]\n
+              cell_aggregate_list.extend(cell_item)\n
               cell.setAggregateValueList(cell_aggregate_list)\n
-            # update quantity              \n
-            total_quantity = sum([x.getQuantity() for x in cell_aggregate_list])            \n
+            # update quantity\n
+            total_quantity = sum([x.getQuantity() for x in cell_aggregate_list])\n
             if cell.getPortalType() in inventory_cell_portal_type_list:\n
               cell.setMappedValuePropertyList([\'inventory\',\'price\'])\n
               cell.edit(inventory=total_quantity)\n
             elif cell.getPortalType() in delivery_cell_portal_type_list:\n
               cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
-              cell.edit(quantity=total_quantity)    \n
+              cell.edit(quantity=total_quantity)\n
 \n
 \n
 except FormValidationError, validation_errors:\n
   redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
-                                  , \'portal_status_message=%s\' %translate("ui", "input failed.")\n
+                                  , \'portal_status_message=%s\' % localizer.erp5_ui.gettext("input failed.")\n
                                   )\n
 else:\n
   if error_message != \'\':\n
     redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
                                   , \'portal_status_message=%s\' % error_message\n
                                   )\n
-  else:  \n
-    redirect_url = \'%s/view?%s\' % ( context.absolute_url()    \n
-                                  , \'portal_status_message=%s\' %translate("ui", " ${nb} items created.", mapping = {"nb" : counter})                              \n
+  else:\n
+    redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                  , \'portal_status_message=%s\' % (localizer.erp5_ui.gettext(" %s items created.") % (counter))\n
                                   )\n
 \n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
@@ -286,159 +287,9 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAFMAAABFAAAACwAA
-AHOsDAAAZAEAawAAbAEAfQMAbAIAfQQAAXQDAHQEAGQCAIMCAH0HAHQDAHQDAHQEAGQDAIMCAGQE
-AIMCAH0IAGQFAIkAAGQGAH0KAGQHAH0LAGQIAH0MAGQJAH0NAGQKAH0OAGQLAH0PAGQMAGYBAH0Q
-AGQNAGYBAH0RAHwQAHwRABd9EgBkDgB9EwBnAAB9FAB0AwB0BABkDwCDAgCDAAB9FQB0AwB0BABk
-EACDAgCDAAB9FgBkEQB9FwB5LAt0AwB0BABkEgCDAgCDAAB8DgBqAgBvCgABdAQAfRgAbhwAAXQD
-AHQDAHQEAGQTAIMCAIMAAGQUAIMCAH0YAHQXAIcAAGQVAIYAAHwAAIMCAH0aAGQRAH0XAHh6AHQa
-AHwaAIMBAERdbAB9HAB0HAB8HAB8CwCDAgB9HgB0AwB0BABkFgCDAgBkFwB8DgBkBwB8HgCDAAJ9
-HwB0HwB8HwCDAQBkDgBqBABvJgABfBcAfAgAZBgAZBkAZBoAaAAABGQHAHweAAM8gwIBN30XAHEf
-AQFxHwFXfBcAZBEAagIAb0UKAXjcAnQaAHwaAIMBAERdzgJ9HAB0HAB8HACIAACDAgB9IQB0AwB8
-GABkEgCDAgCDAAB8DgBqAgBvUgABdAMAdAQAZBsAgwIAZBwAdAMAfBgAZB0AgwIAgwAAgwIAAXQc
-AHwcAIgAAIMCAHQDAHwYAGQdAIMCAIMAAGoFAG8KAAF0IQB9IQBxKQIBbgEAAXwhAHQhAGoJAG9B
-AgF8EwBkHgA3fRMAdAMAdAQAZBIAgwIAgwAAfBIAagYAbzEAAXQDAHQEAGQfAIMCAIMAAHQhAGoI
-AG8UAAF8CABkGABkIACDAgB9FwBQcYoCAW4BAAF0AwB0BABkEgCDAgCDAAB8DgBqAgBv9AABdBwA
-fBwAfAoAgwIAZBEAdCEAZwIAagYAbyAAAXQDAHwYAGQhAIMCAIMAAHQiAHwcAIMBAHwKADxuAQAB
-dBwAfBwAfAsAgwIAZBEAdCEAZwIAagYAbyAAAXQDAHwYAGQiAIMCAIMAAHQiAHwcAIMBAHwLADxu
-AQABdBwAfBwAfAwAgwIAZBEAdCEAZwIAagYAbyAAAXQDAHwYAGQjAIMCAIMAAHQiAHwcAIMBAHwM
-ADxuAQABdBwAfBwAfA0AgwIAZBEAdCEAZwIAagYAbyAAAXQDAHwYAGQkAIMCAIMAAHQiAHwcAIMB
-AHwNADxxlwMBbgEAAXQcAHwcAHwLAIMCAH0eAHQDAHwYAGQlAIMCAGQXAHwOAGQFAHQcAHwcAIgA
-AIMCAGQGAHQcAHwcAHwKAIMCAGQmAHQcAHwcAHwLAIMCAGQHAHweAGQIAHQcAHwcAHwMAIMCAGQJ
-AHQcAHwcAHwNAIMCAIMAB30kAHQDAHQEAGQSAIMCAIMAAHwSAGoGAG84AAF0AwB8JABkJwCDAgBk
-KAB0AwB0BABkKQCDAgCDAABkKgB0AwB0BABkKwCDAgCDAACDAAIBbgEAAXQDAHwUAGQsAIMCAHwk
-AIMBAAFxqQEBcakBV2gAAH0lAGQRAH0mAHh7AHQaAHwUAIMBAERdbQB9JwB0AwB8JwBkCACDAgB9
-JgB0AwB8JQBkLQCDAgB8JgCDAQBvKQABdAMAdBwAfCUAdCcAfCYAgwEAgwIAZC4AgwIAfCcAZwEA
-gwEAAXGUBAF8JwBnAQB0IgB8JQCDAQB0JwB8JgCDAQA8cZQEV3QDAHQDAHQEAGQTAIMCAIMAAGQv
-AIMCAH0pAHQDAHQEAGQwAIMCAIMAAH0qAHQDAHQEAGQxAIMCAIMAAH0rAHQDAHQEAGQpAIMCAIMA
-AH0sAHQDAHQEAGQrAIMCAIMAAH0tAGgAAH0uAHgIAXQaAHQDAHwlAGQyAIMCAIMAAIMBAERd7gB9
-LwB8LwBkMwBqAwBv2wABdAMAdAQAZBYAgwIAZBcAfA8AZDQAfCoAZAcAfC8AgwADfTAAdB8AfDAA
-gwEAZA4AagQAb2YAAXiNAHQaAHwwAIMBAERdUQB9MQB0AwB8JgBkKwCDAgCDAAB8LQBqAgBvMgAB
-fDAAfTEAdAMAdAMAdAQAZBYAgwIAZDUAgwIAdAMAfDEAZDYAgwIAgwEAfTIAUHHeBQFx3gVXbisA
-AXQDAHwpAGQlAIMCAGQXAHwPAGQHAHwvAGQoAHwsAGQqAHwtAIMABH0yAHwyAHQiAHwuAIMBAHwv
-ADxxhwUBcYcFV3QEAH0zAHQDAHwzAGQ3AIMCAIMAAH00AGQzAH01AHhEAHQaAHw0AIMBAERdNgB9
-JwB0AwB8JwBkEgCDAgCDAAB8DwBqAgBvFwABdAMAfCcAZDgAgwIAgwAAfTUAUHGkBgFxpAZXdAMA
-dAQAZDkAgwIAgwAAAWcAAH02AHgrAXQaAHQDAHwlAGQyAIMCAIMAAIMBAERdEQF9JgB8JgB8NQBq
-AwBv/gABZA4AfTcAdAMAdAQAZBsAgwIAZDoAfCYAgwIAAXQcAHwlAHwmAIMCAH04AHgnAHQaAHw4
-AIMBAERdGQB9JwB8NwB0AwB8JwBkBQCDAgA3fTcAcVgHV3wmAGQzAGoDAG8iAAF0AwB0HAB8LgB8
-JgCDAgBkOwCDAgCDAABnAQB9OQBuCgABZBEAZwEAfTkAdAMAdAMAdAQAZDwAgwIAZD0AgwIAfDMA
-dCEAZD4AZD8AaAAABGRAAHw5AAM8ZEEAfBUAZEIAfBYAZAUAfDcAgwMEfToAdAMAfDYAZCwAgwIA
-dAMAdBwAfDoAZA4AgwIAZDsAgwIAgwAAgwEAAXENBwFxDQdXdAMAfCUAZC0AgwIAfDUAgwEAb1kA
-AXQcAHwlAHw1AIMCAH04AGQOAH03AHgnAHQaAHw4AIMBAERdGQB9JwB8NwB0AwB8JwBkBQCDAgA3
-fTcAcVoIV3QDAHwzAGQnAIMCAGQFAHw3AIMAAQFuAQABdAMAdAMAdAQAZEMAgwIAgwAAZDsAgwIA
-gwAAZwEAfTsAdAMAdAQAZEQAgwIAgwAAfTwAdAMAfDwAZEUAgwIAZBcAZEYAgwABfT0AdAMAfDwA
-ZBIAgwIAgwAAfT4AfD4AZEcAagIAbxwAAXQDAHQDAHw8AGRIAIMCAGRJAIMCAH0/AG4qAAF8PgBk
-SgBqAgBvHAABdAMAdAMAfDwAZEgAgwIAZEsAgwIAfT8AbgEAAXQDAHw8AGRMAIMCAIMAAHQDAHQE
-AGRMAIMCAIMAAGcCAH1AAHQDAHw/AGRNAIMCAGROAHxAAGRPAHw2AGRQAHw7AIMAA31BAHQDAHQc
-AHxBAGQOAIMCAGRRAIMCAIMAAH1CAHQDAHQEAGRSAIMCAIMAAH1DAHgpAnQaAHxCAIMBAERdFwJ9
-RAB0AwB8RABkMACDAgCDAAB8KgBqAgBv+AEBdAMAfEQAZDcAgwIAgwAAfUUAZA4AfUYAeEkAdBoA
-fEUAgwEARF07AH0nAHQDAHwnAGQSAIMCAIMAAHwPAGoCAG8cAAFkHgB9RgB0AwB8JwBkOACDAgCD
-AAB9RwBxBgoBcQYKV3xGAAxvCgABZDMAfUcAbgEAAXQDAHxEAGRRAIMCAIMAAH1IAHhtAXQaAHxI
-AIMBAERdWwF9SQB0AwB8SQBkUgCDAgCDAAB8QwBqAgBvPAEBdAMAfEkAZDcAgwIAgwAAfUoAdAMA
-fCUAZC0AgwIAfEcAgwEAbzkAAXQcAHwlAHxHAIMCAH1LAHQDAHxKAGQuAIMCAHxLAIMBAAF0AwB8
-SQBkUwCDAgB8SgCDAQABbgEAAXRLAGcAAARpTAB9TgB0GgB8SgCDAQBEXRwAfU8AfE4AdAMAfE8A
-ZFQAgwIAgwAAgwEAAXENC35OAIMBAH1QAHQDAHxJAGQSAIMCAIMAAHwQAGoGAG8zAAF0AwB8SQBk
-VQCDAgBkVgBkVwBnAgCDAQABdAMAfEkAZCcAgwIAZFYAfFAAgwABAXHRCwF0AwB8SQBkEgCDAgCD
-AAB8EQBqBgBvMwABdAMAfEkAZFUAgwIAZAUAZFcAZwIAgwEAAXQDAHxJAGQnAIMCAGQFAHxQAIMA
-AQFx0QsBcXYKAXF2CldxwgkBccIJV24BAAFXbj4ABHwEAGoKAG8yAAEBfVEAAWRYAHQDAHQEAGRZ
-AIMCAIMAAGRaAHwIAGQYAGRbAIMCABZmAgAWfVIAbmsAAVh8FwBkEQBqAwBvJAABZFgAdAMAdAQA
-ZFkAgwIAgwAAZFoAfBcAFmYCABZ9UgBuOQABZFgAdAMAdAQAZFkAgwIAgwAAZFoAfAgAZBgAZFwA
-ZBoAaAAABGRdAHwTAAM8gwIBFmYCABZ9UgB0AwB0HAB8BwBkXgCDAgBkXwCDAgB8UgCDAQABZAAA
-UyhgAAAATigCAAAAcw8AAABWYWxpZGF0aW9uRXJyb3JzEwAAAEZvcm1WYWxpZGF0aW9uRXJyb3Jz
-BwAAAFJFUVVFU1RzEwAAAHRyYW5zbGF0aW9uX3NlcnZpY2VzCQAAAHRyYW5zbGF0ZXMIAAAAcXVh
-bnRpdHlzCQAAAG5ldF93aWR0aHMFAAAAdGl0bGVzEgAAAGdyb3VwaW5nX3JlZmVyZW5jZXMHAAAA
-Y29tbWVudHMTAAAAQXBwYXJlbCBGYWJyaWMgSXRlbXMMAAAAQXBwYXJlbCBCYXRocw4AAABJbnZl
-bnRvcnkgQ2VsbHMaAAAAUHVyY2hhc2UgUGFja2luZyBMaXN0IENlbGxpAAAAAHMMAAAAZ2V0U3Rh
-cnREYXRlcwsAAABnZXRTdG9wRGF0ZXMAAAAAcw0AAABnZXRQb3J0YWxUeXBlcw8AAABnZXRQb3J0
-YWxPYmplY3RzGgAAAGFwcGFyZWxfZmFicmljX2l0ZW1fbW9kdWxlYwEAAAADAAAABQAAAAMAAABz
-KQAAAHQAAHwAAIgAAIMCAGQBAGoDAG8TAAF0AAB8AACIAACDAgBkAgBqBABTKAMAAABOcwAAAABp
-AAAAACgDAAAAcwkAAABfZ2V0aXRlbV9zAQAAAHhzEQAAAG5ld19xdWFudGl0eV9uYW1lKAMAAABz
-AQAAAHhzCQAAAF9nZXRpdGVtX3MRAAAAbmV3X3F1YW50aXR5X25hbWUoAQAAAHMRAAAAbmV3X3F1
-YW50aXR5X25hbWUoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwoAAAA8bGFtYmRhLjI+IgAAAHMA
-AAAAcw4AAABwb3J0YWxfY2F0YWxvZ3MLAAAAcG9ydGFsX3R5cGVzAgAAAHVpcykAAABXYXJuaW5n
-IHRoZSBpdGVtICR7dGl0bGV9IGFscmVhZHkgZXhpc3RzLnMHAAAAbWFwcGluZ3MDAAAAbG9ncxIA
-AAByZW1haW5pbmcgcXVhbnRpdHlzFAAAAGdldFJlbWFpbmluZ1F1YW50aXR5aQEAAABzEwAAAGdl
-dERlc3RpbmF0aW9uVmFsdWVzHQAAAFdhcm5pbmcgc2VsZWN0IGEgZGVzdGluYXRpb24ucw0AAABn
-ZXRMYWl6ZVV0aWxlcxIAAABnZXRTb3VyY2VSZWZlcmVuY2VzDwAAAGdldEJhaW5UZWludHVyZXMK
-AAAAZ2V0Q29tbWVudHMKAAAAbmV3Q29udGVudHMQAAAAc291cmNlX3JlZmVyZW5jZXMEAAAAZWRp
-dHMIAAAAcmVzb3VyY2VzCwAAAGdldFJlc291cmNlcxcAAAB2YXJpYXRpb25fY2F0ZWdvcnlfbGlz
-dHMYAAAAZ2V0VmFyaWF0aW9uQ2F0ZWdvcnlMaXN0cwYAAABhcHBlbmRzBwAAAGhhc19rZXlzBgAA
-AGV4dGVuZHMYAAAAYXBwYXJlbF90aW50X2l0ZW1fbW9kdWxlcw4AAABnZXRSZXNvdXJjZVVpZHMQ
-AAAAZ2V0UmVzb3VyY2VUaXRsZXMEAAAAa2V5c3MEAAAATm9uZXMMAAAAcmVzb3VyY2VfdWlkcwkA
-AABnZXRPYmplY3RzAwAAAHVpZHMVAAAAZ2V0QWdncmVnYXRlVmFsdWVMaXN0cwgAAABnZXRUaXRs
-ZXMRAAAAdXBkYXRlQXBwbGllZFJ1bGVzBAAAAHRpbnRzDgAAAGdldFJlbGF0aXZlVXJscxEAAABw
-b3J0YWxfc2ltdWxhdGlvbnMNAAAAc29sdmVNb3ZlbWVudHMNAAAAU3BsaXRRdWFudGl0eXMVAAAA
-YWRkaXRpb25hbF9wYXJhbWV0ZXJzcw4AAABhZ2dyZWdhdGVfbGlzdHMKAAAAc3RhcnRfZGF0ZXMJ
-AAAAc3RvcF9kYXRlcxMAAABnZXRFeHBsYW5hdGlvblZhbHVlcxEAAABnZXRDYXVzYWxpdHlWYWx1
-ZXMYAAAAZ2V0Q2F1c2FsaXR5UmVsYXRlZFZhbHVlcwwAAABBcHBsaWVkIFJ1bGVzCgAAAFNhbGUg
-T3JkZXJzEQAAAHBvcnRhbF9kZWxpdmVyaWVzcxkAAABzYWxlX3BhY2tpbmdfbGlzdF9idWlsZGVy
-cw4AAABQdXJjaGFzZSBPcmRlcnMdAAAAcHVyY2hhc2VfcGFja2luZ19saXN0X2J1aWxkZXJzBgAA
-AGdldFVpZHMFAAAAYnVpbGRzDwAAAGV4cGxhbmF0aW9uX3VpZHMaAAAAbW92ZW1lbnRfcmVsYXRp
-dmVfdXJsX2xpc3RzGgAAAGRlbGl2ZXJ5X3JlbGF0aXZlX3VybF9saXN0cwwAAABvYmplY3RWYWx1
-ZXNzEAAAAGdldFZhcmlhdGlvblRleHRzFQAAAHNldEFnZ3JlZ2F0ZVZhbHVlTGlzdHMLAAAAZ2V0
-UXVhbnRpdHlzGgAAAHNldE1hcHBlZFZhbHVlUHJvcGVydHlMaXN0cwkAAABpbnZlbnRvcnlzBQAA
-AHByaWNlcwoAAAAlcy92aWV3PyVzcwwAAABhYnNvbHV0ZV91cmxzGAAAAHBvcnRhbF9zdGF0dXNf
-bWVzc2FnZT0lc3MNAAAAaW5wdXQgZmFpbGVkLnMVAAAAICR7bmJ9IGl0ZW1zIGNyZWF0ZWQucwIA
-AABuYnMIAAAAUkVTUE9OU0VzCAAAAHJlZGlyZWN0KFIAAABzGgAAAFByb2R1Y3RzLkZvcm11bGF0
-b3IuRXJyb3Jzcw8AAABWYWxpZGF0aW9uRXJyb3JzEwAAAEZvcm1WYWxpZGF0aW9uRXJyb3JzCQAA
-AF9nZXRhdHRyX3MHAAAAY29udGV4dHMHAAAAcmVxdWVzdHMJAAAAdHJhbnNsYXRlcxEAAABuZXdf
-cXVhbnRpdHlfbmFtZXMSAAAAbmV3X25ldF93aWR0aF9uYW1lcxkAAABuZXdfc291cmNlX3JlZmVy
-ZW5jZV9uYW1lcw0AAABuZXdfdGludF9uYW1lcxAAAABuZXdfY29tbWVudF9uYW1lcxcAAABmYWJy
-aWNfaXRlbV9wb3J0YWxfdHlwZXMYAAAAYXBwYXJlbF9iYXRoX3BvcnRhbF90eXBlcx8AAABpbnZl
-bnRvcnlfY2VsbF9wb3J0YWxfdHlwZV9saXN0cx4AAABkZWxpdmVyeV9jZWxsX3BvcnRhbF90eXBl
-X2xpc3RzFQAAAGNlbGxfcG9ydGFsX3R5cGVfbGlzdHMHAAAAY291bnRlcnMRAAAAY3JlYXRlZF9p
-dGVtX2xpc3RzCgAAAHN0YXJ0X2RhdGVzCQAAAHN0b3BfZGF0ZXMNAAAAZXJyb3JfbWVzc2FnZXMM
-AAAAbXlfY29udGFpbmVycwYAAABmaWx0ZXJzBwAAAGxpc3Rib3hzCgAAAGlucHV0X2xpc3RzCQAA
-AF9nZXRpdGVyX3MFAAAAaW5wdXRzCQAAAF9nZXRpdGVtX3MFAAAAdGl0bGVzDAAAAGNhdGFsb2df
-bGlzdHMDAAAAbGVucwsAAABteV9xdWFudGl0eXMEAAAATm9uZXMHAAAAX3dyaXRlX3MIAAAAbmV3
-X2l0ZW1zCQAAAHRpbnRfZGljdHMEAAAAdGludHMEAAAAaXRlbXMDAAAAc3Rycw4AAAB0aW50X2Nv
-bnRhaW5lcnMMAAAAcmVzb3VyY2VfdWlkcw4AAAByZXNvdXJjZV90aXRsZXMIAAAAcmVzb3VyY2Vz
-FwAAAHZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cxAAAAB0aW50X29iamVjdF9saXN0cwoAAAB0aW50
-X3RpdGxlcw4AAAB0aW50X2l0ZW1fbGlzdHMJAAAAdGludF9pdGVtcwsAAAB0aW50X29iamVjdHMI
-AAAAbW92ZW1lbnRzDgAAAGFnZ3JlZ2F0ZV9saXN0cw0AAABtb3ZlbWVudF90aW50cw0AAABtb3Zl
-bWVudF9saXN0cwgAAABxdWFudGl0eXMFAAAAaXRlbXNzEQAAAGFwcGFyZWxfdGludF9saXN0cwwA
-AABuZXdfbW92ZW1lbnRzDQAAAGRlbGl2ZXJ5X2xpc3RzBQAAAG9yZGVycwwAAABhcHBsaWVkX3J1
-bGVzEQAAAG9yZGVyX3BvcnRhbF90eXBlcxAAAABkZWxpdmVyeV9idWlsZGVycxQAAABleHBsYW5h
-dGlvbl91aWRfbGlzdHMIAAAAZGVsaXZlcnlzBQAAAGxpbmVzcw4AAAB2YXJpYXRpb25fdGV4dHME
-AAAAbGluZXMTAAAAbGluZV9hZ2dyZWdhdGVfbGlzdHMIAAAAaGFzX3RpbnRzCQAAAGxpbmVfdGlu
-dHMFAAAAY2VsbHNzBAAAAGNlbGxzEwAAAGNlbGxfYWdncmVnYXRlX2xpc3RzCQAAAGNlbGxfaXRl
-bXMDAAAAc3VtcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwEAAAB4cw4AAAB0b3RhbF9xdWFudGl0
-eXMRAAAAdmFsaWRhdGlvbl9lcnJvcnNzDAAAAHJlZGlyZWN0X3VybChTAAAAcwcAAABsaXN0Ym94
-cwIAAABrd3MaAAAAUHJvZHVjdHMuRm9ybXVsYXRvci5FcnJvcnNzDwAAAFZhbGlkYXRpb25FcnJv
-cnMTAAAARm9ybVZhbGlkYXRpb25FcnJvcnMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAABy
-ZXF1ZXN0cwkAAAB0cmFuc2xhdGVzEQAAAG5ld19xdWFudGl0eV9uYW1lcxIAAABuZXdfbmV0X3dp
-ZHRoX25hbWVzGQAAAG5ld19zb3VyY2VfcmVmZXJlbmNlX25hbWVzDQAAAG5ld190aW50X25hbWVz
-EAAAAG5ld19jb21tZW50X25hbWVzFwAAAGZhYnJpY19pdGVtX3BvcnRhbF90eXBlcxgAAABhcHBh
-cmVsX2JhdGhfcG9ydGFsX3R5cGVzHwAAAGludmVudG9yeV9jZWxsX3BvcnRhbF90eXBlX2xpc3Rz
-HgAAAGRlbGl2ZXJ5X2NlbGxfcG9ydGFsX3R5cGVfbGlzdHMVAAAAY2VsbF9wb3J0YWxfdHlwZV9s
-aXN0cwcAAABjb3VudGVycxEAAABjcmVhdGVkX2l0ZW1fbGlzdHMKAAAAc3RhcnRfZGF0ZXMJAAAA
-c3RvcF9kYXRlcw0AAABlcnJvcl9tZXNzYWdlcwwAAABteV9jb250YWluZXJzBgAAAGZpbHRlcnMK
-AAAAaW5wdXRfbGlzdHMJAAAAX2dldGl0ZXJfcwUAAABpbnB1dHMJAAAAX2dldGl0ZW1fcwUAAAB0
-aXRsZXMMAAAAY2F0YWxvZ19saXN0cwMAAABsZW5zCwAAAG15X3F1YW50aXR5cwQAAABOb25lcwcA
-AABfd3JpdGVfcwgAAABuZXdfaXRlbXMJAAAAdGludF9kaWN0cwQAAAB0aW50cwQAAABpdGVtcwMA
-AABzdHJzDgAAAHRpbnRfY29udGFpbmVycwwAAAByZXNvdXJjZV91aWRzDgAAAHJlc291cmNlX3Rp
-dGxlcwgAAAByZXNvdXJjZXMXAAAAdmFyaWF0aW9uX2NhdGVnb3J5X2xpc3RzEAAAAHRpbnRfb2Jq
-ZWN0X2xpc3RzCgAAAHRpbnRfdGl0bGVzDgAAAHRpbnRfaXRlbV9saXN0cwkAAAB0aW50X2l0ZW1z
-CwAAAHRpbnRfb2JqZWN0cwgAAABtb3ZlbWVudHMOAAAAYWdncmVnYXRlX2xpc3RzDQAAAG1vdmVt
-ZW50X3RpbnRzDQAAAG1vdmVtZW50X2xpc3RzCAAAAHF1YW50aXR5cwUAAABpdGVtc3MRAAAAYXBw
-YXJlbF90aW50X2xpc3RzDAAAAG5ld19tb3ZlbWVudHMNAAAAZGVsaXZlcnlfbGlzdHMFAAAAb3Jk
-ZXJzDAAAAGFwcGxpZWRfcnVsZXMRAAAAb3JkZXJfcG9ydGFsX3R5cGVzEAAAAGRlbGl2ZXJ5X2J1
-aWxkZXJzFAAAAGV4cGxhbmF0aW9uX3VpZF9saXN0cwgAAABkZWxpdmVyeXMFAAAAbGluZXNzDgAA
-AHZhcmlhdGlvbl90ZXh0cwQAAABsaW5lcxMAAABsaW5lX2FnZ3JlZ2F0ZV9saXN0cwgAAABoYXNf
-dGludHMJAAAAbGluZV90aW50cwUAAABjZWxsc3MEAAAAY2VsbHMTAAAAY2VsbF9hZ2dyZWdhdGVf
-bGlzdHMJAAAAY2VsbF9pdGVtcwMAAABzdW1zBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzAQAAAHhz
-DgAAAHRvdGFsX3F1YW50aXR5cxEAAAB2YWxpZGF0aW9uX2Vycm9yc3MMAAAAcmVkaXJlY3RfdXJs
-KAAAAAAoAQAAAHMRAAAAbmV3X3F1YW50aXR5X25hbWVzDwAAAFNjcmlwdCAoUHl0aG9uKXMbAAAA
-QXBwYXJlbEZhYnJpY0l0ZW1fZmFzdElucHV0AQAAAHNgAQAAAAITAQ8CGAMGAQYBBgEGAQYCBgEG
-AQkBCQEKAQYBBgISARICBgIDARkBCgIbAhUBBgENAAYBDwEeARMBKgINAQ0ABgEPAhwBHwEiAQ4B
-DQEKAhkBGQEPAQkCGQEcASABHAEgARwBIAEcASQDDwEYAQ8BDwEMAQkBDwEPAhwBIQIXARgDBgEG
-AQ0ABgESARkBIwIdAxsBEgESARIBEgEGARkABgENASQBEwENAAYBGQEGAScBDQIVAQYBBgEJARgD
-BgISAQYBDQAGARkBEgEMAg0BBgEZAAYBDQEJARMBDwINAAYBFwINASICCQFIATACEwEPAQYBDQAG
-ARoBFwIhAhIBGAESAQ0BHAENARwBJAEkARsCEgENAAYBGQISAQYBDQAGARkBBgEaAQgBCgISAQ0A
-BgEZAhUBEwISARMBFAIXACgBHAEZARcBHAEZAS8DEAEVARkDDQEVAQ8DFQEpAygBAAAAcxsAAABB
-cHBhcmVsRmFicmljSXRlbV9mYXN0SW5wdXQoAQAAAHMbAAAAQXBwYXJlbEZhYnJpY0l0ZW1fZmFz
-dElucHV0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAA
-AA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -486,11 +337,11 @@ AA==</string> </value>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>translate</string>
+                            <string>localizer</string>
                             <string>new_quantity_name</string>
                             <string>new_net_width_name</string>
                             <string>new_source_reference_name</string>
-                            <string>new_tint_name</string>
+                            <string>new_bath_name</string>
                             <string>new_comment_name</string>
                             <string>fabric_item_portal_type</string>
                             <string>apparel_bath_portal_type</string>
@@ -515,41 +366,40 @@ AA==</string> </value>
                             <string>None</string>
                             <string>_write_</string>
                             <string>new_item</string>
-                            <string>tint_dict</string>
-                            <string>tint</string>
+                            <string>bath_dict</string>
+                            <string>bath</string>
                             <string>item</string>
                             <string>str</string>
-                            <string>tint_container</string>
+                            <string>bath_container</string>
                             <string>resource_uid</string>
                             <string>resource_title</string>
                             <string>resource</string>
                             <string>variation_category_list</string>
-                            <string>tint_object_list</string>
-                            <string>tint_title</string>
-                            <string>tint_item_list</string>
-                            <string>tint_item</string>
-                            <string>tint_object</string>
+                            <string>bath_object_list</string>
+                            <string>bath_title</string>
+                            <string>bath_list</string>
+                            <string>bath_object</string>
                             <string>movement</string>
                             <string>aggregate_list</string>
-                            <string>movement_tint</string>
+                            <string>movement_bath</string>
                             <string>movement_list</string>
                             <string>quantity</string>
                             <string>items</string>
-                            <string>apparel_tint_list</string>
+                            <string>apparel_bath_list</string>
                             <string>new_movement</string>
                             <string>delivery_list</string>
+                            <string>delivery</string>
                             <string>order</string>
                             <string>applied_rule</string>
                             <string>order_portal_type</string>
                             <string>delivery_builder</string>
                             <string>explanation_uid_list</string>
-                            <string>delivery</string>
                             <string>lines</string>
                             <string>variation_text</string>
                             <string>line</string>
                             <string>line_aggregate_list</string>
-                            <string>has_tint</string>
-                            <string>line_tint</string>
+                            <string>has_bath</string>
+                            <string>line_bath</string>
                             <string>cells</string>
                             <string>cell</string>
                             <string>cell_aggregate_list</string>

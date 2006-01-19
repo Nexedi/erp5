@@ -1,0 +1,36 @@
+<property_sheet_list>
+ <portal_type id="Apparel Assortment Colour Variation">
+  <item>ApparelModelColourVariation</item>
+ </portal_type>
+ <portal_type id="Apparel Bath">
+  <item>ApparelFabricColourVariation</item>
+  <item>Reference</item>
+ </portal_type>
+ <portal_type id="Apparel Colour Range Variation">
+  <item>ApparelColourRangeVariation</item>
+  <item>TransformedResource</item>
+ </portal_type>
+ <portal_type id="Apparel Component">
+  <item>DefaultSupply</item>
+ </portal_type>
+ <portal_type id="Apparel Component Variation">
+  <item>ApparelComponentVariation</item>
+  <item>Resource</item>
+ </portal_type>
+ <portal_type id="Apparel Consumption">
+  <item>ApparelConsumption</item>
+ </portal_type>
+ <portal_type id="Apparel Fabric Colour Variation">
+  <item>ApparelFabricColourVariation</item>
+ </portal_type>
+ <portal_type id="Apparel Model Colour Variation">
+  <item>ApparelModelColourVariation</item>
+ </portal_type>
+ <portal_type id="Apparel Model Morphology Variation">
+  <item>ApparelModelMorphologyVariation</item>
+  <item>TransformedResource</item>
+ </portal_type>
+ <portal_type id="Apparel Transformation">
+  <item>ApparelTransformation</item>
+ </portal_type>
+</property_sheet_list>
