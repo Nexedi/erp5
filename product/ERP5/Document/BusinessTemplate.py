@@ -3415,7 +3415,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # update catalog if necessary
       update_catalog=0
       catalog_method = getattr(self, '_catalog_method_item', None)
-      if catalog_method is not None:
+      if catalog_method is not None and self.getTemplateFormatVersion() == 1:
         for id in catalog_method._objects.keys():
           if id in object_to_update.keys() or force:
             if not force:
