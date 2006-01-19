@@ -136,7 +136,7 @@ if not tree_mode :\n
   result.append(\n
                 ReportSection( path=portal.account_module.getPhysicalPath(),\n
                                # FIXME translate later\n
-                               title=portal.translation_service.translate(\'ui\', \'Trial Balance\').encode(\'utf8\'),\n
+                               title=portal.Localizer.erp5_ui.gettext(\'Trial Balance\').encode(\'utf8\'),\n
                                level=1,\n
                                form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
                                selection_name=\'accounting_selection\',\n
@@ -168,7 +168,6 @@ else :\n
                )\n
 \n
 return result\n
-# vim: syntax=python\n
 </string> </value>
         </item>
         <item>
