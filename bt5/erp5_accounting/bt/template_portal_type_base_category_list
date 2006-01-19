@@ -1,0 +1,3 @@
+Invoice Line | destination_region
+Invoice Line | product_line
+Sale Invoice Transaction | destination_region

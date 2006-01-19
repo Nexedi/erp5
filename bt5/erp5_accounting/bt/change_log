@@ -1,3 +1,7 @@
+2006-01-19 Kevin
+* Use Localizer instead of Translation Service in: AccountingTransactionModule_journal_pdf_template, AccountModule_getTrialBalanceReportSectionList, AccountModule_viewAccountStatementReport/transaction_simulation_state, AccountModule_viewGeneralLedgerReport/transaction_simulation_state and AccountModule_viewTrialBalanceReport/transaction_simulation_state.
+* Update Copyright year.
+
 2006-01-10 jerome
 * bug fix: use python: TALES expression for actions, for a old CMF bug
 * fix order of account_type category, using asset/cash/bank instead of asset/bank/cash
@@ -105,16 +109,12 @@ update for new catalog
 
 2005-23-06 Jérome
 * removed pcg base category (replaced by gap/france/pcg, which moved in accounting_l10n_fr)
-
 * Added (initial) support for grouping reference
-
 * Added standarts accounting reports (General ledger, Trial Balance, Journal)
 Added other reports (Other Parties, Bank Accounts)
-
 * Various bug fixes
 
-2005-04-06:
-
+2005-04-06
 * Move base_categories to erp5_core:
 destination_payment
 source_payment

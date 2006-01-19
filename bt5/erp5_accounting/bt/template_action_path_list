@@ -1,6 +1,144 @@
-Bank Account[id=jump_active_accounting_pref]
-Bank Account[id=transactions]
-Organisation[id=jump_active_accounting_pref]
-Organisation[id=jump_to_accounting]
-Organisation[id=transactions]
-Person[id=transactions]
+Account Module | account_statement_report
+Account Module | bank_accounts_report
+Account Module | fiscal_report
+Account Module | general_ledger_report
+Account Module | journal_report
+Account Module | jump_active_accounting_pref
+Account Module | list_ui
+Account Module | print
+Account Module | search
+Account Module | sort_on
+Account Module | third_parties_report
+Account Module | trial_balance_report
+Account Module | view
+Account | history
+Account | jump_active_accounting_pref
+Account | metadata
+Account | print
+Account | transaction_list
+Account | view
+Accounting Period Module | jump_active_accounting_pref
+Accounting Period Module | list_ui
+Accounting Period Module | print
+Accounting Period Module | sort_on
+Accounting Period Module | view
+Accounting Period | history
+Accounting Period | metadata
+Accounting Period | view
+Accounting Rule Cell | metadata
+Accounting Rule Cell | print_pdf
+Accounting Rule Cell | view
+Accounting Transaction Line | history
+Accounting Transaction Line | metadata
+Accounting Transaction Line | print
+Accounting Transaction Line | view
+Accounting Transaction Module | account_statement_report
+Accounting Transaction Module | bank_accounts_report
+Accounting Transaction Module | close_accounting_period
+Accounting Transaction Module | csv_export
+Accounting Transaction Module | fiscal_report
+Accounting Transaction Module | general_ledger_report
+Accounting Transaction Module | journal_report
+Accounting Transaction Module | jump_active_accounting_pref
+Accounting Transaction Module | jump_bank_accounts
+Accounting Transaction Module | list_ui
+Accounting Transaction Module | print
+Accounting Transaction Module | report
+Accounting Transaction Module | search
+Accounting Transaction Module | social_report
+Accounting Transaction Module | sort_on
+Accounting Transaction Module | third_parties_report
+Accounting Transaction Module | trial_balance_report
+Accounting Transaction Module | view
+Accounting Transaction | create_reversal
+Accounting Transaction | destination_asset
+Accounting Transaction | details
+Accounting Transaction | history
+Accounting Transaction | metadata
+Accounting Transaction | print
+Accounting Transaction | source_asset
+Accounting Transaction | view
+Balance Transaction Line | history
+Balance Transaction Line | metadata
+Balance Transaction Line | print_pdf
+Balance Transaction Line | view
+Balance Transaction | history
+Balance Transaction | metadata
+Balance Transaction | print
+Balance Transaction | print_pdf
+Balance Transaction | view
+Bank Account | jump_active_accounting_pref
+Bank Account | transactions
+Cash Register | history
+Cash Register | jump_active_accounting_pref
+Cash Register | metadata
+Cash Register | print_pdf
+Cash Register | transactions
+Cash Register | view
+Invoice Cell | history
+Invoice Cell | list
+Invoice Cell | metadata
+Invoice Cell | print
+Invoice Cell | translate
+Invoice Cell | view
+Invoice Line | history
+Invoice Line | list
+Invoice Line | metadata
+Invoice Line | price
+Invoice Line | print
+Invoice Line | quantity
+Invoice Line | view
+Invoice Rule | metadata
+Invoice Rule | print
+Invoice Rule | print_pdf
+Invoice Rule | view
+Invoice Transaction Rule | metadata
+Invoice Transaction Rule | print_pdf
+Invoice Transaction Rule | update_matrix
+Invoice Transaction Rule | view
+Invoicing Rule | metadata
+Invoicing Rule | print
+Invoicing Rule | view
+Organisation | jump_active_accounting_pref
+Organisation | jump_to_accounting
+Organisation | transactions
+Payment Transaction | create_reversal
+Payment Transaction | destination_asset
+Payment Transaction | details
+Payment Transaction | history
+Payment Transaction | metadata
+Payment Transaction | print
+Payment Transaction | related_invoice
+Payment Transaction | source_asset
+Payment Transaction | view
+Person | transactions
+Purchase Invoice Transaction Line | history
+Purchase Invoice Transaction Line | metadata
+Purchase Invoice Transaction Line | print
+Purchase Invoice Transaction Line | view
+Purchase Invoice Transaction | create_reversal
+Purchase Invoice Transaction | destination_asset
+Purchase Invoice Transaction | detail
+Purchase Invoice Transaction | history
+Purchase Invoice Transaction | metadata
+Purchase Invoice Transaction | print
+Purchase Invoice Transaction | source_asset
+Purchase Invoice Transaction | view
+Sale Invoice Transaction Line | history
+Sale Invoice Transaction Line | metadata
+Sale Invoice Transaction Line | print
+Sale Invoice Transaction Line | view
+Sale Invoice Transaction | create_reversal
+Sale Invoice Transaction | destination_asset
+Sale Invoice Transaction | detail
+Sale Invoice Transaction | history
+Sale Invoice Transaction | invoice_item_list
+Sale Invoice Transaction | jump_to_related_payment
+Sale Invoice Transaction | jump_to_related_sale_packing_list
+Sale Invoice Transaction | metadata
+Sale Invoice Transaction | payment_condition
+Sale Invoice Transaction | print
+Sale Invoice Transaction | source_asset
+Sale Invoice Transaction | trade_condition_discount
+Sale Invoice Transaction | trade_condition_profile_view
+Sale Invoice Transaction | view
