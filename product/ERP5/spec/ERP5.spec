@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.10
-%define release 3
+%define release 4
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -41,6 +41,10 @@ very short time.
 %{__rm} -rf %{buildroot}
 
 %post
+mkdir /var/lib/zope/Extensions
+mkdir /var/lib/zope/PropertySheet
+mkdir /var/lib/zope/Constraint
+ln -s %{software_home}/Products/%{name}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
   service zope restart
 fi
@@ -57,6 +61,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 19 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-4mdk
+- Add missing custom post-command
+
 * Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-3mdk
 - Add a version to the required zope package
 
