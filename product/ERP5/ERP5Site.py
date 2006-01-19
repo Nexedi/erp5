@@ -112,7 +112,7 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       """Check if the portal has an id.
       """
       return id in self.objectIds()
-      
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalObject')
     def getPortalObject(self):
       return self
@@ -333,7 +333,7 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       """
       return self._getPortalGroupedTypeList('sub_variation')
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                                        'getPortalSubVariationBaseCategoryList')
     def getPortalSubVariationBaseCategoryList(self):
       """
@@ -573,7 +573,7 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       """
       return self._getPortalGroupedTypeList('accounting_transaction') or \
           self._getPortalConfiguration('portal_accounting_transaction_type_list')
-          
+
     def getPortalAssignmentBaseCategoryList(self):
       """
         Return List of category values to generate security groups.
@@ -707,7 +707,7 @@ class ERP5Generator(PortalGenerator):
           PortalGenerator.setupTools(self, p)
 
         # It is better to remove portal_catalog which is ZCatalog as soon as possible,
-        # because the API is not the completely same as ERP5Catalog, and ZCatalog is          
+        # because the API is not the completely same as ERP5Catalog, and ZCatalog is
         # useless for ERP5 after all.
         update = kw.get('update', 0)
         portal_catalog = getToolByName(p, 'portal_catalog', None)
@@ -803,15 +803,6 @@ class ERP5Generator(PortalGenerator):
           addMessageCatalog('default', 'ERP5 Localized Messages', ('en',))
           addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en',))
           addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en',))
-
-        # Add Translation Service
-        if p.hasObject('translation_service') and p.translation_service.meta_type != 'Translation Service':
-          p._delObject('translation_service')
-        if not p.hasObject('translation_service'):
-          p.manage_addProduct['TranslationService'].addPlacefulTranslationService('translation_service')
-          p.translation_service.manage_setDomainInfo(domain_0=None, path_0='Localizer/default')
-          p.translation_service.manage_addDomainInfo(domain='ui', path='Localizer/erp5_ui')
-          p.translation_service.manage_addDomainInfo(domain='content', path='Localizer/erp5_content')
 
 
     def setupMembersFolder(self, p):
@@ -964,10 +955,10 @@ class ERP5Generator(PortalGenerator):
         update = kw.get('update', 0)
 
         self.setupTools(p, **kw)
-        
+
         if not p.hasObject('MailHost'):
           self.setupMailHost(p)
-          
+
         if int(create_userfolder) != 0 and not p.hasObject('acl_users'):
             self.setupUserFolder(p)
 
@@ -1028,7 +1019,7 @@ class ERP5Generator(PortalGenerator):
           template = os.path.join(bootstrap_dir, 'erp5_core')
           if not os.path.exists(template):
             template = os.path.join(bootstrap_dir, 'erp5_core.bt5')
-  
+
           id = template_tool.generateNewId()
           template_tool.download(template, id=id)
           template_tool[id].install(**kw)
