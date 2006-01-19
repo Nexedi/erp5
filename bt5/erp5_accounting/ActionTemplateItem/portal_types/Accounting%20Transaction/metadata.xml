@@ -26,13 +26,11 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_jump</string> </value>
+            <value> <string>object_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -44,17 +42,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jump_active_accounting_pref</string> </value>
+            <value> <string>metadata</string> </value>
         </item>
         <item>
             <key> <string>optional</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Manage properties</string>
               </tuple>
             </value>
         </item>
@@ -64,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Active Preference</string> </value>
+            <value> <string>Metadata</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -87,26 +85,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransactionModule_jumpToActiveAccountingPreference</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:object.REQUEST.get(\'form_id\') == \'Entity_viewAccountingTransactionList\'</string> </value>
+            <value> <string>string:${object_url}/Base_viewMetadata</string> </value>
         </item>
       </dictionary>
     </pickle>

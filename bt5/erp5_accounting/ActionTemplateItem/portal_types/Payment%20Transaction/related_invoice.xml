@@ -44,11 +44,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jump_active_accounting_pref</string> </value>
+            <value> <string>related_invoice</string> </value>
         </item>
         <item>
             <key> <string>optional</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Active Preference</string> </value>
+            <value> <string>Related Invoice</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -87,7 +87,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountingTransactionModule_jumpToActiveAccountingPreference</string> </value>
+            <value> <string>python:"%s/%s/view" % (object.getPortalObject().getPath(), object.getCausality(portal_type = [\'Sale Invoice Transaction\', \'Purchase Invoice Transaction\']))</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -106,7 +106,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:object.REQUEST.get(\'form_id\') == \'Entity_viewAccountingTransactionList\'</string> </value>
+            <value> <string>python:object.getCausalityValue() is not None</string> </value>
         </item>
       </dictionary>
     </pickle>

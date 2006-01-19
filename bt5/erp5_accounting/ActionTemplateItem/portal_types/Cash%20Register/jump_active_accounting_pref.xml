@@ -30,9 +30,7 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -60,11 +58,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>10.0</float> </value>
+            <value> <int>10</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Active Preference</string> </value>
+            <value> <string>Accounting Preference</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -88,25 +86,6 @@
         <item>
             <key> <string>text</string> </key>
             <value> <string>string:${object_url}/AccountingTransactionModule_jumpToActiveAccountingPreference</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:object.REQUEST.get(\'form_id\') == \'Entity_viewAccountingTransactionList\'</string> </value>
         </item>
       </dictionary>
     </pickle>
