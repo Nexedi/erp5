@@ -1,3 +1,43 @@
+Address | history
+Address | metadata
+Address | print
+Address | print_pdf
+Address | view
+Agent Privilege | history
+Agent Privilege | metadata
+Agent Privilege | print
+Agent Privilege | view
+Agent | download
+Agent | history
+Agent | metadata
+Agent | signature
+Agent | view
+Alarm Tool | metadata
+Alarm Tool | print
+Alarm Tool | view
+Alarm | metadata
+Alarm | periodicity
+Alarm | print
+Alarm | print_pdf
+Alarm | view
+Applied Rule | list
+Applied Rule | metadata
+Applied Rule | print
+Applied Rule | print_pdf
+Applied Rule | translate
+Applied Rule | view
+Assignment | history
+Assignment | metadata
+Assignment | print_pdf
+Assignment | view
+Bank Account | history
+Bank Account | jump_active_accounting_pref
+Bank Account | metadata
+Bank Account | print_pdf
+Bank Account | transactions
+Bank Account | view
+Base Category | list
+Base Category | view
 Business Template | export
 Business Template | get_portal_type_properties
 Business Template | guess_portal_types
@@ -9,3 +49,232 @@ Business Template | view
 Business Template | view_catalog
 Business Template | view_detail
 Business Template | view_portal_types
+Career | history
+Career | metadata
+Career | print_pdf
+Career | view
+Category Tool | fast_input
+Category Tool | list
+Category Tool | localroles
+Category Tool | metadata
+Category Tool | syndication
+Category Tool | view
+Category | list
+Category | view
+ChatAddress | history
+ChatAddress | metadata
+ChatAddress | print
+ChatAddress | translate
+ChatAddress | view
+Credit Card | history
+Credit Card | metadata
+Credit Card | print
+Credit Card | view
+Currency Exchange Line | history
+Currency Exchange Line | metadata
+Currency Exchange Line | print
+Currency Exchange Line | view
+Currency Module | Translate
+Currency Module | csv_export
+Currency Module | csv_import
+Currency Module | print
+Currency Module | search
+Currency Module | view
+Currency | history
+Currency | metadata
+Currency | print
+Currency | view
+Delivery Builder | history_view
+Delivery Builder | metadata
+Delivery Builder | print
+Delivery Builder | view
+Delivery Builder | view_predicate_group
+Delivery Builder | view_profile
+Delivery Tool | csv_export
+Delivery Tool | list_ui
+Delivery Tool | print
+Delivery Tool | sort_on
+Delivery Tool | view
+Document | history
+Document | metadata
+Document | print
+Document | translate
+Document | view
+Email | history
+Email | metadata
+Email | print
+Email | view
+Favorite | history
+Favorite | metadata
+Favorite | translate
+Favorite | view
+Fax | fax
+Fax | history
+Fax | metadata
+Fax | previous_call
+Fax | print
+Fax | view
+File | download
+File | history
+File | metadata
+File | print
+File | view
+Folder | edit
+Folder | foldercontents
+Folder | localroles
+Folder | syndication
+Folder | view
+Image | download
+Image | fullsize_view
+Image | history
+Image | metadata
+Image | print
+Image | translate
+Image | view
+Link | history
+Link | metadata
+Link | translate
+Link | view
+Mapped Value | history
+Mapped Value | metadata
+Mapped Value | print
+Mapped Value | translate
+Mapped Value | view
+News Item | history
+News Item | metadata
+News Item | translate
+News Item | view
+Order Builder | history_view
+Order Builder | metadata
+Order Builder | print
+Order Builder | view
+Order Builder | view_predicate_group
+Order Builder | view_profile
+Order Tool | csv_export
+Order Tool | list_ui
+Order Tool | print
+Order Tool | sort_on
+Order Tool | view
+Organisation Module | csv_export
+Organisation Module | csv_import
+Organisation Module | jump_to_accounting
+Organisation Module | jump_to_opportunity
+Organisation Module | jump_to_project
+Organisation Module | jump_to_purchase_order
+Organisation Module | jump_to_purchase_packing_list
+Organisation Module | jump_to_sale_order
+Organisation Module | jump_to_sale_packing_list
+Organisation Module | jump_to_support_request
+Organisation Module | list_ui
+Organisation Module | print
+Organisation Module | search
+Organisation Module | sort_on
+Organisation Module | translate
+Organisation Module | view
+Organisation | coordinates
+Organisation | details
+Organisation | document_view
+Organisation | financial_view
+Organisation | history
+Organisation | jump_active_accounting_pref
+Organisation | jump_to_accounting
+Organisation | jump_to_purchase_order
+Organisation | jump_to_purchase_packing_list
+Organisation | jump_to_sale_order
+Organisation | jump_to_sale_packing_list
+Organisation | list
+Organisation | metadata
+Organisation | print
+Organisation | transactions
+Organisation | view
+Person Module | career_print
+Person Module | csv_export
+Person Module | csv_import
+Person Module | email_report
+Person Module | exchange
+Person Module | jump_to_accounting
+Person Module | jump_to_opportunity
+Person Module | jump_to_project
+Person Module | jump_to_purchase_order
+Person Module | jump_to_purchase_packing_list
+Person Module | jump_to_sale_order
+Person Module | jump_to_sale_packing_list
+Person Module | jump_to_support_request
+Person Module | list_emails
+Person Module | list_ui
+Person Module | print
+Person Module | report
+Person Module | search
+Person Module | search_phones
+Person Module | sort_on
+Person Module | view
+Person | assignment
+Person | bank_account
+Person | career
+Person | details
+Person | document_view
+Person | exchange
+Person | history
+Person | jump_to_accounting
+Person | jump_to_opportunity
+Person | jump_to_project
+Person | jump_to_purchase_order
+Person | jump_to_purchase_packing_list
+Person | jump_to_sale_order
+Person | jump_to_sale_packing_list
+Person | jump_to_support_request
+Person | metadata
+Person | print
+Person | profile
+Person | report
+Person | terminate_career
+Person | transactions
+Person | translate
+Person | view
+Predicate | print_pdf
+Predicate | view
+Preference Tool | advanced
+Preference Tool | localroles
+Preference Tool | metadata
+Preference Tool | syndication
+Preference Tool | view
+Preference | acconting_preferences
+Preference | history
+Preference | metadata
+Preference | print
+Preference | view
+Route Tool | list
+Route Tool | localroles
+Route Tool | metadata
+Route Tool | syndication
+Route Tool | view
+Rule Tool | list
+Rule Tool | localroles
+Rule Tool | metadata
+Rule Tool | syndication
+Rule Tool | view
+Simulation Movement | metadata
+Simulation Movement | print
+Simulation Movement | translate
+Simulation Movement | view
+Simulation Tool | csv_export
+Simulation Tool | view
+Telephone | call
+Telephone | history
+Telephone | metadata
+Telephone | previous_call
+Telephone | print
+Telephone | view
+Template Tool | diff
+Template Tool | download
+Template Tool | download_from_repository
+Template Tool | import
+Template Tool | install_from_repository
+Template Tool | update
+Template Tool | upgrade_from_repository
+Template Tool | view
+Trash Bin | metadata
+Trash Bin | view
+Trash Folder | list
+Trash Folder | view
+Trash Tool | view
