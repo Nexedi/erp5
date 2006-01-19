@@ -79,37 +79,38 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key>                 <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_template_role_list</string>
                         <string>my_template_site_property_id_list</string>
                         <string>my_template_document_id_list</string>
                         <string>my_template_property_sheet_id_list</string>
+                        <string>my_template_local_roles_list</string>
                         <string>my_template_update_business_template_workflow</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_template_product_id_list</string>
                         <string>my_template_test_id_list</string>
                         <string>my_template_message_translation_list</string>
-                        <string>my_template_local_roles_list</string>
+                        <string>my_template_constraint_id_list</string>
                         <string>my_template_update_tool</string>
                       </list>
                     </value>

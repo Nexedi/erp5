@@ -1,3 +1,13 @@
+2006-01-19 alex
+* added constraints to BT_viewDetail
+2006-01-18 aurel
+* modify TemplateTool_viewInstallRepositoryBusinessTemplateListDialog and add TemplateTool_getModifiedObjectList, TemplateTool_installBusinessTemplateListAction, TemplateTool_viewMultiInstallationDialog to manage multi installation of business templates
+
+2006-01-14 yo
+* Add new skins TemplateTool_viewInstallRepositoryBusinessTemplateListDialog, TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog and TemplateTool_installRepositoryBusinessTemplateList.
+* Add new actions install_from_repository and upgrade_from_repository into Template Tool.
+* Adjust the priorities of the actions of Template Tool.
+
 2006-01-13 aurel
 * modify UI of Business Template
 

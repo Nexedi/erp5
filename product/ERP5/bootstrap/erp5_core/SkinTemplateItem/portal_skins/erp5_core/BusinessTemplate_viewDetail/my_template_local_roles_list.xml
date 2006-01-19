@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_template_local_roles_list</string> </value>
         </item>
@@ -279,12 +285,7 @@
                 </item>
                 <item>
                     <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />\n
-
-
-]]></string> </value>
+                    <value> <string encoding="base64">Cg==</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

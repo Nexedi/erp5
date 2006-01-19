@@ -200,16 +200,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                 <option value="en"\n
                         selected\n
                         tal:attributes="value language/id"\n
-                        tal:content="python: here.translation_service.translate(\'ui\', language[\'title\'],\n
-                        default=language[\'title\'], target_language=language[\'id\'])">\n
+                        tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])">\n
                   English\n
                 </option>\n
               </tal:block>\n
               <tal:block tal:condition="not:language/selected">\n
                 <option value="en"\n
                         tal:attributes="value language/id"\n
-                        tal:content="python: here.translation_service.translate(\'ui\', language[\'title\'],\n
-                        default=language[\'title\'], target_language=language[\'id\'])">\n
+                        tal:content="python: here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])">\n
                   English\n
                 </option>\n
               </tal:block>\n

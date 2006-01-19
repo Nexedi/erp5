@@ -86,7 +86,8 @@ except ConflictError : raise\n
 except : filter = 0\n
 \n
 def getModuleItemList(user=None, portal_path=None, filter=filter):\n
-  translate = context.translation_service.translate\n
+  #translate = context.translation_service.translate\n
+  gettext = context.Localizer.erp5_ui.gettext\n
 \n
   item_list = []\n
   try :\n
@@ -95,7 +96,8 @@ def getModuleItemList(user=None, portal_path=None, filter=filter):\n
         module = portal[module_id]\n
         url = module.getPath()\n
         label = module.getTitleOrId()\n
-        label = translate(\'ui\', label, default=label)\n
+        #label = translate(\'ui\', label, default=label)\n
+        label = gettext(label)\n
         if not filter or url in portal.portal_preferences.getPreferredVisibleModuleList() : \n
           item_list.append((label, url))\n
       except ConflictError : raise\n
