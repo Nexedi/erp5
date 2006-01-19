@@ -33,16 +33,24 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Utils import readLocalDocument, \
+                                    writeLocalDocument, \
+                                    importLocalDocument, \
+                                    removeLocalDocument
 from Products.ERP5Type.Utils import readLocalPropertySheet, \
                                     writeLocalPropertySheet, \
                                     importLocalPropertySheet, \
                                     removeLocalPropertySheet
-from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, \
+from Products.ERP5Type.Utils import readLocalConstraint, \
+                                    writeLocalPropertySheet, \
+                                    importLocalConstraint, \
+                                    removeLocalConstraint
+from Products.ERP5Type.Utils import readLocalExtension, \
+                                    writeLocalExtension, \
                                     removeLocalExtension
-from Products.ERP5Type.Utils import readLocalTest, writeLocalTest, \
+from Products.ERP5Type.Utils import readLocalTest, \
+                                    writeLocalTest, \
                                     removeLocalTest
-from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, \
-                                    importLocalDocument, removeLocalDocument
 from Products.ERP5Type.XMLObject import XMLObject
 import fnmatch
 import re, os, sys, string, tarfile
@@ -1923,18 +1931,23 @@ class PropertySheetTemplateItem(DocumentTemplateItem):
   local_file_importer_name = 'importLocalPropertySheet'
   local_file_remover_name = 'removeLocalPropertySheet'
 
+class ConstraintTemplateItem(DocumentTemplateItem):
+  local_file_reader_name = 'readLocalConstraint'
+  local_file_writer_name = 'writeLocalConstraint'
+  local_file_importer_name = 'importLocalConstraint'
+  local_file_remover_name = 'removeLocalConstraint'
 
 class ExtensionTemplateItem(DocumentTemplateItem):
   local_file_reader_name = 'readLocalExtension'
   local_file_writer_name = 'writeLocalExtension'
-  # XXX is this method a error or ?
-  local_file_importer_name = 'importLocalPropertySheet'
+  # Extension needs no import
+  local_file_importer_name = None
   local_file_remover_name = 'removeLocalExtension'
 
 class TestTemplateItem(DocumentTemplateItem):
   local_file_reader_name = 'readLocalTest'
   local_file_writer_name = 'writeLocalTest'
-  # XXX is this a error ?
+  # Test needs no import
   local_file_importer_name = None
   local_file_remover_name = 'removeLocalTest'
 
@@ -3137,6 +3150,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     _item_name_list = [
       '_product_item',
       '_property_sheet_item',
+      '_constraint_item',
       '_document_item',
       '_extension_item',
       '_test_item',
@@ -3231,6 +3245,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           DocumentTemplateItem(self.getTemplateDocumentIdList())
       self._property_sheet_item = \
           PropertySheetTemplateItem(self.getTemplatePropertySheetIdList())
+      self._constraint_item = \
+          ConstraintTemplateItem(self.getTemplateConstraintIdList())
       self._extension_item = \
           ExtensionTemplateItem(self.getTemplateExtensionIdList())
       self._test_item = \
@@ -3764,6 +3780,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           DocumentTemplateItem(self.getTemplateDocumentIdList())
       self._property_sheet_item = \
           PropertySheetTemplateItem(self.getTemplatePropertySheetIdList())
+      self._constraint_item = \
+          ConstraintTemplateItem(self.getTemplateConstraintIdList())
       self._extension_item = \
           ExtensionTemplateItem(self.getTemplateExtensionIdList())
       self._test_item = \
@@ -3830,6 +3848,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       class_name_dict = {
         'Product' : '_product_item',
         'PropertySheet' : '_property_sheet_item', 
+        'Constraint' : '_constraint_item',
         'Document' : '_document_item',
         'Extension' : '_extension_item',
         'Test' : '_test_item',
@@ -3900,7 +3919,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item',
                      '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item',
                      '_portal_type_property_sheet_item', '_portal_type_base_category_item', '_local_roles_item']
-      item_list_3 = ['_document_item', '_property_sheet_item', '_extension_item', '_test_item', '_message_translation_item']
+      item_list_3 = ['_document_item', '_property_sheet_item',
+          '_constraint_item', '_extension_item', '_test_item',
+          '_message_translation_item']
       if item_name in item_list_1:
         f1 = StringIO()
         f2 = StringIO()
