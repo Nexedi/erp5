@@ -1,6 +1,5 @@
 %define product CMFActivity
-%define version 0.9.20060116
-# If we get the code from the CVS, the release will be always the first
+%define version 0.10
 %define release 1
 
 %define zope_home %{_prefix}/lib/zope
@@ -55,6 +54,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-1mdk
+- Update to version 0.10
+
 * Mon Jan 16 2006 Kevin Deldycke <kevin@nexedi.com> 0.9.20060116-1mdk
 - New build from the CVS
 
