@@ -504,6 +504,7 @@ class PDFForm(File):
       value = getEngine().getContext(context).evaluate(compiled_tales)
       return value
     except Exception, e :
+      LOG('PDFForm', PROBLEM, "Exception in cell %s"%cell_name, e)
       raise e.__class__, "Exception in %s :\n %s"%(cell_name, e)
 
   security.declareProtected(Permissions.ManagePortal, 'setAllCellTALES')
