@@ -103,7 +103,25 @@ elif doAction0 == \'add\':\n
                             , \'view\'\n
                             , \'portal_status_message=Object+Created.\')\n
   return request.RESPONSE.redirect( redirect_url )\n
-\n
+elif doAction0 == \'template\':\n
+  # Support for document templates (copy / paste a document from preferences)\n
+  template_relative_url = \' \'.join(Base_doAction[1:])\n
+  template = context.getPortalObject().restrictedTraverse(template_relative_url)\n
+  if template is not None:\n
+    preference = template.getParentValue()\n
+    preference.manage_copyObjects(ids=[template.getId()], REQUEST=request, RESPONSE=None)\n
+    new_content_list = context.manage_pasteObjects(request[\'__cp\'])\n
+    new_content_id = new_content_list[0][\'new_id\']\n
+    redirect_url = \'%s/%s/%s?%s\' % ( context.absolute_url()\n
+                            ,  new_content_id\n
+                            , \'view\'\n
+                            , \'portal_status_message=Template+Created.\')\n
+  else: \n
+    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                            , \'view\'\n
+                            , \'portal_status_message=Template+Does+not+Exist.\')\n
+  return request.RESPONSE.redirect( redirect_url )\n
+  \n
 return getattr(context,form_id)(request)\n
 
 
@@ -175,6 +193,11 @@ return getattr(context,form_id)(request)\n
                             <string>str</string>
                             <string>new_content</string>
                             <string>redirect_url</string>
+                            <string>template_relative_url</string>
+                            <string>template</string>
+                            <string>preference</string>
+                            <string>new_content_list</string>
+                            <string>new_content_id</string>
                             <string>getattr</string>
                           </tuple>
                         </value>

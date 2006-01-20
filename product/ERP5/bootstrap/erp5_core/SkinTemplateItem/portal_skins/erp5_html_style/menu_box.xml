@@ -124,6 +124,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
                    i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content/Title" i18n:name="portal_type" i18n:translate="" i18n:domain="ui">portal type</tal:block></option>\n
                 </tal:block>\n
               </tal:block>\n
+              <tal:block tal:condition="document_template_list">\n
+                <option disabled>-- <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --</option>\n
+                <tal:block tal:repeat="document_template document_template_list">\n
+                <option value="1"\n
+                  tal:attributes="value python:\'template \' + document_template.getRelativeUrl()">\n
+                  <tal:block i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="document_template/getTitle" i18n:name="document_template">Document Template</tal:block></tal:block></option>\n
+                </tal:block>\n
+              </tal:block>\n
               <option disabled>-- <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --</option>\n
               <tal:block tal:repeat="action workflow_actions">\n
                <option value="1" tal:content="action/name"\n

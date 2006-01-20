@@ -1,3 +1,6 @@
+2006-01-20 JP & Jerome
+* Added document template initial support to Base_doAction and erp5_html_style
+
 2006-01-20 Kevin
 * Replace Translation Service by Localizer in: erp5_core/Base_TranslateString, erp5_core/ERP5Site_updateTranslationTable, erp5_csv_style/Listbox_exportCsv, erp5_html_style/form_html, erp5_html_style/view_master.xml, erp5_pdf_style/form_view, erp5_pdf_style/listbox_pdf_macro, erp5_pdf_style/report_pdf and erp5_pdf_style/report_view.
 * ERP5Site_getModuleItemList cleaned.

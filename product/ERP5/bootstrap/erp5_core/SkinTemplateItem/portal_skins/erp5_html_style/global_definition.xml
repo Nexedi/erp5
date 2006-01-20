@@ -90,7 +90,9 @@
                   global user_actions filtered_actions/user | nothing;\n
                   global global_actions filtered_actions/global | nothing;\n
                   global ordered_global_actions python:here.getOrderedGlobalActionList(global_actions);\n
-                  global portal_url python:here.portal_url();" />\n
+                  global portal_url python:here.portal_url();\n
+                  global document_template_list here/getDocumentTemplateList | nothing"\n
+                />\n
 \n
 \n
   </body>\n
