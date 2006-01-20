@@ -70,7 +70,9 @@
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getModifiedObjectList(context):\n
-  return context.preinstall()\n
+  result = context.preinstall()\n
+  context.log(\'getModifiedObjectList cache filled\',\'\')\n
+  return result \n
 \n
 getModifiedObjectList = CachingMethod(getModifiedObjectList, id=\'BusinessTemplate_getModifiedObjectList\', cache_duration=36000)\n
 \n

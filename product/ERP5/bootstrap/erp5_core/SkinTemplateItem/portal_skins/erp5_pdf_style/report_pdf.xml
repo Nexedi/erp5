@@ -88,7 +88,7 @@
     <paragraphstyle name="ParaHeadLine" fontname="Helvetica" fontsize="8" parent="Normal"/>\n
     <paragraphstyle name="ParaHeadLine2" fontname="Helvetica" fontsize="6" parent="Normal"/>\n
     <paragraphstyle name="ParaHeadLine3" align="RIGHT" fontname="Helvetica" fontsize="6"/>\n
- \n
+\n
     <paragraphstyle name="TableStandard" parent="Normal" fontname="Helvetica" fontsize="7" alignment="right" />\n
     <paragraphstyle name="TableStandardLeftAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="left" />\n
     <paragraphstyle name="TableStandardRightAligned" parent="Normal" fontname="Helvetica" fontsize="7" alignment="right" />\n
@@ -104,7 +104,7 @@
     <paragraphstyle name="Section7" leftindent="2.4cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
     <paragraphstyle name="Section8" leftindent="2.8cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
     <paragraphstyle name="Section9" leftindent="3.2cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
-      \n
+\n
     <tablestyle name="StandardTable">\n
       <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
       <stylecmd expr="(\'BOX\', (0,0), (-1,0), 1, colors.black)"/>\n
@@ -164,7 +164,7 @@
   <pagetemplate id="FirstPage" nextid="FirstPage" startframe="content">\n
     <static>\n
       <infostring align="left" x="1cm" y= "29cm" size="8" font="Helvetica" color="(0,0,0)"\n
-                  tal:content="python: here.translation_service.translate(\'ui\', \'Printed by %(user)s at %(date)s\') % {\'user\':user.getUserName(), \'date\':DateTime()}" >Printed by</infostring>\n
+                  tal:content="python: here.Localizer.erp5_ui.gettext(\'Printed by %(user)s at %(date)s\') % {\'user\':user.getUserName(), \'date\':DateTime()}" >Printed by</infostring>\n
       <infostring align="left" x="18cm" y= "0.5cm" size="10" font="Helvetica" color="(0,0,0)" >Page %(page)s</infostring>\n
     </static>\n
 \n
@@ -179,7 +179,7 @@
            toppadding="0cm"\n
            bottompadding="0cm"\n
            showBoundary="0"/>\n
- \n
+\n
   </pagetemplate>\n
 \n
 </template>

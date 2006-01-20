@@ -66,12 +66,34 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
-translation_service = getToolByName(context, \'translation_service\', None)\n
-if translation_service is not None :\n
-  return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
-else :\n
-  return msg\n
+            <value> <string>def translate(domain, msgid, mapping=None, context=None, target_language=None, default=None):\n
+  localizer = context.Localizer\n
+  msg_catalog_binding = { "ui"     : "erp5_ui"\n
+                        , "content": "erp5_content"\n
+                        }\n
+  localizer_cat_id = None\n
+  if domain in msg_catalog_binding.keys():\n
+    localizer_cat_id = msg_catalog_binding[domain]\n
+  else:\n
+    localizer_cat_id = domain\n
+  if localizer_cat_id not in localizer.objectIds():\n
+    return msgid\n
+  localizer_cat = localizer[localizer_cat_id]\n
+  if default == None:\n
+    default = []\n
+  return localizer_cat.gettext( message = msgid\n
+                              , lang    = target_language\n
+                              , default = default\n
+                              )\n
+\n
+return translate(catalog, msg, **kw).encode(encoding)\n
+\n
+#from Products.CMFCore.utils import getToolByName\n
+#translation_service = getToolByName(context, \'translation_service\', None)\n
+#if translation_service is not None :\n
+#  return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
+#else :\n
+#  return msg\n
 </string> </value>
         </item>
         <item>
@@ -122,11 +144,8 @@ else :\n
                             <string>catalog</string>
                             <string>encoding</string>
                             <string>kw</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
-                            <string>context</string>
                             <string>None</string>
-                            <string>translation_service</string>
+                            <string>translate</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
                           </tuple>

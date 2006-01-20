@@ -72,7 +72,7 @@
 result = \'\'\n
 request = context.REQUEST\n
 \n
-translate = context.portal_url.getPortalObject().translation_service.translate\n
+translate = context.portal_url.getPortalObject().Localizer.erp5_ui.gettext\n
 \n
 listboxline_list = context.get_value(\'default\', render_format=\'list\', REQUEST=request)\n
 \n
@@ -100,7 +100,7 @@ for listboxline in listboxline_list:\n
 \n
       if column_property is not None:\n
         if same_type(column_property,\'\'):\n
-          column_property = translate(\'ui\', column_property.decode(\'utf-8\'))\n
+          column_property = translate(column_property.decode(\'utf-8\'))\n
           column_property = column_property.replace(\'"\',\'""\')\n
           line_result2 += \'"%s"\' % column_property\n
         else:\n
@@ -116,17 +116,17 @@ for listboxline in listboxline_list:\n
 \n
     if not export_only:\n
       result += line_result+\'\\n\' #XXX do not display id\n
-    result += line_result2+\'\\n\' \n
+    result += line_result2+\'\\n\'\n
 \n
 \n
 \n
 \n
   if listboxline.isDataLine():\n
     line_result = \'\'\n
- \n
+\n
     if not export_only:\n
       listboxline.setListboxLineDisplayListMode([\'uid\'])  #XXX do not display uid column\n
-    \n
+\n
     for column_property in listboxline.getColumnPropertyList():\n
 \n
       if column_property is not None:\n

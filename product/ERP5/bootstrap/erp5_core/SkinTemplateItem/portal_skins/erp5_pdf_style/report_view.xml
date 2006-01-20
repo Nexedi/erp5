@@ -84,7 +84,7 @@
               <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
                 <tr>\n
                   <td tal:attributes="colwidth python: \'5cm\'" >\n
-                    <para  style="TableHeader" tal:content="python: here.translation_service.translate(\'ui\', field.get_value(\'title\')).encode(\'utf-8\')" />\n
+                    <para  style="TableHeader" tal:content="python: here.Localizer.erp5_ui.gettext(field.get_value(\'title\')).encode(\'utf-8\')" />\n
                   </td>\n
                   <td tal:attributes="colwidth python: None" tal:define="value python: field.get_value(\'default\')">\n
                     <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
@@ -155,13 +155,13 @@
       <para style="Heading1" tal:content="report_item/getTitle"\n
                              i18n:translate=""\n
                              tal:attributes="style python:\'Heading%s\' % report_item.getLevel()">toto</para>\n
-     \n
+\n
       <para/>\n
     </tal:block>\n
     <tal:block tal:condition="report_item/getTranslatedTitle">\n
       <para style="Heading1" tal:content="report_item/getTranslatedTitle"\n
                              tal:attributes="style python:\'Heading%s\' % report_item.getLevel()">toto</para>\n
-     \n
+\n
       <para/>\n
     </tal:block>\n
   </tal:block>\n
@@ -183,10 +183,7 @@
 \n
   </content>\n
 \n
-</document>\n
-\n
-\n
-
+</document>
 
 ]]></string> </value>
         </item>

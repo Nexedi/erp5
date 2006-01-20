@@ -85,9 +85,9 @@ for wf in context.portal_workflow.objectValues():\n
         key = (lang, state_var, state_id)\n
         if not translated_keys.has_key(key):\n
           translated_keys[key] = None # mark as translated\n
-          obj = newTempBase(context, \'temp_translation_%d\' % i, \n
+          obj = newTempBase(context, \'temp_translation_%d\' % i,\n
                             language=lang, message_context=state_var, original_message=state_id,\n
-                            translated_message = context.translation_service.translate(\'ui\', state_id, target_language=lang).encode(\'utf-8\'))\n
+                            translated_message = context.Localizer.erp5_ui.gettext(state_id, lang=lang).encode(\'utf-8\'))\n
           obj.setUid(\'temp_%d\' % i)\n
           i += 1\n
           object_list.append(obj)\n
@@ -95,7 +95,7 @@ for wf in context.portal_workflow.objectValues():\n
         # translate state title as well\n
         if state.title != \'\' :\n
           state_var_title = \'%s_title\' % state_var\n
-          translated_message = context.translation_service.translate(\'ui\', state.title, target_language=lang).encode(\'utf-8\')\n
+          translated_message = context.Localizer.erp5_ui.gettext(state.title, lang=lang).encode(\'utf-8\')\n
           key = (lang, state_var_title, translated_message)\n
           if not translated_keys.has_key(key):\n
             translated_keys[key] = None # mark as translated\n
@@ -105,11 +105,11 @@ for wf in context.portal_workflow.objectValues():\n
             obj.setUid(\'temp_%d\' % i)\n
             i += 1\n
             object_list.append(obj)\n
-            \n
+\n
   if object_list:\n
     context.portal_catalog.catalogTranslationList(object_list, sql_catalog_id=sql_catalog_id)\n
-    \n
-# Translate every portal type in the context of the portal type \n
+\n
+# Translate every portal type in the context of the portal type\n
 for ptype in context.portal_types.objectValues():\n
   title = ptype.title\n
   if not title: title = ptype.id\n
@@ -121,11 +121,11 @@ for ptype in context.portal_types.objectValues():\n
       obj = newTempBase(context, \'temp_translation_%d\' % i,\n
                         language=lang, message_context="portal_type",\n
                         original_message = title,\n
-                        translated_message = context.translation_service.translate(\'ui\', title, target_language=lang).encode(\'utf-8\'))\n
+                        translated_message = context.Localizer.erp5_ui.gettext(title, lang=lang).encode(\'utf-8\'))\n
       obj.setUid(\'temp_%d\' % i)\n
       i += 1\n
       object_list.append(obj)\n
-      \n
+\n
   if object_list:\n
     context.portal_catalog.catalogTranslationList(object_list, sql_catalog_id=sql_catalog_id)\n
 \n

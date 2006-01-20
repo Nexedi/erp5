@@ -56,13 +56,13 @@
 
 <html>\n
   <head>\n
-    <title tal:content="python: here.translation_service.translate(\'ui\', template.title).encode(\'utf8\')" >Listbox PDF Macro</title>\n
+    <title tal:content="python: here.Localizer.erp5_ui.gettext(template.title).encode(\'utf8\')" >Listbox PDF Macro</title>\n
   </head>\n
-<body> \n
+<body>\n
 \n
 \n
     ***** ########### listbox: must define the field listbox before calling this macro ! ########### *****\n
-  <tal:block metal:define-macro="listbox"> \n
+  <tal:block metal:define-macro="listbox">\n
 \n
   <tal:block tal:define="listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
                  selection_name python:listbox.get_value(\'selection_name\', REQUEST=request);\n
@@ -89,7 +89,7 @@
       <tal:block tal:define="global column_width python:here.ListBox_getColumnWithDict(listboxline_list, is_domain_tree_mode, is_report_tree_mode, frame_width=frame_width)"/>\n
 \n
       <tal:block tal:content="python:str(column_width)"/>\n
-      \n
+\n
       <table  splitbyrow="1" repeatrows="1" repeatcols="0"  style="StandardTableWithGrid">\n
 \n
         <tal:block tal:repeat="listboxline python: listboxline_list">\n
@@ -99,7 +99,7 @@
 \n
               <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[\'section_name\'])">\n
                 <tal:block tal:condition="listboxline/getSectionName">\n
-                  <para style="TableHeader" tal:content="listboxline/getSectionName" \n
+                  <para style="TableHeader" tal:content="listboxline/getSectionName"\n
                         tal:attributes="style python:\'Section%s\' % listboxline.getSectionDepth()" />\n
                 </tal:block>\n
               </td>\n
@@ -108,11 +108,11 @@
             <tal:block tal:condition="python: listboxline.isTitleLine()">\n
               <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                 <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0]">                 \n
+                                       column_id python: column_item[0]">\n
                   <tal:block tal:condition="python: column_property is not None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
-                      <para  style="TableHeader" tal:content="python: here.translation_service.translate(\'ui\', str(column_property)).encode(\'utf8\')"/>\n
-                    </td> \n
+                      <para  style="TableHeader" tal:content="python: here.Localizer.erp5_ui.gettext(str(column_property)).encode(\'utf8\')"/>\n
+                    </td>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: column_property is None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
@@ -127,10 +127,10 @@
             <tal:block tal:condition="python: listboxline.isDataLine() ">\n
               <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                 <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0]">                 \n
+                                       column_id python: column_item[0]">\n
                   <tal:block tal:condition="python: column_property is not None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
-                      <para  style="TableStandard" tal:content="python: str(column_property)" \n
+                      <para  style="TableStandard" tal:content="python: str(column_property)"\n
                              tal:attributes="style python:column_id in (\'gap_id\', \'id\', \'title\', \'translated_portal_type\', \'third_party\', \'translated_simulation_state_title\') and \'TableStandardLeftAligned\' or \'TableStandardRightAligned\'" />\n
                     </td>\n
                   </tal:block>\n
@@ -146,7 +146,7 @@
             <tal:block tal:condition="python: listboxline.isStatLine() or listboxline.isSummaryLine()">\n
               <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                 <tal:block tal:define="column_property python: column_item[1];\n
-                                       column_id python: column_item[0]">                    \n
+                                       column_id python: column_item[0]">\n
                   <tal:block tal:condition="python: column_property is not None">\n
                     <td tal:attributes="colwidth python:\'%.2fcm\' % float(column_width[column_id])">\n
                       <para  style="TableLastLine" tal:content="python: str(column_property)" />\n
@@ -164,14 +164,14 @@
           </tr>\n
         </tal:block>\n
 \n
- \n
+\n
       </table>\n
     </tal:block>\n
 \n
 \n
 \n
   </tal:block>\n
-  </tal:block>  \n
+  </tal:block>\n
 \n
 \n
    </body>\n
