@@ -733,7 +733,7 @@ be a problem)."""
       Returns the list of allowed templates for this folder
       by calling the preference tool
     """
-    return self.getPortalObject().portal_preferences_getDocumentTemplateList(self)
+    return self.getPortalObject().portal_preferences.getDocumentTemplateList(self)
 
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle
