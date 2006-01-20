@@ -183,18 +183,18 @@ class PreferenceTool(BaseTool):
     if len(enabled_prefs) > 0 :
       return enabled_prefs[0]
 
-  security.declareProtected(Permissions.View, 'getDocumentTemplate')
-  def getDocumentTemplate(self, folder) :
+  security.declareProtected(Permissions.View, 'getDocumentTemplateList')
+  def getDocumentTemplateList(self, folder) :
     """ returns all document templates that are in acceptable Preferences 
         based on different criteria such as folder, portal_type, etc.
 
         XXX This spec still needs to be refined before implementation
     """
     acceptable_templates = []
+    allowed_content_types = map(lambda pti: pti.id, folder.allowedContentTypes())
     for pref in self._getSortedPreferenceList() :
       for doc in pref.objectValues() :
-        if hasattr(doc, 'getTemplateDestinationUidList') and \
-           folder.getUid() in doc.getTemplateDestinationUidList() :
+        if doc.getPortalTypes() in allowed_content_types:
           acceptable_templates.append (doc)
     return acceptable_templates
 

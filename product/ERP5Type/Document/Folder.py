@@ -727,5 +727,13 @@ be a problem)."""
   security.declareProtected( Permissions.AccessContentsInformation, 'manage_copyObjects' ) # XXX Why this one doesn't work in CopySupport ?
   security.declareProtected( Permissions.AddPortalContent, 'manage_pasteObjects' ) # XXX Why this one doesn't work in CopySupport ?
 
+  security.declareProtected(Permissions.View, 'getDocumentTemplateList')
+  def getDocumentTemplateList(self) :
+    """
+      Returns the list of allowed templates for this folder
+      by calling the preference tool
+    """
+    return self.getPortalObject().portal_preferences_getDocumentTemplateList(self)
+
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle
