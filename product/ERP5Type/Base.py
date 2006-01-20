@@ -2156,6 +2156,33 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           return history[-1].get('time', None)
     return None
 
+  # Layout management
+  security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
+  def getApplicableLayout(self):
+    """
+      Return applicable layout in this acquisition context by
+      browsing context parents.
+
+      We have to take into account context before containment. This
+      is why standard acquisition must be circumvented here.
+    """
+    current = self
+    while current is not None:
+      if current.hasLayout():
+        return current.getLayout()
+      current = current.getParentValue()
+      if not hasattr(current, 'getApplicableLayout'):
+        return None
+    return None
+
+  security.declareProtected(Permissions.View, 'getDocumentTemplateList')
+  def getDocumentTemplateList(self) :
+    """
+      Returns an empty list of allowed templates
+      (this is not a folder)
+    """
+    return []
+
 InitializeClass(Base)
 
 class TempBase(Base):
