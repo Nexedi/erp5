@@ -70,9 +70,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>from_table_list</string>
-<string>where_expression</string>
-<string>order_by_expression</string>
+                            <string>from_table_list</string>
+                            <string>where_expression</string>
+                            <string>order_by_expression</string>
                           </list>
                         </value>
                     </item>
