@@ -213,6 +213,7 @@ class CopyContainer:
     self_base.uid = portal_catalog.newUid()
 
     # Clear the transaction references
+    # THIS IS NOT GENERIC ENOUGH - PROPERTY SHEET EXTENSION REQUIRED
     if getattr(self_base, 'default_source_reference', None):
       delattr(self_base, 'default_source_reference')
     if getattr(self_base, 'default_destination_reference', None):
