@@ -70,7 +70,7 @@
 \n
 kw = {}\n
 kw[\'stat\'] = 1\n
-kw[\'omit_input\'] = 1\n
+kw[\'omit_output\'] = 1\n
 \n
 for keyword in [\'section_category\', \'from_date\', \'to_date\', \'source_reference\',\n
                 \'entity\', \'node\', \'amount\', \'amount_range_min\', \'amount_max_range_max\',\n
@@ -82,7 +82,7 @@ for keyword in [\'section_category\', \'from_date\', \'to_date\', \'source_refer
 \n
 result = context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, **kw)\n
 row = result[0]\n
-return float(\'%.02f\' % (row.quantity and - row.quantity or 0.0))\n
+return float(\'%.02f\' % (row.quantity or 0.0))\n
 # vim: syntax=python\n
 </string> </value>
         </item>
