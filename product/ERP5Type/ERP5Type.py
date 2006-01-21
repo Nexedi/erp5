@@ -311,13 +311,16 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
             role_group_dict = {}
             for category_dict in value_list:
                 group_id = group_id_generator(**category_dict)
-                if type(group_id) is type('a'):
-                  # Single group is defined
-                  role_group_dict[group_id] = 1
-                else:
-                  # Multiple users defined
-                  for user_id in group_id:
-                    role_group_dict[user_id] = 1
+                # If group_id is not defined, do not use it
+                if group_id not in (None, ''):
+                  if type(group_id) is type('a'):
+                    # Single group is defined (this is usually for group membership)
+                    role_group_dict[group_id] = 1
+                  else:
+                    # Multiple groups are defined (this is usually for users)
+                    # but it could be extended to ad hoc groups
+                    for user_id in group_id:
+                      role_group_dict[user_id] = 1
             role_group_id_dict[role].extend(role_group_dict.keys())
 
         # Switch index from role to group id
