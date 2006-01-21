@@ -365,6 +365,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # Patch for ERP5 by JP Smets in order
         # to implement worklists and search of local roles
         if kw.has_key('local_roles'):
+          user = _getAuthenticatedUser(self)
           # Only consider local_roles if it is not empty
           if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
             local_roles = kw['local_roles']
@@ -399,10 +400,26 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
 
+        # Patch for ERP5 by JP Smets in order
+        # to implement worklists and search of local roles
+        if kw.has_key('local_roles'):
+          user = _getAuthenticatedUser(self)
+          # Only consider local_roles if it is not empty
+          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
+            local_roles = kw['local_roles']
+            # Turn it into a list if necessary according to ';' separator
+            if type(local_roles) == type('a'):
+              local_roles = local_roles.split(';')
+            # Local roles now has precedence (since it comes from a WorkList)
+            kw[ 'allowedRolesAndUsers' ] = []
+            for role in local_roles:
+                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
+        
         # Forget about permissions in statistics
-        # (we should not count lines more than once
+        # (we should not count lines more than once with statistic expressions)
         if kw.has_key('select_expression'): del kw[ 'allowedRolesAndUsers' ]
 
+        # XXX This needs to be set again
         #if not _checkPermission(
         #    CMFCorePermissions.AccessInactivePortalContent, self ):
         #    base = aq_base( self )
