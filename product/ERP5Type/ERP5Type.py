@@ -336,7 +336,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
           # Save the owner
           for group, role_list in old_group_list:
             if 'Owner' in role_list:
-              if group not in group_id_role_dict.keys():
+              if not group_id_role_dict.has_key(group):
                 group_id_role_dict[group] = ('Owner',)
               else:
                 group_id_role_dict[group].append('Owner')
@@ -346,10 +346,19 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         else: # NuxUserGroups implementation
           # Clean old group roles
           old_group_list = object.get_local_group_roles()
+          # We duplicate role settings to mimic PAS
           object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
           object.manage_delLocalRoles([x[0] for x in old_group_list])
+          # Save the owner
+          for group, role_list in old_group_list:
+            if 'Owner' in role_list:
+              if not group_id_role_dict.has_key(group):
+                group_id_role_dict[group] = ('Owner',)
+              else:
+                group_id_role_dict[group].append('Owner')
           # Assign new roles
           for group, role_list in group_id_role_dict.items():
+              # We duplicate role settings to mimic PAS
               object.manage_addLocalGroupRoles(group, role_list)
               object.manage_addLocalRoles(group, role_list)
 
