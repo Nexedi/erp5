@@ -2183,6 +2183,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return []
 
+  security.declareProtected(Permissions.ModifyPortalContent,'assignRoleToSecurityGroup')
+  def assignRoleToSecurityGroup(self):
+    """
+      Set or reset local roles assignments based on local roles
+      definition in portal type.
+    """
+    self._getTypesTool()[self.getPortalType()].assignRoleToSecurityGroup(self)
+
 InitializeClass(Base)
 
 class TempBase(Base):
