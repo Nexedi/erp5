@@ -134,6 +134,10 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
 
       return str(my_id)
 
+  def _get_id(self, id):
+    # Override Zope default by folder id generation
+    self.generateNewId()
+    
   security.declareProtected(Permissions.View, 'hasContent')
   def hasContent(self,id):
     return self.hasObject(id)
