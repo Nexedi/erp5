@@ -82,6 +82,9 @@ packing_list.edit(\n
 #   stop_date = related_order.getStopDate(),\n
   title = related_order.getTitle()\n
 )\n
+\n
+# If security definitions are implement on the packing list, it is time to apply them\n
+packing_list.assignRoleToSecurityGroup()\n
 </string> </value>
         </item>
         <item>
