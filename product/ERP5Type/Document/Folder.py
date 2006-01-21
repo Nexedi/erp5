@@ -299,7 +299,7 @@ be a problem)."""
 
   # Override Zope default by folder id generation
   def _get_id(self, id):
-    self.generateNewId()
+    return self.generateNewId()
     
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   #manage_delObjects = CopyContainer.manage_delObjects
