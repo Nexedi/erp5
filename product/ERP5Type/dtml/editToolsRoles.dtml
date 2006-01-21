@@ -56,6 +56,20 @@
 <td></td>
 <td>
   <div class="form-label">
+  Description
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <textarea rows="3" cols="80" name="description_&dtml-index;">&dtml-description;</textarea>
+  </div>
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
   Condition
   </div>
 </td>
@@ -103,7 +117,7 @@
 </td>
 <td>
   <div class="form-element">
-  <textarea rows="4" cols="80" name="category_&dtml-index;"><dtml-var "'\n'.join(category)"></textarea>
+  <textarea rows="3" cols="80" name="category_&dtml-index;"><dtml-var "'\n'.join(category)"></textarea>
   </div>
 </td>
 </tr>
@@ -169,6 +183,20 @@ Add a role
 <td></td>
 <td>
   <div class="form-label">
+  Description
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <textarea rows="3" cols="80" name="description"></textarea>
+  </div>
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
   Condition
   </div>
 </td>
@@ -216,7 +244,7 @@ Add a role
 </td>
 <td>
   <div class="form-element">
-  <textarea rows="4" cols="80" name="category"></textarea>
+  <textarea rows="3" cols="80" name="category"></textarea>
   </div>
 </td>
 </tr>

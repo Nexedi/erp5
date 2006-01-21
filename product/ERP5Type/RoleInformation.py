@@ -99,6 +99,7 @@ class RoleInformation( SimpleItem ):
         info = {}
         info['id'] = self.id
         info['name'] = self.Title()
+        info['description'] = self.Description()
         info['category'] = self.getCategory()
         info['base_category'] = self.getBaseCategory()
         info['base_category_script'] = self.getBaseCategoryScript()

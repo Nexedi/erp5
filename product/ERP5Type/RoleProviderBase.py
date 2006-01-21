@@ -67,6 +67,7 @@ class RoleProviderBase:
 
             a1 = {}
             a1['id'] = a.getId()    # The Role Id (ex. Assignor)
+            a1['description'] = a.Description()    # The Role Description (ex. a person in charge of assigning orders)
             a1['name'] = a.Title()  # The name of this role definition (ex. Assignor at company X)
             a1['category'] = a.getCategory() or [] # Category definition
             a1['base_category'] = a.getBaseCategory() # Base Category Definition
@@ -84,6 +85,7 @@ class RoleProviderBase:
     security.declareProtected( ManagePortal, 'addRole' )
     def addRole( self
                  , id
+                 , description
                  , name
                  , condition
                  , category
@@ -101,6 +103,7 @@ class RoleProviderBase:
         new_roles = self._cloneRoles()
 
         new_role = RoleInformation(     id=str(id)
+                                      , description=description
                                       , title=str(name)
                                       , condition=c_expr
                                       , category=category.split('\n')
@@ -226,10 +229,11 @@ class RoleProviderBase:
         """ Extract an RoleInformation from the funky form properties.
         """
         id             = str( properties.get( 'id_%d'          % index, '' ) )
+        description    = str( properties.get( 'description_%d' % index, '' ) )
         name           = str( properties.get( 'name_%d'        % index, '' ) )
         condition      = str( properties.get( 'condition_%d'   % index, '' ) )
-        category       = properties.get( 'category_%d'    % index, '' ).split('\n')
-        base_category  = properties.get( 'base_category_%d'     % index, ''  ).split()
+        category       = properties.get( 'category_%d'         % index, '' ).split('\n')
+        base_category  = properties.get( 'base_category_%d'    % index, ''  ).split()
         base_category_script = str( properties.get( 'base_category_script_%d' % index, '' ) )
 
         if not name:
@@ -240,6 +244,7 @@ class RoleProviderBase:
 
         return RoleInformation( id=id
                                 , title=name
+                                , description=description
                                 , condition=condition
                                 , category=category
                                 , base_category=base_category
