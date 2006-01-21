@@ -311,7 +311,13 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
             role_group_dict = {}
             for category_dict in value_list:
                 group_id = group_id_generator(**category_dict)
-                role_group_dict[group_id] = 1
+                if type(group_id) is type('a'):
+                  # Single group is defined
+                  role_group_dict[group_id] = 1
+                else:
+                  # Multiple users defined
+                  for user_id in group_id:
+                    role_group_dict[user_id] = 1
             role_group_id_dict[role].extend(role_group_dict.keys())
 
         # Switch index from role to group id
@@ -341,9 +347,11 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
           # Clean old group roles
           old_group_list = object.get_local_group_roles()
           object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
+          object.manage_delLocalRoles([x[0] for x in old_group_list])
           # Assign new roles
           for group, role_list in group_id_role_dict.items():
               object.manage_addLocalGroupRoles(group, role_list)
+              object.manage_addLocalRoles(group, role_list)
 
     security.declarePublic('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, object=None, **kw):
