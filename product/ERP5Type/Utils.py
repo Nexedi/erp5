@@ -1075,6 +1075,7 @@ def setDefaultProperties(property_holder, object=None):
       # Create free text accessors.
       prop = {
         'id'         : '%s_free_text' % cat,
+        'storage_id' : cat,
         'description': 'free text to specify %s' % cat,
         'type'       : 'text',
         'default'    : '',
