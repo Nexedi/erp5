@@ -79,7 +79,23 @@ class InvoicingRule(Rule):
       delivery_line_type = 'Simulation Movement'
       # Source that movement from the next node / stock
       my_context_movement = applied_rule.getParent()
+
+      # Do not invoice within the same entity or whenever entities are not all defined
+      # It is OK to invoice within different entities of the same company
+      # if we wish to get some internal analytical accounting
+      # but that requires some processing to produce a balance sheet
+      source_section = my_context_movement.getSourceSection()
+      destination_section = my_context_movement.getDestinationSection()
+      if source_section == destination_section or source_section is None \
+         or destination_section is None:
+        return Rule.expand(self, applied_rule, **kw)
+      
       if my_context_movement.getSource() is not None:
+        # XXX Please explain why ? Let us consider for
+        # example a consumption movement of garbage which we
+        # want to be invoiced (the cleanup company is working
+        # within our premises)
+        #
         # We should only expand movements if they have a source
         # otherwise, it creates infinite recursion
         # This happens for example whenever the source of a movement is 
