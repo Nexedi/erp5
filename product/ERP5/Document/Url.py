@@ -55,49 +55,6 @@ class Url(Coordinate, Base):
                       , PropertySheet.Url
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-A Url is allows to represent in a standard way coordinates
-such as web sites, emails, ftp sites, etc."""
-         , 'icon'           : 'url_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addUrl'
-         , 'immediate_view' : 'url_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'url_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'url_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     security.declareProtected(Permissions.View, 'asText')
     def asText(self):
       return self.url_string
@@ -120,9 +77,11 @@ such as web sites, emails, ftp sites, etc."""
 
         Send An Email
         """
-        # We assume by default that we are replying to the sender
+        # If no URL is specified, use ourselves
         if from_url == None:
           from_url = self.getUrlString()
+        if to_url == None:
+          to_url = self.getUrlString()
         if to_url.find('@')>=0: # We will send an email
           if msg is not None and subject is not None:
             header = "From: %s\n" % from_url
