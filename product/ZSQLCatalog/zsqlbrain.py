@@ -26,7 +26,11 @@ class  ZSQLBrain(Acquisition.Implicit):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
 
-  o_self = None
+  def _aq_dynamic(self, name):
+    """Acquire an attribute from a real object.
+    """
+    o = self.getObject()
+    return getattr(o, name, None)
 
 #   def __getattr__(self, key):
 #     return "toto"
