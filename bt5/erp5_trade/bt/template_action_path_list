@@ -1,4 +1,4 @@
-Organisation[id=jump_to_purchase_order]
-Organisation[id=jump_to_purchase_packing_list]
-Organisation[id=jump_to_sale_order]
-Organisation[id=jump_to_sale_packing_list]
+Organisation | jump_to_purchase_order
+Organisation | jump_to_purchase_packing_list
+Organisation | jump_to_sale_order
+Organisation | jump_to_sale_packing_list
