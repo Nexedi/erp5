@@ -1072,6 +1072,18 @@ def setDefaultProperties(property_holder, object=None):
                                             prop['type']
     # Create Category Accessors
     for cat in cat_list:
+      # Create free text accessors.
+      prop = {
+        'id'         : '%s_free_text' % cat,
+        'description': 'free text to specify %s' % cat,
+        'type'       : 'text',
+        'default'    : '',
+        'mode'       : 'w'
+      }
+      createDefaultAccessors(property_holder, prop['id'], prop=prop,
+                             read_permission=Permissions.AccessContentsInformation,
+                             write_permission=Permissions.ModifyPortalContent)
+
       # Get read and write permission
       if object is not None:
         cat_object = object.getPortalObject().portal_categories.get(cat, None)
