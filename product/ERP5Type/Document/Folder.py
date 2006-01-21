@@ -205,7 +205,6 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
     method = self.portal_catalog.countResults
     return method(**kw2)
 
-
   # Count objects in the folder
   security.declarePrivate('_count')
   def _count(self, **kw):
@@ -731,6 +730,7 @@ be a problem)."""
   security.declareProtected( Permissions.AccessContentsInformation, 'manage_copyObjects' ) # XXX Why this one doesn't work in CopySupport ?
   security.declareProtected( Permissions.AddPortalContent, 'manage_pasteObjects' ) # XXX Why this one doesn't work in CopySupport ?
 
+  # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
   def getDocumentTemplateList(self) :
     """
@@ -738,6 +738,29 @@ be a problem)."""
       by calling the preference tool
     """
     return self.getPortalObject().portal_preferences.getDocumentTemplateList(self)
+  
+  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplate')
+  def makeTemplate(self):
+    """
+      Make document behave as a template.
+      A template is no longer indexable
+
+      TODO:
+         - prevent from changing templates or invoking workflows
+    """
+    Base.makeTemplate(self)
+    for o in self.objectValues():
+      if hasattr(aq_base(o), 'makeTemplate'): o.makeTemplate()
+
+  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplateInstance')
+  def makeTemplateInstance(self):
+    """
+      Make document behave as standard document (indexable)
+    """
+    Base.makeTemplateInstance(self)
+    for o in self.objectValues():
+      if hasattr(aq_base(o), 'makeTemplateInstance'): o.makeTemplateInstance()
+  
 
 # Overwrite Zope setTitle()
 Folder.setTitle = Base.setTitle

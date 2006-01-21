@@ -339,6 +339,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isDelivery = 0      #
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
   isPredicate = 0     #
+  isTemplate = 0      #
 
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
@@ -2175,6 +2176,15 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         return None
     return None
 
+  security.declareProtected(Permissions.ModifyPortalContent,'assignRoleToSecurityGroup')
+  def assignRoleToSecurityGroup(self):
+    """
+      Set or reset local roles assignments based on local roles
+      definition in portal type.
+    """
+    self._getTypesTool()[self.getPortalType()].assignRoleToSecurityGroup(self)
+
+  # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
   def getDocumentTemplateList(self) :
     """
@@ -2183,13 +2193,35 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return []
 
-  security.declareProtected(Permissions.ModifyPortalContent,'assignRoleToSecurityGroup')
-  def assignRoleToSecurityGroup(self):
+  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplate')
+  def makeTemplate(self):
     """
-      Set or reset local roles assignments based on local roles
-      definition in portal type.
+      Make document behave as a template.
+      A template is no longer indexable
+
+      TODO:
+         - stronger security model
+         - prevent from changing templates or invoking workflows
     """
-    self._getTypesTool()[self.getPortalType()].assignRoleToSecurityGroup(self)
+    parent = self.getParentValue()
+    if parent.getPortalType() != "Preference" and not parent.isTemplate:
+      raise ValueError, "Template documents can not be created outside Preferences"
+    # Make sure this object is not in the catalog
+    catalog = getToolByName(self, 'portal_catalog', None)
+    if catalog is not None:
+       catalog.unindexObject(self)
+    self.isIndexable = 0
+    self.isTemplate = 1
+
+  security.declareProtected(Permissions.ModifyPortalContent,'makeTemplateInstance')
+  def makeTemplateInstance(self):
+    """
+      Make document behave as standard document (indexable)
+    """
+    if self.getParentValue().getPortalType() == "Preference":
+      raise ValueError, "Template instances can not be created within Preferences"
+    if hasattr(aq_base(self), 'isIndexable'): delattr(self, 'isIndexable')
+    if hasattr(aq_base(self), 'isTemplate'): delattr(self, 'isTemplate')
 
 InitializeClass(Base)
 
