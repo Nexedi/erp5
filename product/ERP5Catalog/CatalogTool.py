@@ -364,7 +364,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
         # Patch for ERP5 by JP Smets in order
         # to implement worklists and search of local roles
+        # This allows for displaying results based on local roles
+        # rather than based on view permissions
         if kw.has_key('local_roles'):
+          # XXX user is not enough - we should also include groups of the user
           user = _getAuthenticatedUser(self)
           # Only consider local_roles if it is not empty
           if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
@@ -402,7 +405,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
         # Patch for ERP5 by JP Smets in order
         # to implement worklists and search of local roles
+        # This allows for counting results based on local roles
+        # rather than based on view permissions
         if kw.has_key('local_roles'):
+          # XXX user is not enough - we should also include groups of the user
           user = _getAuthenticatedUser(self)
           # Only consider local_roles if it is not empty
           if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
