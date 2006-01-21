@@ -330,8 +330,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     def getAllowedRolesAndUsers(self, **kw):
       """
         Return allowed roles and users.
+
         This is supposed to be used with Z SQL Methods to check permissions
-        when you list up documents.
+        when you list up documents. It is also able to take into account
+        a parameter named local_roles so that list documents only include
+        those documents for which the user (or the group) was
+        associated one of the given local roles.
       """
       user = _getAuthenticatedUser(self)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
@@ -339,6 +343,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
       if kw.has_key('local_roles'):
+        # XXX user is not enough - we should also include groups of the user
         # Only consider local_roles if it is not empty
         if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
           local_roles = kw['local_roles']
@@ -362,24 +367,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
 
-        # Patch for ERP5 by JP Smets in order
-        # to implement worklists and search of local roles
-        # This allows for displaying results based on local roles
-        # rather than based on view permissions
-        if kw.has_key('local_roles'):
-          # XXX user is not enough - we should also include groups of the user
-          user = _getAuthenticatedUser(self)
-          # Only consider local_roles if it is not empty
-          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
-            local_roles = kw['local_roles']
-            # Turn it into a list if necessary according to ';' separator
-            if type(local_roles) == type('a'):
-              local_roles = local_roles.split(';')
-            # Local roles now has precedence (since it comes from a WorkList)
-            kw[ 'allowedRolesAndUsers' ] = []
-            for role in local_roles:
-                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
-
         if not _checkPermission(
             CMFCorePermissions.AccessInactivePortalContent, self ):
             base = aq_base( self )
@@ -402,24 +389,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             limit the results to what the user is allowed to see.
         """
         kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
-
-        # Patch for ERP5 by JP Smets in order
-        # to implement worklists and search of local roles
-        # This allows for counting results based on local roles
-        # rather than based on view permissions
-        if kw.has_key('local_roles'):
-          # XXX user is not enough - we should also include groups of the user
-          user = _getAuthenticatedUser(self)
-          # Only consider local_roles if it is not empty
-          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
-            local_roles = kw['local_roles']
-            # Turn it into a list if necessary according to ';' separator
-            if type(local_roles) == type('a'):
-              local_roles = local_roles.split(';')
-            # Local roles now has precedence (since it comes from a WorkList)
-            kw[ 'allowedRolesAndUsers' ] = []
-            for role in local_roles:
-                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
         
         # Forget about permissions in statistics
         # (we should not count lines more than once with statistic expressions)
