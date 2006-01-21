@@ -1,3 +1,6 @@
+2006-01-21 JP
+* Added support for user based role assignment (ERP5Type_getSecurityCategoryFromArrow)
+
 2006-01-20 JP & Jerome
 * Added document template initial support to Base_doAction and erp5_html_style
 

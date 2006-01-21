@@ -66,49 +66,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># category_order : list of base_categories we want to use to generate the group id\n
-# kw : keys should be base categories,\n
-#      values should be value of corresponding relative urls (obtained by getBaseCategory())\n
-#\n
-# Example call : context.ERP5TypeSecurity_asGroupId(category_order=(\'site\', \'group\', \'function\'),\n
-#                    site=\'france/lille\', group=\'nexedi\', function=\'accounting/accountant\')\n
-# This will generate a string like \'LIL_NXD_ACT\' where "LIL", "NXD" and "ACT" are the codification\n
-#   of respecively "france/lille", "nexedi" and "accounting/accountant" categories\n
-#\n
-# ERP5Type_asSecurityGroupId can also return a list of users whenever a category points\n
-# to a Person instance. This is useful to implement user based local role assignments\n
+            <value> <string># XXX For now, this script requires proxy manager\n
 \n
-code_list = []\n
-user_list = []\n
+# base_category_list : list of category values we need to retrieve\n
+# user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
+#             When using PluggableAuthService with ERP5GroupMAnager, user_name is the id\n
+#             of the person linked to getUser().getId() through getReference() (which is its login).\n
+# object : object which we want to assign roles to.\n
+# portal_type : portal type of object\n
 \n
-# sort the category list lexicographically\n
-# this prevents us to choose the exact order we want,\n
-# but also prevents some human mistake to break everything up by creating site_function instead of function_site\n
-if category_order not in (None, \'\'):\n
-  category_order = [ x for x in category_order]\n
-  category_order.sort()\n
-else:\n
-  category_order = []\n
+# must always return a list of dicts\n
 \n
-for base_category in category_order:\n
-  category_list   = kw[base_category]\n
-  for category in category_list:\n
-    category_path   = \'%s/%s\' % (base_category, category)\n
-    category_object = context.portal_categories.getCategoryValue(category_path)\n
-    if category_object in (None, \'\'):\n
-      raise "SecurityRoleDefinitionError", "Category \'%s\' doesn\'t exist" % (category_path)\n
-    if category_object.getPortalType() == \'Person\':\n
-      # We define a person here\n
-      user_name = category_object.getReference()\n
-      if user_name is not None: user_list.append(user_name)\n
-    else:\n
-      # We define a group item here\n
-      category_code   = category_object.getCodification() or category_object.getId()\n
-      code_list.append(category_code)\n
+category_list = []\n
 \n
-# Return a list of users or a single group\n
-if user_list: return user_list\n
-return \'_\'.join(code_list)\n
+if object is None:\n
+  return []\n
+\n
+for base_category in base_category_list:\n
+  category_list.append({base_category: object.getCategoryMembershipList(base_category)})\n
+\n
+return category_list\n
 </string> </value>
         </item>
         <item>
@@ -119,11 +96,25 @@ return \'_\'.join(code_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Type_asSecurityGroupId</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/ERP5Type_getSecurityCategoryFromArrow</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category_order, **kw</string> </value>
+            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -143,31 +134,21 @@ return \'_\'.join(code_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>category_order</string>
-                            <string>kw</string>
-                            <string>code_list</string>
-                            <string>user_list</string>
-                            <string>None</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>_getattr_</string>
-                            <string>base_category</string>
-                            <string>_getitem_</string>
-                            <string>category_list</string>
-                            <string>category</string>
-                            <string>category_path</string>
-                            <string>context</string>
-                            <string>category_object</string>
+                            <string>base_category_list</string>
                             <string>user_name</string>
-                            <string>category_code</string>
+                            <string>object</string>
+                            <string>portal_type</string>
+                            <string>category_list</string>
+                            <string>None</string>
+                            <string>_getiter_</string>
+                            <string>base_category</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
@@ -184,7 +165,7 @@ return \'_\'.join(code_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Type_asSecurityGroupId</string> </value>
+            <value> <string>ERP5Type_getSecurityCategoryFromArrow</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
