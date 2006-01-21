@@ -248,7 +248,7 @@ for account in accounts_to_expand_by_third_parties :\n
   accounts_to_expand_by_third_parties_dict[account.getId()] = 1\n
 \n
 accounts_to_expand_by_bank_accounts = context.portal_categories\\\n
-      .account_type.asset.bank.getAccountTypeRelatedValueList(\n
+      .account_type.asset.cash.getAccountTypeRelatedValueList(\n
        portal_type=\'Account\')\n
 accounts_to_expand_by_bank_accounts_dict = {}\n
 for account in accounts_to_expand_by_bank_accounts :\n
