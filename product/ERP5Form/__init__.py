@@ -40,9 +40,9 @@ document_classes = updateGlobals( this_module, globals(),
                                   permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
-import PlanningBox
-import POSBox
+import Form, FSForm, ListBox, MatrixBox, SelectionTool
+import ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
+import PlanningBox, POSBox, FormBox, EditorField, ProxyField
 import RelationField, ImageField, MultiRelationField
 import PreferenceTool
 
@@ -80,6 +80,14 @@ def initialize( context ):
                          content_classes = content_classes)
 
     # Initialise ERP5Form Formulator
+    FieldRegistry.registerField(ProxyField.ProxyField,
+                                'www/StringField.gif')
+    FieldRegistry.registerField(EditorField.EditorField,
+                                'www/TextAreaField.gif')
+    FieldRegistry.registerField(FormBox.FormBox, 
+                                'www/StringField.gif')
+    FieldRegistry.registerField(POSBox.POSBox,
+                                'www/StringField.gif')
     FieldRegistry.registerField(ListBox.ListBox,
                                 'www/StringField.gif')
     FieldRegistry.registerField(PlanningBox.PlanningBox,
@@ -132,8 +140,6 @@ def initialize( context ):
                                 'www/FileField.gif')
     FieldRegistry.registerField(StandardFields.LinkField,
                                 'www/LinkField.gif')
-    FieldRegistry.registerField(POSBox.POSBox, 
-                                'www/StringField.gif')
  
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)
