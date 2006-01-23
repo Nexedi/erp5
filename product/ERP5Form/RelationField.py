@@ -325,7 +325,10 @@ class RelationStringFieldValidator(Validator.StringValidator):
                                , 'Localizer'
                                , None
                                )
-      N_ = localizer.erp5_ui.gettext
+      if localizer is not None:
+        N_ = localizer.erp5_ui.gettext
+      else :
+        N_ = lambda msg, **kw: msg
       # Get the current value
       value = Validator.StringValidator.validate(self, field, key, REQUEST)
       # If the value is the same as the current field value, do nothing

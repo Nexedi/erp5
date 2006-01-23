@@ -443,8 +443,11 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                                          , 'Localizer'
                                          , None
                                          )
-                N_ = localizer.erp5_ui.gettext
                 # Prepare a menu
+                if localizer is not None:
+                  N_ = localizer.erp5_ui.gettext
+                else :
+                  N_ = lambda msg, **kw: msg
                 menu_item_list = [('', '')]
                 new_object_menu_item_list = []
                 for p in portal_type:
