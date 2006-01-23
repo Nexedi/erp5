@@ -66,62 +66,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>valid_role_list = context.valid_roles()\n
-role_index_list = range(len(valid_role_list))\n
-permission_list = context.possible_permissions()\n
-#return context.possible_permissions()\n
+            <value> <string>search_method = getattr(context, \'get%sValueList\' %\n
+          string.join([string.capitalize(x) for x in base_category.split(\'_\')], \'\'))\n
+related_object_list = search_method(portal_type=portal_type)\n
 \n
+if len(related_object_list)==0:\n
+  url = context.absolute_url()\n
+  message = \'No+%s+related.\' % portal_type.replace(\' \', \'+\')\n
 \n
-# First, remove all permissions (very secure by default)\n
-# We should keep only Manager, or we will not be able to\n
-# do the end of the script\n
-for permission in permission_list:\n
-  context.manage_permission(permission, [\'Manager\'], 0)\n
+elif len(related_object_list)==1:\n
+  url = related_object_list[0].absolute_url()\n
+  message = \'%s+related+to+%s:+%s.\' %\\\n
+            (portal_type.replace(\' \', \'+\'),\n
+             context.getPortalType().replace(\' \', \'+\'), \n
+             context.getTitleOrId())\n
 \n
-# Then, define default ERP5 permissions\n
+else:\n
+  request=context.REQUEST\n
+  selection_uid_list = [x.getUid() for x in related_object_list]\n
+  kw = {\'uid\': selection_uid_list}\n
+  context.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\', kw)\n
+  request.set(\'object_uid\', context.getUid())\n
+  request.set(\'uids\', selection_uid_list)\n
+  return context.Base_jumpToRelatedObjectList(uids=selection_uid_list, REQUEST=request)\n
 \n
-common_permission_list = [\n
-  \'Access Transient Objects\',\n
-  \'Access contents information\',\n
-  \'Access session data\',\n
-  \'List folder contents\',\n
-  \'View\',\n
-  \'View History\',\n
-]\n
-\n
-author_permission_list = [\n
-  \'Add portal content\',\n
-  \'Add portal folders\',\n
-]\n
-\n
-assignor_permission_list = [\n
-  \'Modify portal content\',\n
-  \'Delete objects\',\n
-]\n
-\n
-# Define ERP5 permissions for each role\n
-erp5_role_dict = {\n
-  \'Assignee\': common_permission_list,\n
-  \'Assignor\': common_permission_list + author_permission_list +\\\n
-              assignor_permission_list, \n
-  \'Associate\': common_permission_list, \n
-  \'Auditor\' : common_permission_list,\n
-  \'Author\': common_permission_list + author_permission_list,\n
-  \'Manager\': permission_list\n
-}\n
-\n
-# Add ERP5 permissions\n
-erp5_permission_dict = {}\n
-for role,permission_list in erp5_role_dict.items():\n
-  for permission in permission_list:\n
-    if not erp5_permission_dict.has_key(permission):\n
-      erp5_permission_dict[permission] = []\n
-    erp5_permission_dict[permission].append(role)\n
-\n
-for permission,role_list in erp5_permission_dict.items():\n
-  context.manage_permission(permission,role_list, 0)\n
-\n
-return "finished"\n
+redirect_url = \'%s/%s?%s\' % (url, \'view\', \'portal_status_message=%s\' % message)\n
+context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
 </string> </value>
         </item>
         <item>
@@ -131,18 +101,18 @@ return "finished"\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_core/Base_jumpToRelationObject</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_setDefaultSecurity</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>base_category, portal_type=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -162,30 +132,32 @@ return "finished"\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>base_category</string>
+                            <string>portal_type</string>
+                            <string>getattr</string>
+<string>context</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>valid_role_list</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>role_index_list</string>
-                            <string>permission_list</string>
+                            <string>string</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>permission</string>
-                            <string>common_permission_list</string>
-                            <string>author_permission_list</string>
-                            <string>assignor_permission_list</string>
-                            <string>erp5_role_dict</string>
-                            <string>erp5_permission_dict</string>
-                            <string>role</string>
-                            <string>_write_</string>
+                            <string>x</string>
+                            <string>search_method</string>
+                            <string>related_object_list</string>
+                            <string>len</string>
+                            <string>url</string>
+                            <string>message</string>
                             <string>_getitem_</string>
-                            <string>role_list</string>
+                            <string>request</string>
+                            <string>selection_uid_list</string>
+                            <string>kw</string>
+                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
@@ -197,42 +169,23 @@ return "finished"\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_setDefaultSecurity</string> </value>
+            <value> <string>Base_jumpToRelationObject</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Jump to the object in relation with the current context</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>
