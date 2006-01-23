@@ -1,3 +1,9 @@
+2006-01-23 Alex
+* added support for Portal Type Role Definitions
+
+2006-01-23 JPS
+* Added support for legal_parent, natural_parent and insurance base categories
+
 2006-01-23 Aurel
 * check category_list is a list in ERP5Type_asSecurityGroupId
 

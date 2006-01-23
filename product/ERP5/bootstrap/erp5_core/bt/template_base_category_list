@@ -17,10 +17,13 @@ function
 gender
 grade
 group
+insurance_coverage
+legal_parent
 mapping
 marital_status
 market_segment
 nationality
+natural_parent
 order
 origin
 parent

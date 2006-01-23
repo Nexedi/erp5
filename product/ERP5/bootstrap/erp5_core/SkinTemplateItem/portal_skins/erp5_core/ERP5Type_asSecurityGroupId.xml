@@ -83,9 +83,9 @@ user_list = []\n
 \n
 # sort the category list lexicographically\n
 # this prevents us to choose the exact order we want,\n
-# but also prevents some human mistake to break everything up by creating site_function instead of function_site\n
+# but also prevents some human mistake to break everything by creating site_function instead of function_site\n
 if category_order not in (None, \'\'):\n
-  category_order = [ x for x in category_order]\n
+  category_order = list(category_order)\n
   category_order.sort()\n
 else:\n
   category_order = []\n
@@ -156,11 +156,9 @@ return \'_\'.join(code_list)\n
                             <string>code_list</string>
                             <string>user_list</string>
                             <string>None</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
+                            <string>list</string>
                             <string>_getattr_</string>
+                            <string>_getiter_</string>
                             <string>base_category</string>
                             <string>_getitem_</string>
                             <string>category_list</string>

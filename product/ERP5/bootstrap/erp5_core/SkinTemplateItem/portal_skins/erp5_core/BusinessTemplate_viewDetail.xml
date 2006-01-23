@@ -111,6 +111,7 @@
                         <string>my_template_test_id_list</string>
                         <string>my_template_message_translation_list</string>
                         <string>my_template_constraint_id_list</string>
+                        <string>my_template_portal_type_roles_list</string>
                         <string>my_template_update_tool</string>
                       </list>
                     </value>
