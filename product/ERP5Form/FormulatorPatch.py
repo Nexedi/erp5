@@ -843,7 +843,7 @@ FloatField.widget = FloatWidgetInstance
 # 
 # render method on Field must change, and have a new parameter:
 #   render_format
-# which is call others methods ('html' call render_html)
+# which is used to call others methods ('html' call render_html)
 ###################################################################
 # XXX Patching all Fields is not easy, as ERP5 defines his own fields.
 # def Widget_render(self, field, key, value, REQUEST, render_format='html')
