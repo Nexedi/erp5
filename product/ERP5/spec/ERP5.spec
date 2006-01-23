@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.10
-%define release 5
+%define release 6
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -44,7 +44,7 @@ very short time.
 mkdir /var/lib/zope/Extensions
 mkdir /var/lib/zope/PropertySheet
 mkdir /var/lib/zope/Constraint
-ln -s %{software_home}/Products/%{name}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
+ln -s %{software_home}/Products/%{product}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
   service zope restart
 fi
@@ -61,6 +61,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 23 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-6mdk
+- Fix bad symlink
+
 * Thu Jan 19 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-5mdk
 - Don't need Translation Service Zope product for ERP5
 
