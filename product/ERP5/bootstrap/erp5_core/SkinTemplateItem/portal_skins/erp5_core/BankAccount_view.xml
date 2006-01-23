@@ -99,7 +99,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
                         <string>my_source_title</string>
                         <string>my_start_date</string>
@@ -113,14 +112,11 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_iban_text_format</string>
-                        <string>my_iban_key</string>
                         <string>my_bank_country_code</string>
-                        <string>my_bban_text_format</string>
-                        <string>my_bban_key</string>
                         <string>my_bank_code</string>
                         <string>my_branch</string>
                         <string>my_bank_account_number</string>
+                        <string>my_bank_account_key</string>
                       </list>
                     </value>
                 </item>

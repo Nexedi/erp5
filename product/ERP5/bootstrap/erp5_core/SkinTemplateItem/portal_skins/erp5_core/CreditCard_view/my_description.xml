@@ -239,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>4</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -275,7 +275,7 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>60</int> </value>
                 </item>
               </dictionary>
             </value>

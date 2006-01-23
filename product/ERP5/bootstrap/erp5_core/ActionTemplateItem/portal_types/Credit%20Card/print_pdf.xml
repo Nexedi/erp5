@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>print</string> </value>
+            <value> <string>print_pdf</string> </value>
         </item>
         <item>
             <key> <string>optional</string> </key>
@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>4.0</float> </value>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -85,7 +85,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/CreditCard_print</string> </value>
+            <value> <string>string:${object_url}/Base_printPdf</string> </value>
         </item>
       </dictionary>
     </pickle>

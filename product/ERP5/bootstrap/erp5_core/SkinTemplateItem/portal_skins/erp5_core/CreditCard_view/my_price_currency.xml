@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_creditcard_type</string> </value>
+            <value> <string>my_price_currency</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -238,20 +238,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-<string></string>
-<string></string>
-                        </tuple>
-                        <tuple>
-                          <string>Master Card</string>
-                          <string>master_card</string>
-                        </tuple>
-                        <tuple>
-                          <string>Visa</string>
-                          <string>visa</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -264,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Credit Card Type</string> </value>
+                    <value> <string>Currency</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -294,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/portal_categories/creditcard_type/getCategoryChildLogicalPathItemList</string> </value>
+            <value> <string>python:here.CurrencyModule_getCurrencyItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

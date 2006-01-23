@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_iban_text_format</string> </value>
+            <value> <string>my_bank_account_key</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -211,11 +211,11 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>10</int> </value>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -243,7 +243,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>IBAN</string> </value>
+                    <value> <string>IBAN Key</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

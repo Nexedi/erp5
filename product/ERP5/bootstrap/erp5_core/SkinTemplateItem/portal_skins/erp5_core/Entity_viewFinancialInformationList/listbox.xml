@@ -338,7 +338,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>bban_text_format</string>
+                          <string>bank_account_number</string>
                           <string>Number</string>
                         </tuple>
                         <tuple>
@@ -467,6 +467,10 @@
                         <tuple>
                           <string>Bank Account</string>
                           <string>Bank Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>Credit Card</string>
+                          <string>Credit Card</string>
                         </tuple>
                       </list>
                     </value>

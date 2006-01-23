@@ -68,7 +68,7 @@ ChatAddress | translate
 ChatAddress | view
 Credit Card | history
 Credit Card | metadata
-Credit Card | print
+Credit Card | print_pdf
 Credit Card | view
 Currency Exchange Line | history
 Currency Exchange Line | metadata
