@@ -1674,7 +1674,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       for property in property_list:
         property_id = property.getAttribute('id').encode()
         if property.hasChildNodes():
-          property_value = property.childNodes[0].data
+          property_value = property.childNodes[0].data.encode()
           if property_id == 'priority':
             property_value = float(property_value)
           type_role_property_dict[property_id] = property_value
@@ -1685,7 +1685,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         if not type_role_property_dict.has_key(property_id):
           type_role_property_dict[property_id] = []
         if property.hasChildNodes():
-          property_value = property.childNodes[0].data
+          property_value = property.childNodes[0].data.encode()
           type_role_property_dict[property_id].append(property_value)
       type_roles_list.append(type_role_property_dict)
     self._objects['portal_type_roles/'+file_name[:-4]] = type_roles_list
