@@ -314,15 +314,15 @@ class TestOrderMixin:
     order_line_vcl = []
     resource_vbcl = resource.getVariationBaseCategoryList()
     for vbc in resource_vbcl:
-      ZopeTestCase._print('\n')
-      ZopeTestCase._print('vbc: %s' % str(vbc))
+      LOG('stepSetOrderLineHalfVCL', 0, 'vbc: %s' % str(vbc))
       resource_vcl = list(resource.getVariationCategoryList(
                                   base_category_list=[vbc],
                                   omit_individual_variation=0))
-      ZopeTestCase._print('resource_vcl: %s' % str(resource_vcl))
+      LOG('stepSetOrderLineHalfVCL', 0,
+                        'resource_vcl: %s' % str(resource_vcl))
       resource_vcl.sort()
-      ZopeTestCase._print('split resource_vcl: %s' %\
-                          str(self.splitList(resource_vcl)[0]))
+      LOG('stepSetOrderLineHalfVCL', 0, 'split resource_vcl: %s' %
+                           str(self.splitList(resource_vcl)[0]))
       order_line_vcl.extend(self.splitList(resource_vcl)[0])
     order_line.setVariationCategoryList(order_line_vcl)
 
@@ -435,9 +435,8 @@ class TestOrderMixin:
     order_line = sequence.get('order_line')
     vcl = order_line.getVariationCategoryList()
     vcil = order_line.getVariationCategoryItemList()
-    ZopeTestCase._print('\n')
-    ZopeTestCase._print('vcl: %s\n' % str(vcl))
-    ZopeTestCase._print('vcil: %s\n' % str(vcil))
+    LOG('stepCheckOrderLineVCIL', 0, 'vcl: %s\n' % str(vcl))
+    LOG('stepCheckOrderLineVCIL', 0, 'vcil: %s\n' % str(vcil))
     self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
 
   def stepSetOrderLineDefaultValues(self, sequence=None, \
@@ -646,9 +645,8 @@ class TestOrderMixin:
     if order_state in no_applied_rule_state:
       self.assertEquals(0, len(related_applied_rule_list))
     else:
-#       ZopeTestCase._print('\n')
-#       ZopeTestCase._print('related_applied_rule_list: %s' %\
-#                        str([x.getObject() for x in related_applied_rule_list]))
+      LOG('stepCheckOrderSimulation', 0, 'related_applied_rule_list: %s' %
+                   str([x.getObject() for x in related_applied_rule_list]))
       self.assertEquals(1, len(related_applied_rule_list))
       applied_rule = related_applied_rule_list[0].getObject()
       sequence.edit(applied_rule=applied_rule)
@@ -765,8 +763,10 @@ class TestOrderMixin:
     organisation1 = sequence.get('organisation1')
     organisation2 = sequence.get('organisation2')
     order = sequence.get('order')
-    order.edit(source_value=organisation1,
-               destination_value=organisation2)
+    order.edit( source_value = organisation1,
+                source_section_value = organisation1,
+                destination_value = organisation2,
+                destination_section_value = organisation2 )
 
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
     """
