@@ -187,12 +187,12 @@ class Resource(XMLMatrix, CoreResource, Variated):
               # XXX now, call Renderer a lot of time.
               # Better implementation needed
               result.extend(Renderer(
-                                   base_category=base_category, 
-                                   display_base_category=display_base_category,
-                                   display_none_category=0, base=base,
-                                   current_category=current_category,
-                                   display_id=display_id, **kw).\
-                                                     render([object]))
+                             base_category=base_category, 
+                             display_base_category=display_base_category,
+                             display_none_category=0, base=base,
+                             current_category=current_category,
+                             display_id=display_id, **kw).\
+                                               render([object]))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -228,8 +228,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
                     |  morphology/2        | (morphology/2, )
       """
       vcil = self.getVariationCategoryItemList(
-                          base_category_list=base_category_list,
-                          omit_individual_variation=omit_individual_variation,**kw)
+                    base_category_list=base_category_list,
+                    omit_individual_variation=omit_individual_variation,**kw)
       return map(lambda x: x[1], vcil)
 
     # Unit conversion

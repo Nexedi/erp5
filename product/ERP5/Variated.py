@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -76,7 +76,8 @@ class Variated(Base):
                             '_getVariationCategoryList')
   def _getVariationCategoryList(self, base_category_list = ()):
     if base_category_list is ():
-      base_category_list = self.getVariationRangeBaseCategoryList()
+      base_category_list = self.getVariationBaseCategoryList()
+#       base_category_list = self.getVariationRangeBaseCategoryList()
     return self.getAcquiredCategoryMembershipList(base_category_list, base=1)
 
   security.declareProtected(Permissions.AccessContentsInformation, 
@@ -104,71 +105,83 @@ class Variated(Base):
       variation_category_item_list.append((current_category,current_category))
 
     if base_category_list is ():
-      base_category_list = self.getVariationRangeBaseCategoryList()
+      base_category_list = self.getVariationBaseCategoryList()
       if omit_option_base_category == 1:
         base_category_list = [x for x in base_category_list if x not in
                               self.getPortalOptionBaseCategoryList()]
     for base_category in base_category_list:
       variation_category_list = self._getVariationCategoryList(
-                                         base_category_list=[base_category])
-      variation_list = map(lambda x: self.portal_categories.resolveCategory(x),
-                           variation_category_list)
-      variation_category_item_list.extend(Renderer(                             
+                                       base_category_list=[base_category])
+      variation_list = [self.portal_categories.resolveCategory(x) for x in \
+                        variation_category_list]
+      category_list = [x for x in variation_list \
+                       if x.getPortalType() == 'Category']
+      variation_category_item_list.extend(Renderer(
                              display_base_category=display_base_category,
                              display_none_category=0, base=base,
                              current_category=current_category,
-                             display_id=display_id,**kw).\
-                                               render(variation_list))
-
+                             display_id=display_id, **kw).\
+                                               render(category_list))
+      object_list = [x for x in variation_list \
+                       if x.getPortalType() != 'Category']
+      variation_category_item_list.extend(Renderer(
+                             base_category=base_category,
+                             display_base_category=display_base_category,
+                             display_none_category=0, base=base,
+                             current_category=current_category,
+                             display_id='title', **kw).\
+                                               render(object_list))
     return variation_category_item_list
   
-  def getVariationCategoryTitleOrIdItemList(self, base_category_list=(), base=1, **kw):
-    """
-    Returns a list of tuples by parsing recursively all categories in a
-    given list of base categories. Uses getTitleOrId as method
-    """
-    return self.getVariationCategoryItemList(display_id='title_or_id', base_category_list=base_category_list, base=base, **kw)
+  # XXX Is it used ?
+#   def getVariationCategoryTitleOrIdItemList(self, base_category_list=(), 
+#                                             base=1, **kw):
+#     """
+#     Returns a list of tuples by parsing recursively all categories in a
+#     given list of base categories. Uses getTitleOrId as method
+#     """
+#     return self.getVariationCategoryItemList(
+#                    display_id='title_or_id', 
+#                    base_category_list=base_category_list, base=base, **kw)
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
-  def _setVariationCategoryList(self, node_list, base_category_list = ()):
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            '_setVariationCategoryList')
+  def _setVariationCategoryList(self, node_list, base_category_list=()):
     if base_category_list is ():
-      base_category_list = self.getVariationRangeBaseCategoryList()
+      base_category_list = self.getVariationBaseCategoryList()
     self._setCategoryMembership(base_category_list,node_list,base=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setVariationCategoryList')
-  def setVariationCategoryList(self, node_list, base_category_list = () ):
-    self._setVariationCategoryList(node_list, base_category_list = base_category_list)
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            'setVariationCategoryList')
+  def setVariationCategoryList(self, node_list, base_category_list=()):
+    self._setVariationCategoryList(node_list, 
+                                   base_category_list=base_category_list)
     self.reindexObject()
-
 
   # Range
   security.declareProtected(Permissions.AccessContentsInformation,
-                                        'getVariationRangeBaseCategoryList')
+                            'getVariationRangeBaseCategoryList')
   def getVariationRangeBaseCategoryList(self):
       """
-        Returns possible variation base_category ids of the
-        default resource of this transformation
+      Returns possible variation base_category ids.
       """
-      try:
-        resource = self.getDefaultResourceValue()
-      except AttributeError:
-        resource = None
-      if resource is not None:
-        result = resource.getVariationBaseCategoryList()
-      else:
-        result = self.portal_categories.getBaseCategoryList()
-      return result
+      # Get a portal method which defines a list of 
+      # variation base category
+      return self.getPortalVariationBaseCategoryList()
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                                    'getVariationRangeBaseCategoryItemList')
-  def getVariationRangeBaseCategoryItemList(self, base=1, display_id='getTitle', current_category=None):
+                            'getVariationRangeBaseCategoryItemList')
+  def getVariationRangeBaseCategoryItemList(self, base=1, 
+                                            display_id='getTitle', 
+                                            current_category=None):
       """
         Returns possible variations of the resource
         as a list of tuples (id, title). This is mostly
         useful in ERP5Form instances to generate selection
         menus.
       """
-      return self.portal_categories.getItemList(self.getVariationRangeBaseCategoryList())
+      return self.portal_categories.getItemList(
+                            self.getVariationBaseCategoryList())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                     'getVariationBaseCategoryItemList')
@@ -191,8 +204,10 @@ class Variated(Base):
       return result
 
   # Methods for matrix UI widgets
+  # XXX FIXME Those method are depreciated.
+  # We now use _asCellRange scripts.
   security.declareProtected(Permissions.AccessContentsInformation,
-                                               'getLineVariationRangeCategoryItemList')
+                            'getLineVariationRangeCategoryItemList')
   def getLineVariationRangeCategoryItemList(self):
     """
       Returns possible variations in line
@@ -202,8 +217,9 @@ class Variated(Base):
     except AttributeError:
       resource = None
     if resource is not None:
-      clist = resource.getVariationRangeCategoryItemList(base_category_list =
-                                       self.getVariationBaseCategoryLine(), root=0)
+      clist = resource.getVariationRangeCategoryItemList(
+                       base_category_list=self.getVariationBaseCategoryLine(),
+                       root=0)
     else:
       clist = [(None,None)]
     return clist

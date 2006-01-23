@@ -96,24 +96,6 @@ class Transformation(XMLObject, Predicate, Variated):
         transformation_line.updateVariationCategoryList()
 
     security.declareProtected(Permissions.AccessContentsInformation, 
-                              'getVariationRangeBaseCategoryList')
-    def getVariationRangeBaseCategoryList(self):
-        """
-          Returns possible variation base_category ids of the
-          default resource which can be used a variation axis
-          in the transformation. 
-        """
-        resource = self.getResourceValue()
-        if resource is not None:
-          result = resource.getVariationBaseCategoryList()
-        else:
-          # XXX result = self.getBaseCategoryIds()
-          # Why calling this method ?
-          # Get a global variable which define a list of variation base category
-          result = self.getPortalVariationBaseCategoryList()
-        return result
-
-    security.declareProtected(Permissions.AccessContentsInformation, 
                               'getVariationRangeBaseCategoryItemList')
     def getVariationRangeBaseCategoryItemList(self,display_id='title_or_id',**kw):
         """
@@ -122,39 +104,14 @@ class Transformation(XMLObject, Predicate, Variated):
           useful in ERP5Form instances to generate selection
           menus.
         """
-        return self.portal_categories.getItemList( self.getVariationRangeBaseCategoryList(),
-                                                   display_id=display_id,**kw )
-
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                             'getVariationRangeCategoryList')
-    def getVariationRangeCategoryList(self, base_category_list=()):
-        """
-          Returns possible variation category values for the
-          transformation according to the default resource.
-          Possible category values is provided as a list of
-          id.
-          User may want to define generic transformation without
-          any resource define.
-          Result is left display.
-        """
-        if base_category_list is ():
-          base_category_list = self.getVariationBaseCategoryList()
-
-        resource = self.getResourceValue()
-        if resource != None:
-          result = resource.getVariationCategoryList(
-                                        base_category_list=base_category_list,
-                                        omit_individual_variation=0)
-        else:
-          # No resource is define on transformation. We want to display content of base categories
-          result = self.portal_categories.getCategoryChildList(base_category_list, base=1)
-        return result
+        return self.portal_categories.getItemList( 
+                              self.getVariationRangeBaseCategoryList(),
+                              display_id=display_id, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getVariationRangeCategoryItemList')
     def getVariationRangeCategoryItemList(self, base_category_list=(),
-                                          display_base_category=1,**kw):
+                                          display_base_category=1, **kw):
         """
           Returns possible variation category values for the
           transformation according to the default resource.
@@ -171,23 +128,15 @@ class Transformation(XMLObject, Predicate, Variated):
         resource = self.getResourceValue()
         if resource != None:
           result = resource.getVariationCategoryItemList(
-                                  base_category_list=base_category_list,
-                                  omit_individual_variation=0,
-                                  display_base_category=display_base_category,**kw)
+                        base_category_list=base_category_list,
+                        omit_individual_variation=0,
+                        display_base_category=display_base_category,**kw)
         else:
-          # No resource is define on transformation. We want to display content of base categories
-          result = self.portal_categories.getCategoryChildTitleItemList(base_category_list, base=1, display_none_category=0)
+          # No resource is define on transformation. 
+          # We want to display content of base categories
+          result = self.portal_categories.getCategoryChildTitleItemList(
+                         base_category_list, base=1, display_none_category=0)
         return result
-
-    security.declareProtected(Permissions.AccessContentsInformation, 
-                              'getVariationBaseCategoryItemList')
-    def getVariationBaseCategoryItemList(self,display_id='title_or_id',**kw):
-      """
-        Returns a list of base_category tuples for this tranformation
-      """
-      return self.portal_categories.getItemList(self.getVariationBaseCategoryList(),
-                                                display_id=display_id,**kw)
-
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               '_setVariationBaseCategoryList')

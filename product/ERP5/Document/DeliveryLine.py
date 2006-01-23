@@ -77,7 +77,8 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
     updateRelatedContent = XMLMatrix.updateRelatedContent
 
     # Explicit acquisition of aq_dynamic generated method
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getSimulationState')
     def getSimulationState(self):
       """
         Explicitly acquire simulation_state from parent

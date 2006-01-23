@@ -162,51 +162,6 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
       self._setVVariationBaseCategoryList(value)
       self.reindexObject()
 
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVariationRangeCategoryItemList')
-    def getVariationRangeCategoryItemList(self, base_category_list = (),
-                                          omit_individual_variation=1, base=1,
-                                          current_category=None,
-                                          display_base_category=1,
-                                          display_id='title', **kw):
-
-        """
-          Returns possible variation category values for the
-          transformation according to the default resource.
-          Possible category values is provided as a list of
-          tuples (id, title). This is mostly
-          useful in ERP5Form instances to generate selection
-          menus.
-          Display is left...
-        """
-        resource = self.getResourceValue()
-        result = []
-        if resource != None:
-          if base_category_list is ():
-            base_category_list = resource.getVariationBaseCategoryList()
-          result = resource.getVariationCategoryItemList(
-                                   base_category_list=base_category_list,
-                                   omit_individual_variation=0,
-                                   base=base,
-                                   current_category=current_category,
-                                   display_base_category=display_base_category,
-                                   display_id=display_id,
-                                   **kw)
-        return result
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVariationRangeCategoryItemList')
-    def getVariationRangeCategoryList(self, base_category_list=()):
-        """
-          Returns possible variation category values for the
-          transformation according to the default resource.
-        """
-        return map(lambda x: x[1],
-                   self.getVariationRangeCategoryItemList(
-                          base_category_list=base_category_list))
-        return result
-
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None, **kw):

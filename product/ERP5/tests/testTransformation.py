@@ -103,15 +103,24 @@ class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
       component_name = component_info['name']
       component = component_module.newContent()
       component_dict[component_name] = component
-      variation1 = component.newContent(portal_type=self.component_variation_portal_type,id='1')
-      variation2 = component.newContent(portal_type=self.component_variation_portal_type,id='2')
+      variation1 = component.newContent(
+                          portal_type=self.component_variation_portal_type,
+                          id='1')
+      variation2 = component.newContent(
+                          portal_type=self.component_variation_portal_type,
+                          id='2')
       variations = [variation1, variation2]
+
+      # Commit and catalog
+      get_transaction().commit()
+      self.tic()
       
       component.setPricedQuantity(component_info['quantity'])
       component.setVariationBaseCategoryList(['variation'])
       component.setPVariationBaseCategoryList(['variation'])
-      component.setCategoryList( ['variation/' + x.getRelativeUrl() for x in variations] )
-      
+      # Variation are automatically acquired if they are individual variation.
+#       component.setCategoryList( 
+#                     ['variation/' + x.getRelativeUrl() for x in variations] )
       # Set the price
       supply_line = component.newContent(portal_type='Supply Line')
       supply_line.edit( mapped_value_property_list = ['base_price'] )
@@ -122,10 +131,13 @@ class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
             membership_criterion_category = ['variation/' + x.getRelativeUrl() for x in variations],
             base_price = component_prices[0])
       else:
-        supply_line.setVariationBaseCategoryList(['variation'])
+#         supply_line.setVariationBaseCategoryList(['variation'])
         supply_line.updateCellRange(base_id = 'path')
         for i in range(2):
-          supply_cell = supply_line.newCell('apparel_component_module/%s/%d' % (component.getId(),(i+1)), base_id='path')
+          supply_cell = supply_line.newCell(
+                   'variation/apparel_component_module/%s/%d' % \
+                                      (component.getId(),(i+1)), 
+                   base_id='path')
           supply_cell.edit(
             membership_criterion_base_category = ['variation'],
             membership_criterion_category = ['variation/' + variations[i].getRelativeUrl()],

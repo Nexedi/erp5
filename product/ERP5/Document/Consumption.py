@@ -60,20 +60,23 @@ class Consumption(XMLObject, XMLMatrix, Variated):
 #                      , PropertySheet.Consumption
                       )
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              '_setVariationCategoryList')
     def _setVariationCategoryList(self,value):
       """
         Set consumption variation category list.
         Set matrix cell range.
       """
-      self._setCategoryMembership(self.getVariationRangeBaseCategoryList(),value,base=1)
+      self._setCategoryMembership(self.getVariationRangeBaseCategoryList(),
+                                  value, base=1)
       # XXX Must use in futur this method, but it failed today 
       #Variated._setVariationCategoryList(self, value)
       # XXX FIXME: Use a interaction workflow instead
       # Kept for compatibility.
       self.updateCellRange(base_id='quantity')
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'setVariationCategoryList')
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              'setVariationCategoryList')
     def setVariationCategoryList(self,value):
       """
         Set consumption variation category list.
@@ -82,14 +85,8 @@ class Consumption(XMLObject, XMLMatrix, Variated):
       self._setVariationCategoryList(value)
       self.reindexObject()
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'getVariationRangeBaseCategoryList')
-    def getVariationRangeBaseCategoryList(self):
-      """
-        Return range of base variation 
-      """
-      return self.getPortalVariationBaseCategoryList()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'getVariationRangeBaseCategoryItemList')
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              'getVariationRangeBaseCategoryItemList')
     def getVariationRangeBaseCategoryItemList(self):
       """
         Return range of base variation item
@@ -98,33 +95,18 @@ class Consumption(XMLObject, XMLMatrix, Variated):
       # XXX get TitleOrId
       return map( lambda x: (x,x)  , self.getVariationRangeBaseCategoryList() )
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'getVariationRangeCategoryList')
-    def getVariationRangeCategoryList(self):
-      """
-        Return range of variation 
-      """
-      result = self.portal_categories.getCategoryChildList(self.getVariationBaseCategoryList(), base=0)
-      return result
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'getVariationRangeCategoryItemList')
-    def getVariationRangeCategoryItemList(self):
-      """
-        Return range of variation item
-      """
-      # We need a left display for ListField, and self.portal_categories.getCategoryChildTitleItemList return a right display
-      # So, invert all tuples
-      result = map( lambda x: (x[1],x[0]), self.portal_categories.getCategoryChildTitleItemList(self.getVariationBaseCategoryList(), base=1) )
-      return result
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'getQuantityRatio')
-    def getQuantityRatio(self, variation_category_line, variation_category_column):
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              'getQuantityRatio')
+    def getQuantityRatio(self, variation_category_line, 
+                         variation_category_column):
       """
         Return quantity ratio for a virtual cell.
         Return None if not result can be return.
       """
       cell_quantity_ratio_list = []
       
-      for variation_category in (variation_category_line, variation_category_column):
+      for variation_category in (variation_category_line, 
+                                 variation_category_column):
         cell = self.getCell(variation_category, base_id='quantity')
         if cell is None:
           return None

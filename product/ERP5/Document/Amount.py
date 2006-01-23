@@ -132,7 +132,8 @@ class Amount(Base, Variated):
                                                render(object_list))
     return variation_category_item_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            '_setVariationCategoryList')
   def _setVariationCategoryList(self, value):
     result = []
     resource = self.getDefaultResourceValue()
@@ -141,7 +142,8 @@ class Amount(Base, Variated):
       if len(variation_list) > 0:
         self._setCategoryMembership(variation_list, value, base = 1)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setVariationCategoryList')
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            'setVariationCategoryList')
   def setVariationCategoryList(self, value):
     self._setVariationCategoryList(value)
     self.reindexObject()
@@ -162,7 +164,18 @@ class Amount(Base, Variated):
         base_category_list.append(base_category)
     return base_category_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVariationValue')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getVariationBaseCategoryItemList')
+  def getVariationBaseCategoryItemList(self,display_id='title_or_id',**kw):
+    """
+    Returns a list of base_category tuples.
+    """
+    return self.portal_categories.getItemList(
+                                    self.getVariationBaseCategoryList(),
+                                    display_id=display_id,**kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getVariationValue')
   def getVariationValue(self):
     """
       New Method for dicrete and countinuous variations
@@ -215,7 +228,7 @@ class Amount(Base, Variated):
                                      base=base, **kw)]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                                            'getVariationRangeBaseCategoryList')
+                            'getVariationRangeBaseCategoryList')
   def getVariationRangeBaseCategoryList(self, omit_option_base_category=0):
     """
         Returns possible variations base categories for this amount ie.
@@ -232,7 +245,7 @@ class Amount(Base, Variated):
       result = resource.getVariationBaseCategoryList(
                           omit_option_base_category=omit_option_base_category)
     else:
-      result = self.portal_categories.getBaseCategoryList()
+      result = Variated.getVariationRangeBaseCategoryList(self)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
