@@ -52,6 +52,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.RoleInformation import RoleInformation
 import fnmatch
 import re, os, sys, string, tarfile
 from Products.ERP5Type.Cache import clearCache
@@ -1600,6 +1601,119 @@ class ActionTemplateItem(ObjectTemplateItem):
           break
     BaseTemplateItem.uninstall(self, context, **kw)
 
+class PortalTypeRolesTemplateItem(BaseTemplateItem):
+
+  def __init__(self, id_list, **kw):
+    id_list = ['portal_type_roles/%s' % id for id in id_list]
+    BaseTemplateItem.__init__(self, id_list, **kw)
+
+  def build(self, context, **kw):
+    p = context.getPortalObject()
+    for relative_url in self._archive.keys():
+      obj = p.unrestrictedTraverse("portal_types/%s" %
+          relative_url.split('/', 1)[1])
+      type_roles_obj = getattr(obj, '_roles', ())
+      type_role_list = []
+      for role in type_roles_obj:
+        type_role_dict = {}
+        # uniq
+        for property in ('id', 'title', 'description', 'condition',
+            'priority', 'base_category_script'):
+          prop_value = getattr(role, property)
+          if prop_value:
+            type_role_dict[property] = prop_value
+        # multi
+        for property in ('category', 'base_category'):
+          prop_value_list = []
+          for prop_value in getattr(role, property):
+            prop_value_list.append(prop_value)
+          type_role_dict[property] = prop_value_list
+        type_role_list.append(type_role_dict)
+      self._objects[relative_url] = type_role_list
+
+  def generateXml(self, path=None):
+    type_role_list = self._objects[path]
+    xml_data = '<type_roles>'
+    for role in type_role_list:
+      xml_data += os.linesep+"  <role id='%s'>" % role['id']
+      # uniq
+      for property in ('title', 'description', 'condition', 'priority',
+          'base_category_script'):
+        prop_value = role.get(property)
+        if prop_value:
+          xml_data += os.linesep+"   <property id='%s'>%s</property>" % \
+              (property, prop_value)
+      # multi
+      for property in ('category', 'base_category'):
+        for prop_value in role.get(property):
+          xml_data += os.linesep+"   <multi_property "\
+          "id='%s'>%s</multi_property>" % (property, prop_value)
+      xml_data += os.linesep+"  </role>"
+    xml_data += os.linesep+'</type_roles>'
+    return xml_data
+      
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    root_path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(name=root_path)
+    for key in self._objects.keys():
+      xml_data = self.generateXml(key)
+      name = key.split('/', 1)[1]
+      bta.addObject(obj=xml_data, name=name, path=root_path)
+
+  def _importFile(self, file_name, file):
+    type_roles_list = []
+    xml = parse(file)
+    xml_type_roles_list = xml.getElementsByTagName('role')    
+    for role in xml_type_roles_list:
+      id = role.getAttribute('id')
+      type_role_property_dict = {'id':id}
+      # uniq
+      property_list = role.getElementsByTagName('property')
+      for property in property_list:
+        property_id = property.getAttribute('id').encode()
+        if property.hasChildNodes():
+          property_value = property.childNodes[0].data
+          if property_id == 'priority':
+            property_value = float(property_value)
+          type_role_property_dict[property_id] = property_value
+      # multi
+      multi_property_list = role.getElementsByTagName('multi_property')
+      for property in multi_property_list:
+        property_id = property.getAttribute('id').encode()
+        if not type_role_property_dict.has_key(property_id):
+          type_role_property_dict[property_id] = []
+        if property.hasChildNodes():
+          property_value = property.childNodes[0].data
+          type_role_property_dict[property_id].append(property_value)
+      type_roles_list.append(type_role_property_dict)
+    self._objects['portal_type_roles/'+file_name[:-4]] = type_roles_list
+
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    p = context.getPortalObject()
+    for roles_path in self._objects.keys():
+      if update_dict.has_key(roles_path) or force:
+        if not force:
+          action = update_dict[roles_path]
+          if action == 'nothing':
+            continue
+      path = 'portal_types/%s' % roles_path.split('/', 1)[1]
+      obj = p.unrestrictedTraverse(path)
+      setattr(obj, '_roles', []) # reset roles before applying
+      type_roles_list = self._objects[roles_path]
+      for type_role_property_dict in type_roles_list:
+        obj._roles.append(RoleInformation(**type_role_property_dict))
+
+  def uninstall(self, context, **kw):
+    p = context.getPortalObject()
+    for roles_path in self._objects.keys():
+      path = 'portal_types/%s' % roles_path.split('/', 1)[1]
+      obj = p.unrestrictedTraverse(path)
+      setattr(obj, '_roles', [])
+
 class SitePropertyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
@@ -2945,10 +3059,14 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
 
 class LocalRolesTemplateItem(BaseTemplateItem):
 
+  def __init__(self, id_list, **kw):
+    id_list = ['local_roles/%s' % id for id in id_list]
+    BaseTemplateItem.__init__(self, id_list, **kw)
+
   def build(self, context, **kw):
     p = context.getPortalObject()
     for path in self._archive.keys():
-      obj = p.unrestrictedTraverse(path)
+      obj = p.unrestrictedTraverse(path.split('/', 1)[1])
       local_roles_dict = getattr(obj, '__ac_local_roles__', {})
       group_local_roles_dict = getattr(obj, '__ac_local_group_roles__', {})
       self._objects[path] = (local_roles_dict, group_local_roles_dict)
@@ -2991,7 +3109,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 
       folders, id = os.path.split(key)
       encode_folders = []
-      for folder in folders.split('/'):
+      for folder in folders.split('/')[1:]:
         if '%' not in folder:
           encode_folders.append(pathname2url(folder))
         else:
@@ -3169,6 +3287,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_skin_item',
       '_path_item',
       '_action_item',
+      '_portal_type_roles_item',
       '_local_roles_item', 
       '_catalog_result_key_item',
       '_catalog_related_key_item',
@@ -3237,6 +3356,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           CatalogMethodTemplateItem(self.getTemplateCatalogMethodIdList())
       self._action_item = \
           ActionTemplateItem(self.getTemplateActionPathList())
+      self._portal_type_roles_item = \
+          PortalTypeRolesTemplateItem(self.getTemplatePortalTypeRolesList())
       self._site_property_item = \
           SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
       self._module_item = \
@@ -3693,6 +3814,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_action_path')
 
+    def getTemplatePortalTypeRolesList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_portal_type_roles')
+
     def getTemplateSkinIdList(self):
       """
       We have to set this method because we want an
@@ -3772,6 +3900,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
           CatalogMethodTemplateItem(self.getTemplateCatalogMethodIdList())
       self._action_item = \
           ActionTemplateItem(self.getTemplateActionPathList())
+      self._portal_type_roles_item = \
+          PortalTypeRolesTemplateItem(self.getTemplatePortalTypeRolesList())
       self._site_property_item = \
           SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
       self._module_item = \
@@ -3867,6 +3997,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'Skin' : '_skin_item',
         'Path' : '_path_item',
         'Action' : '_action_item',
+        'PortalTypeRoles' : '_portal_type_roles_item',
         'LocalRoles' : '_local_roles_item',
         'CatalogResultKey' : '_catalog_result_key_item',
         'CatalogRelatedKey' : '_catalog_related_key_item',
@@ -3918,7 +4049,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_result_table_item',   '_catalog_keyword_key_item', '_catalog_full_text_key_item',
                      '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item',
                      '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item',
-                     '_portal_type_property_sheet_item', '_portal_type_base_category_item', '_local_roles_item']
+                     '_portal_type_property_sheet_item', '_portal_type_roles_item',
+                     '_portal_type_base_category_item', '_local_roles_item',]
       item_list_3 = ['_document_item', '_property_sheet_item',
           '_constraint_item', '_extension_item', '_test_item',
           '_message_translation_item']
