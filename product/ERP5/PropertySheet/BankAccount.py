@@ -58,6 +58,11 @@ class BankAccount:
      'type'        : 'string',
      'mode'        : 'w'
     },
+    {'id'          : 'bank_account_holder_name',
+     'description' : 'The bank account holder\'s name',
+     'type'        : 'string',
+     'mode'        : 'w'
+    },
   )
 
   _categories = ( 'source', )
