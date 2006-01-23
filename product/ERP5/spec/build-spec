@@ -103,6 +103,9 @@ while test $# -gt 0; do
   fi
   MKREL=`rpm --with unstable --eval "%mkrel $RELEASE"`
 
+  # TODO: get the %post section from the CVS spec file
+  # TODO: write a generic code to get sections from the CVS spec file
+
 
   ####################
   # Build the spec file using the following template
