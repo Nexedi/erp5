@@ -106,13 +106,6 @@ except FormValidationError, validation_errors:\n
   field_errors = form.ErrorFields(validation_errors)\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
-except ValueError, value_error:\n
-  # Pack errors into the request\n
-  redirect_url = \'%s/%s?%s%s\' % ( context.absolute_url(), form_id\n
-                                  , \'portal_status_message=\',value_error\n
-                                  )\n
-\n
-  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
 \n
 else:\n
   # We will check if there\'s an error_message\n
@@ -205,11 +198,9 @@ else:\n
                             <string>_apply_</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
-                            <string>ValueError</string>
-                            <string>value_error</string>
-                            <string>redirect_url</string>
                             <string>history_data</string>
                             <string>AttributeError</string>
+                            <string>redirect_url</string>
                             <string>last_history_data</string>
                             <string>error_message</string>
                           </tuple>
