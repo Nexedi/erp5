@@ -107,7 +107,7 @@ def get_value(self, id, **kw):
         else:
             # get normal value
             value = self.get_orig_value(id)
-            # Only for the default value
+            # For the 'default' value, we try to get a default value
             if id == 'default':
                 if (value is None or value == '' or value == [] or value == ()) \
                        and self.meta_type != 'MethodField' :
@@ -123,6 +123,18 @@ def get_value(self, id, **kw):
                     value = object.getProperty(key, d=value)
                   except (KeyError, AttributeError):
                     value = None
+            # For the 'editable' value, we try to get a default value
+            elif id == 'editable':
+                # By default, pages are editable and
+                # fields are editable if they are set to editable mode
+                # However, if the REQUEST defines editable_mode to 0
+                # then all fields become read only.
+                # This is useful to render ERP5 content as in a web site (ECommerce)
+                # editable_mode should be set for example by the page template
+                # which defines the current layout
+                if kw.has_key('REQUEST'):
+                  if not getattr(kw['REQUEST'], 'editable_mode', 1):
+                    value = 0
 
     # if normal value is a callable itself, wrap it
     if callable(value):
