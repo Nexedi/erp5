@@ -222,7 +222,7 @@ class SupplyLine(DeliveryLine, Path):
       return getattr(self, method_name)()
 
     security.declareProtected(Permissions.ModifyPortalContent, 
-                              'updatePredicate')
+                              'updateQuantityPredicate')
     def updateQuantityPredicate(self, price_parameter):
       """
         Update the quantity predicate
