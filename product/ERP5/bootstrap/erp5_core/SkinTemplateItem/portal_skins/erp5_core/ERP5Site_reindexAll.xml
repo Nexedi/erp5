@@ -76,7 +76,7 @@ for o in list(context.portal_categories.objectValues()):\n
 \n
 print "#### Indexing preferences ####"\n
 context.portal_preferences.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
-for o in list(context.portal_preferences.objectValues(tag=\'module\')):\n
+for o in list(context.portal_preferences.objectValues()):\n
   o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
 # We index simulation first to make sure we can calculate tests (ie. related quantity)\n
