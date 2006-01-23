@@ -615,7 +615,7 @@ class PlanningBoxWidget(Widget.Widget):
                                  title='List Method',
                                  description=('The method to use to list'
                                              'objects'),
-                                 default='searchFolder',
+                                 default='',
                                  required=0)                             
 
     title_line = fields.StringField('title_line',
