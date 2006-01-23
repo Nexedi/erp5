@@ -1075,12 +1075,16 @@ def setDefaultProperties(property_holder, object=None):
       # Create free text accessors.
       prop = {
         'id'         : '%s_free_text' % cat,
-        'storage_id' : cat,
         'description': 'free text to specify %s' % cat,
         'type'       : 'text',
         'default'    : '',
         'mode'       : 'w'
       }
+      # XXX These are only for backward compatibility.
+      if cat == 'group':
+        prop['storage_id'] = 'group'
+      elif cat == 'site':
+        prop['storage_id'] = 'location'
       createDefaultAccessors(property_holder, prop['id'], prop=prop,
                              read_permission=Permissions.AccessContentsInformation,
                              write_permission=Permissions.ModifyPortalContent)
