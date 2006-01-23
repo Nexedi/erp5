@@ -1,3 +1,6 @@
+2006-01-23 Aurel
+* check category_list is a list in ERP5Type_asSecurityGroupId
+
 2006-01-23 Alex
 * Added "Add portal folders" permission for Author in Base_setDefaultSecurity
 

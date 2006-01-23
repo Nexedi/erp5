@@ -92,6 +92,8 @@ else:\n
 \n
 for base_category in category_order:\n
   category_list   = kw[base_category]\n
+  if same_type(category_list, \'\'):\n
+    category_list = [category_list]\n
   for category in category_list:\n
     category_path   = \'%s/%s\' % (base_category, category)\n
     category_object = context.portal_categories.getCategoryValue(category_path)\n
@@ -162,6 +164,7 @@ return \'_\'.join(code_list)\n
                             <string>base_category</string>
                             <string>_getitem_</string>
                             <string>category_list</string>
+                            <string>same_type</string>
                             <string>category</string>
                             <string>category_path</string>
                             <string>context</string>
