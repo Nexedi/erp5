@@ -1,6 +1,6 @@
 %define product CMFActivity
 %define version 0.10
-%define release 1
+%define release 2
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -15,7 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  zope zope-CMF
+Requires:  zope zope-CMF zope-TimerService
 
 #----------------------------------------------------------------------
 %description
@@ -54,6 +54,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 23 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-2mdk
+- CMFActivity need Timer Service Zope product
+
 * Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-1mdk
 - Update to version 0.10
 
