@@ -30,6 +30,8 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_inner
 
+from Products.CMFCore.utils import getToolByName
+
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
@@ -151,8 +153,9 @@ class Predicate(Folder):
     # XXX Add here additional method calls
     return result
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
-  def asSqlExpression():
+  security.declareProtected( Permissions.AccessContentsInformation, 'buildSqlQuery' )
+  def buildSqlQuery(self, strict_membership=0, table='category',
+                          join_table='catalog', join_column='uid'):
     """
       A Predicate can be rendered as an SQL expression. This
       can be used to generate SQL requests in reports or in
@@ -160,8 +163,75 @@ class Predicate(Folder):
       
       XXX - This method is not implemented yet
     """
-    pass
+    portal_categories = getToolByName(self, 'portal_categories')
 
+    from_table_dict = {}
+    
+    # First build SQL for membership criteria
+    # It would be much nicer if all this was handled by the catalog in a central place
+    membership_dict = {}
+    for base_category in self.getMembershipCriterionBaseCategoryList():
+      membership_dict[base_category] = [] # Init dict with valid base categories
+    for category in self.getMembershipCriterionCategoryList():
+      base_category = category.split('/')[0] # Retrieve base category
+      if membership_dict.has_key(base_category):
+        category_value = portal_categories.resolveCategory(category)
+        if category_value is not None:
+          table_alias = "single_%s_%s" % (table, base_category)
+          from_table_dict[table_alias] = 'category'
+          membership_dict[base_category].append(category_value.asSqlExpression(
+                                          strict_membership=strict_membership,
+                                          table=table_alias,
+                                          base_category=base_category))
+    membership_select_list = map(lambda l: '( %s )' % ' OR '.join(l),
+                                                         membership_dict.values())
+
+    # First build SQL for membership criteria
+    # It would be much nicer if all this was handled by the catalog in a central place
+    multimembership_dict = {}
+    for base_category in self.getMultimembershipCriterionBaseCategoryList():
+      multimembership_dict[base_category] = [] # Init dict with valid base categories
+    join_count = 0
+    for category in self.getMembershipCriterionCategoryList():
+      base_category = category.split('/')[0] # Retrieve base category
+      if multimembership_dict.has_key(base_category):
+        category_value = portal_categories.resolveCategory(category)
+        if category_value is not None:
+          join_count += 1
+          table_alias = "multi_%s_%s" % (table, join_count)
+          from_table_dict[table_alias] = 'category'
+          multimembership_dict[base_category].append(category_value.asSqlExpression(
+                                          strict_membership=strict_membership,
+                                          table=table_alias,
+                                          base_category=base_category))
+    multimembership_select_list = map(lambda l: ' AND '.join(l), multimembership_dict.values())
+    
+    # Build the join where expression 
+    join_select_list = []
+    for k in from_table_dict.keys():
+      join_select_list.append('%s.%s = %s.uid' % (join_table, join_column, k))
+    
+    sql_text = ' AND '.join(join_select_list + membership_select_list + 
+                            multimembership_select_list)
+
+    # And now build criteria
+    return { 'from_table_list' : from_table_dict.items(),
+             'where_expression' : sql_text }
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
+  def asSqlExpression(self, strict_membership=0, table='category'):
+    """
+    """
+    return self.buildSqlQuery(strict_membership=strict_membership, table=table)['where_expression']
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlJoinExpression' )
+  def asSqlJoinExpression(self, strict_membership=0, table='category', join_table='catalog', join_column='uid'):
+    """
+    """
+    table_list = self.buildSqlQuery(strict_membership=strict_membership, table=table)['from_table_list']
+    sql_text_list = map(lambda (a,b): '%s AS %s' % (b,a), table_list)
+    return ' , '.join(sql_text_list)
+  
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
   def getCriterionList(self, **kw):
     """
@@ -288,7 +358,7 @@ class Predicate(Folder):
     self.reindexObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'generatePredicate')
-  def generatePredicate(self,multimembership_criterion_base_category_list=(),
+  def generatePredicate(self, multimembership_criterion_base_category_list=(),
                         membership_criterion_base_category_list=(),
                         criterion_property_list=()):
     """
@@ -357,3 +427,9 @@ class Predicate(Folder):
     if script is not None:
       return script()
     return self
+
+  def searchPredicate(self, **kw):
+    """
+      Returns a list of documents matching the predicate
+    """
+    pass
