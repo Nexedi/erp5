@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5OOo.OOoTemplate</string>
+          <string>OOoTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?>\n
+<office:document-content xmlns:draw=\'http://openoffice.org/2000/drawing\' xmlns:office=\'http://openoffice.org/2000/office\' xmlns:text=\'http://openoffice.org/2000/text\' xmlns:number=\'http://openoffice.org/2000/datastyle\' xmlns:chart=\'http://openoffice.org/2000/chart\' xmlns:table=\'http://openoffice.org/2000/table\' xmlns:dr3d=\'http://openoffice.org/2000/dr3d\' xmlns:fo=\'http://www.w3.org/1999/XSL/Format\' xmlns:style=\'http://openoffice.org/2000/style\' xmlns:form=\'http://openoffice.org/2000/form\' xmlns:script=\'http://openoffice.org/2000/script\' xmlns:svg=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' xmlns:math=\'http://www.w3.org/1998/Math/MathML\' office:class=\'text\' office:version=\'1.0\' xmlns:tal=\'http://xml.zope.org/namespaces/tal\'>\n
+  <office:script/>\n
+  <office:font-decls>\n
+    <style:font-decl style:name="Tahoma1" fo:font-family="Tahoma"/>\n
+    <style:font-decl style:name="Lucida Sans Unicode" fo:font-family="&apos;Lucida Sans Unicode&apos;" style:font-pitch="variable"/>\n
+    <style:font-decl style:name="Mincho" fo:font-family="Mincho" style:font-pitch="variable"/>\n
+    <style:font-decl style:name="Tahoma" fo:font-family="Tahoma" style:font-pitch="variable"/>\n
+    <style:font-decl style:name="Times New Roman" fo:font-family="&apos;Times New Roman&apos;" style:font-family-generic="roman" style:font-pitch="variable"/>\n
+    <style:font-decl style:name="Arial" fo:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>\n
+  </office:font-decls>\n
+  <office:automatic-styles>\n
+    <style:style style:name="Image body" style:family="paragraph" style:parent-style-name="Text body" style:class="extra">\n
+      <style:properties fo:text-align="center" />\n
+    </style:style>\n
+  \n
+    <style:style style:name="Tableau1" style:family="table"> \n
+      <style:properties style:width="16.999cm" table:align="margins"/>\n
+    </style:style>\n
+    \n
+    <style:style style:name="Tableau1.A" style:family="table-column"> \n
+      <style:properties style:column-width="2cm" style:rel-column-width="1500*"/>\n
+    </style:style> \n
+    <style:style style:name="Tableau1.B" style:family="table-column"> \n
+      <style:properties style:column-width="7cm" style:rel-column-width="4030*"/> \n
+    </style:style> \n
+    <style:style style:name="Tableau1.C" style:family="table-column"> \n
+      <style:properties style:column-width="2.5cm" style:rel-column-width="1200*"/> \n
+    </style:style> \n
+    <style:style style:name="Tableau1.D" style:family="table-column"> \n
+      <style:properties style:column-width="5cm" style:rel-column-width="3200*"/>\n
+    </style:style>\n
+    <style:style style:name="Tableau1.E" style:family="table-column"> \n
+      <style:properties style:column-width="2.5cm" style:rel-column-width="1200*"/>\n
+    </style:style>\n
+        \n
+    <style:style style:name="Tableau1.A1" style:family="table-cell">\n
+      <style:properties fo:padding="0.097cm" fo:border-left="0.002cm solid #000000" fo:border-right="none" fo:border-top="0.002cm solid #000000" fo:border-bottom="0.002cm solid #000000"/>\n
+    </style:style>\n
+      \n
+    <style:style style:name="Tableau1.D1" style:family="table-cell">\n
+      <style:properties fo:padding="0.097cm" fo:border="0.002cm solid #000000"/>\n
+    </style:style>\n
+    \n
+    <style:style style:name="Tableau1.A2" style:family="table-cell">\n
+      <style:properties fo:padding="0.097cm" fo:border-left="0.002cm solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.002cm solid #000000"/>\n
+    </style:style>\n
+    \n
+    <style:style style:name="Tableau1.D2" style:family="table-cell">\n
+      <style:properties fo:padding="0.097cm" fo:border-left="0.002cm solid #000000" fo:border-right="0.002cm solid #000000" fo:border-top="none" fo:border-bottom="0.002cm solid #000000"/>\n
+    </style:style>\n
+    \n
+  \n
+    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Table Heading">\n
+      <style:properties style:font-name="Arial" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>\n
+    </style:style>\n
+    \n
+    <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Table Contents"><style:properties style:font-name="Arial" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>\n
+    </style:style>\n
+  \n
+  </office:automatic-styles>\n
+  <office:body>\n
+    <text:sequence-decls>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Illustration\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Table\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Text\'/>\n
+      <text:sequence-decl text:display-outline-level=\'0\' text:name=\'Drawing\'/>\n
+    </text:sequence-decls>\n
+    \n
+    <text:p text:style-name=\'Text body\'>Nexedi SARL</text:p>\n
+    \n
+    <div tal:omit-tag=\'\' tal:repeat=\'usecase  python:here.objectValues(portal_type="Use Case",sort_on=(("int_index",),))\'>\n
+    <tal:block tal:condition="python: usecase.getValidationState() == \'validated\'">\n
+    <text:h text:style-name=\'Heading 2\' text:level=\'2\'>Use Case : <span tal:replace=\'usecase/getTitle\'>Title</span></text:h>\n
+    \n
+    <text:p text:style-name=\'Text body\' tal:content=\'usecase/getDescription\'>Use Case Description</text:p>\n
+    \n
+    <tal:block \n
+        tal:condition="python:usecase.contentValues(filter={\'portal_type\':\'Image\'})">\n
+    <text:h text:style-name=\'Heading 3\' text:level=\'3\'>Related Requirement Processes</text:h>\n
+    \n
+    <tal:block tal:repeat="image python:usecase.contentValues(filter={\'portal_type\':\'Image\'})">  \n
+    <text:p text:style-name="Text body" tal:content="image/getDescription"\n
+            tal:condition="image/getDescription">Description</text:p>\n
+    <text:p text:style-name="Image body" fo:text-align="center">\n
+    <draw:image draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char"\n
+      draw:z-index="0" xlink:href="#Pictures/0001.png" \n
+      svg:width="12cm"\n
+      svg:height="7.516cm" \n
+      xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"\n
+      tal:attributes="xlink:href python:request.oo_builder.addImage(image.index_html(None,None));\n
+                      svg:height python:\'%scm\' % (12 * float(image.height()) / max(float(image.width()),0))" />\n
+    </text:p>\n
+    </tal:block>\n
+    \n
+    </tal:block>\n
+    \n
+    \n
+    <text:h text:style-name=\'Heading 3\' text:level=\'3\'>Actors</text:h>\n
+    <text:p text:style-name="Text body">Actors involved in this Use Case are listed bellow:</text:p>\n
+    <table:table table:style-name=\'Tableau1\' table:name=\'Tableau1\'>\n
+      <table:table-column table:style-name="Tableau1.A"/>\n
+      <table:table-column table:style-name="Tableau1.B"/>\n
+      <table:table-column table:style-name="Tableau1.E"/>\n
+      <table:table-header-rows>\n
+        <table:table-row>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'P1\'>Title</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'P1\'>Description</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.D1\'>\n
+            <text:p text:style-name=\'P1\'>Role</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+      </table:table-header-rows>\n
+      \n
+      <table:table-row tal:repeat=\'actor python:usecase.contentValues(filter={"portal_type":"Use Case Actor"})\'>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'P2\' tal:content=\'actor/getTitle\'>Title</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'P2\' tal:content=\'actor/getDescription\'>Description</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.D2\'>\n
+          <text:p text:style-name=\'P2\'\n
+                  tal:repeat="role python: actor.getUseCaseActorRoleTitleList()"\n
+                  tal:content=\'role\'>Role</text:p>\n
+        </table:table-cell>\n
+      </table:table-row>\n
+    </table:table>\n
+    \n
+    <text:h text:style-name=\'Heading 3\' text:level=\'3\'>Scenarii</text:h>\n
+    <div tal:omit-tag=\'\' tal:repeat=\'scenario  python:usecase.searchFolder(portal_type="Use Case Scenario", sort_on=(("int_index",), ("id",)))\'>\n
+    \n
+      <text:h text:style-name=\'Heading 4\' text:level=\'4\'>Scenario <span tal:replace=\'repeat/scenario/number\'>1</span> : <span tal:replace=\'python: scenario.getObject().getTitle()\'>Scenario Title</span></text:h>\n
+    \n
+    <text:p text:style-name=\'Text body\' tal:content=\'python: scenario.getObject().getDescription()\'>Scenario Description</text:p>\n
+    \n
+    <table:table table:style-name=\'Tableau1\' table:name=\'Tableau1\'>\n
+      \n
+      <table:table-column table:style-name="Tableau1.A"/>\n
+      <table:table-column table:style-name="Tableau1.B"/>\n
+      <table:table-column table:style-name="Tableau1.C"/>\n
+      <table:table-column table:style-name="Tableau1.D"/>\n
+      \n
+      <table:table-header-rows>\n
+        <table:table-row>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'P1\'>No</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'P1\'>Description</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A1\'>\n
+            <text:p text:style-name=\'P1\'>Actor</text:p>\n
+          </table:table-cell>\n
+          <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.D1\'>\n
+            <text:p text:style-name=\'P1\'>Requirements</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+      </table:table-header-rows>\n
+      <table:table-row tal:repeat="step python: scenario.getObject().searchFolder(portal_type=\'Use Case Scenario Step\', sort_on=((\'int_index\',), (\'id\',)))">\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'P2\' tal:content=\'repeat/step/number\'>Index</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'P2\' tal:content=\'python: step.getObject().getDescription()\'>Description</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
+          <text:p text:style-name=\'P2\' tal:content=\'python: step.getObject().getSourceSectionTitle()\'>Actor</text:p>\n
+        </table:table-cell>\n
+        <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.D2\'>\n
+          <tal:block tal:condition="python: step.getObject().getRequirementList()">\n
+            <text:p text:style-name=\'P2\'\n
+                    tal:repeat="ref python: step.getObject().getRequirementTitleList()"\n
+                    tal:content=\'ref\'>Actor</text:p>                    \n
+          </tal:block>\n
+          <tal:block tal:condition="python:not step.getObject().getRequirementList()">\n
+            <text:p text:style-name=\'P2\'>N.A.</text:p> \n
+          </tal:block>\n
+        </table:table-cell>\n
+      </table:table-row>\n
+    </table:table>\n
+    </div>\n
+\n
+     \n
+\n
+        \n
+    </tal:block>\n
+    </div>\n
+  </office:body>\n
+</office:document-content>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.sun.xml.writer</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>UseCaseModule_viewUseCaseReportAsSxw</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>UseCaseModule_UseCaseReportStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

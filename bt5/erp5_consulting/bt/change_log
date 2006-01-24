@@ -1,3 +1,6 @@
+2005-01-24 yo
+* Perform refactoring of the Use Case Module.
+
 2005-11-03 Kevin
 * Change some object's title to respect ERP5 naming conventions.
 * Clean Use Case scenarii UI.

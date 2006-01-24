@@ -94,10 +94,7 @@
                 <item>
                     <key>                 <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_actor_count</string>
-                        <string>listbox_use_case_scenario_count</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -127,7 +124,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>UseCaseModule_viewUseCaseList</string> </value>
+            <value> <string>Folder_viewContentList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -143,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Use Case</string> </value>
+            <value> <string>Use Cases</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

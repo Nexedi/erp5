@@ -1,0 +1,10 @@
+Document Analysis Lexicon Item | DocumentAnalysisLexiconItem
+Document Analysis Lexicon | DocumentAnalysisLexicon
+Feature | Document
+Feature | DublinCore
+Feature | Folder
+Feature | XMLObject
+Use Case Actor | SortIndex
+Use Case Scenario Step | SortIndex
+Use Case Scenario | SortIndex
+Use Case | SortIndex

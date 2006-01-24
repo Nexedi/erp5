@@ -1,0 +1,26 @@
+<property_sheet_list>
+ <portal_type id="Document Analysis Lexicon">
+  <item>DocumentAnalysisLexicon</item>
+ </portal_type>
+ <portal_type id="Document Analysis Lexicon Item">
+  <item>DocumentAnalysisLexiconItem</item>
+ </portal_type>
+ <portal_type id="Feature">
+  <item>Folder</item>
+  <item>XMLObject</item>
+  <item>DublinCore</item>
+  <item>Document</item>
+ </portal_type>
+ <portal_type id="Use Case">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Use Case Actor">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Use Case Scenario">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Use Case Scenario Step">
+  <item>SortIndex</item>
+ </portal_type>
+</property_sheet_list>

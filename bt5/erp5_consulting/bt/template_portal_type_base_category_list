@@ -1,0 +1,13 @@
+Document Analysis Document | document_analysis_document_type
+Document Analysis Lexicon Item | lexicon_item_type
+Document Analysis Lexicon Item | lexicon_item_ubm
+Document Analysis Lexicon | lexicon_source_type
+Feature | feature_group
+Feature | feature_state
+Use Case Actor | group
+Use Case Actor | site
+Use Case Actor | use_case_actor_role
+Use Case Scenario Step | requirement
+Use Case Scenario Step | source_section
+Use Case Scenario | requirement
+Use Case | requirement

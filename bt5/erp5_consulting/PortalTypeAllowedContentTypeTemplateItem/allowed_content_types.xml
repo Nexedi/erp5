@@ -1,0 +1,36 @@
+<allowed_content_type_list>
+ <portal_type id="Document Analysis">
+  <item>Document Analysis Lexicon</item>
+  <item>Document Analysis Document</item>
+ </portal_type>
+ <portal_type id="Document Analysis Document">
+  <item>Document Analysis Document Item</item>
+  <item>Document Analysis Document Decision Item</item>
+ </portal_type>
+ <portal_type id="Document Analysis Lexicon">
+  <item>Document Analysis Lexicon Item</item>
+ </portal_type>
+ <portal_type id="Document Analysis Module">
+  <item>Document Analysis</item>
+ </portal_type>
+ <portal_type id="Feature">
+  <item>Feature</item>
+ </portal_type>
+ <portal_type id="Feature Document">
+  <item>Feature</item>
+ </portal_type>
+ <portal_type id="Feature Module">
+  <item>Feature Document</item>
+ </portal_type>
+ <portal_type id="Use Case">
+  <item>Use Case Scenario</item>
+  <item>Image</item>
+  <item>Use Case Actor</item>
+ </portal_type>
+ <portal_type id="Use Case Module">
+  <item>Use Case</item>
+ </portal_type>
+ <portal_type id="Use Case Scenario">
+  <item>Use Case Scenario Step</item>
+ </portal_type>
+</allowed_content_type_list>

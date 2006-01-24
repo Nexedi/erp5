@@ -338,6 +338,10 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -347,7 +351,7 @@
                         </tuple>
                         <tuple>
                           <string>source_section</string>
-                          <string>Role</string>
+                          <string>Actor</string>
                         </tuple>
                       </list>
                     </value>
@@ -393,6 +397,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -402,7 +410,7 @@
                         </tuple>
                         <tuple>
                           <string>source_section</string>
-                          <string>Role</string>
+                          <string>Actor</string>
                         </tuple>
                       </list>
                     </value>
@@ -513,6 +521,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
                           <string>id</string>
                           <string>ID</string>
                         </tuple>
@@ -522,12 +534,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

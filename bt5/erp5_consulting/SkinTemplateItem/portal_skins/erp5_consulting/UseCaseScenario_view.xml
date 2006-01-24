@@ -102,6 +102,7 @@
                         <string>listbox_description</string>
                         <string>listbox_title</string>
                         <string>listbox_source_section</string>
+                        <string>listbox_int_index</string>
                       </list>
                     </value>
                 </item>
@@ -109,7 +110,7 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
+                        <string>my_int_index</string>
                         <string>my_title</string>
                       </list>
                     </value>
@@ -117,7 +118,9 @@
                 <item>
                     <key>                 <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_requirement_title_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

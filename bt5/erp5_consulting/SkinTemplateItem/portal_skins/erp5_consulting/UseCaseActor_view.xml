@@ -96,10 +96,10 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
+                        <string>my_int_index</string>
                         <string>my_title</string>
-                        <string>my_location</string>
-                        <string>my_group</string>
+                        <string>my_group_free_text</string>
+                        <string>my_site_free_text</string>
                       </list>
                     </value>
                 </item>

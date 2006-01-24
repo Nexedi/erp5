@@ -1,0 +1,31 @@
+<base_category_list>
+ <portal_type id="Document Analysis Document">
+  <item>document_analysis_document_type</item>
+ </portal_type>
+ <portal_type id="Document Analysis Lexicon">
+  <item>lexicon_source_type</item>
+ </portal_type>
+ <portal_type id="Document Analysis Lexicon Item">
+  <item>lexicon_item_type</item>
+  <item>lexicon_item_ubm</item>
+ </portal_type>
+ <portal_type id="Feature">
+  <item>feature_group</item>
+  <item>feature_state</item>
+ </portal_type>
+ <portal_type id="Use Case">
+  <item>requirement</item>
+ </portal_type>
+ <portal_type id="Use Case Actor">
+  <item>site</item>
+  <item>use_case_actor_role</item>
+  <item>group</item>
+ </portal_type>
+ <portal_type id="Use Case Scenario">
+  <item>requirement</item>
+ </portal_type>
+ <portal_type id="Use Case Scenario Step">
+  <item>requirement</item>
+  <item>source_section</item>
+ </portal_type>
+</base_category_list>

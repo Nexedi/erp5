@@ -41,22 +41,22 @@
  </chain>
  <chain>
   <type>Use Case</type>
-  <workflow>(Default)</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Use Case Actor</type>
-  <workflow>(Default)</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Use Case Module</type>
-  <workflow>(Default)</workflow>
+  <workflow></workflow>
  </chain>
  <chain>
   <type>Use Case Scenario</type>
-  <workflow>(Default)</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Use Case Scenario Step</type>
-  <workflow>(Default)</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

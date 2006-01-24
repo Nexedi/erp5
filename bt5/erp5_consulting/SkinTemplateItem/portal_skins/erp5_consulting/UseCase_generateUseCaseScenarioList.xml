@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from string import zfill\n
+\n
+destination_obj = context.getObject()\n
+\n
+first_level_type  = \'Use Case Scenario\'\n
+second_level_type = \'Use Case Scenario Step\'\n
+\n
+# this list contain all input line items\n
+items = []\n
+\n
+# get the user information\n
+for inputline in listbox:\n
+  if inputline.has_key(\'listbox_key\'):\n
+    scenario = {}\n
+    scenario[\'id\'] = int(inputline[\'listbox_key\'])\n
+    scenario[\'title\'] = inputline[\'scenario_title\']\n
+    scenario[\'step_title\'] = inputline[\'step_title\']\n
+    scenario[\'step_description\'] = inputline[\'step_description\']\n
+    scenario[\'step_actor\'] = inputline[\'step_actor\']\n
+    items.append(scenario)\n
+\n
+# sort the list by id to have the same order of the user\n
+items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+\n
+clean_input_lines = {}\n
+has_1st_level = False\n
+has_2nd_level = False\n
+new_1st_level_item = None\n
+\n
+# scan every fast input line to create a structured and comprehensive list of items\n
+for item in items:\n
+  # the item has a first level\n
+  if item[\'title\'] not in (\'\', None):\n
+    has_1st_level = True\n
+    new_1st_level_item = []\n
+    new_1st_level_key = item[\'title\']\n
+  else:\n
+    has_1st_level = False\n
+\n
+  # the item has a second level, so built it\n
+  if item[\'step_title\'] not in (\'\', None):\n
+    has_2nd_level = True\n
+    new_2nd_level_item = {}\n
+    new_2nd_level_item[\'title\'] = item[\'step_title\']\n
+    if item[\'step_title\'] not in (\'\', None):\n
+      new_2nd_level_item[\'description\'] = item[\'step_description\']\n
+      new_2nd_level_item[\'actor\'] = item[\'step_actor\']\n
+    else:\n
+      new_2nd_level_item[\'description\'] = None\n
+      new_2nd_level_item[\'actor\'] = None\n
+  else:\n
+    has_2nd_level = False\n
+\n
+  if has_2nd_level == True and new_1st_level_item != None:\n
+    new_1st_level_item.append(new_2nd_level_item)\n
+\n
+  if has_1st_level == True:\n
+    if clean_input_lines.has_key(new_1st_level_key):\n
+      new_1st_level_item = clean_input_lines[new_1st_level_key] + new_1st_level_item\n
+    clean_input_lines[new_1st_level_key] = new_1st_level_item\n
+\n
+# get the next int index\n
+result = destination_obj.searchFolder(portal_type = first_level_type, sort_on = ((\'int_index\', \'DESC\'),), limit = 1)\n
+try:\n
+  int_index = result[0].getObject().getIntIndex() + 1\n
+except:\n
+  int_index = 1\n
+\n
+# create items objects and sub-objects\n
+for key in clean_input_lines.keys():\n
+  new_1st_level_obj = destination_obj.newContent( portal_type = first_level_type\n
+                                                , int_index   = int_index\n
+                                                , title       = key\n
+                                                )\n
+  int_index += 1\n
+\n
+  second_level_int_index = 1\n
+  for second_level in clean_input_lines[key]:\n
+    new_2nd_level_obj = new_1st_level_obj.newContent( portal_type    = second_level_type\n
+                                                    , int_index      = second_level_int_index\n
+                                                    , title          = second_level[\'title\']\n
+                                                    , description    = second_level[\'description\']\n
+                                                    , source_section = second_level[\'actor\']\n
+                                                    )\n
+    second_level_int_index += 1\n
+\n
+# return to the module\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/view?portal_status_message=\' + first_level_type.replace(\' \', \'+\') + \'s+Added.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/UseCase_generateUseCaseScenarioList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>destination_obj</string>
+                            <string>first_level_type</string>
+                            <string>second_level_type</string>
+                            <string>items</string>
+                            <string>_getiter_</string>
+                            <string>inputline</string>
+                            <string>scenario</string>
+                            <string>int</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>clean_input_lines</string>
+                            <string>False</string>
+                            <string>has_1st_level</string>
+                            <string>has_2nd_level</string>
+                            <string>None</string>
+                            <string>new_1st_level_item</string>
+                            <string>item</string>
+                            <string>True</string>
+                            <string>new_1st_level_key</string>
+                            <string>new_2nd_level_item</string>
+                            <string>result</string>
+                            <string>int_index</string>
+                            <string>key</string>
+                            <string>new_1st_level_obj</string>
+                            <string>second_level_int_index</string>
+                            <string>second_level</string>
+                            <string>new_2nd_level_obj</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>UseCase_generateUseCaseScenarioList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

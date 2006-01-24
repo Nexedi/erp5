@@ -1,0 +1,59 @@
+Document Analysis Document Decision Item | print_pdf
+Document Analysis Document Decision Item | view
+Document Analysis Document Item | print_pdf
+Document Analysis Document Item | view
+Document Analysis Document | document_decision_items_fast_input
+Document Analysis Document | document_items_fast_input
+Document Analysis Document | print_pdf
+Document Analysis Document | view
+Document Analysis Document | view_decision_items
+Document Analysis Lexicon Item | print_pdf
+Document Analysis Lexicon Item | view
+Document Analysis Lexicon | lexicon_items_fast_input
+Document Analysis Lexicon | print_pdf
+Document Analysis Lexicon | view
+Document Analysis Module | list_ui
+Document Analysis Module | sort_on
+Document Analysis Module | view
+Document Analysis | documents_fast_input
+Document Analysis | lexicons_fast_input
+Document Analysis | list_ui
+Document Analysis | sort_on
+Document Analysis | view
+Document Analysis | view_lexicons
+Feature Document | fast_input
+Feature Document | list_ui
+Feature Document | print_pdf
+Feature Document | sort_on
+Feature Document | view
+Feature Module | fast_input
+Feature Module | list_ui
+Feature Module | print_pdf
+Feature Module | sort_on
+Feature Module | view
+Feature | fast_input
+Feature | print_pdf
+Feature | view
+Use Case Actor | history
+Use Case Actor | metadata
+Use Case Actor | print_pdf
+Use Case Actor | view
+Use Case Module | list_ui
+Use Case Module | sort_on
+Use Case Module | use_case_report
+Use Case Module | view
+Use Case Scenario Step | history
+Use Case Scenario Step | metadata
+Use Case Scenario Step | print_pdf
+Use Case Scenario Step | view
+Use Case Scenario | history
+Use Case Scenario | metadata
+Use Case Scenario | print_pdf
+Use Case Scenario | view
+Use Case | actor_fast_input
+Use Case | actors
+Use Case | history
+Use Case | metadata
+Use Case | print_pdf
+Use Case | scenarii_fast_input
+Use Case | view
