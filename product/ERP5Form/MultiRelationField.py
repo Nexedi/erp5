@@ -349,10 +349,10 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
       relation_uid_list = REQUEST.get(relation_field_id, None)
       relation_field_sub_id = 'relation_%s_0' % ( key )
       if checkSameKeys( value_list, current_value_list ) and (relation_uid_list is None)  and (not REQUEST.has_key( relation_field_sub_id )):
-        # XXX Will be interpreted by Base_edit as "do nothing"
-        #return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, None)
-        return None
-
+        # Will be interpreted by Editor as "do nothing"
+        return MultiRelationEditor(field.id, base_category, 
+                                   portal_type, portal_type_item, 
+                                   catalog_index, relation_setter_id, None)
       else:
 
         relation_field_id = 'relation_%s' % ( key )
