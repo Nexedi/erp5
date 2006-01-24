@@ -273,8 +273,8 @@ class Movement(XMLObject, Amount):
     return None
 
   # Asset price calculation
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSourceInventoriatedTotalAssetPrice')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceInventoriatedTotalAssetPrice')
   def getSourceInventoriatedTotalAssetPrice(self):
     """
       Returns a price which can be used to calculate stock value (asset)
@@ -291,16 +291,19 @@ class Movement(XMLObject, Amount):
       to calculate asset prices based on calculation rules (FIFO,
       FILO, AVERAGE, etc.).
     """
-    result = self.getSourceTotalAssetPrice() # This is what we use for accounting
-    if result is not None: return result
+    # This is what we use for accounting
+    result = self.getSourceTotalAssetPrice()
+    if result is not None:
+      return result
     quantity = self.getQuantity()
-    if quantity > 0.0:
-      return None                       # Outgoing quantity
-    elif quantity < 0.0:
-      return self.getSourceAssetPrice() * quantity # XXX: price should be converted to the source currency
+    if quantity :
+      source_asset_price = self.getSourceAssetPrice()
+      if source_asset_price :
+        return source_asset_price * quantity
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationInventoriatedTotalAssetPrice')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDestinationInventoriatedTotalAssetPrice')
   def getDestinationInventoriatedTotalAssetPrice(self):
     """
       Returns a price which can be used to calculate stock value (asset)
@@ -308,13 +311,15 @@ class Movement(XMLObject, Amount):
       Asset price is used for calculation of inventory asset value
       and for accounting
     """
-    result = self.getDestinationTotalAssetPrice() # This is what we use for accounting
-    if result is not None: return result
+    # This is what we use for accounting
+    result = self.getDestinationTotalAssetPrice()
+    if result is not None:
+      return result
     quantity = self.getQuantity()
-    if quantity < 0.0:
-      return None                       # Outgoing quantity
-    elif quantity > 0.0:
-      return self.getDestinationAssetPrice() * quantity # XXX: price should be converted to the dest. currency
+    if quantity :
+      destination_asset_price = self.getDestinationAssetPrice()
+      if destination_asset_price :
+        return destination_asset_price * quantity
     return None
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -336,14 +341,16 @@ class Movement(XMLObject, Amount):
     return self.getPrice() # XXX Not implemented yet TODO
 
   # Causality computation
-  security.declareProtected(Permissions.View, 'isConvergent')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isConvergent')
   def isConvergent(self):
     """
       Returns 0 if the target is not met
     """
     return int(not self.isDivergent())
 
-  security.declareProtected(Permissions.View, 'isDivergent')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isDivergent')
   def isDivergent(self):
     """
       XXX documentation out of sync with actual use
@@ -383,7 +390,8 @@ class Movement(XMLObject, Amount):
     return self.getDeliveryValue()
 
   # Simulation
-  security.declareProtected(Permissions.View, 'isSimulated')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isSimulated')
   def isSimulated(self):
     return (len(self.getDeliveryRelatedValueList()) > 0) or\
            (len(self.getOrderRelatedValueList()) > 0)
