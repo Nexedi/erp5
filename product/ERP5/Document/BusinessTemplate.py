@@ -4079,6 +4079,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if item_name in item_list_1:
         f1 = StringIO()
         f2 = StringIO()
+        # remove uneeded property
+        new_object.removeProperties()
+        installed_object.removeProperties()
         OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
         OFS.XMLExportImport.exportXML(installed_object._p_jar, installed_object._p_oid, f2)
         new_obj_xml = f1.getvalue()
