@@ -546,8 +546,17 @@ class ListBoxWidget(Widget.Widget):
           list_action += '&reset=1'
         object_list = []
 
-        # This translate() method has the same prototype as the one defined
-        #   in Translation Service, but use Localizer.
+        ##################
+        # This translate() method is a binding between Translation Service product
+        # and Localizer. It has the same prototype as the one defined in Translation
+        # Service, but use Localizer.
+        ##################
+        # Template() is a new method of python 2.4, that's why we have the string.py
+        #   file in ERP5Form.
+        try:
+          from string import Template
+        except ImportError:
+          from Products.ERP5Form.string import Template
         global localizer, msg_catalog_binding
         localizer = portal_object.Localizer
         msg_catalog_binding = { "ui"     : "erp5_ui"
@@ -570,7 +579,7 @@ class ListBoxWidget(Widget.Widget):
                                                 , default = default
                                                 )
           if type(mapping) is type({}):
-            return string.Template(translated_str).substitute(mapping)
+            return Template(translated_str).substitute(mapping)
           return translated_str
 
         # Make sure list_result_item is defined
