@@ -209,11 +209,11 @@ Person Module | search_phones
 Person Module | sort_on
 Person Module | view
 Person | assignment
-Person | bank_account
 Person | career
 Person | details
 Person | document_view
 Person | exchange
+Person | financial_view
 Person | history
 Person | jump_to_accounting
 Person | jump_to_opportunity

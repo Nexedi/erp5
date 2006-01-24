@@ -1,10 +1,4 @@
 <property_sheet_list>
- <portal_type id="Bank Account">
-  <item>BankAccount</item>
- </portal_type>
- <portal_type id="Credit Card">
-  <item>CreditCard</item>
- </portal_type>
  <portal_type id="Trash Bin">
   <item>Base</item>
   <item>Task</item>
