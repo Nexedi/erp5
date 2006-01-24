@@ -134,7 +134,7 @@ class AccountingTransactionLine(DeliveryLine):
       self._setSource(kw['source'])
     elif kw.has_key('destination') :
       self._setDestination(kw['destination'])
-    DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
+    DeliveryLine._edit(self, REQUEST=REQUEST, force_update=force_update, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getInventoriatedQuantity')
@@ -166,40 +166,33 @@ class AccountingTransactionLine(DeliveryLine):
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None):
     """
-      The inventoriated quantity converted in a default unit
-
-      For assortments, returns the inventoriated quantity in terms of
-      number of items in the assortemnt.
-
-      For accounting, returns the quantity converted in a default unit
+      On accounting transaction lines, the price is always set to 1.
+      We use the `quantity` property for the default quantity, and the
+      converted value for source in getSourceInventoriatedTotalAssetPrice
+      and getDestinationInventoriatedTotalAssetPrice for destination.
     """
-    result = self.getInventoriatedQuantity()
-    resource = self.getResourceValue()
-    source_section = self.getSourceSectionValue()
+    return 1.0 
 
-    if source_section is not None and \
-       resource is not None and \
-       hasattr(resource, 'convertCurrency') :
-      return resource.convertCurrency(result,
-                                      source_section.getPriceCurrencyValue())
-    return None
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSourceAssetPrice')
   def getSourceAssetPrice(self):
     """
-      The price is set to 1.0 because we do not want to implement automatic currency
-      conversion in accounting. Users must define the conversion manually in accounting.
-      This is required by accounting law. One can not account USD (in a EUR based company)
-      without defining the equivalent in EUR.
+      The price is set to 1.0 because we do not want to implement
+      automatic currency conversion in accounting. Users must define the
+      conversion manually in accounting.  This is required by accounting
+      law. One can not account USD (in a EUR based company) without
+      defining the equivalent in EUR.
     """
     return 1.0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationAssetPrice')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationAssetPrice')
   def getDestinationAssetPrice(self):
     """
-      The price is set to 1.0 because we do not want to implement automatic currency
-      conversion in accounting. Users must define the conversion manually in accounting.
-      This is required by accounting law. One can not account USD (in a EUR based company)
-      without defining the equivalent in EUR.
+      The price is set to 1.0 because we do not want to implement
+      automatic currency conversion in accounting. Users must define the
+      conversion manually in accounting.  This is required by accounting
+      law. One can not account USD (in a EUR based company) without
+      defining the equivalent in EUR.
     """
     return 1.0
