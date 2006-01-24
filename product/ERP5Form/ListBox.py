@@ -546,8 +546,8 @@ class ListBoxWidget(Widget.Widget):
           list_action += '&reset=1'
         object_list = []
 
-        #translate = portal_object.translation_service.translate
-        # This translate() method has the same prototype as the one defined in Translation Service
+        # This translate() method has the same prototype as the one defined
+        #   in Translation Service, but use Localizer.
         global localizer, msg_catalog_binding
         localizer = portal_object.Localizer
         msg_catalog_binding = { "ui"     : "erp5_ui"
@@ -565,10 +565,13 @@ class ListBoxWidget(Widget.Widget):
           localizer_cat = localizer[localizer_cat_id]
           if default == None:
             default = []
-          return localizer_cat.gettext( message = msgid
-                                      , lang    = None
-                                      , default = default
-                                      )
+          translated_str = localizer_cat.gettext( message = msgid
+                                                , lang    = target_language
+                                                , default = default
+                                                )
+          if type(mapping) is type({}):
+            return string.Template(translated_str).substitute(mapping)
+          return translated_str
 
         # Make sure list_result_item is defined
         list_result_item = []
