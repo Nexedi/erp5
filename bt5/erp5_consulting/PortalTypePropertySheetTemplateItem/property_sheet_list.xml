@@ -2,9 +2,6 @@
  <portal_type id="Document Analysis Lexicon">
   <item>DocumentAnalysisLexicon</item>
  </portal_type>
- <portal_type id="Document Analysis Lexicon Item">
-  <item>DocumentAnalysisLexiconItem</item>
- </portal_type>
  <portal_type id="Feature">
   <item>Folder</item>
   <item>XMLObject</item>
