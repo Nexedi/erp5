@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.10
-%define release 6
+%define release 8
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -15,7 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
-Requires:  erp5-zope >= 2.7.8, MySQL-Max >= 5, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile
+Requires:  erp5-zope >= 2.7.8, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile, zope-TimerService
 
 #----------------------------------------------------------------------
 %description
@@ -35,6 +35,16 @@ very short time.
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{software_home}/Products
 %{__cp} -a * %{buildroot}%{software_home}/Products/
+
+cat > README.urpmi <<EOF
+
+ERP5 need a MySQL-Max version 5.x.x server to work properly. Because this server
+can be installed on another machine, we let you the choice to install it or not.
+
+If you want to let ERP5 working on a standalone machine, please install MySQL-Max
+package and its dependancies.
+
+EOF
 
 
 %clean
@@ -61,6 +71,13 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 23 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-8mdk
+- Add a README to warn user that ERP5 need a MySQL-Max server to work
+- Delete "Requires: MySQL-Max >= 5" statement
+
+* Mon Jan 23 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-7mdk
+- ERP5 Zope product also need Timer Service to make Portal Alarm Working
+
 * Mon Jan 23 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-6mdk
 - Fix bad symlink
 
