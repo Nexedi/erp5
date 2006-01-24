@@ -1493,6 +1493,27 @@ class ActionTemplateItem(ObjectTemplateItem):
     for id in id_list:
       self._archive["%s/%s" % ('portal_types', id)] = None
 
+  def _splitPath(self, path):
+    """
+      Split path tries to split a complexe path such as:
+
+      "foo/bar[id=zoo]"
+
+      into
+
+      "foo/bar", "id", "zoo"
+
+      This is used mostly for generic objects
+    """
+    # Add error checking here
+    if path.find('[') >= 0 and path.find(']') > path.find('=') and path.find('=') > path.find('['):
+      relative_url = path[0:path.find('[')]
+      id_block = path[path.find('[')+1:path.find(']')]
+      key = id_block.split('=')[0]
+      value = id_block.split('=')[1]
+      return relative_url, key, value
+    return path, None, None
+
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
@@ -1582,21 +1603,23 @@ class ActionTemplateItem(ObjectTemplateItem):
             move_down_list.append(str(index))
           obj.moveDownActions(selections=tuple(move_down_list))
 
-
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
     object_path = kw.get("object_path", None)
     if object_path is not None:
       keys = [object_path]
     else:
-      keys = self._archive.keys()
-    
+      keys = self._archive.keys()  
     for id in keys:
-      relative_url, value = id.split(' | ')
+      if  '|' in id:
+        relative_url, value = id.split(' | ')
+        key = 'id'
+      else:
+        relative_url, key, value = self._splitPath(id)        
       obj = p.unrestrictedTraverse(relative_url)
       action_list = obj.listActions()
       for index in range(len(action_list)):
-        if getattr(action_list[index], 'id') == value:
+        if getattr(action_list[index], key) == value:
           obj.deleteActions(selections=(index,))
           break
     BaseTemplateItem.uninstall(self, context, **kw)
@@ -3494,7 +3517,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         old_item = getattr(installed_bt, item_name, None)
         if new_item is not None:
           if old_item is not None:
-            LOG('compare object item', 0, item_name)
             modified_object = new_item.preinstall(context=local_configuration, installed_bt=old_item)
             if len(modified_object) > 0:
               modified_object_list.update(modified_object)
