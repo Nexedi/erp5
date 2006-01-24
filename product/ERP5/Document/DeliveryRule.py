@@ -134,11 +134,15 @@ class DeliveryRule(Rule):
                       delivery_value=delivery_movement,
                       # XXX Do we need to copy the quantity
                       # Why not the resource, the variation,...
+                      # force_update is required in order
+                      # to make sure the quantity is stored
+                      # on the movement
                       quantity=delivery_movement.getQuantity(),
                       variation_category_list=\
                         delivery_movement.getVariationCategoryList(),
                       delivery_ratio=1,
-                      deliverable=1)
+                      deliverable=1,
+                      force_update=1)
 
           except AttributeError:
             LOG('ERP5: WARNING', 0,
