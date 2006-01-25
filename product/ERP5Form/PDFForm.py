@@ -60,9 +60,9 @@ python_version = sys.version.split(' ')[0].split('.')
 python_version = int(python_version[0]) * 100 +\
                  int(python_version[1])
 zope_version = App.version_txt.getZopeVersion()
-zope_version = int(zope_version(0)) * 100 * 100 +\
-               int(zope_version(1)) * 100 +\
-               int(zope_version(2))
+zope_version = int(zope_version[0]) * 100 * 100 +\
+               int(zope_version[1]) * 100 +\
+               int(zope_version[2])
 if python_version >= 204 and zope_version >= 20708:
   PDFTK_EXECUTABLE = "pdftk"
 
