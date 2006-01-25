@@ -85,7 +85,7 @@ if packing_list_state == "draft":\n
 packing_list.startBuilding()\n
 # Then an activity should put the causality state in diverged or solved\n
 # XXX after_method_id is not good, it should be after_group_id, but not yet implemented\n
-packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImmediateReindexObject\',\'Delivery_confirm\')).updateCausalityState()\n
+packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImmediateReindexObject\',\'Delivery_confirm\')).updateCausalityState(fast=1)\n
 </string> </value>
         </item>
         <item>

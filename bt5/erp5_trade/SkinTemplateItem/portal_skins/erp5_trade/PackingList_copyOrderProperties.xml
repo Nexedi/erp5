@@ -69,22 +69,14 @@
             <value> <string>packing_list = context\n
 related_order = packing_list.getCausalityValue()\n
 \n
-packing_list.edit(\n
-  comment = related_order.getComment(),\n
-  delivery_mode = related_order.getDeliveryMode(),\n
-#   destination_section_value = related_order.getDestinationSectionValue(),\n
-#   destination_value = related_order.getDestinationValue(),\n
-  incoterm = related_order.getIncoterm(),\n
-  source_administration_value = related_order.getSourceAdministrationValue(),\n
-#   source_section_value = related_order.getSourceSectionValue(),\n
-#   source_value = related_order.getSourceValue(),\n
-#   start_date = related_order.getStartDate(),\n
-#   stop_date = related_order.getStopDate(),\n
-  title = related_order.getTitle()\n
-)\n
-\n
-# If security definitions are implement on the packing list, it is time to apply them\n
-packing_list.assignRoleToSecurityGroup()\n
+if packing_list.getSimulationState()==\'draft\':\n
+  packing_list.edit(\n
+    comment = related_order.getComment(),\n
+    delivery_mode = related_order.getDeliveryMode(),\n
+    incoterm = related_order.getIncoterm(),\n
+    source_administration_value = related_order.getSourceAdministrationValue(),\n
+    title = related_order.getTitle()\n
+  )\n
 </string> </value>
         </item>
         <item>
