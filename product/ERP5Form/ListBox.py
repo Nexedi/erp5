@@ -1086,7 +1086,7 @@ class ListBoxWidget(Widget.Widget):
           # Reset original value
           selection.edit(report = None)
         else:
-          #LOG('ListBox 612', 0, str((selection_name, selection.__dict__)))
+          #LOG('ListBox 1054', 0, str((selection_name, selection.__dict__, selection)))
           if list_method is not None:
             if count_method is not None and not selection.invert_mode and render_format == 'html':
               #LOG('ListBox', 0, 'use count_method %r' % count_method)
@@ -1765,14 +1765,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   td_align = "right"
                 else:
                   td_align = "left"
-                # It is safer to convert attribute_value to an unicode string, because
-                # it might be utf-8.
-                if type(attribute_value) == type(''):
-                  attribute_value = unicode(attribute_value, 'utf-8')
-                  attribute_original_value = attribute_value
-                elif attribute_value is None:
-                  attribute_original_value = None
-                  attribute_value = ''
+                  if attribute_value is None:
+                    attribute_original_value = None
+                    attribute_value = ''
+                  elif type(attribute_value) != type(u''):
+                    attribute_value = unicode(str(attribute_value), 'utf-8')
+                    attribute_original_value = attribute_value
                 if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias)) and not is_summary:
                   key = my_field.id + '_%s' % o.uid
                   if field_errors.has_key(key):
@@ -1867,7 +1865,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         # XXX FIXME: except without Error name
                         pass
                   # Generate appropriate HTML
-                  if type(attribute_value) in [type(''), type(u'')]:
+                  if type(attribute_value) == type(u''):
                     attribute_value = cgi.escape(attribute_value)
                   if object_url is None:
                     list_body_append(
