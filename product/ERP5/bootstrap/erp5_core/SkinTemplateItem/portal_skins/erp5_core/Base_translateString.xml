@@ -66,11 +66,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(\'Base_TranslateString (%s)\' % msg,\n
-                   \'Base_TranslateString breaks naming convention and will be removed, \'\\\n
-                   \'please use Base_translateString instead\')\n
-\n
-return context.Base_translateString(msg, catalog=catalog, encoding=encoding, **kw)\n
+            <value> <string>from Products.CMFCore.utils import getToolByName\n
+translation_service = getToolByName(context, \'Localizer\', None)\n
+if translation_service is not None :\n
+  return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
+else :\n
+  return msg\n
 </string> </value>
         </item>
         <item>
@@ -81,7 +82,7 @@ return context.Base_translateString(msg, catalog=catalog, encoding=encoding, **k
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_core/Base_TranslateString</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_translateString</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -121,8 +122,12 @@ return context.Base_translateString(msg, catalog=catalog, encoding=encoding, **k
                             <string>catalog</string>
                             <string>encoding</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
                             <string>context</string>
+                            <string>None</string>
+                            <string>translation_service</string>
+                            <string>_getattr_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
@@ -143,7 +148,7 @@ return context.Base_translateString(msg, catalog=catalog, encoding=encoding, **k
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_TranslateString</string> </value>
+            <value> <string>Base_translateString</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
