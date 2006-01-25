@@ -12,6 +12,9 @@
 #
 ##############################################################################
 
+from Products.CMFCore.utils import getToolByName
+
+
 # Template() is a new method of python 2.4, that's why we have the string.py
 #   file in ERP5Form.
 try:
@@ -35,7 +38,7 @@ class LocalizerTranslationService:
                               }
 
     # Get Localizer
-    localizer = context.getPortalObject().Localizer
+    localizer = getToolByName(context, 'Localizer')
     # Get the Localizer catalog id
     catalog_id = None
     if domain in message_catalog_aliases.keys():
@@ -47,7 +50,8 @@ class LocalizerTranslationService:
       return msgid
     catalog_obj = localizer[catalog_id]
     # Adapt Translation Service default value to the Localizer one
-    if default == None: default = []
+    if default == None:
+      default = msgid
     # Call the Message Catalog gettext method
     translated_str = catalog_obj.gettext( message = msgid
                                         , lang    = target_language
