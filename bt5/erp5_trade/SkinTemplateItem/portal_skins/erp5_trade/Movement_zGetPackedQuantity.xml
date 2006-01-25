@@ -57,9 +57,9 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>explanation_uid</string>
-                            <string>resource_uid</string>
-                            <string>variation_text</string>
+<string>explanation_uid</string>
+<string>resource_uid</string>
+<string>variation_text</string>
                           </list>
                         </value>
                     </item>
@@ -139,7 +139,7 @@ WHERE\n
   AND movement.resource_uid = <dtml-sqlvar resource_uid type="int">\n
 </dtml-if>\n
 <dtml-if variation_text>\n
-  AND movement.variation_text = "<dtml-var variation_text>"\n
+  AND movement.variation_text = <dtml-sqlvar variation_text type="string">\n
 </dtml-if>\n
 
 
@@ -194,7 +194,7 @@ WHERE\n
   AND movement.resource_uid = <dtml-sqlvar resource_uid type="int">\n
 </dtml-if>\n
 <dtml-if variation_text>\n
-  AND movement.variation_text = "<dtml-var variation_text>"\n
+  AND movement.variation_text = <dtml-sqlvar variation_text type="string">\n
 </dtml-if>\n
 
 
