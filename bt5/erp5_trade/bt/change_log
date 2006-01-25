@@ -1,3 +1,10 @@
+2005-01-24 Seb
+* call updateCausalityState with fast option in SalePackingList_copyOrderProperties
+* in the case we add new lines to an existing packing_list already confirmed, do not delete data in PackingList_copyOrderProperties
+
+2005-01-21 JPS
+* Removed support for assignRoleToSecurityGroup in PackingList_copyOrderProperties and moved to dedicated script
+
 2005-01-21 JPS
 * Added support for assignRoleToSecurityGroup in PackingList_copyOrderProperties
 
