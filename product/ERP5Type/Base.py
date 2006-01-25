@@ -1050,6 +1050,26 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return self
 
+  def asSqlExpression(self, strict_membership=0, table='category', base_category = None):
+    """
+      Any document can be used as a Category. It can therefore
+      serve in a Predicate and must be rendered as an sql expression. This
+      can be useful to create reporting trees based on the
+      ZSQLCatalog whenever documents are used rather than categories
+
+      TODO:
+        - strict_membership is not implemented
+    """
+    if type(base_category) is type('a'):
+      base_category = self.portal_categories[base_category]
+    if base_category is None:
+      sql_text = '(%s.category_uid = %s)' % \
+          (table, self.getUid())
+    else:
+      sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
+          (table, self.getUid(), table, base_category.getBaseCategoryUid())
+    return sql_text
+  
   security.declareProtected( Permissions.AccessContentsInformation, 'asParentSqlExpression' )
   def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
     """
