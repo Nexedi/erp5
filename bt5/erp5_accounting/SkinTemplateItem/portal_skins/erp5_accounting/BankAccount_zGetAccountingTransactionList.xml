@@ -247,7 +247,7 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   AND node.uid = node_category.uid\n
-  AND node_category.category_uid = <dtml-sqlvar "portal_categories.account_type.asset.bank.getUid()"  type="int">\n
+  AND node_category.category_uid = <dtml-sqlvar "portal_categories.account_type.asset.cash.getUid()"  type="int">\n
 <dtml-if node_uid>\n
   AND (\n
   <dtml-in node_uid>\n
@@ -263,13 +263,13 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity > 0\n
@@ -286,12 +286,12 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
 </dtml-if>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
-AND <dtml-var query>\n
+  AND <dtml-var query>\n
 </dtml-if>\n
 <dtml-unless stat>\n
 GROUP BY catalog.uid\n
 </dtml-unless>\n
-ORDER BY movement.start_date, movement.uid\n
+ORDER BY stock.date, movement.uid\n
 </dtml-if>\n
 
 
@@ -361,7 +361,7 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   AND node.uid = node_category.uid\n
-  AND node_category.category_uid = <dtml-sqlvar "portal_categories.account_type.asset.bank.getUid()"  type="int">\n
+  AND node_category.category_uid = <dtml-sqlvar "portal_categories.account_type.asset.cash.getUid()"  type="int">\n
 <dtml-if node_uid>\n
   AND (\n
   <dtml-in node_uid>\n
@@ -377,13 +377,13 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   )\n
 </dtml-if>\n
 <dtml-if from_date>\n
-  AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+  AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
 </dtml-if>\n
 <dtml-if at_date>\n
-  AND movement.stop_date <= <dtml-sqlvar at_date type="datetime">\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if to_date>\n
-  AND movement.stop_date < <dtml-sqlvar to_date type="datetime">\n
+  AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
   AND stock.quantity > 0\n
@@ -400,12 +400,12 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
 </dtml-if>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
-AND <dtml-var query>\n
+  AND <dtml-var query>\n
 </dtml-if>\n
 <dtml-unless stat>\n
 GROUP BY catalog.uid\n
 </dtml-unless>\n
-ORDER BY movement.start_date, movement.uid\n
+ORDER BY stock.date, movement.uid\n
 </dtml-if>\n
 
 
