@@ -6,7 +6,6 @@
   <item>Accounting Period</item>
  </portal_type>
  <portal_type id="Accounting Rule Cell">
-  <item>Sale Invoice Transaction Line</item>
   <item>Accounting Transaction Line</item>
  </portal_type>
  <portal_type id="Accounting Transaction">
@@ -46,14 +45,8 @@
  <portal_type id="Purchase Invoice Transaction">
   <item>Purchase Invoice Transaction Line</item>
  </portal_type>
- <portal_type id="Purchase Invoice Transaction Line">
-  <item>Purchase Invoice Transaction Line</item>
- </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>Sale Invoice Transaction Line</item>
   <item>Invoice Line</item>
- </portal_type>
- <portal_type id="Sale Invoice Transaction Line">
-  <item>Sale Invoice Transaction Line</item>
  </portal_type>
 </allowed_content_type_list>
