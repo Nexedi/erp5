@@ -373,7 +373,7 @@
                           <string>Source Reference</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
