@@ -76,3 +76,11 @@ class Domain(Predicate, MetaNode, MetaResource):
 
   # Declarative interfaces
   __implements__ = ( Interface.Predicate, )
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getRelativeUrl' )
+  def getRelativeUrl(self):
+    """
+      We must eliminate portal_categories in the RelativeUrl
+      since it is never present in the category list
+    """
+    return '/'.join(self.portal_url.getRelativeContentPath(self)[1:])
