@@ -613,16 +613,24 @@ class SimulationTool (BaseTool):
       Same thing as getInventory but returns an asset 
       price rather than an inventory.
       
-      NOTE: implementation could be merged with getInventory
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
+      result = self.Resource_zGetInventory(
+          src__=src__, ignore_variation=ignore_variation,
+          standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report,
+          **sql_kw)
+      if src__ :
+        return result
 
-      return self.Resource_zGetInventoryAssetPrice(
-                     src__=src__, ignore_variation=ignore_variation, 
-                     standardise=standardise, omit_simulation=omit_simulation,
-                     omit_input=omit_input, omit_output=omit_output,
-                     selection_domain=selection_domain, 
-                     selection_report=selection_report, **sql_kw)
+      total_result = 0.0
+      if len(result) > 0:
+        for result_line in result:
+          if result_line.inventory is not None:
+            total_result += result_line.total_price
+      
+      return total_result
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getCurrentInventoryAssetPrice')
