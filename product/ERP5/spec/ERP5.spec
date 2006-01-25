@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.10
-%define release 8
+%define release 9
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -66,11 +66,14 @@ fi
 
 %files
 %defattr(0644, root, root, 0755)
-%doc %{product}/VERSION.txt %{product}/README.txt %{product}/INSTALL.txt %{product}/CREDITS.txt %{product}/GPL.txt %{product}/ZPL.txt
+%doc %{product}/VERSION.txt %{product}/README.txt %{product}/INSTALL.txt %{product}/CREDITS.txt  %{product}/GPL.txt %{product}/ZPL.txt README.urpmi
 %{software_home}/Products/*
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Jan 25 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-9mdk
+- Add README.urpmi in %%doc
+
 * Mon Jan 23 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-8mdk
 - Add a README to warn user that ERP5 need a MySQL-Max server to work
 - Delete "Requires: MySQL-Max >= 5" statement
