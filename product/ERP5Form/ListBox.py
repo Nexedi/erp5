@@ -546,41 +546,10 @@ class ListBoxWidget(Widget.Widget):
           list_action += '&reset=1'
         object_list = []
 
-        ##################
-        # This translate() method is a binding between Translation Service product
-        # and Localizer. It has the same prototype as the one defined in Translation
-        # Service, but use Localizer.
-        ##################
-        # Template() is a new method of python 2.4, that's why we have the string.py
-        #   file in ERP5Form.
-        try:
-          from string import Template
-        except ImportError:
-          from Products.ERP5Form.string import Template
-        global localizer, msg_catalog_binding
+        # Get translation methods
         localizer = portal_object.Localizer
-        msg_catalog_binding = { "ui"     : "erp5_ui"
-                              , "content": "erp5_content"
-                              }
-        def translate(domain, msgid, mapping=None, context=None, target_language=None, default=None):
-          global localizer, msg_catalog_binding
-          localizer_cat_id = None
-          if domain in msg_catalog_binding.keys():
-            localizer_cat_id = msg_catalog_binding[domain]
-          else:
-            localizer_cat_id = domain
-          if localizer_cat_id not in localizer.objectIds():
-            return msgid
-          localizer_cat = localizer[localizer_cat_id]
-          if default == None:
-            default = []
-          translated_str = localizer_cat.gettext( message = msgid
-                                                , lang    = target_language
-                                                , default = default
-                                                )
-          if type(mapping) is type({}):
-            return Template(translated_str).substitute(mapping)
-          return translated_str
+        UI_ = localizer.erp5_ui.gettext
+        CT_ = localizer.erp5_content.gettext
 
         # Make sure list_result_item is defined
         list_result_item = []
@@ -1032,7 +1001,7 @@ class ListBoxWidget(Widget.Widget):
               stat_context.absolute_url = lambda x: s[0].absolute_url()
               stat_context.domain_url = s[0].getRelativeUrl()
               section_title = s[0].getTitle()
-              section_title = translate('content', section_title, section_title.decode('utf-8'))
+              section_title = CT_(section_title, default=section_title.decode('utf-8'))
               if type(section_title) == type(u''):
                 section_title = section_title.encode('utf-8')
               report_sections += [(s[0].getTitle(), 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
@@ -1210,7 +1179,7 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (translate('ui', 'Change Page'), REQUEST.URL1))
+""" % (UI_('Change Page'), REQUEST.URL1))
         else:
           pages_list_append("""\
    <td nowrap valign="middle" align="center">
@@ -1220,8 +1189,8 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (portal_url_string, translate('ui', 'Previous Page'),
-       translate('ui', 'Change Page'), REQUEST.URL1))
+""" % (portal_url_string, UI_('Previous Page'),
+       UI_('Change Page'), REQUEST.URL1))
         for p in range(0, total_pages):
           if p == current_page:
             selected = 'selected'
@@ -1230,8 +1199,7 @@ class ListBoxWidget(Widget.Widget):
           pages_list_append('<option %s value="%s">%s</option>\n' \
                   % (selected,
                      p * lines,
-                     translate('ui', '${page} of ${total_pages}', default = '%s of %s' % (p+1, total_pages),
-                               mapping = {'page' : p+1, 'total_pages': total_pages})))
+                     UI_('%s of %s') % (p+1, total_pages)))
 
         if current_page == total_pages - 1:
           pages_list_append("""\
@@ -1248,29 +1216,22 @@ class ListBoxWidget(Widget.Widget):
     <input type="image" src="%s/images/1rightarrowv.png"
       title="%s" name="portal_selections/nextPage:method" border="0" />
    </td>
-""" % (portal_url_string, translate('ui', 'Next Page')))
+""" % (portal_url_string, UI_('Next Page')))
         # Create the header of the table - this should probably become DTML
         # Create also View Selector which enables to switch from a view mode
         # to another directly from the listbox
         #LOG('ListBox', 0, 'field_title = %s, translate(\'ui\', field_title) + %s' % (repr(field_title), repr(translate('ui', field_title))))
         pages = ''.join(pages_list)
-        format_dict = {
-          'portal_url_string' : portal_url_string,
-          'list_action' : list_action,
-          'selection_name' : selection_name,
-          'field_title' : translate('ui', field_title),
-          'pages' : pages,
-          'record_number' : translate('ui', '${number} record(s)',
-                                      default = '%s record(s)' % total_size,
-                                      mapping = { 'number' : str(total_size) }),
-          'item_number' : translate('ui', '${number} item(s) selected',
-                                     default = '%s item(s) selected' % \
-                                         len(checked_uids),
-                                    mapping = { 'number' : \
-                                        str(len(checked_uids)) }),
-          'flat_list_title': translate('ui', 'Flat List'),
-          'report_tree_title': translate('ui', 'Report Tree'),
-          'domain_tree_title': translate('ui', 'Domain Tree'),
+        format_dict = { 'portal_url_string': portal_url_string
+                      , 'list_action'      : list_action
+                      , 'selection_name'   : selection_name
+                      , 'field_title'      : UI_(field_title)
+                      , 'pages'            : pages
+                      , 'record_number'    : UI_('%s record(s)') % total_size
+                      , 'item_number'      : UI_('%s item(s) selected') % len(checked_uids)
+                      , 'flat_list_title'  : UI_('Flat List')
+                      , 'report_tree_title': UI_('Report Tree')
+                      , 'domain_tree_title': UI_('Domain Tree')
                       }
         header_list = []
         header_list_append = header_list.append
@@ -1363,11 +1324,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         list_header_list = []
         list_header_list_append = list_header_list.append
         if select:
-          format_dict = {
-                          'portal_url_string' : portal_url_string,
-                          'report_popup' : report_popup,
-                          'check_all_title' : translate('ui', 'Check All'),
-                          'uncheck_all_title' : translate('ui', 'Uncheck All'),
+          format_dict = { 'portal_url_string': portal_url_string
+                        , 'report_popup'     : report_popup
+                        , 'check_all_title'  : UI_('Check All')
+                        , 'uncheck_all_title': UI_('Uncheck All')
                         }
           list_header_list_append("""\
 <tr>%(report_popup)s
@@ -1404,9 +1364,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           if cname[0] in sort_columns_id_list:
             #LOG('ListBox', 0, 'str(cname[1]) = %s, translate(\'ui\',str(cname[1])) = %s' % (repr(str(cname[1])), repr(translate('ui',str(cname[1])))))
             list_header_list_append("<td class=\"Data\"><a href=\"%s/portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
-                (here.absolute_url(),str(selection_name),cname[0],translate('ui', cname[1]),img))
+                (here.absolute_url(),str(selection_name),cname[0],UI_(cname[1]),img))
           else:
-            list_header_list_append("<td class=\"Data\">%s</td>\n" % translate('ui', cname[1]))
+            list_header_list_append("<td class=\"Data\">%s</td>\n" % UI_(cname[1]))
         list_header_list_append("</tr>")
         list_header = ''.join(list_header_list)
 
@@ -1440,7 +1400,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
    <td class="Data" width="50" align="center" valign="middle">
      <input type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="Base_doSelect:method" />
    </td>
-""" % (report_search,portal_url_string,translate('ui', 'Action'))) # XXX Action? Is this word appropriate here?
+""" % (report_search,portal_url_string,UI_('Action'))) # XXX Action? Is this word appropriate here?
           else:
             list_search_append("""\
   <tr >
@@ -1572,7 +1532,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   section_char = '-'
                 list_body_append(
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8'))))
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, CT_(section_name, default=section_name.decode('utf-8'))))
 
                 if render_format == 'list':
 
@@ -1591,7 +1551,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   section_char = '+'
                 list_body_append(
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8'))))
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, CT_(section_name, default=section_name.decode('utf-8'))))
 
                 if render_format == 'list':
 
@@ -1773,7 +1733,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   key = my_field.id + '_%s' % o.uid
                   if field_errors.has_key(key):
                     error_css = 'Error'
-                    error_message = "<br/>%s" % translate('ui', field_errors[key].error_text)
+                    error_message = "<br/>%s" % UI_(field_errors[key].error_text)
                     # Display previous value (in case of error
                     error_list.append(field_errors.get(key))
                     display_value = REQUEST.get('field_%s' % key, attribute_value)
