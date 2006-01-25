@@ -1,3 +1,6 @@
+2005-01-25 yo
+* Fix the sort_on parameters in UseCaseModule_viewUseCaseReportAsSxw.
+
 2005-01-24 yo
 * Set the permissions of use_case_module.
 

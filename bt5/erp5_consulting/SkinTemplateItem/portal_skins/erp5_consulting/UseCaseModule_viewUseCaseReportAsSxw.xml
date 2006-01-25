@@ -188,7 +188,7 @@
     </table:table>\n
     \n
     <text:h text:style-name=\'Heading 3\' text:level=\'3\'>Scenarii</text:h>\n
-    <div tal:omit-tag=\'\' tal:repeat=\'scenario  python:usecase.searchFolder(portal_type="Use Case Scenario", sort_on=(("int_index",), ("id",)))\'>\n
+    <div tal:omit-tag=\'\' tal:repeat=\'scenario  python:usecase.searchFolder(portal_type="Use Case Scenario", sort_on=(("int_index", "ASC"), ("id", "ASC")))\'>\n
     \n
       <text:h text:style-name=\'Heading 4\' text:level=\'4\'>Scenario <span tal:replace=\'repeat/scenario/number\'>1</span> : <span tal:replace=\'python: scenario.getObject().getTitle()\'>Scenario Title</span></text:h>\n
     \n
@@ -217,7 +217,7 @@
           </table:table-cell>\n
         </table:table-row>\n
       </table:table-header-rows>\n
-      <table:table-row tal:repeat="step python: scenario.getObject().searchFolder(portal_type=\'Use Case Scenario Step\', sort_on=((\'int_index\',), (\'id\',)))">\n
+      <table:table-row tal:repeat="step python: scenario.getObject().searchFolder(portal_type=\'Use Case Scenario Step\', sort_on=((\'int_index\', \'ASC\'), (\'id\', \'ASC\')))">\n
         <table:table-cell table:value-type=\'string\' table:style-name=\'Tableau1.A2\'>\n
           <text:p text:style-name=\'P2\' tal:content=\'repeat/step/number\'>Index</text:p>\n
         </table:table-cell>\n
