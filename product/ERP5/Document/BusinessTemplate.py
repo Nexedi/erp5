@@ -4133,8 +4133,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_hidden_content_type_list = []
       bt_property_sheet_list = []
       bt_base_category_list = []
-      bt_action_list = []
-      
+      bt_action_list = getattr(self, 'template_action_path', [])  
+      bt_action_list = list(bt_action_list)
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())      
       p = self.getPortalObject()
       for id in bt_portal_types_id_list:        
