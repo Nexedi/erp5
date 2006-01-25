@@ -1769,8 +1769,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     attribute_original_value = None
                     attribute_value = ''
                   elif type(attribute_value) != type(u''):
-                    attribute_value = unicode(str(attribute_value), 'utf-8')
                     attribute_original_value = attribute_value
+                    attribute_value = unicode(str(attribute_value), 'utf-8')
                 if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias)) and not is_summary:
                   key = my_field.id + '_%s' % o.uid
                   if field_errors.has_key(key):
