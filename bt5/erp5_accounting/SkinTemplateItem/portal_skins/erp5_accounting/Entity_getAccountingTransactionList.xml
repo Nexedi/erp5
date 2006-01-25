@@ -113,6 +113,7 @@ for l in result:\n
                     date=l.date,\n
                     parent_reference=l.parent_reference,\n
                     parent_source_reference=l.parent_source_reference,\n
+                    translated_simulation_state_title = o.getTranslatedSimulationStateTitle(),\n
                     portal_type=l.portal_type )\n
     new_result.append(c)\n
 \n
