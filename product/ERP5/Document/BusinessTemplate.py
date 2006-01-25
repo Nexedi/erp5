@@ -4166,8 +4166,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
           bt_property_sheet_list.append(id+' | '+ps_id)
         for bc_id in base_category_list:            
           bt_base_category_list.append(id+' | '+bc_id)
-        for act_id in action_list:            
-          bt_action_list.append(id+' | '+act_id)
+        for act_id in action_list:
+          action_id = id+' | '+act_id
+          if action_id not in bt_action_list:
+            bt_action_list.append(action_id)
           
       bt_allowed_content_type_list.sort()
       bt_hidden_content_type_list.sort()
