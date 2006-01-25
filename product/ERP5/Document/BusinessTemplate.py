@@ -457,7 +457,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       Backup the object in portal trash if necessery and return its subobjects
     """
     subobjects_dict = {}
-    if trashbin is None: #m ust return subobjects
+    if trashbin is None: # must return subobjects
       object_path = container_path + [object_id]
       obj = self.unrestrictedTraverse(object_path)
       for subobject_id in list(obj.objectIds()):
@@ -3534,14 +3534,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Install a new Business Template, if force, all we be upgrade or installed
         otherwise depends of dict object_to_update
       """
+      
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
       if installed_bt is not None:        
         if installed_bt.getTemplateFormatVersion() == 0:
-          # maybe another to uninstall old format bt, maybe not needed
-          installed_bt.trash(self)
           force = 1
         installed_bt.replace(self)
+
+      trash_tool = getToolByName(self, 'portal_trash', None)
+      if trash_tool is None and self.getTemplateFormatVersion() == 1:
+        raise AttributeError, 'Trash Tool is not installed'
 
       # Check the format of business template, if old, force install
       if self.getTemplateFormatVersion() == 0:
@@ -3553,8 +3556,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # update activity tool first if necessary
       if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
         LOG('Business Template', 0, 'Updating Activity Tool')
-        gen.setupLastTools(site, update=1, create_activities=1)
-             
+        gen.setupLastTools(site, update=1, create_activities=1)             
       if not force:
         if len(object_to_update) == 0:
           # check if we have to update tools
@@ -3596,12 +3598,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
               
       # always created a trash bin because we may to save object already present
       # but not in a previous business templates apart at creation of a new site
-      trash_tool = getToolByName(self, 'portal_trash', None)
       if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1):
         trashbin = trash_tool.newTrashBin(self.getTitle(), self)
       else:
         trashbin = None
-              
+        
       # Install everything
       if len(object_to_update) > 0 or force:
         for item_name in self._item_name_list:
@@ -3649,7 +3650,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     def install(self, **kw):
       """
         For install based on paramaters provided in **kw
-      """
+      """      
       return self._install(**kw)
 
     install = WorkflowMethod(install)
