@@ -54,7 +54,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     space_line=field.get_value('space_line')
     selection_name = field.get_value('selection_name')
     sort = field.get_value('sort')
-    color_script=getattr(here,field.get_value('color'),None)
+    color_script=getattr(here,field.get_value('color_script'),None)
     height_header = field.get_value('height_header')
     height_global_div = field.get_value('height_global_div')
     height_axis_x=field.get_value('height_axis_x')
@@ -342,6 +342,7 @@ def createLineObject(meta_types,selection,selection_name,field,REQUEST,list_meth
   report_depth = REQUEST.get('report_depth', None)
   is_report_opened = REQUEST.get('is_report_opened', selection.isReportOpened())
   portal_categories = getattr(form, 'portal_categories', None)
+  portal_domains = getattr(form, 'portal_domains', None)
   if 'select_expression' in kw:
     del kw['select_expression']
   if hasattr(list_method, 'method_name'):
@@ -434,7 +435,6 @@ def createLineObject(meta_types,selection,selection_name,field,REQUEST,list_meth
       # Filter folders if this is a parent tree
         new_object_list = []
         for o in object_list:
-        #LOG('exception_uid_list', 0, '%s %s' % (o.getUid(), exception_uid_list))
           if o.getUid() not in exception_uid_list:
             new_object_list.append(o)
                       
