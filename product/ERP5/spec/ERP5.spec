@@ -1,6 +1,6 @@
 %define product ERP5
-%define version 0.10
-%define release 9
+%define version 0.11
+%define release 1
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -15,6 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
+Conflicts: ERP5
 Requires:  erp5-zope >= 2.7.8, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile, zope-TimerService
 
 #----------------------------------------------------------------------
@@ -30,12 +31,10 @@ very short time.
 
 %build
 
-
 %install
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{software_home}/Products
 %{__cp} -a * %{buildroot}%{software_home}/Products/
-
 cat > README.urpmi <<EOF
 
 ERP5 need a MySQL-Max version 5.x.x server to work properly. Because this server
@@ -46,7 +45,6 @@ package and its dependancies.
 
 EOF
 
-
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -55,6 +53,7 @@ mkdir /var/lib/zope/Extensions
 mkdir /var/lib/zope/PropertySheet
 mkdir /var/lib/zope/Constraint
 ln -s %{software_home}/Products/%{product}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
+mv %{software_home}/Products/%{product}/utils/cvs_update.sh /var/lib/zope/Products/
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
   service zope restart
 fi
@@ -71,6 +70,10 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 26 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-1mdk
+- Update to version 0.11
+- Put the cvs_update script in the right place
+
 * Wed Jan 25 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-9mdk
 - Add README.urpmi in %%doc
 

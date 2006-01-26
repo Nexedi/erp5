@@ -1,5 +1,5 @@
 %define product ERP5Catalog
-%define version 0.10
+%define version 0.11
 %define release 1
 
 %define zope_home %{_prefix}/lib/zope
@@ -15,6 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
+Conflicts: ERP5Catalog
 Requires:  erp5-zope zope-ZSQLCatalog zope-ERP5Type
 
 #----------------------------------------------------------------------
@@ -27,12 +28,10 @@ This is a Catalog that filters catalog queries. It is based on ZSQLCatalog.
 
 %build
 
-
 %install
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{software_home}/Products
 %{__cp} -a * %{buildroot}%{software_home}/Products/
-
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -54,6 +53,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 26 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-1mdk
+- Update to version 0.11
+
 * Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-1mdk
 - Update to version 0.10
 

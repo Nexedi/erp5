@@ -1,5 +1,5 @@
 %define product CMFCategory
-%define version 0.10
+%define version 0.11
 %define release 1
 
 %define zope_home %{_prefix}/lib/zope
@@ -15,6 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
+Conflicts: CMFCategory
 Requires:  zope zope-CMF
 
 #----------------------------------------------------------------------
@@ -32,12 +33,10 @@ example, the category will be named color/red, color/blue or color/green.
 
 %build
 
-
 %install
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{software_home}/Products
 %{__cp} -a * %{buildroot}%{software_home}/Products/
-
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -59,6 +58,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 26 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-1mdk
+- Update to version 0.11
+
 * Wed Jan 18 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-1mdk
 - Update to version 0.10
 

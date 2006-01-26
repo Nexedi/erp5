@@ -1,6 +1,6 @@
 %define product ERP5Type
-%define version 0.10
-%define release 2
+%define version 0.11
+%define release 1
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -15,6 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
+Conflicts: ERP5Type
 Requires:  erp5-zope
 
 #----------------------------------------------------------------------
@@ -29,12 +30,10 @@ the Rapid Application Developpement feature used in ERP5.
 
 %build
 
-
 %install
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{software_home}/Products
 %{__cp} -a * %{buildroot}%{software_home}/Products/
-
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -57,6 +56,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Jan 26 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-1mdk
+- Update to version 0.11
+
 * Thu Jan 19 2006 Kevin Deldycke <kevin@nexedi.com> 0.10-2mdk
 - Add missing custom post-command
 
