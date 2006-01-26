@@ -3090,8 +3090,10 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     p = context.getPortalObject()
     for path in self._archive.keys():
       obj = p.unrestrictedTraverse(path.split('/', 1)[1])
-      local_roles_dict = getattr(obj, '__ac_local_roles__', {})
-      group_local_roles_dict = getattr(obj, '__ac_local_group_roles__', {})
+      local_roles_dict = getattr(obj, '__ac_local_roles__',
+                                        {}) or {}
+      group_local_roles_dict = getattr(obj, '__ac_local_group_roles__',
+                                        {}) or {}
       self._objects[path] = (local_roles_dict, group_local_roles_dict)
 
   def generateXml(self, path=None):
