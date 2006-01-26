@@ -34,11 +34,21 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>enquire</string>
                 <string>enquire_action</string>
+                <string>expire</string>
                 <string>expire_action</string>
+                <string>reject</string>
                 <string>reject_action</string>
+                <string>sell</string>
                 <string>sell_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
