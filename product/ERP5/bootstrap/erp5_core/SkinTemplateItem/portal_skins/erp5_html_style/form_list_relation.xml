@@ -117,7 +117,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
       <input type="hidden" name="form_pickle" value="" tal:attributes="value form_pickle | nothing" tal:condition="form_pickle | nothing"/>\n
       <input type="hidden" name="form_signature" value="" tal:attributes="value form_signature | nothing" tal:condition="form_signature | nothing"/>\n
-      <input type="hidden" name="selection_index" value="" tal:attributes="value request/selection_index">\n
+      <input type="hidden" name="selection_index" value="" tal:attributes="value request/selection_index | nothing">\n
       <input type="hidden" name="object_uid" value="" tal:attributes="value request/object_uid">\n
       <input type="hidden" name="field_id" value="" tal:attributes="value request/field_id">\n
 \n

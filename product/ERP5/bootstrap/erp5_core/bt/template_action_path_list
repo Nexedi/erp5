@@ -270,6 +270,7 @@ Template Tool | download
 Template Tool | download_from_repository
 Template Tool | import
 Template Tool | install_from_repository
+Template Tool | jump_trash_bins
 Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
@@ -278,3 +279,5 @@ Trash Bin | view
 Trash Folder | list
 Trash Folder | view
 Trash Tool | view
+portal_actions | bt_tool
+portal_actions | category_tool
