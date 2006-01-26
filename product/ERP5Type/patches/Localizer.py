@@ -22,6 +22,7 @@ except ImportError:
 from Products.CMFCore.utils import getToolByName
 from Products.Localizer.MessageCatalog import _marker
 
+
 class LocalizerTranslationService:
   def translate( self, domain, msgid
                , mapping=None, context=None, target_language=None, default=_marker
@@ -34,7 +35,6 @@ class LocalizerTranslationService:
     message_catalog_aliases = { "ui"     : "erp5_ui"
                               , "content": "erp5_content"
                               }
-    
     # Get Localizer
     localizer = getToolByName(self, 'Localizer')
     # Get the Localizer catalog id
@@ -42,7 +42,6 @@ class LocalizerTranslationService:
     if catalog_id not in localizer.objectIds():
       # No catalog found: return the untranslated string
       return msgid
-      
     catalog_obj = localizer[catalog_id]
     # Call the Message Catalog gettext method
     translated_str = catalog_obj.gettext( message = msgid
@@ -54,15 +53,15 @@ class LocalizerTranslationService:
     return translated_str
 
 
-# Use the patched translate() method
-try :
-  from Products.Localizer import GlobalTranslationService
-  GlobalTranslationService.translate = LocalizerTranslationService.translate
-except ImportError: # for Localizer-1.0.1
-  from Products.PageTemplates.GlobalTranslationService import setGlobalTranslationService
-  setGlobalTranslationService(LocalizerTranslationService())
+# Because we don't know when getGlobalTranslationService will be called,
+#   we override the setter to force the use of our patched translate() method.
+from Products.PageTemplates import GlobalTranslationService
+def setGlobalTranslationService(service):
+  GlobalTranslationService.translationService = LocalizerTranslationService()
+GlobalTranslationService.setGlobalTranslationService = setGlobalTranslationService
 
+
+# Allow call of translate in python scripts
 from Products.Localizer import Localizer
 Localizer.Localizer.translate = LocalizerTranslationService.translate
 Localizer.Localizer.tranlate__roles__ = None # public
-
