@@ -1409,7 +1409,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           for cname in extended_columns:
             if cname[0] in search_columns_id_list:
-              alias = str(cname[2])
+              alias = str(cname[0])
               if type(alias) == type(''):
                 alias = unicode(alias, 'utf-8')
               param = params.get(alias,'')
