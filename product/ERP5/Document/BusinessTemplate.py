@@ -968,7 +968,6 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     else:
       ObjectTemplateItem.install(self, context, trashbin, **kw)
 
-  
 
 class PortalTypeTemplateItem(ObjectTemplateItem):
 
@@ -1026,6 +1025,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         setattr(obj, 'property_sheet_list', ())
       if hasattr(obj, 'base_category_list'):
         setattr(obj, 'base_category_list', ())
+      if hasattr(obj, '_roles'):
+        setattr(obj, '_roles', [])
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
     # also export workflow chain
@@ -1728,7 +1729,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
       obj = p.unrestrictedTraverse(path)
       setattr(obj, '_roles', []) # reset roles before applying
-      type_roles_list = self._objects[roles_path]
+      type_roles_list = self._objects[roles_path] or []
       for type_role_property_dict in type_roles_list:
         obj._roles.append(RoleInformation(**type_role_property_dict))
 
@@ -3805,6 +3806,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_portal_type_id')
+
+    def getTemplatePathList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_path')
 
     def getTemplatePortalTypeAllowedContentTypeList(self):
       """
