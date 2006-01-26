@@ -55,9 +55,14 @@ class LocalizerTranslationService:
 
 
 # Use the patched translate() method
-from Products.Localizer import GlobalTranslationService, Localizer
+try :
+  from Products.Localizer import GlobalTranslationService
+  GlobalTranslationService.translate = LocalizerTranslationService.translate
+except ImportError: # for Localizer-1.0.1
+  from Products.PageTemplates.GlobalTranslationService import setGlobalTranslationService
+  setGlobalTranslationService(LocalizerTranslationService())
 
-GlobalTranslationService.translate = LocalizerTranslationService.translate
+from Products.Localizer import Localizer
 Localizer.Localizer.translate = LocalizerTranslationService.translate
 Localizer.Localizer.tranlate__roles__ = None # public
 
