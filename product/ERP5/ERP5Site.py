@@ -804,14 +804,21 @@ class ERP5Generator(PortalGenerator):
           addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en',))
           addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en',))
 
-        # Add Translation Service
-        if p.hasObject('translation_service') and p.translation_service.meta_type != 'Translation Service':
-          p._delObject('translation_service')
-        if not p.hasObject('translation_service'):
-          p.manage_addProduct['TranslationService'].addPlacefulTranslationService('translation_service')
-          p.translation_service.manage_setDomainInfo(domain_0=None, path_0='Localizer/default')
-          p.translation_service.manage_addDomainInfo(domain='ui', path='Localizer/erp5_ui')
-          p.translation_service.manage_addDomainInfo(domain='content', path='Localizer/erp5_content')
+        # Add Translation Service if the products if available
+        translation_service_available = None
+        try:
+          from Products.TranslationService import PlacefulTranslationService
+          translation_service_available = True
+        except ImportError:
+          translation_service_available = False
+        if translation_service_available:
+          if p.hasObject('translation_service') and p.translation_service.meta_type != 'Translation Service':
+            p._delObject('translation_service')
+          if not p.hasObject('translation_service'):
+            p.manage_addProduct['TranslationService'].addPlacefulTranslationService('translation_service')
+            p.translation_service.manage_setDomainInfo(domain_0=None, path_0='Localizer/default')
+            p.translation_service.manage_addDomainInfo(domain='ui', path='Localizer/erp5_ui')
+            p.translation_service.manage_addDomainInfo(domain='content', path='Localizer/erp5_content')
 
 
     def setupMembersFolder(self, p):
