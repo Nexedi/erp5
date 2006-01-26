@@ -74,14 +74,9 @@ object.Event_createSupportRequest()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
-AHMjAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAAWQAAFMoAwAAAE5zBgAAAG9iamVj
-dHMaAAAARXZlbnRfY3JlYXRlU3VwcG9ydFJlcXVlc3QoAwAAAHMJAAAAX2dldGF0dHJfcwwAAABz
-dGF0ZV9jaGFuZ2VzBgAAAG9iamVjdCgDAAAAcwwAAABzdGF0ZV9jaGFuZ2VzCQAAAF9nZXRhdHRy
-X3MGAAAAb2JqZWN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxYAAABjcmVhdGVfc3Vw
-cG9ydF9yZXF1ZXN0AQAAAHMEAAAAAAISASgBAAAAcxYAAABjcmVhdGVfc3VwcG9ydF9yZXF1ZXN0
-KAEAAABzFgAAAGNyZWF0ZV9zdXBwb3J0X3JlcXVlc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
-dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

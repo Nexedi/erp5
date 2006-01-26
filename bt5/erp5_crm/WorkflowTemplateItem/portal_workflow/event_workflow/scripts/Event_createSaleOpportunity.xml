@@ -74,14 +74,9 @@ object.Event_createSaleOpportunity()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
-AHMjAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAAWQAAFMoAwAAAE5zBgAAAG9iamVj
-dHMbAAAARXZlbnRfY3JlYXRlU2FsZU9wcG9ydHVuaXR5KAMAAABzCQAAAF9nZXRhdHRyX3MMAAAA
-c3RhdGVfY2hhbmdlcwYAAABvYmplY3QoAwAAAHMMAAAAc3RhdGVfY2hhbmdlcwkAAABfZ2V0YXR0
-cl9zBgAAAG9iamVjdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMXAAAAY3JlYXRlX3Nh
-bGVfb3Bwb3J0dW5pdHkBAAAAcwQAAAAAAhIBKAEAAABzFwAAAGNyZWF0ZV9zYWxlX29wcG9ydHVu
-aXR5KAEAAABzFwAAAGNyZWF0ZV9zYWxlX29wcG9ydHVuaXR5KAAAAAAoAAAAAHMPAAAAU2NyaXB0
-IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

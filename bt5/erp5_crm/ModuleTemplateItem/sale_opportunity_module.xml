@@ -86,6 +86,9 @@
    <name>Add ERP5 Forms</name>
   </permission>
   <permission>
+   <name>Add ERP5 OOo Templates</name>
+  </permission>
+  <permission>
    <name>Add ERP5 PDF Forms</name>
   </permission>
   <permission>
@@ -170,6 +173,9 @@
    <name>Add Pluggable Index</name>
   </permission>
   <permission>
+   <name>Add Portal ZSyncer Tools</name>
+  </permission>
+  <permission>
    <name>Add Python Scripts</name>
   </permission>
   <permission>
@@ -219,6 +225,9 @@
   </permission>
   <permission>
    <name>Add ZODB Mount Points</name>
+  </permission>
+  <permission>
+   <name>Add ZSyncers</name>
   </permission>
   <permission>
    <name>Add Zope Tutorials</name>
@@ -525,6 +534,9 @@
   </permission>
   <permission>
    <name>WebDAV access</name>
+  </permission>
+  <permission>
+   <name>ZSyncer: Use ZSyncer</name>
   </permission>
   <permission>
    <name>ZopeProfiler: manage</name>

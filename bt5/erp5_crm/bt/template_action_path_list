@@ -1,0 +1,30 @@
+Event Module | print_pdf
+Event Module | view
+Incoming Fax | history
+Incoming Fax | metadata
+Incoming Fax | print
+Incoming Fax | view
+Incoming Letter | history
+Incoming Letter | metadata
+Incoming Letter | print
+Incoming Letter | view
+Mail Message | history
+Mail Message | metadata
+Mail Message | print
+Mail Message | view
+Phone Call | history
+Phone Call | metadata
+Phone Call | print
+Phone Call | view
+Sale Opportunity Module | print
+Sale Opportunity Module | view
+Sale Opportunity | history
+Sale Opportunity | metadata
+Sale Opportunity | print
+Sale Opportunity | view
+Support Request Module | print
+Support Request Module | view
+Support Request | history
+Support Request | metadata
+Support Request | print
+Support Request | view

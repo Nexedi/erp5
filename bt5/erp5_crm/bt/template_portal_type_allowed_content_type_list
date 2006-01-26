@@ -1,0 +1,21 @@
+Event Module | Incoming Fax
+Event Module | Incoming Letter
+Event Module | Mail Message
+Event Module | Phone Call
+Mail Message | Document
+Mail Message | File
+Mail Message | Image
+Mail Message | Link
+Mail Message | News Item
+Sale Opportunity Module | Sale Opportunity
+Sale Opportunity | Document
+Sale Opportunity | File
+Sale Opportunity | Image
+Sale Opportunity | Link
+Support Request Module | Support Request
+Support Request | Document
+Support Request | File
+Support Request | Image
+Support Request | Link
+Support Request | Predicate Group
+Support Request | Value Predicate
