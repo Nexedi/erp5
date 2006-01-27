@@ -4240,14 +4240,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       Fill field about properties for each portal type
       """
-      bt_allowed_content_type_list = []
-      bt_hidden_content_type_list = []
-      bt_property_sheet_list = []
-      bt_base_category_list = []
-      bt_action_list = getattr(self, 'template_action_path', []) or []
-      bt_action_list = list(bt_action_list)
-      bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())      
-      bt_portal_type_roles_list = []
+      bt_allowed_content_type_list = list(getattr(self, 'template_portal_type_allowed_content_type', []) or [])
+      bt_hidden_content_type_list = list(getattr(self, 'template_portal_type_hidden_content_type', []) or [])
+      bt_property_sheet_list = list(getattr(self, 'template_portal_type_property_sheet', []) or [])
+      bt_base_category_list = list(getattr(self, 'template_portal_type_base_category', []) or [])
+      bt_action_list = list(getattr(self, 'template_action_path', []) or [])
+      bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())
+      bt_portal_type_roles_list =  list(getattr(self, 'template_portal_type_roles', []) or [])
+
       p = self.getPortalObject()
       for id in bt_portal_types_id_list:        
         try:
@@ -4255,7 +4255,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         except KeyError:
           continue
         if len(getattr(portal_type, '_roles', ())) > 0:
-          bt_portal_type_roles_list.append(id)
+          if id not in bt_portal_type_roles_list:
+            bt_portal_type_roles_list.append(id)
 
         allowed_content_type_list = []
         hidden_content_type_list = []
@@ -4273,14 +4274,26 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if hasattr(portal_type, 'listActions'):
           action_list = [x.getId() for x in portal_type.listActions()]
         
-        for a_id in allowed_content_type_list:            
-          bt_allowed_content_type_list.append(id+' | '+a_id)
+        for a_id in allowed_content_type_list:
+          allowed_id = id+' | '+a_id
+          if allowed_id not in bt_allowed_content_type_list:
+            bt_allowed_content_type_list.append(allowed_id)
+            
         for h_id in hidden_content_type_list:
-          bt_hidden_content_type_list.append(id+' | '+h_id)
-        for ps_id in property_sheet_list:           
-          bt_property_sheet_list.append(id+' | '+ps_id)
-        for bc_id in base_category_list:            
-          bt_base_category_list.append(id+' | '+bc_id)
+          hidden_id = id+' | '+h_id
+          if hidden_id not in bt_hidden_content_type_list:
+            bt_hidden_content_type_list.append(hidden_id)
+          
+        for ps_id in property_sheet_list:
+          p_sheet_id = id+' | '+ps_id
+          if p_sheet_id not in bt_property_sheet_list:
+            bt_property_sheet_list.append(p_sheet_id)
+          
+        for bc_id in base_category_list:
+          base_cat_id = id+' | '+bc_id
+          if base_cat_id not in bt_base_category_list:
+            bt_base_category_list.append(base_cat_id)
+            
         for act_id in action_list:
           action_id = id+' | '+act_id
           if action_id not in bt_action_list:
