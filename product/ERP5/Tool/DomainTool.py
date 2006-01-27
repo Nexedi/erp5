@@ -55,8 +55,9 @@ class DomainTool(BaseTool):
     # (some users are not able to see resource's price)
     security.declarePublic('searchPredicateList')
     def searchPredicateList(self, context, test=1, sort_method=None,
-                            ignored_category_list=None, filter_method=None,
-                            acquired=1, **kw):
+                            ignored_category_list=None,
+                            tested_base_category_list=None,
+                            filter_method=None, acquired=1, **kw):
       """
       Search all predicates which corresponds to this particular 
       context.
@@ -67,6 +68,10 @@ class DomainTool(BaseTool):
 
       - ignored_category_list:  this is the list of category that we do
         not want to test. For example, we might want to not test the 
+        destination or the source of a predicate.
+
+      - tested_base_category_list:  this is the list of category that we do
+        want to test. For example, we might want to test only the 
         destination or the source of a predicate.
 
       - the acquired parameter allows to define if we want to use
@@ -127,23 +132,32 @@ class DomainTool(BaseTool):
             checked_column_list.append('%s_range_max' % property)
       # Add predicate.uid for automatic join
       sql_kw['predicate.uid'] = '!=0'
-      where_expression = ' AND '.join(expression_list)
+      where_expression = ' AND \n'.join(expression_list)
 
       # Add category selection
-      if acquired:
-        category_list = context.getAcquiredCategoryList()
+      if tested_base_category_list is None:
+        if acquired:
+          category_list = context.getAcquiredCategoryList()
+        else:
+          category_list = context.getCategoryList()
       else:
-        category_list = context.getCategoryList()
-      if len(category_list)==0:
-        category_list = ['NULL']
-      category_expression = portal_categories.buildSQLSelector(
-                                             category_list,
-                                             query_table='predicate_category')
-      if len(where_expression) > 0:
-        where_expression = '(%s) AND (%s)' % \
-                                        (where_expression,category_expression)
-      else:
-        where_expression = category_expression
+        category_list = []
+        for tested_base_category in tested_base_category_list:
+          category_list.extend(
+               context.getCategoryMembershipList(tested_base_category, base=1))
+
+      if tested_base_category_list != []:
+        if len(category_list)==0:
+          category_list = ['NULL']
+        category_expression = portal_categories.buildSQLSelector(
+                                           category_list,
+                                           query_table='predicate_category')
+        if len(where_expression) > 0:
+          where_expression = '(%s) AND \n(%s)' % \
+                                          (where_expression,category_expression)
+        else:
+          where_expression = category_expression
+
       sql_kw['where_expression'] = where_expression
       # Add predicate_category.uid for automatic join
       sql_kw['predicate_category.uid'] = '!=0'
@@ -157,7 +171,9 @@ class DomainTool(BaseTool):
 #       LOG('searchPredicateList, result_list before test', 0,
 #           [x.getObject() for x in sql_result_list])
       for predicate in [x.getObject() for x in sql_result_list]:
-        if test==0 or predicate.test(context):
+        if test==0 or predicate.test(
+                       context, 
+                       tested_base_category_list=tested_base_category_list):
           result_list.append(predicate)
 #       LOG('searchPredicateList, result_list before sort', 0, result_list)
       if filter_method is not None:

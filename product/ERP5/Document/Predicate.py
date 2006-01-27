@@ -80,10 +80,14 @@ class Predicate(Folder):
   __implements__ = ( Interface.Predicate )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
-  def test(self, context, **kw):
+  def test(self, context, tested_base_category_list=None, **kw):
     """
       A Predicate can be tested on a given context.
       Parameters can passed in order to ignore some conditions.
+
+      - tested_base_category_list:  this is the list of category that we do
+        want to test. For example, we might want to test only the 
+        destination or the source of a predicate.
     """
     self = self.asPredicate()
     result = 1
@@ -120,7 +124,14 @@ class Predicate(Folder):
 #             (multimembership_criterion_base_category_list, 
 #              membership_criterion_base_category_list, 
 #              self.getMembershipCriterionCategoryList()))
-    for c in self.getMembershipCriterionCategoryList():
+    membership_criterion_category_list = \
+                            self.getMembershipCriterionCategoryList()
+    if tested_base_category_list is not None:
+      membership_criterion_category_list = [x for x in \
+          membership_criterion_category_list if x.split('/')[0] in \
+          tested_base_category_list]
+
+    for c in membership_criterion_category_list:
       bc = c.split('/')[0]
       if (not bc in tested_base_category.keys()) and \
          (bc in multimembership_criterion_base_category_list):
@@ -137,6 +148,7 @@ class Predicate(Folder):
       elif (bc in membership_criterion_base_category_list):
         tested_base_category[bc] = tested_base_category[bc] or \
                                    context.isMemberOf(c)
+
 #         LOG('predicate test', 0, 
 #             '%s after single membership to %s' % \
 #                 (tested_base_category[bc], c))
