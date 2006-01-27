@@ -91,6 +91,7 @@ try:\n
   form.validate_all_to_request(request)\n
   # Basic attributes\n
   kw = {}\n
+  encapsulated_editor_list = []\n
   # Parse attributes\n
   for f in form.get_fields():\n
     k = f.id\n
@@ -98,7 +99,8 @@ try:\n
     if hasattr(v, \'edit\'):\n
       # This is an encapsulated editor\n
       # call it\n
-      v.edit(context)\n
+      encapsulated_editor_list.append(v)\n
+#       v.edit(context)\n
       pass\n
     elif v is not MARKER:\n
       if k[0:3] == \'my_\':\n
@@ -245,6 +247,8 @@ try:\n
     \n
   # Maybe we should build a list of objects we need\n
   # Update basic attributes\n
+  for encapsulated_editor in encapsulated_editor_list:\n
+    encapsulated_editor.edit(context)\n
   context.edit(REQUEST=request,**kw)\n
 \n
 except FormValidationError, validation_errors:\n
@@ -343,6 +347,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>getattr</string>
                             <string>form</string>
                             <string>kw</string>
+                            <string>encapsulated_editor_list</string>
                             <string>_getiter_</string>
                             <string>f</string>
                             <string>k</string>
@@ -383,6 +388,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>url</string>
                             <string>o</string>
                             <string>planning_box_field</string>
+                            <string>encapsulated_editor</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
                             <string>field_id</string>
