@@ -1,4 +1,7 @@
-2007-01-26 Jerome
+2006-01-27 aurel
+* add action to create module
+
+2006-01-26 Jerome
 * added Base_uniqueReferenceInFolderValidator python script for my_reference fields validators.
 * make sure two currencies with the same reference do not exist.
 
