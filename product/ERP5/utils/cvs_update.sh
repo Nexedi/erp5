@@ -1,40 +1,59 @@
 #!/bin/bash
 
-MODULES="CMFActivity CMFCategory ERP5 ERP5Catalog \
-         ERP5Form ERP5SyncML ERP5Type ZSQLCatalog \
-         ERP5OOo ERP5Security erp5_bt5 erp5_banking"
+# Modules to get from the CVS
+MODULES="CMFActivity CMFCategory ERP5 ERP5Catalog ERP5Form \
+         ERP5OOo ERP5Security ERP5SyncML ERP5Type ZSQLCatalog \
+         erp5_banking erp5_bt5"
 
-#CVS_USER="seb"
-CVS_USER="anonymous"
+# CVS Users name
+CVS_USER="anonymous" #CVS_USER="seb"
 ANON_CVS="anonymous"
+
+# System user and group that own Zope product files
+USER="zope"
+GROUP="zope"
+
+# Define paths
+ZOPE_PRODUCTS="/usr/lib/zope/lib/python/Products"
+EXTENSIONS_FOLDER="/var/lib/zope/Extensions"
+BT5_FOLDER="/var/lib/zope/bt5"
+
+
 
 LOGGED=0
 ZERO=0
-
 export CVS_RSH=ssh
+
+
 
 # Update each module
 for f in $MODULES
   do
     echo ""
     echo "----- Updating $f -----"
-    if ls /usr/lib/zope/lib/python/Products/$f > /dev/null 2>&1 /dev/null; then
-      cd /usr/lib/zope/lib/python/Products/$f && \
-        cvs update -RdP && cd /usr/lib/zope/lib/python/Products/
+    if ls $ZOPE_PRODUCTS/$f > /dev/null 2>&1 /dev/null; then
+      cd $ZOPE_PRODUCTS/$f && \
+        cvs update -RdPA && cd $ZOPE_PRODUCTS/
     else
       if [ $CVS_USER == $ANON_CVS ] ; then
         if [ $LOGGED == $ZERO ] ; then
           cvs -d:pserver:anonymous@cvs.erp5.org:/cvsroot login
-          cvs -z3 -d:pserver:anonymous@cvs.erp5.org:/cvsroot co $f
+          cvs -z3 -d:pserver:anonymous@cvs.erp5.org:/cvsroot co -A $f
           LOGGED=1
         else
-          cvs -z3 -d:pserver:anonymous@cvs.erp5.org:/cvsroot co $f
+          cvs -z3 -d:pserver:anonymous@cvs.erp5.org:/cvsroot co -A $f
         fi
       else
-        cvs -z3 -d $CVS_USER@cvs.erp5.org:/cvsroot co $f
+        cvs -z3 -d $CVS_USER@cvs.erp5.org:/cvsroot co -A $f
       fi
     fi
   done
+
+
+
+# Restore good right
+chown -R $USER.$GROUP .
+
 
 
 # Replace symlinks installed by the default ERP5 installation by the new ones
@@ -55,10 +74,6 @@ update_symlink() {
   fi
 }
 
-
-EXTENSIONS_FOLDER="/var/lib/zope/Extensions"
-BT5_FOLDER="/var/lib/zope/bt5"
-
 for f in $MODULES
   do
     if test $f = "ZSQLCatalog"; then
@@ -74,5 +89,6 @@ for f in $MODULES
       echo `update_symlink $BT5_FOLDER erp5_banking ../Products/erp5_banking`
     fi
   done
+
 
 exit 0
