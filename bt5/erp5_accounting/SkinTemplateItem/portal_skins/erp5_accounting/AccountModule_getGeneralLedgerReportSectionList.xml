@@ -116,7 +116,7 @@ result = []\n
 portal = context.portal_url.getPortalObject()\n
 \n
 account_columns = (\n
-#  (\'source_reference\', \'Reference\'),\n
+  (\'source_reference\', \'Reference\'),\n
   (\'delivery.start_date\', \'Date\'),\n
   (\'title\', \'Title\'),\n
   (\'translated_portal_type\', \'Type\'),\n
