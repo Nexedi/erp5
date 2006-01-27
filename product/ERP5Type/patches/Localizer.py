@@ -22,13 +22,15 @@ except ImportError:
   from Products.ERP5Type.patches.string import Template
 
 
+from zLOG import LOG
+
 class LocalizerPatchError(Exception):
   """Error wen trying to use or apply the Localizer patch"""
 
 # This patch will not work if Translation Service Zope product exist on the system
 try:
   from Products import TranslationService
-  raise LocalizerPatchError, "Translation Service Zope Product (%s) and Translation Service tools must be deleted to let Localizer Patch work." % (repr(TranslationService))
+  LOG("LocalizerPatchError", 100,"Translation Service Zope Product (%s) and Translation Service tools must be deleted to let Localizer Patch work." % (repr(TranslationService)))
 except ImportError:
   pass
 
