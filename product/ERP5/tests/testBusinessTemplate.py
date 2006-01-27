@@ -1476,19 +1476,19 @@ class TestBusinessTemplate(ERP5TypeTestCase):
         prop_dict[pid[:-5]] = ()
     bt.edit(**prop_dict)
 
-  def stepRemoveTrashTool(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveSimulationTool(self, sequence=None, sequence_list=None, **kw):
     """
     Remove Trash Tool from site
     """
     p = self.getPortal()
-    p.manage_delObjects(['portal_trash'])
-    self.failUnless(p._getOb('portal_trash', None) is None)
+    p.manage_delObjects(['portal_simulation'])
+    self.failUnless(p._getOb('portal_simulation', None) is None)
 
-  def stepCheckTrashToolExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSimulationToolExists(self, sequence=None, sequence_list=None, **kw):
     """
     Check presence of trash tool
     """
-    self.failUnless(self.getTrashTool() is not None)
+    self.failUnless(self.getSimulationTool() is not None)
           
   # tests
   def test_01_checkNewSite(self, quiet=0, run=run_all_test):
@@ -2591,7 +2591,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemovePropertySheet \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
-                       RemoveTrashTool \
+                       RemoveSimulationTool \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
@@ -2600,7 +2600,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
-                       CheckTrashToolExists \
+                       CheckSimulationToolExists \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        CheckModuleExists \
