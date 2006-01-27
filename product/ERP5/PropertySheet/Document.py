@@ -32,6 +32,11 @@ class Document:
     """
 
     _properties = (
+        {   'id'          : 'short_title',
+            'description' : 'A short title which can be used for user interface in web sites',
+            'type'        : 'text',
+            'mode'        : 'w'
+            },
         {   'id'          : 'text_content',
             'description' : 'The content of the document considered as a text string',
             'type'        : 'text',
