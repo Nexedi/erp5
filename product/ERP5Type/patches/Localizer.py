@@ -49,8 +49,6 @@ class LocalizerTranslationService:
     message_catalog_aliases = { "Default": "default"
                               , "ui"     : "erp5_ui"
                               , "content": "erp5_content"
-                              , "erp5_ui": "erp5_ui"
-                              , "erp5_content": "erp5_content"
                               }
 
     # Be carefull to not import Localizer anywhere in that Localizer patch:
@@ -75,11 +73,10 @@ class LocalizerTranslationService:
       raise LocalizerPatchError, "Localizer tool not found."
 
     # Get the Localizer catalog id
-    catalog_id = message_catalog_aliases.get(domain, 'default')
-
+    catalog_id = message_catalog_aliases.get(domain, domain)
     if catalog_id not in localizer.objectIds():
-      # No catalog found: return the untranslated string
-      return msgid
+      # No catalog found: use the default one
+      catalog_id = 'default'
     catalog_obj = localizer[catalog_id]
 
     # Adapt Translation Service default value to the Localizer one
