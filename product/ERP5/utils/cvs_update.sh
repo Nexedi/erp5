@@ -14,7 +14,7 @@ USER="zope"
 GROUP="zope"
 
 # Define paths
-ZOPE_PRODUCTS="/usr/lib/zope/lib/python/Products"
+ZOPE_PRODUCTS="/var/lib/zope/Products"
 EXTENSIONS_FOLDER="/var/lib/zope/Extensions"
 BT5_FOLDER="/var/lib/zope/bt5"
 
