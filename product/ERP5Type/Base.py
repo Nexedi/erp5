@@ -428,7 +428,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if not Base.aq_related_generated:
       from Utils import createRelatedValueAccessors
       generated = 1
-      portal_categories = getToolByName(self, 'portal_categories', None)
+      portal_types = getToolByName(self, 'portal_types', None)
       generated_bid = {}
       for pid, ps in PropertySheet.__dict__.items():
         if pid[0] != '_':
@@ -437,6 +437,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
               #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
               createRelatedValueAccessors(Base, bid)
               generated_bid[bid] = 1
+      for ptype in portal_types.objectValues('ERP5 Type Information') :
+        for bid in ptype.base_category_list :
+          if bid not in generated_bid :
+            createRelatedValueAccessors(Base, bid)
+            generated_bid[bid] = 1
+      
       Base.aq_related_generated = 1
 
     # Always try to return something after generation
