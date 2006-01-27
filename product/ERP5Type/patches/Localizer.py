@@ -22,6 +22,17 @@ except ImportError:
   from Products.ERP5Type.patches.string import Template
 
 
+class LocalizerPatchError(Exception):
+  """"Error wen trying to use or apply the Localizer patch"""
+
+# This patch will not work if Translation Service Zope product exist on the system
+try:
+  from Products import TranslationService
+  raise LocalizerPatchError, "Translation Service Zope Product (%s) and Translation Service tools must be deleted to let Localizer Patch work." % (repr(TranslationService))
+except ImportError:
+  pass
+
+
 
 class LocalizerTranslationService:
   def translate( self, domain, msgid
@@ -57,7 +68,7 @@ class LocalizerTranslationService:
       #   = the one when translation is done via <i18n:translate> tag in Page Template
       localizer = getToolByName(context, 'Localizer', None)
     if localizer == None:
-      raise LocalizerPatch, "Localizer tool not found."
+      raise LocalizerPatchError, "Localizer tool not found."
 
     # Get the Localizer catalog id
     catalog_id = message_catalog_aliases.get(domain, domain)
