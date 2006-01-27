@@ -39,5 +39,9 @@ class WebSite:
             'description' : 'ID of a user which has complete access to all documents in the site.',
             'type'        : 'string',
             'mode'        : '' },
+        {   'id'          : 'visible',
+            'description' : 'Defines visibility of current section.',
+            'type'        : 'boolean',
+            'mode'        : '' },
     )
 
