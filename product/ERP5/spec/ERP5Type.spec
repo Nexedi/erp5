@@ -1,6 +1,6 @@
 %define product ERP5Type
 %define version 0.11
-%define release 1
+%define release 2
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -30,10 +30,12 @@ the Rapid Application Developpement feature used in ERP5.
 
 %build
 
+
 %install
 %{__rm} -rf %{buildroot}
 %{__mkdir_p} %{buildroot}/%{software_home}/Products
 %{__cp} -a * %{buildroot}%{software_home}/Products/
+
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -56,6 +58,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Fri Jan 27 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-2mdk
+- New build from the CVS
+
 * Thu Jan 26 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-1mdk
 - Update to version 0.11
 

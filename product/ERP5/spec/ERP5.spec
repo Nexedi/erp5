@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.11
-%define release 1
+%define release 2
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -52,6 +52,7 @@ EOF
 mkdir /var/lib/zope/Extensions
 mkdir /var/lib/zope/PropertySheet
 mkdir /var/lib/zope/Constraint
+mkdir /var/lib/zope/bt5
 ln -s %{software_home}/Products/%{product}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
 mv %{software_home}/Products/%{product}/utils/cvs_update.sh /var/lib/zope/Products/
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
@@ -70,6 +71,10 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Fri Jan 27 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-2mdk
+- New build from the CVS
+- Create a bt5 folder in /var/lib/zope
+
 * Thu Jan 26 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-1mdk
 - Update to version 0.11
 - Put the cvs_update script in the right place
