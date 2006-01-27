@@ -23,7 +23,7 @@ except ImportError:
 
 
 class LocalizerPatchError(Exception):
-  """"Error wen trying to use or apply the Localizer patch"""
+  """Error wen trying to use or apply the Localizer patch"""
 
 # This patch will not work if Translation Service Zope product exist on the system
 try:
@@ -47,6 +47,8 @@ class LocalizerTranslationService:
     message_catalog_aliases = { "Default": "default"
                               , "ui"     : "erp5_ui"
                               , "content": "erp5_content"
+                              , "erp5_ui": "erp5_ui"
+                              , "erp5_content": "erp5_content"
                               }
 
     # Be carefull to not import Localizer anywhere in that Localizer patch:
@@ -71,7 +73,8 @@ class LocalizerTranslationService:
       raise LocalizerPatchError, "Localizer tool not found."
 
     # Get the Localizer catalog id
-    catalog_id = message_catalog_aliases.get(domain, domain)
+    catalog_id = message_catalog_aliases.get(domain, 'default')
+
     if catalog_id not in localizer.objectIds():
       # No catalog found: return the untranslated string
       return msgid
