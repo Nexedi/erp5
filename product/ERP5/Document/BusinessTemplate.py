@@ -1077,9 +1077,9 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         obj = object_list[path]
         portal_type = obj.id
         chain_dict['chain_%s' % portal_type] = \
-                              self._workflow_chain_archive[portal_type]
-        context.portal_workflow.manage_changeWorkflows(default_chain,
-                                                       props=chain_dict)
+            self._workflow_chain_archive[portal_type]
+    context.portal_workflow.manage_changeWorkflows(default_chain,
+                                                   props=chain_dict)
 
   def _importFile(self, file_name, file):
     if 'workflow_chain_type.xml' in file_name:
