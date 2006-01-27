@@ -971,8 +971,8 @@ class WorkflowTemplateItem(ObjectTemplateItem):
 
 class PortalTypeTemplateItem(ObjectTemplateItem):
 
-  workflow_chain = None
-
+  # XXX : this method is kept temporarily, but can be removed once all bt5 are
+  # re-exported with separated workflow-chain information
   def _getChainByType(self, context):
     """
     This is used in order to construct the full list
@@ -1004,6 +1004,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_types', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    # XXX : this statement can be removed once all bt5 have separated
+    # workflow-chain information
     self._workflow_chain_archive = PersistentMapping()
 
   def build(self, context, **kw):
@@ -1011,7 +1013,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      id_list = obj.objectIds()
       # remove actions and properties
       action_len = len(obj.listActions())
       obj.deleteActions(selections=range(action_len))
@@ -1029,30 +1030,9 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         setattr(obj, '_roles', [])
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
-    # also export workflow chain
-    (default_chain, chain_dict) = self._getChainByType(context)
-    for obj in self._objects.values():
-      portal_type = obj.id
-      self._workflow_chain_archive[portal_type] = chain_dict['chain_%s' % portal_type]
 
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    # export portal type object
-    ObjectTemplateItem.export(self, context, bta, **kw)
-    # export workflow chain
-    xml_data = '<workflow_chain>'
-    keys = self._workflow_chain_archive.keys()
-    keys.sort()
-    for key in keys:
-      xml_data += os.linesep+' <chain>'
-      xml_data += os.linesep+'  <type>%s</type>' %(key,)
-      xml_data += os.linesep+'  <workflow>%s</workflow>' %(self._workflow_chain_archive[key],)
-      xml_data += os.linesep+' </chain>'
-    xml_data += os.linesep+'</workflow_chain>'
-    bta.addObject(obj=xml_data, name='workflow_chain_type',  path=root_path)
-
+  # XXX : this method is kept temporarily, but can be removed once all bt5 are
+  # re-exported with separated workflow-chain information
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
     update_dict = kw.get('object_to_update')
@@ -1076,11 +1056,14 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
             continue          
         obj = object_list[path]
         portal_type = obj.id
-        chain_dict['chain_%s' % portal_type] = \
-            self._workflow_chain_archive[portal_type]
+        if self._workflow_chain_archive.has_key(portal_type):
+          chain_dict['chain_%s' % portal_type] = \
+              self._workflow_chain_archive[portal_type]
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
 
+  # XXX : this method is kept temporarily, but can be removed once all bt5 are
+  # re-exported with separated workflow-chain information
   def _importFile(self, file_name, file):
     if 'workflow_chain_type.xml' in file_name:
       # import workflow chain for portal_type
@@ -1098,6 +1081,106 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       self._workflow_chain_archive = dict
     else:
       ObjectTemplateItem._importFile(self, file_name, file)
+
+
+class PortalTypeTemplateWorkflowChainItem(BaseTemplateItem):
+
+  def _getChainByType(self, context):
+    """
+    This is used in order to construct the full list
+    of mapping between type and list of workflow associated
+    This is only useful in order to use
+    portal_workflow.manage_changeWorkflows
+    """
+    pw = context.portal_workflow
+    cbt = pw._chains_by_type
+    ti = pw._listTypeInfo()
+    types_info = []
+    for t in ti:
+      id = t.getId()
+      title = t.Title()
+      if title == id:
+        title = None
+      if cbt is not None and cbt.has_key(id):
+        chain = ', '.join(cbt[id])
+      else:
+        chain = '(Default)'
+      types_info.append({'id': id,
+                        'title': title,
+                        'chain': chain})
+    new_dict = {}
+    for item in types_info:
+      new_dict['chain_%s' % item['id']] = item['chain']
+    default_chain=', '.join(pw._default_chain)
+    return (default_chain, new_dict)
+
+  def __init__(self, id_list, **kw):
+    id_list = ['portal_type_workflow_chain/%s' % id for id in id_list]
+    BaseTemplateItem.__init__(self, id_list, **kw)
+
+  def build(self, context, **kw):
+    p = context.getPortalObject()
+    (default_chain, chain_dict) = self._getChainByType(context)
+    for relative_url in self._archive.keys():
+      portal_type = relative_url.split('/', 1)[1]
+      self._objects[relative_url] = chain_dict['chain_%s' % portal_type]
+
+  def generateXml(self, path=None):
+    xml_data = '<workflow_chain>'
+    keys = self._objects.keys()
+    keys.sort()
+    for key in keys:
+      xml_data += os.linesep+' <chain>'
+      xml_data += os.linesep+'  <type>%s</type>' %(key,)
+      xml_data += os.linesep+'  <workflow>%s</workflow>' %(self._objects[key],)
+      xml_data += os.linesep+' </chain>'
+    xml_data += os.linesep+'</workflow_chain>'
+    return xml_data
+
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    root_path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(name=root_path)
+    # export workflow chain
+    xml_data = self.generateXml()
+    bta.addObject(obj=xml_data, name='workflow_chain_type',  path=root_path)
+
+  def install(self, context, trashbin, **kw):
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    # We now need to setup the list of workflows corresponding to
+    # each portal type
+    (default_chain, chain_dict) = self._getChainByType(context)
+    # Set the default chain to the empty string is probably the
+    # best solution, by default it is 'default_workflow', wich is
+    # not very usefull
+    default_chain = ''
+    for path in self._objects.keys():
+      if update_dict.has_key(path) or force:
+        if not force:
+          action = update_dict[path]
+          if action == 'nothing':
+            continue          
+        portal_type = path.split('/', 1)[1]
+        chain_dict['chain_%s' % portal_type] = self._objects[path]
+    context.portal_workflow.manage_changeWorkflows(default_chain,
+                                                   props=chain_dict)
+
+  def _importFile(self, file_name, file):
+    # import workflow chain for portal_type
+    dict = {}
+    xml = parse(file)
+    chain_list = xml.getElementsByTagName('chain')
+    for chain in chain_list:
+      ptype = chain.getElementsByTagName('type')[0].childNodes[0].data
+      workflow_list = chain.getElementsByTagName('workflow')[0].childNodes
+      if len(workflow_list) == 0:
+        workflow = ''
+      else:
+        workflow = workflow_list[0].data
+      dict[str(ptype)] = str(workflow)
+    self._objects = dict
 
 
 class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
@@ -3306,6 +3389,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_catalog_method_item',
       '_site_property_item',
       '_portal_type_item',
+      '_portal_type_workflow_chain_item',
       '_portal_type_allowed_content_type_item',
       '_portal_type_hidden_content_type_item',
       '_portal_type_property_sheet_item',
@@ -3374,6 +3458,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Store all datas
       self._portal_type_item = \
           PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
+      self._portal_type_workflow_chain_item = \
+          PortalTypeTemplateWorkflowChainItem(self.getTemplatePortalTypeWorkflowChainList())
       self._workflow_item = \
           WorkflowTemplateItem(self.getTemplateWorkflowIdList())
       self._skin_item = \
@@ -3807,6 +3893,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_id')
 
+    def getTemplatePortalTypeWorkflowChainList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_portal_type_workflow_chain')
+
     def getTemplatePathList(self):
       """
       We have to set this method because we want an
@@ -3925,6 +4018,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       self._portal_type_item = \
           PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
+      self._portal_type_workflow_chain_item = \
+          PortalTypeTemplateWorkflowChainItem(self.getTemplatePortalTypeWorkflowChainList())
       self._workflow_item = \
           WorkflowTemplateItem(self.getTemplateWorkflowIdList())
       self._skin_item = \
@@ -4023,6 +4118,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogMethod' : '_catalog_method_item',
         'SiteProperty' : '_site_property_item',
         'PortalType' : '_portal_type_item',
+        'PortalTypeWorkflowChain' : '_portal_type_workflow_chain_item',
         'PortalTypeAllowedContentType' : '_portal_type_allowed_content_type_item',
         'PortalHiddenAllowedContentType' : '_portal_type_hidden_content_type_item',
         'PortalTypePropertySheet' : '_portal_type_property_sheet_item',
@@ -4085,7 +4181,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item',
                      '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item',
                      '_portal_type_property_sheet_item', '_portal_type_roles_item',
-                     '_portal_type_base_category_item', '_local_roles_item',]
+                     '_portal_type_base_category_item', '_local_roles_item',
+                     '_portal_type_workflow_chain_item']
       item_list_3 = ['_document_item', '_property_sheet_item',
           '_constraint_item', '_extension_item', '_test_item',
           '_message_translation_item']
@@ -4150,12 +4247,16 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_action_list = getattr(self, 'template_action_path', []) or []
       bt_action_list = list(bt_action_list)
       bt_portal_types_id_list = list(self.getTemplatePortalTypeIdList())      
+      bt_portal_type_roles_list = []
       p = self.getPortalObject()
       for id in bt_portal_types_id_list:        
         try:
           portal_type = p.unrestrictedTraverse('portal_types/'+id)
         except KeyError:
           continue
+        if len(getattr(portal_type, '_roles', ())) > 0:
+          bt_portal_type_roles_list.append(id)
+
         allowed_content_type_list = []
         hidden_content_type_list = []
         property_sheet_list = []
@@ -4191,6 +4292,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       bt_base_category_list.sort()
       bt_action_list.sort()
 
+      setattr(self, 'template_portal_type_workflow_chain', bt_portal_types_id_list)
+      setattr(self, 'template_portal_type_roles', bt_portal_type_roles_list)
       setattr(self, 'template_portal_type_allowed_content_type', bt_allowed_content_type_list)
       setattr(self, 'template_portal_type_hidden_content_type', bt_hidden_content_type_list)
       setattr(self, 'template_portal_type_property_sheet', bt_property_sheet_list)
