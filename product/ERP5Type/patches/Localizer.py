@@ -14,7 +14,6 @@
 
 from Products.CMFCore.utils import getToolByName
 
-
 # Template() is a new method of python 2.4, that's why we have the string.py
 #   file in ERP5Form.
 try:
@@ -31,14 +30,32 @@ class LocalizerTranslationService:
     """
       This translate() method use Localizer and support catalog aliases.
     """
+
     # This dict define the alias between old Translation Service catalog id
     #   and new Localizer Message Catalog.
     message_catalog_aliases = { "ui"     : "erp5_ui"
                               , "content": "erp5_content"
                               }
 
-    # Get Localizer
-    localizer = getToolByName(context, 'Localizer')
+    # Be carefull to not import Localizer anywhere in that Localizer patch:
+    #   it can break everything !
+    # To update this file in the right way, keep in mind that translate() method
+    #   must be able to work outside its LocalizerTranslationService class.
+    from Products.Localizer.Localizer import Localizer
+
+    # Get Localizer object installed in ERP5 instance
+    if isinstance(self, Localizer):
+      # In this case we call the translate method from a script (Base_translateString generally).
+      # Exemple of call from a ZODB python script:
+      #   context.Localizer.translate('ui', 'Print button')
+      # This branch of "if" statement is needed to make the "New Localizer Feature" coded
+      #   at the end of the file work.
+      localizer = self
+    else:
+      # This is the normal case
+      #   = the one when translation is done via <i18n:translate> tag in Page Template
+      localizer = getToolByName(context, 'Localizer', None)
+
     # Get the Localizer catalog id
     catalog_id = None
     if domain in message_catalog_aliases.keys():
@@ -49,6 +66,7 @@ class LocalizerTranslationService:
       # No catalog found: return the untranslated string
       return msgid
     catalog_obj = localizer[catalog_id]
+
     # Adapt Translation Service default value to the Localizer one
     if default == None:
       default = msgid
@@ -57,16 +75,24 @@ class LocalizerTranslationService:
                                         , lang    = target_language
                                         , default = default
                                         )
+
+    # Map the translated string with given parameters
     if type(mapping) is type({}):
       return Template(translated_str).substitute(mapping)
     return translated_str
 
 
 
-# Use the patched translate() method
+# Apply the monkey patch
 from Products.PageTemplates import GlobalTranslationService
-
 def setGlobalTranslationService(service):
   GlobalTranslationService.translationService = LocalizerTranslationService()
-
 GlobalTranslationService.setGlobalTranslationService = setGlobalTranslationService
+
+
+
+### New Localizer Feature ###
+# Allow call of translate() in python scripts directly from Localizer object
+from Products.Localizer import Localizer
+Localizer.Localizer.translate = LocalizerTranslationService.translate
+Localizer.Localizer.tranlate__roles__ = None # public
