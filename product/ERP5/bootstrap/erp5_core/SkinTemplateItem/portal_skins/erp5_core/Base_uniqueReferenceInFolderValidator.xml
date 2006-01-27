@@ -74,15 +74,16 @@ if editor is None : \n
 \n
 reference = editor\n
 \n
-document = context.portal_catalog.getObject(request.object_uid)\n
+document = context.restrictedTraverse(request.object_path, None)\n
 if document is None : \n
-  #context.log(\'document is None\',\'\') # log may not work with unprivilegied user\n
+  context.log(\'Base_uniqueReferenceInFolderValidator\', \'document is None\')\n
   return 0\n
 \n
 parent_folder = document.getParentValue()\n
 for same_reference in parent_folder.searchFolder(reference = reference):\n
   if same_reference.uid != document.getUid() :\n
-    #context.log(\'another document with reference %s exists at\' % reference, same_reference.getPath())\n
+    context.log(\'Base_uniqueReferenceInFolderValidator\',\n
+                        \'another document with reference %s exists at %s\' % (reference, same_reference.getPath()))\n
     return 0\n
 \n
 return 1\n
