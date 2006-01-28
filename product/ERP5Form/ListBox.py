@@ -1001,11 +1001,11 @@ class ListBoxWidget(Widget.Widget):
               absolute_url_txt = s[0].absolute_url()
               stat_context.absolute_url = lambda: absolute_url_txt
               stat_context.domain_url = s[0].getRelativeUrl()
-              section_title = s[0].getTitle()
+              section_title = s[0].getTitleOrId()
               section_title = CT_(section_title, default=section_title.decode('utf-8'))
               if type(section_title) == type(u''):
                 section_title = section_title.encode('utf-8')
-              report_sections += [(s[0].getTitle(), 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
+              report_sections += [(s[0].getTitleOrId(), 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
               #                 report id, is_summary, depth, object_list, object_list_len, XX, XX, report_object, start, stop
             else:
               # Prepare query
@@ -1044,15 +1044,15 @@ class ListBoxWidget(Widget.Widget):
                 if object_list_len and s[3]:
                   # Display object data at same level as category selector
                   # If this domain is open
-                  report_sections += [ (s[0].getTitle(), 0, s[2], [object_list[0]], 1, s[3], s[4], stat_context, 0) ]
+                  report_sections += [ (s[0].getTitleOrId(), 0, s[2], [object_list[0]], 1, s[3], s[4], stat_context, 0) ]
                   report_sections += [ (None, 0, s[2], object_list, object_list_len - 1, s[3], s[4], None, 1) ]
                 else:
                   if exception_uid_list is not None:
                     # Display current parent domain
-                    report_sections += [ (s[0].getTitle(), 0, s[2], [s[0]], 1, s[3], s[4], stat_context, 0) ]
+                    report_sections += [ (s[0].getTitleOrId(), 0, s[2], [s[0]], 1, s[3], s[4], stat_context, 0) ]
                   else:
                     # No data to display
-                    report_sections += [ (s[0].getTitle(), 0, s[2], [None], 1, s[3], s[4], stat_context, 0) ]
+                    report_sections += [ (s[0].getTitleOrId(), 0, s[2], [None], 1, s[3], s[4], stat_context, 0) ]
 
           # Reset original value
           selection.edit(report = None)
