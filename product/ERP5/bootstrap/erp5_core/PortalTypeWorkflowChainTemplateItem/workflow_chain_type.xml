@@ -1,0 +1,166 @@
+<workflow_chain>
+ <chain>
+  <type>Address</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Agent</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Agent Privilege</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Alarm</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Alarm Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Assignment</type>
+  <workflow>edit_workflow, assignment_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Bank Account</type>
+  <workflow>bank_account_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Base Category</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Career</type>
+  <workflow>career_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Category</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Category Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>ChatAddress</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Credit Card</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Currency</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Currency Exchange Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Delivery Builder</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Delivery Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Email</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Favorite</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Fax</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>File</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Link</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Mapped Value</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>News Item</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Order Builder</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Order Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Organisation</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Person</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Predicate</type>
+  <workflow>rule_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Preference</type>
+  <workflow>preference_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Preference Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Route Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Rule Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Simulation Movement</type>
+  <workflow>simulation_movement_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Simulation Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Telephone</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trash Bin</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Trash Folder</type>
+  <workflow>(Default)</workflow>
+ </chain>
+ <chain>
+  <type>Trash Tool</type>
+  <workflow>(Default)</workflow>
+ </chain>
+</workflow_chain>
