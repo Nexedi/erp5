@@ -1088,7 +1088,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     p = context.getPortalObject()
     (default_chain, chain_dict) = getChainByType(context)
     for key in self._archive.keys():      
-      portal_type, workflow = key.split(' | ')
+      wflist = key.split(' | ')
+      if len(wflist) == 2:
+        portal_type = wflist[0]
+        worflow = wf_list[1]
+      else:
+        portal_type = wflist[0]
+        worflow = ''      
       if workflow not in chain_dict['chain_%s' % portal_type]:
         raise 
       if self._objects.has_key(portal_type):
