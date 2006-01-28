@@ -1091,7 +1091,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       wflist = key.split(' | ')
       if len(wflist) == 2:
         portal_type = wflist[0]
-        worflow = wf_list[1]
+        worflow = wflist[1]
       else:
         portal_type = wflist[0]
         worflow = ''      
