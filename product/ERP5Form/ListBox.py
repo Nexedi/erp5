@@ -998,7 +998,8 @@ class ListBoxWidget(Widget.Widget):
                 index = index + 1
 
               stat_context = s[0].asContext(**stat_result)
-              stat_context.absolute_url = lambda x: s[0].absolute_url()
+              absolute_url_txt = s[0].absolute_url()
+              stat_context.absolute_url = lambda: absolute_url_txt
               stat_context.domain_url = s[0].getRelativeUrl()
               section_title = s[0].getTitle()
               section_title = CT_(section_title, default=section_title.decode('utf-8'))
@@ -1037,7 +1038,8 @@ class ListBoxWidget(Widget.Widget):
                   report_sections += [ (None, 0, s[2], object_list, object_list_len, s[3], s[4], None, 0) ]
               else:
                 stat_context = s[0].asContext()
-                stat_context.absolute_url = lambda x: s[0].absolute_url()
+                absolute_url_txt = s[0].absolute_url()
+                stat_context.absolute_url = lambda : absolute_url_txt
                 stat_context.domain_url = s[0].getRelativeUrl()
                 if object_list_len and s[3]:
                   # Display object data at same level as category selector
@@ -1820,7 +1822,6 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       except (ConflictError, RuntimeError):
                         raise
                       except:
-                        # XXX FIXME: except without Error name
                         pass
                   # Generate appropriate HTML
                   if type(attribute_value) == type(u''):
@@ -1922,7 +1923,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   # XXX this is horrible, but it would be better without those &nbsp; ....
                   if type(value_tmp) == type(''):
                     if '&nbsp;' in value_tmp:
-                      value_tmp = value_tmp.replace('&nbsp', ' ')
+                      value_tmp = value_tmp.replace('&nbsp;', ' ')
 
                   current_listboxline.addColumn( column[0] , value_tmp )
 
