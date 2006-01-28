@@ -1091,10 +1091,10 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       wflist = key.split(' | ')
       if len(wflist) == 2:
         portal_type = wflist[0]
-        worflow = wflist[1]
+        workflow = wflist[1]
       else:
         portal_type = wflist[0]
-        worflow = ''      
+        workflow = ''      
       if workflow not in chain_dict['chain_%s' % portal_type]:
         raise 
       if self._objects.has_key(portal_type):
