@@ -406,7 +406,7 @@ class Category(Folder):
       return "context.isMemberOf('%s')" % self.getCategoryRelativeUrl(base = 1)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
-    def asSqlExpression(self, strict_membership=0, table='category'):
+    def asSqlExpression(self, strict_membership=0, table='category', base_category = None):
       """
         A Predicate can be rendered as an sql expression. This
         can be useful to create reporting trees based on the
@@ -414,14 +414,18 @@ class Category(Folder):
       """
       #LOG('asSqlExpression', 0, str(self))
       #LOG('asSqlExpression parent', 0, str(self.aq_parent))
+      if base_category is None:
+        base_category = self
+      elif type(base_category) is type('a'):
+        base_category = self.portal_categories[base_category]
       if strict_membership:
         sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s ' \
                    'AND %s.category_strict_membership = 1)' % \
                                  (table, self.getUid(), table, 
-                                  self.getBaseCategoryUid(), table)
+                                  base_category.getBaseCategoryUid(), table)
       else:
         sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
-            (table, self.getUid(), table, self.getBaseCategoryUid())
+            (table, self.getUid(), table, base_category.getBaseCategoryUid())
       # Now useless since we precompute the mapping
       #for o in self.objectValues():
       #  sql_text += ' OR %s' % o.asSqlExpression()
