@@ -1122,7 +1122,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         workflow = ''
       if chain_dict.has_key('chain_%s' % portal_type):
         if workflow not in chain_dict['chain_%s' % portal_type]:
-          raise
+          raise NotFound, 'workflow %s not found in chain for portal_type %s'\
+        % (workflow, portal_type)
         if self._objects.has_key(portal_type):
           workflow_list = self._objects[portal_type]
           workflow_list.append(workflow)
