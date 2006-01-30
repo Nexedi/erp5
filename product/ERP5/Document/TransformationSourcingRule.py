@@ -229,7 +229,7 @@ class TransformationSourcingRule(Rule):
               'quantity': parent_movement.getQuantity(),
               'price': parent_movement.getPrice(),
               'quantity_unit': parent_movement.getQuantityUnit(),
-              'start_date': previous_supply_link.getStartDate(stop_date),
+              'start_date': previous_supply_link.calculateStartDate(stop_date),
               'stop_date': stop_date,
               'deliverable': 1,
               # Save the value of the current supply link

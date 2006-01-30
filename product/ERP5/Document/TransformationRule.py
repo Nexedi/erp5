@@ -165,7 +165,7 @@ class TransformationRule(Rule):
           "destination": production,
           "destination_section": production_section,
           "deliverable": 1,
-          'start_date': current_supply_link.getStartDate(stop_date),
+          'start_date': current_supply_link.calculateStartDate(stop_date),
           'stop_date': stop_date,
           'causality_value': current_supply_link,
         }
@@ -233,7 +233,7 @@ class TransformationRule(Rule):
           id_count += 1
           stop_date = parent_movement.getStartDate()
           consumed_movement_dict[consumed_mvt_id] = {
-            'start_date': current_supply_link.getStartDate(stop_date),
+            'start_date': current_supply_link.calculateStartDate(stop_date),
             'stop_date': stop_date,
             "resource": parent_movement.getResource(),
             # XXX Is the quantity value correct ?
@@ -291,7 +291,7 @@ class TransformationRule(Rule):
         if resource_price is not None:
           price = amount.getQuantity() * resource_price
         consumed_movement_dict[consumed_mvt_id] = {
-          'start_date': current_supply_link.getStartDate(stop_date),
+          'start_date': current_supply_link.calculateStartDate(stop_date),
           'stop_date': stop_date,
           "resource": amount.getResource(),
           "variation_category_list":\

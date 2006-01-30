@@ -61,7 +61,6 @@ class SupplyLink(Path, XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
-                      , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Price
@@ -165,8 +164,8 @@ class SupplyLink(Path, XMLObject):
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getStartDate')
-    def getStartDate(self, stop_date):
+                              'calculateStartDate')
+    def calculateStartDate(self, stop_date):
       """
         Calculate the start date, depending on the delay.
       """
