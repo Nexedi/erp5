@@ -35,6 +35,7 @@ import tarfile
 import os
 import sys
 import tempfile
+import shutil
 
 property_list = ('title', 'version', 'description', 'license', 'dependency_list', 'copyright_list')
 
@@ -59,9 +60,9 @@ def readBusinessTemplate(tar):
           property_dict[name_list[2]] = text
       finally:
         f.close()
-        
+
   return property_dict
-        
+
 def generateInformation(fd):
   os.write(fd, '<?xml version="1.0"?>\n')
   os.write(fd, '<repository>\n')
@@ -90,9 +91,9 @@ def generateInformation(fd):
         info('done\n')
       finally:
         tar.close()
-        
+
   os.write(fd, '</repository>\n')
-       
+
 def main():
   if len(sys.argv) < 2:
     dir_list = ['.']
@@ -112,7 +113,7 @@ def main():
       os.remove(path)
       raise
     else:
-      os.rename(path, 'bt5list')
+      shutil.move(path, 'bt5list')
     os.chdir(cwd)
 
 main()
