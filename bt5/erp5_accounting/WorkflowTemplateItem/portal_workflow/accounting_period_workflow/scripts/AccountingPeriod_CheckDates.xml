@@ -72,35 +72,45 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 closing_period = state_change.object\n
 portal = closing_period.getPortalObject()\n
-N_ = portal.Base_TranslateString\n
-accounting_period_module = portal.accounting_period_module\n
+N_ = portal.Base_translateString\n
 valid_states = [\'planned\', \'confirmed\', \'delivered\']\n
 \n
 start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n
-if start_date > stop_date : \n
-  raise ValidationFailed, "Start Date is After Stop Date"\n
+if start_date > stop_date :\n
+  raise ValidationFailed, N_("Start Date is After Stop Date")\n
 \n
-period_list = portal.accounting_period_module\\\n
-                            .searchFolder( simulation_state = [\'planned\', \'confirmed\', \'delivered\'],\n
-                                                    sort_on = \'delivery.start_date\')\n
+period_list = closing_period.getParentValue().searchFolder(\n
+                  simulation_state = valid_states,\n
+                  sort_on = \'delivery.start_date\',\n
+                  portal_type = \'Accounting Period\')\n
 \n
 for period in period_list :\n
   period = period.getObject()\n
-  portal.log("period", "id:%s start:%s stop:%s" % (period.getId(), period.getStartDate(), period.getStopDate()))\n
+  portal.log("AccountingPeriod_CheckDates", "id:%s start:%s stop:%s" % (\n
+                                period.getId(),\n
+                                period.getStartDate(),\n
+                                period.getStopDate()))\n
   if period.getSimulationState() in valid_states :\n
     if start_date <= period.getStopDate() :\n
-      raise ValidationFailed, N_("%s is already in an opened accounting period") % period.Base_FormatDate(start_date)\n
+      raise ValidationFailed, N_(\n
+          "${date} is already in an opened accounting period",\n
+          mapping = {\'date\': period.Base_FormatDate(start_date)})\n
+          \n
 if len(period_list) > 1 :\n
   last_period  = period_list[-1].getObject()\n
   if last_period.getId() == closing_period.getId() :\n
-    last_period  = period_list[-2].getObject() \n
+    last_period  = period_list[-2].getObject()\n
   if (start_date - last_period.getStopDate()) > 1:\n
-      raise ValidationFailed, N_("Last opened period ends on ${last_openned_date}, this period starts on ${this_period_start_date}."+\n
-          " Accounting Periods must be consecutive.", \n
-          mapping = { \'last_openned_date\' : period.Base_FormatDate(last_period.getStopDate()),\n
-                                \'this_period_start_date\' : period.Base_FormatDate(start_date) } )\n
+      raise ValidationFailed, N_(\n
+        "Last opened period ends on ${last_openned_date},"+\n
+        " this period starts on ${this_period_start_date}."+\n
+        " Accounting Periods must be consecutive.",\n
+          mapping = { \'last_openned_date\' :\n
+                        period.Base_FormatDate(last_period.getStopDate()),\n
+                      \'this_period_start_date\' :\n
+                        period.Base_FormatDate(start_date) } )\n
 
 
 ]]></string> </value>
@@ -112,8 +122,14 @@ if len(period_list) > 1 :\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/hopital/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckDates</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckDates</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -150,7 +166,6 @@ if len(period_list) > 1 :\n
                             <string>closing_period</string>
                             <string>portal</string>
                             <string>N_</string>
-                            <string>accounting_period_module</string>
                             <string>valid_states</string>
                             <string>start_date</string>
                             <string>stop_date</string>
@@ -182,6 +197,27 @@ if len(period_list) > 1 :\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

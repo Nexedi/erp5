@@ -72,7 +72,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 closing_period = state_change.object\n
 portal = closing_period.getPortalObject()\n
-N_ = portal.Base_TranslateString\n
+N_ = portal.Base_translateString\n
 accounting_module = portal.accounting_module\n
 valid_states = [\'cancelled\', \'stopped\', \'delivered\']\n
 \n
@@ -80,15 +80,26 @@ start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n
 search_params = { \'delivery.start_date\' : \'>= %s\' % start_date,\n
-                                \'delivery.stop_date\'  : \'<= %s\' % stop_date, }\n
-transaction_list = accounting_module.searchFolder( **search_params)\n
+                  \'delivery.stop_date\'  : \'<= %s\' % stop_date, \n
+                  \'simulation_state\' : [\'draft\', \'planned\', \'confirmed\', ] }\n
+transaction_list = accounting_module.searchFolder( **search_params )\n
 \n
-for transaction in transaction_list : \n
+organisation_section = closing_period.getParentValue()\n
+for transaction in transaction_list :\n
   transaction = transaction.getObject()\n
-  if transaction.getSimulationState() not in valid_states :\n
-    raise ValidationFailed, N_("Transaction ${transaction_path} is in invalid state (${transaction_translated_state})",\n
-                                mapping =  { \'transaction_path\' : transaction.getPath(),\n
-                                             \'transaction_translated_state\' : unicode(transaction.getTranslatedSimulationStateTitle(), \'utf8\')})\n
+  # we only take into account transaction that are related to this\n
+  # organisation. \n
+  # FIXME: this approach is not compatible with categories as section.\n
+  # FIXME: and not compatible with 100 000 transactions.\n
+  if transaction.getSourceSectionUid() == organisation_section.getUid() or \\\n
+     transaction.getDestinationSectionUid() == organisation_section.getUid() :\n
+    if transaction.getSimulationState() not in valid_states :\n
+      raise ValidationFailed, N_(\n
+          "Transaction ${transaction_path} is in invalid "+\n
+          "state (${transaction_translated_state})",\n
+           mapping =  { \'transaction_path\' : transaction.getPath(),\n
+                        \'transaction_translated_state\' :\n
+            unicode(transaction.getTranslatedSimulationStateTitle(), \'utf8\')})\n
 
 
 ]]></string> </value>
@@ -100,8 +111,14 @@ for transaction in transaction_list : \n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/hopital/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckTransactionsState</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_CheckTransactionsState</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -145,6 +162,7 @@ for transaction in transaction_list : \n
                             <string>search_params</string>
                             <string>_apply_</string>
                             <string>transaction_list</string>
+                            <string>organisation_section</string>
                             <string>_getiter_</string>
                             <string>transaction</string>
                             <string>unicode</string>
@@ -170,6 +188,27 @@ for transaction in transaction_list : \n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

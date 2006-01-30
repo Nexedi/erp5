@@ -72,7 +72,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 closing_period = state_change.object\n
 portal = closing_period.getPortalObject()\n
-N_ = portal.Base_TranslateString\n
+N_ = portal.Base_translateString\n
 accounting_module = portal.accounting_module\n
 valid_states = [\'cancelled\', \'stopped\', \'delivered\']\n
 \n
@@ -83,20 +83,39 @@ start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n
 search_params = { \'delivery.start_date\' : \'>= %s\' % start_date,\n
-                                \'delivery.stop_date\'  : \'<= %s\' % stop_date, }\n
-transaction_list = accounting_module.searchFolder( **search_params)\n
+                  \'delivery.stop_date\'  : \'<= %s\' % stop_date,\n
+                  \'simulation_state\' : \'stopped\' }\n
+transaction_list = accounting_module.searchFolder( **search_params )\n
 \n
-for transaction in transaction_list : \n
+#raise \'\\n\'.join([transaction.path for transaction in transaction_list])\n
+\n
+section_uid = closing_period.getParentValue().getUid()\n
+for transaction in transaction_list :\n
   transaction = transaction.getObject()\n
-  if transaction.getSimulationState() == \'stopped\' : \n
-    portal.portal_workflow.doActionFor( transaction, \'deliver_action\', \n
-                                                               wf_id="accounting_workflow",\n
-                                                               skip_period_validation = 1)\n
-    if transaction.getSimulationState() != \'delivered\' : \n
-      raise ValidationFailed, N_("Unable to change state for ${transaction_path}, check this transaction history",\n
-                                  mapping = {\'transaction_path\' : transaction.getPath()})\n
+  # FIXME: this approach is not compatible with categories as sections.\n
+  if transaction.getSourceSectionUid() == section_uid or \\\n
+             transaction.getDestinationSectionUid() == section_uid :\n
+    if transaction.getSimulationState() == \'stopped\' :\n
+      # this action is made in the \'before_script\', even if this is \n
+      # related to the workflow logic, because we want the user to be\n
+      # notified of failures\n
+      \n
+      # FIXME: this way is not compatible with 100.000 transactions and should\n
+      # probably be activated.\n
+      portal.portal_workflow.doActionFor( transaction, \'deliver_action\',\n
+              wf_id="accounting_workflow",\n
+              comment=N_("Closing period ${period_title}",\n
+                    mapping={\'period_title\': closing_period.getTitle()}),\n
+              skip_period_validation = 1  )\n
+      if transaction.getSimulationState() != \'delivered\' :\n
+        # FIXME: this is not transactional\n
+        raise ValidationFailed, N_(\n
+            "Unable to change state for ${transaction_path}, "+\n
+            "check this transaction history",\n
+            mapping = {\'transaction_path\' : transaction.getPath()})\n
     else :\n
-      transaction.log(\'AccountingPeriod_DeliverTransaction\', \'deliver %s\' % transaction.getPath())\n
+      transaction.log(\'AccountingPeriod_DeliverTransaction\',\n
+                      \'deliver %s\' % transaction.getPath())\n
 
 
 ]]></string> </value>
@@ -108,8 +127,14 @@ for transaction in transaction_list : \n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/hopital/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_DeliverTransactions</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_period_workflow/scripts/AccountingPeriod_DeliverTransactions</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -154,6 +179,7 @@ for transaction in transaction_list : \n
                             <string>search_params</string>
                             <string>_apply_</string>
                             <string>transaction_list</string>
+                            <string>section_uid</string>
                             <string>_getiter_</string>
                             <string>transaction</string>
                           </tuple>
@@ -178,6 +204,27 @@ for transaction in transaction_list : \n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
