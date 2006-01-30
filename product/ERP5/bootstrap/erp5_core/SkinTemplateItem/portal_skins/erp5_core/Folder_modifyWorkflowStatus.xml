@@ -1,0 +1,246 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.Formulator.Errors import ValidationError, FormValidationError\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+request=context.REQUEST\n
+\n
+try:\n
+  # Validate the form\n
+  form = getattr(context,dialog_id)\n
+  #form.validate_all_to_request(request)\n
+  kw = {}\n
+  for f in form.get_fields():\n
+    k = f.id\n
+    v = getattr(request, k, getattr(request, k[3:], None))\n
+    if v is not None:\n
+      k = k[3:]\n
+      kw[k] = v\n
+      \n
+  listbox = request.get(\'listbox\')\n
+  if listbox is not None:\n
+    listbox_line_list = []\n
+    listbox = getattr(request,\'listbox\',None)\n
+    listbox_keys = listbox.keys()\n
+    listbox_keys.sort()\n
+    for key in listbox_keys:\n
+      listbox_line = listbox[key]\n
+      listbox_line[\'listbox_key\'] = key\n
+      listbox_line_list.append(listbox[key])\n
+    listbox_line_list = tuple(listbox_line_list)\n
+    kw[\'listbox\'] = listbox_line_list\n
+\n
+  selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+  if len(selection_uid_list) == 0 :\n
+    selection_list = context.portal_selections.callSelectionFor(selection_name, context=context)\n
+  else :\n
+    selection_list = []\n
+    for uid in selection_uid_list :\n
+      selection_list.append(context.portal_catalog.getObject(uid))\n
+   \n
+  for o in selection_list:\n
+    o = o.getObject()\n
+    o.activate().Base_workflowStatusModify(batch = 1, **kw)\n
+\n
+  value_error = "Done"\n
+  redirect_url = \'%s/%s?portal_status_message=%s&form_id=%s\' % (\n
+                                   context.absolute_url(), form_id\n
+                                  , value_error, form_id,\n
+                                  )\n
+\n
+  return context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  return form(request)\n
+except ValueError, value_error:\n
+  # Pack errors into the request\n
+  redirect_url = \'%s/%s?%s%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=\',value_error\n
+                                  )\n
+\n
+  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/erp5_core/Folder_modifyWorkflowStatus</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, dialog_id, selection_name</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>dialog_id</string>
+                            <string>selection_name</string>
+                            <string>Products.Formulator.Errors</string>
+                            <string>ValidationError</string>
+                            <string>FormValidationError</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>kw</string>
+                            <string>_getiter_</string>
+                            <string>f</string>
+                            <string>k</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>v</string>
+                            <string>_write_</string>
+                            <string>listbox</string>
+                            <string>listbox_line_list</string>
+                            <string>listbox_keys</string>
+                            <string>key</string>
+                            <string>listbox_line</string>
+                            <string>tuple</string>
+                            <string>selection_uid_list</string>
+                            <string>len</string>
+                            <string>selection_list</string>
+                            <string>uid</string>
+                            <string>o</string>
+                            <string>_apply_</string>
+                            <string>value_error</string>
+                            <string>redirect_url</string>
+                            <string>validation_errors</string>
+                            <string>field_errors</string>
+                            <string>ValueError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Folder_modifyWorkflowStatus</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

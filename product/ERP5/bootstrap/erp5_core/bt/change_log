@@ -1,4 +1,7 @@
 2006-01-30 jerome
+* added support for workflow validation in list mode (see Accounting Transaction Module for an example of how to use it)
+
+2006-01-30 jerome
 * modify Organisation_viewDetails to add a listbox for Accounting Periods.
 
 2006-01-30 aurel
