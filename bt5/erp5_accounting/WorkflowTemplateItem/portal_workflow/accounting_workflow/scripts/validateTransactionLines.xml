@@ -68,63 +68,74 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""Validate Transaction Lines for the source.\n
+"""\n
+\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 error_message = \'\'\n
 transaction = state_change[\'object\']\n
-N_ = transaction.Base_TranslateString\n
+N_ = transaction.Base_translateString\n
 \n
 # first of all, validate the transaction it self\n
 container.validateTransaction(state_change)\n
 \n
 # Get sections.\n
-source_section = transaction.getSourceSection(portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
-destination_section = transaction.getDestinationSection(portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
+source_section = transaction.getSourceSection(\n
+  portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
+destination_section = transaction.getDestinationSection(\n
+  portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
 \n
 # Check transaction lines.\n
 if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
-  accountingTransactionLineList = transaction.contentValues(\n
-                    filter={\'portal_type\': (\'Accounting Transaction Line\',\n
-                                            \'Sale Invoice Transaction Line\',\n
-                                            \'Pay Sheet Transaction Line\',\n
-                                            \'Purchase Invoice Transaction Line\' )})\n
+  accounting_transaction_line_list = transaction.contentValues(\n
+         filter={ \'portal_type\':\n
+               transaction.getPortalAccountingMovementTypeList()})\n
   sum = 0\n
-  for transaction_line in accountingTransactionLineList:\n
+  for transaction_line in accounting_transaction_line_list:\n
     if source_section != destination_section :\n
-      quantity = transaction_line.getQuantity() or 0.0\n
+      quantity = transaction_line.getSourceInventoriatedTotalAssetPrice() or 0\n
     else :\n
-      quantity = transaction_line.getSourceDebit() - transaction_line.getSourceCredit() + \\\n
-                 transaction_line.getDestinationDebit() - transaction_line.getDestinationCredit()\n
+      quantity = transaction_line.getSourceInventoriatedTotalAssetPrice() or 0 +\\\n
+                 transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+      \n
     sum += int(round(quantity * 100))\n
-\n
-    if transaction_line.getSourceValue() is None : continue\n
+    if transaction_line.getSourceValue() is None :\n
+      continue\n
 \n
     if transaction_line.getSourceValue().getValidationState() != \'validated\' :\n
-      raise ValidationFailed, N_(\'Action impossible : Account ${account_title} is ${state}\',\n
-                 mapping = {\'account_title\': unicode(transaction_line.getSourceValue().getTranslatedTitle(), \'utf8\'),\n
-                                      \'state\': unicode(transaction_line.getSourceValue().\n
-                                                              getTranslatedValidationStateTitle(), \'utf8\')})\n
- \n
-    if transaction_line.getSourceValue().getAccountTypeId() in ("receivable", "payable") \\\n
-          and transaction_line.getDestinationSection() in (None, "") :\n
       raise ValidationFailed, N_(\n
-             \'Action impossible : no Third Party defined for line ${line} where Account Type is ${account_type}.\',\n
+            \'Action impossible : Account ${account_title} is ${state}\',\n
+            mapping = {\'account_title\':  unicode(transaction_line\\\n
+                           .getSourceValue().getTranslatedTitle(), \'utf8\'),\n
+                       \'state\': unicode(transaction_line.getSourceValue()\\\n
+                           .getTranslatedValidationStateTitle(), \'utf8\')})\n
+ \n
+    if transaction_line.getSourceValue().getAccountTypeId() in (\n
+              "receivable", "payable") and \\\n
+              transaction_line.getDestinationSection() in (None, "") :\n
+      raise ValidationFailed, N_(\n
+             \'Action impossible : no Third Party defined for line ${line} \'+\n
+             \'where Account Type is ${account_type}.\',\n
              mapping = { \'line\': transaction_line.getId(),\n
-                                   \'account_type\' : unicode(transaction_line.getSourceValue()\n
-                                                                 .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
+                \'account_type\' : unicode(transaction_line.getSourceValue()\\\n
+                .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
     \n
     if transaction_line.getSourceValue().isMemberOf("account_type/asset/cash") \\\n
           and transaction_line.getSourcePayment() in (None, "") :\n
        raise ValidationFailed, N_(\n
-            \'Action impossible : no Bank Account defined for line ${line} where Account Type is ${account_type}.\',\n
+            \'Action impossible : no Bank Account defined for line ${line} \'+\n
+            \'where Account Type is ${account_type}.\',\n
             mapping = { \'line\': transaction_line.getId(),\n
-                                   \'account_type\' : unicode(transaction_line.getSourceValue()\n
-                                                       .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
+             \'account_type\' : unicode(transaction_line.getSourceValue()\\\n
+                .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
 \n
   if sum > 0:\n
-    raise ValidationFailed, N_(\'Action impossible : credit is greater than debit\')\n
+    raise ValidationFailed, N_(\n
+              \'Action impossible : credit is greater than debit\')\n
   elif sum < 0:\n
-    raise ValidationFailed, N_(\'Action impossible : credit is smaller than debit\')\n
+    raise ValidationFailed, N_(\n
+              \'Action impossible : credit is smaller than debit\')\n
 \n
 transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
 
@@ -145,7 +156,7 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/validateTransactionLines</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/validateTransactionLines</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -204,7 +215,7 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>container</string>
                             <string>source_section</string>
                             <string>destination_section</string>
-                            <string>accountingTransactionLineList</string>
+                            <string>accounting_transaction_line_list</string>
                             <string>sum</string>
                             <string>_getiter_</string>
                             <string>transaction_line</string>
