@@ -1,6 +1,6 @@
 Account Module | Account
-Accounting Period Module | Accounting Period
 Accounting Rule Cell | Accounting Transaction Line
+Accounting Transaction Module | Accounting Period Delimiter
 Accounting Transaction Module | Accounting Transaction
 Accounting Transaction Module | Balance Transaction
 Accounting Transaction Module | Pay Sheet Transaction
@@ -14,6 +14,7 @@ Invoice Line | Discount
 Invoice Line | Invoice Cell
 Invoice Transaction Rule | Accounting Rule Cell
 Invoice Transaction Rule | Predicate
+Organisation | Accounting Period
 Payment Transaction | Accounting Transaction Line
 Preference | Accounting Transaction
 Preference | Payment Transaction
