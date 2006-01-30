@@ -2,9 +2,6 @@
  <portal_type id="Account Module">
   <item>Account</item>
  </portal_type>
- <portal_type id="Accounting Period Module">
-  <item>Accounting Period</item>
- </portal_type>
  <portal_type id="Accounting Rule Cell">
   <item>Accounting Transaction Line</item>
  </portal_type>
@@ -13,6 +10,7 @@
  </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>Purchase Invoice Transaction</item>
+  <item>Accounting Period Delimiter</item>
   <item>Pay Sheet Transaction</item>
   <item>Accounting Transaction</item>
   <item>Sale Invoice Transaction</item>
@@ -32,6 +30,9 @@
  <portal_type id="Invoice Transaction Rule">
   <item>Predicate</item>
   <item>Accounting Rule Cell</item>
+ </portal_type>
+ <portal_type id="Organisation">
+  <item>Accounting Period</item>
  </portal_type>
  <portal_type id="Payment Transaction">
   <item>Accounting Transaction Line</item>
