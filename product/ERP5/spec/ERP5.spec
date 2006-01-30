@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.11
-%define release 2
+%define release 3
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -30,6 +30,7 @@ very short time.
 %setup -c
 
 %build
+
 
 %install
 %{__rm} -rf %{buildroot}
@@ -71,6 +72,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-3mdk
+- New build from the CVS
+
 * Fri Jan 27 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-2mdk
 - New build from the CVS
 - Create a bt5 folder in /var/lib/zope
