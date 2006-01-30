@@ -555,8 +555,34 @@ class ObjectTemplateItem(BaseTemplateItem):
           obj = container._getOb(object_id)
           obj.manage_afterClone(obj)
           obj.wl_clearLocks()
+          # if portal types upgrade, set backup properties
+          if getattr(obj, 'meta_type', None) == 'ERP5 Type Information' and len(subobjects_dict) > 0:
+            setattr(obj, 'allowed_content_types', subobjects_dict['allowed_content_type_list'] or [])
+            setattr(obj, 'hidden_content_type_list', subobjects_dict['hidden_content_type_list'] or [])
+            setattr(obj, 'property_sheet_list', subobjects_dict['property_sheet_list'] or [])
+            setattr(obj, 'base_category_list', subobjects_dict['base_category_list'] or [])
+            setattr(obj, '_roles', subobjects_dict['roles_list'] or [])
+            # set actions
+            action_list = subobjects_dict['action_list']
+            for action in action_list:
+              obj.addAction(id = action.id
+                            , name = action.title
+                            , action = action.action.text
+                            , condition = action.getCondition()
+                            , permission = action.permissions
+                            , category = action.category
+                            , visible = action.visible
+                            , icon = getattr(action, 'icon', None) and action.icon.text or ''
+                            , priority = action.priority
+                            )
+            # set workflow chain
+            wf_chain = subobjects_dict['workflow_chain']
+            chain_dict = getChainByType(context)[1]
+            default_chain = ''
+            chain_dict['chain_%s' %(object_id)] = wf_chain
+            context.portal_workflow.manage_changeWorkflows(default_chain, props=chain_dict)            
           # import sub objects if there is
-          if len(subobjects_dict) > 0:
+          elif len(subobjects_dict) > 0:
             # get a jar
             connection = obj._p_jar
             o = obj
@@ -569,7 +595,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               subobject_data.seek(0)
               subobject = connection.importFile(subobject_data)
               if subobject_id not in obj.objectIds():
-                obj._setObject(subobject_id, subobject)
+                obj._setObject(subobject_id, subobject)          
           if obj.meta_type in ('Z SQL Method',):
             # It is necessary to make sure that the sql connection
             # in this method is valid.
@@ -1081,7 +1107,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     else:
       ObjectTemplateItem._importFile(self, file_name, file)
 
-
 class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
@@ -1103,7 +1128,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           workflow_list.append(workflow)
           self._objects[portal_type] = workflow_list
         else:
-          self._objects[portal_type] = [workflow]
+          self._objects[portal_type] = [workflow,]
       else:
         LOG('BusinessTemplate build', 0, 'portal type %s not found in workflow chain' %(portal_type))
 
@@ -1113,6 +1138,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     keys.sort()
     for key in keys:
       workflow_list = self._objects[key]
+      LOG('generate xml', 0, workflow_list)
       xml_data += os.linesep+' <chain>'
       xml_data += os.linesep+'  <type>%s</type>' %(key,)
       xml_data += os.linesep+'  <workflow>%s</workflow>' %(', '.join(workflow_list))
@@ -1167,6 +1193,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       dict[str(ptype)] = str(workflow)
     self._objects = dict
 
+# just for backward compatibility
+PortalTypeTemplateWorkflowChainItem = PortalTypeWorkflowChainTemplateItem
 
 class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
 

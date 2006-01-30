@@ -32,6 +32,7 @@ from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
+from Products.ERP5.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from DateTime import DateTime
 from Acquisition import aq_base
@@ -93,9 +94,28 @@ class TrashTool(BaseTool):
           # so object is not backup
           LOG("Trash Tool backupObject", 100, "Can't backup object %s" %(object_id))
           pass
+      # in case of portal types, export properties instead of subobjects
+      if getattr(obj, 'meta_type', None) == 'ERP5 Type Information':
+        subobjects_dict = {}
+        subobjects_dict['allowed_content_type_list'] = getattr(obj, 'allowed_content_types', []) or []
+        subobjects_dict['hidden_content_type_list'] = getattr(obj, 'hidden_content_type_list', []) or []
+        subobjects_dict['property_sheet_list'] = getattr(obj, 'property_sheet_list', []) or []
+        subobjects_dict['base_category_list'] = getattr(obj, 'base_category_list', []) or []
+        subobjects_dict['roles_list'] =  getattr(obj, '_roles', []) or []
+        action_list = obj.listActions() or []
+        subobjects_dict['action_list'] = []
+        for action in action_list:
+          subobjects_dict['action_list'].append(action._getCopy(obj))
+        wf_chain = getChainByType(self.getPortalObject())[1]
+        if wf_chain.has_key(object_id):
+          subobjects_dict['workflow_chain'] = wf_chain[object_id]
+        else:
+          subobjects_dict['workflow_chain'] = ''
+        return subobjects_dict
         
     keep_sub = kw.get('keep_subobjects', 0)
     subobjects_dict = {}
+    
     if not keep_sub:
       # export subobjects
       if save:
