@@ -106,6 +106,7 @@ def removeAll(entry):
   except OSError:
     pass
 
+
 def getChainByType(context):
   """
   This is used in order to construct the full list
@@ -134,7 +135,6 @@ def getChainByType(context):
     new_dict['chain_%s' % item['id']] = item['chain']
   default_chain=', '.join(pw._default_chain)
   return (default_chain, new_dict)
-
 
 class BusinessTemplateArchive:
   """
@@ -1173,7 +1173,15 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           if action == 'nothing':
             continue          
         portal_type = path.split('/', 1)[1]
-        chain_dict['chain_%s' % portal_type] = self._objects[path]
+        if chain_dict.has_key('chain_%s' % portal_type):          
+          old_chain_dict = chain_dict['chain_%s' % portal_type]
+          # XXX we don't use the chain (Default) in erp5 so don't keep it
+          if old_chain_dict != '(Default)' and old_chain_dict != '':
+            chain_dict['chain_%s' % portal_type] = old_chain_dict +', '+self._objects[path]
+          else:
+            chain_dict['chain_%s' % portal_type] = self._objects[path]            
+        else:
+          chain_dict['chain_%s' % portal_type] = self._objects[path]
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
 
@@ -2056,7 +2064,9 @@ class ModuleTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = dict
 
   def uninstall(self, context, **kw):
-    trash = kw.get('trash', 0)      
+    trash = kw.get('trash', 0)
+    if trash:
+      return
     object_path = kw.get('object_path', None)
     trashbin = kw.get('trashbin', None)
     if object_path is None:
@@ -4295,7 +4305,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if hasattr(portal_type, 'listActions'):
           action_list = [x.getId() for x in portal_type.listActions()]
         if chain_dict.has_key('chain_%s' % id):
-          wf_list = chain_dict['chain_%s' % id].split(', ')
+          wf_list = chain_dict['chain_%s' % id].split(', ')          
         
         for a_id in allowed_content_type_list:
           allowed_id = id+' | '+a_id
