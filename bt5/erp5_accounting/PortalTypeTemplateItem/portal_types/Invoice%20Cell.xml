@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_roles</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>acquire_local_roles</string> </key>
             <value> <int>1</int> </value>
         </item>
