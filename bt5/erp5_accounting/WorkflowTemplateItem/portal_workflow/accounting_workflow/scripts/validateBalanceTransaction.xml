@@ -109,7 +109,7 @@ container.validateTransactionLines(state_change)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/validateBalanceTransaction</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/validateBalanceTransaction</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

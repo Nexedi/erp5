@@ -111,7 +111,7 @@ if builder_by_ptype.has_key(delivery_portal_type) : \n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/hopital/portal_workflow/accounting_workflow/scripts/Delivery_Build</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/Delivery_Build</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

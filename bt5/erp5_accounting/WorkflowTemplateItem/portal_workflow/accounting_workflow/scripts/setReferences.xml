@@ -96,7 +96,7 @@ transaction.setDestinationReference(destination_reference)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/setReferences</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/setReferences</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
