@@ -70,7 +70,7 @@
 
 portal = context.getPortalObject()\n
 \n
-period_list = portal.accounting_period_module\\\n
+period_list = context.getParentValue()\\\n
                             .searchFolder( simulation_state = [\'planned\', \'confirmed\', \'delivered\'],\n
                                                     sort_on = (\'delivery.stop_date\', \'ASC\'))\n
 \n
