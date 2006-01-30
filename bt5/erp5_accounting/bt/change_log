@@ -1,3 +1,8 @@
+2006-01-30 Jerome
+* Accounting Periods are now stored in Organisation are used on a per-Organisation basis.
+* removed Accounting Period Module.
+* bumped version to 1.0rc8
+
 2006-01-19 Kevin
 * Use Localizer instead of Translation Service in: AccountingTransactionModule_journal_pdf_template, AccountModule_getTrialBalanceReportSectionList, AccountModule_viewAccountStatementReport/transaction_simulation_state, AccountModule_viewGeneralLedgerReport/transaction_simulation_state and AccountModule_viewTrialBalanceReport/transaction_simulation_state.
 * Update Copyright year.
