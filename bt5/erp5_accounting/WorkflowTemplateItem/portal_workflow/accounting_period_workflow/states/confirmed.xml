@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Closed Accounting Period</string> </value>
+            <value> <string>Temporally Closed Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -45,6 +45,12 @@
                 <string>plan</string>
                 <string>reopen_action</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
