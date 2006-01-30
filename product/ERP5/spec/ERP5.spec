@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.11
-%define release 3
+%define release 4
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -55,6 +55,7 @@ mkdir /var/lib/zope/PropertySheet
 mkdir /var/lib/zope/Constraint
 mkdir /var/lib/zope/bt5
 ln -s %{software_home}/Products/%{product}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
+ln -s %{software_home}/Products/%{product}/Extensions/InventoryBrain.py /var/lib/zope/Extensions/
 mv %{software_home}/Products/%{product}/utils/cvs_update.sh /var/lib/zope/Products/
 if [ "`%{_prefix}/bin/zopectl status`" != "daemon manager not running" ] ; then
   service zope restart
@@ -72,6 +73,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-4mdk
+- Add missing symlink to InventoryBrain.py
+
 * Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-3mdk
 - New build from the CVS
 
