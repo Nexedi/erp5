@@ -35,11 +35,7 @@ except ImportError:
   pass
 
 
-
-class LocalizerTranslationService:
-  def translate( self, domain, msgid
-               , mapping=None, context=None, target_language=None, default=None
-               , *args, **kw):
+def Localizer_translate(self, domain, msgid, mapping=None, *args, **kw):
     """
       This translate() method use Localizer and support catalog aliases.
     """
@@ -51,63 +47,41 @@ class LocalizerTranslationService:
                               , "content": "erp5_content"
                               }
 
-    # Be carefull to not import Localizer anywhere in that Localizer patch:
-    #   it can break everything !
-    # To update this file in the right way, keep in mind that translate() method
-    #   must be able to work outside its LocalizerTranslationService class.
-    from Products.Localizer.Localizer import Localizer
-
-    # Get Localizer tool object installed in the ERP5 instance
-    if isinstance(self, Localizer):
-      # In this case we call the translate method from a script (Base_translateString generally).
-      # Exemple of call from a ZODB python script:
-      #   context.Localizer.translate('ui', 'Print button')
-      # This branch of "if" statement is needed to make the "New Localizer Feature" coded
-      #   at the end of the file work.
-      localizer = self
-    else:
-      # This is the normal case
-      #   = the one when translation is done via <i18n:translate> tag in Page Template
-      localizer = getToolByName(context, 'Localizer', None)
-    if localizer == None:
-      raise LocalizerPatchError, "Localizer tool not found."
-
     # Get the Localizer catalog id
     catalog_id = message_catalog_aliases.get(domain, domain)
-    if catalog_id not in localizer.objectIds():
+    if catalog_id not in self.objectIds():
       # No catalog found: use the default one
       catalog_id = 'default'
-    catalog_obj = localizer[catalog_id]
-
-    # Adapt Translation Service default value to the Localizer one
-    from Products.Localizer.MessageCatalog import _marker
-    if default == None: default =_marker
+    catalog_obj = self[catalog_id]
 
     # Call the Message Catalog gettext method
-    translated_str = catalog_obj.gettext( message = msgid
-                                        , lang    = target_language
-                                        , default = default
-                                        )
+    params = {}
+    for key in ('lang', 'add', 'default'):
+      if key in kw:
+        params[key] = kw[key]
+    if 'target_language' in kw:
+      params['lang'] = kw['target_language']
+    translated_str = catalog_obj.gettext(msgid, **params)
 
     # Map the translated string with given parameters
     if type(mapping) is type({}):
       return Template(translated_str).substitute(mapping)
     return translated_str
 
+def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
+  context = kw.get('context')
+  if context is None:
+    # Placeless!
+    return msgid
 
+  return context.Localizer.translate(domain, msgid, *args, **kw)
 
 # Apply the monkey patch.
-# Because we don't know when getGlobalTranslationService will be called,
-#   we override the setter to force the use of our patched translate() method.
-from Products.PageTemplates import GlobalTranslationService
-def setGlobalTranslationService(service):
-  GlobalTranslationService.translationService = LocalizerTranslationService()
-GlobalTranslationService.setGlobalTranslationService = setGlobalTranslationService
-
-
-
-### New Localizer Feature ###
-# Allow call of translate() in python scripts directly from Localizer object
-from Products.Localizer.Localizer import Localizer
-Localizer.translate = LocalizerTranslationService.translate
-Localizer.tranlate__roles__ = None # public
+try:
+  from Products.Localizer import GlobalTranslationService
+  from Products.Localizer.Localizer import Localizer
+  GlobalTranslationService.translate = GlobalTranslationService_translate
+  Localizer.translate = Localizer_translate
+  Localizer.translate__roles__ = None # public
+except ImportError:
+  pass
