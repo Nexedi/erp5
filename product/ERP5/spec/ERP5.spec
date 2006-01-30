@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.11
-%define release 4
+%define release 5
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -54,6 +54,8 @@ mkdir /var/lib/zope/Extensions
 mkdir /var/lib/zope/PropertySheet
 mkdir /var/lib/zope/Constraint
 mkdir /var/lib/zope/bt5
+chmod -R 755 /var/lib/zope
+chown -R zope:zope /var/lib/zope
 ln -s %{software_home}/Products/%{product}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
 ln -s %{software_home}/Products/%{product}/Extensions/InventoryBrain.py /var/lib/zope/Extensions/
 mv %{software_home}/Products/%{product}/utils/cvs_update.sh /var/lib/zope/Products/
@@ -73,6 +75,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-5mdk
+- Correct /var/lib/zope/ ownership and rights
+
 * Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-4mdk
 - Add missing symlink to InventoryBrain.py
 
