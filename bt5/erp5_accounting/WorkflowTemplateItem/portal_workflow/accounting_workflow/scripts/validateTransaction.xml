@@ -68,52 +68,66 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+"""Validates the transaction from the source section.\n
+Currently only works for \n
+"""\n
 \n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 error_message = \'\'\n
 \n
-# Purchase Invoice Transaction or Sale Invoice Transaction.\n
 transaction = state_change[\'object\']\n
 skip_period_validation = state_change[\'kwargs\'].get(\'skip_period_validation\', 0)\n
 transition = state_change[\'transition\']\n
 if transition.id in (\'plan_action\', \'confirm_action\') :\n
   skip_period_validation = 1\n
 \n
-if transaction.getStopDate() in (None, \'\') : \n
+N_ = transition.Base_translateString\n
+\n
+# Get sections and a currency.\n
+source_section = transaction.getSourceSectionValue(\n
+            portal_type = [\'Organisation\',\'Category\'])\n
+if source_section and source_section.getPortalType() != \'Organisation\' :\n
+  source_section = source_section.getMappingRelatedValue(\n
+            portal_type = \'Organisation\')\n
+if not source_section :\n
+  raise ValidationFailed, N_(\n
+      \'Action impossible : Source Section is not Defined.\')\n
+  \n
+destination_section = transaction.getDestinationSection(\n
+            portal_type = [\'Organisation\', \'Person\'])\n
+# if it\'s not an invoice, then we can validate without destination.\n
+if not destination_section and \\\n
+    transaction.getPortalType() in transaction.getPortalInvoiceTypeList() :\n
+  raise ValidationFailed, N_(\n
+      \'Action impossible : Destination Section is not Defined.\')\n
+\n
+currency = transaction.getResource()\n
+if not currency :\n
+  raise ValidationFailed, N_(\n
+      \'Action impossible : Currency is not Defined.\')\n
+\n
+if transaction.getStopDate() in (None, \'\') :\n
   error_message = \'date is not defined\'\n
-else: \n
+else:\n
   if not skip_period_validation :\n
     valid_date = 0\n
     # check the date is in an opened period\n
     transaction_date = DateTime( transaction.getStopDate().year(),\n
                                  transaction.getStopDate().month(),\n
-                                 transaction.getStopDate().day() ) # we don\'t care about hour:minutes\n
-    for apd in context.portal_catalog(\n
-         portal_type = "Accounting Period", \n
-         simulation_state = "planned") : \n
+                                 transaction.getStopDate().day(),\n
+                                 # we don\'t care about hour:minutes\n
+                               )\n
+    for apd in source_section.searchFolder(\n
+         portal_type = "Accounting Period",\n
+         simulation_state = "planned") :\n
       apd = apd.getObject()\n
       if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
         valid_date = 1\n
     if not valid_date :\n
-      error_message = "Date is not in an openned Accounting Period" \n
+      error_message = "Date is not in an openned Accounting Period"\n
 \n
-# Get sections and a currency.\n
-source_section = transaction.getSourceSection(portal_type = [\'Organisation\',\'Category\'])\n
-destination_section = transaction.getDestinationSection(portal_type = [\'Organisation\', \'Person\'])\n
-currency = transaction.getResource()\n
-\n
-if source_section in (None, \'\'):\n
-  error_message = \'Source Section is not defined\'\n
-elif transaction.getPortalType() not in (\'Balance Transaction\', \'Accounting Transaction\'):\n
-  if destination_section in (None, \'\'):\n
-    error_message = \'Destination Section is not defined\'\n
-    if transaction.getDestinationSection() not in (None, \'\'):\n
-      error_message = \'Destination Section is not an Organisation or a Person\'\n
-  elif currency in (None, \'\'):\n
-    error_message = \'currency is not defined\'\n
-\n
-if error_message != \'\':\n
-  raise ValidationFailed, \'Action impossible : \' + error_message\n
+if error_message :\n
+  raise ValidationFailed, N_(\'Action impossible : \' + error_message)\n
 
 
 ]]></string> </value>
@@ -132,7 +146,7 @@ if error_message != \'\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/accounting_workflow/scripts/validateTransaction</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/accounting_workflow/scripts/validateTransaction</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -189,16 +203,16 @@ if error_message != \'\':\n
                             <string>_getattr_</string>
                             <string>skip_period_validation</string>
                             <string>transition</string>
+                            <string>N_</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
+                            <string>currency</string>
                             <string>None</string>
                             <string>valid_date</string>
                             <string>DateTime</string>
                             <string>transaction_date</string>
                             <string>_getiter_</string>
-                            <string>context</string>
                             <string>apd</string>
-                            <string>source_section</string>
-                            <string>destination_section</string>
-                            <string>currency</string>
                           </tuple>
                         </value>
                     </item>
