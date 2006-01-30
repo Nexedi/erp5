@@ -73,21 +73,24 @@ class SupplyLink(Path, XMLObject):
                       , PropertySheet.Simulation
                       )
 
-    security.declareProtected(Permissions.View, 'isProductionSupplyLink')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isProductionSupplyLink')
     def isProductionSupplyLink(self):
       """
         Return 1 if the SupplyLink represents a production.
       """
       return (self.getSourceValue() is None)
 
-    security.declareProtected(Permissions.View, 'isPackingListSupplyLink')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isPackingListSupplyLink')
     def isPackingListSupplyLink(self):
       """
         Return 1 if the SupplyLink represents a packing list.
       """
       return not(self.isProductionSupplyLink())
 
-    security.declareProtected(Permissions.View, 'getCurrentNodeValue')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getCurrentNodeValue')
     def getCurrentNodeValue(self):
       """
         Return the node used to find the previous SupplyLink
@@ -98,14 +101,16 @@ class SupplyLink(Path, XMLObject):
         node = self.getSourceValue()
       return node
 
-    security.declareProtected(Permissions.View, 'getNextNodeValue')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getNextNodeValue')
     def getNextNodeValue(self):
       """
         Return the node used to find the next SupplyLink
       """
       return self.getDestinationValue()
 
-    security.declareProtected(Permissions.View, 'test')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'test')
     def test(self, movement, concurrent_supply_link_list):
       """
         Test if the current link can expand this movement.
@@ -159,7 +164,8 @@ class SupplyLink(Path, XMLObject):
               result = 1
       return result
 
-    security.declareProtected(Permissions.View, 'getStartDate')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getStartDate')
     def getStartDate(self, stop_date):
       """
         Calculate the start date, depending on the delay.
@@ -171,3 +177,4 @@ class SupplyLink(Path, XMLObject):
           start_date = stop_date - delay
           break
       return start_date
+
