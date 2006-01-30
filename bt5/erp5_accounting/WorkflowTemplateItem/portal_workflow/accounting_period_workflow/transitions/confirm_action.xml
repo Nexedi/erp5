@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Close Accounting Period</string> </value>
+            <value> <string>Temporally Close Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -83,8 +83,8 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
