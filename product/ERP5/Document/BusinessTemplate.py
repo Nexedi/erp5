@@ -1112,13 +1112,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     p = context.getPortalObject()
     (default_chain, chain_dict) = getChainByType(context)
-    for key in self._archive.keys():      
+    for key in self._archive.keys():
       wflist = key.split(' | ')
       if len(wflist) == 2:
         portal_type = wflist[0]
         workflow = wflist[1]
       else:
-        portal_type = wflist[0]
+        portal_type = wflist[0][:-2]
         workflow = ''
       if chain_dict.has_key('chain_%s' % portal_type):
         if workflow not in chain_dict['chain_%s' % portal_type]:
@@ -1131,7 +1131,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         else:
           self._objects[portal_type] = [workflow,]
       else:
-        LOG('BusinessTemplate build', 0, 'portal type %s not found in workflow chain' %(portal_type))
+        LOG('BusinessTemplate build', 100, 'portal type %s not found in workflow chain' %(portal_type))
 
   def generateXml(self, path=None):
     xml_data = '<workflow_chain>'
@@ -4305,7 +4305,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if hasattr(portal_type, 'listActions'):
           action_list = [x.getId() for x in portal_type.listActions()]
         if chain_dict.has_key('chain_%s' % id):
-          wf_list = chain_dict['chain_%s' % id].split(', ')          
+          chain = chain_dict['chain_%s' % id]
+          if chain != '' and chain != '(Default)':
+            wf_list = chain.split(', ')
         
         for a_id in allowed_content_type_list:
           allowed_id = id+' | '+a_id
