@@ -77,6 +77,9 @@ def get_value(self, id, **kw):
         except AttributeError :
             LOG('ERP5Form', 0,
               'portal_preferences not put in TALES context (not installed?)')
+        extra_context = getattr(self, '_v_extra_context', None)
+        if extra_context:
+          kw.update(extra_context)
         # This allows to pass some pointer to the local object
         # through the REQUEST parameter. Not very clean.
         # Used by ListBox to render different items in a list

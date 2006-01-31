@@ -55,6 +55,7 @@ class ProxyWidget(Widget.Widget):
   property_names = Widget.Widget.property_names + [
     'form_id', \
     'field_id', \
+    'extra_context', \
   ]
 
   form_id = fields.StringField(
@@ -81,6 +82,13 @@ class ProxyWidget(Widget.Widget):
                                 default="",
                                 required=0)
 
+  extra_context = fields.ListTextAreaField(
+                                'extra_context', 
+                                title='Extra Context', 
+                                description='Additional context variables.', 
+                                default=(), 
+                                required=0)
+
  
   def render(self, field, key, value, REQUEST):
     """
@@ -89,6 +97,11 @@ class ProxyWidget(Widget.Widget):
     form = field.aq_parent
     proxy_form = getattr(form, field.get_value('form_id'))
     proxy_field = getattr(proxy_form, field.get_value('field_id'))
+    extra_context = field.get_value('extra_context')
+    if not hasattr(proxy_field, '_v_extra_context'):
+      proxy_field._v_extra_context = {}
+    for k, v in extra_context:
+      proxy_field._v_extra_context[k] = v
     return proxy_field.widget.render(proxy_field, key, value, REQUEST)
 
   def render_view(self, field, value):
@@ -98,6 +111,11 @@ class ProxyWidget(Widget.Widget):
     form = field.aq_parent
     proxy_form = getattr(form, field.get_value('form_id'))
     proxy_field = getattr(proxy_form, field.get_value('field_id'))
+    extra_context = field.get_value('extra_context')
+    if not hasattr(proxy_field, '_v_extra_context'):
+      proxy_field._v_extra_context = {}
+    for k, v in extra_context:
+      proxy_field._v_extra_context[k] = v
     return proxy_field.widget.render_view(proxy_field, key, value)
 
 class ProxyValidator(Validator.Validator):
