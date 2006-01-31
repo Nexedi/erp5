@@ -1,4 +1,10 @@
 2006-01-31 aurel
+* fix compution of number of column in index_html
+
+2006-01-31 jerome
+* quick hack to make listbox rendering in report tree / domain tree work again.
+
+2006-01-31 aurel
 * fix TemplateTool_installBusinessTemplateListAction
 
 2006-01-31 Kevin

@@ -107,7 +107,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <tr tal:define="module_list python:here.ERP5Site_getModuleItemList();\n
                         module_len python:len(module_list);\n
                         col_size python:12;\n
-                        col_len python:(module_len + col_size) / col_size">\n
+                        col_len python:module_len%col_size and (module_len + col_size) / col_size or (module_len) / col_size">\n
           <td>\n
             <a href="http://www.erp5.org/"><img src="images/erp5_logo.png" alt="ERP5 Logo" /></a>\n
           </td>\n
