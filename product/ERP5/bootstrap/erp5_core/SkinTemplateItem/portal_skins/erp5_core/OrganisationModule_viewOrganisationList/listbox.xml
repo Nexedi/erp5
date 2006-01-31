@@ -322,39 +322,39 @@
                           <string>Name</string>
                         </tuple>
                         <tuple>
-                          <string>getRole</string>
+                          <string>role_title</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>getGroup</string>
+                          <string>group_title</string>
                           <string>Group</string>
                         </tuple>
                         <tuple>
-                          <string>getActivity</string>
+                          <string>activity_title</string>
                           <string>Activity</string>
                         </tuple>
                         <tuple>
-                          <string>getFunction</string>
+                          <string>function_title</string>
                           <string>Function</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultEmailText</string>
+                          <string>default_email_text</string>
                           <string>Email</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultTelephoneText</string>
+                          <string>default_telephone_text</string>
                           <string>Phone</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultFaxText</string>
+                          <string>default_fax_text</string>
                           <string>FAX</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultAddressText</string>
+                          <string>default_address_text</string>
                           <string>Address</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultRegion</string>
+                          <string>default_region_title</string>
                           <string>Region</string>
                         </tuple>
                         <tuple>
@@ -362,7 +362,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
@@ -391,27 +391,27 @@
                           <string>Name</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultTelephoneText</string>
+                          <string>default_telephone_text</string>
                           <string>Phone</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultRegionTitle</string>
+                          <string>default_region_title</string>
                           <string>Region</string>
                         </tuple>
                         <tuple>
-                          <string>getRoleTitle</string>
+                          <string>role_title</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>getGroupTitle</string>
+                          <string>group_title</string>
                           <string>Group</string>
                         </tuple>
                         <tuple>
-                          <string>getActivityTitle</string>
+                          <string>activity_title</string>
                           <string>Activity</string>
                         </tuple>
                         <tuple>
-                          <string>getFunctionTitle</string>
+                          <string>function_title</string>
                           <string>Function</string>
                         </tuple>
                         <tuple>
@@ -419,7 +419,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>validation_state</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>

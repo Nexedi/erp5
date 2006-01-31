@@ -326,7 +326,7 @@
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>group</string>
+                          <string>group_title</string>
                           <string>Group</string>
                         </tuple>
                         <tuple>
@@ -346,11 +346,11 @@
                           <string>Address</string>
                         </tuple>
                         <tuple>
-                          <string>default_region</string>
+                          <string>default_region_title</string>
                           <string>Region</string>
                         </tuple>
                         <tuple>
-                          <string>role</string>
+                          <string>role_title</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
@@ -391,11 +391,11 @@
                           <string>Phone</string>
                         </tuple>
                         <tuple>
-                          <string>default_region</string>
+                          <string>default_region_title</string>
                           <string>Region</string>
                         </tuple>
                         <tuple>
-                          <string>role</string>
+                          <string>role_title</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
@@ -571,16 +571,7 @@ Role & Region
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Usual Name</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

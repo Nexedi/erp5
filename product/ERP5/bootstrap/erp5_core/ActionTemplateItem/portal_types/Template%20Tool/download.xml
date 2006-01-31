@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Download Business Template</string> </value>
+            <value> <string>Download Business Template From URL</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>

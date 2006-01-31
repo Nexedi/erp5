@@ -1,3 +1,6 @@
+2006-01-31 yo
+* Fix OrganisationModule_viewOrganisationList and PersonModule_viewPersonList to use translated titles or plain titles.
+
 2006-01-30 jerome
 * added support for workflow validation in list mode (see Accounting Transaction Module for an example of how to use it)
 

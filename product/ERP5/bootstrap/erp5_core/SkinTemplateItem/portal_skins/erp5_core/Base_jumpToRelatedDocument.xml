@@ -66,26 +66,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Updates attributes of an Zope document\n
-# which is in a class inheriting from ERP5 Base\n
-\n
-\n
-from ZTUtils import make_query\n
+            <value> <string>from ZTUtils import make_query\n
 \n
 request=context.REQUEST\n
-\n
-#return request\n
-\n
-\n
-#selection = context.portal_selections.getSelectionFor(\'modele_view\')\n
-#context.portal_selections.setSelectionFor(\'jump_relation\',selection)\n
-#return "ok"\n
 \n
 form = getattr(context,form_id)\n
 field = form.get_field(field_id)\n
 base_category = field.get_value(\'base_category\')\n
 portal_type = map(lambda x:x[0],field.get_value(\'portal_type\'))\n
 jump_reference_list = context.getAcquiredValueList(base_category, portal_type=portal_type)\n
+\n
 if len(jump_reference_list)==1:\n
   jump_reference = jump_reference_list[0]\n
   return request[ \'RESPONSE\' ].redirect( \'%s/view\' % jump_reference.absolute_url() )\n

@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Import Business Template</string> </value>
+            <value> <string>Upload Business Template</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
