@@ -77,11 +77,11 @@ def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
   return context.Localizer.translate(domain, msgid, *args, **kw)
 
 # Apply the monkey patch.
+from Products.Localizer.Localizer import Localizer
+Localizer.translate = Localizer_translate
+Localizer.translate__roles__ = None # public
 try:
   from Products.Localizer import GlobalTranslationService
-  from Products.Localizer.Localizer import Localizer
   GlobalTranslationService.translate = GlobalTranslationService_translate
-  Localizer.translate = Localizer_translate
-  Localizer.translate__roles__ = None # public
 except ImportError:
   pass
