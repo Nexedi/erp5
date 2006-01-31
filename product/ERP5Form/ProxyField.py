@@ -102,7 +102,11 @@ class ProxyWidget(Widget.Widget):
       proxy_field._v_extra_context = {}
     for k, v in extra_context:
       proxy_field._v_extra_context[k] = v
-    return proxy_field.widget.render(proxy_field, key, value, REQUEST)
+    try:
+      return proxy_field.widget.render(proxy_field, key, value, REQUEST)
+    finally:
+      if hasattr(proxy_field, '_v_extra_context'):
+        del proxy_field._v_extra_context
 
   def render_view(self, field, value):
     """ 
@@ -116,7 +120,12 @@ class ProxyWidget(Widget.Widget):
       proxy_field._v_extra_context = {}
     for k, v in extra_context:
       proxy_field._v_extra_context[k] = v
-    return proxy_field.widget.render_view(proxy_field, key, value)
+    try:
+      return proxy_field.widget.render_view(proxy_field, key, value)
+    finally:
+      if hasattr(proxy_field, '_v_extra_context'):
+        del proxy_field._v_extra_context
+
 
 class ProxyValidator(Validator.Validator):
   """
