@@ -72,6 +72,7 @@ class TrashTool(BaseTool):
       # backup the object
       # here we choose export/import to copy because cut/paste
       # do too many things and check for what we want to do
+      obj = None
       if object_id not in backup_object_container.objectIds():
         # export object
         object_path = container_path + [object_id]
@@ -95,6 +96,8 @@ class TrashTool(BaseTool):
           LOG("Trash Tool backupObject", 100, "Can't backup object %s" %(object_id))
           pass
       # in case of portal types, export properties instead of subobjects
+      if obj is None:
+        obj = self.unrestrictedTraverse(object_path)
       if getattr(obj, 'meta_type', None) == 'ERP5 Type Information':
         subobjects_dict = {}
         subobjects_dict['allowed_content_type_list'] = getattr(obj, 'allowed_content_types', []) or []
