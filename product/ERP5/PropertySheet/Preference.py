@@ -44,5 +44,10 @@ class Preference :
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},
+    { 'id'          : 'preferred_date_order',
+      'description' : 'The order of year, month and day.',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : 'w'},
   )
 
