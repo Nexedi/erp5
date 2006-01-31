@@ -97,6 +97,7 @@ class TrashTool(BaseTool):
           pass
       # in case of portal types, export properties instead of subobjects
       if obj is None:
+        object_path = container_path + [object_id]
         obj = self.unrestrictedTraverse(object_path)
       if getattr(obj, 'meta_type', None) == 'ERP5 Type Information':
         subobjects_dict = {}
