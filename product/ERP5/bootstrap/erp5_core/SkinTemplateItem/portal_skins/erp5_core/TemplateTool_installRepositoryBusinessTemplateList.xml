@@ -110,7 +110,7 @@ RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=Busin
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -136,6 +136,7 @@ RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=Busin
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>

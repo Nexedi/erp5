@@ -71,8 +71,7 @@
 bt_dict = {}\n
 object_to_update = {}\n
 for item in listbox:\n
-  bt_id, object_id = item[\'listbox_key\'].split(\'+\')\n
-  bt_id = item[\'object_bt_id\']\n
+  bt_id, object_id = item[\'listbox_key\'].split(\'|\')\n
   if bt_dict.has_key(bt_id):\n
     bt_dict[bt_id][object_id] = item[\'choice\']\n
   else:\n

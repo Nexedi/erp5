@@ -1,3 +1,9 @@
+2006-01-31 aurel
+* fix TemplateTool_installBusinessTemplateListAction
+
+2006-01-31 Kevin
+* add **kw parameter to TemplateTool_installRepositoryBusinessTemplateList
+
 2006-01-31 yo
 * Fix OrganisationModule_viewOrganisationList and PersonModule_viewPersonList to use translated titles or plain titles.
 
