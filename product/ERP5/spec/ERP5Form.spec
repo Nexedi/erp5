@@ -16,7 +16,7 @@ Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
 Conflicts: ERP5Form
-Requires:  erp5-zope erp5-Formulator
+Requires:  erp5-zope erp5-Formulator pdftk
 
 #----------------------------------------------------------------------
 %description
