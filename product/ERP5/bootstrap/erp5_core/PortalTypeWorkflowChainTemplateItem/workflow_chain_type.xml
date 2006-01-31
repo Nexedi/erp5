@@ -20,6 +20,10 @@
   <workflow>(Default)</workflow>
  </chain>
  <chain>
+  <type>Applied Rule</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
   <type>Assignment</type>
   <workflow>edit_workflow, assignment_workflow</workflow>
  </chain>
@@ -60,6 +64,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Currency Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
   <type>Delivery Builder</type>
   <workflow>(Default)</workflow>
  </chain>
@@ -86,6 +94,10 @@
  <chain>
   <type>File</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Folder</type>
+  <workflow></workflow>
  </chain>
  <chain>
   <type>Image</type>
@@ -116,8 +128,16 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Organisation Module</type>
+  <workflow></workflow>
+ </chain>
+ <chain>
   <type>Person</type>
   <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Person Module</type>
+  <workflow></workflow>
  </chain>
  <chain>
   <type>Predicate</type>
@@ -150,6 +170,10 @@
  <chain>
   <type>Telephone</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Template Tool</type>
+  <workflow></workflow>
  </chain>
  <chain>
   <type>Trash Bin</type>
