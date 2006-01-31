@@ -708,7 +708,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     self.failUnless(workflow is None)
 
   # Actions
-  def stepCreateAction(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateFirstAction(self, sequence=None, sequence_list=None, **kw):
     """
     Create action
     """
@@ -723,13 +723,12 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       , permission = ('View', )
       , category = 'object_action'
       , visible = 1
-      , optional = 0
       , priority = 2.0 )
-    sequence.edit(action_id='become_geek')
+    sequence.edit(first_action_id='become_geek')
 
-  def stepCreateOptionalAction(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateSecondAction(self, sequence=None, sequence_list=None, **kw):
     """
-    Create optional action
+    Create a second action
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
@@ -742,9 +741,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       , permission = ('View', )
       , category = 'object_action'
       , visible = 1
-      , optional = 1
       , priority = 1.5 )
-    sequence.edit(opt_action_id='become_nerd')
+    sequence.edit(second_action_id='become_nerd')
 
   def stepCheckActionsOrder(self, sequence=None, sequence_list=None, **kw):
     """
@@ -759,60 +757,56 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       self.failIf(action.priority < priority)
       priority = action.priority
 
-
-  def stepCheckActionExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFirstActionExists(self, sequence=None, sequence_list=None, **kw):
     """
     Check presence of action 
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    action_id = sequence.get('action_id')
+    action_id = sequence.get('first_action_id')
     self.failUnless(action_id in [x.getId() for x in object_pt.listActions()])
 
-  def stepCheckActionNotExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFirstActionNotExists(self, sequence=None, sequence_list=None, **kw):
     """
     Check non-presence of action 
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    action_id = sequence.get('action_id')
+    action_id = sequence.get('first_action_id')
     self.failUnless(action_id not in [x.getId() for x in object_pt.listActions()])
 
-  def stepCheckOptionalActionExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSecondActionExists(self, sequence=None, sequence_list=None, **kw):
     """
-    Check presence of optional action 
+    Check presence of the second action 
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    action_id = sequence.get('opt_action_id')
+    action_id = sequence.get('second_action_id')
     self.failUnless(action_id in [x.getId() for x in object_pt.listActions()])
 
-  def stepCheckOptionalActionNotExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSecondActionNotExists(self, sequence=None, sequence_list=None, **kw):
     """
     Check non-presence of optional action 
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    action_id = sequence.get('opt_action_id')
+    action_id = sequence.get('second_action_id')
     self.failUnless(action_id not in [x.getId() for x in object_pt.listActions()])    
 
-  def stepAddOptionalActionToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddSecondActionToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
-    Add optionpal action into the business template
+    Add Second Action to business template
     """
+    object_id = sequence.get('object_ptype_id')
+    action_id = sequence.get('second_action_id')
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
-    opt_action_id = sequence.get('opt_action_id', None)
-    self.failUnless(opt_action_id is not None)
-    object_ptype_id = sequence.get('object_ptype_id', None)
-    self.failUnless(object_ptype_id is not None)
-    action_path = object_ptype_id+' | '+opt_action_id
-    bt.edit(template_action_path_list=[action_path])
-
+    bt.edit(template_action_path=['%s | %s' %(object_id, action_id)])
+  
   # Catalog Method
   def stepCreateCatalogMethod(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1522,6 +1516,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        BuildBusinessTemplate \
@@ -1655,6 +1650,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
@@ -1736,22 +1732,22 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.play(self)
     
   # test of actions
-  def test_07_BusinessTemplateWithoutOptionalAction(self, quiet=0, run=run_all_test):
+  def test_07_BusinessTemplateWithOneAction(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test Business Template Without Optional Action'
+      message = 'Test Business Template With One Action'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
-                       CreateAction \
-                       CreateOptionalAction \
+                       CreateFirstAction \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        BuildBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -1773,8 +1769,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckTrashBin \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
-                       CheckActionExists \
-                       CheckOptionalActionExists \
+                       CheckFirstActionExists \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -1783,22 +1778,22 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)    
 
-  def test_08_BusinessTemplateWithOptionalAction(self, quiet=0, run=run_all_test):
+  def test_08_BusinessTemplateWithTwoActions(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test Business Template With Optional Action'
+      message = 'Test Business Template With Two Actions'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
-                       CreateAction \
-                       CreateOptionalAction \
+                       CreateFirstAction \
+                       CreateSecondAction \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        CheckModifiedBuildingState \
                        CheckNotInstalledInstallationState \
-                       AddOptionalActionToBusinessTemplate \
+                       AddSecondActionToBusinessTemplate \
                        BuildBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -1810,7 +1805,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        CreatePortalType \
-                       CreateAction \
+                       CreateFirstAction \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        CheckBuiltBuildingState \
@@ -1821,13 +1816,13 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckBuiltBuildingState \
                        CheckTrashBin \
                        CheckSkinsLayers \
-                       CheckActionExists \
-                       CheckOptionalActionExists \
+                       CheckFirstActionExists \
+                       CheckSecondActionExists \
                        CheckActionsOrder \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       CheckOptionalActionNotExists \
+                       CheckSecondActionNotExists \
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
@@ -2168,8 +2163,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCategories \
                        CreateSubCategories \
                        CreateWorkflow \
-                       CreateAction \
-                       CreateOptionalAction \
+                       CreateFirstAction \
+                       CreateSecondAction \
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
@@ -2178,12 +2173,12 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
-                       AddOptionalActionToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -2226,7 +2221,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
-                       CheckOptionalActionExists \
+                       CheckFirstActionExists \
+                       CheckSecondActionExists \
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
@@ -2266,6 +2262,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
                        AddBaseCategoryToBusinessTemplate \
                        CheckModifiedBuildingState \
@@ -2343,8 +2340,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCategories \
                        CreateSubCategories \
                        CreateWorkflow \
-                       CreateAction \
-                       CreateOptionalAction \
+                       CreateFirstAction \
+                       CreateSecondAction \
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
@@ -2353,12 +2350,12 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
-                       AddOptionalActionToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -2401,7 +2398,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
-                       CheckOptionalActionExists \
+                       CheckFirstActionExists \
+                       CheckSecondActionExists \
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
@@ -2424,7 +2422,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
-                       CheckOptionalActionExists \
+                       CheckFirstActionExists \
+                       CheckSecondActionExists \
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
@@ -2462,8 +2461,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCategories \
                        CreateSubCategories \
                        CreateWorkflow \
-                       CreateAction \
-                       CreateOptionalAction \
+                       CreateFirstAction \
+                       CreateSecondAction \
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
@@ -2474,12 +2473,12 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        ClearBusinessTemplateField \
                        SetUpdateWorkflowFlagInBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
-                       AddOptionalActionToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -2512,7 +2511,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
-                       CheckOptionalActionExists \
+                       CheckFirstActionExists \
+                       CheckSecondActionExists \
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
@@ -2548,8 +2548,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CreateCategories \
                        CreateSubCategories \
                        CreateWorkflow \
-                       CreateAction \
-                       CreateOptionalAction \
+                       CreateFirstAction \
+                       CreateSecondAction \
                        CreateCatalogMethod \
                        CreateKeysAndTable \
                        CreateRole \
@@ -2560,12 +2560,12 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        ClearBusinessTemplateField \
                        SetUpdateToolFlagInBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
                        AddBaseCategoryToBusinessTemplate \
                        AddSubCategoriesAsPathToBusinessTemplate \
                        AddWorkflowToBusinessTemplate \
-                       AddOptionalActionToBusinessTemplate \
                        AddCatalogMethodToBusinessTemplate \
                        AddKeysAndTableToBusinessTemplate \
                        AddRoleToBusinessTemplate \
@@ -2609,7 +2609,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckCategoriesExists \
                        CheckSubCategoriesExists \
                        CheckWorkflowExists \
-                       CheckOptionalActionExists \
+                       CheckFirstActionExists \
+                       CheckSecondActionExists \
                        CheckCatalogMethodExists \
                        CheckKeysAndTableExists \
                        CheckRoleExists \
