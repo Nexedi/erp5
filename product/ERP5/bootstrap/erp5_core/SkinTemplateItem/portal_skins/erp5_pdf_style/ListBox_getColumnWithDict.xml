@@ -66,7 +66,69 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># 0.5 is too small and can crash pdf generation\n
+            <value> <string># XXX this is just a copy / paste of the old implementation\n
+# dirty code : if we are in domain or report tree, just use the old one, otherwise\n
+# use the new one that gives better results in list mode.\n
+if is_domain_tree_mode or is_report_tree_mode : \n
+  result = {}\n
+  \n
+  # 0.5 is too small and can crash pdf generation\n
+  min_column_width = 1\n
+  \n
+  for listboxline in listboxline_list:\n
+   if 1 : #not listboxline.isTitleLine():\n
+    line_width = 0\n
+    col_count = 0\n
+    if is_report_tree_mode:\n
+      col_count += 1\n
+      column_property = listboxline.getSectionName()\n
+      if column_property is None:    \n
+        string_property = \'\'\n
+      else:\n
+        string_property = str(column_property)\n
+      line_width += len(string_property) + section_width * (listboxline.getSectionDepth() - 1)\n
+    for column_id, column_property in listboxline.getColumnItemList():   \n
+      col_count += 1\n
+      if column_property is None:    \n
+        string_property = \'\'\n
+      else:\n
+        string_property = str(column_property)\n
+      line_width += len(string_property)\n
+    for column_id, column_property in listboxline.getColumnItemList():\n
+      if column_property is None:    \n
+        string_property = \'\'\n
+      else:\n
+        string_property = str(column_property)\n
+      result[column_id] = max(result.get(column_id, min_column_width),\n
+                                        min( frame_width * 2 / col_count, \n
+                                                frame_width * len(str(string_property)) / max(line_width, 1)))\n
+    if is_report_tree_mode:\n
+      column_property = listboxline.getSectionName()\n
+      if column_property is None:    \n
+        string_property = \'\'\n
+      else:\n
+        string_property = str(column_property)\n
+      column_id = \'section_name\'\n
+      result[column_id] = max(result.get(column_id,min_column_width), min(frame_width * 3 / col_count, frame_width * (len(str(string_property)) + section_width * (listboxline.getSectionDepth() - 1)) / max(line_width, 1)))\n
+  \n
+  total_col_width = 0.0\n
+  for column_id in result.keys():\n
+    if result[column_id] == 0.0:\n
+      result[column_id] = 1.0\n
+  for column_id in result.keys():\n
+    if column_id != \'section_name\' or is_report_tree_mode:\n
+      total_col_width += result[column_id]\n
+  for column_id in result.keys():\n
+    if column_id != \'section_name\' or is_report_tree_mode:\n
+      result[column_id] = result[column_id] * frame_width / total_col_width \n
+  \n
+  return result\n
+\n
+## End of dirty patch ###############################################\n
+  \n
+\n
+\n
+# 0.5 is too small and can crash pdf generation\n
 min_column_width = 1\n
 \n
 max_line_len = {}\n
@@ -143,27 +205,30 @@ return result\n
                             <string>is_report_tree_mode</string>
                             <string>frame_width</string>
                             <string>section_width</string>
+                            <string>result</string>
                             <string>min_column_width</string>
-                            <string>max_line_len</string>
                             <string>_getiter_</string>
                             <string>listboxline</string>
                             <string>line_width</string>
                             <string>col_count</string>
                             <string>_getattr_</string>
-                            <string>column_id</string>
                             <string>column_property</string>
                             <string>None</string>
                             <string>string_property</string>
                             <string>str</string>
                             <string>len</string>
+                            <string>column_id</string>
                             <string>max</string>
+                            <string>min</string>
+                            <string>_write_</string>
+                            <string>total_col_width</string>
+                            <string>_getitem_</string>
+                            <string>max_line_len</string>
                             <string>new_column_max_len</string>
                             <string>update_dict</string>
-                            <string>_write_</string>
                             <string>float</string>
                             <string>sum</string>
                             <string>total_max_len</string>
-                            <string>result</string>
                             <string>max_len</string>
                           </tuple>
                         </value>
@@ -188,7 +253,7 @@ return result\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>FIXME: does not support report_tree</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
