@@ -1,0 +1,102 @@
+<workflow_chain>
+ <chain>
+  <type>Container</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Container Cell</type>
+  <workflow>edit_workflow, packing_list_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Container Line</type>
+  <workflow>edit_workflow, packing_list_interaction_workflow, trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Delivery Cell</type>
+  <workflow>packing_list_interaction_workflow, delivery_edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Discount</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Internal Packing List</type>
+  <workflow>internal_packing_list_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Internal Packing List Line</type>
+  <workflow>edit_workflow, trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Inventory</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Inventory Line</type>
+  <workflow>trade_matrix_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Payment Condition</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order</type>
+  <workflow>order_interaction_workflow, edit_workflow, order_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order Line</type>
+  <workflow>trade_matrix_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Packing List</type>
+  <workflow>edit_workflow, packing_list_interaction_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Packing List Cell</type>
+  <workflow>delivery_edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Packing List Line</type>
+  <workflow>edit_workflow, trade_matrix_workflow, packing_list_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Supply</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Trade Condition</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order</type>
+  <workflow>order_interaction_workflow, order_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order Line</type>
+  <workflow>trade_matrix_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Packing List</type>
+  <workflow>edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow, packing_list_container_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Packing List Cell</type>
+  <workflow>delivery_edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Packing List Line</type>
+  <workflow>delivery_edit_workflow, trade_matrix_workflow, packing_list_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Supply</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Trade Condition</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Supply Line</type>
+  <workflow>supply_line_interaction_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>
