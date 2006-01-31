@@ -43,6 +43,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from testPackingList import TestPackingListMixin
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from DateTime import DateTime
 
 class TestAccounting(ERP5TypeTestCase):
   """Test Accounting. """
@@ -64,6 +65,7 @@ class TestAccounting(ERP5TypeTestCase):
   RUN_ALL_TESTS = 1
 
   account_portal_type           = 'Account'
+  accounting_period_portal_type = 'Accounting Period'
   currency_portal_type          = 'Currency'
   organisation_portal_type      = 'Organisation'
   sale_invoice_portal_type      = 'Sale Invoice Transaction'
@@ -75,6 +77,9 @@ class TestAccounting(ERP5TypeTestCase):
   purchase_invoice_transaction_line_portal_type = \
                 'Purchase Invoice Transaction Line'
   purchase_invoice_cell_portal_type = 'Invoice Cell'
+
+  start_date = DateTime(2004, 01, 01)
+  stop_date  = DateTime(2004, 12, 31)
 
   def getTitle(self):
     return "Accounting"
@@ -127,10 +132,66 @@ class TestAccounting(ERP5TypeTestCase):
         portal_type = self.organisation_portal_type,
         group = "group/vendor",
         price_currency = "currency_module/EUR")
-    sequence.edit( client = client, vendor = vendor)
+    sequence.edit( client = client,
+                   vendor = vendor,
+                   organisation = vendor )
+  
+  def stepCreateAccountingPeriod(self, sequence, **kw):
+    """Creates an Accounting Period for the Organisation."""
+    organisation = sequence.get('organisation')
+    start_date = self.start_date
+    stop_date = self.stop_date
+    accounting_period = organisation.newContent(
+      portal_type = self.accounting_period_portal_type,
+      start_date = start_date, stop_date = stop_date )
+    sequence.edit( accounting_period = accounting_period,
+                   valid_date_list = [ start_date, start_date+1, stop_date],
+                   invalid_date_list = [start_date-1, stop_date+1] )
+  
+  def stepUseValidDates(self, sequence, **kw):
+    """Puts some valid dates in sequence."""
+    sequence.edit(date_list = sequence.get('valid_date_list'))
+    
+  def stepUseInvalidDates(self, sequence, **kw):
+    """Puts some invalid dates in sequence."""
+    sequence.edit(date_list = sequence.get('invalid_date_list'))
+  
+  def stepOpenAccountingPeriod(self, sequence, **kw):
+    """Opens the Accounting Period."""
+    accounting_period = sequence.get('accounting_period')
+    self.getPortal().portal_workflow.doActionFor(
+                        accounting_period,
+                        'plan_action' )
+    self.assertEquals(accounting_period.getSimulationState(),
+                      'planned')
+                      
+  def stepConfirmAccountingPeriod(self, sequence, **kw):
+    """Confirm the Accounting Period."""
+    accounting_period = sequence.get('accounting_period')
+    self.getPortal().portal_workflow.doActionFor(
+                        accounting_period,
+                        'confirm_action' )
+    self.assertEquals(accounting_period.getSimulationState(),
+                      'confirmed')
+
+  def stepDeliverAccountingPeriod(self, sequence, **kw):
+    """Deliver the Accounting Period."""
+    accounting_period = sequence.get('accounting_period')
+    self.getPortal().portal_workflow.doActionFor(
+                        accounting_period,
+                        'deliver_action' )
+    self.assertEquals(accounting_period.getSimulationState(),
+                      'delivered')
   
   def stepCreateCurrencies(self, sequence, **kw) :
     """Create a some currencies. """
+    if hasattr(self.getCurrencyModule(), 'EUR'):
+      sequence.edit(
+        EUR = self.getCurrencyModule()['EUR'],
+        USD = self.getCurrencyModule()['USD'],
+        YEN = self.getCurrencyModule()['YEN'],
+      )
+      return
     EUR = self.getCurrencyModule().newContent(
           portal_type = self.currency_portal_type,
           reference = "EUR",
@@ -185,13 +246,26 @@ class TestAccounting(ERP5TypeTestCase):
     refundable_vat.setDestinationValue(collected_vat)
     bank.setDestinationValue(bank)
     
+    account_list = [ receivable,
+                     payable,
+                     expense,
+                     income,
+                     collected_vat,
+                     refundable_vat,
+                     bank ]
+
+    for account in account_list :
+      account.validate()
+      self.assertEquals(account.getValidationState(), 'validated')
+      
     sequence.edit( receivable_account = receivable,
                    payable_account = payable,
                    expense_account = expense,
                    income_account = income,
                    collected_vat_account = collected_vat,
                    refundable_vat_account = refundable_vat,
-                   bank = bank, )
+                   bank = bank,
+                   account_list = account_list )
 
   def getInvoicePropertyList(self):
     """Returns the list of properties for invoices, stored as 
@@ -241,7 +315,12 @@ class TestAccounting(ERP5TypeTestCase):
     """Create invoices with properties from getInvoicePropertyList. """
     invoice_prop_list = self.getInvoicePropertyList()
     invoice_list = []
+    date_list = sequence.get('date_list')
+    if not date_list : date_list = [ DateTime(2004, 12, 31) ]
+    i = 0
     for invoice_prop in invoice_prop_list :
+      i += 1
+      date = date_list[i % len(date_list)]
       invoice = self.getAccountingModule().newContent(
           portal_type = self.sale_invoice_portal_type,
           source_section_value = sequence.get('vendor'),
@@ -249,6 +328,7 @@ class TestAccounting(ERP5TypeTestCase):
           destination_section_value = sequence.get('client'),
           destination_value = sequence.get('client'),
           resource = invoice_prop['currency'],
+          start_date = date, stop_date = date,
           bypass_init_script = 0,
       )
       
@@ -275,6 +355,57 @@ class TestAccounting(ERP5TypeTestCase):
       invoice_list.append(invoice)
     sequence.edit( invoice_list = invoice_list )
   
+  def stepCreateOtherSectionInvoices(self, sequence, **kw):
+    """Create invoice for other sections."""
+    other_source = self.getOrganisationModule().newContent(
+                      portal_type = 'Organisation' )
+    other_destination = self.getOrganisationModule().newContent(
+                      portal_type = 'Organisation' )
+    invoice = self.getAccountingModule().newContent(
+        portal_type = self.sale_invoice_portal_type,
+        source_section_value = other_source,
+        source_value = other_source,
+        destination_section_value = other_destination,
+        destination_value = other_destination,
+        resource_value = sequence.get('EUR'),
+        start_date = self.start_date,
+        stop_date = self.start_date,
+        bypass_init_script = 0,
+    )
+    
+    line = invoice.newContent(
+        portal_type = self.sale_invoice_transaction_line_portal_type,
+        quantity = 100, source_value = sequence.get('account_list')[0])
+    line = invoice.newContent(
+        portal_type = self.sale_invoice_transaction_line_portal_type,
+        quantity = -100, source_value = sequence.get('account_list')[1])
+    sequence.edit(invoice_list = [invoice])
+  
+  def stepStopInvoices(self, sequence, **kw) :
+    """Validates invoices."""
+    invoice_list = sequence.get('invoice_list')
+    for invoice in invoice_list:
+      self.getPortal().portal_workflow.doActionFor(
+          invoice, 'stop_action')
+
+  def stepCheckInvoicesAreDraft(self, sequence, **kw) :
+    """Checks invoices are in draft state."""
+    invoice_list = sequence.get('invoice_list')
+    for invoice in invoice_list:
+      self.assertEquals(invoice.getSimulationState(), 'draft')
+
+  def stepCheckInvoicesAreStopped(self, sequence, **kw) :
+    """Checks invoices are in stopped state."""
+    invoice_list = sequence.get('invoice_list')
+    for invoice in invoice_list:
+      self.assertEquals(invoice.getSimulationState(), 'stopped')
+      
+  def stepCheckInvoicesAreDelivered(self, sequence, **kw) :
+    """Checks invoices are in delivered state."""
+    invoice_list = sequence.get('invoice_list')
+    for invoice in invoice_list:
+      self.assertEquals(invoice.getSimulationState(), 'delivered')
+      
   def checkAccountBalanceInCurrency(self, section, currency,
                                           sequence, **kw) :
     """ Checks accounts balances in a given currency."""
@@ -345,7 +476,25 @@ class TestAccounting(ERP5TypeTestCase):
     currency."""
     for section in (sequence.get('vendor'), sequence.get('client')) :
       self.checkAccountBalanceInConvertedCurrency(section, sequence)
-    
+  
+  def stepCheckAccountingTransactionDelivered(self, sequence, **kw):
+    """Checks all accounting transaction related to `organisation`
+      are in delivered state. """
+    organisation = sequence.get('organisation').getRelativeUrl()
+    accounting_module = self.getPortal().accounting_module
+    for transaction in accounting_module.objectValues() :
+      if transaction.getSourceSection() == organisation \
+          or transaction.getDestinationSection() == organisation :
+        if self.start_date <= transaction.getStartDate() <= self.stop_date :
+          self.assertEquals(transaction.getSimulationState(), 'delivered')
+  
+  
+
+
+  ##############################################################################
+  ## Test Methods ##############################################################
+  ##############################################################################
+  
   def test_MultiCurrencyInvoice(self, quiet=0, run=RUN_ALL_TESTS):
     """Basic test for multi currency accounting"""
     self.playSequence("""
@@ -358,7 +507,86 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckAccountBalanceExternalCurrency
       stepCheckAccountBalanceConvertedCurrency
     """)
-    
+
+  def test_AccountingPeriod(self, quiet=0, run=RUN_ALL_TESTS):
+    """Basic test for Accounting Periods"""
+    self.playSequence("""
+      stepCreateCurrencies
+      stepCreateEntities
+      stepCreateAccounts
+      stepCreateAccountingPeriod
+      stepOpenAccountingPeriod
+      stepTic
+      stepUseValidDates
+      stepCreateInvoices
+      stepStopInvoices
+      stepCheckInvoicesAreStopped
+      stepTic
+      stepConfirmAccountingPeriod
+      stepTic
+      stepDeliverAccountingPeriod
+      stepTic
+      stepCheckInvoicesAreDelivered
+      stepTic
+      stepCheckAccountingTransactionDelivered
+    """)
+  
+  def test_AccountingPeriodRefusesWrongDateTransactionValidation(
+        self, quiet=0, run=RUN_ALL_TESTS):
+    """Accounting Periods prevents transactions to be validated
+        when there is no oppened accounting period"""
+    self.playSequence("""
+      stepCreateCurrencies
+      stepCreateEntities
+      stepCreateAccounts
+      stepCreateAccountingPeriod
+      stepOpenAccountingPeriod
+      stepTic
+      stepUseInvalidDates
+      stepCreateInvoices
+      stepStopInvoices
+      stepTic
+      stepCheckInvoicesAreDraft
+    """)
+
+  def test_AccountingPeriodNotStoppedTransactions(self, quiet=0,
+                                                  run=RUN_ALL_TESTS):
+    """Accounting Periods refuse to close when some transactions are
+      not stopped"""
+    self.playSequence("""
+      stepCreateCurrencies
+      stepCreateEntities
+      stepCreateAccounts
+      stepCreateAccountingPeriod
+      stepOpenAccountingPeriod
+      stepTic
+      stepCreateInvoices
+      stepTic
+      stepCheckAccountingPeriodRefusesClosing
+      stepTic
+      stepCheckInvoicesAreDraft
+    """)
+
+  def test_AccountingPeriodNotStoppedTransactions(self, quiet=0,
+                                                  run=RUN_ALL_TESTS):
+    """Accounting Periods does not change other section transactions."""
+    self.playSequence("""
+      stepCreateCurrencies
+      stepCreateEntities
+      stepCreateAccounts
+      stepCreateAccountingPeriod
+      stepOpenAccountingPeriod
+      stepTic
+      stepCreateOtherSectionInvoices
+      stepTic
+      stepConfirmAccountingPeriod
+      stepTic
+      stepDeliverAccountingPeriod
+      stepTic
+      stepCheckInvoicesAreDraft
+    """)
+
+
 if __name__ == '__main__':
   framework()
 else:
