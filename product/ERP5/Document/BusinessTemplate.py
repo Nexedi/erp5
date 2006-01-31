@@ -1259,7 +1259,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         if installed_bt._objects.has_key(path):
           # compare object to see it there is changes
           new_object = self._objects[path]
-          old_object = installed_bt._objects[path]          
+          old_object = installed_bt._objects[path]
           if new_object != old_object:
             modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
         else: # new object
@@ -1307,8 +1307,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           # merge differences between portal types properties
           # only add new, do not remove
           for id in object_property_list:
-            if id not in property_list:              
-              property_list.append(id)        
+            if id not in property_list:
+              property_list.append(id)
         setattr(portal_type, self.class_property, list(property_list))
 
   def uninstall(self, context, **kw):
@@ -1327,10 +1327,11 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         LOG("portal types not found : ", 100, portal_id)
         continue
       property_list = self._objects[key]
-      original_property_list = getattr(portal_type, self.class_property, ())
+      original_property_list = list(getattr(portal_type,
+                                    self.class_property, ()))
       for id in property_list:
         if id in original_property_list:
-          original_property_list.remove(id)        
+          original_property_list.remove(id)
       setattr(portal_type, self.class_property, list(original_property_list))
     
 class PortalTypeHiddenContentTypeTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
@@ -2380,7 +2381,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
     sql_search_result_keys = list(catalog.sql_search_result_keys)
-    object_path = kw.get('object_path', None)    
+    object_path = kw.get('object_path', None)
     if object_path is not None:
       object_keys = [object_path]
     else:
@@ -3424,7 +3425,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_path_item',
       '_action_item',
       '_portal_type_roles_item',
-      '_local_roles_item', 
+      '_local_roles_item',
       '_catalog_result_key_item',
       '_catalog_related_key_item',
       '_catalog_result_table_item',
@@ -3686,7 +3687,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Update local dictionary containing all setup parameters
       # This may include mappings
       self.portal_templates.updateLocalConfiguration(self, **kw)
-      local_configuration = self.portal_templates.getLocalConfiguration(self)    
+      local_configuration = self.portal_templates.getLocalConfiguration(self)
 
       # update catalog if necessary
       update_catalog=0
