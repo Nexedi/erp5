@@ -89,14 +89,14 @@ source_section = transaction.getSourceSectionValue(\n
 if source_section and source_section.getPortalType() != \'Organisation\' :\n
   source_section = source_section.getMappingRelatedValue(\n
             portal_type = \'Organisation\')\n
-if not source_section :\n
+if source_section is None:\n
   raise ValidationFailed, N_(\n
       \'Action impossible : Source Section is not Defined.\')\n
   \n
 destination_section = transaction.getDestinationSection(\n
             portal_type = [\'Organisation\', \'Person\'])\n
 # if it\'s not an invoice, then we can validate without destination.\n
-if not destination_section and \\\n
+if destination_section is None and \\\n
     transaction.getPortalType() in transaction.getPortalInvoiceTypeList() :\n
   raise ValidationFailed, N_(\n
       \'Action impossible : Destination Section is not Defined.\')\n
@@ -205,9 +205,9 @@ if error_message :\n
                             <string>transition</string>
                             <string>N_</string>
                             <string>source_section</string>
+                            <string>None</string>
                             <string>destination_section</string>
                             <string>currency</string>
-                            <string>None</string>
                             <string>valid_date</string>
                             <string>DateTime</string>
                             <string>transaction_date</string>
