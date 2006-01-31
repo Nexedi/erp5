@@ -92,6 +92,17 @@
     <paragraphstyle name="TableHeader" parent="Normal" fontname="Helvetica-Oblique" fontsize="9" alignment="left" />\n
     <paragraphstyle name="TableLastLine" parent="Normal" fontname="Helvetica-Oblique" fontsize="11" alignment="left" />\n
       \n
+    <paragraphstyle name="Section1" parent="Normal" fontname="Helvetica-Bold" fontsize="10"/>\n
+    <paragraphstyle name="Section2" leftindent="0.4cm" parent="Normal" fontname="Helvetica-Bold" fontsize="7"/>\n
+    <paragraphstyle name="Section3" leftindent="0.8cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
+    <paragraphstyle name="Section4" leftindent="1.2cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
+    <paragraphstyle name="Section5" leftindent="1.6cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
+    <paragraphstyle name="Section6" leftindent="2.0cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
+    <paragraphstyle name="Section7" leftindent="2.4cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
+    <paragraphstyle name="Section8" leftindent="2.8cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
+    <paragraphstyle name="Section9" leftindent="3.2cm" parent="Normal" fontname="Helvetica" fontsize="7"/>\n
+\n
+\n
     <tablestyle name="StandardTable">\n
       <stylecmd expr="(\'FONT\', (0,0), (-1,-1), \'Helvetica\', 8)"/>\n
       <stylecmd expr="(\'BOX\', (0,0), (-1,0), 1, colors.black)"/>\n
