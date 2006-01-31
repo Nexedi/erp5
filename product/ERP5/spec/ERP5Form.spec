@@ -1,6 +1,6 @@
 %define product ERP5Form
 %define version 0.11
-%define release 3
+%define release 4
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -59,6 +59,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Tue Jan 31 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-4mdk
+- pdftk is required to let ERP5Form handle PDF files
+
 * Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-3mdk
 - New build from the CVS
 
