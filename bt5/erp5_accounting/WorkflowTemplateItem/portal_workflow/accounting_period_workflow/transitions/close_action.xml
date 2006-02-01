@@ -28,15 +28,15 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=deliver_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=close_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>close</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Closing accounting period is made in an activity. if it fails, the Accounting Period object remains in confirmed state, otherwise it goes to delivered state, depending on the result of passing workflow transitions.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deliver_action</string> </value>
+            <value> <string>close_action</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>AccountingPeriod_DeliverTransactions</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

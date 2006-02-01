@@ -40,8 +40,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>deliver</string>
-                <string>deliver_action</string>
+                <string>close</string>
+                <string>close_action</string>
                 <string>plan</string>
                 <string>reopen_action</string>
               </tuple>
