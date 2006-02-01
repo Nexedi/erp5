@@ -40,7 +40,12 @@ import shutil
 property_list = ('title', 'version', 'description', 'license', 'dependency_list', 'copyright_list')
 
 def info(message):
-  """Print a message.
+  """Print a message to stdout.
+  """
+  sys.stdout.write(message)
+
+def err(message):
+  """Print a message to stderr.
   """
   sys.stderr.write(message)
 
@@ -73,7 +78,7 @@ def generateInformation(fd):
       try:
         tar = tarfile.open(file, 'r:gz')
       except tarfile.TarError:
-        info('an error happened; skipping\n')
+        err('An error happened in %s; skipping\n' % (file,))
         continue
       try:
         property_dict = readBusinessTemplate(tar)

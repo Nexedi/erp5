@@ -36,21 +36,21 @@ cvs -Qz3 "-d$CVSROOT" checkout "$MODULE" || cleanup
 # Create one archive for each Business Template
 for BT5 in `ls "$LOCALDIR/$MODULE"`; do
   if [ "$BT5" != "CVS" -a -d "$LOCALDIR/$MODULE/$BT5" ]; then
-    echo "Building $BT5..."
     cd "$LOCALDIR/$MODULE/$BT5" || cleanup
     tar -zcf "$LOCALDIR/$BT5.bt5" --exclude CVS --exclude .cvsignore . || cleanup
-  else
-    echo "Skipping $BT5"
   fi
 done
 
 # Get the latest version of the genbt5list and generate the index
 cd "$LOCALDIR" || cleanup
 cvs -Qz3 "-d$CVSROOT" checkout "$GENBTLIST" || cleanup
-python "$GENBTLIST" || cleanup
 
 # Publish the repository
-mv -f bt5list "$LOCALDIR/"*.bt5 "$BT5DIR"
+mv -f bt5list "$LOCALDIR/"*.bt5 "$BT5DIR" || cleanup
+
+# Generate the index from repository directory, in case there are BT5 manually added there
+cd "$BT5DIR" || cleanup
+python "$LOCALDIR/$GENBTLIST" > /dev/null
 
 # Clean up
 rm -rf $LOCALDIR
