@@ -58,7 +58,7 @@ def get_value(self, id, **kw):
 
     tales_expr = self.tales.get(id, "")
     if tales_expr:
-        REQUEST = get_request
+        REQUEST = get_request()
         form = self.aq_parent
         object = getattr(form, 'aq_parent', None)
         if object:
