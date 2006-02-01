@@ -39,11 +39,13 @@ os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from testPackingList import TestPackingListMixin
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from DateTime import DateTime
+
 
 class TestAccounting(ERP5TypeTestCase):
   """Test Accounting. """
@@ -179,9 +181,16 @@ class TestAccounting(ERP5TypeTestCase):
     accounting_period = sequence.get('accounting_period')
     self.getPortal().portal_workflow.doActionFor(
                         accounting_period,
-                        'deliver_action' )
+                        'close_action' )
+    self.assertEquals(accounting_period.getSimulationState(),
+                      'closing')
+    
+  def stepCheckAccountingPeriodDelivered(self, sequence, **kw):
+    """Check the Accounting Period is delivered."""
+    accounting_period = sequence.get('accounting_period')
     self.assertEquals(accounting_period.getSimulationState(),
                       'delivered')
+    
   
   def stepCreateCurrencies(self, sequence, **kw) :
     """Create a some currencies. """
@@ -387,6 +396,14 @@ class TestAccounting(ERP5TypeTestCase):
     for invoice in invoice_list:
       self.getPortal().portal_workflow.doActionFor(
           invoice, 'stop_action')
+  
+  def stepCheckStopInvoicesRefused(self, sequence, **kw) :
+    """Checks that invoices cannot be validated."""
+    invoice_list = sequence.get('invoice_list')
+    for invoice in invoice_list:
+      self.assertRaises(ValidationFailed,
+          self.getPortal().portal_workflow.doActionFor,
+          invoice, 'stop_action')
 
   def stepCheckInvoicesAreDraft(self, sequence, **kw) :
     """Checks invoices are in draft state."""
@@ -526,6 +543,7 @@ class TestAccounting(ERP5TypeTestCase):
       stepTic
       stepDeliverAccountingPeriod
       stepTic
+      stepCheckAccountingPeriodDelivered
       stepCheckInvoicesAreDelivered
       stepTic
       stepCheckAccountingTransactionDelivered
@@ -544,7 +562,7 @@ class TestAccounting(ERP5TypeTestCase):
       stepTic
       stepUseInvalidDates
       stepCreateInvoices
-      stepStopInvoices
+      stepCheckStopInvoicesRefused
       stepTic
       stepCheckInvoicesAreDraft
     """)
@@ -583,6 +601,7 @@ class TestAccounting(ERP5TypeTestCase):
       stepTic
       stepDeliverAccountingPeriod
       stepTic
+      stepCheckAccountingPeriodDelivered
       stepCheckInvoicesAreDraft
     """)
 
