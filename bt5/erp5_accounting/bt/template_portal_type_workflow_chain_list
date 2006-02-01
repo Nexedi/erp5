@@ -1,6 +1,7 @@
 Account | account_workflow
 Account | edit_workflow
 Accounting Period | accounting_period_workflow
+Accounting Period | edit_workflow
 Accounting Transaction Line | delivery_edit_workflow
 Accounting Transaction Line | edit_workflow
 Accounting Transaction | accounting_workflow

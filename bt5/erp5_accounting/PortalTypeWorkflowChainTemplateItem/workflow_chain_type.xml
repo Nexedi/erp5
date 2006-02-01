@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Accounting Period</type>
-  <workflow>accounting_period_workflow</workflow>
+  <workflow>edit_workflow, accounting_period_workflow</workflow>
  </chain>
  <chain>
   <type>Accounting Transaction</type>
