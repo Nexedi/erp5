@@ -2246,8 +2246,10 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     if self.getParentValue().getPortalType() == "Preference":
       raise ValueError, "Template instances can not be created within Preferences"
-    if hasattr(aq_base(self), 'isIndexable'): delattr(self, 'isIndexable')
-    if hasattr(aq_base(self), 'isTemplate'): delattr(self, 'isTemplate')
+    #if hasattr(aq_base(self), 'isIndexable'): delattr(self, 'isIndexable')
+    #if hasattr(aq_base(self), 'isTemplate'): delattr(self, 'isTemplate')
+    # FIXME: attribute is not set on the class, delattr fails.
+    
     # Add to catalog
     self.reindexObject()
 
