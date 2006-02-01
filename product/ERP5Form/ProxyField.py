@@ -42,7 +42,7 @@ from Products.PythonScripts.standard import url_quote_plus
 
 import string
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 class ProxyWidget(Widget.Widget):
   """
@@ -95,8 +95,12 @@ class ProxyWidget(Widget.Widget):
       Render proxy field
     """
     form = field.aq_parent
-    proxy_form = getattr(form, field.get_value('form_id'))
-    proxy_field = getattr(proxy_form, field.get_value('field_id'))
+    try:
+      proxy_form = getattr(form, field.get_value('form_id'))
+      proxy_field = getattr(proxy_form, field.get_value('field_id'))
+    except AttributeError:
+      LOG('ProxyField', WARNING, 'could not get a field from a proxy field %s in %s' % (field.id, form.id))
+      return ''
     extra_context = REQUEST.get('erp5_extra_context', {})
     for k, v in field.get_value('extra_context'):
       extra_context[k] = v
@@ -108,8 +112,12 @@ class ProxyWidget(Widget.Widget):
       Display proxy field
     """
     form = field.aq_parent
-    proxy_form = getattr(form, field.get_value('form_id'))
-    proxy_field = getattr(proxy_form, field.get_value('field_id'))
+    try:
+      proxy_form = getattr(form, field.get_value('form_id'))
+      proxy_field = getattr(proxy_form, field.get_value('field_id'))
+    except AttributeError:
+      LOG('ProxyField', WARNING, 'could not get a field from a proxy field %s in %s' % (field.id, form.id))
+      return ''
     REQUEST = get_request()
     extra_context = REQUEST.get('erp5_extra_context', {})
     for k, v in field.get_value('extra_context'):
