@@ -117,6 +117,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     sci = None
     econtext = None
     moved_exc = None
+    validation_exc = None
 
     # Figure out the old and new states.
     old_sdef = self._getWorkflowStateOf(ob)
@@ -194,18 +195,18 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         tool.setStatusOf(self.id, ob, status)
         sci = StateChangeInfo(
             ob, self, status, tdef, old_sdef, new_sdef, kwargs)
-        sci.setWorkflowVariable(ob, workflow_id=self.id, error_message = before_script_error_message)
+        # put the error message in the workflow history
+        sci.setWorkflowVariable(ob, workflow_id=self.id,
+                                error_message = before_script_error_message)
+        if validation_exc :
+            # reraise validation failed exception
+            raise validation_exc
         return new_sdef
 
     # Update state.
     status[self.state_var] = new_state
     tool = aq_parent(aq_inner(self))
     tool.setStatusOf(self.id, ob, status)
-
-    # Make sure that the error message is empty. # Why ?
-    #sci = StateChangeInfo(
-    #    ob, self, status, tdef, old_sdef, new_sdef, kwargs)
-    #sci.setWorkflowVariable(ob, error_message = '')
 
     # Update role to permission assignments.
     self.updateRoleMappingsFor(ob)
