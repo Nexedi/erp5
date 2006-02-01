@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.11
-%define release 5
+%define release 6
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -75,6 +75,10 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Feb 01 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-6mdk
+- Give ownership to zope
+- New build from the CVS
+
 * Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-5mdk
 - Correct /var/lib/zope/ ownership and rights
 

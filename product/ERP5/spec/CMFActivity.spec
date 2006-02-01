@@ -1,6 +1,6 @@
 %define product CMFActivity
 %define version 0.11
-%define release 3
+%define release 4
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -55,6 +55,10 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Feb 01 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-4mdk
+- Give ownership to zope
+- New build from the CVS
+
 * Mon Jan 30 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-3mdk
 - New build from the CVS
 
