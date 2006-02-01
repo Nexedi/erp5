@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Products.CMFCore.utils import getToolByName
+from types import StringType
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
 from Products.Formulator.Form import BasicForm
@@ -86,16 +87,6 @@ class OOoTemplate(ZopePageTemplate):
         A page template which is able to embed and OpenOffice
         file (zip archive) and replace content.xml at render time
         with XML dynamically generated through TAL/TALES/METAL expressions
-
-        WARNING:
-          - In order to render in UTF-8, Template must contain the expression:
-            tal:define="dummy python:
-       request.RESPONSE.setHeader('Content-Type','text/xml;; charset=utf-8')"
-
-        TODO:
-          - upload of OOo documents must be able to extract content.xml
-            from the archive, remove DTD definition and include
-            CR/LF to produce a nice looking XML source.
     """
     meta_type = "ERP5 OOo Template"
     icon = "www/OOo.png"
@@ -126,8 +117,26 @@ class OOoTemplate(ZopePageTemplate):
       )
 
     security.declareProtected('View management screens', 'formSettings')
-    formSettings = PageTemplateFile('www/formSettings', globals(), __name__='formSettings')
+    formSettings = PageTemplateFile('www/formSettings', globals(),
+                                     __name__='formSettings')
     formSettings._owner = None
+    
+    def pt_upload(self, REQUEST, file=''):
+      """Replace the document with the text in file."""
+      if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
+          raise ResourceLockedError, "File is locked via WebDAV"
+
+      if type(file) is not StringType:
+          if not file: raise ValueError, 'File not specified'
+          file = file.read()
+           
+      if file.startswith("PK") : # FIXME: this condition is probably not enough
+        # this is a OOo zip file, extract the content
+        builder = OOoBuilder(file)
+        self.content_type = builder.getMimeType()
+        file = builder.prepareContentXml()
+        
+      return ZopePageTemplate.pt_upload(self, REQUEST, file)
 
     security.declareProtected('Change Page Templates', 'doSettings')
     def doSettings(self, REQUEST, title, ooo_stylesheet):
@@ -178,7 +187,8 @@ class OOoTemplate(ZopePageTemplate):
       if request and not batch_mode:
         request.RESPONSE.setHeader('Content-Type','%s;; charset=utf-8' % self.content_type)
         request.RESPONSE.setHeader('Content-Length',len(ooo))
-        request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s' % self.id)
+        request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s' %
+                                     self.title_or_id())
 
       return ooo
 

@@ -65,7 +65,12 @@ class OOoBuilder:
 
   security.declarePrivate('__init__')
   def __init__(self, document):
-    self._document = StringIO(document.data)
+    if hasattr(document, 'data') :
+      self._document = StringIO(document.data)
+    elif hasattr(document, 'read') :
+      self._document = document
+    else :
+      self._document = StringIO(document)
     self._image_count = 0    
 
   security.declarePublic('replace')
@@ -80,7 +85,46 @@ class OOoBuilder:
       zf = ZipFile(self._document, mode='a')
     zf.writestr(filename, stream)
     zf.close()
+  
+  security.declarePublic('extract')
+  def extract(self, filename):
+    """
+    Extracts a file from the archive
+    """
+    try:
+      zf = ZipFile(self._document, mode='r', compression=ZIP_DEFLATED)
+    except RuntimeError:
+      zf = ZipFile(self._document, mode='r')
+    return zf.read(filename)
+  
+  security.declarePublic('getMimeType')
+  def getMimeType(self):
+    return self.extract('mimetype')
 
+  security.declarePublic('prepareContentXml')
+  def prepareContentXml(self) :
+    """
+      extracts content.xml text and prepare it :
+        - add tal namespace
+        - indent the xml
+    """
+    import pprint
+    content_xml = self.extract('content.xml')
+    reader = PyExpat.Reader()
+    document = reader.fromString(content_xml)
+    document_element = document.documentElement
+    from xml.dom.ext import PrettyPrint
+    output = StringIO()
+    PrettyPrint(document_element, output)
+    return output.getvalue().replace(
+      "office:version='1.0'",
+      """ xmlns:tal='http://xml.zope.org/namespaces/tal'
+          xmlns:i18n='http://xml.zope.org/namespaces/i18n'
+          xmlns:metal='http://xml.zope.org/namespaces/metal'
+          tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
+         office:version='1.0'""")
+
+  security.declarePublic('addImage')
   def addImage(self, image, format='png'):
     """
     Add an image to the current document and return its id
