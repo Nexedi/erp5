@@ -73,8 +73,8 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_import_file</string>
+                        <string>your_id</string>
+                        <string>your_import_file</string>
                       </list>
                     </value>
                 </item>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_url</string> </value>
+            <value> <string>your_url</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
