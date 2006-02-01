@@ -114,15 +114,18 @@ try:\n
     k = f.id\n
     v = getattr(request, k, MARKER)\n
     if v is not MARKER:\n
-      if k[0:3] == \'my_\':\n
-        k = k[3:]\n
-        kw[k] = v\n
-        if v in (None, [], ()) or hasattr(v, \'read\') :\n
+      for prefix in (\'my_\', \'your_\'):\n
+        if k.startswith(prefix):\n
+          k = k[len(prefix):]\n
+          kw[k] = v\n
+          if v in (None, [], ()) or hasattr(v, \'read\') :\n
+            must_redirect = 1\n
+          break\n
+      else:\n
+        if k in (\'import_file\', \'listbox\'):\n
+          if f.meta_type == \'ListBox\': has_listbox = 1\n
           must_redirect = 1\n
-      elif k in (\'import_file\', \'listbox\'):\n
-        if f.meta_type == \'ListBox\': has_listbox = 1\n
-        must_redirect = 1\n
-        kw[k] = v\n
+          kw[k] = v\n
   # Add some properties required by UI\n
   md5_object_uid_list = getattr(request,\'md5_object_uid_list\',None)\n
   kw[\'md5_object_uid_list\'] = md5_object_uid_list\n
@@ -253,7 +256,9 @@ return request.RESPONSE.redirect( redirect_url )\n
                             <string>f</string>
                             <string>k</string>
                             <string>v</string>
+                            <string>prefix</string>
                             <string>_getitem_</string>
+                            <string>len</string>
                             <string>_write_</string>
                             <string>hasattr</string>
                             <string>md5_object_uid_list</string>

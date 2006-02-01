@@ -118,12 +118,18 @@ try:\n
     k = f.id\n
     v = getattr(request,k, MARKER)\n
     if v is not MARKER:\n
-      if k[0:3] == \'my_\':\n
-        k = k[3:]\n
-        kw[k] = v\n
-      elif k in (\'import_file\', \'listbox\'):\n
-        if f.meta_type == \'ListBox\': has_listbox = 1\n
-        kw[k] = v\n
+      for prefix in (\'my_\', \'your_\'):\n
+        if k.startswith(prefix):\n
+          k = k[len(prefix):]\n
+          kw[k] = v\n
+          if v in (None, [], ()) or hasattr(v, \'read\') :\n
+            must_redirect = 1\n
+          break\n
+      else:\n
+        if k in (\'import_file\', \'listbox\'):\n
+          if f.meta_type == \'ListBox\': has_listbox = 1\n
+          must_redirect = 1\n
+          kw[k] = v\n
   # Add some properties required by UI\n
   kw[\'cancel_url\'] = cancel_url\n
   # Redirect if possible, or call directly else\n
@@ -247,8 +253,12 @@ return request.RESPONSE.redirect( redirect_url )\n
                             <string>f</string>
                             <string>k</string>
                             <string>v</string>
+                            <string>prefix</string>
                             <string>_getitem_</string>
+                            <string>len</string>
                             <string>_write_</string>
+                            <string>hasattr</string>
+                            <string>must_redirect</string>
                             <string>import_file</string>
                             <string>_apply_</string>
                             <string>listbox_line_list</string>
