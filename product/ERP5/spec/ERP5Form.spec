@@ -53,7 +53,7 @@ if [ -f "%{_prefix}/bin/zopectl" ] && [ "`%{_prefix}/bin/zopectl status`" != "da
 fi
 
 %files
-%defattr(0644, root, root, 0755)
+%defattr(0644, zope, zope, 0755)
 %doc %{product}/VERSION.txt %{product}/TODO.txt
 %{software_home}/Products/*
 
