@@ -1,39 +1,57 @@
 #!/bin/bash
 
-# Where we want to store the source code from cvs
-CVS_PATH="/home/$USER/cvs"
-REPOSIT="cvs.erp5.org"
+# TODO: BT5 version support (stable/unstable)
 
-# Retrieve the version of the source code as anonymous user to be sure we get published code only
-cd $CVS_PATH && cvs -d:pserver:anonymous@$REPOSIT:/cvsroot checkout erp5_bt
-mkdir $CVS_PATH/bt5
+# Lock file name
+LOCKFILE="/tmp/$0.lock"
+# CVS root
+CVSROOT=":pserver:anonymous@cvs.erp5.org:/cvsroot"
+# Module containing business template
+MODULE="erp5_bt5"
+# Script generating the business template repository index (in $REPOSITORY)
+GENBTLIST="ERP5/bin/genbt5list" # XXX: relative to the same repository
+# Local directory to receive CVS copy
+BASELOCALDIR="/tmp"
+# Local directory to receive butiness templates
+BT5DIR="/var/lib/zope/static/reposit/erp5/upload_module"
 
-# Remove CVS extra files
-find $CVS_PATH/erp5_bt/* -name "CVS" | xargs rm -rf
+function cleanup () {
+  rm -f $LOCKFILE
+  exit 1
+}
 
-# Get the list of Business Template
-# BT5_LIST is the list of folder found in $CVS_PATH/erp5_bt
-BT5_LIST=`ls $CVS_PATH/erp5_bt`
+if [ -e "$LOCKFILE" ]; then
+  echo "Lock file '$LOCKFILE' exists, exiting..."
+  exit 1
+fi
+
+touch "$LOCKFILE" || exit 1
+LOCALDIR="$BASELOCALDIR/$$"
+mkdir "$LOCALDIR" || cleanup
+
+# Checkout the source code from cvs
+cd "$LOCALDIR" || cleanup
+cvs -Qz3 "-d$CVSROOT" checkout "$MODULE" || cleanup
 
 # Create one archive for each Business Template
-cd $CVS_PATH/erp5_bt
-for $BT5 in $BT5_LIST
-  do
-    cd $CVS_PATH/erp5_bt
-    tar zcvf $BT5.tgz $BT5
-    mv $CVS_PATH/erp5_bt/$BT5.tgz $CVS_PATH/bt5/$BT5.bt5
-  done
+for BT5 in `ls "$LOCALDIR/$MODULE"`; do
+  if [ "$BT5" != "CVS" -a -d "$LOCALDIR/$MODULE/$BT5" ]; then
+    echo "Building $BT5..."
+    cd "$LOCALDIR/$MODULE/$BT5" || cleanup
+    tar -zcf "$LOCALDIR/$BT5.bt5" --exclude CVS --exclude .cvsignore . || cleanup
+  else
+    echo "Skipping $BT5"
+  fi
+done
 
-# Get the latest version of the genbt5list (the script that generate the index)
-cd $CVS_PATH/bt5
-cvs -d:pserver:anonymous@$REPOSIT:/cvsroot checkout ERP5/bin/genbt5list
-
-# Generate the repository index
-python $CVS_PATH/bt5/genbt5list
-rm -f genbt5list
+# Get the latest version of the genbt5list and generate the index
+cd "$LOCALDIR" || cleanup
+cvs -Qz3 "-d$CVSROOT" checkout "$GENBTLIST" || cleanup
+python "$GENBTLIST" || cleanup
 
 # Publish the repository
-mv -f $CVS_PATH/bt5/* /var/www/erp5.org/bt5/
+mv -f bt5list "$LOCALDIR/"*.bt5 "$BT5DIR"
 
 # Clean up
-rm -rf $CVS_PATH/*
+rm -rf $LOCALDIR
+rm -f $LOCKFILE
