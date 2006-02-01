@@ -66,19 +66,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>o = context.getObject()\n
+            <value> <string>from Products.DCWorkflow import ValidationFailed\n
+\n
+o = context.getObject()\n
 \n
 action_list = context.portal_workflow.getActionsFor(o)\n
 action_list = filter(lambda x:x.has_key(\'id\'), action_list )\n
 action_id_list = map(lambda x:x[\'id\'], action_list)\n
 \n
 if workflow_action in action_id_list:\n
-\n
-  context.portal_workflow.doActionFor(\n
-     o,\n
+  try : \n
+    context.portal_workflow.doActionFor( o,\n
      workflow_action,\n
      comment = comment\n
      )\n
+  except ValidationFailed, message: \n
+    if not batch :\n
+      context.REQUEST.RESPONSE.redirect(\n
+                 "%s/view?portal_status_message=%s" %\n
+                 (context.absolute_url(), message))\n
 </string> </value>
         </item>
         <item>
@@ -128,13 +134,16 @@ if workflow_action in action_id_list:\n
                             <string>workflow_action</string>
                             <string>comment</string>
                             <string>batch</string>
+                            <string>Products.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>o</string>
                             <string>action_list</string>
                             <string>filter</string>
                             <string>map</string>
                             <string>action_id_list</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>

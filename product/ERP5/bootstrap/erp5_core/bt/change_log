@@ -1,3 +1,6 @@
+2006-02-01 jerome
+* catch validation faileds on workflow validations and put them in portal status message
+
 2006-02-01 aurel
 * modify Base_callViewDialogMethod
 

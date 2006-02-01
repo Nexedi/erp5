@@ -101,34 +101,21 @@ try:\n
       kw[\'workflow_action\'],\n
       **kw)\n
 \n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+                                  , \'portal_status_message=Status+changed.\' )\n
+\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
   field_errors = form.ErrorFields(validation_errors)\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
 \n
-else:\n
-  # We will check if there\'s an error_message\n
-  history_data = None\n
-  try : \n
-    history_data = context.portal_workflow.getInfoFor(ob=context.getObject(), name=\'history\')\n
-  except AttributeError : \n
-    pass\n
-  redirect_url = None\n
-  if history_data:\n
-    last_history_data = history_data[-1]\n
-    error_message = last_history_data.get(\'error_message\')\n
-    if error_message != None and error_message != \'\':\n
-      redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
+except ValidationFailed, error_message:\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
                                   , \'portal_status_message=%s\' % error_message\n
                                   )\n
-      pass\n
-  if redirect_url is None:\n
-    redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
-                                  , \'portal_status_message=Status+changed.\'\n
-                                  )\n
 \n
-  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
 </string> </value>
         </item>
         <item>
@@ -196,12 +183,9 @@ else:\n
                             <string>listbox_line</string>
                             <string>tuple</string>
                             <string>_apply_</string>
+                            <string>redirect_url</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
-                            <string>history_data</string>
-                            <string>AttributeError</string>
-                            <string>redirect_url</string>
-                            <string>last_history_data</string>
                             <string>error_message</string>
                           </tuple>
                         </value>
