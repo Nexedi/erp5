@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>disableOtherPreferences</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -84,6 +84,7 @@
             <value>
               <tuple>
                 <string>Owner</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>

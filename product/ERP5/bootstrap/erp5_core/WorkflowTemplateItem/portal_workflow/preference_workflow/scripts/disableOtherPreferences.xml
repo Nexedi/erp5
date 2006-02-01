@@ -66,11 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-\n
-pref = sci.object\n
+            <value> <string>pref = sci.object\n
 portal = sci.getPortal()\n
 LOG = lambda msg: pref.log("PreferenceWorkflow.disableOtherPreferences on %s"%pref, msg)\n
+N_ = context.Base_translateString\n
 \n
 # deactivate all other preferences of the same level \n
 for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
@@ -82,12 +81,12 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
          p.getPriority() == pref.getPriority() :\n
         p.portal_workflow.doActionFor(p,\n
            \'disable_action\',\n
-           wf_id=\'preference_workflow\')\n
+           wf_id=\'preference_workflow\', \n
+           comment=N_(\'automatically disabled when enabling ${preference_title}\',\n
+                                   mapping={\'preference_title\': context.getTitle()}) )\n
         LOG(\'Deactivated %s\'%p)\n
   except \'Unauthorized\', a :\n
     LOG("not authorized to deactivate %s"%p)\n
-\n
-# vim: syntax=python\n
 </string> </value>
         </item>
         <item>
@@ -141,12 +140,12 @@ for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>pref</string>
                             <string>portal</string>
                             <string>LOG</string>
+                            <string>context</string>
+                            <string>N_</string>
                             <string>_getiter_</string>
                             <string>p</string>
                             <string>a</string>
