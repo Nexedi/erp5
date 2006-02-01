@@ -48,10 +48,8 @@ while test $# -gt 0; do
 
   # Create the archive
   cd $CVS_PATH/$NAME-$VERSION && tar jcvf $NAME-$VERSION.tar.bz2 $NAME && cd -
-  mv $CVS_PATH/$NAME-$VERSION/$NAME-$VERSION.tar.bz2 $CVS_PATH/
-  # Remove because this does not remove files
-  rm -f $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
-  cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
+  mv -f $CVS_PATH/$NAME-$VERSION/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
+  rm -rf $CVS_PATH/$NAME-$VERSION
 
   TMP_SPEC="/tmp/$NAME-$VERSION-tmp.spec"
   rm -f $TMP_SPEC
@@ -71,24 +69,22 @@ while test $# -gt 0; do
   SUMMARY=`grep "^Summary*" $CVS_SPEC_FILE`
   REQUIRES=`grep "^Requires*" $CVS_SPEC_FILE`
 
-  # Get the doc
-  DOC=`grep "^%doc*" $CVS_SPEC_FILE`
-  # Default value for %doc if not found in previous spec file
-  if test "x$DOC" = x; then
-    DOC="%doc %{product}/VERSION.txt"
-  fi
-
   # Get the description and changelog from the previous spec file
   L_SECTIONS=`grep -hn "#----------------------------------------------------------------------" $CVS_SPEC_FILE | sed -e "s/:/ /g" | awk '{print $1}'`
   L_DESC_START=`echo $L_SECTIONS | awk '{print $1}'`
   L_DESC_STOP=` echo $L_SECTIONS | awk '{print $2}'`
   L_CHANGELOG=` echo $L_SECTIONS | awk '{print $3}'`
+  L_CORE_START=$L_DESC_STOP
+  L_CORE_STOP=$L_CHANGELOG
   L_TOTAL=`wc -l $CVS_SPEC_FILE | awk '{print $1}'`
   DESC_HEAD=`expr $L_DESC_STOP - 1`
   DESC_TAIL=`expr $L_DESC_STOP - $L_DESC_START - 2`
+  CORE_HEAD=`expr $L_CORE_STOP - 1`
+  CORE_TAIL=`expr $L_CORE_STOP - $L_CORE_START - 1`
   CLOG_TAIL=`expr $L_TOTAL - $L_CHANGELOG - 1`
 
   DESCRIPTION=`head -n $DESC_HEAD $CVS_SPEC_FILE | tail -n $DESC_TAIL`
+  SPEC_CORE=`head -n $CORE_HEAD $CVS_SPEC_FILE | tail -n $CORE_TAIL`
   CHANGELOG=`tail -n $CLOG_TAIL $CVS_SPEC_FILE`
 
   TODAY=`env LC_TIME=en date +"%a %b %d %Y"`
@@ -102,9 +98,6 @@ while test $# -gt 0; do
     RELEASE="1"
   fi
   MKREL=`rpm --with unstable --eval "%mkrel $RELEASE"`
-
-  # TODO: get the %post section from the CVS spec file
-  # TODO: write a generic code to get sections from the CVS spec file
 
 
   ####################
@@ -136,35 +129,7 @@ $REQUIRES
 $DESCRIPTION
 
 #----------------------------------------------------------------------
-%prep
-%setup -c
-
-%build
-
-
-%install
-%{__rm} -rf %{buildroot}
-%{__mkdir_p} %{buildroot}/%{software_home}/Products
-%{__cp} -a * %{buildroot}%{software_home}/Products/
-
-
-%clean
-%{__rm} -rf %{buildroot}
-
-%post
-if [ \"\`%{_prefix}/bin/zopectl status\`\" != \"daemon manager not running\" ] ; then
-  service zope restart
-fi
-
-%postun
-if [ -f \"%{_prefix}/bin/zopectl\" ] && [ \"\`%{_prefix}/bin/zopectl status\`\" != \"daemon manager not running\" ] ; then
-  service zope restart
-fi
-
-%files
-%defattr(0644, root, root, 0755)
-$DOC
-%{software_home}/Products/*
+$SPEC_CORE
 
 #----------------------------------------------------------------------
 %changelog
@@ -175,7 +140,7 @@ $CHANGELOG" >> $TMP_SPEC
 
   # now we can replace the spec file
   rm -f $RPM_PATH/SPECS/$NAME.spec
-  cp -f $TMP_SPEC $RPM_PATH/SPECS/$NAME.spec
+  mv -f $TMP_SPEC $RPM_PATH/SPECS/$NAME.spec
 
   #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
 
