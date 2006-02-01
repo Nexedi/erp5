@@ -153,13 +153,23 @@
                             <item>
                                 <key> <string>omit_input</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
                                 <key> <string>omit_output</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
@@ -247,17 +257,6 @@
                                   </dictionary>
                                 </value>
                             </item>
-                            <item>
-                                <key> <string>transaction</string> </key>
-                                <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>default</string> </key>
-                                        <value> <string></string> </value>
-                                    </item>
-                                  </dictionary>
-                                </value>
-                            </item>
                           </dictionary>
                         </value>
                     </item>
@@ -285,7 +284,6 @@
 <string>amount_range_max</string>
 <string>creation_date_range_min</string>
 <string>creation_date_range_max</string>
-<string>transaction</string>
 <string>section_category</string>
 <string>count</string>
                           </list>
@@ -310,28 +308,27 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>selection\r\n
-selection_domain\r\n
-selection_report\r\n
-selection_params=""\r\n
-selection_sort_on\r\n
-select_expression\r\n
-from_date=""\r\n
-at_date=""\r\n
-to_date=""\r\n
-node=""\r\n
-resource=""\r\n
-entity=""\r\n
-stat=""\r\n
-omit_input\r\n
-omit_output\r\n
-amount=""\r\n
-amount_range_min=""\r\n
-amount_range_max=""\r\n
-creation_date_range_min=""\r\n
-creation_date_range_max=""\r\n
-transaction=""\r\n
-section_category=""\r\n
+            <value> <string>selection\n
+selection_domain\n
+selection_report\n
+selection_params=""\n
+selection_sort_on\n
+select_expression\n
+from_date=""\n
+at_date=""\n
+to_date=""\n
+node=""\n
+resource=""\n
+entity=""\n
+stat=""\n
+omit_input=""\n
+omit_output=""\n
+amount=""\n
+amount_range_min=""\n
+amount_range_max=""\n
+creation_date_range_min=""\n
+creation_date_range_max=""\n
+section_category=""\n
 count=""</string> </value>
         </item>
         <item>
@@ -381,7 +378,7 @@ count=""</string> </value>
 <dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
 <dtml-let section_category="not entity and section_category or \'\'">\n
 \n
-<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category">\n
+<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category or entity">\n
 \n
 SELECT\n
   <dtml-if stat>\n
@@ -398,10 +395,9 @@ FROM\n
   <dtml-in "query[\'from_table_list\']"> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
-\n
   <dtml-if use_movement_table>, catalog AS child\n
-                                      , movement </dtml-if>\n
-  <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
+                              , movement </dtml-if>\n
+  <dtml-if "stat or omit_input or omit_output">, stock </dtml-if>\n
   <dtml-if node>, catalog AS source_account </dtml-if>\n
   <dtml-if resource>, catalog AS currency </dtml-if>\n
   <dtml-if entity>, catalog AS related_entity </dtml-if>\n
@@ -425,26 +421,39 @@ WHERE\n
   <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
   <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
   <dtml-if use_movement_table> AND child.parent_uid = catalog.uid \n
-                                                       AND movement.uid = child.uid </dtml-if>\n
-  <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n
-  <dtml-if node> AND source_account.uid = movement.source_uid </dtml-if>\n
-  <dtml-if resource> AND currency.uid = movement.resource_uid </dtml-if>\n
-  <dtml-if entity> AND related_entity.uid = stock.section_uid </dtml-if>\n
-  <dtml-if section_category> AND category.uid = stock.section_uid AND section_c.uid = category.category_uid </dtml-if>\n
+                               AND movement.uid = child.uid </dtml-if>\n
+  <dtml-if resource> AND currency.uid = movement.resource_uid \n
+                     AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
+  <dtml-if entity> AND ( related_entity.uid = delivery.destination_section_uid \n
+                         OR related_entity.uid = delivery.source_section_uid )\n
+                   AND related_entity.relative_url = \'<dtml-var entity>\'  </dtml-if>\n
+  <dtml-if section_category> AND ( category.uid = delivery.destination_section_uid \n
+                                OR category.uid = delivery.source_section_uid )\n
+                             AND section_c.uid = category.category_uid\n
+                             AND section_c.relative_url = <dtml-sqlvar section_category type="string">\n
+  </dtml-if>\n
 \n
+  -- FIXME: we want stop date when we are destination_section and start_date when \n
+  --   we are source_section (one solution is to read in stock.date, but we try\n
+  --   to avoid the use of stock table here)\n
   <dtml-if from_date> AND movement.stop_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
   <dtml-if to_date> AND movement.stop_date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>\n
   <dtml-if at_date> AND movement.stop_date < <dtml-sqlvar at_date type="datetime"> </dtml-if>\n
-  <dtml-if node> AND ( <dtml-in node> <dtml-unless sequence-start>OR</dtml-unless> source_account.relative_url = \'<dtml-var sequence-item>\' </dtml-in> ) </dtml-if>\n
-  <dtml-if resource> AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
-  <dtml-if entity> AND related_entity.relative_url = \'<dtml-var entity>\' </dtml-if>\n
+\n
+  <dtml-if node>\n
+    AND source_account.uid = movement.source_uid\n
+    AND ( \n
+    <dtml-in node> \n
+      <dtml-unless sequence-start>OR</dtml-unless> source_account.relative_url = \'<dtml-var sequence-item>\'\n
+    </dtml-in> )\n
+   </dtml-if>\n
   <dtml-if stat> AND movement.is_accountable = 1 </dtml-if>\n
-  <dtml-if omit_input> AND stock.quantity < 0 </dtml-if>\n
-  <dtml-if omit_output> AND stock.quantity > 0 </dtml-if>\n
-  <dtml-if transaction> AND catalog.uid = \'<dtml-var transaction>\' </dtml-if>\n
-  <dtml-if section_category> AND section_c.relative_url = \'<dtml-var section_category>\' </dtml-if>\n
+  <dtml-if omit_input> AND stock.quantity < 0\n
+                       AND stock.uid = child.uid  </dtml-if>\n
+  <dtml-if omit_output> AND stock.quantity > 0\n
+                        AND stock.uid = child.uid  </dtml-if>\n
   <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
-    AND ( 0 = 1 \n
+    AND ( 0 = 1\n
       <dtml-in expr="selection.getInvertModeUidList()">\n
         OR catalog.uid = <dtml-var sequence-item> \n
       </dtml-in>\n
@@ -513,7 +522,7 @@ WHERE\n
 <dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
 <dtml-let section_category="not entity and section_category or \'\'">\n
 \n
-<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category">\n
+<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category or entity">\n
 \n
 SELECT\n
   <dtml-if stat>\n
@@ -530,10 +539,9 @@ FROM\n
   <dtml-in "query[\'from_table_list\']"> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
-\n
   <dtml-if use_movement_table>, catalog AS child\n
-                                      , movement </dtml-if>\n
-  <dtml-if "entity or stat or section_category">, stock </dtml-if>\n
+                              , movement </dtml-if>\n
+  <dtml-if "stat or omit_input or omit_output">, stock </dtml-if>\n
   <dtml-if node>, catalog AS source_account </dtml-if>\n
   <dtml-if resource>, catalog AS currency </dtml-if>\n
   <dtml-if entity>, catalog AS related_entity </dtml-if>\n
@@ -557,26 +565,39 @@ WHERE\n
   <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
   <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
   <dtml-if use_movement_table> AND child.parent_uid = catalog.uid \n
-                                                       AND movement.uid = child.uid </dtml-if>\n
-  <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>\n
-  <dtml-if node> AND source_account.uid = movement.source_uid </dtml-if>\n
-  <dtml-if resource> AND currency.uid = movement.resource_uid </dtml-if>\n
-  <dtml-if entity> AND related_entity.uid = stock.section_uid </dtml-if>\n
-  <dtml-if section_category> AND category.uid = stock.section_uid AND section_c.uid = category.category_uid </dtml-if>\n
+                               AND movement.uid = child.uid </dtml-if>\n
+  <dtml-if resource> AND currency.uid = movement.resource_uid \n
+                     AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
+  <dtml-if entity> AND ( related_entity.uid = delivery.destination_section_uid \n
+                         OR related_entity.uid = delivery.source_section_uid )\n
+                   AND related_entity.relative_url = \'<dtml-var entity>\'  </dtml-if>\n
+  <dtml-if section_category> AND ( category.uid = delivery.destination_section_uid \n
+                                OR category.uid = delivery.source_section_uid )\n
+                             AND section_c.uid = category.category_uid\n
+                             AND section_c.relative_url = <dtml-sqlvar section_category type="string">\n
+  </dtml-if>\n
 \n
+  -- FIXME: we want stop date when we are destination_section and start_date when \n
+  --   we are source_section (one solution is to read in stock.date, but we try\n
+  --   to avoid the use of stock table here)\n
   <dtml-if from_date> AND movement.stop_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
   <dtml-if to_date> AND movement.stop_date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>\n
   <dtml-if at_date> AND movement.stop_date < <dtml-sqlvar at_date type="datetime"> </dtml-if>\n
-  <dtml-if node> AND ( <dtml-in node> <dtml-unless sequence-start>OR</dtml-unless> source_account.relative_url = \'<dtml-var sequence-item>\' </dtml-in> ) </dtml-if>\n
-  <dtml-if resource> AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
-  <dtml-if entity> AND related_entity.relative_url = \'<dtml-var entity>\' </dtml-if>\n
+\n
+  <dtml-if node>\n
+    AND source_account.uid = movement.source_uid\n
+    AND ( \n
+    <dtml-in node> \n
+      <dtml-unless sequence-start>OR</dtml-unless> source_account.relative_url = \'<dtml-var sequence-item>\'\n
+    </dtml-in> )\n
+   </dtml-if>\n
   <dtml-if stat> AND movement.is_accountable = 1 </dtml-if>\n
-  <dtml-if omit_input> AND stock.quantity < 0 </dtml-if>\n
-  <dtml-if omit_output> AND stock.quantity > 0 </dtml-if>\n
-  <dtml-if transaction> AND catalog.uid = \'<dtml-var transaction>\' </dtml-if>\n
-  <dtml-if section_category> AND section_c.relative_url = \'<dtml-var section_category>\' </dtml-if>\n
+  <dtml-if omit_input> AND stock.quantity < 0\n
+                       AND stock.uid = child.uid  </dtml-if>\n
+  <dtml-if omit_output> AND stock.quantity > 0\n
+                        AND stock.uid = child.uid  </dtml-if>\n
   <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
-    AND ( 0 = 1 \n
+    AND ( 0 = 1\n
       <dtml-in expr="selection.getInvertModeUidList()">\n
         OR catalog.uid = <dtml-var sequence-item> \n
       </dtml-in>\n
