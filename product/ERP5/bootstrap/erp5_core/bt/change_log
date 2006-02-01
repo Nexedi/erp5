@@ -1,3 +1,8 @@
+2006-02-01 kevin
+* Delete all jump menus defined on Organisation module: they are just shortcuts to other modules.
+* Same on Person module.
+* Reorder Bank Account tabs.
+
 2006-02-01 aurel
 * add parameters to script TemplateTool_downloadRepositoryBusinessTemplateList
 
