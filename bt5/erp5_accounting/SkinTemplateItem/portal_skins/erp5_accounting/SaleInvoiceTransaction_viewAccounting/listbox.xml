@@ -510,7 +510,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>purchase_invoice_transaction_line_selection</string> </value>
+                    <value> <string>sale_invoice_transaction_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
