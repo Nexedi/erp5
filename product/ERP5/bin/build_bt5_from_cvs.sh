@@ -46,11 +46,12 @@ cd "$LOCALDIR" || cleanup
 cvs -Qz3 "-d$CVSROOT" checkout "$GENBTLIST" || cleanup
 
 # Publish the repository
-mv -f bt5list "$LOCALDIR/"*.bt5 "$BT5DIR" || cleanup
+mv -f "$LOCALDIR/"*.bt5 "$BT5DIR"
 
 # Generate the index from repository directory, in case there are BT5 manually added there
 cd "$BT5DIR" || cleanup
-python "$LOCALDIR/$GENBTLIST" > /dev/null
+/usr/bin/python "$LOCALDIR/$GENBTLIST" > /dev/null
+chmod go+r bt5list
 
 # Clean up
 rm -rf $LOCALDIR
