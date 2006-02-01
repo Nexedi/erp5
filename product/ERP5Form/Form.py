@@ -58,6 +58,7 @@ def get_value(self, id, **kw):
 
     tales_expr = self.tales.get(id, "")
     if tales_expr:
+        REQUEST = get_request
         form = self.aq_parent
         object = getattr(form, 'aq_parent', None)
         if object:
@@ -69,7 +70,7 @@ def get_value(self, id, **kw):
             container = None
         kw['field'] = self
         kw['form'] = form
-        kw['request'] = get_request()
+        kw['request'] = REQUEST
         kw['here'] = object
         kw['container'] = container
         try :
@@ -77,7 +78,7 @@ def get_value(self, id, **kw):
         except AttributeError :
             LOG('ERP5Form', 0,
               'portal_preferences not put in TALES context (not installed?)')
-        extra_context = getattr(self, '_v_extra_context', None)
+        extra_context = REQUEST.get('erp5_extra_context', None)
         if extra_context:
           kw.update(extra_context)
         # This allows to pass some pointer to the local object

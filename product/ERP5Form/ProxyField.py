@@ -97,34 +97,25 @@ class ProxyWidget(Widget.Widget):
     form = field.aq_parent
     proxy_form = getattr(form, field.get_value('form_id'))
     proxy_field = getattr(proxy_form, field.get_value('field_id'))
-    extra_context = field.get_value('extra_context')
-    if not hasattr(proxy_field, '_v_extra_context'):
-      proxy_field._v_extra_context = {}
-    for k, v in extra_context:
-      proxy_field._v_extra_context[k] = v
-    try:
-      return proxy_field.widget.render(proxy_field, key, value, REQUEST)
-    finally:
-      if hasattr(proxy_field, '_v_extra_context'):
-        del proxy_field._v_extra_context
+    extra_context = REQUEST.get('erp5_extra_context', {})
+    for k, v in field.get_value('extra_context'):
+      extra_context[k] = v
+    REQUEST['erp5_extra_context'] = extra_context
+    return proxy_field.widget.render(proxy_field, key, value, REQUEST)
 
   def render_view(self, field, value):
-    """ 
+    """
       Display proxy field
     """
     form = field.aq_parent
     proxy_form = getattr(form, field.get_value('form_id'))
     proxy_field = getattr(proxy_form, field.get_value('field_id'))
-    extra_context = field.get_value('extra_context')
-    if not hasattr(proxy_field, '_v_extra_context'):
-      proxy_field._v_extra_context = {}
-    for k, v in extra_context:
-      proxy_field._v_extra_context[k] = v
-    try:
-      return proxy_field.widget.render_view(proxy_field, key, value)
-    finally:
-      if hasattr(proxy_field, '_v_extra_context'):
-        del proxy_field._v_extra_context
+    REQUEST = get_request()
+    extra_context = REQUEST.get('erp5_extra_context', {})
+    for k, v in field.get_value('extra_context'):
+      extra_context[k] = v
+    REQUEST['erp5_extra_context'] = extra_context
+    return proxy_field.widget.render_view(proxy_field, key, value)
 
 
 class ProxyValidator(Validator.Validator):
