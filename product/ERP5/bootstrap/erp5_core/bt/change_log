@@ -1,3 +1,12 @@
+2006-02-01 aurel
+* modify Base_callViewDialogMethod
+
+2006-01-31 jerome
+* implement preference workflow the right way, fix a bug in a guard.
+
+2006-01-31 aurel
+* change my by your in some TemplateTool skins and modify Base_callDialogMethod to take this change into account
+
 2006-01-31 aurel
 * fix compution of number of column in index_html
 
