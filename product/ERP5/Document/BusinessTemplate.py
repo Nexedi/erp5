@@ -580,7 +580,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             chain_dict = getChainByType(context)[1]
             default_chain = ''
             chain_dict['chain_%s' %(object_id)] = wf_chain
-            context.portal_workflow.manage_changeWorkflows(default_chain, props=chain_dict)            
+            context.portal_workflow.manage_changeWorkflows(default_chain, props=chain_dict) 
           # import sub objects if there is
           elif len(subobjects_dict) > 0:
             # get a jar
@@ -1173,13 +1173,20 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           if action == 'nothing':
             continue          
         portal_type = path.split('/', 1)[1]
-        if chain_dict.has_key('chain_%s' % portal_type):          
+        if chain_dict.has_key('chain_%s' % portal_type):
           old_chain_dict = chain_dict['chain_%s' % portal_type]
           # XXX we don't use the chain (Default) in erp5 so don't keep it
           if old_chain_dict != '(Default)' and old_chain_dict != '':
-            chain_dict['chain_%s' % portal_type] = old_chain_dict +', '+self._objects[path]
+            # unique workflow chains
+            old_chain_workflow_id_set = {}
+            for wf_id in old_chain_dict.split(', '):
+              old_chain_workflow_id_set[wf_id] = 1
+            for wf_id in self._objects[path].split(', '):
+              old_chain_workflow_id_set[wf_id] = 1
+            chain_dict['chain_%s' % portal_type] = ', '.join(
+                                              old_chain_workflow_id_set.keys())
           else:
-            chain_dict['chain_%s' % portal_type] = self._objects[path]            
+            chain_dict['chain_%s' % portal_type] = self._objects[path]
         else:
           chain_dict['chain_%s' % portal_type] = self._objects[path]
     context.portal_workflow.manage_changeWorkflows(default_chain,
