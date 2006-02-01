@@ -34,10 +34,10 @@ cd "$LOCALDIR" || cleanup
 cvs -Qz3 "-d$CVSROOT" checkout "$MODULE" || cleanup
 
 # Create one archive for each Business Template
+cd "$LOCALDIR/$MODULE"
 for BT5 in `ls "$LOCALDIR/$MODULE"`; do
   if [ "$BT5" != "CVS" -a -d "$LOCALDIR/$MODULE/$BT5" ]; then
-    cd "$LOCALDIR/$MODULE/$BT5" || cleanup
-    tar -zcf "$LOCALDIR/$BT5.bt5" --exclude CVS --exclude .cvsignore . || cleanup
+    tar -zcf "$LOCALDIR/$BT5.bt5" --exclude CVS --exclude .cvsignore "$BT5" || cleanup
   fi
 done
 
