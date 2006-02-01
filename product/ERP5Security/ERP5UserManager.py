@@ -119,10 +119,12 @@ class ERP5UserManager(BasePlugin):
 
         _enumerateUsers = CachingMethod(_enumerateUsers, id='ERP5UserManager_enumerateUsers')
 
+        if id is None:
+          id = login
         if isinstance(id, str):
-            id = (id,)
+          id = (id,)
         if isinstance(id, list):
-            id = tuple(id)
+          id = tuple(id)
         return _enumerateUsers(id_tuple=id, exact_match=exact_match, path=self.getPhysicalPath())
 
     def getUserByLogin(self, login):
