@@ -1756,11 +1756,15 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       for role in type_roles_obj:
         type_role_dict = {}
         # uniq
-        for property in ('id', 'title', 'description', 'condition',
+        for property in ('id', 'title', 'description',
             'priority', 'base_category_script'):
           prop_value = getattr(role, property)
           if prop_value:
             type_role_dict[property] = prop_value
+        # condition
+        prop_value = getattr(role, 'condition')
+        if prop_value:
+          type_role_dict['condition'] = prop_value.text
         # multi
         for property in ('category', 'base_category'):
           prop_value_list = []
