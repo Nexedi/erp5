@@ -103,7 +103,7 @@ RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+As:+%s
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,13 +129,15 @@ RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+As:+%s
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>args</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
-<string>container</string>
+                            <string>container</string>
                             <string>REQUEST</string>
                             <string>RESPONSE</string>
                             <string>getattr</string>
                             <string>uids</string>
-<string>context</string>
+                            <string>context</string>
                             <string>ret_url</string>
                             <string>len</string>
                             <string>id_list</string>
@@ -159,7 +161,7 @@ RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+As:+%s
             </value>
         </item>
         <item>
-            <key>                             <string>id</string> </key>
+            <key> <string>id</string> </key>
             <value> <string>TemplateTool_downloadRepositoryBusinessTemplateList</string> </value>
         </item>
         <item>

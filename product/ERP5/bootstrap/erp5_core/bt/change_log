@@ -1,3 +1,6 @@
+2006-02-01 aurel
+* add parameters to script TemplateTool_downloadRepositoryBusinessTemplateList
+
 2006-02-01 jerome
 * catch validation faileds on workflow validations and put them in portal status message
 
