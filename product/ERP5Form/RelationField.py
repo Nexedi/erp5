@@ -54,7 +54,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
     """
     property_names = Widget.TextWidget.property_names + \
       ['update_method', 'jump_method', 'allow_jump', 'base_category', 'portal_type', 'allow_creation', 'catalog_index',
-       'default_module', 'relation_setter_id', 'columns','sort','parameter_list','list_method',
+       'relation_setter_id', 'columns','sort','parameter_list','list_method',
        'first_item', 'items', 'size', 'extra_item']
 
     # XXX Field to remove...
@@ -104,13 +104,6 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
                                title='Catalog Index',
                                description=(
         "The method to call to set the relation. Required."),
-                               default="",
-                               required=1)
-
-    default_module = fields.StringField('default_module',
-                               title='Default Module',
-                               description=(
-        "The module which should be invoked to create new objects."),
                                default="",
                                required=1)
 
