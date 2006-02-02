@@ -92,7 +92,7 @@ class PreferenceTool(BaseTool):
           if value not in (None, '', (), []) :
             return attr
       if found :
-        return attr
+        return value
     _getPreference = CachingMethod( _getPreference,
                                   id='PreferenceTool.CachingMethod')
     user_name = getSecurityManager().getUser().getId()
