@@ -69,6 +69,11 @@ class Resource:
             'type'        : 'float',
             'default'     : 1.0,
             'mode'        : 'w' },
+        {   'id'          : 'base_unit_quantity',
+            'description' : 'The amount of base units of the resource',
+            'type'        : 'float',
+            'default'     : 1.0,
+            'mode'        : 'w' },
         # Physical properties
         {   'id'          : 'base_weight',
             'description' : 'A typical per unit weight of the resource',
