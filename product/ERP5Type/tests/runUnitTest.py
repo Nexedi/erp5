@@ -111,7 +111,7 @@ def runUnitTestList(test_list) :
       if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and (attr.__module__ == test) :
         suite.addTest(unittest.makeSuite(attr))
 
-  TestRunner().run(suite)
+  return TestRunner().run(suite)
 
 if __name__ == '__main__' :
   test_list = sys.argv[1:]
@@ -119,4 +119,6 @@ if __name__ == '__main__' :
     print "No test to run, exiting immediately."
     print "Usage : %s UnitTest1 UnitTest2 ..." % sys.argv[0]
     sys.exit(1)
-  runUnitTestList(test_list=test_list)
+  result = runUnitTestList(test_list=test_list)
+  if len(result.failures) or len(result.errors) :
+    sys.exit(1)
