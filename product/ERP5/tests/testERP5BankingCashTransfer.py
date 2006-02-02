@@ -39,7 +39,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.DCWorkflow.DCWorkflow import Unauthorized
+from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
 # Needed in order to have a log file inside the current folder
@@ -383,7 +383,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       #   by the assignment workflow when NuxUserGroup is used and
       #   by ERP5Security PAS plugins in the context of PAS use.
       assignment.open()
-
+      
     if self.PAS_installed:
       # reindexing is required for the security to work
       get_transaction().commit()
@@ -502,6 +502,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     Each time this method is called, it simulates a call to tic
     which invoke activities in the Activity Tool
     """
+    # execute transaction
+    get_transaction().commit()
     self.tic()
 
 
@@ -586,10 +588,14 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
-  def stepCheckCashTransfer(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check data in the cash transfer
+    Create a cash transfer document and check it
     """
+    # Cash transfer has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
+    self.cash_transfer = self.cash_transfer_module.newContent(id='cash_transfer_1', portal_type='Cash Transfer', source_value=self.caisse_1, destination_value=self.caisse_2, price=52400.0)
+    # execute tic
+    self.stepTic()
     # check we have only one cash transfer
     self.assertEqual(len(self.cash_transfer_module.objectValues()), 1)
     # get the cash transfer document
@@ -606,10 +612,16 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     #raise 'alex', repr( self.cash_transfer.get_local_roles() )
 
 
-  def stepCheckValidLine1(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check the cash transfer line as been well created
+    Create the cash transfer line 1 with banknotes of 10000 and check it has been well created
     """
+    # create the cash transfer line
+    self.addCashLineToDelivery(self.cash_transfer, 'valid_line_1', 'Cash Transfer Line', self.billet_10000,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+            self.quantity_10000)
+    # execute tic
+    self.stepTic()
     # check there is only one line created
     self.assertEqual(len(self.cash_transfer.objectValues()), 1)
     # get the cash transfer line
@@ -658,10 +670,16 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0)
 
 
-  def stepCheckValidLine2(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateValidLine2(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check the cash transfer line 2 has been well created
+    Create the cash transfer line 2 wiht coins of 200 and check it has been well created
     """
+    # create the line
+    self.addCashLineToDelivery(self.cash_transfer, 'valid_line_2', 'Cash Transfer Line', self.piece_200,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+            self.quantity_200)
+    # execute tic
+    self.stepTic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_transfer.objectValues()), 2)
     # get the second cash transfer line
@@ -690,6 +708,86 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
+        
+  
+  def stepTryConfirmCashTransferWithBadUser(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try to confirm cash transfer with a user that doesn't have the right and
+    check that the try of confirm by a bad user doesn't change the cash transfer
+    """
+    # logout from user_1
+    self.logout()
+    # log in as bad user
+    self.login('user_3')
+    # get workflow tool
+    self.workflow_tool = self.getWorkflowTool()
+    # check that an Unauthorized exception is raised when trying to confirm the cash transfer
+    self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
+    # logout from user_3
+    self.logout()
+    # login as default user
+    self.login('user_1')
+    # execute tic
+    self.stepTic()
+    # get state of the cash transfer
+    state = self.cash_transfer.getSimulationState()
+    # check it has remain as draft
+    self.assertEqual(state, 'draft')
+    # get the workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
+    # check its len is one
+    self.assertEqual(len(workflow_history), 1)
+
+
+  def stepCreateInvalidLine(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Create an invalid cash transfer line and
+    check the total with the invalid cash transfer line
+    """
+    # create a line in which quanity of banknotes of 5000 is higher that quantity available at source
+    # here create a line with 24 (11+13) banknotes of 500 although the vault caisse_1 has no banknote of 5000
+    self.addCashLineToDelivery(self.cash_transfer, 'invalid_line', 'Cash Transfer Line', self.billet_5000,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+            self.quantity_5000)
+    # execute tic
+    self.stepTic()
+    # Check number of cash transfer lines (line1 + line2 +invalid_line)
+    self.assertEqual(len(self.cash_transfer.objectValues()), 3)
+    # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
+    self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0 + 12.0 + 24)
+    # chect the total price
+    self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
+
+
+  def stepTryConfirmCashTransferWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Try to confirm the cash transfer with a bad cash transfer line and
+    check the try of confirm the cash transfer with the invalid line has failed
+    """
+    # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
+    self.cash_transfer.setPrice('172400.0')
+    # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition 
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
+    # execute tic
+    self.stepTic()
+    # get state of the cash transfer
+    state = self.cash_transfer.getSimulationState()
+    # check the state is draft
+    self.assertEqual(state, 'draft')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
+    # check its len is 2
+    self.assertEqual(len(workflow_history), 2)
+    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
+    self.assertEqual('Insufficient balance' in workflow_history[-1]['error_message'], True)
+
+
+  def stepDelInvalidLine(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Delete the invalid cash transfer line previously create
+    """
+    self.cash_transfer.deleteContent('invalid_line')
+
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -703,52 +801,16 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
 
 
-  def stepCheckBadTotal(self, sequence=None, sequence_list=None, **kwd):
+  def stepConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check the total with the invalid cash transfer line
+    Confirm the cash transfer and check it
     """
-    # Check number of cash transfer lines (line1 + line2 +invalid_line)
-    self.assertEqual(len(self.cash_transfer.objectValues()), 3)
-    # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
-    self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0 + 12.0 + 24)
-    # chect the total price
-    self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
-
-
-  def stepCheckBadUserConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check that the try of confirm by a bad user doesn't change the cash transfer
-    """
-    # get state of the cash transfer
-    state = self.cash_transfer.getSimulationState()
-    # check it has remain as draft
-    self.assertEqual(state, 'draft')
-    # get the workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
-    # check its len is one
-    self.assertEqual(len(workflow_history), 1)
-
-
-  def stepCheckBadInventoryConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check the try of confirm the cash transfer with the invalid line has failed
-    """
-    # get state of the cash transfer
-    state = self.cash_transfer.getSimulationState()
-    # check the state is draft
-    self.assertEqual(state, 'draft')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
-    # check its len is 2
-    self.assertEqual(len(workflow_history), 2)
-    # check we get an "Insufficient balance" message in the workflow history because of the invalid line
-    self.assertEqual('Insufficient balance' in workflow_history[-1]['error_message'], True)
-
-
-  def stepCheckConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check the confirm the cash transfer
-    """
+    # fix amount (10000 * 5.0 + 200 * 12.0)
+    self.cash_transfer.setPrice('52400.0')
+    # do the Workflow action
+    self.workflow_tool.doActionFor(self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
+    # execute tic
+    self.stepTic()
     # get state
     state = self.cash_transfer.getSimulationState()
     # check state is confirmed
@@ -787,10 +849,23 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
-  def stepBadUserCheckDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
+  def stepTryDeliverCashTransferWithBadUser(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that the try to deliver a Cash Transfer with a bad user have failed
+    Try to deliver a cash transfer with a user that doesn't have the right
+    and check that it failed
     """
+    # logout from user_1
+    self.logout()
+    # log in as bad user
+    self.login('user_3')
+    # check we raise an Unauthorized Exception if we try to deliver cash transfer
+    self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.cash_transfer, 'deliver_action', wf_id='cash_transfer_workflow')
+    # logout from bad user
+    self.logout()
+    # log in as default user
+    self.login('user_1')
+    # execute tic
+    self.stepTic()
     # get state of the cash transfer
     state = self.cash_transfer.getSimulationState()
     # check that state is confirmed
@@ -801,10 +876,25 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 4)
 
 
-  def stepCheckDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
+  def stepDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that the deliver of a cash tranfer have achieved
+    Deliver the cash transfer with a good user
+    and check that the deliver of a cash tranfer have achieved
     """
+    # logout from user_1
+    self.logout()
+    # log in as good user (controleur_caisse)
+    self.login('user_2')
+    #     self.security_manager = AccessControl.getSecurityManager()
+    #     self.user = self.security_manager.getUser()
+    # do the workflow transition "deliver_action"
+    self.workflow_tool.doActionFor(self.cash_transfer, 'deliver_action', wf_id='cash_transfer_workflow')
+    # logout from user_2
+    self.logout()
+    # log in as default user
+    self.login('user_1')
+    # execute tic
+    self.stepTic()
     # get state of cash transfer
     state = self.cash_transfer.getSimulationState()
     # check that state is delivered
@@ -813,7 +903,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
     # check len of len workflow history is 6
     self.assertEqual(len(workflow_history), 6)
-
+    
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -839,123 +929,6 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
-  def stepCreateCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create a cash transfer document
-    """
-    # Cash transfer has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_transfer = self.cash_transfer_module.newContent(id='cash_transfer_1', portal_type='Cash Transfer', source_value=self.caisse_1, destination_value=self.caisse_2, price=52400.0) 
-
-
-  def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create the cash transfer line 1 with banknotes of 10000
-    """
-    self.addCashLineToDelivery(self.cash_transfer, 'valid_line_1', 'Cash Transfer Line', self.billet_10000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
-            self.quantity_10000)
-
-
-  def stepCreateValidLine2(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create the cash transfer line 2 wiht coins of 200
-    """
-    self.addCashLineToDelivery(self.cash_transfer, 'valid_line_2', 'Cash Transfer Line', self.piece_200,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
-            self.quantity_200)
-
-
-  def stepCreateInvalidLine(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create an invalid cash transfer line
-    """
-    # create a line in which quanity of banknotes of 5000 is higher that quantity available at source
-    # here create a line with 24 (11+13) banknotes of 500 although the vault caisse_1 has no banknote of 5000
-    self.addCashLineToDelivery(self.cash_transfer, 'invalid_line', 'Cash Transfer Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
-            self.quantity_5000)
-
-
-  def stepDelInvalidLine(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Delete the invalid cash transfer line previously create
-    """
-    self.cash_transfer.deleteContent('invalid_line')
-
-
-  def stepBadUserConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Try to confirm cash transfer with a user that doesn't have the right
-    """
-    # logout from user_1
-    self.logout()
-    # log in as bad user
-    self.login('user_3')
-    # get workflow tool
-    self.workflow_tool = self.getWorkflowTool()
-    # check that an Unauthorized exception is raised when trying to confirm the cash transfer
-    self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
-    # logout from user_3
-    self.logout()
-    # login as default user
-    self.login('user_1')
-
-
-  def stepBadInventoryConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Try to confirm the cash transfer with a bad cash transfer line
-    """
-    # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
-    self.cash_transfer.setPrice('172400.0')
-    # try to do the workflow action "confirm_action'
-    self.workflow_tool.doActionFor(self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
-
-
-  def stepConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Confir the cash transfer
-    """
-    # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.cash_transfer.setPrice('52400.0')
-    # do the Workflow action
-    self.workflow_tool.doActionFor(self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
-
-
-  def stepBadUserDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Try to deliver a cash transfer with a user that doesn't have the right
-    """
-    # logout from user_1
-    self.logout()
-    # log in as bad user
-    self.login('user_3')
-    # check we raise an Unauthorized Exception if we try to deliver cash transfer
-    self.assertRaises(Unauthorized, self.workflow_tool.doActionFor, self.cash_transfer, 'deliver_action', wf_id='cash_transfer_workflow')
-    # logout from bad user
-    self.logout()
-    # log in as default user
-    self.login('user_1')
-    
-
-  def stepDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Deliver the cash transfer with a good user
-    """
-    # logout from user_1
-    self.logout()
-    # log in as good user (controleur_caisse)
-    self.login('user_2')
-    #     self.security_manager = AccessControl.getSecurityManager()
-    #     self.user = self.security_manager.getUser()
-    # do the workflow transition "deliver_action"
-    self.workflow_tool.doActionFor(self.cash_transfer, 'deliver_action', wf_id='cash_transfer_workflow')
-    # logout from user_2
-    self.logout()
-    # log in as default user
-    self.login('user_1')
-
-
-
   ##################################
   ##  Tests
   ##################################
@@ -967,21 +940,21 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # define the sequence
-    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory CheckSource CheckDestination' \
-                    + ' CreateCashTransfer Tic CheckCashTransfer' \
-                    + ' CreateValidLine1 Tic CheckValidLine1 CheckSubTotal' \
-                    + ' CreateValidLine2 Tic CheckValidLine2 CheckTotal' \
-                    + ' BadUserConfirmCashTransfer Tic CheckBadUserConfirmCashTransfer' \
-                    + ' CheckSource CheckDestination' \
-                    + ' CreateInvalidLine Tic CheckBadTotal' \
-                    + ' BadInventoryConfirmCashTransfer Tic CheckBadInventoryConfirmCashTransfer' \
-                    + ' DelInvalidLine Tic CheckTotal' \
-                    + ' ConfirmCashTransfer Tic CheckConfirmCashTransfer' \
-                    + ' CheckSourceDebitPlanned CheckDestinationCreditPlanned' \
-                    + ' BadUserDeliverCashTransfer Tic BadUserCheckDeliverCashTransfer' \
-                    + ' CheckSourceDebitPlanned CheckDestinationCreditPlanned' \
-                    + ' DeliverCashTransfer Tic CheckDeliverCashTransfer' \
-                    + ' CheckSourceDebit CheckDestinationCredit'
+    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory CheckSource CheckDestination ' \
+                    + 'CreateCashTransfer ' \
+                    + 'CreateValidLine1 CheckSubTotal ' \
+                    + 'CreateValidLine2 CheckTotal ' \
+                    + 'TryConfirmCashTransferWithBadUser ' \
+                    + 'CheckSource CheckDestination ' \
+                    + 'CreateInvalidLine ' \
+                    + 'TryConfirmCashTransferWithBadInventory ' \
+                    + 'DelInvalidLine Tic CheckTotal ' \
+                    + 'ConfirmCashTransfer ' \
+                    + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'TryDeliverCashTransferWithBadUser ' \
+                    + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
+                    + 'DeliverCashTransfer ' \
+                    + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
