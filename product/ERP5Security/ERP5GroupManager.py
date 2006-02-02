@@ -69,7 +69,7 @@ class ERP5GroupManager(BasePlugin):
       security_category_dict = {} # key is the base_category_list,
                                   # value is the list of fetched categories
       security_group_list = []
-      security_definition_dict = {}
+      security_definition_list = ()
 
       # because we aren't logged in, we have to create our own
       # SecurityManager to be able to access the Catalog
@@ -79,24 +79,27 @@ class ERP5GroupManager(BasePlugin):
       newSecurityManager(self, self.getPortalObject().getOwner())
 
       # To get the complete list of groups, we try to call the
-      # ERP5Type_getSecurityCategoryMapping which should return a dict
-      # like : {
-      #     'script_1':['base_category_1', 'base_category_2', ...],
-      #     'script_2':['base_category_1', 'base_category_3', ...]}
+      # ERP5Type_getSecurityCategoryMapping which should return a list
+      # of lists of two elements (script, base_category_list) like :
+      # (
+      #   ('script_1', ['base_category_1', 'base_category_2', ...]),
+      #   ('script_2', ['base_category_1', 'base_category_3', ...])
+      # )
       #
-      # else, if the script does not exist, falls back to :
-      # { 'ERP5Type_getSecurityCategoryFromAssignment':
-      #   self.getPortalAssignmentBaseCategoryList()}
+      # else, if the script does not exist, falls back to a list containng
+      # only one list :
+      # (('ERP5Type_getSecurityCategoryFromAssignment',
+      #   self.getPortalAssignmentBaseCategoryList() ),)
 
       mapping_method = getattr(self,
           'ERP5Type_getSecurityCategoryMapping', None)
       if mapping_method is None:
-        security_definition_dict = {
-            'ERP5Type_getSecurityCategoryFromAssignment':
+        security_definition_list = ((
+            'ERP5Type_getSecurityCategoryFromAssignment',
             self.getPortalAssignmentBaseCategoryList()
-        }
+        ),)
       else:
-        security_definition_dict = mapping_method()
+        security_definition_list = mapping_method()
 
       # get the person from its reference
       catalog_result = self.portal_catalog(
@@ -113,8 +116,8 @@ class ERP5GroupManager(BasePlugin):
       person_id = person_object.getId()
 
       # Fetch category values from defined scripts
-      for method_name, base_category_list in \
-          security_definition_dict.items():
+      for (method_name, base_category_list) in \
+          security_definition_list:
         pickled_category_list = dumps(base_category_list)
         method = getattr(self, method_name)
         if not security_category_dict.has_key(pickled_category_list):
