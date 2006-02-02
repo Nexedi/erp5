@@ -485,6 +485,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return self._p_oid
 
+  def getOidRepr(self):
+    """
+      Return ODB oid, in an 'human' readable form.
+    """
+    from ZODB.utils import oid_repr
+    return oid_repr(self._p_oid)
+
   # Utils
   def _getCategoryTool(self):
     return aq_inner(self.getPortalObject().portal_categories)
