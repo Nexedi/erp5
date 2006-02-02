@@ -622,3 +622,14 @@ class Resource(XMLMatrix, CoreResource, Variated):
         unit_base_price = unit_base_price / priced_quantity
       # Return result
       return unit_base_price
+
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getQuantityPrecision')
+    def getQuantityPrecision(self):
+      """Return the floating point precision of a quantity.
+      """
+      quantity = str(self.getBaseUnitQuantity())
+      i = quantity.find('.')
+      if i < 0:
+        return 0
+      return len(quantity[i+1:].rstrip('0'))
