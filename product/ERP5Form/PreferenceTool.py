@@ -28,8 +28,7 @@
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
-from Acquisition import aq_base
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, PROBLEM
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -40,6 +39,77 @@ from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form.Document.Preference import Preference
 from Products.ERP5Form import _dtmldir
 
+from MethodObject import Method
+
+class func_code: pass
+
+def createPreferenceMethods(portal) :
+  """Initialize all Preference methods on the preference tool.
+  This method must be called on startup.
+  """
+  attr_list = []
+  pref_portal_type = getToolByName(portal,
+                                  'portal_types')['Preference']
+  # 'Dynamic' property sheets added through ZMI
+  zmi_property_sheet_list = []
+  for property_sheet in pref_portal_type.property_sheet_list :
+    try:
+      zmi_property_sheet_list.append(
+                  getattr(__import__(property_sheet), property_sheet))
+    except ImportError, e :
+      LOG('createPreferenceMethods', PROBLEM,
+           'unable to import Property Sheet %s' % property_sheet, e)
+  # 'Static' property sheets defined on the class
+  class_property_sheet_list = Preference.property_sheets
+  for property_sheet in ( tuple(zmi_property_sheet_list) +
+                                class_property_sheet_list ) :
+    # then generate common method names 
+    for prop in property_sheet._properties :
+      if not prop.get('preference', 0) :
+        # only properties marked as preference are used
+        continue
+      attribute = prop['id']
+      attr_list = [ 'get%s' % convertToUpperCase(attribute)]
+      if prop['type'] in list_types :
+        attr_list +=  ['get%sList' % convertToUpperCase(attribute), ]
+      for attribute_name in attr_list:
+        method = PreferenceMethod(attribute_name)
+        setattr(PreferenceTool, attribute_name, method)
+  LOG('PreferenceTool', INFO, 'Preference methods generated')
+
+class PreferenceMethod(Method) :
+  """ A method object that lookup the attribute on preferences. """
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
+
+  def __init__(self, attribute) :
+    self._preference_name = attribute
+
+  def __call__(self, instance, *args, **kw) :
+    def _getPreference(user_name="") :
+      found = 0
+      MARKER = []
+      for pref in instance._getSortedPreferenceList() :
+        attr = getattr(pref, self._preference_name, MARKER)
+        if attr is not MARKER :
+          found = 1
+          # test the attr is set
+          if callable(attr) :
+            value = attr()
+          else :
+            value = attr
+          if value not in (None, '', (), []) :
+            return value
+      if found :
+        return value
+    _getPreference = CachingMethod( _getPreference,
+            id='PreferenceTool.CachingMethod.%s' % self._preference_name)
+    user_name = getSecurityManager().getUser().getId()
+    return _getPreference(user_name=user_name)
+    
 class PreferenceTool(BaseTool):
   """ PreferenceTool manages User Preferences / User profiles. """
   id            = 'portal_preferences'
@@ -62,22 +132,12 @@ class PreferenceTool(BaseTool):
           ['Member', 'Auditor', 'Manager'])
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-  def _aq_dynamic(self, name):
-    """ if the name is a valid preference, then start a lookup on
-      active preferences. """
-    dynamic = BaseTool._aq_dynamic(self, name)
-    if dynamic is not None :
-      return dynamic
-    aq_base_name = getattr(aq_base(self), name, None)
-    if aq_base_name is not None :
-      return aq_base_name
-    if name in self.getValidPreferencePropertyIdList() :
-      return self.getPreference(name)
-
   security.declareProtected(Permissions.View, "getPreference")
   def getPreference(self, pref_name) :
     """ get the preference on the most appopriate Preference object. """
-    def _getPreference(pref_name="", user_name="") :
+    LOG("PreferenceTool", PROBLEM, 'calling getPreference directly on the tool' +
+                                   'is deprecated, no caching happens !')
+    def _getPreference(pref_name="") :
       found = 0
       MARKER = []
       for pref in self._getSortedPreferenceList() :
@@ -93,71 +153,12 @@ class PreferenceTool(BaseTool):
             return attr
       if found :
         return value
-    _getPreference = CachingMethod( _getPreference,
-                                  id='PreferenceTool.CachingMethod')
-    user_name = getSecurityManager().getUser().getId()
-    return _getPreference(pref_name=pref_name, user_name=user_name)
+    return _getPreference(pref_name=pref_name)
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :
     """ set the preference on the active Preference object"""
     self.getActivePreference()._edit(**{pref_name:value})
-
-  security.declareProtected(Permissions.View, "getValidPreferencePropertyIdList")
-  def getValidPreferencePropertyIdList(self) :
-    """ return the list of attributes that are preferences names and
-       should be looked up on Preferences. """
-    def _getValidPreferencePropertyIdList(self) :
-      """ a cache for this method """
-      attr_list = []
-      try :
-        pref_portal_type = getToolByName(self, 'portal_types')['Preference']
-      except KeyError :
-        # When creating an ERP5 Site, this method is called, but the 
-        # type is not installed yet
-        return []
-      # 'Dynamic' property sheets added through ZMI
-      zmi_property_sheet_list = []
-      for property_sheet in pref_portal_type.property_sheet_list :
-        try:
-          zmi_property_sheet_list.append(
-                        getattr(__import__(property_sheet), property_sheet))
-        except ImportError, e :
-          LOG('PreferenceTool._getValidPreferencePropertyIdList', INFO,
-               'unable to import Property Sheet %s' % property_sheet, e)
-      # 'Static' property sheets defined on the class
-      class_property_sheet_list = Preference.property_sheets
-      for property_sheet in ( tuple(zmi_property_sheet_list) +
-                              class_property_sheet_list ) :
-        # then generate common method names 
-        for prop in property_sheet._properties :
-          if not prop.get('preference', 0) :
-            # only properties marked as preference are used
-            continue
-          attribute = prop['id']
-          attr_list += [ attribute,
-                         'get%s' % convertToUpperCase(attribute),
-                         'get%sId' % convertToUpperCase(attribute),
-                         'get%sTitle' % convertToUpperCase(attribute), ]
-          if prop['type'] in list_types :
-            attr_list +=  ['get%sList' % convertToUpperCase(attribute), ]
-        for attribute in list(getattr(property_sheet, '_categories', [])) :
-          attr_list += [ attribute,
-                         'get%s' % convertToUpperCase(attribute),
-                         'get%sId' % convertToUpperCase(attribute),
-                         'get%sTitle' % convertToUpperCase(attribute),
-
-                         'get%sValue' % convertToUpperCase(attribute),
-                         'get%sValueList' % convertToUpperCase(attribute),
-                         'get%sItemList' % convertToUpperCase(attribute),
-                         'get%sIdList' % convertToUpperCase(attribute),
-                         'get%sTitleList' % convertToUpperCase(attribute),
-                         'get%sList' % convertToUpperCase(attribute), ]
-      return attr_list
-    _getValidPreferencePropertyIdList = CachingMethod(
-                      _getValidPreferencePropertyIdList, cache_duration = 600,
-                      id = 'PreferenceTool._getPreferenceAttributes')
-    return _getValidPreferencePropertyIdList(self)
 
   security.declarePrivate('_getSortedPreferenceList')
   def _getSortedPreferenceList(self) :
@@ -191,7 +192,7 @@ class PreferenceTool(BaseTool):
     if folder is None :
       # as the preference tool is also a Folder, this method is called by
       # page templates to get the list of document templates for self.
-      folder =self
+      folder = self
 
     acceptable_templates = []
     allowed_content_types = map(lambda pti: pti.id,

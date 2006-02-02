@@ -114,6 +114,8 @@ def _aq_reset():
   Base.aq_method_generated = {}
   Base.aq_portal_type = {}
   Base.aq_related_generated = 0
+  Base.aq_preference_generated = 0 
+  
   # Some method generations are based on portal methods, and portal methods cache results.
   # So it is safer to invalidate the cache.
   clearCache()
@@ -345,6 +347,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   aq_method_generated = {}
   aq_portal_type = {}
   aq_related_generated = 0
+  
+  aq_preference_generated = 0 
+  # FIXME: Preference should not be included in ERP5Type
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -444,7 +449,17 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
             generated_bid[bid] = 1
       
       Base.aq_related_generated = 1
-
+    
+    if not Base.aq_preference_generated:
+      try :
+        from Products.ERP5Form.PreferenceTool import createPreferenceMethods
+        createPreferenceMethods(self.getPortalObject())
+      except ImportError, e :
+        LOG('Base._aq_dynamic', 100,
+            'unable to create methods for PreferenceTool', e)
+        raise
+      Base.aq_preference_generated = 1
+    
     # Always try to return something after generation
     if generated:
       # We suppose that if we reach this point
