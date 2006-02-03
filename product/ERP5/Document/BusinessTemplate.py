@@ -956,23 +956,23 @@ class WorkflowTemplateItem(ObjectTemplateItem):
       portal = context.getPortalObject()
       new_keys = self._objects.keys()
       for path in new_keys:
-        if len(path.split('/')) == 2:
-          if installed_bt._objects.has_key(path):          
-            # compare object to see it there is changes
-            new_object = self._objects[path]
-            old_object = installed_bt._objects[path]
-            new_io = StringIO()
-            old_io = StringIO()
-            OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
-            OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
-            new_obj_xml = new_io.getvalue()
-            old_obj_xml = old_io.getvalue()
-            new_io.close()
-            old_io.close()
-            if new_obj_xml != old_obj_xml:
-              modified_object_list.update({path : ['Modified', 'Workflow']})
-          else: # new object
-            modified_object_list.update({path : ['New', 'Workflow']})
+        if installed_bt._objects.has_key(path):          
+          # compare object to see it there is changes
+          new_object = self._objects[path]
+          old_object = installed_bt._objects[path]
+          new_io = StringIO()
+          old_io = StringIO()
+          OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
+          OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
+          new_obj_xml = new_io.getvalue()
+          old_obj_xml = old_io.getvalue()
+          new_io.close()
+          old_io.close()
+          if new_obj_xml != old_obj_xml:
+            wf_id = path.split('/')[:2]
+            modified_object_list.update({'/'.join(wf_id) : ['Modified', 'Workflow']})
+        else: # new object
+          modified_object_list.update({path : ['New', 'Workflow']})
       # get removed object
       old_keys = installed_bt._objects.keys()
       for path in old_keys:
