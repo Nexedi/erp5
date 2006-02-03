@@ -1,0 +1,13 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>table_0</params>
+<dtml-var table_0>.original_message = catalog.opportunity_state
+ AND <dtml-var table_0>.message_context = "opportunity_state_title"
+ AND <dtml-var table_0>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">
