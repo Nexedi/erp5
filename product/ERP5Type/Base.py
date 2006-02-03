@@ -208,94 +208,8 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     from Utils import initializeDefaultProperties
     initializeDefaultProperties([prop_holder], object=self)
     #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
-    # We should now make sure workflow methods are defined
-    # and also make sure simulation state is defined
-    portal_workflow = getToolByName(self, 'portal_workflow')
-    #LOG('getWorkflowsFor', 0, str((self, [wf.id for wf in portal_workflow.getWorkflowsFor(self)])))
-    for wf in portal_workflow.getWorkflowsFor(self):
-      wf_id = wf.id
-      #LOG('in aq_portal_type %s' % id, 0, "found state workflow %s" % wf.id)
-      if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
-        # Create state var accessor
-        state_var = wf.variables.getStateVar()
-        method_id = 'get%s' % UpperCase(state_var)
-        if not hasattr(prop_holder, method_id):
-          method = WorkflowState.Getter(method_id, wf_id)
-          setattr(prop_holder, method_id, method) # Attach to portal_type
-          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-        method_id = 'get%sTitle' % UpperCase(state_var)
-        if not hasattr(prop_holder, method_id):
-          method = WorkflowState.TitleGetter(method_id, wf_id)
-          setattr(prop_holder, method_id, method) # Attach to portal_type
-          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-          #LOG('in aq_portal_type %s' % id, 0, "added state method %s" % method_id)
-      #LOG('in aq_portal_type %s' % id, 0, "found transition workflow %s" % wf.id)
-    # Generate methods that support the translation of workflow states
-    for wf in portal_workflow.getWorkflowsFor(self):
-      wf_id = wf.id
-      if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
-        # Create state var accessor
-        state_var = wf.variables.getStateVar()
-        method_id = 'getTranslated%s' % UpperCase(state_var)
-        if not hasattr(prop_holder, method_id):
-          method = WorkflowState.TranslatedGetter(method_id, wf_id)
-          setattr(prop_holder, method_id, method) # Attach to portal_type
-          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-        method_id = 'getTranslated%sTitle' % UpperCase(state_var)
-        if not hasattr(prop_holder, method_id):
-          method = WorkflowState.TranslatedTitleGetter(method_id, wf_id)
-          setattr(prop_holder, method_id, method) # Attach to portal_type
-          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-      if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
-        for tr_id in wf.transitions.objectIds():
-          tdef = wf.transitions.get(tr_id, None)
-          if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
-            method_id = convertToMixedCase(tr_id)
-            # We have to make a difference between a method which is on
-            # the prop_holder or on the klass, if the method is on the
-            # klass, then the WorkflowMethod created also need to be on the klass
-            if not hasattr(prop_holder, method_id) and not hasattr(klass,method_id):
-              method = WorkflowMethod(klass._doNothing, tr_id)
-              setattr(prop_holder, method_id, method) # Attach to portal_type
-              prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-              #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
-            else:
-              # Wrap method into WorkflowMethod is needed
-              if getattr(klass,method_id,None) is not None:
-                method = getattr(klass, method_id)
-                if callable(method):
-                  if not isinstance(method, WorkflowMethod):
-                    setattr(klass, method_id, WorkflowMethod(method, method_id))
-              else:
-                method = getattr(prop_holder, method_id)
-                if callable(method):
-                  if not isinstance(method, WorkflowMethod):
-                    setattr(prop_holder, method_id, WorkflowMethod(method, method_id))
-      elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
-        for tr_id in wf.interactions.objectIds():
-          tdef = wf.interactions.get(tr_id, None)
-          if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
-            for imethod_id in tdef.method_id:
-              method_id = imethod_id
-              if not hasattr(prop_holder, method_id) and not hasattr(klass,method_id):
-                method = WorkflowMethod(klass._doNothing, imethod_id)
-                setattr(prop_holder, method_id, method) # Attach to portal_type
-                prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-              else:
-                # Wrap method into WorkflowMethod is needed
-                if getattr(klass,method_id,None) is not None:
-                  method = getattr(klass, method_id)
-                  if callable(method):
-                    if not isinstance(method, WorkflowMethod):
-                      method = WorkflowMethod(method, method_id)
-                      setattr(klass, method_id, method)
-                else:
-                  method = getattr(prop_holder, method_id)
-                  if callable(method):
-                    if not isinstance(method, WorkflowMethod):
-                      method = WorkflowMethod(method, method_id)
-                      setattr(prop_holder, method_id, method)
-
+#     initializePortalTypeDynamicWorkflowMethods(self,
+    initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder)
     # We can now associate it after initialising security
     InitializeClass(prop_holder)
     prop_holder.__propholder__ = prop_holder
@@ -304,6 +218,101 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     #klass.__ac_permissions__ = prop_holder.__ac_permissions__
     Base.aq_portal_type[ptype] = prop_holder
 
+def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
+  # We should now make sure workflow methods are defined
+  # and also make sure simulation state is defined
+  portal_workflow = getToolByName(self, 'portal_workflow')
+#   LOG('getWorkflowsFor', 0, 
+#       str((self, [wf.id for wf in portal_workflow.getWorkflowsFor(self)])))
+  for wf in portal_workflow.getWorkflowsFor(self):
+#     LOG('in aq_portal_type %s' % id, 0, 
+#         "found state workflow %s" % wf.id)
+    if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
+      wf_id = wf.id
+      # Create state var accessor
+      # and generate methods that support the translation of workflow states
+      state_var = wf.variables.getStateVar()
+      for method_id, getter in (
+          ('get%s' % UpperCase(state_var), WorkflowState.Getter),
+          ('get%sTitle' % UpperCase(state_var), WorkflowState.TitleGetter),
+          ('getTranslated%s' % UpperCase(state_var), 
+                                     WorkflowState.TranslatedGetter),
+          ('getTranslated%sTitle' % UpperCase(state_var), 
+                                     WorkflowState.TranslatedTitleGetter)):
+        if not hasattr(prop_holder, method_id):
+          method = getter(method_id, wf_id)
+          # Attach to portal_type
+          setattr(prop_holder, method_id, method) 
+          prop_holder.security.declareProtected(
+                                 Permissions.AccessContentsInformation, 
+                                 method_id )
+  for wf in portal_workflow.getWorkflowsFor(self):
+    wf_id = wf.id
+    if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
+      for tr_id in wf.transitions.objectIds():
+        tdef = wf.transitions.get(tr_id, None)
+        if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+          method_id = convertToMixedCase(tr_id)
+          # We have to make a difference between a method which is on
+          # the prop_holder or on the klass, if the method is on the
+          # klass, then the WorkflowMethod created also need to be on the klass
+          if (not hasattr(prop_holder, method_id)) and \
+             (not hasattr(klass, method_id)):
+            method = WorkflowMethod(klass._doNothing, tr_id)
+            # Attach to portal_type
+            setattr(prop_holder, method_id, method) 
+            prop_holder.security.declareProtected( 
+                                     Permissions.AccessContentsInformation, 
+                                     method_id )
+#             LOG('in aq_portal_type %s' % id, 0, 
+#                 "added transition method %s" % method_id)
+          else:
+            # Wrap method into WorkflowMethod is needed
+            try:
+              method = getattr(klass, method_id)
+            except AttributeError:
+              method = getattr(prop_holder, method_id)
+              work_method_holder = prop_holder 
+            else:
+              work_method_holder = klass
+            # Wrap method
+            if callable(method):
+              if not isinstance(method, WorkflowMethod):
+                setattr(work_method_holder, method_id, 
+                        WorkflowMethod(method, method_id))
+            else:
+              LOG('initializePortalTypeDynamicWorkflowMethods', 100,
+                  'WARNING! Can not initialize %s on %s' % \
+                    (method_id, str(work_method_holder)))
+    # XXX This part is (more or less...) a copy and paste
+    elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
+      for tr_id in wf.interactions.objectIds():
+        tdef = wf.interactions.get(tr_id, None)
+        if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+          for imethod_id in tdef.method_id:
+            method_id = imethod_id
+            if (not hasattr(prop_holder, method_id)) and \
+               (not hasattr(klass,method_id)):
+              method = WorkflowMethod(klass._doNothing, imethod_id)
+              # Attach to portal_type
+              setattr(prop_holder, method_id, method) 
+              prop_holder.security.declareProtected(
+                                      Permissions.AccessContentsInformation,
+                                      method_id)
+            else:
+              # Wrap method into WorkflowMethod is needed
+              if getattr(klass,method_id,None) is not None:
+                method = getattr(klass, method_id)
+                if callable(method):
+                  if not isinstance(method, WorkflowMethod):
+                    method = WorkflowMethod(method, method_id)
+                    setattr(klass, method_id, method)
+              else:
+                method = getattr(prop_holder, method_id)
+                if callable(method):
+                  if not isinstance(method, WorkflowMethod):
+                    method = WorkflowMethod(method, method_id)
+                    setattr(prop_holder, method_id, method)
 
 class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   """
