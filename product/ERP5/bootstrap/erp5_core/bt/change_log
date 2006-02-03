@@ -1,3 +1,6 @@
+2006-02-03 aurel
+* modify Base_getWorkflowHistoryItemList
+
 2006-02-02 aurel
 * modify Base_getWorkflowHistorySectionList and Base_viewWorkflowHistory
 
