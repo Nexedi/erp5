@@ -102,11 +102,8 @@ class ERP5GroupManager(BasePlugin):
         security_definition_list = mapping_method()
 
       # get the person from its reference
-      try:
-        catalog_result = self.portal_catalog(
-            portal_type="Person", reference=user_name)
-      except AttributeError:
-        return []
+      catalog_result = self.portal_catalog(
+          portal_type="Person", reference=user_name)
       if len(catalog_result) != 1: # we won't proceed with groups
         if len(catalog_result) > 1: # configuration is screwed
           raise 'ConsistencyError', 'There is more than one Person whose \
