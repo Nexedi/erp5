@@ -298,6 +298,8 @@ be a problem)."""
 
   # Override Zope default by folder id generation
   def _get_id(self, id):
+    if self._getOb(id, None) is None :
+      return id
     return self.generateNewId()
     
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
