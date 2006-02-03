@@ -3,7 +3,7 @@
 # TODO: BT5 version support (stable/unstable)
 
 # Lock file name
-LOCKFILE="/tmp/$0.lock"
+LOCKFILE="/tmp/`basename $0`.lock"
 # CVS root
 CVSROOT=":pserver:anonymous@cvs.erp5.org:/cvsroot"
 # Module containing business template
