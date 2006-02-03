@@ -601,7 +601,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_selections.getSelectionParams(\'base_workflow_history_selection\')[\'workflow_id\']</string> </value>
+            <value> <string>python: here.portal_selections.getSelectionParams(\'base_workflow_history_selection\')[\'workflow_title\']</string> </value>
         </item>
       </dictionary>
     </pickle>

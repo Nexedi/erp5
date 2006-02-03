@@ -1,3 +1,6 @@
+2006-02-02 aurel
+* modify Base_getWorkflowHistorySectionList and Base_viewWorkflowHistory
+
 2006-02-01 kevin
 * Delete all jump menus defined on Organisation module: they are just shortcuts to other modules.
 * Same on Person module.

@@ -71,13 +71,14 @@ result = []\n
 \n
 history_dict = context.Base_getWorkflowHistory()\n
 for workflow_id, workflow_history in history_dict.items():\n
+  workflow_title = context.portal_workflow[workflow_id].title or workflow_id\n
   result.append(\n
     ReportSection(\n
       path=context.getPhysicalPath(),\n
       title=workflow_id,\n
       level=1,\n
       form_id=\'Base_viewWorkflowHistory\',\n
-      selection_params={\'workflow_id\': workflow_id},\n
+      selection_params={\'workflow_id\': workflow_id, \'workflow_title\' : workflow_title},\n
       listbox_display_mode=\'FlatListMode\')\n
   )\n
 \n
@@ -137,6 +138,8 @@ return result\n
                             <string>_getiter_</string>
                             <string>workflow_id</string>
                             <string>workflow_history</string>
+                            <string>_getitem_</string>
+                            <string>workflow_title</string>
                           </tuple>
                         </value>
                     </item>
