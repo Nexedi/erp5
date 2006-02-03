@@ -7,7 +7,7 @@ LOCKFILE="/tmp/$0.lock"
 # CVS root
 CVSROOT=":pserver:anonymous@cvs.erp5.org:/cvsroot"
 # Module containing business template
-MODULE="erp5_bt5"
+MODULES="erp5_bt5 erp5_banking ERP5/bootstrap"
 # Script generating the business template repository index (in $REPOSITORY)
 GENBTLIST="ERP5/bin/genbt5list" # XXX: relative to the same repository
 # Local directory to receive CVS copy
@@ -26,19 +26,21 @@ if [ -e "$LOCKFILE" ]; then
 fi
 
 touch "$LOCKFILE" || exit 1
-LOCALDIR="$BASELOCALDIR/$$"
-mkdir "$LOCALDIR" || cleanup
+  LOCALDIR="$BASELOCALDIR/$$"
+  mkdir "$LOCALDIR" || cleanup
 
-# Checkout the source code from cvs
-cd "$LOCALDIR" || cleanup
-cvs -Qz3 "-d$CVSROOT" checkout "$MODULE" || cleanup
+  for MODULE in $MODULES; do
+  # Checkout the source code from cvs
+  cd "$LOCALDIR" || cleanup
+  cvs -Qz3 "-d$CVSROOT" checkout "$MODULE" || cleanup
 
-# Create one archive for each Business Template
-cd "$LOCALDIR/$MODULE"
-for BT5 in `ls "$LOCALDIR/$MODULE"`; do
+  # Create one archive for each Business Template
+  cd "$LOCALDIR/$MODULE"
+  for BT5 in `ls "$LOCALDIR/$MODULE"`; do
   if [ "$BT5" != "CVS" -a -d "$LOCALDIR/$MODULE/$BT5" ]; then
     tar -zcf "$LOCALDIR/$BT5.bt5" --exclude CVS --exclude .cvsignore "$BT5" || cleanup
   fi
+  done
 done
 
 # Get the latest version of the genbt5list and generate the index
