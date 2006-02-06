@@ -166,7 +166,7 @@ class PDFTemplate(ZopePageTemplate):
       if request and not batch_mode:
         request.RESPONSE.setHeader('Content-Type','application/pdf')
         request.RESPONSE.setHeader('Content-Length',len(pdf))
-        request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s.pdf' % self.id)
+        request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s.pdf' % self.title_or_id())
 
       return pdf
 
