@@ -40,15 +40,18 @@ from zLOG import LOG
 
 class Container(Movement, XMLObject):
     """
-      Container is equivalent to a movement with qty 1.0 and resource = to the kind of packaging
-      Container may point to item (ex. Container serial No or Parcel Serial No if tracing required)
-      Container may eventually usa optional property sheet to store parcel No information (we use
-      Item property sheet for that). Some acquisition may be required...
+      Container is equivalent to a movement with qty 1.0 and resource =
+      to the kind of packaging Container may point to item (ex.
+      Container serial No or Parcel Serial No if tracing required)
+      Container may eventually usa optional property sheet to store
+      parcel No information (we use Item property sheet for that). Some
+      acquisition may be required...
       
       A Container which does not point to an Item can act itself as an Item
       for traceability. 
 
-      Container Line / Container Cell is used to store quantities (never accounted)
+      Container Line / Container Cell is used to store quantities (never
+      accounted)
       Container Line / Countainer Cell may point to Item
     """
 
@@ -78,14 +81,16 @@ class Container(Movement, XMLObject):
                       , PropertySheet.SortIndex
                       )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getQuantity')
     def getQuantity(self):
       """
         Returns 1 because only one container is shipped
       """
       return 1.0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
     def isAccountable(self):
       """
         Returns 1 if this needs to be accounted
@@ -95,7 +100,8 @@ class Container(Movement, XMLObject):
       # Always accountable - to account the containers which we use
       return 1
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
+    security.declareProtected( Permissions.ModifyPortalContent,
+                              'hasCellContent' )
     def hasCellContent(self, base_id='movement'):
       """
           This method can be overriden
@@ -139,47 +145,57 @@ class Container(Movement, XMLObject):
       return result
 
     # Used for optimization - requires reindexing using container_uid 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getContainerUid')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getContainerUid')
     def getContainerUid(self):
       return self.getUid()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getContainerValue')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getContainerValue')
     def getContainerValue(self):
       return self
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getContainer')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getContainer')
     def getContainer(self):
       return self.getRelativeUrl()
 
     # Quantity methods
-    security.declareProtected(Permissions.AccessContentsInformation, 'getContainer')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getContainedTotalQuantity')
     def getContainedTotalQuantity(self, recursive = 0):
       """
         The sum of quantities of contained lines
       """
       result = 0.0
-      for o in self.contentValues(filter = {'portal_type': self.getPortalContainerLineTypeList()}):
+      for o in self.contentValues(filter =
+                    {'portal_type': self.getPortalContainerLineTypeList()}):
         result += o.getTotalQuantity()
       if recursive:
-        for o in self.contentValues(filter = {'portal_type': self.getPortalContainerTypeList()}):
-          result += o.getContainedTotalQuantity()              
-      return result            
+        for o in self.contentValues(filter =
+                    {'portal_type': self.getPortalContainerTypeList()}):
+          result += o.getContainedTotalQuantity()
+      return result
     
-    security.declareProtected(Permissions.AccessContentsInformation, 'getContainer')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getContainedTotalPrice')
     def getContainedTotalPrice(self, recursive = 0):
       """
         The sum of price of contained lines
       """
       result = 0.0
-      for o in self.contentValues(filter = {'portal_type': self.getPortalContainerLineTypeList()}):
+      for o in self.contentValues(filter =
+                    {'portal_type': self.getPortalContainerLineTypeList()}):
         result += o.getTotalPrice()
       if recursive:
-        for o in self.contentValues(filter = {'portal_type': self.getPortalContainerTypeList()}):
-          result += o.getContainedTotalPrice()              
-      return result            
+        for o in self.contentValues(filter =
+                    {'portal_type': self.getPortalContainerTypeList()}):
+          result += o.getContainedTotalPrice()
+      return result
       
     # Item Access
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTrackedItemUidList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTrackedItemUidList')
     def getTrackedItemUidList(self):
       """
         Return a list of uid for related items.
