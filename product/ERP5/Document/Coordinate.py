@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
-
+from Products.CMFDefault.utils import formatRFC822Headers
 import re
 
 class Coordinate(Base):
@@ -89,14 +89,16 @@ class Coordinate(Base):
                       )
 
     ### helper methods
-    security.declareProtected( Permissions.View, 'getRegularExpressionFindAll')
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getRegularExpressionFindAll')
     def getRegularExpressionFindAll(self, regular_expression, string):
       """
       allows call of re.findall in a python script used for Coordinate
       """
       return re.findall(regular_expression, string)
 
-    security.declareProtected( Permissions.View, 'getRegularExpressionGroups')
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getRegularExpressionGroups')
     def getRegularExpressionGroups(self, regular_expression, string):
       """
       allows call of re.search.groups in a python script used for Coordinate
@@ -114,7 +116,8 @@ class Coordinate(Base):
         """
         return self()
 
-    security.declareProtected( Permissions.View, 'SearchableText' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'SearchableText' )
     def getSearchableText(self):
         """
             text for indexing
@@ -122,7 +125,8 @@ class Coordinate(Base):
         return "%s %s %s" % (self.title, self.description, self.asText())
     SearchableText = getSearchableText
 
-    security.declareProtected( Permissions.View, 'asText' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'asText' )
     def asText(self):
         """
             returns the coordinate as a text string
@@ -131,7 +135,8 @@ class Coordinate(Base):
         if script is not None:
           return script()
 
-    security.declareProtected(Permissions.View, 'getText')
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getText')
     getText = asText
 
     security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
@@ -147,7 +152,8 @@ class Coordinate(Base):
     security.declareProtected(Permissions.ModifyPortalContent, '_setText')
     _setText = fromText
 
-    security.declareProtected(Permissions.View, 'standardTextFormat')
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'standardTextFormat')
     def standardTextFormat(self):
         """
         Returns the standard text formats for telephone numbers
@@ -158,7 +164,7 @@ class Coordinate(Base):
     def _writeFromPUT( self, body ):
         headers = {}
         headers, body = parseHeadersBody(body, headers)
-        lines = string.split( body, '\n' )
+        lines = body.split( '\n' )
         self.edit( lines[0] )
         headers['Format'] = self.COORDINATE_FORMAT
         new_subject = keywordsplitter(headers)
@@ -203,8 +209,6 @@ class Coordinate(Base):
         """
             Get the coordinate as text for WebDAV src / FTP download.
         """
-        join = string.join
-        lower = string.lower
         hdrlist = self.getMetadataHeaders()
         hdrtext = formatRFC822Headers( hdrlist )
         bodytext = '%s\n\n%s' % ( hdrtext, self.asText() )
