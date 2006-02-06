@@ -156,18 +156,21 @@ class Delivery(XMLObject):
       aggregate = self.Delivery_zGetTotal(**kw)[0]
       return aggregate.total_quantity or 0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDeliveryUid')
     def getDeliveryUid(self):
       return self.getUid()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryValue')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDeliveryValue')
     def getDeliveryValue(self):
       """
       Deprecated, we should use getRootDeliveryValue instead
       """
       return self
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getRootDeliveryValue')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRootDeliveryValue')
     def getRootDeliveryValue(self):
       """
       This method returns the delivery, it is usefull to retrieve the delivery
@@ -175,7 +178,8 @@ class Delivery(XMLObject):
       """
       return self
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDelivery')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDelivery')
     def getDelivery(self):
       return self.getRelativeUrl()
 
@@ -196,48 +200,56 @@ class Delivery(XMLObject):
           movement_list.append(m)
       return movement_list
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulatedMovementList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getSimulatedMovementList')
     def getSimulatedMovementList(self):
       """
         Return a list of simulated movements.
         This does not contain Container Line or Container Cell.
       """
-      return self.getMovementList(portal_type=self.getPortalSimulatedMovementTypeList())
+      return self.getMovementList(portal_type=
+                          self.getPortalSimulatedMovementTypeList())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInvoiceMovementList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInvoiceMovementList')
     def getInvoiceMovementList(self):
       """
         Return a list of simulated movements.
         This does not contain Container Line or Container Cell.
       """
-      return self.getMovementList(portal_type=self.getPortalInvoiceMovementTypeList())
+      return self.getMovementList(portal_type=
+                            self.getPortalInvoiceMovementTypeList())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getContainerList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getContainerList')
     def getContainerList(self):
       """
         Return a list of root containers.
         This does not contain sub-containers.
       """
       container_list = []
-      for m in self.contentValues(filter={'portal_type': self.getPortalContainerTypeList()}):
+      for m in self.contentValues(filter={'portal_type':
+                                  self.getPortalContainerTypeList()}):
         container_list.append(m)
       return container_list
 
     def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
         method_id = 'expand',**kw):
       for my_simulation_movement in self.getDeliveryRelatedValueList(
-                                                portal_type = 'Simulation Movement'):
+                                      portal_type = 'Simulation Movement'):
           # And apply
           getattr(my_simulation_movement.getObject(), method_id)(**kw)
-      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
+      for m in self.contentValues(filter={'portal_type':
+                                      self.getPortalMovementTypeList()}):
         # Find related in simulation
         for my_simulation_movement in m.getDeliveryRelatedValueList(
-                                                portal_type = 'Simulation Movement'):
+                                  portal_type = 'Simulation Movement'):
           # And apply
           getattr(my_simulation_movement.getObject(), method_id)(**kw)
-        for c in m.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
+        for c in m.contentValues(filter={'portal_type':
+                                        self.getPortalMovementTypeList()}):
           for my_simulation_movement in c.getDeliveryRelatedValueList(
-                                                portal_type = 'Simulation Movement'):
+                                  portal_type = 'Simulation Movement'):
             # And apply
             getattr(my_simulation_movement.getObject(), method_id)(**kw)
 
