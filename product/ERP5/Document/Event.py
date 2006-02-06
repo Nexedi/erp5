@@ -50,7 +50,7 @@ class Event(Document):
     portal_type = 'Event'
     isPortalContent = 1
     isRADContent = 1
-
+    
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -62,54 +62,3 @@ class Event(Document):
                       , PropertySheet.Task
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An Event object holds the information about
-an event."""
-         , 'icon'           : 'event_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addEvent'
-         , 'immediate_view' : 'event_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'event_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'event_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
-    def getEventState(self, id_only=1):
-      """
-        Returns the current state in simulation
-      """
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('event_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only )
