@@ -250,7 +250,8 @@ class Movement(XMLObject, Amount):
     """
       Get the Total Price in the context.
     """
-    return self._getTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
+    return self._getTotalPrice(self.asContext(context=context,
+                                REQUEST=REQUEST, **kw))
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalQuantity')
@@ -299,7 +300,7 @@ class Movement(XMLObject, Amount):
     if quantity :
       source_asset_price = self.getSourceAssetPrice()
       if source_asset_price :
-        return source_asset_price * quantity
+        return source_asset_price * - quantity
     return None
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -642,7 +643,8 @@ class Movement(XMLObject, Amount):
       Return the debit part of the source total asset price.
 
       This is the same as getSourceDebit where quantity is replaced
-      by source_total_asset_price
+      by source_total_asset_price.
+      This method returns 0 if the total asset price is not set.
     """
     quantity = self.getSourceTotalAssetPrice()
     try:
@@ -650,9 +652,9 @@ class Movement(XMLObject, Amount):
     except TypeError:
       quantity = 0.0
     if quantity < 0:
-      return - quantity
-    else:
       return 0.0
+    else:
+      return quantity
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceAssetCredit' )
@@ -661,28 +663,10 @@ class Movement(XMLObject, Amount):
       Return the credit part of the source total asset price.
 
       This is the same as getSourceCredit where quantity is replaced
-      by source_total_asset_price
+      by source_total_asset_price.
+      This method returns 0 if the total asset price is not set.
     """
     quantity = self.getSourceTotalAssetPrice()
-    try:
-      quantity = float(quantity)
-    except TypeError:
-      quantity = 0.0
-    if quantity < 0:
-      return 0.0
-    else:
-      return quantity
-  
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationAssetDebit' )
-  def getDestinationAssetDebit(self):
-    """
-      Return the debit part of the destination total asset price.
-
-      This is the same as getDestinationDebit where quantity is replaced
-      by destination_total_asset_price
-    """
-    quantity = self.getDestinationTotalAssetPrice()
     try:
       quantity = float(quantity)
     except TypeError:
@@ -691,15 +675,16 @@ class Movement(XMLObject, Amount):
       return - quantity
     else:
       return 0.0
-
+  
   security.declareProtected( Permissions.AccessContentsInformation,
-                             'getDestinationAssetCredit' )
-  def getDestinationAssetCredit(self):
+                             'getDestinationAssetDebit' )
+  def getDestinationAssetDebit(self):
     """
-      Return the credit part of the destination total asset price.
+      Return the debit part of the destination total asset price.
 
-      This is the same as getDestinationCredit where quantity is replaced
-      by destination_total_asset_price
+      This is the same as getDestinationDebit where quantity is replaced
+      by destination_total_asset_price.
+      This method returns 0 if the total asset price is not set.
     """
     quantity = self.getDestinationTotalAssetPrice()
     try:
@@ -710,43 +695,63 @@ class Movement(XMLObject, Amount):
       return 0.0
     else:
       return quantity
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDestinationAssetCredit' )
+  def getDestinationAssetCredit(self):
+    """
+      Return the credit part of the destination total asset price.
+
+      This is the same as getDestinationCredit where quantity is replaced
+      by destination_total_asset_price.
+      This method returns 0 if the total asset price is not set.
+    """
+    quantity = self.getDestinationTotalAssetPrice()
+    try:
+      quantity = float(quantity)
+    except TypeError:
+      quantity = 0.0
+    if quantity < 0:
+      return -quantity
+    else:
+      return 0.0
   
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setSourceAssetDebit' )
   def setSourceAssetDebit(self, source_debit):
     """
-      Set the quantity
+      Set the source total asset price
     """
     if source_debit in (None, ''):
-      return 0.0
+      return
     try:
       source_debit = float(source_debit)
     except TypeError:
       source_debit = 0.0
-    self.setSourceTotalAssetPrice(- source_debit)
+    self.setSourceTotalAssetPrice(source_debit)
 
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setSourceAssetCredit' )
   def setSourceAssetCredit(self, source_credit):
     """
-      Set the quantity
+      Set the source total asset price
     """
     if source_credit in (None, ''):
-      return 0.0
+      return
     try:
       source_credit = float(source_credit)
     except TypeError:
       source_credit = 0.0
-    self.setSourceTotalAssetPrice(source_credit)
+    self.setSourceTotalAssetPrice( - source_credit)
 
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setDestinationAssetDebit' )
   def setDestinationAssetDebit(self, destination_debit):
     """
-      Set the quantity
+      Set the destination total asset price
     """
     if destination_debit in (None, ''):
-      return 0.0
+      return
     try:
       destination_debit = float(destination_debit)
     except TypeError:
@@ -757,18 +762,19 @@ class Movement(XMLObject, Amount):
                              'setDestinationAssetCredit' )
   def setDestinationAssetCredit(self, destination_credit):
     """
-      Set the quantity
+      Set the destination total asset price
     """
     if destination_credit in (None, ''):
-      return 0.0
+      return
     try:
       destination_credit = float(destination_credit)
     except TypeError:
       destination_credit = 0.0
-    self.setDestinationTotalAssetPrice(- destination_credit)
+    self.setDestinationTotalAssetPrice( - destination_credit)
 
   # Item Access (tracking)
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTrackedItemUidList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getTrackedItemUidList')
   def getTrackedItemUidList(self):
     """
       Return a list of uid for related items
