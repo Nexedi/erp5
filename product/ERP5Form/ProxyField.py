@@ -111,6 +111,8 @@ class ProxyWidget(Widget.Widget):
     """
       Display proxy field
     """
+    if type(value) == type('') and value == '':
+      return ''
     form = field.aq_parent
     try:
       proxy_form = getattr(form, field.get_value('form_id'))
