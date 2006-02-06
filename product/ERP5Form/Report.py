@@ -41,12 +41,12 @@ from Form import create_settings_form as Form_create_settings_form
 def create_settings_form():
     form = Form_create_settings_form()
     report_method = fields.StringField(
-                         'report_method',
-                         title='Report Method',
-                         description=('The method to get a list of items (object, form, parameters) '
-                                      'to aggregate in a single Report'),
-                         default='',
-                         required=0)
+         'report_method',
+         title='Report Method',
+         description=('The method to get a list of items (object, form,'
+                      ' parameters) to aggregate in a single Report'),
+         default='',
+         required=0)
 
     form.add_fields([report_method])
     return form
@@ -63,7 +63,7 @@ def addERP5Report(self, id, title="", REQUEST=None):
     id = self._setObject(id, ERP5Report(id, title))
     # respond to the add_and_edit button if necessary
     add_and_edit(self, id, REQUEST)
-    return ''    
+    return ''
     
 class ERP5Report(ERP5Form):
     """
@@ -111,7 +111,8 @@ class ERP5Report(ERP5Form):
     # Special Settings
     settings_form = create_settings_form()
 
-    def __init__(self, id, title, unicode_mode=0, encoding='UTF-8', stored_encoding='UTF-8'):
+    def __init__(self, id, title, unicode_mode=0,
+                  encoding='UTF-8', stored_encoding='UTF-8'):
         """Initialize form.
         id    -- id of form
         title -- the title of the form
@@ -203,7 +204,6 @@ class ReportSection:
       In ReportTree listbox display mode, you can override :
         selection_report_path, the root category for this report 
         selection_report_list, the list of unfolded categories (defaults to all)      
- 
     """
     
     self.path = path
@@ -261,25 +261,29 @@ class ReportSection:
     portal_selections = context.portal_selections
     selection_list = [self.selection_name]
     if self.form_id and hasattr(context[self.form_id], 'listbox') :
-      selection_list += [ context[self.form_id].listbox.get_value('selection_name') ]
-    # save report's selection and orignal form's selection, as ListBox will overwrite it
+      selection_list += [
+          context[self.form_id].listbox.get_value('selection_name') ]
+    # save report's selection and orignal form's selection,
+    #as ListBox will overwrite it
     for selection_name in selection_list :
       if selection_name is not None :
         if not self.saved_selections.has_key(selection_name) :
           self.saved_selections[selection_name] = {}
         if self.selection_report_list is not None:
-          selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
+          selection = portal_selections.getSelectionFor(selection_name,
+                                                        REQUEST=REQUEST)
           self.saved_selections[selection_name]['report_list'] = \
                selection.getReportList()
           selection.edit(report_list=self.selection_report_list)
         if self.selection_report_path is not None:
-          selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
+          selection = portal_selections.getSelectionFor(selection_name,
+                                                        REQUEST=REQUEST)
           self.saved_selections[selection_name]['report_path'] = \
                selection.getReportPath()
           selection.edit(report_path=self.selection_report_path)
         if self.listbox_display_mode is not None:
           self.saved_selections[selection_name]['display_mode'] = \
-               portal_selections.getListboxDisplayMode(selection_name, 
+               portal_selections.getListboxDisplayMode(selection_name,
                                                        REQUEST=REQUEST)
           # XXX Dirty fix, to be able to change the display mode in form_view
           REQUEST.list_selection_name = selection_name
@@ -288,23 +292,26 @@ class ReportSection:
                                            selection_name=selection_name)
         if self.selection_params is not None:
           self.saved_selections[selection_name]['params'] =  \
-               portal_selections.getSelectionParams(selection_name, REQUEST=REQUEST)
+               portal_selections.getSelectionParams(
+                               selection_name, REQUEST=REQUEST)
           portal_selections.setSelectionParamsFor(selection_name,
-                                                  self.selection_params, REQUEST=REQUEST)
+                               self.selection_params, REQUEST=REQUEST)
         if self.selection_columns is not None:
           self.saved_selections[selection_name]['columns'] =  \
-               portal_selections.getSelectionColumns(selection_name, REQUEST=REQUEST)
-          portal_selections.setSelectionColumns(selection_name, self.selection_columns,
-                                              REQUEST=REQUEST)
+               portal_selections.getSelectionColumns(selection_name,
+                                                     REQUEST=REQUEST)
+          portal_selections.setSelectionColumns(selection_name,
+                                  self.selection_columns, REQUEST=REQUEST)
         if self.selection_sort_order is not None:
           self.saved_selections[selection_name]['sort_order'] =  \
-               portal_selections.getSelectionSortOrder(selection_name, REQUEST=REQUEST)
-          portal_selections.setSelectionSortOrder(selection_name, self.selection_sort_order,
-                                              REQUEST=REQUEST)
+               portal_selections.getSelectionSortOrder(selection_name,
+                                                       REQUEST=REQUEST)
+          portal_selections.setSelectionSortOrder(selection_name,
+                      self.selection_sort_order, REQUEST=REQUEST)
 
     portal_pref = context.getPortalObject().portal_preferences
     for pref, value in self.preferences.items() :
-      self.saved_preferences[pref] = portal_pref.getPreference(pref)
+      self.saved_preferences[pref] = portal_pref.getProperty(pref)
       portal_pref.setPreference(pref, value)
     
   security.declarePublic('popReport')
@@ -319,17 +326,22 @@ class ReportSection:
     portal_selections = context.portal_selections
     selection_list = []
     if self.form_id and hasattr(context[self.form_id], 'listbox') :
-      selection_list += [ context[self.form_id].listbox.get_value('selection_name') ]
+      selection_list += [
+                context[self.form_id].listbox.get_value('selection_name') ]
     selection_list += [self.selection_name]
     # restore report then form selection
     for selection_name in selection_list:
       if selection_name is not None:
         if self.selection_report_list is not None:
-          selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-          selection.edit(report_list = self.saved_selections[selection_name]['report_list'])
+          selection = portal_selections.getSelectionFor(
+                              selection_name, REQUEST=REQUEST)
+          selection.edit(report_list =
+                self.saved_selections[selection_name]['report_list'])
         if self.selection_report_path is not None:
-          selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-          selection.edit(report_path = self.saved_selections[selection_name]['report_path'])
+          selection = portal_selections.getSelectionFor(
+                selection_name, REQUEST=REQUEST)
+          selection.edit(report_path =
+                self.saved_selections[selection_name]['report_path'])
         if self.listbox_display_mode is not None:
           # XXX Dirty fix, to be able to change the display mode in form_view
           REQUEST.list_selection_name = selection_name
@@ -339,19 +351,20 @@ class ReportSection:
                        selection_name=selection_name)
         if self.selection_params is not None:
           # first make sure no parameters that have been pushed are erased 
-          portal_selections.setSelectionParamsFor(selection_name, {}, REQUEST=REQUEST)
+          portal_selections.setSelectionParamsFor(selection_name,
+                                                  {}, REQUEST=REQUEST)
           # then restore the original params
           portal_selections.setSelectionParamsFor(selection_name,
-                                                  self.saved_selections[selection_name]['params'],
-                                                  REQUEST=REQUEST)
+                      self.saved_selections[selection_name]['params'],
+                      REQUEST=REQUEST)
         if self.selection_columns is not None:
           portal_selections.setSelectionColumns(selection_name,
-                                              self.saved_selections[selection_name]['columns'],
-                                              REQUEST=REQUEST)
+                      self.saved_selections[selection_name]['columns'],
+                      REQUEST=REQUEST)
         if self.selection_sort_order is not None:
           portal_selections.setSelectionSortOrder(selection_name,
-                                              self.saved_selections[selection_name]['sort_order'],
-                                              REQUEST=REQUEST)
+                      self.saved_selections[selection_name]['sort_order'],
+                      REQUEST=REQUEST)
 
     for pref, value in self.saved_preferences.items() :
       context.getPortalObject().portal_preferences.setPreference(pref, value)
