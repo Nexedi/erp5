@@ -29,7 +29,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFMailIn.MailMessage import MailMessage
+from Products.CMFMailIn.MailMessage import MailMessage as CMFMailInMessage
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFCore.WorkflowCore import WorkflowMethod
@@ -39,7 +39,7 @@ import smtplib
 
 from zLOG import LOG
 
-class MailMessage(XMLObject, Event, MailMessage):
+class MailMessage(XMLObject, Event, CMFMailInMessage):
     """
       MailMessage subclasses Event objects to implement Email Events.
     """
@@ -61,51 +61,7 @@ class MailMessage(XMLObject, Event, MailMessage):
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.MailMessage
-
                       )
-
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An Event object holds the information about
-an event."""
-         , 'icon'           : 'event_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addMailMessage'
-         , 'immediate_view' : 'mail_message_view'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'mail_message_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'mail_message_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     def __init__(self, *args, **kw):
       attachments = kw.get('attachments', {})
@@ -115,36 +71,29 @@ an event."""
       self.attachments = attachments
 
     def _edit(self, *args, **kw):
-      LOG('in _edit', 0, str(kw))	    
+      LOG('MailMessage._edit', 0, str(kw))
       attachments = kw.get('attachments', {})
       if kw.has_key('attachments'):
         del kw['attachments']
       XMLObject._edit(self, *args, **kw)
       self.attachments = attachments
 
-    #def SendMail(from_addr=None, smtp_server=None, to_addr=None, msg=None, subject=None):
-    def send(from_url=None, to_url=None, msg=None, subject=None):
-        """
-        This method was previously named 'SendMail'
-
-        smtp_server: something like localhost:11025
-
-        Send An Email
-        """
-        if smtp_server == None:
-          smtp_server = 'localhost'
-        # We assume by default that we are replying to the sender
-        if from_url == None:
-          from_url = self.getUrlString()
-        if to_url == None:
-          to_url = self.getSender()
-        if msg is not None and subject is not None:
-          header = "From: %s\n" % from_url
-          header += "To: %s\n\n" % to_url
-          header += "Subject: %s\n" % subject
-          header += "\n"
-          msg = header + msg
-          self.MailHost.send( msg )
+    def send(self, from_url=None, to_url=None, msg=None, subject=None):
+      """
+      Sends a reply to this mail message.
+      """
+      # We assume by default that we are replying to the sender
+      if from_url == None:
+        from_url = self.getUrlString()
+      if to_url == None:
+        to_url = self.getSender()
+      if msg is not None and subject is not None:
+        header = "From: %s\n" % from_url
+        header += "To: %s\n\n" % to_url
+        header += "Subject: %s\n" % subject
+        header += "\n"
+        msg = header + msg
+        self.MailHost.send( msg )
 
     def getReplyBody(self):
       """
@@ -159,18 +108,10 @@ an event."""
     def getReplySubject(self):
       """
       This is used in order to respond to a mail,
-      this put a '> ' before each line of the body
+      this put a 'Re: ' before the orignal subject
       """
       reply_subject = self.getTitle()
       if reply_subject.find('Re: ')!=0:
         reply_subject = 'Re: ' + reply_subject
       return reply_subject
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'assign')
-    def assign(self):
-      """
-        Sets the order to ordered
-      """
-      pass
-
-    assign = WorkflowMethod(assign)
+  
