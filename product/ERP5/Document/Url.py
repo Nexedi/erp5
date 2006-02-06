@@ -55,7 +55,8 @@ class Url(Coordinate, Base):
                       , PropertySheet.Url
                       )
 
-    security.declareProtected(Permissions.View, 'asText')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'asText')
     def asText(self):
       return self.url_string
 
@@ -63,7 +64,8 @@ class Url(Coordinate, Base):
     def fromText(self, text):
       self.url_string = text
 
-    security.declareProtected(Permissions.View, 'standardTextFormat')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'standardTextFormat')
     def standardTextFormat(self):
       """
         Returns the standard text formats for urls
