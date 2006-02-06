@@ -135,8 +135,8 @@ class PreferenceTool(BaseTool):
   security.declareProtected(Permissions.View, "getPreference")
   def getPreference(self, pref_name) :
     """ get the preference on the most appopriate Preference object. """
-    LOG("PreferenceTool", PROBLEM, 'calling getPreference directly on the tool' +
-                                   'is deprecated, no caching happens !')
+    LOG("PreferenceTool", PROBLEM, 'calling getPreference directly on the '+
+                                   'tool is deprecated, no caching happens !')
     def _getPreference(pref_name="") :
       found = 0
       MARKER = []
