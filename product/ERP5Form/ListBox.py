@@ -1759,7 +1759,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   #LOG('ListBox', 0, 'display_value = %r' % display_value)
                   if type(display_value) == type(u''):
                     display_value = display_value.encode('utf-8')
-                  if my_field.meta_type not in ('DateTimeField', ):
+                  if my_field.meta_type not in ('DateTimeField', 'ProxyField',):
                     cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
                                                                 # We use REQUEST which is not so good here
                                                                 # This prevents from using standard display process
