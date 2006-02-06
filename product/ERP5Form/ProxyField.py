@@ -123,7 +123,7 @@ class ProxyWidget(Widget.Widget):
     for k, v in field.get_value('extra_context'):
       extra_context[k] = v
     REQUEST.other['erp5_extra_context'] = extra_context
-    return proxy_field.widget.render_view(proxy_field, key, value)
+    return proxy_field.widget.render_view(proxy_field, value)
 
 
 class ProxyValidator(Validator.Validator):
