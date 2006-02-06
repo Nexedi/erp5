@@ -302,6 +302,32 @@ class Movement(XMLObject, Amount):
       if source_asset_price :
         return source_asset_price * - quantity
     return None
+  
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceInventoriatedTotalAssetDebit')
+  def getSourceInventoriatedTotalAssetDebit(self) :
+    """
+      Returns the debit part of inventoriated source total asset price.
+    """
+    result = self.getSourceInventoriatedTotalAssetPrice()
+    if result is not None :
+      if result < 0:
+        return 0.0
+      else :
+        return result
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSourceInventoriatedTotalAssetCredit')
+  def getSourceInventoriatedTotalAssetCredit(self) :
+    """
+      Returns the credit part of inventoriated source total asset price.
+    """
+    result = self.getSourceInventoriatedTotalAssetPrice()
+    if result is not None :
+      if result < 0:
+        return -result
+      else :
+        return 0.0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationInventoriatedTotalAssetPrice')
@@ -322,6 +348,32 @@ class Movement(XMLObject, Amount):
       if destination_asset_price :
         return destination_asset_price * quantity
     return None
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDestinationInventoriatedTotalAssetDebit')
+  def getDestinationInventoriatedTotalAssetDebit(self) :
+    """
+      Returns the debit part of inventoriated destination total asset price.
+    """
+    result = self.getDestinationInventoriatedTotalAssetPrice()
+    if result is not None :
+      if result < 0:
+        return 0.0
+      else :
+        return result
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDestinationInventoriatedTotalAssetCredit')
+  def getDestinationInventoriatedTotalAssetCredit(self) :
+    """
+      Returns the credit part of inventoriated destination total asset price.
+    """
+    result = self.getDestinationInventoriatedTotalAssetPrice()
+    if result is not None :
+      if result < 0:
+        return -result
+      else :
+        return 0.0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceAssetPrice')
