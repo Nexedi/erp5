@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.11
-%define release 7
+%define release 8
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -54,6 +54,7 @@ mkdir /var/lib/zope/Extensions
 mkdir /var/lib/zope/PropertySheet
 mkdir /var/lib/zope/Constraint
 mkdir /var/lib/zope/bt5
+mkdir /var/lib/zope/tests
 chmod -R 755 /var/lib/zope
 chown -R zope:zope /var/lib/zope
 ln -s %{software_home}/Products/%{product}/Extensions/zsqlbrain.py /var/lib/zope/Extensions/
@@ -75,6 +76,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Feb 06 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-8mdk
+- Create /var/lib/zope/tests directory automaticcaly
+
 * Wed Feb 01 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-7mdk
 - Give ownership to zope
 - New build from the CVS
