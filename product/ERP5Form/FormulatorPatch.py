@@ -802,7 +802,6 @@ class FloatWidget(TextWidget):
         return render_element( "input",
                                 type="text",
                                 name=key,
-                                align="right",
                                 css_class=field.get_value('css_class'),
                                 value=value,
                                 size=field.get_value('display_width'),
