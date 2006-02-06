@@ -53,7 +53,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
 
     """
     property_names = Widget.TextWidget.property_names + \
-      ['update_method', 'jump_method', 'allow_jump', 'base_category', 'portal_type', 'allow_creation', 'catalog_index',
+      ['update_method', 'jump_method', 'allow_jump', 'base_category', 'portal_type', 'allow_creation', 'container_getter_id', 'catalog_index',
        'relation_setter_id', 'columns','sort','parameter_list','list_method',
        'first_item', 'items', 'size', 'extra_item']
 
@@ -98,6 +98,13 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
                                description=(
         "Do we allow to create new objects ?"),
                                default=1,
+                               required=0)
+
+    container_getter_id = fields.StringField('container_getter_id',
+                               title='Container Getter Method',
+                               description=(
+        "The method to call to get a container object."),
+                               default="",
                                required=0)
 
     catalog_index = fields.StringField('catalog_index',
@@ -220,7 +227,8 @@ class RelationEditor:
     """
 
     def __init__(self, field_id, base_category, portal_type, uid, portal_type_item,
-                       key, value, relation_setter_id, display_text):
+                 key, value, relation_setter_id, container_getter_id,
+                 display_text):
       self.field_id = field_id
       self.uid = uid
       self.base_category = base_category
@@ -229,6 +237,7 @@ class RelationEditor:
       self.key = key
       self.value = value
       self.relation_setter_id = relation_setter_id
+      self.container_getter_id = container_getter_id
       self.display_text = display_text
 
     def __call__(self, REQUEST):
@@ -252,18 +261,20 @@ class RelationEditor:
         if type(self.uid) is type('a') and self.uid.startswith(new_content_prefix):
           # Create a new content
           portal_type = self.uid[len(new_content_prefix):]
-          portal_module = None
+          container = None
           for p_item in self.portal_type_item:
             if p_item[0] == portal_type:
-              #portal_module = p_item[1]
-              portal_module = o.getPortalObject().getDefaultModuleId( p_item[0] )
-          if portal_module is not None:
-            portal_module_object = getattr(o.getPortalObject(), portal_module)
+              if self.container_getter_id:
+                container = getattr(o, self.container_getter_id)(portal_type = portal_type)
+              else:
+                portal_module = o.getPortalObject().getDefaultModuleId( p_item[0] )
+                container = getattr(o.getPortalObject(), portal_module)
+          if container is not None:
             kw ={}
             kw[self.key] = string.join( string.split(self.value,'%'), '' )
             kw['portal_type'] = portal_type
             kw['immediate_reindex'] = 1
-            new_object = portal_module_object.newContent(**kw)
+            new_object = container.newContent(**kw)
             self.uid = new_object.getUid()
           else:
             raise
@@ -331,12 +342,13 @@ class RelationStringFieldValidator(Validator.StringValidator):
       catalog_index = field.get_value('catalog_index')
       parameter_list = field.get_value('parameter_list')
       relation_setter_id = field.get_value('relation_setter_id')
+      container_getter_id = field.get_value('container_getter_id')
 
       if (value == current_value) and (relation_uid is None):
         # Will be interpreted by Editor as "do nothing"
         return RelationEditor(key, base_category, portal_type, None,
                               portal_type_item, catalog_index, None, 
-                              relation_setter_id, None)
+                              relation_setter_id, container_getter_id, None)
       if relation_uid not in (None, ''):
         # A value has been defined by the user
         if type(relation_uid) in (type([]), type(())):
@@ -356,13 +368,15 @@ class RelationStringFieldValidator(Validator.StringValidator):
         else:
           display_text = 'Object has been deleted'
         return RelationEditor(key, base_category, portal_type, relation_uid,
-                              portal_type_item, catalog_index, value, relation_setter_id, display_text)
+                              portal_type_item, catalog_index, value, 
+                              relation_setter_id, container_getter_id, display_text)
 
       # We must be able to erase the relation
       if value == '':
         display_text = 'Delete the relation'
         return RelationEditor(key, base_category, portal_type, None,
-                              portal_type_item, catalog_index, value, relation_setter_id, display_text)
+                              portal_type_item, catalog_index, value, 
+                              relation_setter_id, container_getter_id, display_text)
                               # Will be interpreted by Base_edit as "delete relation" (with no uid and value = '')
 
 
@@ -394,7 +408,8 @@ class RelationStringFieldValidator(Validator.StringValidator):
           display_text = 'Object has been deleted'
 
         return RelationEditor(key, base_category, portal_type, relation_uid,
-                              portal_type_item, catalog_index, value, relation_setter_id, display_text)
+                              portal_type_item, catalog_index, value, 
+                              relation_setter_id, container_getter_id, display_text)
       # If the length is 0, raise an error
       elif len(relation_list) == 0:
         if field.get_value('allow_creation') == 1 :
