@@ -66,9 +66,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>account = brain.getObject().getSourceValue()\n
-if account is not None:\n
-  return account.Account_getGapId()\n
+            <value> <string>account_uid = brain.account_uid\n
+account = context.portal_catalog.getObject(account_uid)\n
+return account.Account_getGapId()\n
 </string> </value>
         </item>
         <item>
@@ -79,11 +79,11 @@ if account is not None:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Entity_getAccountingTransactionSourceGapId</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/Entity_getAccountingTransactionGapId</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection</string> </value>
+            <value> <string>brain=None, selection=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,8 +112,9 @@ if account is not None:\n
                             <string>brain</string>
                             <string>selection</string>
                             <string>_getattr_</string>
+                            <string>account_uid</string>
+                            <string>context</string>
                             <string>account</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -125,12 +126,19 @@ if account is not None:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Entity_getAccountingTransactionSourceGapId</string> </value>
+            <value> <string>Entity_getAccountingTransactionGapId</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
