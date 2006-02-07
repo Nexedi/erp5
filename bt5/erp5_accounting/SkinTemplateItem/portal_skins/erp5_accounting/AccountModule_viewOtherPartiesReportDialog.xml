@@ -76,11 +76,10 @@
                     <value>
                       <list>
                         <string>my_transaction_section_category</string>
-                        <string>my_from_date</string>
-                        <string>my_to_date</string>
+                        <string>my_at_date</string>
                         <string>my_omit_balanced_accounts</string>
-                        <string>my_omit_empty_accounts</string>
                         <string>my_omit_grouped_references</string>
+                        <string>my_portal_skin</string>
                       </list>
                     </value>
                 </item>
@@ -96,7 +95,6 @@
                       <list>
                         <string>my_transaction_simulation_state</string>
                         <string>my_entity_role</string>
-                        <string>my_portal_skin</string>
                       </list>
                     </value>
                 </item>
