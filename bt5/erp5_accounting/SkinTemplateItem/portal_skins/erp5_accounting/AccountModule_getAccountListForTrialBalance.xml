@@ -81,14 +81,21 @@ LOG = lambda msg : context.getPortalObject().log(\n
 \n
 from_date = kw.get(\'from_date\', DateTime(\'1970/01/01\'))\n
 simulation_state = kw[\'transaction_simulation_state\']\n
-section_category = kw[\'transaction_section_category\']\n
 at_date = kw[\'at_date\']\n
-kw[\'accounting_transaction_line_currency\'] = \'TODO\'\n
 \n
+# extra arguments for getInventory :\n
+extra_kw = {}\n
 \n
-getInventory = context.getPortalObject().portal_simulation.getInventory\n
-getInventoryList = context.getPortalObject().portal_simulation.getInventoryList\n
-        \n
+# get a list of section uids. \n
+section_category = kw[\'transaction_section_category\']\n
+section_object = context.portal_categories.restrictedTraverse(\n
+                        section_category )\n
+organisation_list = section_object.getGroupRelatedValueList(\n
+                        portal_type=\'Organisation\')\n
+section_uid_list = [section_object.getUid()] + [\n
+                      x.getUid() for x in organisation_list]\n
+extra_kw[\'stock.section_uid\'] = section_uid_list\n
+\n
 # wether we should or not expand accounts into virtual accounts \n
 # (payable & receivable with other parties / bank with bank account)\n
 expand_accounts = kw.get("expand_accounts", 1)\n
@@ -96,10 +103,10 @@ expand_accounts = kw.get("expand_accounts", 1)\n
 # the gap tree to use\n
 gap_root = kw["gap_root"]\n
 \n
-# extra arguments for getInventory :\n
-extra_kw = {}\n
-if kw.get(\'from_date\', None) is not None:\n
-  extra_from_date = from_date\n
+# inventory methods\n
+getInventory = context.getPortalObject().portal_simulation\\\n
+                                        .getInventoryAssetPrice\n
+getInventoryList = context.getPortalObject().portal_simulation.getInventoryList\n
 \n
 # shall we display a summary line for expanded accounts ?\n
 display_summary_account_line = 0\n
@@ -133,38 +140,33 @@ def formatValues(dict) :\n
         dict[k]\n
   return dict \n
 \n
-# organisations for expandBankAccountsForAccount\n
-organisations = context.portal_categories.restrictedTraverse(\n
-                        section_category\n
-                      ).getGroupRelatedValueList(portal_type=\'Organisation\')\n
-\n
-\n
-def getDefaultColumnValues(node_uid = 0, **kw): \n
+def getDefaultColumnValues(node_uid = 0, **kw):\n
   """ returns then opening balance, debit movements sum, credit movements\n
   sum and closing balance using defaults categories. """\n
   values = {}\n
+  get_inventory_kw = extra_kw.copy()\n
+  get_inventory_kw.update(kw)\n
+\n
   values[\'opening_balance\']  = getInventory( node_uid = node_uid,\n
-                                             to_date = from_date,\n
-                                             simulation_state = simulation_state,\n
-                                             omit_simulation = 1,\n
-                                            # TODOcurrency = kw[\'accounting_transaction_line_currency\'],\n
-                                             **kw )\n
+               to_date = from_date,\n
+               simulation_state = simulation_state,\n
+               omit_simulation = 1,\n
+               **get_inventory_kw )\n
+  \n
   values[\'debit_movement\']  = getInventory( node_uid = node_uid,\n
-                                            from_date = from_date,\n
-                                            at_date = at_date,\n
-                                            simulation_state = simulation_state,\n
-                                            omit_simulation = 1,\n
-                                            omit_output = 1,\n
-                                           # TODOcurrency = kw[\'accounting_transaction_line_currency\'],\n
-                                            **kw )\n
+               from_date = from_date,\n
+               at_date = at_date,\n
+               simulation_state = simulation_state,\n
+               omit_simulation = 1,\n
+               omit_output = 1,\n
+               **get_inventory_kw )\n
   values[\'credit_movement\']  = - getInventory( node_uid = node_uid,\n
-                                               from_date = from_date,\n
-                                               at_date = at_date,\n
-                                               simulation_state = simulation_state,\n
-                                               omit_simulation = 1,\n
-                                               omit_input = 1,\n
-                                           #    TODOcurrency = kw[\'accounting_transaction_line_currency\'],\n
-                                               **kw )\n
+               from_date = from_date,\n
+               at_date = at_date,\n
+               simulation_state = simulation_state,\n
+               omit_simulation = 1,\n
+               omit_input = 1,\n
+               **get_inventory_kw )\n
   values[\'closing_balance\'] = values[\'opening_balance\'] + \\\n
                               values[\'debit_movement\'] - \\\n
                               values[\'credit_movement\']\n
@@ -173,9 +175,11 @@ def getDefaultColumnValues(node_uid = 0, **kw): \n
 def expandBankAccountsForAccount(account, **kw) :\n
   tmp_accounts = []\n
   orga_and_banks = []\n
-  for orga in organisations :\n
+  for orga in organisation_list :\n
      orga_and_banks += [(orga, o.getObject()) for o in \\\n
-                        orga.searchFolder(portal_type=[\'Bank Account\', \'Cash Register\'])]\n
+            orga.searchFolder(portal_type=[ \'Bank Account\',\n
+                                            \'Cash Register\',\n
+                                            \'Credit Card\'])]\n
   for orga ,bank in orga_and_banks :\n
     this_tmp_account = {\n
          \'uid\'   : account.getUid(),\n
@@ -192,16 +196,17 @@ def expandBankAccountsForAccount(account, **kw) :\n
          this_tmp_account[\'credit_movement\'] != 0 or \n
          this_tmp_account[\'debit_movement\'] != 0 or\n
          this_tmp_account[\'closing_balance\'] != 0 ) :\n
-      tmp_accounts.append( account.asContext( **formatValues(this_tmp_account) ) )\n
+      tmp_accounts.append( account.asContext(\n
+                              **formatValues(this_tmp_account) ) )\n
   return tmp_accounts\n
 \n
 def expandThirdPartiesForAccount(account, **kw) :\n
   tmp_accounts = []\n
   # get all entities that are destination section related to this account.\n
   entities = [o.getObject() for o in \\\n
-        context.Account_zDistinctSectionList( node_uid = account.getUid(), \n
-                                              at_date = at_date,\n
-                                              simulation_state = simulation_state)]\n
+        context.Account_zDistinctSectionList( node_uid = account.getUid(),\n
+                                at_date = at_date,\n
+                                simulation_state = simulation_state)]\n
   for entity in entities :\n
     this_tmp_account = {\n
          \'uid\' : account.getUid(),\n
@@ -216,10 +221,12 @@ def expandThirdPartiesForAccount(account, **kw) :\n
     if ( this_tmp_account[\'opening_balance\'] != 0 or\n
          this_tmp_account[\'credit_movement\'] != 0 or \n
          this_tmp_account[\'debit_movement\'] != 0 ) :\n
-      tmp_accounts.append( account.asContext( **formatValues(this_tmp_account) ) )\n
+      tmp_accounts.append( account.asContext(\n
+                              **formatValues(this_tmp_account) ) )\n
   return tmp_accounts\n
 \n
-accounts = [ o.getObject() for o in context.portal_catalog(**kw) ]\n
+accounts = [ o.getObject() for o in \n
+            context.account_module.objectValues(portal_type=\'Account\') ]\n
 accounts = filter(lambda account: account.getGapId() is not None, accounts )\n
 \n
 def gap_sort_func(a, b) :\n
@@ -257,7 +264,8 @@ for account in accounts_to_expand_by_bank_accounts :\n
 report_items = []\n
 results = []\n
 for account in accounts :\n
-  if expand_accounts and account.getId() in accounts_to_expand_by_third_parties_dict :\n
+  if expand_accounts and account.getId() \\\n
+                          in accounts_to_expand_by_third_parties_dict :\n
     # get all organisations with this account\n
     # and create a "virtual-Account" for each organisation\n
     virtual_accounts = expandThirdPartiesForAccount(account, **kw)\n
@@ -279,7 +287,8 @@ for account in accounts :\n
 \n
       report_items.append( account.asContext( **formatValues(item) ) )\n
 \n
-  elif expand_accounts and account.getId() in accounts_to_expand_by_bank_accounts_dict :\n
+  elif expand_accounts and account.getId()\\\n
+                            in accounts_to_expand_by_bank_accounts_dict :\n
     virtual_accounts = expandBankAccountsForAccount(account, **kw)\n
     report_items += virtual_accounts\n
     if display_summary_account_line or not len(virtual_accounts)  :\n
@@ -297,7 +306,7 @@ for account in accounts :\n
                                 item[\'debit_movement\'] - \\\n
                                 item[\'credit_movement\']\n
 \n
-      report_items.append(account.asContext(**formatValues(item)))    \n
+      report_items.append(account.asContext(**formatValues(item)))\n
   else :\n
     item = { \'id\' : account.getGapId(),\n
              \'title\': account.getTitle(), }\n
@@ -324,7 +333,7 @@ return report_items\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getAccountListForTrialBalance</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_getAccountListForTrialBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -363,27 +372,27 @@ return report_items\n
                             <string>from_date</string>
                             <string>_getitem_</string>
                             <string>simulation_state</string>
-                            <string>section_category</string>
                             <string>at_date</string>
-                            <string>_write_</string>
-                            <string>context</string>
-                            <string>getInventory</string>
-                            <string>getInventoryList</string>
-                            <string>expand_accounts</string>
-                            <string>gap_root</string>
                             <string>extra_kw</string>
-                            <string>None</string>
-                            <string>extra_from_date</string>
-                            <string>display_summary_account_line</string>
-                            <string>formatValues</string>
-                            <string>organisations</string>
-                            <string>getDefaultColumnValues</string>
-                            <string>expandBankAccountsForAccount</string>
-                            <string>expandThirdPartiesForAccount</string>
+                            <string>section_category</string>
+                            <string>context</string>
+                            <string>section_object</string>
+                            <string>organisation_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>_apply_</string>
+                            <string>x</string>
+                            <string>section_uid_list</string>
+                            <string>_write_</string>
+                            <string>expand_accounts</string>
+                            <string>gap_root</string>
+                            <string>getInventory</string>
+                            <string>getInventoryList</string>
+                            <string>display_summary_account_line</string>
+                            <string>formatValues</string>
+                            <string>getDefaultColumnValues</string>
+                            <string>expandBankAccountsForAccount</string>
+                            <string>expandThirdPartiesForAccount</string>
                             <string>o</string>
                             <string>accounts</string>
                             <string>filter</string>
@@ -395,6 +404,7 @@ return report_items\n
                             <string>accounts_to_expand_by_bank_accounts_dict</string>
                             <string>report_items</string>
                             <string>results</string>
+                            <string>_apply_</string>
                             <string>virtual_accounts</string>
                             <string>len</string>
                             <string>item</string>
