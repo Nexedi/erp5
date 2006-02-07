@@ -1725,19 +1725,23 @@ class ActionTemplateItem(ObjectTemplateItem):
     if object_path is not None:
       keys = [object_path]
     else:
-      keys = self._archive.keys()  
+      keys = self._archive.keys()
     for id in keys:
       if  '|' in id:
         relative_url, value = id.split(' | ')
         key = 'id'
       else:
-        relative_url, key, value = self._splitPath(id)        
-      obj = p.unrestrictedTraverse(relative_url)
-      action_list = obj.listActions()
-      for index in range(len(action_list)):
-        if getattr(action_list[index], key) == value:
-          obj.deleteActions(selections=(index,))
-          break
+        relative_url, key, value = self._splitPath(id)
+      obj = p.unrestrictedTraverse(relative_url, None)
+      if obj is not None:
+        action_list = obj.listActions()
+        for index in range(len(action_list)):
+          if getattr(action_list[index], key) == value:
+            obj.deleteActions(selections=(index,))
+            break
+      else :
+        LOG('BusinessTemplate', 100,
+            'unable to uninstall action at %s, ignoring' % relative_url )
     BaseTemplateItem.uninstall(self, context, **kw)
 
 class PortalTypeRolesTemplateItem(BaseTemplateItem):
