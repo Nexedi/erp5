@@ -1,3 +1,7 @@
+2006-02-07 Jerome
+* Display amounts in default currency in every listbox / reports.
+* Many bug fixes when we are at destination section.
+
 2006-02-01 Jerome
 * fix the main Accounting module listbox which didn't display empty transactions.
 * Accounting Period workflow now closes the period in an activity.
