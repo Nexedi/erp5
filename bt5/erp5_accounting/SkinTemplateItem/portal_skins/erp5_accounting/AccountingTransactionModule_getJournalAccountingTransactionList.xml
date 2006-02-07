@@ -93,7 +93,7 @@ transaction_simulation_state = request[\'transaction_simulation_state\']\n
 transaction_portal_type = request[\'transaction_portal_type\']\n
 from_date = request.get(\'from_date\', None)\n
 \n
-N_ = context.Base_TranslateString\n
+N_ = context.Base_translateString\n
 \n
 params = {\n
   \'sort_on\' : \'delivery.start_date\',\n
@@ -102,94 +102,123 @@ params = {\n
   \'section_category\' : transaction_section_category,\n
   \'portal_type\': transaction_portal_type,\n
 }\n
+\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
 \n
 result=[]\n
 journal_total_debit = 0\n
 journal_total_credit = 0\n
+\n
 for transaction in context\\\n
         .AccountingTransactionModule_zGetAccountingTransactionList(\n
         selection_params = params, selection=None, **params):\n
-    transaction = transaction.getObject()\n
-    lines = []\n
-    transaction_dict={ \'date\'        : context.Base_FormatDate(transaction.getStartDate()),\n
-                       \'description\' : N_("${transaction_title} (Transaction Reference = ${transaction_source_reference},\\n Creation Date = ${creation_date} \\n Currency = ${currency_title})" ,\n
-           mapping = { "transaction_title": unicode(transaction.getTitle() or \'\', \'utf8\'),\n
-                       "transaction_source_reference": unicode(transaction.getSourceReference() or \'\', \'utf8\'),\n
-                       "creation_date" : context.Base_FormatDate(transaction.getCreationDate()),\n
-                       "currency_title" : transaction.getResourceTitle() or \'\'}),\n
-                       \'lines\'       : lines, }\n
+  transaction = transaction.getObject()\n
+  \n
+  destination_section = transaction.getDestinationSectionValue()\n
+  we_are_destination =  destination_section is not None and (\'group/%s\' %\n
+    destination_section.getGroup(\'\')).startswith(transaction_section_category)\n
+  source_section = transaction.getSourceSectionValue()\n
+  we_are_source = (source_section is not None) and (\'group/%s\' %\n
+    source_section.getGroup(\'\')).startswith(transaction_section_category)\n
+  \n
+  if we_are_source :\n
+    specific_reference = transaction.getSourceReference()\n
+    date = transaction.getStartDate()\n
+  else :\n
+    specific_reference = transaction.getDestinationReference()\n
+    date = transaction.getStopDate()\n
     \n
-    result.append(transaction_dict)\n
-    transaction_lines = transaction.contentValues(\n
-      filter = {\'portal_type\' : context.getPortalAccountingMovementTypeList()})\n
+  lines = []\n
+  transaction_dict={\n
+        \'date\'        : context.Base_FormatDate( date ),\n
+        \'description\' : N_("${transaction_title} (Transaction Reference "+\n
+                  "= ${transaction_reference},\\n Creation Date = "+\n
+                  "${creation_date} \\n Currency = ${currency_title})" ,\n
+        mapping = { "transaction_title": unicode(transaction.getTitle()\n
+                                                  or \'\', \'utf8\'),\n
+                     "transaction_reference": unicode(\n
+                            specific_reference or \'\', \'utf8\'),\n
+                     "creation_date" : context.Base_FormatDate(\n
+                                          transaction.getCreationDate()),\n
+                     "currency_title" : transaction.getResourceTitle() or \'\'\n
+                   }),\n
+         \'lines\'       : lines, }\n
+  \n
+  result.append(transaction_dict)\n
+  transaction_lines = transaction.contentValues(\n
+    filter = {\'portal_type\' : context.getPortalAccountingMovementTypeList()})\n
 \n
-    transaction_lines.sort(lambda x,y: cmp(y.getObject().getSourceDebit(),\n
-                                           x.getObject().getSourceDebit()))\n
-    for line in transaction_lines :\n
-       line = line.getObject()\n
-       debtor = (line.getSourceDebit() > line.getSourceCredit())\n
-       account = line.getSourceValue()\n
-       if account is None: continue\n
-       if account.isMemberOf( \'account_type/asset/cash\' ) :\n
-          account_description = "%s (%s)"%(\n
-                                      line.getSourceTitle(),\n
-                                      line.getSourcePaymentTitle())\n
-       elif account.getAccountType() in (\n
-                                    \'asset/receivable\',\n
-                                    \'liability/payable\'):\n
-          account_description = "%s (%s)"%(\n
-                                      line.getSourceTitle(),\n
-                                      line.getDestinationSectionTitle())\n
-       else :\n
-          account_description = line.getSourceTitle()\n
-       lines.append({\n
-          \'debtor\' : debtor,\n
-          \'account_gap_id\' : account.Account_getGapId(),\n
-          \'account_name\' : account_description,\n
-          \'amount\' : debtor  and (line.getSourceDebit() \\\n
-                                    - line.getSourceCredit()) \\\n
-                              or (line.getSourceCredit() \\\n
-                                    - line.getSourceDebit())\n
-          })\n
-       if debtor :\n
-         journal_total_debit += line.getSourceDebit()\n
-       else:\n
-         journal_total_credit += line.getSourceCredit()\n
-       \n
-       # internal mouvements, ie when we are destination and source\n
-       # FIXME: here we should check only if we are destination.\n
-       if line.getDestinationSection() == line.getSourceSection() :\n
-         debtor = (line.getDestinationDebit() > line.getDestinationCredit())\n
-         account = line.getDestinationValue()\n
-         if account is None : continue\n
-         if account.isMemberOf( \'account_type/asset/cash\' ) :\n
-            account_description = "%s (%s)"%(\n
-                                      line.getDestinationTitle(),\n
-                                      line.getDestinationPaymentTitle())\n
-         elif account.getAccountType() in (\n
-                                  \'asset/receivable\',\n
-                                  \'liability/payable\'):\n
-            account_description = "%s (%s)"%(\n
-                                      line.getDestinationTitle(),\n
-                                      line.getSourceSectionTitle())\n
-         else :\n
-            account_description = line.getDestinationTitle()\n
-         lines.append({\n
-            \'debtor\' : debtor,\n
-            \'account_gap_id\' : account.Account_getGapId(),\n
-            \'account_name\' : account_description,\n
-            \'amount\' : debtor  and (line.getDestinationDebit() \\\n
-                                        - line.getDestinationCredit()) \\\n
-                                or (line.getDestinationCredit() \\\n
-                                        - line.getDestinationDebit())\n
-            })\n
-         if debtor :\n
-           journal_total_debit += line.getSourceDebit()\n
-         else:\n
-           journal_total_credit += line.getSourceCredit()\n
-         \n
+  if we_are_source :\n
+    transaction_lines.sort(lambda x,y: cmp(\n
+                y.getObject().getSourceInventoriatedTotalAssetPrice(),\n
+                x.getObject().getSourceInventoriatedTotalAssetPrice()))\n
+  else :\n
+    transaction_lines.sort(lambda x,y: cmp(\n
+                y.getObject().getDestinationInventoriatedTotalAssetPrice(),\n
+                x.getObject().getDestinationInventoriatedTotalAssetPrice()))\n
+    \n
+  for line in transaction_lines :\n
+    line = line.getObject()\n
+    if we_are_source :\n
+      debtor = (line.getSourceInventoriatedTotalAssetPrice() > 0)\n
+      account = line.getSourceValue()\n
+      if account is None: continue\n
+      if account.isMemberOf( \'account_type/asset/cash\' ) :\n
+        account_description = "%s (%s)"%(\n
+                                     line.getSourceTitle(),\n
+                                     line.getSourcePaymentTitle())\n
+      elif account.getAccountType() in (\n
+                                   \'asset/receivable\',\n
+                                   \'liability/payable\'):\n
+        account_description = "%s (%s)"%(\n
+                                     line.getSourceTitle(),\n
+                                     line.getDestinationSectionTitle())\n
+      else :\n
+        account_description = line.getSourceTitle()\n
+      lines.append({\n
+         \'debtor\' : debtor,\n
+         \'account_gap_id\' : account.Account_getGapId(),\n
+         \'account_name\' : account_description,\n
+         \'amount\' : debtor  and (\n
+                       line.getSourceInventoriatedTotalAssetDebit()) \\\n
+                     or ( line.getSourceInventoriatedTotalAssetCredit())\n
+         })\n
+      if debtor :\n
+        journal_total_debit += line.getSourceInventoriatedTotalAssetDebit()\n
+      else:\n
+        journal_total_credit += line.getSourceInventoriatedTotalAssetCredit()\n
+      \n
+    if we_are_destination :\n
+      debtor = (line.getDestinationInventoriatedTotalAssetDebit() >\n
+                line.getDestinationInventoriatedTotalAssetCredit())\n
+      account = line.getDestinationValue()\n
+      if account is None : continue\n
+      if account.isMemberOf( \'account_type/asset/cash\' ) :\n
+         account_description = "%s (%s)"%(\n
+                                   line.getDestinationTitle(),\n
+                                   line.getDestinationPaymentTitle())\n
+      elif account.getAccountType() in (\n
+                               \'asset/receivable\',\n
+                               \'liability/payable\'):\n
+        account_description = "%s (%s)"%(\n
+                                   line.getDestinationTitle(),\n
+                                   line.getSourceSectionTitle())\n
+      else :\n
+        account_description = line.getDestinationTitle()\n
+      lines.append({\n
+         \'debtor\' : debtor,\n
+         \'account_gap_id\' : account.Account_getGapId(),\n
+         \'account_name\' : account_description,\n
+         \'amount\' : debtor  and (\n
+               line.getDestinationInventoriatedTotalAssetDebit()) \\\n
+           or ( line.getDestinationInventoriatedTotalAssetCredit())\n
+         })\n
+      if debtor :\n
+        journal_total_debit += line.getDestinationInventoriatedTotalAssetDebit()\n
+      else:\n
+        journal_total_credit += line.getDestinationInventoriatedTotalAssetCredit()\n
+      \n
 return result + [{ "journal_total_debit": journal_total_debit,\n
                    "journal_total_credit": journal_total_credit }]\n
 # vim: syntax=python\n
@@ -211,7 +240,7 @@ return result + [{ "journal_total_debit": journal_total_debit,\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_getJournalAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_getJournalAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -260,6 +289,12 @@ return result + [{ "journal_total_debit": journal_total_debit,\n
                             <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>transaction</string>
+                            <string>destination_section</string>
+                            <string>we_are_destination</string>
+                            <string>source_section</string>
+                            <string>we_are_source</string>
+                            <string>specific_reference</string>
+                            <string>date</string>
                             <string>lines</string>
                             <string>unicode</string>
                             <string>transaction_dict</string>
