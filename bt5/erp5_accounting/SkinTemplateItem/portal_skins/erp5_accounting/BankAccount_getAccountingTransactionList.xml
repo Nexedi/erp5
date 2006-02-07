@@ -104,12 +104,16 @@ net_balance = 0.0\n
 # \n
 for l in result:\n
   o = l.getObject()\n
-  net_balance += l.source_balance or 0.0\n
+  net_balance += l.balance or 0.0\n
   if o is not None:\n
-    c = o.asContext(net_balance = net_balance,\n
-                    source_balance=l.source_balance,\n
-                    source_credit=l.source_credit,\n
-                    source_debit=l.source_debit  )\n
+    c = o.asContext(  net_balance = net_balance,\n
+                      balance=l.balance,\n
+                      credit=l.credit,\n
+                      debit=l.debit,\n
+                      section_title=l.section_title,\n
+                      specific_reference=l.specific_reference,\n
+                      date=l.date,\n
+                   )\n
     new_result.append(c)\n
 \n
 return new_result\n
@@ -130,7 +134,7 @@ return new_result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/BankAccount_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/BankAccount_getAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

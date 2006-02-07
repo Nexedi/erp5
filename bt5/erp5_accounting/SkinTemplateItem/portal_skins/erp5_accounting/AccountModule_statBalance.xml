@@ -72,16 +72,23 @@ LOG=lambda message: context.log("AccountModule_statBalance", message)\n
 \n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
+from_date = preference.getPreferredAccountingTransactionFromDate()\\\n
+                      or kw.get(\'from_date\', None)\n
 if from_date :\n
   params[\'from_date\'] = from_date\n
-at_date = preference.getPreferredAccountingTransactionAtDate()\n
+  \n
+at_date = preference.getPreferredAccountingTransactionAtDate()\\\n
+                      or kw.get(\'at_date\', None)\n
 if at_date :\n
   params[\'at_date\'] = at_date\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
+\n
+simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\\\n
+                      or kw.get(\'simulation_state\', kw.get(\'transaction_simulation_state\', None))\n
 if simulation_state :\n
   params[\'simulation_state\'] = simulation_state\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
+\n
+section_category = preference.getPreferredAccountingTransactionSectionCategory()\\\n
+                      or kw.get(\'section_category\', kw.get(\'transaction_section_category\', None))\n
 if section_category :\n
   params[\'section_category\'] = section_category\n
 \n
@@ -116,12 +123,14 @@ if kw.get(\'omit_input\'):\n
 if kw.get(\'omit_output\'):\n
   params[\'omit_output\'] = 1\n
 \n
+context.log(\'params\', params)\n
+context.log(\'at_date\', at_date)\n
 results = context.Resource_zStatInventory(omit_simulation=1,\n
                                          **params)\n
 row = results[0]\n
 total = 0\n
-if row.quantity :\n
-  total = row.quantity or 0.00\n
+if row.total_price :\n
+  total = row.total_price or 0.00\n
 return total\n
 \n
 # FIXME:\n
@@ -145,7 +154,7 @@ return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_statBalance</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_statBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -183,6 +192,7 @@ return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
                             <string>LOG</string>
                             <string>context</string>
                             <string>preference</string>
+                            <string>None</string>
                             <string>from_date</string>
                             <string>_write_</string>
                             <string>at_date</string>

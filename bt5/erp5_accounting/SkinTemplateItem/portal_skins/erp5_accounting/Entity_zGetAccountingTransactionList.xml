@@ -103,8 +103,8 @@
                                 <value>
                                   <dictionary>
                                     <item>
-                                        <key> <string>type</string> </key>
-                                        <value> <string>list</string> </value>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
                                     </item>
                                   </dictionary>
                                 </value>
@@ -156,20 +156,21 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>getUid</string>
-<string>query</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>resource_uid</string>
-<string>from_date</string>
-<string>at_date</string>
-<string>to_date</string>
-<string>transaction_simulation_state</string>
-<string>transaction_section_category</string>
-<string>transaction_portal_type</string>
-<string>node_uid</string>
-<string>hide_grouping</string>
-<string>stat</string>
+                            <string>getUid</string>
+                            <string>query</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>resource_uid</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>to_date</string>
+                            <string>transaction_simulation_state</string>
+                            <string>transaction_section_category</string>
+                            <string>transaction_portal_type</string>
+                            <string>node_uid</string>
+                            <string>hide_grouping</string>
+                            <string>resource_uid</string>
+                            <string>stat</string>
                           </list>
                         </value>
                     </item>
@@ -205,6 +206,7 @@ transaction_section_category\r\n
 transaction_portal_type:list\r\n
 node_uid:list\r\n
 hide_grouping=""\r\n
+resource_uid=""\n
 stat</string> </value>
         </item>
         <item>
@@ -248,48 +250,65 @@ stat</string> </value>
 <dtml-if getUid>\n
 SELECT\n
 <dtml-if stat>\n
+  IFNULL(SUM(stock.total_price), 0.00) AS total_price,\n
   IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
 <dtml-else>\n
   DISTINCT child.uid AS uid\n
   , child.path AS path\n
-  , stock.node_uid AS account_uid\n
   , stock.date AS date\n
+  , stock.node_uid AS account_uid\n
   , catalog.reference AS parent_reference\n
-  , catalog.source_reference AS parent_source_reference -- FIXME\n
+  , mirror_section.title AS section_title\n
+  , IF(stock.section_uid = delivery.source_section_uid,\n
+       catalog.source_reference,\n
+       catalog.destination_reference) AS parent_specific_reference\n
   , catalog.portal_type AS portal_type\n
-  , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0.00) AS source_debit\n
-  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0.00) AS source_credit\n
-  , IFNULL(SUM(stock.quantity), 0.00) AS source_balance\n
+  <dtml-if resource_uid>\n
+    , IFNULL(SUM(IF(stock.quantity > 0,\n
+                  stock.quantity, 0)), 0.00) AS debit\n
+    , IFNULL(SUM(IF(stock.quantity < 0,\n
+                  - stock.quantity, 0)), 0.00) AS credit\n
+    , IFNULL(SUM(stock.quantity), 0.00) AS balance\n
+  <dtml-else>\n
+    , IFNULL(SUM(IF(stock.total_price > 0,\n
+                  stock.total_price, 0)), 0.00) AS debit\n
+    , IFNULL(SUM(IF(stock.total_price < 0,\n
+                  - stock.total_price, 0)), 0.00) AS credit\n
+    , IFNULL(SUM(stock.total_price), 0.00) AS balance\n
+  </dtml-if>\n
 </dtml-if>\n
 FROM\n
-  movement\n
-  , stock\n
+    stock\n
   , catalog AS child\n
   , catalog\n
   , catalog AS node\n
   , category AS node_category\n
   , category AS section_category\n
+  , catalog AS mirror_section\n
+  , delivery\n
 <dtml-if query>\n
   , category\n
 </dtml-if>\n
 WHERE stock.mirror_section_uid = <dtml-var getUid>\n
-  AND child.uid = stock.uid \n
+  AND child.uid = stock.uid\n
+  AND delivery.uid = catalog.uid\n
   AND child.parent_uid = catalog.uid\n
   AND child.portal_type <> "Simulation Movement"\n
-  AND movement.uid = stock.uid\n
-  AND movement.source_uid = node.uid\n
-  AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   AND node.uid = node_category.uid\n
   AND stock.section_uid = section_category.uid\n
-  AND (node_category.category_uid = <dtml-var expr="getPortalObject().portal_categories.account_type.asset.receivable.getUid()">\n
-    OR node_category.category_uid = <dtml-var expr="getPortalObject().portal_categories.account_type.liability.payable.getUid()">\n
+  AND section_category.uid = mirror_section.uid\n
+  AND (node_category.category_uid = <dtml-var\n
+    expr="getPortalObject().portal_categories.account_type.asset.receivable.getUid()">\n
+    OR node_category.category_uid = <dtml-var\n
+    expr="getPortalObject().portal_categories.account_type.liability.payable.getUid()">\n
   )\n
   AND node_category.category_strict_membership = 1\n
 <dtml-if transaction_portal_type>\n
   AND (\n
   <dtml-in transaction_portal_type>\n
-    catalog.portal_type = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end> OR </dtml-unless>\n
+    catalog.portal_type = <dtml-sqlvar sequence-item type="string">\n
+              <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
@@ -297,14 +316,16 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
 <dtml-if node_uid>\n
   AND (\n
   <dtml-in node_uid>\n
-    stock.node_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    stock.node_uid = <dtml-sqlvar sequence-item type="int">\n
+            <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
 <dtml-if resource_uid>\n
   AND (\n
   <dtml-in resource_uid>\n
-    movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    stock.resource_uid = <dtml-sqlvar sequence-item type="int">\n
+        <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
@@ -318,15 +339,17 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
-  AND stock.quantity > 0\n
+  AND stock.total_price > 0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
-  AND stock.quantity < 0\n
+  AND stock.total_price < 0\n
 </dtml-if>\n
+  AND stock.total_price != 0\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
   <dtml-in transaction_simulation_state>\n
-    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    catalog.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+        <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
@@ -335,16 +358,16 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
      <dtml-var expr="portal_categories.resolveCategory(transaction_section_category).getUid()">\n
 </dtml-if>\n
 <dtml-if hide_grouping>\n
-  AND (child.grouping_reference IS NULL or child.grouping_reference ="")\n
+  AND (child.grouping_reference IS NULL or child.grouping_reference = "")\n
 </dtml-if hide_grouping>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
-AND <dtml-var query>\n
+  AND <dtml-var query>\n
 </dtml-if>\n
 <dtml-unless stat>\n
-GROUP BY catalog.uid, stock.node_uid\n
+  GROUP BY catalog.uid, stock.node_uid\n
 </dtml-unless>\n
-ORDER BY stock.date, child.uid\n
+  ORDER BY stock.date, child.uid\n
 </dtml-if>\n
 
 
@@ -387,48 +410,65 @@ ORDER BY stock.date, child.uid\n
 <dtml-if getUid>\n
 SELECT\n
 <dtml-if stat>\n
+  IFNULL(SUM(stock.total_price), 0.00) AS total_price,\n
   IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
 <dtml-else>\n
   DISTINCT child.uid AS uid\n
   , child.path AS path\n
-  , stock.node_uid AS account_uid\n
   , stock.date AS date\n
+  , stock.node_uid AS account_uid\n
   , catalog.reference AS parent_reference\n
-  , catalog.source_reference AS parent_source_reference -- FIXME\n
+  , mirror_section.title AS section_title\n
+  , IF(stock.section_uid = delivery.source_section_uid,\n
+       catalog.source_reference,\n
+       catalog.destination_reference) AS parent_specific_reference\n
   , catalog.portal_type AS portal_type\n
-  , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0.00) AS source_debit\n
-  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0.00) AS source_credit\n
-  , IFNULL(SUM(stock.quantity), 0.00) AS source_balance\n
+  <dtml-if resource_uid>\n
+    , IFNULL(SUM(IF(stock.quantity > 0,\n
+                  stock.quantity, 0)), 0.00) AS debit\n
+    , IFNULL(SUM(IF(stock.quantity < 0,\n
+                  - stock.quantity, 0)), 0.00) AS credit\n
+    , IFNULL(SUM(stock.quantity), 0.00) AS balance\n
+  <dtml-else>\n
+    , IFNULL(SUM(IF(stock.total_price > 0,\n
+                  stock.total_price, 0)), 0.00) AS debit\n
+    , IFNULL(SUM(IF(stock.total_price < 0,\n
+                  - stock.total_price, 0)), 0.00) AS credit\n
+    , IFNULL(SUM(stock.total_price), 0.00) AS balance\n
+  </dtml-if>\n
 </dtml-if>\n
 FROM\n
-  movement\n
-  , stock\n
+    stock\n
   , catalog AS child\n
   , catalog\n
   , catalog AS node\n
   , category AS node_category\n
   , category AS section_category\n
+  , catalog AS mirror_section\n
+  , delivery\n
 <dtml-if query>\n
   , category\n
 </dtml-if>\n
 WHERE stock.mirror_section_uid = <dtml-var getUid>\n
-  AND child.uid = stock.uid \n
+  AND child.uid = stock.uid\n
+  AND delivery.uid = catalog.uid\n
   AND child.parent_uid = catalog.uid\n
   AND child.portal_type <> "Simulation Movement"\n
-  AND movement.uid = stock.uid\n
-  AND movement.source_uid = node.uid\n
-  AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   AND node.uid = node_category.uid\n
   AND stock.section_uid = section_category.uid\n
-  AND (node_category.category_uid = <dtml-var expr="getPortalObject().portal_categories.account_type.asset.receivable.getUid()">\n
-    OR node_category.category_uid = <dtml-var expr="getPortalObject().portal_categories.account_type.liability.payable.getUid()">\n
+  AND section_category.uid = mirror_section.uid\n
+  AND (node_category.category_uid = <dtml-var\n
+    expr="getPortalObject().portal_categories.account_type.asset.receivable.getUid()">\n
+    OR node_category.category_uid = <dtml-var\n
+    expr="getPortalObject().portal_categories.account_type.liability.payable.getUid()">\n
   )\n
   AND node_category.category_strict_membership = 1\n
 <dtml-if transaction_portal_type>\n
   AND (\n
   <dtml-in transaction_portal_type>\n
-    catalog.portal_type = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end> OR </dtml-unless>\n
+    catalog.portal_type = <dtml-sqlvar sequence-item type="string">\n
+              <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
@@ -436,14 +476,16 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
 <dtml-if node_uid>\n
   AND (\n
   <dtml-in node_uid>\n
-    stock.node_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    stock.node_uid = <dtml-sqlvar sequence-item type="int">\n
+            <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
 <dtml-if resource_uid>\n
   AND (\n
   <dtml-in resource_uid>\n
-    movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    stock.resource_uid = <dtml-sqlvar sequence-item type="int">\n
+        <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
@@ -457,15 +499,17 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
-  AND stock.quantity > 0\n
+  AND stock.total_price > 0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
-  AND stock.quantity < 0\n
+  AND stock.total_price < 0\n
 </dtml-if>\n
+  AND stock.total_price != 0\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
   <dtml-in transaction_simulation_state>\n
-    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    catalog.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+        <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
@@ -474,16 +518,16 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
      <dtml-var expr="portal_categories.resolveCategory(transaction_section_category).getUid()">\n
 </dtml-if>\n
 <dtml-if hide_grouping>\n
-  AND (child.grouping_reference IS NULL or child.grouping_reference ="")\n
+  AND (child.grouping_reference IS NULL or child.grouping_reference = "")\n
 </dtml-if hide_grouping>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
-AND <dtml-var query>\n
+  AND <dtml-var query>\n
 </dtml-if>\n
 <dtml-unless stat>\n
-GROUP BY catalog.uid, stock.node_uid\n
+  GROUP BY catalog.uid, stock.node_uid\n
 </dtml-unless>\n
-ORDER BY stock.date, child.uid\n
+  ORDER BY stock.date, child.uid\n
 </dtml-if>\n
 
 

@@ -77,13 +77,18 @@ preference = context.getPortalObject().portal_preferences\n
 from_date = preference.getPreferredAccountingTransactionFromDate()\n
 if from_date :\n
   kwd[\'from_date\'] = from_date\n
+\n
 at_date = preference.getPreferredAccountingTransactionAtDate()\n
 if at_date :\n
   kwd[\'at_date\'] = at_date\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
+\n
+simulation_state = preference\\\n
+              .getPreferredAccountingTransactionSimulationStateList()\n
 if simulation_state :\n
   kwd[\'transaction_simulation_state\'] = simulation_state\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
+\n
+section_category = preference\\\n
+              .getPreferredAccountingTransactionSectionCategory()\n
 if section_category :\n
   kwd[\'transaction_section_category\'] = section_category\n
 \n
@@ -93,9 +98,9 @@ if kw.has_key(\'transaction_portal_type\'):\n
   kwd[\'transaction_portal_type\'] = kw[\'transaction_portal_type\']\n
 \n
 \n
-# FIXME: same problem as in BankAccount_getAccountingTransactionList\n
 \n
-#LOG("SQL used: %s" % context.Entity_zGetAccountingTransactionList(src__=1, **kwd))\n
+# FIXME: same problem as in BankAccount_getAccountingTransactionList\n
+# LOG("SQL used: %s" % context.Entity_zGetAccountingTransactionList(src__=1, **kwd))\n
 \n
 new_result = []\n
 result = context.Entity_zGetAccountingTransactionList(**kwd)\n
@@ -104,17 +109,20 @@ if src__:\n
 net_balance = 0.0\n
 for l in result:\n
   o = l.getObject()\n
-  net_balance += l.source_balance or 0.0\n
+  net_balance += l.balance or 0.0\n
   if o is not None:\n
-    c = o.asContext(net_balance = net_balance,\n
-                    source_balance=l.source_balance,\n
-                    source_credit=l.source_credit,\n
-                    source_debit=l.source_debit,\n
-                    date=l.date,\n
-                    parent_reference=l.parent_reference,\n
-                    parent_source_reference=l.parent_source_reference,\n
-                    translated_simulation_state_title = o.getTranslatedSimulationStateTitle(),\n
-                    portal_type=l.portal_type )\n
+    c = o.asContext( net_balance = net_balance,\n
+                     balance=l.balance,\n
+                     credit=l.credit,\n
+                     debit=l.debit,\n
+                     date=l.date,\n
+                     section_title=l.section_title,\n
+                     parent_reference=l.parent_reference,\n
+                     parent_specific_reference=l.parent_specific_reference,\n
+                     translated_simulation_state_title =\n
+                             o.getTranslatedSimulationStateTitle(),\n
+                     portal_type=l.portal_type,\n
+                     account_uid=l.account_uid, )\n
     new_result.append(c)\n
 \n
 return new_result\n
@@ -135,7 +143,7 @@ return new_result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Entity_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/Entity_getAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
