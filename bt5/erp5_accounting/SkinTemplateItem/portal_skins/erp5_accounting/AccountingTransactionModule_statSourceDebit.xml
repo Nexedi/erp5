@@ -68,21 +68,14 @@
             <key> <string>_body</string> </key>
             <value> <string>params = selection.getParams()\n
 \n
-kw = {}\n
-kw[\'stat\'] = 1\n
-kw[\'omit_output\'] = 1\n
+params[\'stat\'] = 1\n
+params[\'omit_output\'] = 1\n
+params[\'omit_input\'] = 0\n
 \n
-for keyword in [\'section_category\', \'from_date\', \'to_date\', \'source_reference\',\n
-                \'entity\', \'node\', \'amount\', \'amount_range_min\', \'amount_max_range_max\',\n
-                \'creation_date_range_min\', \'creation_date_range_max\', \n
-                \'translated_simulation_state_title\', \'simulation_state\',\n
-                \'portal_type\', \'translated_portal_type\',  \'resource\' ] :\n
-  if keyword in params :\n
-    kw[keyword] = params[keyword]\n
-\n
-result = context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, **kw)\n
+result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
+                selection=selection, selection_params = params, **params)\n
 row = result[0]\n
-return float(\'%.02f\' % (row.quantity or 0.0))\n
+return float(\'%.02f\' % (row.total_price or 0.0))\n
 # vim: syntax=python\n
 </string> </value>
         </item>
@@ -100,7 +93,7 @@ return float(\'%.02f\' % (row.quantity or 0.0))\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_statSourceDebit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_statSourceDebit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -135,12 +128,10 @@ return float(\'%.02f\' % (row.quantity or 0.0))\n
                             <string>_getattr_</string>
                             <string>params</string>
                             <string>_write_</string>
-                            <string>_getiter_</string>
-                            <string>keyword</string>
-                            <string>_getitem_</string>
                             <string>_apply_</string>
                             <string>context</string>
                             <string>result</string>
+                            <string>_getitem_</string>
                             <string>row</string>
                             <string>float</string>
                           </tuple>
