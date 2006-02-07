@@ -323,13 +323,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Default</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>sub_list</string> </key>
+                    <key> <string>sub_list</string> </key>
                     <value>
                       <list/>
                     </value>
