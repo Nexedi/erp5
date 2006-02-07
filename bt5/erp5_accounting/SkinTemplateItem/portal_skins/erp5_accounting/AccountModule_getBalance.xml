@@ -93,7 +93,10 @@ if kw.get(\'omit_input\') :\n
 if kw.get(\'omit_output\') :\n
   kwd[\'omit_output\'] = 1\n
 \n
-return context.portal_simulation.getInventory(node_uid=context.getUid(),\n
+# return context.portal_simulation.getInventory(node_uid=context.getUid(),\n
+#                                                  omit_simulation=1,\n
+#                                                  **kwd)\n
+return context.portal_simulation.getInventoryAssetPrice(node_uid=context.getUid(),\n
                                                  omit_simulation=1,\n
                                                  **kwd)\n
 </string> </value>
@@ -112,7 +115,7 @@ return context.portal_simulation.getInventory(node_uid=context.getUid(),\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getBalance</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_getBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
