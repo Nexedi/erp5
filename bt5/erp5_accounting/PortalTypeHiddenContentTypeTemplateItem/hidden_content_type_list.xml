@@ -2,4 +2,7 @@
  <portal_type id="Accounting Transaction Module">
   <item>Balance Transaction</item>
  </portal_type>
+ <portal_type id="Invoice Line">
+  <item>Invoice Cell</item>
+ </portal_type>
 </hidden_content_type_list>
