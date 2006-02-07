@@ -447,7 +447,7 @@
                       <list>
                         <tuple>
                           <string>section_category</string>
-                          <string>here.portal_preferences.getPreference(\'preferred_accounting_transaction_section_category\')</string>
+                          <string>here.portal_preferences.getPreferredAccountingTransactionSectionCategory()</string>
                         </tuple>
                       </list>
                     </value>
