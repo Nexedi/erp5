@@ -297,7 +297,6 @@ WHERE\n
                                            , getInventoriatedQuantity[loop_item]\n
                                            , getStopDate[loop_item]\n
                                            , getPrice[loop_item]\n
-                                           , isAccountable[loop_item]\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
@@ -317,7 +316,6 @@ WHERE\n
                                            , -(getInventoriatedQuantity[loop_item] or 0)\n
                                            , getStartDate[loop_item]\n
                                            , getPrice[loop_item]\n
-                                           , isAccountable[loop_item]\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
@@ -346,11 +344,10 @@ VALUES\n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
   <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
@@ -421,7 +418,6 @@ WHERE\n
                                            , getInventoriatedQuantity[loop_item]\n
                                            , getStopDate[loop_item]\n
                                            , getPrice[loop_item]\n
-                                           , isAccountable[loop_item]\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
@@ -441,7 +437,6 @@ WHERE\n
                                            , -(getInventoriatedQuantity[loop_item] or 0)\n
                                            , getStartDate[loop_item]\n
                                            , getPrice[loop_item]\n
-                                           , isAccountable[loop_item]\n
                                            , getPortalType[loop_item]\n
                                            , getSimulationState[loop_item]\n
                                            , getVariationText[loop_item]\n
@@ -470,11 +465,10 @@ VALUES\n
   <dtml-sqlvar expr="row_item[9]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[10]" type="datetime" optional>,\n
   <dtml-sqlvar expr="row_item[11]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[12]" type="int" optional>,\n
+  <dtml-sqlvar expr="row_item[12]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[13]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[16]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[15]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
