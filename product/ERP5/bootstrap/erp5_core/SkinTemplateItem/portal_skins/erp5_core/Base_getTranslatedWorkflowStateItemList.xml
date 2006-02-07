@@ -68,7 +68,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.CMFCore.utils import getToolByName\n
 \n
-N_ = context.Base_TranslateString\n
+N_ = context.Base_translateString\n
 wf = getToolByName(context, \'portal_workflow\')[wf_id]\n
 item_list = []\n
 \n
