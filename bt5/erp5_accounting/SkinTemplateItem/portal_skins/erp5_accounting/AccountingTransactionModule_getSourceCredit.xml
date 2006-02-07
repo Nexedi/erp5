@@ -68,26 +68,23 @@
             <key> <string>_body</string> </key>
             <value> <string>accounting_transaction_lines_portal_types = context.getPortalAccountingMovementTypeList()\n
 \n
-transaction = brain.getObject()\n
+if brain is not None :\n
+  transaction = brain.getObject()\n
+transaction = context\n
+\n
 credit = 0\n
-for line in transaction.objectValues() :\n
-  if line.getPortalType() in accounting_transaction_lines_portal_types :\n
-    credit += line.getSourceCredit()\n
-  if line.getSourceSection() == line.getDestinationSection() : \n
-    credit += line.getSourceCredit()\n
+group_category = context.getPortalObject().portal_preferences\\\n
+                        .getPreferredAccountingTransactionSectionCategory()\n
+\n
+for line in transaction.contentValues(\n
+       filter={\'portal_type\': accounting_transaction_lines_portal_types} ) :\n
+  source_section = line.getSourceSectionValue()\n
+  if source_section is not None and source_section.isMemberOf(group_category) :\n
+    credit += line.getSourceInventoriatedTotalAssetCredit() or 0\n
+  destination_section = line.getDestinationSectionValue()\n
+  if destination_section is not None and destination_section.isMemberOf(group_category) :\n
+    credit += line.getDestinationInventoriatedTotalAssetCredit() or 0\n
 return credit\n
-\n
-## old implementation with portal_catalog:\n
-params = selection.getParams()\n
-kw = {}\n
-kw[\'section_category\'] = params.get(\'section_category\')\n
-kw[\'stat\'] = 1\n
-kw[\'omit_output\'] = 1\n
-kw[\'transaction\'] = context.getUid()\n
-\n
-result = context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, **kw)\n
-row = result[0]\n
-return float(\'%.02f\' % (row.quantity or 0.0))\n
 </string> </value>
         </item>
         <item>
@@ -97,8 +94,14 @@ return float(\'%.02f\' % (row.quantity or 0.0))\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_getSourceCredit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_getSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -134,17 +137,14 @@ return float(\'%.02f\' % (row.quantity or 0.0))\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>accounting_transaction_lines_portal_types</string>
+                            <string>None</string>
                             <string>transaction</string>
                             <string>credit</string>
+                            <string>group_category</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>params</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>result</string>
-                            <string>_getitem_</string>
-                            <string>row</string>
-                            <string>float</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
                           </tuple>
                         </value>
                     </item>
@@ -170,6 +170,27 @@ return float(\'%.02f\' % (row.quantity or 0.0))\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
