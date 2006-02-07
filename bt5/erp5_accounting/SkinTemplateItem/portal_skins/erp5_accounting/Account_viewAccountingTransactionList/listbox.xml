@@ -340,7 +340,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source_reference</string>
+                          <string>specific_reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
@@ -348,7 +348,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -364,19 +364,19 @@
                           <string>Third Party</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>credit</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
-                          <string>source_balance</string>
+                          <string>balance</string>
                           <string>Balance</string>
                         </tuple>
                         <tuple>
@@ -571,15 +571,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>debit</string>
                           <string>Account_statSourceDebit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>credit</string>
                           <string>Account_statSourceCredit</string>
                         </tuple>
                         <tuple>
-                          <string>source_balance</string>
+                          <string>balance</string>
                           <string>Account_statSourceBalance</string>
                         </tuple>
                       </list>

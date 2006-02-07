@@ -322,12 +322,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>destination_reference</string>
-                          <string>Destination Reference</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -349,7 +344,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_section_title</string>
+                          <string>section_title</string>
                           <string>Section</string>
                         </tuple>
                         <tuple>
@@ -361,7 +356,7 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>Entity_getAccountingTransactionSourceGapId</string>
+                          <string>Entity_getAccountingTransactionGapId</string>
                           <string>GAP</string>
                         </tuple>
                         <tuple>
@@ -369,19 +364,19 @@
                           <string>Invoice Number</string>
                         </tuple>
                         <tuple>
-                          <string>parent_source_reference</string>
-                          <string>Source Reference</string>
+                          <string>parent_specific_reference</string>
+                          <string>Specific Reference</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>credit</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
@@ -389,7 +384,7 @@
                           <string>Grouping</string>
                         </tuple>
                         <tuple>
-                          <string>source_balance</string>
+                          <string>balance</string>
                           <string>Balance</string>
                         </tuple>
                         <tuple>
@@ -589,15 +584,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>debit</string>
                           <string>Entity_statSourceDebit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>credit</string>
                           <string>Entity_statSourceCredit</string>
                         </tuple>
                         <tuple>
-                          <string>source_balance</string>
+                          <string>balance</string>
                           <string>Entity_statSourceBalance</string>
                         </tuple>
                       </list>
@@ -622,7 +617,7 @@
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_section_title</string>
+                          <string>section_title</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
@@ -634,7 +629,7 @@
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>Entity_getAccountingTransactionSourceGapId</string>
+                          <string>Entity_getAccountingTransactionGapId</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
@@ -642,7 +637,7 @@
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>parent_source_reference</string>
+                          <string>parent_specific_reference</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
@@ -650,11 +645,11 @@
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>debit</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>credit</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
@@ -662,7 +657,7 @@
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>source_balance</string>
+                          <string>balance</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>

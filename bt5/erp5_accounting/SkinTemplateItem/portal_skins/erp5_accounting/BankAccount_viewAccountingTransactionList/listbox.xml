@@ -187,6 +187,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -252,7 +256,9 @@
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>report_root_list</string> </key>
@@ -338,11 +344,11 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>default_source_section_title</string>
+                          <string>section_title</string>
                           <string>Section</string>
                         </tuple>
                         <tuple>
-                          <string>getStartDate</string>
+                          <string>date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -350,27 +356,23 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
-                          <string>Source Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_reference</string>
-                          <string>Destination Reference</string>
+                          <string>specific_reference</string>
+                          <string>Specific Reference</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>debit</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>credit</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
-                          <string>source_balance</string>
+                          <string>balance</string>
                           <string>Balance</string>
                         </tuple>
                         <tuple>
@@ -476,7 +478,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -542,7 +544,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>bank_account_transaction_selection</string> </value>
+                    <value> <string>bbank_account_transaction_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -561,15 +563,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>source_debit</string>
+                          <string>debit</string>
                           <string>BankAccount_statSourceDebit</string>
                         </tuple>
                         <tuple>
-                          <string>source_credit</string>
+                          <string>credit</string>
                           <string>BankAccount_statSourceCredit</string>
                         </tuple>
                         <tuple>
-                          <string>source_balance</string>
+                          <string>balance</string>
                           <string>BankAccount_statSourceBalance</string>
                         </tuple>
                       </list>
@@ -578,7 +580,7 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -617,6 +619,25 @@
     <pickle>
       <tuple>
         <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[(x, x) for x in here.getPortalAccountingTransactionTypeList()]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
           <string>Products.Formulator.MethodField</string>
           <string>Method</string>
         </tuple>
@@ -632,7 +653,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>

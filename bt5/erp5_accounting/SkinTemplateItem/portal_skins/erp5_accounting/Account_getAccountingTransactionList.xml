@@ -73,33 +73,40 @@ from Products.ERP5Type.Document import newTempAccountingTransaction\n
 kwd={"omit_simulation" : 1}\n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = kw.get(\'from_date\', preference.getPreferredAccountingTransactionFromDate())\n
+from_date = kw.get(\'from_date\', preference\\\n
+                        .getPreferredAccountingTransactionFromDate())\n
 if from_date :\n
   kwd[\'from_date\'] = from_date\n
-at_date = kw.get(\'at_date\', preference.getPreferredAccountingTransactionAtDate())\n
+at_date = kw.get(\'at_date\', preference\\\n
+                        .getPreferredAccountingTransactionAtDate())\n
 if at_date :\n
   kwd[\'at_date\'] = at_date\n
-simulation_state = kw.get(\'simulation_state\', preference.getPreferredAccountingTransactionSimulationStateList())\n
+simulation_state = kw.get(\'simulation_state\', preference\\\n
+                    .getPreferredAccountingTransactionSimulationStateList())\n
 if simulation_state :\n
   kwd[\'transaction_simulation_state\'] = simulation_state\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
+section_category = preference\\\n
+                    .getPreferredAccountingTransactionSectionCategory()\n
 if section_category :\n
   kwd[\'transaction_section_category\'] = section_category\n
+  kwd[\'section_category\'] = section_category\n
 \n
+# Special filtering for GL\n
+#  XXX this script could also be used for entity / bank account ?\n
 MARKER = []\n
-source_payment_uid = kw.get(\'source_payment_uid\', MARKER)\n
-if source_payment_uid is not MARKER:\n
-  kwd[\'source_payment_uid\'] = source_payment_uid\n
-no_source_payment = kw.get(\'no_source_payment_uid\', MARKER)\n
-if no_source_payment is not MARKER:\n
-  kwd[\'no_source_payment_uid\'] = 1\n
+payment_uid = kw.get(\'source_uid\', MARKER)\n
+if payment_uid is not MARKER:\n
+  kwd[\'payment_uid\'] = payment_uid\n
+no_payment_uid = kw.get(\'no_source_uid\', MARKER)\n
+if no_payment_uid is not MARKER:\n
+  kwd[\'no_payment_uid\'] = 1\n
 \n
-destination_section_uid = kw.get(\'destination_section_uid\', MARKER)\n
-if destination_section_uid is not MARKER:\n
-  kwd[\'destination_section_uid\'] = destination_section_uid\n
-no_destination_section_uid = kw.get(\'no_destination_section_uid\', MARKER)\n
-if no_destination_section_uid is not MARKER:\n
-  kwd[\'no_destination_section_uid\'] = 1\n
+mirror_section_uid = kw.get(\'mirror_section_uid\', MARKER)\n
+if mirror_section_uid is not MARKER:\n
+  kwd[\'mirror_section_uid\'] = mirror_section_uid\n
+no_mirror_section_uid = kw.get(\'no_mirror_section_uid\', MARKER)\n
+if no_mirror_section_uid is not MARKER:\n
+  kwd[\'no_mirror_section_uid\'] = 1\n
   \n
 node_uid = kw.get(\'node_uid\', MARKER)\n
 if node_uid is not MARKER:\n
@@ -112,43 +119,47 @@ if node_uid is not MARKER:\n
 new_result = []\n
 #LOG(\'kwd %s\' % kwd)\n
 #LOG(\'SQL:\\n%s\'%context.Account_zGetAccountingTransactionList(src__=1, **kwd))\n
-result = context.Account_zGetAccountingTransactionList(src__=src__, **kwd)\n
+result = context.Account_zGetAccountingTransactionList(**kwd)\n
 \n
 net_balance = 0.0\n
 \n
 if from_date not in (None, MARKER) and kw.get(\'from_date_summary\', 0) :\n
   get_inventory_kw = {}\n
   get_inventory_kw[\'omit_simulation\'] = 1\n
-  get_inventory_kw[\'section_category\'] = section_category # FIXME: shouldn\'t we use section_uid, ie displaying only the organisation rather than the group ???\n
+  get_inventory_kw[\'section_category\'] = section_category\n
   get_inventory_kw[\'node_uid\'] = kw.get(\'node_uid\', context.getUid())\n
   if simulation_state :\n
     get_inventory_kw[\'simulation_state\'] = simulation_state\n
-  if destination_section_uid is not MARKER :\n
-    get_inventory_kw[\'mirror_section_uid\'] = destination_section_uid\n
-  if source_payment_uid is not MARKER :\n
-    get_inventory_kw[\'payment_uid\'] = source_payment_uid\n
+  if mirror_section_uid is not MARKER :\n
+    get_inventory_kw[\'mirror_section_uid\'] = mirror_section_uid\n
+  if payment_uid is not MARKER :\n
+    get_inventory_kw[\'payment_uid\'] = payment_uid\n
 \n
-  getInventory = context.getPortalObject().portal_simulation.getInventory\n
-  last_total_source_debit = getInventory(omit_output=1, to_date=from_date, **get_inventory_kw)\n
-  last_total_source_credit = getInventory(omit_input=1, to_date=from_date, **get_inventory_kw)\n
-  if last_total_source_credit != 0 : \n
-    last_total_source_credit = - last_total_source_credit \n
+  getInventoryAssetPrice = context.getPortalObject()\\\n
+                                .portal_simulation.getInventoryAssetPrice\n
+  last_total_debit = getInventoryAssetPrice(omit_output=1,\n
+                                to_date=from_date, **get_inventory_kw)\n
+  last_total_credit = getInventoryAssetPrice(omit_input=1,\n
+                                to_date=from_date, **get_inventory_kw)\n
+  if last_total_credit != 0 :\n
+    last_total_credit = - last_total_credit\n
 \n
-  if last_total_source_debit != 0 or last_total_source_credit  != 0 :\n
+  if last_total_debit != 0 or last_total_credit  != 0 :\n
     from_date_summary = newTempAccountingTransaction(\n
           context.getPortalObject(), "temp_%s" % context.getUid())\n
     from_date_summary.setUid(\'new_000\')\n
-    net_balance = last_total_source_debit - last_total_source_credit\n
+    net_balance = last_total_debit - last_total_credit\n
     from_date_summary.edit(\n
           title = context.Base_TranslateString("Previous Balance"),\n
           translated_portal_type = "",\n
           translated_simulation_state_title = "",\n
-          net_balance = net_balance, \n
-          source_balance = net_balance,\n
-          source_credit = last_total_source_credit,\n
-          source_debit = last_total_source_debit,\n
+          net_balance = net_balance,\n
+          balance = net_balance,\n
+          credit = last_total_credit,\n
+          debit = last_total_debit,\n
           current_transaction_line_path = None,\n
           third_party = None,\n
+          date = from_date,\n
     )\n
     new_result.append(from_date_summary)\n
 \n
@@ -157,15 +168,18 @@ if src__:\n
 \n
 for l in result:\n
   o = l.getObject()\n
-  net_balance += l.source_balance or 0.0\n
+  net_balance += l.balance or 0.0\n
   if o is not None:\n
     c = o.asContext( net_balance = net_balance,\n
-                       source_balance = l.source_balance,\n
-                       source_credit = l.source_credit,\n
-                       source_debit = l.source_debit,\n
-                       current_transaction_line_path = l.current_transaction_line_path,\n
-                       third_party = l.third_party,\n
-                       source_payment = l.source_payment_uid\n
+                     balance = l.balance,\n
+                     credit = l.credit,\n
+                     debit = l.debit,\n
+                     date = l.date,\n
+                     current_transaction_line_path =\n
+                              l.current_transaction_line_path,\n
+                     third_party = l.third_party,\n
+                     payment = l.payment_uid,\n
+                     specific_reference = l.specific_reference,\n
                   )\n
     new_result.append(c)\n
 \n
@@ -186,7 +200,7 @@ return new_result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Account_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/Account_getAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -231,10 +245,10 @@ return new_result\n
                             <string>simulation_state</string>
                             <string>section_category</string>
                             <string>MARKER</string>
-                            <string>source_payment_uid</string>
-                            <string>no_source_payment</string>
-                            <string>destination_section_uid</string>
-                            <string>no_destination_section_uid</string>
+                            <string>payment_uid</string>
+                            <string>no_payment_uid</string>
+                            <string>mirror_section_uid</string>
+                            <string>no_mirror_section_uid</string>
                             <string>node_uid</string>
                             <string>new_result</string>
                             <string>_apply_</string>
@@ -242,9 +256,9 @@ return new_result\n
                             <string>net_balance</string>
                             <string>None</string>
                             <string>get_inventory_kw</string>
-                            <string>getInventory</string>
-                            <string>last_total_source_debit</string>
-                            <string>last_total_source_credit</string>
+                            <string>getInventoryAssetPrice</string>
+                            <string>last_total_debit</string>
+                            <string>last_total_credit</string>
                             <string>from_date_summary</string>
                             <string>_getiter_</string>
                             <string>l</string>
