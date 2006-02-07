@@ -53,6 +53,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>section_category</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>simulation_state</string> </key>
                                 <value>
                                   <dictionary>
@@ -70,9 +76,10 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>node_uid</string>
-<string>at_date</string>
-<string>simulation_state</string>
+                            <string>node_uid</string>
+                            <string>at_date</string>
+                            <string>section_category</string>
+                            <string>simulation_state</string>
                           </list>
                         </value>
                     </item>
@@ -125,6 +132,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -134,6 +147,7 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>node_uid\r\n
 at_date\r\n
+section_category\n
 simulation_state:list</string> </value>
         </item>
         <item>
@@ -150,7 +164,9 @@ simulation_state:list</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -176,7 +192,7 @@ SELECT DISTINCT\n
   catalog.uid,\n
   catalog.path,\n
   catalog.relative_url,\n
-  catalog.title, \n
+  catalog.title,\n
   catalog.portal_type\n
 FROM\n
   catalog,\n
@@ -191,11 +207,13 @@ WHERE\n
 </dtml-if>\n
 <dtml-if simulation_state>\n
   AND ( <dtml-in simulation_state>\n
-    stock.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end>OR </dtml-unless>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+                <dtml-unless sequence-end>OR </dtml-unless>\n
   </dtml-in> )\n
 </dtml-if>\n
 ORDER BY\n
-  catalog.portal_type, catalog.title
+  catalog.portal_type, catalog.title\n
+
 
 ]]></string> </value>
         </item>
@@ -237,7 +255,7 @@ SELECT DISTINCT\n
   catalog.uid,\n
   catalog.path,\n
   catalog.relative_url,\n
-  catalog.title, \n
+  catalog.title,\n
   catalog.portal_type\n
 FROM\n
   catalog,\n
@@ -252,11 +270,13 @@ WHERE\n
 </dtml-if>\n
 <dtml-if simulation_state>\n
   AND ( <dtml-in simulation_state>\n
-    stock.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-unless sequence-end>OR </dtml-unless>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+                <dtml-unless sequence-end>OR </dtml-unless>\n
   </dtml-in> )\n
 </dtml-if>\n
 ORDER BY\n
-  catalog.portal_type, catalog.title
+  catalog.portal_type, catalog.title\n
+
 
 ]]></string> </value>
                     </item>
@@ -268,6 +288,27 @@ ORDER BY\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>
