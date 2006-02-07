@@ -82,6 +82,13 @@ if \'to_date\' not in params:\n
 if \'section_category\' not in params:\n
   params[\'section_category\'] = \'\'\n
 \n
+if params.get(\'stat\', 0):\n
+  params[\'stat\'] = 0\n
+if params.get(\'count\', 0):\n
+  params[\'count\'] = 0\n
+params[\'omit_input\'] = 0\n
+params[\'omit_output\'] = 0\n
+\n
 #context.log(\'LOG\',  context.AccountingTransactionModule_zGetAccountingTransactionList(src__ =1, **params))\n
 return context.AccountingTransactionModule_zGetAccountingTransactionList(**params)\n
 
@@ -102,7 +109,7 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList(**param
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_getAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -134,8 +141,8 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList(**param
                           <tuple>
                             <string>params</string>
                             <string>_write_</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
+                            <string>_apply_</string>
                             <string>context</string>
                           </tuple>
                         </value>
