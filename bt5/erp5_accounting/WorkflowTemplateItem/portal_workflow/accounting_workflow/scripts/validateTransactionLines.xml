@@ -66,12 +66,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Validate Transaction Lines for the source.\n
+            <value> <string>"""Validate Transaction Lines for source and destination section.\n
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
+SOURCE, DESTINATION = (\'source\', \'destination\')\n
 \n
 error_message = \'\'\n
 transaction = state_change[\'object\']\n
@@ -86,61 +86,77 @@ source_section = transaction.getSourceSection(\n
 destination_section = transaction.getDestinationSection(\n
   portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
 \n
-# Check transaction lines.\n
+source_sum = 0\n
+destination_sum = 0\n
+\n
+# Check transaction lines\n
 if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
   accounting_transaction_line_list = transaction.contentValues(\n
          filter={ \'portal_type\':\n
                transaction.getPortalAccountingMovementTypeList()})\n
-  sum = 0\n
   for transaction_line in accounting_transaction_line_list:\n
     if source_section != destination_section :\n
-      quantity = transaction_line.getSourceInventoriatedTotalAssetPrice() or 0\n
+      source_quantity = transaction_line\\\n
+                  .getSourceInventoriatedTotalAssetPrice() or 0\n
+      destination_quantity = transaction_line\\\n
+                  .getDestinationInventoriatedTotalAssetPrice() or 0\n
     else :\n
-      quantity = transaction_line.getSourceInventoriatedTotalAssetPrice() or 0 +\\\n
-                 transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+      destination_quantity = source_quantity = transaction_line\\\n
+                  .getSourceInventoriatedTotalAssetPrice() or 0 +\\\n
+          transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0\n
       \n
-    sum += int(round(quantity * 100))\n
+    source_sum += int(round(source_quantity * 100))\n
+    destination_sum += int(round(destination_quantity * 100))\n
 \n
-    # TODO: validate from both source and destination\n
-    account = transaction_line.getSourceValue(portal_type = \'Account\')\n
-    if account is None :\n
-      continue\n
+    for side in (SOURCE, DESTINATION) :\n
+      if side == SOURCE :\n
+        account = transaction_line.getSourceValue(portal_type = \'Account\')\n
+        mirror_section = transaction_line.getDestinationSection()\n
+        paiment = transaction_line.getSourcePayment()\n
+      else:\n
+        account = transaction_line.getDestinationValue(portal_type = \'Account\')\n
+        mirror_section = transaction_line.getSourceSection()\n
+        paiment = transaction_line.getDestinationPayment()\n
+      \n
+      if account is None :\n
+        continue\n
 \n
-    if account .getValidationState() != \'validated\' :\n
-      raise ValidationFailed, N_(\n
-            \'Action impossible : Account ${account_title} is ${state}\',\n
-            mapping = {\'account_title\':  unicode(account.getTranslatedTitle(), \'utf8\'),\n
-                       \'state\': unicode(account.getTranslatedValidationStateTitle(), \'utf8\')})\n
- \n
-    if account.getAccountTypeId() in ("receivable", "payable") and \\\n
-              transaction_line.getDestinationSection() in (None, "") :\n
-      raise ValidationFailed, N_(\n
-             \'Action impossible : no Third Party defined for line ${line} \'+\n
-             \'where Account Type is ${account_type}.\',\n
-             mapping = { \'line\': transaction_line.getId(),\n
-                \'account_type\' : unicode(account\\\n
-                .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
-    \n
-    if account.isMemberOf("account_type/asset/cash") \\\n
-          and transaction_line.getSourcePayment() in (None, "") :\n
-       raise ValidationFailed, N_(\n
-            \'Action impossible : no Bank Account defined for line ${line} \'+\n
-            \'where Account Type is ${account_type}.\',\n
-            mapping = { \'line\': transaction_line.getId(),\n
-             \'account_type\' : unicode(account\\\n
-                .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
+      if account.getValidationState() != \'validated\' :\n
+        raise ValidationFailed, N_(\n
+              \'Action impossible : Account ${account_title} is ${state}\',\n
+              mapping = {\'account_title\':\n
+                            unicode(account.getTranslatedTitle(), \'utf8\'),\n
+                         \'state\': unicode(account\\\n
+                            .getTranslatedValidationStateTitle(), \'utf8\')})\n
+       \n
+      if account.getAccountTypeId() in ("receivable", "payable") and \\\n
+                mirror_section in (None, "") :\n
+        raise ValidationFailed, N_(\n
+               \'Action impossible : no Third Party defined for line ${line} \'+\n
+               \'where Account Type is ${account_type}.\',\n
+               mapping = { \'line\': transaction_line.getId(),\n
+                  \'account_type\' : unicode(account\\\n
+                  .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
+      \n
+      if account.isMemberOf("account_type/asset/cash") \\\n
+            and paiment in (None, "") :\n
+         raise ValidationFailed, N_(\n
+              \'Action impossible : no Bank Account defined for line ${line} \'+\n
+              \'where Account Type is ${account_type}.\',\n
+              mapping = { \'line\': transaction_line.getId(),\n
+               \'account_type\' : unicode(account\\\n
+                  .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
 \n
-  if sum > 0:\n
+  if source_sum != 0:\n
     raise ValidationFailed, N_(\n
-              \'Action impossible : credit is greater than debit\')\n
-  elif sum < 0:\n
+        \'Action impossible : transaction is not balanced for source section\')\n
+\n
+  if destination_sum != 0:\n
     raise ValidationFailed, N_(\n
-              \'Action impossible : credit is smaller than debit\')\n
+  \'Action impossible : transaction is not balanced for destination section\')\n
 \n
 transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -207,6 +223,9 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>_getiter_</string>
+                            <string>SOURCE</string>
+                            <string>DESTINATION</string>
                             <string>error_message</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
@@ -215,14 +234,18 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>container</string>
                             <string>source_section</string>
                             <string>destination_section</string>
+                            <string>source_sum</string>
+                            <string>destination_sum</string>
                             <string>accounting_transaction_line_list</string>
-                            <string>sum</string>
-                            <string>_getiter_</string>
                             <string>transaction_line</string>
-                            <string>quantity</string>
+                            <string>source_quantity</string>
+                            <string>destination_quantity</string>
                             <string>int</string>
                             <string>round</string>
+                            <string>side</string>
                             <string>account</string>
+                            <string>mirror_section</string>
+                            <string>paiment</string>
                             <string>None</string>
                             <string>unicode</string>
                           </tuple>
