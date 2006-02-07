@@ -12,14 +12,13 @@
 #
 ##############################################################################
 
-from Products.CMFCore import ActionInformation
+from Products.CMFCore.ActionInformation import ActionInformation
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from types import StringType
 
-ActionInformation.oldActionInformation = ActionInformation.ActionInformation
-
-class PatchedActionInformation(ActionInformation.oldActionInformation):
+#class PatchedActionInformation(ActionInformation.oldActionInformation):
+if 1:
 
     security = ClassSecurityInfo()
 
@@ -144,4 +143,14 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
                              , optional=self.getOption()
                              )
 
-ActionInformation.ActionInformation = PatchedActionInformation
+#ActionInformation.ActionInformation = PatchedActionInformation
+ActionInformation.__init__ = __init__
+ActionInformation.getAction = getAction
+ActionInformation._getIconObject = _getIconObject
+ActionInformation.getIconExpression = getIconExpression
+ActionInformation.setIconExpression = setIconExpression
+ActionInformation.getOption = getOption
+ActionInformation.getPriority = getPriority
+ActionInformation.clone = clone
+
+PatchedActionInformation = ActionInformation
