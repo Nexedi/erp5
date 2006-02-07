@@ -73,18 +73,20 @@ This script deletes all empty (ie. with balance == 0) lines in an accounting tra
 lines_portal_type = context.getPortalAccountingMovementTypeList()\n
 transaction = context.getObject()\n
 \n
-for line in transaction.objectValues(portal_type=lines_portal_type) : \n
+for line in transaction.objectValues(portal_type=lines_portal_type) :\n
   line = line.getObject()\n
   # Do not delete lines involved in simulation\n
-  if len( line.getDeliveryRelatedValueList(portal_type = \'Simulation Movement\') + \n
-          line.getOrderRelatedValueList(portal_type = \'Simulation Movement\') ) == 0 : \n
-    balance = line.getSourceDebit() - line.getSourceCredit()\n
-    if balance == 0 : \n
+  if len( line.getDeliveryRelatedValueList(\n
+                    portal_type = \'Simulation Movement\') +\n
+          line.getOrderRelatedValueList(\n
+                    portal_type = \'Simulation Movement\') ) == 0 :\n
+    if not line.getSourceInventoriatedTotalAssetPrice() and \\\n
+       not line.getDestinationInventoriatedTotalAssetPrice() :\n
       transaction.deleteContent(line.getId())\n
 \n
 if redirect :\n
   context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
-      transaction.getPath(), context.Base_TranslateString(\'Empty Lines Deleted.\')))\n
+      transaction.getPath(), context.Base_translateString(\'Empty Lines Deleted.\')))\n
 </string> </value>
         </item>
         <item>
@@ -94,8 +96,14 @@ if redirect :\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_deleteEmptyLines</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransaction_deleteEmptyLines</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -133,7 +141,6 @@ if redirect :\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>len</string>
-                            <string>balance</string>
                           </tuple>
                         </value>
                     </item>
@@ -158,6 +165,27 @@ if redirect :\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
