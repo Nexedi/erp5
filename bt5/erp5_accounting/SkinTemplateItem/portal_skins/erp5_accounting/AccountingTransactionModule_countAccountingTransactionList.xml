@@ -66,7 +66,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, count=1, **kw)\n
+            <value> <string>if kw.get(\'stat\', 0) :\n
+  del kw[\'stat\']\n
+\n
+kw[\'omit_input\'] = 0\n
+kw[\'omit_output\'] = 0\n
+\n
+return context.AccountingTransactionModule_zGetAccountingTransactionList( selection=None,\n
+                                                                          selection_params=kw,\n
+                                                                          stat=0,\n
+                                                                          count=1,\n
+                                                                          **kw )\n
 </string> </value>
         </item>
         <item>
@@ -76,8 +86,14 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_countAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_countAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -110,9 +126,11 @@
                             <string>brain</string>
                             <string>selection</string>
                             <string>kw</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                             <string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,6 +156,27 @@
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
