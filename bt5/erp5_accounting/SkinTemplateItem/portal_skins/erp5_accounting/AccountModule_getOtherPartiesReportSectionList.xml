@@ -76,86 +76,82 @@ Client & vendors accounts.\n
 from Products.ERP5Form.Report import ReportSection\n
 \n
 request = context.REQUEST\n
-to_date = request[\'to_date\']\n
+at_date = request[\'at_date\']\n
 transaction_section_category = request[\'transaction_section_category\']\n
 transaction_simulation_state = request[\'transaction_simulation_state\']\n
 role_filter_list = request.get(\'entity_role\', None)\n
 omit_balanced_accounts = request[\'omit_balanced_accounts\']\n
-omit_empty_accounts = request[\'omit_empty_accounts\']\n
 from_date = request.get(\'from_date\', None)\n
-accounting_transaction_line_currency = request.get(\'accounting_transaction_line_currency\', None)\n
 \n
 # role_filter_list == None means no filter on the role\n
-if role_filter_list == [\'\'] : \n
+if role_filter_list == [\'\'] :\n
   role_filter_list = None\n
 \n
 result = []\n
 \n
-params =  { \n
-            \'to_date\'   : to_date,\n
+params =  {\n
+            \'at_date\'   : at_date,\n
             \'transaction_section_category\' : transaction_section_category,\n
             \'section_category\' : transaction_section_category,\n
             \'simulation_state\' :  transaction_simulation_state,\n
-            \'accounting_transaction_line_currency\' : None,\n
             \'report_depth\' : 5,\n
+            \'node_category\': [ \'account_type/asset/receivable\',\n
+                               \'account_type/liability/payable\' ]\n
           }\n
 \n
 params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
-if from_date: \n
+if from_date:\n
     params[\'from_date\'] = from_date\n
 \n
 portal = context.portal_url.getPortalObject()\n
+simulation_tool = portal.portal_simulation\n
 \n
 entity_columns = [\n
-                       (\'getStopDate\', \'Date\'),\n
-                       (\'Entity_getParentPortalType\', \'Type\'),\n
-                       (\'Entity_getSourceGapId\', \'GAP\'),\n
-                       (\'Entity_getReference\', \'Invoice No\'), \n
-                       (\'Entity_getParentTitle\', \'Title\'), \n
-                       (\'Entity_getSourceReference\', \'Reference\'),\n
-                       (\'simulation_state\', \'State\'),\n
-                       (\'source_debit\', \'Debit\'),\n
-                       (\'source_credit\', \'Credit\'),\n
-                       (\'source_balance\', \'Balance\'),\n
+                       (\'date\', \'Date\'),\n
+                       (\'translated_portal_type\', \'Type\'),\n
+                       (\'Entity_getAccountingTransactionGapId\', \'GAP\'),\n
+                       (\'parent_reference\', \'Invoice No\'),\n
+                       (\'parent_title\', \'Title\'),\n
+                       (\'parent_specific_reference\', \'Reference\'),\n
+                       (\'translated_simulation_state_title\', \'State\'),\n
+                       (\'debit\', \'Debit\'),\n
+                       (\'credit\', \'Credit\'),\n
+                       (\'net_balance\', \'Balance\'),\n
 ]\n
 if not params[\'hide_grouping\']  :\n
-  entity_columns.append((\'grouping_reference\', \'Grouping Reference\'))\n
-\n
-# to be able to use Entity_statBalance, Entity_zGetAccountingTransactionList, we must edit accounting_selection\n
-# FIXME: instead we should use getInvetory and portal_catalog\n
-saved_params = context.portal_selections.getSelectionParams("accounting_selection")\n
-context.portal_selections.setSelectionParamsFor("accounting_selection", params)\n
+  entity_columns.append((\'grouping_reference\',\n
+                         \'Grouping Reference\'))\n
 \n
 for party in context.Account_zDistinctSectionList():\n
-  o = party.getObject() \n
-  if role_filter_list and hasattr(o, \'getRole\') and o.getRole() not in role_filter_list : \n
+  o = party.getObject()\n
+  if role_filter_list and hasattr(o, \'getRole\') and \\\n
+            o.getRole() not in role_filter_list :\n
     continue\n
-  if hasattr(o, \'getGroup\') and o.getGroup() :  \n
+  if hasattr(o, \'getGroup\') and o.getGroup() :\n
     group = \'group/%s\'%o.getGroup()\n
-  else : \n
+  else :\n
     group = ""\n
-  if group != transaction_section_category : # don\'t show entities belonging to the group we are reporting\n
-    if omit_empty_accounts and (len(o.Entity_zGetAccountingTransactionList(**params)) == 0) :\n
+  if group != transaction_section_category :\n
+        # don\'t show entities belonging to the group we are reporting\n
+    if omit_balanced_accounts and simulation_tool.getInventoryAssetPrice(\n
+                    mirror_section_uid=party.getUid(), **params) == 0 :\n
       pass\n
-    elif omit_balanced_accounts and (int(o.Entity_statBalance(**params)) == 0) :\n
-      pass\n
-    else : \n
-      if hasattr(o, \'getRole\') and o.getRole() : \n
+    else :\n
+      if hasattr(o, \'getRole\') and o.getRole() :\n
         title = \'%s (%s)\'%(o.getTitle(), o.getRole())\n
-      else : \n
+      else :\n
         title = o.getTitle()\n
       result.append(\n
                  ReportSection(title=title,\n
                                level=2,\n
-                               path=o.getPhysicalPath(), \n
+                               path=o.getPhysicalPath(),\n
                                form_id=\'Entity_viewAccountingTransactionList\',\n
-                               ##  XXX Here we must use accounting_selection, because stat scripts read this selection \n
                                selection_name = \'accounting_selection\',\n
                                selection_params = params,\n
                                selection_columns = entity_columns,\n
-                               selection_sort_order=[(\'delivery.stop_date\', \'ascending\')], ) )\n
+                               selection_sort_order=[(\'delivery.stop_date\',\n
+                                                      \'ascending\')], ) )\n
 \n
-context.portal_selections.setSelectionParamsFor("accounting_selection", saved_params)\n
 return result\n
 
 
@@ -168,8 +164,14 @@ return result\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getOtherPartiesReportSectionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_getOtherPartiesReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -213,29 +215,25 @@ return result\n
                             <string>context</string>
                             <string>request</string>
                             <string>_getitem_</string>
-                            <string>to_date</string>
+                            <string>at_date</string>
                             <string>transaction_section_category</string>
                             <string>transaction_simulation_state</string>
                             <string>None</string>
                             <string>role_filter_list</string>
                             <string>omit_balanced_accounts</string>
-                            <string>omit_empty_accounts</string>
                             <string>from_date</string>
-                            <string>accounting_transaction_line_currency</string>
                             <string>result</string>
                             <string>params</string>
                             <string>_write_</string>
                             <string>portal</string>
+                            <string>simulation_tool</string>
                             <string>entity_columns</string>
-                            <string>saved_params</string>
                             <string>_getiter_</string>
                             <string>party</string>
                             <string>o</string>
                             <string>hasattr</string>
                             <string>group</string>
-                            <string>len</string>
                             <string>_apply_</string>
-                            <string>int</string>
                             <string>title</string>
                           </tuple>
                         </value>
@@ -259,6 +257,27 @@ return result\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
