@@ -51,25 +51,25 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>destination_section_uid</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>from_date</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>no_destination_section_uid</string> </key>
+                                <key> <string>mirror_section_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>no_source_payment_uid</string> </key>
+                                <key> <string>no_mirror_section_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>no_payment_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -93,6 +93,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>payment_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>query</string> </key>
                                 <value>
                                   <dictionary/>
@@ -107,12 +113,6 @@
                                         <value> <string>list</string> </value>
                                     </item>
                                   </dictionary>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>source_payment_uid</string> </key>
-                                <value>
-                                  <dictionary/>
                                 </value>
                             </item>
                             <item>
@@ -145,20 +145,20 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>node_uid</string>
-<string>query</string>
-<string>omit_input</string>
-<string>omit_output</string>
-<string>resource_uid</string>
-<string>from_date</string>
-<string>to_date</string>
-<string>at_date</string>
-<string>transaction_simulation_state</string>
-<string>transaction_section_category</string>
-<string>source_payment_uid</string>
-<string>no_source_payment_uid</string>
-<string>destination_section_uid</string>
-<string>no_destination_section_uid</string>
+                            <string>node_uid</string>
+                            <string>query</string>
+                            <string>omit_input</string>
+                            <string>omit_output</string>
+                            <string>resource_uid</string>
+                            <string>from_date</string>
+                            <string>to_date</string>
+                            <string>at_date</string>
+                            <string>transaction_simulation_state</string>
+                            <string>transaction_section_category</string>
+                            <string>payment_uid</string>
+                            <string>no_payment_uid</string>
+                            <string>mirror_section_uid</string>
+                            <string>no_mirror_section_uid</string>
                           </list>
                         </value>
                     </item>
@@ -191,10 +191,10 @@ to_date\r\n
 at_date\r\n
 transaction_simulation_state:list\r\n
 transaction_section_category\r\n
-source_payment_uid\r\n
-no_source_payment_uid\r\n
-destination_section_uid\r\n
-no_destination_section_uid</string> </value>
+payment_uid\r\n
+no_payment_uid\r\n
+mirror_section_uid\r\n
+no_mirror_section_uid</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -235,22 +235,21 @@ no_destination_section_uid</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
-  SUM(stock.quantity) AS quantity\n
+  SUM(stock.quantity) AS quantity,\n
+  SUM(stock.total_price) AS total_price\n
 FROM\n
   movement,\n
   stock,\n
   catalog as child,\n
-  catalog,\n
   catalog AS section_c,\n
-  catalog AS section_bc,\n
+  catalog AS section_bc, -- XXX probably not necessary\n
   category AS section_membership,\n
   catalog AS section\n
 <dtml-if query>\n
   , category\n
 </dtml-if>\n
 WHERE stock.node_uid = <dtml-var node_uid>\n
-  AND child.uid = stock.uid \n
-  AND child.parent_uid = catalog.uid\n
+  AND child.uid = stock.uid\n
   AND movement.uid = stock.uid\n
   AND child.portal_type <> \'Simulation Movement\'\n
   AND movement.is_accountable = 1\n
@@ -271,32 +270,32 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
-  AND stock.quantity > 0.0\n
+  AND stock.total_price > 0.0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
-  AND stock.quantity < 0.0\n
+  AND stock.total_price < 0.0\n
 </dtml-if>\n
-<dtml-if source_payment_uid>\n
-  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+<dtml-if payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar payment_uid type="int">\n
 </dtml-if>\n
-<dtml-if no_source_payment_uid>\n
+<dtml-if no_payment_uid>\n
   AND stock.payment_uid IS NULL\n
 </dtml-if>\n
-<dtml-if destination_section_uid>\n
-  AND stock.mirror_section_uid = <dtml-sqlvar destination_section_uid type="int">\n
+<dtml-if mirror_section_uid>\n
+  AND stock.mirror_section_uid = <dtml-sqlvar mirror_section_uid type="int">\n
 </dtml-if>\n
-<dtml-if no_destination_section_uid>\n
+<dtml-if no_mirror_section_uid>\n
   AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
   <dtml-in transaction_simulation_state>\n
-    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
   </dtml-in>\n
   )\n
 <dtml-else>\n
-  AND catalog.simulation_state != \'cancelled\' \n
-  AND catalog.simulation_state != \'draft\' \n
+  AND stock.simulation_state != \'cancelled\' \n
+  AND stock.simulation_state != \'draft\' \n
 </dtml-if>\n
   AND section.uid = stock.section_uid\n
 <dtml-if transaction_section_category>\n
@@ -308,7 +307,8 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
 AND <dtml-var query>\n
-</dtml-if>
+</dtml-if>\n
+
 
 ]]></string> </value>
         </item>
@@ -347,22 +347,21 @@ AND <dtml-var query>\n
                         <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
-  SUM(stock.quantity) AS quantity\n
+  SUM(stock.quantity) AS quantity,\n
+  SUM(stock.total_price) AS total_price\n
 FROM\n
   movement,\n
   stock,\n
   catalog as child,\n
-  catalog,\n
   catalog AS section_c,\n
-  catalog AS section_bc,\n
+  catalog AS section_bc, -- XXX probably not necessary\n
   category AS section_membership,\n
   catalog AS section\n
 <dtml-if query>\n
   , category\n
 </dtml-if>\n
 WHERE stock.node_uid = <dtml-var node_uid>\n
-  AND child.uid = stock.uid \n
-  AND child.parent_uid = catalog.uid\n
+  AND child.uid = stock.uid\n
   AND movement.uid = stock.uid\n
   AND child.portal_type <> \'Simulation Movement\'\n
   AND movement.is_accountable = 1\n
@@ -383,32 +382,32 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
-  AND stock.quantity > 0.0\n
+  AND stock.total_price > 0.0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
-  AND stock.quantity < 0.0\n
+  AND stock.total_price < 0.0\n
 </dtml-if>\n
-<dtml-if source_payment_uid>\n
-  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+<dtml-if payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar payment_uid type="int">\n
 </dtml-if>\n
-<dtml-if no_source_payment_uid>\n
+<dtml-if no_payment_uid>\n
   AND stock.payment_uid IS NULL\n
 </dtml-if>\n
-<dtml-if destination_section_uid>\n
-  AND stock.mirror_section_uid = <dtml-sqlvar destination_section_uid type="int">\n
+<dtml-if mirror_section_uid>\n
+  AND stock.mirror_section_uid = <dtml-sqlvar mirror_section_uid type="int">\n
 </dtml-if>\n
-<dtml-if no_destination_section_uid>\n
+<dtml-if no_mirror_section_uid>\n
   AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
   <dtml-in transaction_simulation_state>\n
-    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
   </dtml-in>\n
   )\n
 <dtml-else>\n
-  AND catalog.simulation_state != \'cancelled\' \n
-  AND catalog.simulation_state != \'draft\' \n
+  AND stock.simulation_state != \'cancelled\' \n
+  AND stock.simulation_state != \'draft\' \n
 </dtml-if>\n
   AND section.uid = stock.section_uid\n
 <dtml-if transaction_section_category>\n
@@ -420,7 +419,8 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
 AND <dtml-var query>\n
-</dtml-if>
+</dtml-if>\n
+
 
 ]]></string> </value>
                     </item>
