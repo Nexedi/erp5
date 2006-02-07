@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ZSQLMethods.SQL</string>
+          <string>SQL</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Member</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>at_date</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>node_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>node_uid</string>
+                            <string>at_date</string>
+                            <string>simulation_state</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>uid</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>i</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>11</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>path</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>0</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>50</int> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>node_uid\r\n
+at_date\r\n
+simulation_state:list</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string>zsqlbrain.py</string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string>ZSQLBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Account_zGetDistinctPaymentList</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT DISTINCT\n
+  catalog.uid,\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.title,\n
+  catalog.portal_type\n
+FROM\n
+  catalog,\n
+  stock\n
+WHERE\n
+  stock.payment_uid = catalog.uid\n
+<dtml-if node_uid>\n
+  AND stock.node_uid = <dtml-sqlvar node_uid type="string">\n
+</dtml-if>\n
+<dtml-if at_date>\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
+</dtml-if>\n
+<dtml-if simulation_state>\n
+  AND ( <dtml-in simulation_state>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+                <dtml-unless sequence-end>OR </dtml-unless>\n
+  </dtml-in> )\n
+</dtml-if>\n
+ORDER BY\n
+  catalog.portal_type, catalog.title\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </klass>
+                <none/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT DISTINCT\n
+  catalog.uid,\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.title,\n
+  catalog.portal_type\n
+FROM\n
+  catalog,\n
+  stock\n
+WHERE\n
+  stock.payment_uid = catalog.uid\n
+<dtml-if node_uid>\n
+  AND stock.node_uid = <dtml-sqlvar node_uid type="string">\n
+</dtml-if>\n
+<dtml-if at_date>\n
+  AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
+</dtml-if>\n
+<dtml-if simulation_state>\n
+  AND ( <dtml-in simulation_state>\n
+    stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+                <dtml-unless sequence-end>OR </dtml-unless>\n
+  </dtml-in> )\n
+</dtml-if>\n
+ORDER BY\n
+  catalog.portal_type, catalog.title\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
