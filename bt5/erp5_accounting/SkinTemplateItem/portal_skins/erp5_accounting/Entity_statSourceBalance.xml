@@ -66,7 +66,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kwd = {}\n
+            <value> <string>kw.update(selection.getParams())\n
+kwd = {}\n
 if kw.has_key(\'hide_grouping\'):\n
   kwd[\'hide_grouping\'] = kw[\'hide_grouping\']\n
 \n
@@ -99,7 +100,7 @@ if kw.get(\'omit_output\') :\n
 kwd[\'stat\'] = 1\n
 result = context.Entity_zGetAccountingTransactionList(**kwd)\n
 row = result[0]\n
-return float(\'%.02f\' % row.quantity or 0)\n
+return float(\'%.02f\' % row.total_price or 0)\n
 # vim: syntax=python\n
 </string> </value>
         </item>
@@ -117,11 +118,11 @@ return float(\'%.02f\' % row.quantity or 0)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_statSourceBalance</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/Entity_statSourceBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>selection, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,15 +142,16 @@ return float(\'%.02f\' % row.quantity or 0)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>selection</string>
                             <string>kw</string>
-                            <string>kwd</string>
                             <string>_getattr_</string>
+                            <string>kwd</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
                             <string>context</string>
