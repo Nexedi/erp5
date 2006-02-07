@@ -83,7 +83,6 @@ display_categories = request.get(\'display_categories\', 0)\n
 # TODO\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
 \n
-\n
 params = {\n
   \'at_date\'                      : at_date,\n
   \'section_category\'             : transaction_section_category,\n
@@ -108,7 +107,7 @@ if from_date:\n
   params[\'from_date\'] = from_date\n
   preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
 \n
-## FIXME: issue in reporting famework in ERP5 \n
+## FIXME: issue in reporting famework in ERP5 ? \n
 from Products.ERP5Type.Cache import clearCache\n
 clearCache() # for preferences\n
 \n
@@ -116,14 +115,14 @@ result = []\n
 portal = context.portal_url.getPortalObject()\n
 \n
 account_columns = (\n
-  (\'source_reference\', \'Reference\'),\n
+  (\'specific_reference\', \'Reference\'),\n
   (\'delivery.start_date\', \'Date\'),\n
   (\'title\', \'Title\'),\n
   (\'translated_portal_type\', \'Type\'),\n
   (\'third_party\', \'Third Party\'),\n
   (\'translated_simulation_state_title\', \'State\'),\n
-  (\'source_debit\', \'Debit\'),\n
-  (\'source_credit\', \'Credit\'),\n
+  (\'debit\', \'Debit\'),\n
+  (\'credit\', \'Credit\'),\n
   (\'net_balance\', \'Balance\'),\n
 )\n
 \n
@@ -132,8 +131,9 @@ if gap :\n
                portal.portal_categories.gap.restrictedTraverse(gap)\\\n
                     .Category_getSortedCategoryChildValueList()\n
 else :\n
-  cat = \'gap/%s\'%context.portal_preferences.getPreferredAccountingTransactionGap() \\\n
-        or context.getPortalDefaultGapRoot()\n
+  cat = \'gap/%s\'%context.portal_preferences\\\n
+              .getPreferredAccountingTransactionGap()\\\n
+              or context.getPortalDefaultGapRoot()\n
 \n
   gap_value_list = portal.portal_categories.resolveCategory(cat)\\\n
                 .Category_getSortedCategoryChildValueList()\n
@@ -157,10 +157,8 @@ for c in gap_value_list :\n
       account_inventory_list_cache[account.getUid()] = len(portal.\\\n
           portal_simulation.getInventoryList( omit_simulation = 1,\n
           node_uid = account.getUid(), **account_inventory_list_cache_params))\n
-\n
     if account_inventory_list_cache[account.getUid()] != 0 :\n
       skip_branch = 0\n
-  \n
   \n
   if skip_branch :\n
     continue\n
@@ -177,55 +175,60 @@ for c in gap_value_list :\n
   if len(strict_account_list):\n
     for account in strict_account_list:\n
       if account.getAccountTypeId() in (\'payable\', \'receivable\') :\n
-        for third_party_path in account.Account_getDestinationSectionList(\n
-                                                                at_date = at_date,\n
-                                                                simulation_state = transaction_simulation_state ) :\n
+        for third_party_brain in context.Account_zDistinctSectionList(\n
+                           at_date = at_date,\n
+                           simulation_state = transaction_simulation_state ) :\n
           third_party_params = params.copy()\n
-          if third_party_path is not None :\n
-            third_party = context.getPortalObject().restrictedTraverse(third_party_path)\n
-            third_party_params[\'destination_section_uid\'] = third_party.getUid()\n
-            title = "%s: %s (%s)" % ( c.getId(),\n
-                                                     account.getTitle(),\n
-                                                     third_party.getTitle())\n
-          else :\n
-            third_party_params[\'no_destination_section_uid\'] = 1\n
-            title = "%s: %s" % ( c.getId(), account.getTitle())\n
-          result.append(ReportSection(\n
-            path = account.getPhysicalPath(),\n
-            title = title,\n
-            level = 9,\n
-            form_id = \'Account_viewAccountingTransactionList\',\n
-            selection_name = \'acount_preference_selection\',\n
-            selection_params = third_party_params.copy(),\n
-            selection_columns = account_columns,\n
-            listbox_display_mode = \'FlatListMode\',\n
-            selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
-            preferences = preferences ))\n
-\n
-      elif account.getAccountTypeId() in (\'bank\', \'cash\') :\n
-        # Bank Account\n
-        for bank_account_path in account.Account_getSourcePaymentList() :\n
-          bank_params = params.copy()\n
-          if bank_account_path is not None :\n
-            bank_account = context.getPortalObject().restrictedTraverse(bank_account_path)\n
-            bank_params[\'source_payment_uid\'] = bank_account.getUid()\n
-            title = "%s: %s (%s)" % ( c.getId(),\n
-                                                     account.getTitle(),\n
-                                                     bank_account.getTitle())\n
-          else :\n
-            bank_params[\'no_source_payment_uid\'] = 1\n
-            title = "%s: %s" % ( c.getId(), account.getTitle())\n
-          result.append(ReportSection(\n
+          third_party_params[\'mirror_section_uid\'] = third_party_brain.uid\n
+          title = "%s: %s (%s)" % ( c.getId(),\n
+                                    account.getTitle(),\n
+                                    third_party_brain.title )\n
+          if len(portal.portal_simulation.getInventoryList(\n
+                    mirror_section_uid = third_party_brain.uid,\n
+                    node_uid = account.getUid(),\n
+                    **account_inventory_list_cache_params )):\n
+            result.append(ReportSection(\n
               path = account.getPhysicalPath(),\n
               title = title,\n
               level = 9,\n
               form_id = \'Account_viewAccountingTransactionList\',\n
               selection_name = \'acount_preference_selection\',\n
-              selection_params = bank_params.copy(),\n
+              selection_params = third_party_params.copy(),\n
               selection_columns = account_columns,\n
               listbox_display_mode = \'FlatListMode\',\n
               selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
               preferences = preferences ))\n
+\n
+      elif account.getAccountTypeId() in (\'bank\', \'cash\') :\n
+        # Bank Account\n
+        for bank_account_brain in account.Account_zGetDistinctPaymentList(\n
+                          at_date = at_date,\n
+                          simulation_state = transaction_simulation_state ) :\n
+          bank_params = params.copy()\n
+          if bank_account_brain.path is not None :\n
+            bank_params[\'payment_uid\'] = bank_account_brain.uid\n
+            title = "%s: %s (%s)" % ( c.getId(),\n
+                                      account.getTitle(),\n
+                                      bank_account_brain.title )\n
+          else :\n
+            bank_params[\'no_payment_uid\'] = 1\n
+            title = "%s: %s" % ( c.getId(), account.getTitle())\n
+          \n
+          if len(portal.portal_simulation.getInventoryList(\n
+                    payment_uid = bank_account_brain.uid,\n
+                    node_uid = account.getUid(),\n
+                    **account_inventory_list_cache_params )):\n
+            result.append(ReportSection(\n
+                path = account.getPhysicalPath(),\n
+                title = title,\n
+                level = 9,\n
+                form_id = \'Account_viewAccountingTransactionList\',\n
+                selection_name = \'acount_preference_selection\',\n
+                selection_params = bank_params.copy(),\n
+                selection_columns = account_columns,\n
+                listbox_display_mode = \'FlatListMode\',\n
+                selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
+                preferences = preferences ))\n
       \n
       else :\n
         result.append(ReportSection(\n
@@ -258,7 +261,7 @@ return result\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getGeneralLedgerReportSectionList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_getGeneralLedgerReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -323,13 +326,11 @@ return result\n
                             <string>account</string>
                             <string>len</string>
                             <string>_apply_</string>
-                            <string>third_party_path</string>
+                            <string>third_party_brain</string>
                             <string>third_party_params</string>
-                            <string>third_party</string>
                             <string>title</string>
-                            <string>bank_account_path</string>
+                            <string>bank_account_brain</string>
                             <string>bank_params</string>
-                            <string>bank_account</string>
                           </tuple>
                         </value>
                     </item>
