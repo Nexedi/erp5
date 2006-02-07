@@ -67,25 +67,28 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>account = None\n
-if account == \'\' : \n
+if account == \'\' :\n
   if (hasattr(context, \'getPortalType\') and context.getPortalType() == \'Account\') :\n
     account = context\n
-elif same_type(account, \'\') : \n
+elif same_type(account, \'\') :\n
   account = context.getPortalObject().restrictedTraverse(account)\n
 \n
 node_uid = None\n
-if account is not None :  \n
+if account is not None :\n
   node_uid = account.getUid()\n
 \n
 ptype_translated_dict = {}\n
-def translatePortalType(ptype) : \n
-   if not ptype_translated_dict.has_key(ptype) : \n
-     ptype_translated_dict[ptype] = context.Base_TranslateString(ptype)\n
-   return ptype_translated_dict[ptype]\n
+def translatePortalType(ptype) :\n
+  """Translate portal_type without retrieving the object from ZODB."""\n
+  if not ptype_translated_dict.has_key(ptype) :\n
+    ptype_translated_dict[ptype] = context.Base_translateString(ptype)\n
+  return ptype_translated_dict[ptype]\n
 \n
 item_list = [("", "")]\n
-for entity in context.Account_zDistinctSectionList(node_uid = node_uid): \n
-  item_list.append(("%s (%s)" % (entity[\'title\'], translatePortalType(entity[\'portal_type\'])), entity[\'relative_url\']))\n
+for entity in context.Account_zDistinctSectionList(node_uid = node_uid):\n
+  item_list.append(("%s (%s)" % ( entity[\'title\'],\n
+                                  translatePortalType(entity[\'portal_type\'])),\n
+                                  entity[\'relative_url\']))\n
 \n
 return item_list\n
 </string> </value>
@@ -97,14 +100,14 @@ return item_list\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Account_getDestinationSectionItemList</string> </value>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/Account_getDestinationSectionItemList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -168,9 +171,34 @@ return item_list\n
             <value> <string>Account_getDestinationSectionItemList</string> </value>
         </item>
         <item>
+            <key> <string>title</string> </key>
+            <value> <string>TODO: rename as Account_getMirrorSectionItemList</string> </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
