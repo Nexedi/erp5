@@ -1,3 +1,6 @@
+2006-02-08 aurel
+* modify TemplateTool_viewMultiInstallationDialog and TemplateTool_getModifiedObjectList
+
 2006-02-03 aurel
 * modify Base_getWorkflowHistoryItemList
 

@@ -98,6 +98,7 @@
                     <value>
                       <list>
                         <string>listbox_choice</string>
+                        <string>listbox_object_id</string>
                       </list>
                     </value>
                 </item>
@@ -105,7 +106,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox_object_id</string>
+                        <string>your_form_title</string>
                       </list>
                     </value>
                 </item>

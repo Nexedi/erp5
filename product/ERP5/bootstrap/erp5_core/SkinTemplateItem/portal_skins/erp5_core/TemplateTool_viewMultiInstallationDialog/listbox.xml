@@ -346,6 +346,10 @@
                           <string>Class</string>
                         </tuple>
                         <tuple>
+                          <string>bt_title</string>
+                          <string>BT Title</string>
+                        </tuple>
+                        <tuple>
                           <string>object_state</string>
                           <string>State</string>
                         </tuple>
@@ -515,6 +519,10 @@
                         </tuple>
                         <tuple>
                           <string>object_class</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>bt_title</string>
 <string></string>
                         </tuple>
                         <tuple>

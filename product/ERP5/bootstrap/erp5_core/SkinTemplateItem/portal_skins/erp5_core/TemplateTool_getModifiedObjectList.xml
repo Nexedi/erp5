@@ -84,7 +84,7 @@ bt_objects = {}\n
 \n
 for bt_id in bt_id_list:\n
   bt = context.portal_templates[bt_id]\n
-  bt_objects[bt.getId()] = getModifiedObjectList(bt)\n
+  bt_objects[bt.getId()] = [bt.getTitle(), getModifiedObjectList(bt)]\n
 \n
 object_list = []\n
 no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \'PropertySheet\', \'Extension\', \'Test\', \'Product\', \n
@@ -92,7 +92,8 @@ no_backup_list = [\'Action\', \'SiteProperty\', \'Module\', \'Document\', \'Prop
                  \'PortalTypeAllowedContentType\', \'PortalTypeHiddenContentType\', \'PortalTypePropertySheet\', \'PortalTypeBaseCategory\']\n
 \n
 for bt in bt_objects.keys():\n
-  modified_object_list = bt_objects[bt]  \n
+  modified_object_list = bt_objects[bt][1]  \n
+  bt_title = bt_objects[bt][0]\n
   keys = modified_object_list.keys()\n
   keys.sort()\n
   i = 0\n
@@ -101,17 +102,17 @@ for bt in bt_objects.keys():\n
     object_id = bt+\'|\'+object_id\n
     line = newTempBase(context, \'tmp_install_%s\' %(str(i)))\n
     if object_state == \'New\':\n
-      line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Install\', \'install\'], [\'Do Nothing\', \'nothing\']])\n
+      line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Install\', \'install\'], [\'Do Nothing\', \'nothing\']])\n
     elif object_state == \'Modified\':\n
       if object_class in no_backup_list:\n
-        line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
       else:\n
-        line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Upgrade\', \'backup\'], [\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Upgrade\', \'backup\'], [\'Upgrade\', \'install\'], [\'Keep Original\', \'nothing\']])\n
     elif object_state == \'Removed\':\n
       if object_class in no_backup_list:\n
-        line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
       else:\n
-        line.edit(object_id=object_id, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Remove\', \'save_and_remove\'], [\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
+        line.edit(object_id=object_id, bt_title = bt_title, object_state=object_state, object_class=object_class, choice_item_list=[[\'Backup And Remove\', \'save_and_remove\'], [\'Remove\', \'remove\'], [\'Keep Original\', \'nothing\']])\n
     line.setUid(\'new_%s\' % object_id)\n
     object_list.append(line)\n
   i += 1                                  \n
@@ -191,6 +192,7 @@ return object_list\n
                             <string>object_list</string>
                             <string>no_backup_list</string>
                             <string>modified_object_list</string>
+                            <string>bt_title</string>
                             <string>keys</string>
                             <string>i</string>
                             <string>object_id</string>
