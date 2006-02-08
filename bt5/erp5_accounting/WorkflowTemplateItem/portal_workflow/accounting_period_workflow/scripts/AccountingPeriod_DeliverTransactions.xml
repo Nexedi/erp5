@@ -74,7 +74,7 @@ closing_period = state_change.object\n
 portal = closing_period.getPortalObject()\n
 N_ = portal.Base_translateString\n
 accounting_module = portal.accounting_module\n
-valid_states = [\'cancelled\', \'stopped\', \'delivered\']\n
+valid_states = [\'cancelled\', \'stopped\']\n
 \n
 start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
@@ -85,7 +85,7 @@ search_params = { \'delivery.start_date\' : \'>= %s\' % start_date,\n
 transaction_list = accounting_module.searchFolder( **search_params )\n
 \n
 comment=N_("Closing period ${period_title}",\n
-                    mapping={\'period_title\': closing_period.getTitle()})\n
+                    mapping={\'period_title\': unicode(closing_period.getTitle(), \'utf8\')})\n
 \n
 section_uid = closing_period.getParentValue().getUid()\n
 for transaction in transaction_list :\n
@@ -162,6 +162,7 @@ closing_period.activate( \n
                             <string>search_params</string>
                             <string>_apply_</string>
                             <string>transaction_list</string>
+                            <string>unicode</string>
                             <string>comment</string>
                             <string>section_uid</string>
                             <string>_getiter_</string>
