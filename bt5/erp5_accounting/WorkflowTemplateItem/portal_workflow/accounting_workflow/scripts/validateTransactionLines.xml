@@ -101,22 +101,22 @@ if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
       destination_quantity = transaction_line\\\n
                   .getDestinationInventoriatedTotalAssetPrice() or 0\n
     else :\n
-      destination_quantity = source_quantity = transaction_line\\\n
-                  .getSourceInventoriatedTotalAssetPrice() or 0 +\\\n
-          transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0\n
+      destination_quantity = source_quantity = ((transaction_line\\\n
+                  .getSourceInventoriatedTotalAssetPrice() or 0) + \\\n
+          (transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0))\n
       \n
-    source_sum += int(round(source_quantity * 100))\n
-    destination_sum += int(round(destination_quantity * 100))\n
+    source_sum += source_quantity\n
+    destination_sum += destination_quantity\n
 \n
     for side in (SOURCE, DESTINATION) :\n
       if side == SOURCE :\n
         account = transaction_line.getSourceValue(portal_type = \'Account\')\n
         mirror_section = transaction_line.getDestinationSection()\n
-        paiment = transaction_line.getSourcePayment()\n
+        payment = transaction_line.getSourcePaymentValue()\n
       else:\n
         account = transaction_line.getDestinationValue(portal_type = \'Account\')\n
         mirror_section = transaction_line.getSourceSection()\n
-        paiment = transaction_line.getDestinationPayment()\n
+        payment = transaction_line.getDestinationPaymentValue()\n
       \n
       if account is None :\n
         continue\n
@@ -138,22 +138,31 @@ if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
                   \'account_type\' : unicode(account\\\n
                   .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
       \n
-      if account.isMemberOf("account_type/asset/cash") \\\n
-            and paiment in (None, "") :\n
-         raise ValidationFailed, N_(\n
+      if side==SOURCE and account.isMemberOf("account_type/asset/cash/bank"):\n
+        if payment in (None, "") :\n
+          raise ValidationFailed, N_(\n
               \'Action impossible : no Bank Account defined for line ${line} \'+\n
               \'where Account Type is ${account_type}.\',\n
               mapping = { \'line\': transaction_line.getId(),\n
                \'account_type\' : unicode(account\\\n
                   .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
+        elif hasattr(payment, \'getPriceCurrency\') \\\n
+            and payment.getPriceCurrency() is not None \\\n
+            and payment.getPriceCurrency() != transaction_line.getResource() :\n
+          raise  ValidationFailed, N_(\n
+              \'Action impossible : Bank Account for line ${line} \'+\n
+              \'uses ${bank_account_currency} as default currency.\',\n
+              mapping = { \'line\': transaction_line.getId(),\n
+                    \'bank_account_currency\' : unicode(\n
+                    payment.getPriceCurrencyValue().getReference(), \'utf8\')})\n
 \n
-  if source_sum != 0:\n
+  if int(source_sum*100) != 0:\n
     raise ValidationFailed, N_(\n
         \'Action impossible : transaction is not balanced for source section\')\n
 \n
-  if destination_sum != 0:\n
+  if int(destination_sum*100) != 0:\n
     raise ValidationFailed, N_(\n
-  \'Action impossible : transaction is not balanced for destination section\')\n
+    \'Action impossible : transaction is not balanced for destination section\')\n
 \n
 transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
 </string> </value>
@@ -240,14 +249,14 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>transaction_line</string>
                             <string>source_quantity</string>
                             <string>destination_quantity</string>
-                            <string>int</string>
-                            <string>round</string>
                             <string>side</string>
                             <string>account</string>
                             <string>mirror_section</string>
-                            <string>paiment</string>
+                            <string>payment</string>
                             <string>None</string>
                             <string>unicode</string>
+                            <string>hasattr</string>
+                            <string>int</string>
                           </tuple>
                         </value>
                     </item>
