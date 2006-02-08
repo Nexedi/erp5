@@ -4,8 +4,8 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5Type.patches.ActionInformation</string>
-          <string>PatchedActionInformation</string>
+          <string>Products.CMFCore.ActionInformation</string>
+          <string>ActionInformation</string>
         </tuple>
         <none/>
       </tuple>
