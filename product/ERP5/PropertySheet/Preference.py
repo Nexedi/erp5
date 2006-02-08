@@ -49,5 +49,10 @@ class Preference :
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},
+    { 'id'          : 'preferred_money_quantity_style',
+      'description' : 'The style of money quantities.',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : 'w'},
   )
 
