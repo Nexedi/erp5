@@ -1059,6 +1059,8 @@ def setDefaultProperties(property_holder, object=None):
         if prop.get('range', 0):
           for value in ('min', 'max'):
             range_prop = prop.copy()
+            if 'storage_id' in range_prop:
+              del range_prop['storage_id']
             if range_prop.get('acquisition_accessor_id', 0):
               range_prop['acquisition_accessor_id'] = '%sRange%s' % (range_prop['acquisition_accessor_id'],  value.capitalize())
             range_prop['alt_accessor_id'] = ('get' + convertToUpperCase(prop['id']),)
