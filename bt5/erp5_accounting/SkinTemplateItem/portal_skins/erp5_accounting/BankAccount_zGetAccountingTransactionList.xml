@@ -134,18 +134,18 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>getUid</string>
-                            <string>getParentUid</string>
-                            <string>query</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>resource_uid</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>to_date</string>
-                            <string>transaction_simulation_state</string>
-                            <string>node_uid</string>
-                            <string>stat</string>
+<string>getUid</string>
+<string>getParentUid</string>
+<string>query</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>resource_uid</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>transaction_simulation_state</string>
+<string>node_uid</string>
+<string>stat</string>
                           </list>
                         </value>
                     </item>
@@ -222,34 +222,35 @@ stat</string> </value>
 <dtml-if getParentUid>\n
 SELECT\n
 <dtml-if stat>\n
-  SUM(stock.total_price) AS quantity\n
+  SUM(stock.quantity) AS quantity\n
 <dtml-else>\n
     catalog.uid\n
   , catalog.path\n
   , stock.date as date\n
   , section.title as section_title\n
   , IF(delivery.source_section_uid = stock.section_uid,\n
-       catalog.source_reference, catalog.destination_reference) AS specific_reference\n
-  , IFNULL(SUM(IF(stock.total_price > 0, stock.total_price, 0)), 0) AS debit\n
-  , IFNULL(SUM(IF(stock.total_price < 0, - stock.total_price, 0)), 0) AS credit\n
-  , - IFNULL(SUM(IF(stock.total_price < 0, - stock.total_price, 0)), 0)\n
-    + IFNULL(SUM(IF(stock.total_price > 0, stock.total_price, 0)), 0) AS balance\n
+       catalog.source_reference,\n
+       catalog.destination_reference) AS specific_reference\n
+  , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS debit\n
+  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0) AS credit\n
+ , - IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0)\n
+    + IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS balance  \n
 </dtml-if>\n
 FROM\n
   movement\n
-  , stock\n
   , catalog AS child\n
   , catalog\n
   , catalog AS node\n
   , category AS node_category\n
-  , catalog AS section\n
   , delivery\n
+  , stock\n
+  LEFT JOIN catalog AS section\n
+     ON stock.mirror_section_uid = section.uid\n
 <dtml-if query>\n
   , category\n
 </dtml-if>\n
 WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND stock.payment_uid = <dtml-var getUid>\n
-  AND stock.mirror_section_uid = section.uid\n
   AND delivery.uid = catalog.uid\n
   AND child.uid = stock.uid\n
   AND child.parent_uid = catalog.uid\n
@@ -258,7 +259,7 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND node.uid = stock.node_uid\n
   AND node.uid = node_category.uid\n
   AND node_category.category_uid = <dtml-sqlvar\n
-          "portal_categories.account_type.asset.cash.getUid()"  type="int">\n
+          "portal_categories.account_type.asset.cash.bank.getUid()"  type="int">\n
 <dtml-if node_uid>\n
   AND (\n
   <dtml-in node_uid>\n
@@ -285,10 +286,10 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
-  AND stock.total_price > 0\n
+  AND stock.quantity > 0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
-  AND stock.total_price < 0\n
+  AND stock.quantity < 0\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
@@ -348,34 +349,35 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
 <dtml-if getParentUid>\n
 SELECT\n
 <dtml-if stat>\n
-  SUM(stock.total_price) AS quantity\n
+  SUM(stock.quantity) AS quantity\n
 <dtml-else>\n
     catalog.uid\n
   , catalog.path\n
   , stock.date as date\n
   , section.title as section_title\n
   , IF(delivery.source_section_uid = stock.section_uid,\n
-       catalog.source_reference, catalog.destination_reference) AS specific_reference\n
-  , IFNULL(SUM(IF(stock.total_price > 0, stock.total_price, 0)), 0) AS debit\n
-  , IFNULL(SUM(IF(stock.total_price < 0, - stock.total_price, 0)), 0) AS credit\n
-  , - IFNULL(SUM(IF(stock.total_price < 0, - stock.total_price, 0)), 0)\n
-    + IFNULL(SUM(IF(stock.total_price > 0, stock.total_price, 0)), 0) AS balance\n
+       catalog.source_reference,\n
+       catalog.destination_reference) AS specific_reference\n
+  , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS debit\n
+  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0) AS credit\n
+ , - IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0)\n
+    + IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS balance  \n
 </dtml-if>\n
 FROM\n
   movement\n
-  , stock\n
   , catalog AS child\n
   , catalog\n
   , catalog AS node\n
   , category AS node_category\n
-  , catalog AS section\n
   , delivery\n
+  , stock\n
+  LEFT JOIN catalog AS section\n
+     ON stock.mirror_section_uid = section.uid\n
 <dtml-if query>\n
   , category\n
 </dtml-if>\n
 WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND stock.payment_uid = <dtml-var getUid>\n
-  AND stock.mirror_section_uid = section.uid\n
   AND delivery.uid = catalog.uid\n
   AND child.uid = stock.uid\n
   AND child.parent_uid = catalog.uid\n
@@ -384,7 +386,7 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND node.uid = stock.node_uid\n
   AND node.uid = node_category.uid\n
   AND node_category.category_uid = <dtml-sqlvar\n
-          "portal_categories.account_type.asset.cash.getUid()"  type="int">\n
+          "portal_categories.account_type.asset.cash.bank.getUid()"  type="int">\n
 <dtml-if node_uid>\n
   AND (\n
   <dtml-in node_uid>\n
@@ -411,10 +413,10 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
   AND stock.date < <dtml-sqlvar to_date type="datetime">\n
 </dtml-if>\n
 <dtml-if omit_input>\n
-  AND stock.total_price > 0\n
+  AND stock.quantity > 0\n
 </dtml-if>\n
 <dtml-if omit_output>\n
-  AND stock.total_price < 0\n
+  AND stock.quantity < 0\n
 </dtml-if>\n
 <dtml-if transaction_simulation_state>\n
   AND (\n
