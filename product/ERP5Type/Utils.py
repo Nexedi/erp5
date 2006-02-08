@@ -1059,6 +1059,7 @@ def setDefaultProperties(property_holder, object=None):
         if prop.get('range', 0):
           for value in ('min', 'max'):
             range_prop = prop.copy()
+            del range_prop['range']
             if 'storage_id' in range_prop:
               del range_prop['storage_id']
             if range_prop.get('acquisition_accessor_id', 0):
