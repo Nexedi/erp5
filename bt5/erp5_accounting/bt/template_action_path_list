@@ -30,6 +30,7 @@ Accounting Transaction Line | print
 Accounting Transaction Line | view
 Accounting Transaction Module | account_statement_report
 Accounting Transaction Module | bank_accounts_report
+Accounting Transaction Module | cancel_transactions
 Accounting Transaction Module | close_accounting_period
 Accounting Transaction Module | close_transactions
 Accounting Transaction Module | confirm_transactions
