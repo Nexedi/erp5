@@ -37,6 +37,7 @@ class Reference:
             'storage_id'  : 'default_reference', # Compatibility
             'description' : 'The absolute references of the document (our reference)',
             'type'        : 'string',
+            'range'       : True,
             'mode'        : 'w' },
         # WARNING: the naming is wrong because it conflicts with getSourceReference
         # which returns the reference of the source. Must be renamed as
