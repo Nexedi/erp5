@@ -253,7 +253,7 @@ selection_uids:list</string> </value>
 
 SELECT\n
   IFNULL(COUNT(DISTINCT stock.uid), 0) AS count,\n
-  IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
+  IFNULL(SUM(stock.quantity), 0.00) AS quantity,\n
   IFNULL(SUM(stock.total_price), 0.00) AS total_price\n
   \n
 FROM\n
@@ -399,7 +399,7 @@ WHERE\n
 
 SELECT\n
   IFNULL(COUNT(DISTINCT stock.uid), 0) AS count,\n
-  IFNULL(SUM(stock.quantity), 0.00) AS quantity\n
+  IFNULL(SUM(stock.quantity), 0.00) AS quantity,\n
   IFNULL(SUM(stock.total_price), 0.00) AS total_price\n
   \n
 FROM\n
