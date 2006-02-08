@@ -95,8 +95,6 @@ params =  {\n
             \'section_category\' : transaction_section_category,\n
             \'simulation_state\' :  transaction_simulation_state,\n
             \'report_depth\' : 5,\n
-            \'node_category\': [ \'account_type/asset/receivable\',\n
-                               \'account_type/liability/payable\' ]\n
           }\n
 \n
 params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
@@ -118,6 +116,19 @@ entity_columns = [\n
                        (\'credit\', \'Credit\'),\n
                        (\'net_balance\', \'Balance\'),\n
 ]\n
+\n
+# build a list of all accounts which _strictly_ belongs to categories \n
+# receivable or payable, to prepare parameter to the getInventory which\n
+# will tell wether this third party account is balanced or not.\n
+valid_node_uids = []\n
+if omit_balanced_accounts :\n
+  for account in portal.portal_categories.resolveCategory(\'account_type/asset/receivable\'\n
+                ).getAccountTypeRelatedValueList(strict_membership = 1, portal_type = "Account") :\n
+    valid_node_uids.append(account.getUid())\n
+  for account in portal.portal_categories.resolveCategory(\'account_type/liability/payable\'\n
+                ).getAccountTypeRelatedValueList(strict_membership = 1, portal_type = "Account") :\n
+    valid_node_uids.append(account.getUid())\n
+\n
 if not params[\'hide_grouping\']  :\n
   entity_columns.append((\'grouping_reference\',\n
                          \'Grouping Reference\'))\n
@@ -133,8 +144,9 @@ for party in context.Account_zDistinctSectionList():\n
     group = ""\n
   if group != transaction_section_category :\n
         # don\'t show entities belonging to the group we are reporting\n
-    if omit_balanced_accounts and simulation_tool.getInventoryAssetPrice(\n
-                    mirror_section_uid=party.getUid(), **params) == 0 :\n
+\n
+    if omit_balanced_accounts and (simulation_tool.getInventoryAssetPrice(\n
+                    mirror_section_uid=o.uid, node_uid = valid_node_uids, **params) == 0) :\n
       pass\n
     else :\n
       if hasattr(o, \'getRole\') and o.getRole() :\n
@@ -228,7 +240,9 @@ return result\n
                             <string>portal</string>
                             <string>simulation_tool</string>
                             <string>entity_columns</string>
+                            <string>valid_node_uids</string>
                             <string>_getiter_</string>
+                            <string>account</string>
                             <string>party</string>
                             <string>o</string>
                             <string>hasattr</string>
