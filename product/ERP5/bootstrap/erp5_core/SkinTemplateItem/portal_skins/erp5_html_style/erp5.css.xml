@@ -522,8 +522,12 @@ td.ModuleShortcut p{\n
  font-style: normal;\n
 }\n
 \n
-</dtml-with>\n
+/* figure decoration */\n
+.figure {\n
+  text-align: right;\n
+}\n
 \n
+</dtml-with>\n
 
 
 ]]></string> </value>

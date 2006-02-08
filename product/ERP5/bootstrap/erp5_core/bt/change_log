@@ -1,3 +1,7 @@
+2006-02-08 yo
+* Add .figure into erp5.css.
+* Add Base_FieldLibrary into the skin folder.
+
 2006-02-08 aurel
 * modify TemplateTool_viewMultiInstallationDialog and TemplateTool_getModifiedObjectList
 
