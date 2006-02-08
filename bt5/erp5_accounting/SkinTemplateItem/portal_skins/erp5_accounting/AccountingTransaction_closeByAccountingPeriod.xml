@@ -78,8 +78,9 @@ try : \n
                      comment=comment )\n
 except ValidationFailed, message :\n
   closing_period = context.getPortalObject().restrictedTraverse(closing_period_path)\n
-  closing_period.failClosing()\n
-  closing_period.portal_workflow.doActionFor( closing_period,\n
+  if closing_period.getSimulationState() != \'confirmed\' :\n
+    closing_period.failClosing()\n
+    closing_period.portal_workflow.doActionFor( closing_period,\n
                      \'edit_action\', \n
                      comment=N_(\'unable to deliver ${transaction_path} : ${error_message}\',\n
                        mapping={\'transaction_path\':context.getPath(),\n
@@ -94,7 +95,7 @@ except ValidationFailed, message :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransaction_closeByAccountingPeriod</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransaction_closeByAccountingPeriod</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
