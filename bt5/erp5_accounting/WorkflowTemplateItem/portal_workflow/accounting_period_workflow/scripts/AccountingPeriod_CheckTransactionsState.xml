@@ -90,7 +90,8 @@ for transaction in transaction_list :\n
   # we only take into account transaction that are related to this\n
   # organisation. \n
   # FIXME: this approach is not compatible with categories as section.\n
-  # FIXME: and not compatible with 100 000 transactions.\n
+  # FIXME: and not compatible with 100 000 transactions, but as we only search\n
+  # for draft, planned or confirmed transactions, it should be ok.\n
   if transaction.getSourceSectionUid() == organisation_section.getUid() or \\\n
      transaction.getDestinationSectionUid() == organisation_section.getUid() :\n
     if transaction.getSimulationState() not in valid_states :\n
