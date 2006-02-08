@@ -68,66 +68,96 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-"""Validates the transaction from the source section.\n
-Currently only works for \n
+"""Validates the transaction for both source and destination section.\n
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-error_message = \'\'\n
 \n
 transaction = state_change[\'object\']\n
-skip_period_validation = state_change[\'kwargs\'].get(\'skip_period_validation\', 0)\n
+N_ = transaction.Base_translateString\n
+def raiseError(msg) :\n
+  raise ValidationFailed(N_(msg))\n
+\n
+# do we have to check transaction is in openned periods ?\n
+skip_period_validation = state_change[\'kwargs\'].get(\n
+                              \'skip_period_validation\', 0)\n
 transition = state_change[\'transition\']\n
 if transition.id in (\'plan_action\', \'confirm_action\') :\n
   skip_period_validation = 1\n
 \n
-N_ = transition.Base_translateString\n
+# do we have to care about destination section ?\n
+check_destination = (transaction.getPortalType() in transaction.getPortalInvoiceTypeList())\n
 \n
 # Get sections and a currency.\n
 source_section = transaction.getSourceSectionValue(\n
-            portal_type = [\'Organisation\',\'Category\'])\n
-if source_section and source_section.getPortalType() != \'Organisation\' :\n
+            portal_type = [\'Organisation\', \'Person\', \'Category\'])\n
+if source_section is not None and \\\n
+            source_section.getPortalType() == \'Category\' :\n
   source_section = source_section.getMappingRelatedValue(\n
             portal_type = \'Organisation\')\n
 if source_section is None:\n
-  raise ValidationFailed, N_(\n
-      \'Action impossible : Source Section is not Defined.\')\n
-  \n
-destination_section = transaction.getDestinationSection(\n
-            portal_type = [\'Organisation\', \'Person\'])\n
-# if it\'s not an invoice, then we can validate without destination.\n
-if destination_section is None and \\\n
-    transaction.getPortalType() in transaction.getPortalInvoiceTypeList() :\n
-  raise ValidationFailed, N_(\n
-      \'Action impossible : Destination Section is not Defined.\')\n
+  raiseError(\'Source Section is not Defined.\')\n
+\n
+destination_section = transaction.getDestinationSectionValue(\n
+       portal_type = [\'Organisation\', \'Person\', \'Category\'])\n
+if destination_section is not None and \\\n
+       destination_section.getPortalType() == \'Category\' :\n
+  destination_section = destination_section.getMappingRelatedValue(\n
+            portal_type = \'Organisation\')\n
+# if it\'s not an invoice, then we can validate without destination\n
+if destination_section is None and check_destination :\n
+  raiseError(\'Destination Section is not Defined.\')\n
 \n
 currency = transaction.getResource()\n
 if not currency :\n
-  raise ValidationFailed, N_(\n
-      \'Action impossible : Currency is not Defined.\')\n
+  raiseError(\'Currency is not Defined.\')\n
 \n
-if transaction.getStopDate() in (None, \'\') :\n
-  error_message = \'date is not defined\'\n
+if transaction.getStartDate() in (None, \'\') :\n
+  raiseError(\'date is not Defined\')\n
 else:\n
   if not skip_period_validation :\n
     valid_date = 0\n
     # check the date is in an opened period\n
-    transaction_date = DateTime( transaction.getStopDate().year(),\n
-                                 transaction.getStopDate().month(),\n
-                                 transaction.getStopDate().day(),\n
+    transaction_date = DateTime( transaction.getStartDate().year(),\n
+                                 transaction.getStartDate().month(),\n
+                                 transaction.getStartDate().day(),\n
                                  # we don\'t care about hour:minutes\n
                                )\n
-    for apd in source_section.searchFolder(\n
-         portal_type = "Accounting Period",\n
-         simulation_state = "planned") :\n
+    openned_accounting_period_list = source_section.searchFolder(\n
+                               portal_type = "Accounting Period",\n
+                               simulation_state = "planned")\n
+    if len(openned_accounting_period_list) == 0 :\n
+      # if the entity doesn\'t have any accounting period, we can\n
+      # consider that they do not want to use accounting periods or\n
+      # we do not account from their side.\n
+      valid_date = 1\n
+    for apd in openned_accounting_period_list:\n
       apd = apd.getObject()\n
       if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
         valid_date = 1\n
     if not valid_date :\n
-      error_message = "Date is not in an openned Accounting Period"\n
-\n
-if error_message :\n
-  raise ValidationFailed, N_(\'Action impossible : \' + error_message)\n
+      raiseError("Date is not in an openned Accounting Period "\n
+                 "for source section")\n
+    # do the same for destination section \n
+    if check_destination :\n
+      valid_date = 0\n
+      transaction_date = DateTime( transaction.getStopDate().year(),\n
+                                   transaction.getStopDate().month(),\n
+                                   transaction.getStopDate().day(),\n
+                                   # we don\'t care about hour:minutes\n
+                                 )\n
+      openned_accounting_period_list = destination_section.searchFolder(\n
+                                 portal_type = "Accounting Period",\n
+                                 simulation_state = "planned")\n
+      if len(openned_accounting_period_list) == 0:\n
+        valid_date = 1\n
+      for apd in openned_accounting_period_list:\n
+        apd = apd.getObject()\n
+        if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
+          valid_date = 1\n
+      if not valid_date :\n
+        raiseError("Date is not in an openned Accounting Period "+\n
+                   "for destination section")\n
 
 
 ]]></string> </value>
@@ -197,13 +227,14 @@ if error_message :\n
                             <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>error_message</string>
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
+                            <string>N_</string>
+                            <string>raiseError</string>
                             <string>skip_period_validation</string>
                             <string>transition</string>
-                            <string>N_</string>
+                            <string>check_destination</string>
                             <string>source_section</string>
                             <string>None</string>
                             <string>destination_section</string>
@@ -211,6 +242,8 @@ if error_message :\n
                             <string>valid_date</string>
                             <string>DateTime</string>
                             <string>transaction_date</string>
+                            <string>openned_accounting_period_list</string>
+                            <string>len</string>
                             <string>_getiter_</string>
                             <string>apd</string>
                           </tuple>
