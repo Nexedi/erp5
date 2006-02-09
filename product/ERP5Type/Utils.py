@@ -203,7 +203,7 @@ def pathToUid(list):
   pass
 
 # Path
-def getPath(object_or_path,tuple=0):
+def getPath(object_or_path, **kw):
     """
     Returns the absolute path of an object
     """
@@ -214,7 +214,7 @@ def getPath(object_or_path,tuple=0):
     else:
       path = object_or_path.getPhysicalPath()
       path = '/'.join(path)
-    if tuple:
+    if kw.get('tuple'):
       return path.split('/')
     return path
 
