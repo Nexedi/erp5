@@ -192,7 +192,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
                                     property_sheet_definition_dict.items():
         if hasattr(base, ps_property_name):
           ps_property = getattr(base, ps_property_name)
-          if type(ps_property) in (type(()), type([])):
+          if isinstance(ps_property, (tuple, list)):
             current_list += ps_property
           else :
             raise ValueError, "%s is not a list for %s" % (ps_property_name,
@@ -590,7 +590,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     from Globals import get_request
     TRANSACTION = get_transaction()
     if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
-    if type(portal_type) is type([]):
+    if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
@@ -640,7 +640,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         if value is None:
           result = None
         else:
-          if type(value) is type([]) or type(value) is type(()):
+          if isinstance(value, (list, tuple)):
             if len(value) is 0:
               result = None
             else:
@@ -666,7 +666,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
             result = method()
             if result is not None:
               if is_list_type:
-                if type(result) is type([]) or type(result) is type(()):
+                if isinstance(result, (list, tuple)):
                   # We must provide the first element of the alternate result
                   if len(result) > 0:
                     # Pop context
@@ -734,7 +734,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         if accessor_id is None:
           if is_list_type:
             result = super.getPropertyList(key)
-            if type(result) is type([]) or type(result) is type(()):
+            if isinstance(result, (list, tuple)):
               value += result
             else:
               value += [result]
@@ -744,7 +744,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           method = getattr(super, accessor_id)
           if is_list_type:
             result = method() # We should add depends here
-            if type(result) is type([]) or type(result) is type(()):
+            if isinstance(result, (list, tuple)):
               value += result
             else:
               value += [result]
@@ -881,7 +881,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _setPropValue(self, key, value, **kw):
     #LOG('_setPropValue', 0, 'self = %r, key = %r, value = %r, kw = %r' % (self, key, value, kw))
     self._wrapperCheck(value)
-    if type(value) == type([]):
+    if isinstance(value, list):
       value = tuple(value)
     accessor_name = '_set' + UpperCase(key)
     aq_self = aq_base(self)
@@ -1097,7 +1097,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       TODO:
         - strict_membership is not implemented
     """
-    if type(base_category) is type('a'):
+    if isinstance(base_category, str):
       base_category = self.portal_categories[base_category]
     if base_category is None:
       sql_text = '(%s.category_uid = %s)' % \
@@ -1276,14 +1276,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _setValue(self, id, target, spec=(), filter=None, portal_type=()):
     if target is None :
       path = target
-    elif type(target) is type('a'):
+    elif isinstance(target, str):
       # We have been provided a string
       path = target
-    elif type(target) is type(('a','b')) or type(target) is type(['a','b']):
+    elif isinstance(target, (tuple, list)):
       # We have been provided a list or tuple
       path_list = []
       for target_item in target:
-        if type(target_item) is type('a'):
+        if isinstance(target_item, str):
           path_list += [target_item]
         else:
           path = target_item.getRelativeUrl()
@@ -2082,7 +2082,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       if hasattr(self,permission_name):
         delattr(self,permission_name)
     else:
-      if type(local_permission_list) is type('a'):
+      if isinstance(local_permission_list, str):
         local_permission_list = (local_permission_list,)
       setattr(self,permission_name,tuple(local_permission_list))
 

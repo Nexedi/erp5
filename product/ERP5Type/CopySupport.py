@@ -63,9 +63,7 @@ class CopyContainer:
       elif uids is None:
           raise ValueError, 'uids must be specified'
 
-      if type(uids) is type(''):
-          ids=[uids]
-      if type(uids) is type(1):
+      if isinstance(uids, (str, int)):
           ids=[uids]
       oblist=[]
       for uid in uids:
@@ -130,9 +128,7 @@ class CopyContainer:
       elif uids is None:
           raise ValueError, 'uids must be specified'
 
-      if type(uids) is type(''):
-          ids=[uids]
-      if type(uids) is type(1):
+      if isinstance(uids, (str, int)):
           ids=[uids]
       oblist=[]
       for uid in uids:
@@ -162,8 +158,8 @@ class CopyContainer:
       if len(ids) > 0:
         # Use default method
         return ObjectManager.manage_delObjects(self, ids, REQUEST)
-      if type(uids) is type(''): ids=[uids]
-      if type(uids) is type(1): ids=[uids]
+      if isinstance(uids, (str, int)):
+        ids=[uids]
       if not uids:
           return MessageDialog(title='No items specified',
                  message='No items were specified!',

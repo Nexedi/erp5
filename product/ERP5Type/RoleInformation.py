@@ -54,7 +54,7 @@ class RoleInformation( SimpleItem ):
                 ):
         """ Set up an instance.
         """
-        if condition and type( condition ) == type( '' ):
+        if condition and isinstance(condition, str):
             condition = Expression( condition )
 
         self.id = id

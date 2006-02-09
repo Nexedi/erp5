@@ -70,12 +70,12 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
   """Sort values in a way compatible with ZSQLCatalog.
   """
   if sort_on is not None:
-    if type(sort_on) == type(''):
+    if isinstance(sort_on, str):
       sort_on = (sort_on,)
     reverse = (sort_order in ('descending', 'reverse', 'DESC'))
     new_sort_on = []
     for key in sort_on:
-      if type(key) == type(''):
+      if isinstance(key, str):
         new_sort_on.append((key, reverse, None))
       else:
         if len(key) == 1:
@@ -207,9 +207,9 @@ def getPath(object_or_path,tuple=0):
     """
     Returns the absolute path of an object
     """
-    if type(object_or_path) in (type([]), type(())):
+    if isinstance(object_or_path, (list, tuple)):
       path = '/'.join(object_or_path)
-    elif type(object_or_path) is type('a'):
+    elif isinstance(object_or_path, str):
       path = object_or_path
     else:
       path = object_or_path.getPhysicalPath()
@@ -393,7 +393,7 @@ base_category_dict = {}
 def registerBaseCategories(property_sheet):
   global base_category_dict
   category_list = getattr(property_sheet, '_categories', ())
-  if type(category_list) is type('') :
+  if isinstance(category_list, str):
     category_list = (category_list,)
   for bc in category_list :
     #LOG('registerBaseCategories', 0, 'bc = %r in %s' % (bc, property_sheet))
@@ -692,7 +692,7 @@ def importLocalDocument(class_id, document_path = None):
   pr=PermissionRole(document_class.add_permission, default_permission)
   m[initial.__name__+'__roles__']=pr
   for method in constructors[1:]:
-    if type(method) is type((1,2)):
+    if isinstance(method, tuple):
       name, method = method
     else:
       name=os.path.split(method.__name__)[-1]
@@ -1009,7 +1009,7 @@ def setDefaultProperties(property_holder, object=None):
           # Copy the dict so that Expression objects are not overwritten.
           prop_list.append(prop.copy())
         if hasattr(base, '_categories'):
-          if type(base._categories) in (type(()), type([])):
+          if isinstance(base._categories, (tuple, list)):
             cat_list += base._categories
           else:
             cat_list += [base._categories]
@@ -1025,7 +1025,7 @@ def setDefaultProperties(property_holder, object=None):
     for cat in cat_list:
       if isinstance(cat, Expression):
         result = cat(econtext)
-        if type(result) in (type(()), type([])):
+        if isinstance(result, (tuple, list)):
           new_cat_list.extend(result)
         else:
           new_cat_list.append(result)
@@ -1117,7 +1117,7 @@ def setDefaultProperties(property_holder, object=None):
       for cat in base_category_dict.keys():
         if isinstance(cat, Expression):
           result = cat(econtext)
-          if type(result) in (type(()), type([])):
+          if isinstance(result, (list, tuple)):
             base_category_list.extend(result)
           else:
             base_category_list.append(result)
@@ -2601,7 +2601,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
       #  o._delObject(attribute_name)
     if hasattr(o,attribute_name):
       try:
-        if type(portal_type) is type('a'): portal_type = [portal_type]
+        if isinstance(portal_type, str): portal_type = [portal_type]
         if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
       except (KeyError, AttributeError):
