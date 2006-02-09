@@ -39,7 +39,10 @@ from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import sortValueList
 
-from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
+try:
+  from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
+except ImportError:
+  from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 from AccessControl import getSecurityManager
 from Products.ERP5Type import Permissions
 
