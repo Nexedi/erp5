@@ -189,7 +189,7 @@ class SimulationTool (BaseTool):
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
         input_simulation_state = None, output_simulation_state=None,
         variation_text=None, sub_variation_text=None,
-        variation_category=None,is_accountable=None,
+        variation_category=None,
         **kw) :
       """
       generates keywork and calls buildSqlQuery
@@ -220,9 +220,6 @@ class SimulationTool (BaseTool):
       resource_uid_list = self._generatePropertyUidList(resource)
       if len(resource_uid_list) :
         new_kw[table + '.resource_uid'] = resource_uid_list
-
-      if is_accountable is not None:
-        new_kw[table + '.is_accountable'] = is_accountable
 
       node_uid_list = self._generatePropertyUidList(node)
       if len(node_uid_list) :
@@ -409,8 +406,6 @@ class SimulationTool (BaseTool):
       omit_input
 
       omit_output
-
-      is_accountable - 0 or 1. Select only movement from deliveries, not orders
 
       selection_domain, selection_report - see ListBox
 
