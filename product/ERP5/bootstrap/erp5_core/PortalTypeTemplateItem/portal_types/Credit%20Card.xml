@@ -37,6 +37,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -58,8 +62,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>\n
-      A bank account number holds a collection of numbers and codes\n
+            <value> <string>      A bank account number holds a collection of numbers and codes\n
         (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.\n
 \n
       A Bank Account is owned by a Person or an Organisation. A Bank Account\n
@@ -74,6 +77,18 @@
             <value> <string>addBankAccount</string> </value>
         </item>
         <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>payment_node</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
               <tuple/>
@@ -84,10 +99,18 @@
             <value> <string>Credit Card</string> </value>
         </item>
         <item>
+            <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>property_sheet_list</string> </key>
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

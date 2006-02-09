@@ -83,7 +83,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>payment_node</string>
+              </tuple>
             </value>
         </item>
         <item>
