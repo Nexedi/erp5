@@ -137,7 +137,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
       'accounting_transaction', 'accounting_movement', 'alarm', 'balance_transaction_line',
       'container', 'container_line', 'delivery', 'delivery_movement',
       'discount', 'invoice', 'invoice_movement', 'item',
-      'order', 'order_movement', 'node', 'payment_condition',
+      'order', 'order_movement', 'node', 'payment_node', 'payment_condition',
       'resource', 'supply', 'transformation', 'variation',
       'sub_variation'
     )
