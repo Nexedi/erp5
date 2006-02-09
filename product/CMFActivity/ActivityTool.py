@@ -46,6 +46,7 @@ import threading
 import sys
 from ZODB.POSException import ConflictError
 from OFS.Traversable import NotFound
+from types import TupleType, StringType
 
 from zLOG import LOG, INFO, WARNING
 
@@ -77,11 +78,11 @@ def registerActivity(activity):
 class Message:
 
   def __init__(self, object, active_process, activity_kw, method_id, args, kw):
-    if type(object) is type('a'):
+    if type(object) is StringType:
       self.object_path = object.split('/')
     else:
       self.object_path = object.getPhysicalPath()
-    if type(active_process) is type('a'):
+    if type(active_process) is StringType:
       self.active_process = active_process.split('/')
     elif active_process is None:
       self.active_process = None
@@ -558,7 +559,7 @@ class ActivityTool (Folder, UniqueObject):
       global is_initialized
       if not is_initialized: self.initialize()
       if not hasattr(self, '_v_activity_buffer'): self._v_activity_buffer = ActivityBuffer()
-      if type(object) is type(()):
+      if type(object) is TupleType:
         object_path = object
       else:
         object_path = object.getPhysicalPath()
