@@ -325,7 +325,7 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             factory.manage_addERP5Site(portal_name,light_install=light_install,
                 reindex=reindex,create_activities=create_activities)
             # Release locks
-            #get_transaction().commit()
+            get_transaction().commit()
             portal=app[portal_name]
             # Remove all local PropertySheets, Documents
             for id in getLocalPropertySheetList():
@@ -341,8 +341,10 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               #portal.portal_templates.download('%s.zexp' % id, id=id)
               portal.portal_templates.download(url, id=id)
               portal.portal_templates[id].install(light_install=light_install)
+              #from ZODB.utils import oid_repr, readable_tid_repr
+              #print 'portal._p_oid = %r, portal._p_serial = %r' % (oid_repr(portal._p_oid), readable_tid_repr(portal._p_serial))
               # Release locks
-              #get_transaction().commit()
+              get_transaction().commit()
             # Enbable reindexing
             # Do hot reindexing # Does not work
             if hot_reindexing:
@@ -352,10 +354,14 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             get_transaction().commit()
             portal_activities = getattr(portal,'portal_activities',None)
             if portal_activities is not None:
+              count = 1000
               while len(portal_activities.getMessageList()) > 0:
                 portal_activities.distribute()
                 portal_activities.tic()
                 get_transaction().commit()
+                count -= 1
+                if count == 0:
+                  raise RuntimeError, 'tic is looping forever. These messages are pending: %r' % ([('/'.join(m.object_path), m.method_id, m.processing_node, m.priority) for m in portal_activities.getMessageList()],)
             # Reset aq dynamic, so all unit tests will start again
             from Products.ERP5Type.Base import _aq_reset
             _aq_reset()
@@ -367,6 +373,7 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
           finally:
             get_transaction().commit()
             ZopeTestCase.close(app)
+            pass
     except:
       f = StringIO()
       traceback.print_exc(file=f)
