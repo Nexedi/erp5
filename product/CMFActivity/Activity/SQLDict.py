@@ -35,6 +35,7 @@ from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_
 from ZODB.POSException import ConflictError
 import sys
 import sha
+from types import ClassType, StringType, ListType, TupleType
 
 try:
   from transaction import get as get_transaction
@@ -325,7 +326,7 @@ class SQLDict(RAMDict):
                   # No more activity
                   m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
             else:
-              if issubclass(m.exc_type, ConflictError):
+              if type(m.exc_type) is ClassType and issubclass(m.exc_type, ConflictError):
                 # If this is a conflict error, do not lower the priority but only delay.
                 activity_tool.SQLDict_setPriority(uid = uid_list, delay = VALIDATION_ERROR_DELAY,
                                                   retry = 1)
@@ -487,7 +488,7 @@ class SQLDict(RAMDict):
   # Validation private methods
   def _validate_after_method_id(self, activity_tool, message, value):
     # Count number of occurances of method_id
-    if type(value) == type(''):
+    if type(value) is StringType:
       value = [value]
     if len(value)>0: # if empty list provided, the message is valid
       result = activity_tool.SQLDict_validateMessageList(method_id=value, message_uid=None, path=None)
@@ -497,7 +498,7 @@ class SQLDict(RAMDict):
 
   def _validate_after_path(self, activity_tool, message, value):
     # Count number of occurances of path
-    if type(value) == type(''):
+    if type(value) is StringType:
       value = [value]
     if len(value)>0: # if empty list provided, the message is valid
       result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, path=value)
@@ -514,14 +515,14 @@ class SQLDict(RAMDict):
 
   def _validate_after_path_and_method_id(self, activity_tool, message, value):
     # Count number of occurances of path and method_id
-    if (type(value) != type ( (0,) ) and type(value) != type([])) or len(value)<2:
+    if (type(value) != TupleType and type(value) != ListType) or len(value)<2:
       LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_path_and_method_id : %s' % repr(value))
       return VALID
     path = value[0]
     method = value[1]
-    if type(path) == type(''):
+    if type(path) is StringType:
       path = [path]
-    if type(method) == type(''):
+    if type(method) is StringType:
       method = [method]
     result = activity_tool.SQLDict_validateMessageList(method_id=method, message_uid=None, path=path)
     if result[0].uid_count > 0:
@@ -530,7 +531,7 @@ class SQLDict(RAMDict):
 
   def _validate_after_tag(self, activity_tool, message, value):
     # Count number of occurances of tag
-    if type(value) == type(''):
+    if type(value) is StringType:
       value = [value]
     result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, tag=value)
     if result[0].uid_count > 0:
@@ -539,14 +540,14 @@ class SQLDict(RAMDict):
     
   def _validate_after_tag_and_method_id(self, activity_tool, message, value):
     # Count number of occurances of tag and method_id
-    if (type(value) != type ( (0,) ) and type(value) != type([])) or len(value)<2:
+    if (type(value) != TupleType and type(value) != ListType) or len(value)<2:
       LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_tag_and_method_id : %s' % repr(value))
       return VALID
     tag = value[0]
     method = value[1]
-    if type(tag) == type(''):
+    if type(tag) is StringType:
       tag = [tag]
-    if type(method) == type(''):
+    if type(method) is StringType:
       method = [method]
     result = activity_tool.SQLDict_validateMessageList(method_id=method, message_uid=None, tag=tag)
     if result[0].uid_count > 0:
