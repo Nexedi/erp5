@@ -622,7 +622,7 @@ class SimulationTool (BaseTool):
       total_result = 0.0
       if len(result) > 0:
         for result_line in result:
-          if result_line.inventory is not None:
+          if result_line.total_price is not None:
             total_result += result_line.total_price
       
       return total_result
