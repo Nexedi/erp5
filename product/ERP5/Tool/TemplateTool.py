@@ -484,7 +484,7 @@ class TemplateTool (BaseTool):
                                       repository = repository, **property_dict)
         obj.setUid(uid)
         template_list.append(obj)
-        
+      template_list.sort(lambda x,y:cmp(x.getTitle(), y.getTitle()))
       return template_list
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getUpdatedRepositoryBusinessTemplateList' )
