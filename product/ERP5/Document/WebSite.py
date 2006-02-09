@@ -98,10 +98,13 @@ class WebSite(Domain):
         portal = self.getPortalObject()
         # Use the webmaster identity to find documents
         user = portal.acl_users.getUserById(self.getWebmaster())
-        newSecurityManager(get_request(), user)
-        document = self.WebSite_getDocument(portal, name)
-        self._v_allow_lookup[name] = document
-        setSecurityManager(old_manager)
+        if user is not None:
+          newSecurityManager(get_request(), user)
+          document = self.WebSite_getDocument(portal, name)
+          self._v_allow_lookup[name] = document
+          setSecurityManager(old_manager)
+        else:
+          document = None
       except:
         # Cleanup non recursion dict in case of exception
         if self._v_allow_lookup.has_key(name): del self._v_allow_lookup[name]
