@@ -473,13 +473,12 @@ class ActivityTool (Folder, UniqueObject):
       # else, increase the number of active_threads and continue
       tic_lock.acquire()
       too_many_threads = (active_threads >= max_active_threads)
-      if not too_many_threads:
+      if not too_many_threads or force:
         active_threads += 1
+      else:
+        tic_lock.release()
+        raise RuntimeError, 'Too many threads'
       tic_lock.release()
-
-      if too_many_threads :
-        if not force:
-          raise RuntimeError, 'Too many threads'
 
       # Initialize if needed
       if not is_initialized: self.initialize()
