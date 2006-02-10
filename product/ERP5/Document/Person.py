@@ -83,7 +83,8 @@ class Person(Entity, Node, XMLObject):
       if value != self.getTitle():
         self.title = value
 
-    security.declareProtected(Permissions.View, 'getTitle')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTitle')
     def getTitle(self, **kw):
       """
         Returns the title if it exists or a combination of
@@ -100,7 +101,6 @@ class Person(Entity, Node, XMLObject):
         return ' '.join(name_list)
       else:
         return self.title
-    Title = getTitle
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setTitle')
     def setTitle(self, value):
