@@ -63,13 +63,6 @@ class SQLDict(RAMDict):
     and provide sequentiality. Should not create conflict
     because use of OOBTree.
   """
-  def initialize(self, activity_tool):
-    if not self.is_initialized:
-      # If zope was stopped while activities where processed we must mark them
-      # as unprocessed, or they will be kept as zombies in the SQL table
-      activity_tool.SQLDict_clearProcessingFlag()
-      self.is_initialized = 1
-
   # Transaction commit methods
   def prepareQueueMessage(self, activity_tool, m):
     if m.is_registered:
