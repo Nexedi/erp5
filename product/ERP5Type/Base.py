@@ -2226,7 +2226,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     current = self
     while current is not None:
-      if current.hasLayout():
+      if hasattr(current, 'hasLayout') and current.hasLayout():
         return current.getLayout()
       current = current.getParentValue()
       if not hasattr(current, 'getApplicableLayout'):
