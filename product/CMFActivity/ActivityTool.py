@@ -62,6 +62,7 @@ active_threads = 0
 max_active_threads = 1 # 2 will cause more bug to appear (he he)
 is_initialized = 0
 tic_lock = threading.Lock() # A RAM based lock
+first_run = 1
 
 # Activity Registration
 activity_dict = {}
@@ -467,7 +468,7 @@ class ActivityTool (Folder, UniqueObject):
         Starts again an activity
         processing_node starts from 1 (there is not node 0)
       """
-      global active_threads, is_initialized
+      global active_threads, is_initialized, first_run
 
       # return if the number of threads is too high
       # else, increase the number of active_threads and continue
@@ -482,6 +483,13 @@ class ActivityTool (Folder, UniqueObject):
 
       # Initialize if needed
       if not is_initialized: self.initialize()
+
+      # If this is the first tic after zope is started, reset the processing
+      # flag for activities of this node
+      if first_run:
+        self.SQLDict_clearProcessingFlag(processing_node=processing_node)
+        self.SQLQueue_clearProcessingFlag(processing_node=processing_node)
+        first_run = 0
 
       try:
         # Wakeup each queue

@@ -7,10 +7,11 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params></params>
+<params>processing_node:int=-1</params>
 UPDATE
   message_queue
 SET
   processing="0"
 WHERE
   processing="1"
+  AND processing_node="<dtml-sqlvar processing_node type="int">"
