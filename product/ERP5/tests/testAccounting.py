@@ -68,6 +68,8 @@ class TestAccounting(ERP5TypeTestCase):
 
   account_portal_type           = 'Account'
   accounting_period_portal_type = 'Accounting Period'
+  accounting_transaction_portal_type = 'Accounting Transaction'
+  accounting_transaction_line_portal_type = 'Accounting Transaction Line'
   currency_portal_type          = 'Currency'
   organisation_portal_type      = 'Organisation'
   sale_invoice_portal_type      = 'Sale Invoice Transaction'
@@ -273,9 +275,68 @@ class TestAccounting(ERP5TypeTestCase):
                    income_account = income,
                    collected_vat_account = collected_vat,
                    refundable_vat_account = refundable_vat,
-                   bank = bank,
+                   bank_account = bank,
                    account_list = account_list )
 
+  
+  def stepCreateAccountingTransactionAndCheckMirrorAccount(self,
+                                          sequence, **kw):
+    """Check that mirror account are set automatically. """
+    account_list = sequence.get('account_list')
+    
+    for account in account_list :
+      self.assertNotEquals(account.getDestinationValue(), None)
+    
+    transaction = self.getAccountingModule().newContent(
+      portal_type = self.accounting_transaction_portal_type,
+      source_section_value = sequence.get('client'),
+      resource_value = sequence.get('EUR'),
+      bypass_init_script = 1,
+    )
+    
+    # setting both source and destination shouldn't use mirror accounts
+    destination = sequence.get('receivable_account')
+    for account in account_list :
+      transaction_line = transaction.newContent(
+        portal_type = self.accounting_transaction_line_portal_type,
+        source = account.getRelativeUrl(),
+        destination = destination.getRelativeUrl(),
+      )
+      self.assertEquals( destination.getRelativeUrl(),
+                         transaction_line.getDestination() )
+    
+    # setting only a source must use mirror account as destination
+    for account in account_list :
+      transaction_line = transaction.newContent(
+        portal_type = self.accounting_transaction_line_portal_type,
+        source = account.getRelativeUrl(),
+      )
+      self.assertEquals( account.getDestination(),
+                         transaction_line.getDestination() )
+    
+    # editing the destination later should not change the source once
+    # the mirror account has been set.
+    account = sequence.get('receivable_account')
+    destination = sequence.get('bank_account')
+    another_destination = sequence.get('expense_account')
+    account.setDestinationValueList(account_list)
+    
+    transaction_line = transaction.newContent(
+      portal_type = self.accounting_transaction_line_portal_type,
+      source = account.getRelativeUrl(), )
+    automatically_set_destination = transaction_line.getDestinationValue()
+    # get another account.
+    if automatically_set_destination == destination :
+      forced_destination = destination
+    else :
+      forced_destination = another_destination
+    # set all other accounts as mirror account to this one.
+    forced_destination.setDestinationValueList(account_list)
+    
+    # change the destination and check the source didn't change.
+    transaction_line.edit(destination = forced_destination.getRelativeUrl())
+    self.assertEquals( transaction_line.getSourceValue(), account )
+    
   def getInvoicePropertyList(self):
     """Returns the list of properties for invoices, stored as 
       a list of dictionnaries. """
@@ -290,12 +351,12 @@ class TestAccounting(ERP5TypeTestCase):
       
       # in currency of source, converted for destination
       { 'income' : -100,        'destination_converted_expense' : -200,
-        'collected_vat' : 10,   'destination_converted_refundable_vat' : -100,
+        'collected_vat' : 10,   'destination_converted_refundable_vat' : 100,
         'receivable' : 90,      'destination_converted_payable' : 100,
         'currency' : 'currency_module/EUR' },
       
       { 'income' : -100,        'destination_converted_expense' : -200,
-        'collected_vat' : 10,   'destination_converted_refundable_vat' : -100,
+        'collected_vat' : 10,   'destination_converted_refundable_vat' : 100,
         'receivable' : 90,      'destination_converted_payable' : 100,
         'currency' : 'currency_module/EUR' },
       
@@ -605,7 +666,19 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckInvoicesAreDraft
     """)
 
+  def test_MirrorAccounts(self, quiet=0, run=RUN_ALL_TESTS):
+    """Tests using an account on one sides uses the mirror account
+    on the other size. """
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateAccounts
+      stepCreateAccountingTransactionAndCheckMirrorAccount
+    """)
 
+# TODO:
+#  test transaction validation from accounting workflow.
+
+ 
 if __name__ == '__main__':
   framework()
 else:
