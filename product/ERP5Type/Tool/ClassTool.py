@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                         Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -31,6 +31,9 @@ from Products.CMFCore.utils import UniqueObject
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
+from App.config import getConfiguration
+import os
+
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -80,6 +83,9 @@ if allowClassTool():
                           ,{ 'label'      : 'Tests'
                           , 'action'     : 'manage_viewTestList'
                           }
+                          ,{ 'label'      : 'Product Generation'
+                          , 'action'     : 'manage_viewProductGeneration'
+                          }
                           ,
                           )
                       + tuple (
@@ -119,7 +125,10 @@ if allowClassTool():
   
       security.declareProtected( Permissions.ManagePortal, 'manage_editPropertySheetForm' )
       manage_editPropertySheetForm = DTMLFile( 'editPropertySheetForm', _dtmldir )
-  
+
+      security.declareProtected( Permissions.ManagePortal, 'manage_viewProductGeneration' )
+      manage_viewProductGeneration = DTMLFile( 'viewProductGeneration', _dtmldir )
+
       # Clears the cache of all databases
       def _clearCache(self):
         database = self.Control_Panel.Database
@@ -571,7 +580,7 @@ class ConstraintTemplate(Constraint):
         writeLocalConstraint(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Created' % (self.absolute_url(), class_id))
-  
+
       security.declareProtected( Permissions.ManageExtensions, 'editConstraint' )
       def editConstraint(self, class_id, text, REQUEST=None):
         """
@@ -581,21 +590,161 @@ class ConstraintTemplate(Constraint):
         writeLocalConstraint(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Saved' % (self.absolute_url(), class_id))
-    
+
+      security.declareProtected( Permissions.ManageExtensions, 'generateProduct' )
+      def generateProduct(self, product_id,
+                          document_id_list=(), property_sheet_id_list=(), constraint_id_list=(),
+                          extension_id_list=(), test_id_list=(), REQUEST=None):
+        """Generate a Product
+        """
+        # Ensure that Products exists.
+        product_path = os.path.join(getConfiguration().instancehome, 'Products')
+        if not os.path.exists(product_path):
+          os.mkdir(product_path)
+
+        # Make a new Product directory if not present.
+        base_path = os.path.join(product_path, product_id)
+        if not os.path.exists(base_path):
+          os.mkdir(base_path)
+
+        # Make sub-directories if not present.
+        for d in ('Interface', 'Document', 'PropertySheet', 'Extensions', 'Tool', 'Constraint',
+                  'tests', 'help', 'skins', 'dtml', ):
+          path = os.path.join(base_path, d)
+          if not os.path.exists(path):
+            os.mkdir(path)
+          # Create an empty __init__.py.
+          init = os.path.join(path, '__init__.py')
+          if not os.path.exists(init):
+            f = open(init, 'w')
+            f.close()
+          # For convenience, make .cvsignore.
+          cvsignore = os.path.join(path, '.cvsignore')
+          if not os.path.exists(cvsignore):
+            f = open(cvsignore, 'w')
+            try:
+              f.write('*.pyc' + os.linesep)
+            finally:
+              f.close()
+
+        # Create a Permissions module for this Product.
+        permissions = os.path.join(base_path, 'Permissions.py')
+        if not os.path.exists(permissions):
+          f = open(permissions, 'w')
+          f.close()
+
+        # Make .cvsignore for convenience.
+        cvsignore = os.path.join(base_path, '.cvsignore')
+        if not os.path.exists(cvsignore):
+          f = open(cvsignore, 'w')
+          try:
+            f.write('*.pyc' + os.linesep)
+          finally:
+            f.close()
+
+        # Create an init file for this Product.
+        init = os.path.join(base_path, '__init__.py')
+        if not os.path.exists(init):
+          text = '''
+##############################################################################
+#
+# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Yoshinori Okuji <yo@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+"""
+    ERP5 Free Software ERP
+"""
+
+# Update ERP5 Globals
+from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+import sys, Permissions
+this_module = sys.modules[ __name__ ]
+document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
+
+# Finish installation
+def initialize( context ):
+  import Document
+  initializeProduct(context, this_module, globals(),
+                         document_module = Document,
+                         document_classes = document_classes,
+                         object_classes = (),
+                         portal_tools = (),
+                         content_constructors = (),
+                         content_classes = ())
+'''
+          f = open(init, 'w')
+          try:
+            f.write(text)
+          finally:
+            f.close()
+
+        # Create a skeleton README.txt.
+        readme = os.path.join(base_path, 'README.txt')
+        if not os.path.exists(readme):
+          text = '''
+%s
+
+  %s was automatically generated by ERP5 Class Tool.
+''' % (product_id, product_id)
+          f = open(readme, 'w')
+          try:
+            f.write(text)
+          finally:
+            f.close()
+
+        # Now, copy selected code.
+        for d, m, id_list in (('Document', readLocalDocument, document_id_list),
+                              ('PropertySheet', readLocalPropertySheet, property_sheet_id_list),
+                              ('Constraint', readLocalConstraint, constraint_id_list),
+                              ('tests', readLocalTest, test_id_list),
+                              ('Extensions', readLocalExtension, extension_id_list)):
+          for class_id in id_list:
+            path = os.path.join(base_path, d, class_id) + '.py'
+            text = m(class_id)
+            f = open(path, 'w')
+            try:
+              f.write(text)
+            finally:
+              f.close()
+
+        if REQUEST is not None:
+          REQUEST.RESPONSE.redirect('%s/manage_viewProductGeneration?message=New+Product+Saved+In+%s' % (self.absolute_url(), base_path))
+
 else:
-  
+
   class ClassTool(BaseTool):
       """
       A tool to edit code through the web
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Dummy Class Tool'
-  
+
       # Declarative Security
       security = ClassSecurityInfo()
-  
+
       security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
       manage_overview = DTMLFile( 'explainDummyClassTool', _dtmldir )        
 
 InitializeClass(ClassTool)
-      

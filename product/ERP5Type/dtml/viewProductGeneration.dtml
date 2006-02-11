@@ -1,0 +1,110 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<div class="std-text"><p><strong>Product Generation</strong></p></div>
+
+<dtml-if message><p><dtml-var message></p></dtml-if>
+
+<form method="POST" action="generateProduct">
+<table cellspacing="0" cellpadding="2" border="0">
+  <tr>
+    <td align="left" valign="top" colspan="2">
+    <div class="form-help">
+    Enter a Product name and select classes to be included in this new Product.
+    </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Product Name
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="product_id" size="40" value="" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Documents
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <dtml-in getLocalDocumentList>
+      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      &dtml-sequence-item;
+      <br/>
+    </dtml-in>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    PropertySheets
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <dtml-in getLocalPropertySheetList>
+      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      &dtml-sequence-item;
+      <br/>
+    </dtml-in>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Constraints
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <dtml-in getLocalConstraintList>
+      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      &dtml-sequence-item;
+      <br/>
+    </dtml-in>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Extensions
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <dtml-in getLocalExtensionList>
+      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      &dtml-sequence-item;
+      <br/>
+    </dtml-in>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Tests
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <dtml-in getLocalTestList>
+      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      &dtml-sequence-item;
+      <br/>
+    </dtml-in>
+    </td>
+  </tr>
+
+</table>
+
+<input type="submit" value=" Generate Product " />
+
+</form>
+
+<dtml-var manage_page_footer>
