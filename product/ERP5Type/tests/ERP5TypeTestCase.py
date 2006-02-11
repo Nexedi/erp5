@@ -65,11 +65,21 @@ ZopeTestCase.installProduct('ERP5Type')
 ZopeTestCase.installProduct('ERP5Form') # Not required by ERP5Type but required by ERP5Form
 ZopeTestCase.installProduct('ERP5SyncML')
 ZopeTestCase.installProduct('CMFCategory')
-ZopeTestCase.installProduct('Nexedi')
 ZopeTestCase.installProduct('ERP5') # Not needed by ERP5Type
 
-# Coramy
-ZopeTestCase.installProduct('Coramy')
+# Install everything else which looks like related to ERP5
+from OFS.Application import get_products
+from App.config import getConfiguration
+import os
+
+instancehome = getConfiguration().instancehome
+for priority, product_name, index, product_dir in get_products():
+  # XXX very heuristic
+  if os.path.isdir(os.path.join(product_dir, product_name, 'Document')) \
+     or os.path.isdir(os.path.join(product_dir, product_name, 'PropertySheet')) \
+     or os.path.isdir(os.path.join(product_dir, product_name, 'Constraint')) \
+     or os.path.isdir(os.path.join(product_dir, product_name, 'Tool')):
+    ZopeTestCase.installProduct(product_name)
 
 # Install Document types (circumvent different init order in ZopeTestCase)
 from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
