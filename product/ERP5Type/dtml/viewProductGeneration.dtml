@@ -49,7 +49,7 @@
     </td>
     <td align="left" valign="top">
     <dtml-in getLocalPropertySheetList>
-      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      <input type="checkbox" name="property_sheet_id_list:list" value="&dtml-sequence-item;" />
       &dtml-sequence-item;
       <br/>
     </dtml-in>
@@ -64,7 +64,7 @@
     </td>
     <td align="left" valign="top">
     <dtml-in getLocalConstraintList>
-      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      <input type="checkbox" name="constraint_id_list:list" value="&dtml-sequence-item;" />
       &dtml-sequence-item;
       <br/>
     </dtml-in>
@@ -79,7 +79,7 @@
     </td>
     <td align="left" valign="top">
     <dtml-in getLocalExtensionList>
-      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      <input type="checkbox" name="extension_id_list:list" value="&dtml-sequence-item;" />
       &dtml-sequence-item;
       <br/>
     </dtml-in>
@@ -94,7 +94,7 @@
     </td>
     <td align="left" valign="top">
     <dtml-in getLocalTestList>
-      <input type="checkbox" name="document_id_list:list" value="&dtml-sequence-item;" />
+      <input type="checkbox" name="test_id_list:list" value="&dtml-sequence-item;" />
       &dtml-sequence-item;
       <br/>
     </dtml-in>
