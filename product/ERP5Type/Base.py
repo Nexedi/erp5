@@ -89,7 +89,10 @@ class WorkflowMethod(Method):
     if id is None:
         id = method.__name__
     self._id = id
-
+  
+  def _setId(self, id) :
+    self._id = id
+  
   def __call__(self, instance, *args, **kw):
     """
       Invoke the wrapped method, and deal with the results.
@@ -264,8 +267,6 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
             prop_holder.security.declareProtected( 
                                      Permissions.AccessContentsInformation, 
                                      method_id )
-#             LOG('in aq_portal_type %s' % id, 0, 
-#                 "added transition method %s" % method_id)
           else:
             # Wrap method into WorkflowMethod is needed
             try:
@@ -280,6 +281,15 @@ def initializePortalTypeDynamicWorkflowMethods(self, klass, prop_holder):
               if not isinstance(method, WorkflowMethod):
                 setattr(work_method_holder, method_id, 
                         WorkflowMethod(method, method_id))
+              else :
+                # some methods (eg. set_ready) doesn't have the same name
+                # (setReady) as the workflow transition (set_ready).
+                # If they are associated with both an InteractionWorkflow
+                # and a DCWorkflow, and the WorkflowMethod is created for
+                # the InterractionWorkflow, then it may be associated with
+                # a wrong transition name (setReady).
+                # Here we force it's id to be the transition name (set_ready).
+                method._setId(tr_id)
             else:
               LOG('initializePortalTypeDynamicWorkflowMethods', 100,
                   'WARNING! Can not initialize %s on %s' % \
