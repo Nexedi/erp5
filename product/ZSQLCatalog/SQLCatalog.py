@@ -235,7 +235,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'getpath', 'schema', 'names', 'columns', 'indexes', 'index_objects',
       'all_meta_types', 'valid_roles', 'resolve_url',
       'getobject', 'getObject', 'getObjectList', 'getCatalogSearchTableIds',
-      'getCatalogSearchResultKeys', 'getFilterableMethodList', ],
+      'getFilterableMethodList', ],
      ['Anonymous', 'Manager']),
 
     ('Import/Export objects',
@@ -675,6 +675,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     return self.sql_search_tables
 
+  security.declarePublic('getCatalogSearchResultKeys')
   def getCatalogSearchResultKeys(self):
     """Return search result keys.
     """
