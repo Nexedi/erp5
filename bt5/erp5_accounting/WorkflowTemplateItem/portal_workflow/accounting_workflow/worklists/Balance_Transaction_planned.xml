@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-accounting_module/view?reset:int=1&translated_portal_type=\xc3\x89criture de reprise des \xc3\xa0 nouveaux&translated_simulation_state_title=Planifi\xc3\xa9
+accounting_module/view?reset:int=1&portal_type=Balance Transaction&simulation_state=planned
 
 ]]></string> </value>
         </item>

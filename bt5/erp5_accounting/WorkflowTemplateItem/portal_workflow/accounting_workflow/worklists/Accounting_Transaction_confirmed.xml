@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-accounting_module/view?reset:int=1&translated_portal_type=\xc3\x89criture d\'op\xc3\xa9rations diverses&translated_simulation_state_title=Confirm\xc3\xa9
+accounting_module/view?reset:int=1&portal_type=Accounting Transaction&simulation_state=confirmed
 
 ]]></string> </value>
         </item>
