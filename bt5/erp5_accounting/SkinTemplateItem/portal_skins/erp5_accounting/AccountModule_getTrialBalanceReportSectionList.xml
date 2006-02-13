@@ -85,9 +85,9 @@ expand_accounts                 = request.get(\'expand_accounts\', 0)\n
 \n
 # flat_mode is a boolean that indicate wether we should use a report tree \n
 # or a flat list of all accounts. \n
-tree_mode                        =  request.get(\'tree_mode\', 0)\n
+tree_mode                       =  request.get(\'tree_mode\', 0)\n
 if tree_mode :\n
-  raise \'tree mode no longer supported, sorry\'\n
+  raise \'tree mode no longer supported\'\n
 \n
 result = []\n
 params = {\n
@@ -166,6 +166,20 @@ else :\n
                                preferences = preferences\n
                                )\n
                )\n
+\n
+if 1:\n
+  result.append( ReportSection( path=portal.account_module.getPhysicalPath(),\n
+                              title = \'\\n\', form_id = None )) # spacer\n
+                              \n
+  result.append( ReportSection( path=portal.account_module.getPhysicalPath(),\n
+                              title=\'\',\n
+                              form_id=\'AccountModule_viewTrialBalanceSummary\',\n
+                              selection_name=\'account_selection\',\n
+                              listbox_display_mode=\'FlatListMode\',\n
+                              selection_params=params,\n
+                              preferences=preferences\n
+                              ) )\n
+\n
 \n
 return result\n
 </string> </value>
