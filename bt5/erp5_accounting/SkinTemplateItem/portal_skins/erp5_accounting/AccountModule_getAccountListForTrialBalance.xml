@@ -177,9 +177,7 @@ def expandBankAccountsForAccount(account, **kw) :\n
   orga_and_banks = []\n
   for orga in organisation_list :\n
      orga_and_banks += [(orga, o.getObject()) for o in \\\n
-            orga.searchFolder(portal_type=[ \'Bank Account\',\n
-                                            \'Cash Register\',\n
-                                            \'Credit Card\'])]\n
+            orga.searchFolder(portal_type=context.getPortalPaymentNodeTypeList())]\n
   for orga ,bank in orga_and_banks :\n
     this_tmp_account = {\n
          \'uid\'   : account.getUid(),\n
@@ -333,7 +331,7 @@ return report_items\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_getAccountListForTrialBalance</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getAccountListForTrialBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
