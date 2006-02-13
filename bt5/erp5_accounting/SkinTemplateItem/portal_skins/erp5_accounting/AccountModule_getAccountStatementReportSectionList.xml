@@ -111,9 +111,9 @@ if from_date:\n
   params[\'from_date\'] = from_date\n
   preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
 if source_payment :\n
-  params[\'source_payment_uid\'] = context.restrictedTraverse(source_payment).getUid()\n
+  params[\'payment_uid\'] = context.restrictedTraverse(source_payment).getUid()\n
 if destination_section :\n
-  params[\'destination_section_uid\'] = context.restrictedTraverse(destination_section).getUid()\n
+  params[\'mirror_section_uid\'] = context.restrictedTraverse(destination_section).getUid()\n
 if account:\n
   params[\'node_uid\'] = context.restrictedTraverse(account).getUid()\n
 \n
@@ -129,8 +129,8 @@ account_columns = (\n
 #  (\'translated_portal_type\', \'Type\'),\n
 #  (\'third_party\', \'Third Party\'),\n
 #  (\'translated_simulation_state_title\', \'State\'),\n
-  (\'source_debit\', \'Debit\'),\n
-  (\'source_credit\', \'Credit\'),\n
+  (\'debit\', \'Debit\'),\n
+  (\'credit\', \'Credit\'),\n
   (\'reference\', \'Accounting Transaction Reference\'),\n
   (\'net_balance\', \'Balance\'),\n
 )\n
@@ -163,12 +163,6 @@ return [ReportSection(\n
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getAccountStatementReportSectionList</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
