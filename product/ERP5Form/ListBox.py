@@ -1723,7 +1723,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     attribute_value = "Could not evaluate"
                     attribute_original_value = None
                 #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
-                if type(attribute_value) is type(0.0):
+                if isinstance(attribute_value, float) :
                   attribute_original_value = attribute_value
                   if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                     # Do not truncate if editable
@@ -1732,7 +1732,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     #attribute_original_value = attribute_value
                     attribute_value = float("%.2f" % attribute_value)
                   td_align = "right"
-                elif type(attribute_value) is type(1):
+                elif isinstance(attribute_value, (int, long)):
                   attribute_original_value = attribute_value
                   td_align = "right"
                 else:
@@ -1740,7 +1740,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   if attribute_value is None:
                     attribute_original_value = None
                     attribute_value = ''
-                  elif type(attribute_value) != type(u''):
+                  elif isinstance(attribute_value, str) :
                     attribute_original_value = attribute_value
                     attribute_value = unicode(str(attribute_value), 'utf-8')
                 if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias)) and not is_summary:
