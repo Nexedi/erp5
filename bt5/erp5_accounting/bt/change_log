@@ -1,3 +1,6 @@
+2006-02-13 kevin
+* Only show draft and validated Person and Organisation in Relation String Fields.
+
 2006-02-08 jerome
 * Check the currency of a payment transaction is the same as the currency of the bank account (if set on the bank account)
 * Display quantities in default curreny for bank account instead of converted values.
