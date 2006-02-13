@@ -94,7 +94,7 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_statSourceCredit</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_statSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

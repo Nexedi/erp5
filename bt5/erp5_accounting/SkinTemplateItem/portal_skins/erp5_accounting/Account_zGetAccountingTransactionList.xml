@@ -159,23 +159,23 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>selection</string>
-                            <string>selection_domain</string>
-                            <string>selection_report</string>
-                            <string>getUid</string>
-                            <string>where_expression</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>resource_uid</string>
-                            <string>from_date</string>
-                            <string>to_date</string>
-                            <string>at_date</string>
-                            <string>transaction_simulation_state</string>
-                            <string>transaction_section_category</string>
-                            <string>payment_uid</string>
-                            <string>no_payment_uid</string>
-                            <string>mirror_section_uid</string>
-                            <string>no_mirror_section_uid</string>
+<string>selection</string>
+<string>selection_domain</string>
+<string>selection_report</string>
+<string>getUid</string>
+<string>where_expression</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>resource_uid</string>
+<string>from_date</string>
+<string>to_date</string>
+<string>at_date</string>
+<string>transaction_simulation_state</string>
+<string>transaction_section_category</string>
+<string>payment_uid</string>
+<string>no_payment_uid</string>
+<string>mirror_section_uid</string>
+<string>no_mirror_section_uid</string>
                           </list>
                         </value>
                     </item>

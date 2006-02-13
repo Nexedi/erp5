@@ -107,7 +107,7 @@ return movement_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/SaleInvoiceTransaction_selectInvoiceMovement</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/SaleInvoiceTransaction_selectInvoiceMovement</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

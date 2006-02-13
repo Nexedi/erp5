@@ -79,7 +79,7 @@ return account.Account_getGapId()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/Entity_getAccountingTransactionGapId</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Entity_getAccountingTransactionGapId</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

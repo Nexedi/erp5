@@ -93,12 +93,6 @@ if len(period_list) > 0 :\n
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingPeriod_init</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

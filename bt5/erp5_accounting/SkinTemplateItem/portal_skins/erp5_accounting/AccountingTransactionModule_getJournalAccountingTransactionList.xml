@@ -240,7 +240,7 @@ return result + [{ "journal_total_debit": journal_total_debit,\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_getJournalAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_getJournalAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

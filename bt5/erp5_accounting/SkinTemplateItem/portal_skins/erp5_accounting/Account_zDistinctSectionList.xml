@@ -76,10 +76,10 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>node_uid</string>
-                            <string>at_date</string>
-                            <string>section_category</string>
-                            <string>simulation_state</string>
+<string>node_uid</string>
+<string>at_date</string>
+<string>section_category</string>
+<string>simulation_state</string>
                           </list>
                         </value>
                     </item>
@@ -147,7 +147,7 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>node_uid\r\n
 at_date\r\n
-section_category\n
+section_category\r\n
 simulation_state:list</string> </value>
         </item>
         <item>
@@ -193,7 +193,8 @@ SELECT DISTINCT\n
   catalog.path,\n
   catalog.relative_url,\n
   catalog.title,\n
-  catalog.portal_type\n
+  catalog.portal_type,\n
+  catalog.validation_state\n
 FROM\n
   catalog,\n
   stock\n
@@ -256,7 +257,8 @@ SELECT DISTINCT\n
   catalog.path,\n
   catalog.relative_url,\n
   catalog.title,\n
-  catalog.portal_type\n
+  catalog.portal_type,\n
+  catalog.validation_state\n
 FROM\n
   catalog,\n
   stock\n

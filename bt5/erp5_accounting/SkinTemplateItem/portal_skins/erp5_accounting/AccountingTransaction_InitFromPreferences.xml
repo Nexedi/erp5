@@ -90,12 +90,6 @@ except AttributeError, e :\n
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_InitFromPreferences</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
         </item>

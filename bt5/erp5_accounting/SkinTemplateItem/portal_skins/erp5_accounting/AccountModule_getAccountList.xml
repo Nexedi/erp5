@@ -97,7 +97,7 @@ return context.portal_catalog(**kwd)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getAccountList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getAccountList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

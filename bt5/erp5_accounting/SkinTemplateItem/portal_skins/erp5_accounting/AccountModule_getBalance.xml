@@ -115,7 +115,7 @@ return context.portal_simulation.getInventoryAssetPrice(node_uid=context.getUid(
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_getBalance</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

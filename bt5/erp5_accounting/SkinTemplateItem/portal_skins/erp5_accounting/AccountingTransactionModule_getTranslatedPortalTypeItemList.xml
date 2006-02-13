@@ -84,7 +84,7 @@ return item_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountingTransactionModule_getTranslatedPortalTypeItemList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_getTranslatedPortalTypeItemList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -115,7 +115,7 @@ return item_list\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal_type_list</string>
                             <string>N_</string>
                             <string>item_list</string>

@@ -83,7 +83,7 @@ if total > 0.0:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/AccountModule_getDebitBalance</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getDebitBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

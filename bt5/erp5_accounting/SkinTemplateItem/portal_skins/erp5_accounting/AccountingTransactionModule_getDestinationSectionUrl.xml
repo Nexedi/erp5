@@ -93,7 +93,7 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountingTransactionModule_getDestinationSectionUrl</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_getDestinationSectionUrl</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

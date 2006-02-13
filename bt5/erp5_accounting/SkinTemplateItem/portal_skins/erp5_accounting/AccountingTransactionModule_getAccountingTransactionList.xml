@@ -89,8 +89,8 @@ if params.get(\'count\', 0):\n
 params[\'omit_input\'] = 0\n
 params[\'omit_output\'] = 0\n
 \n
-#context.log(\'LOG\',  context.AccountingTransactionModule_zGetAccountingTransactionList(src__ =1, **params))\n
-return context.AccountingTransactionModule_zGetAccountingTransactionList(**params)\n
+#context.log(\'LOG\',  context.AccountingTransactionModule_zGetAccountingTransactionList(src__ =1, selection_params=params, **params))\n
+return context.AccountingTransactionModule_zGetAccountingTransactionList(selection_params=params, **params)\n
 
 
 ]]></string> </value>
@@ -109,7 +109,7 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList(**param
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_getAccountingTransactionList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_getAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

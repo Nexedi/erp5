@@ -101,7 +101,7 @@ return credit\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountingTransactionModule_getSourceCredit</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionModule_getSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

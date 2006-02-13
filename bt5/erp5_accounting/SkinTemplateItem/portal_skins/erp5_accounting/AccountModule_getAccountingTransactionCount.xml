@@ -129,7 +129,7 @@ return context.portal_simulation.getInventoryStat(node_uid=context.getUid(),\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_accounting/AccountModule_getAccountingTransactionCount</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_getAccountingTransactionCount</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

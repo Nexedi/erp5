@@ -87,12 +87,6 @@ return transaction_currency != section_value.getProperty(\'price_currency\', Non
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_isSourceCurrencyConvertible</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
@@ -121,7 +115,7 @@ return transaction_currency != section_value.getProperty(\'price_currency\', Non
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>section_value</string>
                             <string>None</string>
                             <string>transaction_currency</string>

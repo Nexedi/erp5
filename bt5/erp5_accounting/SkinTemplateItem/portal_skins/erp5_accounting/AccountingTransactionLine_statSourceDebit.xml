@@ -84,12 +84,6 @@ return total\n
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransactionLine_statSourceDebit</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

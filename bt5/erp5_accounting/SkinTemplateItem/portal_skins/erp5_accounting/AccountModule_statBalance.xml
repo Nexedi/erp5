@@ -123,8 +123,6 @@ if kw.get(\'omit_input\'):\n
 if kw.get(\'omit_output\'):\n
   params[\'omit_output\'] = 1\n
 \n
-context.log(\'params\', params)\n
-context.log(\'at_date\', at_date)\n
 results = context.Resource_zStatInventory(omit_simulation=1,\n
                                          **params)\n
 row = results[0]\n
@@ -154,7 +152,7 @@ return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting/AccountModule_statBalance</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountModule_statBalance</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

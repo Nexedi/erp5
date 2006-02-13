@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/erp5_accounting/Entity_statSourceCredit</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Entity_statSourceCredit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

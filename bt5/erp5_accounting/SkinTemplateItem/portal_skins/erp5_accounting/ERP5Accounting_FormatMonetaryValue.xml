@@ -113,12 +113,6 @@ return formatted_value\n
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/ERP5Accounting_FormatMonetaryValue</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value, nbsp=0, precision=0</string> </value>
         </item>
