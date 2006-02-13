@@ -800,8 +800,8 @@ class ListBoxWidget(Widget.Widget):
             # Remove useless matter
             for cname in params.keys():
               if params[cname] != '' and params[cname]!=None:
-                kw[cname] = params[cname]
-
+                kw.setdefault(cname, params[cname])
+            
             # Try to get the method through acquisition
             try:
               list_method = getattr(here, list_method.method_name)
