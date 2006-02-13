@@ -37,6 +37,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -72,6 +76,14 @@
         <item>
             <key> <string>filter_content_types</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>payment_node</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
