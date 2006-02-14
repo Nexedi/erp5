@@ -42,7 +42,7 @@ from Products.ERP5Type.Utils import readLocalPropertySheet, \
                                     importLocalPropertySheet, \
                                     removeLocalPropertySheet
 from Products.ERP5Type.Utils import readLocalConstraint, \
-                                    writeLocalPropertySheet, \
+                                    writeLocalConstraint, \
                                     importLocalConstraint, \
                                     removeLocalConstraint
 from Products.ERP5Type.Utils import readLocalExtension, \
