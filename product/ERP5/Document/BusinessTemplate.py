@@ -1139,7 +1139,6 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     keys.sort()
     for key in keys:
       workflow_list = self._objects[key]
-      LOG('generate xml', 0, workflow_list)
       xml_data += os.linesep+' <chain>'
       xml_data += os.linesep+'  <type>%s</type>' %(key,)
       xml_data += os.linesep+'  <workflow>%s</workflow>' %(', '.join(workflow_list))
