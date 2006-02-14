@@ -1,51 +1,29 @@
 Address | edit_workflow
-Agent Privilege | (Default)
 Agent | edit_workflow
-Alarm Tool | (Default)
-Alarm | (Default)
-Applied Rule |
 Assignment | assignment_workflow
 Assignment | edit_workflow
 Bank Account | bank_account_workflow
 Bank Account | edit_workflow
-Base Category | (Default)
 Career | career_workflow
-Category Tool | (Default)
 Category | edit_workflow
 ChatAddress | edit_workflow
 Credit Card | edit_workflow
 Currency Exchange Line | edit_workflow
-Currency Module |
 Currency | edit_workflow
-Delivery Builder | (Default)
-Delivery Tool | (Default)
 Document | edit_workflow
 Email | edit_workflow
 Favorite | edit_workflow
 Fax | edit_workflow
 File | edit_workflow
-Folder |
 Image | edit_workflow
 Link | edit_workflow
 Mapped Value | edit_workflow
 News Item | edit_workflow
-Order Builder | (Default)
-Order Tool | (Default)
-Organisation Module |
 Organisation | edit_workflow
 Organisation | validation_workflow
-Person Module |
 Person | edit_workflow
 Person | validation_workflow
 Predicate | rule_interaction_workflow
-Preference Tool | (Default)
 Preference | preference_workflow
-Route Tool | (Default)
-Rule Tool | (Default)
 Simulation Movement | simulation_movement_interaction_workflow
-Simulation Tool | (Default)
 Telephone | edit_workflow
-Template Tool |
-Trash Bin | (Default)
-Trash Folder | (Default)
-Trash Tool | (Default)

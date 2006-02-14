@@ -86,6 +86,9 @@ def getIdFromString(string=None):\n
                     }\n
   string = string.lower()\n
   string = string.strip()\n
+  # oocalc inserts some strange chars when you press - key in a text cell.\n
+  # Following line is a workaround for this, because \\u2013 does not exist in latin1\n
+  string = string.replace(u\'\\u2013\', \'-\')\n
   for char in string.encode(\'iso8859_1\'):\n
     if char == \'_\' or char.isalnum():\n
       clean_id += char\n
