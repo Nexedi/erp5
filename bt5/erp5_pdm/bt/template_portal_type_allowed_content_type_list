@@ -1,6 +1,7 @@
 Component Module | Component
 Component | Supply Line
 Product Module | Product
+Product | Supply Line
 Service Module | Service
 Transformation Module | Transformation
 Transformation Operation | Mapped Value
