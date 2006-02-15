@@ -58,8 +58,9 @@ class PaySheetTransaction(Invoice):
                       , PropertySheet.Delivery
                       , PropertySheet.PaySheet
                       , PropertySheet.Movement
-                      , PropertySheet.Amount     
-                      , PropertySheet.XMLObject                      
+                      , PropertySheet.Amount
+                      , PropertySheet.XMLObject
+                      , PropertySheet.TradeCondition
                       )
 
     # Declarative Interface
