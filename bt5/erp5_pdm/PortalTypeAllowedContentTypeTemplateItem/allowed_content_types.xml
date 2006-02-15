@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Component">
+  <item>Supply Line</item>
+ </portal_type>
  <portal_type id="Component Module">
   <item>Component</item>
  </portal_type>
