@@ -69,24 +69,14 @@
             <value> <string>order = state_change.object\n
 \n
 tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-expand_tag = order.getPath() + \'_expand\'\n
-order.activate(tag=tag).updateAppliedRule(tag=expand_tag,rule_id = \'default_production_order_rule\',priority=3)\n
+order.activate(tag=tag).updateAppliedRule(tag=tag,rule_id = \'default_production_order_rule\',priority=3)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAIAAAAQwAA
-AHNzAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAZAMAF30DAHQAAHwCAGQCAIMCAIMA
-AGQEABd9BAB0AAB0AAB8AgBkBQCDAgBkBgB8AwCDAAFkBwCDAgBkBgB8BABkCABkCQBkCgBkCwCD
-AAMBZAAAUygMAAAATnMGAAAAb2JqZWN0cwcAAABnZXRQYXRocxcAAABfZmlyc3RVcGRhdGVBcHBs
-aWVkUnVsZXMHAAAAX2V4cGFuZHMIAAAAYWN0aXZhdGVzAwAAAHRhZ3MRAAAAdXBkYXRlQXBwbGll
-ZFJ1bGVzBwAAAHJ1bGVfaWRzHQAAAGRlZmF1bHRfcHJvZHVjdGlvbl9vcmRlcl9ydWxlcwgAAABw
-cmlvcml0eWkDAAAAKAUAAABzCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hhbmdlcwUAAABvcmRl
-cnMDAAAAdGFncwoAAABleHBhbmRfdGFnKAUAAABzDAAAAHN0YXRlX2NoYW5nZXMJAAAAX2dldGF0
-dHJfcwUAAABvcmRlcnMDAAAAdGFncwoAAABleHBhbmRfdGFnKAAAAAAoAAAAAHMPAAAAU2NyaXB0
-IChQeXRob24pcxUAAABPcmRlcl9jcmVhdGVPcmRlclJ1bGUBAAAAcwYAAAAPAhYBHAEoAQAAAHMV
-AAAAT3JkZXJfY3JlYXRlT3JkZXJSdWxlKAEAAABzFQAAAE9yZGVyX2NyZWF0ZU9yZGVyUnVsZSgA
-AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -124,7 +114,6 @@ AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </
                             <string>_getattr_</string>
                             <string>order</string>
                             <string>tag</string>
-                            <string>expand_tag</string>
                           </tuple>
                         </value>
                     </item>

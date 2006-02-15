@@ -1,0 +1,22 @@
+Production Order Line | edit_workflow
+Production Order Line | production_matrix_workflow
+Production Order | edit_workflow
+Production Order | production_order_interaction_workflow
+Production Order | production_order_workflow
+Production Packing List Line | edit_workflow
+Production Packing List Line | production_matrix_workflow
+Production Packing List Line | production_packing_list_interaction_workflow
+Production Packing List | edit_workflow
+Production Packing List | production_packing_list_causality_workflow
+Production Packing List | production_packing_list_interaction_workflow
+Production Packing List | production_packing_list_workflow
+Production Report Line | edit_workflow
+Production Report Line | production_matrix_workflow
+Production Report Line | production_packing_list_interaction_workflow
+Production Report | edit_workflow
+Production Report | production_packing_list_causality_workflow
+Production Report | production_packing_list_interaction_workflow
+Production Report | production_packing_list_workflow
+Supply Chain | edit_workflow
+Supply Link | edit_workflow
+Supply Node | edit_workflow

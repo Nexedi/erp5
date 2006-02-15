@@ -74,14 +74,9 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
-AHMTAAAAdAAAfAAAZAEAgwIAfQIAZAAAUygCAAAATnMGAAAAb2JqZWN0KAMAAABzCQAAAF9nZXRh
-dHRyX3MMAAAAc3RhdGVfY2hhbmdlcwwAAABwYWNraW5nX2xpc3QoAwAAAHMMAAAAc3RhdGVfY2hh
-bmdlcwkAAABfZ2V0YXR0cl9zDAAAAHBhY2tpbmdfbGlzdCgAAAAAKAAAAABzDwAAAFNjcmlwdCAo
-UHl0aG9uKXMdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBwbGllZFJ1bGUBAAAAcwAAAAAoAQAAAHMd
-AAAAUGFja2luZ0xpc3RfdXBkYXRlQXBwbGllZFJ1bGUoAQAAAHMdAAAAUGFja2luZ0xpc3RfdXBk
-YXRlQXBwbGllZFJ1bGUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
-AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>

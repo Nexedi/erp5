@@ -1,0 +1,38 @@
+<allowed_content_type_list>
+ <portal_type id="Production Order">
+  <item>Payment Condition</item>
+  <item>Production Order Line</item>
+  <item>Discount</item>
+ </portal_type>
+ <portal_type id="Production Order Line">
+  <item>Production Order Cell</item>
+ </portal_type>
+ <portal_type id="Production Order Module">
+  <item>Production Order</item>
+ </portal_type>
+ <portal_type id="Production Packing List">
+  <item>Production Packing List Line</item>
+ </portal_type>
+ <portal_type id="Production Packing List Line">
+  <item>Production Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Production Packing List Module">
+  <item>Production Packing List</item>
+ </portal_type>
+ <portal_type id="Production Report">
+  <item>Production Report Line</item>
+ </portal_type>
+ <portal_type id="Production Report Line">
+  <item>Production Report Cell</item>
+ </portal_type>
+ <portal_type id="Production Report Module">
+  <item>Production Report</item>
+ </portal_type>
+ <portal_type id="Supply Chain">
+  <item>Supply Node</item>
+  <item>Supply Link</item>
+ </portal_type>
+ <portal_type id="Supply Chain Module">
+  <item>Supply Chain</item>
+ </portal_type>
+</allowed_content_type_list>

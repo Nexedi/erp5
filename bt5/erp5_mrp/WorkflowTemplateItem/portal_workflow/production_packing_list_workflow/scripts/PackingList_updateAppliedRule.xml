@@ -73,15 +73,9 @@ packing_list.updateAppliedRule("default_production_packing_list_rule")\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
-AHMmAAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAZAMAgwEAAWQAAFMoBAAAAE5zBgAAAG9i
-amVjdHMRAAAAdXBkYXRlQXBwbGllZFJ1bGVzJAAAAGRlZmF1bHRfcHJvZHVjdGlvbl9wYWNraW5n
-X2xpc3RfcnVsZSgDAAAAcwkAAABfZ2V0YXR0cl9zDAAAAHN0YXRlX2NoYW5nZXMMAAAAcGFja2lu
-Z19saXN0KAMAAABzDAAAAHN0YXRlX2NoYW5nZXMJAAAAX2dldGF0dHJfcwwAAABwYWNraW5nX2xp
-c3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzHQAAAFBhY2tpbmdMaXN0X3VwZGF0ZUFw
-cGxpZWRSdWxlAQAAAHMCAAAAEgIoAQAAAHMdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBwbGllZFJ1
-bGUoAQAAAHMdAAAAUGFja2luZ0xpc3RfdXBkYXRlQXBwbGllZFJ1bGUoAAAAACgAAAAAcw8AAABT
-Y3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

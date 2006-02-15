@@ -73,16 +73,9 @@ packing_list_content.getExplanationValue().activate().edit()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAGAAAAQwAA
-AHM7AAAAdAAAfAAAZAEAgwIAfQIAdAAAdAAAdAAAfAIAZAIAgwIAgwAAZAMAgwIAgwAAZAQAgwIA
-gwAAAWQAAFMoBQAAAE5zBgAAAG9iamVjdHMTAAAAZ2V0RXhwbGFuYXRpb25WYWx1ZXMIAAAAYWN0
-aXZhdGVzBAAAAGVkaXQoAwAAAHMJAAAAX2dldGF0dHJfcwwAAABzdGF0ZV9jaGFuZ2VzFAAAAHBh
-Y2tpbmdfbGlzdF9jb250ZW50KAMAAABzDAAAAHN0YXRlX2NoYW5nZXMJAAAAX2dldGF0dHJfcxQA
-AABwYWNraW5nX2xpc3RfY29udGVudCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMoAAAA
-Q29udGFpbmVyX2FjdGl2YXRlVXBkYXRlUGFja2luZ0xpc3RTdGF0ZQEAAABzAgAAABgCKAEAAABz
-KAAAAENvbnRhaW5lcl9hY3RpdmF0ZVVwZGF0ZVBhY2tpbmdMaXN0U3RhdGUoAQAAAHMoAAAAQ29u
-dGFpbmVyX2FjdGl2YXRlVXBkYXRlUGFja2luZ0xpc3RTdGF0ZSgAAAAAKAAAAABzDwAAAFNjcmlw
-dCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
