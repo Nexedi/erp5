@@ -112,6 +112,7 @@ Payment Transaction | print
 Payment Transaction | related_invoice
 Payment Transaction | source_asset
 Payment Transaction | view
+Person | jump_to_accounting
 Person | transactions
 Purchase Invoice Transaction Line | history
 Purchase Invoice Transaction Line | metadata
