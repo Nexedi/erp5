@@ -36,11 +36,13 @@ class TradeCondition:
 
   _properties = (
         {   'id'          : 'source_decision_destination_reference',
-            'description' : 'The reference of the source_decision for default destination',
+            'description' : 'The reference of the source_decision for'+
+                            ' default destination',
             'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'destination_decision_source_reference',
-            'description' : 'The reference of the destination_decision for default source',
+            'description' : 'The reference of the destination_decision'+
+                            ' for default source',
             'type'        : 'string',
             'mode'        : 'w' },
 
@@ -49,13 +51,15 @@ class TradeCondition:
           'storage_id'  : 'default_payment_condition',
           'description' : 'The current payment condition.',
           'type'        : 'content',
-          'portal_type' : ('Payment Condition'),
+          'portal_type' : ('Payment Condition',),
           'acquired_property_id' : ('payment_mode', 'payment_term',
-                                    'payment_end_of_month', 
+                                    'payment_end_of_month', 'payment_date',
                                     'payment_additional_term', 'trade_date',
                                     'payment_mode_title', 'trade_date_title',
                                    ),
           'mode'        : 'w' },
   )
 
-  _categories = ('group', 'activity', 'incoterm', 'price_currency', 'delivery_mode')
+  _categories = ( 'group', 'activity', 'incoterm',
+                  'price_currency', 'delivery_mode', )
+
