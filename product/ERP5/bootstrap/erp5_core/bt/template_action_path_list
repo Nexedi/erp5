@@ -168,16 +168,9 @@ Organisation | details
 Organisation | document_view
 Organisation | financial_view
 Organisation | history
-Organisation | jump_active_accounting_pref
-Organisation | jump_to_accounting
-Organisation | jump_to_purchase_order
-Organisation | jump_to_purchase_packing_list
-Organisation | jump_to_sale_order
-Organisation | jump_to_sale_packing_list
 Organisation | list
 Organisation | metadata
 Organisation | print
-Organisation | transactions
 Organisation | view
 Person Module | career_print
 Person Module | csv_export
@@ -199,20 +192,11 @@ Person | document_view
 Person | exchange
 Person | financial_view
 Person | history
-Person | jump_to_accounting
-Person | jump_to_opportunity
-Person | jump_to_project
-Person | jump_to_purchase_order
-Person | jump_to_purchase_packing_list
-Person | jump_to_sale_order
-Person | jump_to_sale_packing_list
-Person | jump_to_support_request
 Person | metadata
 Person | print
 Person | profile
 Person | report
 Person | terminate_career
-Person | transactions
 Person | translate
 Person | view
 Predicate | print_pdf
