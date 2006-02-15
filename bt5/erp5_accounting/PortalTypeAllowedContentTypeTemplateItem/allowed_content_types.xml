@@ -10,7 +10,6 @@
  </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>Purchase Invoice Transaction</item>
-  <item>Accounting Period Delimiter</item>
   <item>Pay Sheet Transaction</item>
   <item>Accounting Transaction</item>
   <item>Sale Invoice Transaction</item>
