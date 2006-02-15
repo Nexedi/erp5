@@ -68,8 +68,6 @@
                 <string>_delObject</string>
                 <string>plan</string>
                 <string>confirm</string>
-                <string>stop</string>
-                <string>deliver</string>
                 <string>start</string>
                 <string>setReady</string>
                 <string>order</string>
