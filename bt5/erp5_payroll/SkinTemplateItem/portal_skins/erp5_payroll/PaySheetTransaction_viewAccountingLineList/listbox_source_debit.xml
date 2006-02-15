@@ -203,7 +203,7 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>align=\'right\'</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>

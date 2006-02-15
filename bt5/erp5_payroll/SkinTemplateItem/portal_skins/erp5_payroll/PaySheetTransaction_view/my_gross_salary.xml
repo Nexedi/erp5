@@ -226,8 +226,16 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-1234.5</string> </value>
+                </item>
+                <item>
                     <key> <string>not_viewable</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>read_only</string> </key>
@@ -239,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Gross Salary (Euros)</string> </value>
+                    <value> <string>Gross Salary</string> </value>
                 </item>
                 <item>
                     <key> <string>viewable_expression</string> </key>

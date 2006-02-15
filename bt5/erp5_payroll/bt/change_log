@@ -1,8 +1,17 @@
-2005/09/15 - Kevin
-* Little update of career-related accessor calls to follow changes on Person module
+2006-02-15 Kevin
+* Add an Annual Report generator (must be refactored and cleaned up).
+* Update dependencies.
+* Update description to reflect the actual status of this business template.
+* Assign Paysheet Transaction portal type to 'accounting_transaction' group (thanks to Bartek).
 
-2005/07/23 - Kevin
-* PaySheetTransaction_preCalculation() now handle ceiling salary year safely
+2006-02-06 Kevin
+* Update license and copyright metadata.
 
-2005/07/07 - Jérome
-* Rename service to service_module
+2005-09-15 Kevin
+* Little update of career-related accessor calls to follow changes on Person module.
+
+2005-07-23 Kevin
+* PaySheetTransaction_preCalculation() now handle ceiling salary year safely.
+
+2005-07-07 Jérome
+* Rename service to service_module.

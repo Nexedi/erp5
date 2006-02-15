@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+import DateTime\n
+portal_catalog = context.getPortalObject().portal_catalog\n
+\n
+query = {\n
+  "portal_type" : "Pay Sheet Transaction",\n
+  "simulation_state" : ["confirmed", "stopped", "delivered"],\n
+  "delivery.stop_date" : ">2004-12-31",\n
+  "sort_on" : ("delivery.start_date", "ASC")\n
+}\n
+\n
+if 0 :\n
+  print portal_catalog(src__ = 1, **query)\n
+  return printed\n
+\n
+\n
+# DATA GATHERING part\n
+\n
+paysheet_par_person = {}\n
+\n
+for ps in portal_catalog( **query ) :\n
+  ps = ps.getObject()\n
+# Quick hack to fix some problems on a local site\n
+#  if ps.getStopDate()<DateTime.DateTime("2006-01-01"):\n
+#    print "<a href=\\"%s\\">%s</a> candidate to be updated (%s -> %s)<br>" % (ps.getPath(),ps.getDestinationSection(),ps.getSource(),ps.getDestination())\n
+#    #ps.setSource(ps.getSourceSection())\n
+#    #ps.setDestination(ps.getDestinationSection())\n
+  if not paysheet_par_person.has_key(ps.getDestinationSection()) :\n
+    paysheet_par_person[ps.getDestinationSection()] = []\n
+  paysheet_par_person[ps.getDestinationSection()].append(ps)\n
+\n
+gathered_data = {}\n
+\n
+for p, paysheets in paysheet_par_person.items() :\n
+  gathered_data[p] = {}\n
+  for paysheet in paysheets :\n
+    start_month = paysheet.start_date.month() - 1\n
+    if not gathered_data[p].has_key (start_month) :\n
+      gathered_data[p][start_month] = {}\n
+    if gathered_data[p][start_month].has_key ("salary") :\n
+      if not gathered_data[p][start_month].has_key("doubles") :\n
+        gathered_data[p][start_month]["doubles"] = 0\n
+      gathered_data[p][start_month]["doubles"] = gathered_data [p][start_month]["doubles"] + 1\n
+    else :\n
+      # get the taxable salary\n
+      ps_details = paysheet.PaySheetTransaction_getDetails()\n
+      salary_value = ps_details[salary_type]\n
+      # Round the value the same way it is printed by PaySheetTransaction_viewPaySheetTransactionAsPDF.\n
+      # In fact the rounding must be done by PaySheetTransaction_getDetails to homogenize the value in the paysheet module.\n
+      gathered_data [p][start_month]["salary"] = float(\'%.2f\' % salary_value)\n
+      gathered_data [p][start_month]["url"] = paysheet.getPath()\n
+\n
+# DISPLAY part\n
+\n
+print """\n
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
+ "DTD/xhtml1-strict.dtd">\n
+<html>\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />\n
+<title>R\xc3\xa9capitulatif des salaires bruts</title>\n
+<style>\n
+a {\n
+  text-decoration : none;\n
+}\n
+a:hover {\n
+  text-decoration : underline;\n
+}\n
+table {\n
+  border-collapse : collapse;\n
+}\n
+th, td {\n
+  border : 1px solid #CCC;\n
+}\n
+\n
+td {\n
+  text-align : right;\n
+}\n
+\n
+th.total {\n
+  background : #999;\n
+}\n
+\n
+th.error {\n
+  background : #F00;\n
+}\n
+</style>\n
+</head>\n
+<body>"""\n
+\n
+print "<h1>Annual %s Report</h1>" % (salary_type.replace(\'_\', \' \').title())\n
+print "<h2>Fiscal year 2005</h2>"\n
+\n
+print """\n
+<table>\n
+<tr>\n
+<th></th>\n
+<th>janvier</th>\n
+<th>fevrier</th>\n
+<th>mars</th>\n
+<th>avril</th>\n
+<th>mai</th>\n
+<th>juin</th>\n
+<th>juillet</th>\n
+<th>aout</th>\n
+<th>septembre</th>\n
+<th>october</th>\n
+<th>novembre</th>\n
+<th>decembre</th>\n
+<th class="total">Total</th>\n
+</tr>\n
+"""\n
+\n
+total = 0\n
+monthly_total = {}\n
+\n
+for person_path, person_dict in gathered_data.items() :\n
+  person_total = 0\n
+  print "<tr><td><a href=\\"%s\\">%s</a></td>" % (person_path, context.restrictedTraverse(person_path).getTitle())\n
+  for month in range(12) :\n
+    print "<td>"\n
+    if person_dict.has_key(month) :\n
+      person_total += person_dict[month]["salary"]\n
+      if not monthly_total.has_key (month) :\n
+        monthly_total[month] = 0\n
+      monthly_total[month] = monthly_total[month] + person_dict[month]["salary"]\n
+      print "<a href=\\"%s\\">%s</a>" % (person_dict[month]["url"], person_dict[month]["salary"])\n
+      if person_dict[month].has_key("doubles") :\n
+        print "!" * person_dict[month]["doubles"]\n
+    print "</td>"\n
+  print "<td>%s</td></tr>" % person_total\n
+  total += person_total\n
+\n
+print "<th class=\\"total\\">Total</th>"\n
+check_total = 0\n
+for month in range(12) :\n
+  print "<td>"\n
+  if monthly_total.has_key(month) :\n
+    print monthly_total[month]\n
+    check_total += monthly_total[month]\n
+  print "</td>"\n
+\n
+print "<th class=\\""\n
+if check_total != total :\n
+  print "error"\n
+print \'\\">%s</th>\' % total\n
+print """\n
+</table>\n
+</body>\n
+</html>\n
+"""\n
+\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/AccountingTransactionModule_viewAnnualSalaryReport</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>salary_type="gross_salary"</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>salary_type</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>DateTime</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>portal_catalog</string>
+                            <string>query</string>
+                            <string>paysheet_par_person</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
+                            <string>ps</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>gathered_data</string>
+                            <string>p</string>
+                            <string>paysheets</string>
+                            <string>paysheet</string>
+                            <string>start_month</string>
+                            <string>ps_details</string>
+                            <string>salary_value</string>
+                            <string>float</string>
+                            <string>total</string>
+                            <string>monthly_total</string>
+                            <string>person_path</string>
+                            <string>person_dict</string>
+                            <string>person_total</string>
+                            <string>range</string>
+                            <string>month</string>
+                            <string>check_total</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string>gross_salary</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_viewAnnualSalaryReport</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

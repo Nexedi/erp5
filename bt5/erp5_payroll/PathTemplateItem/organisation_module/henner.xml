@@ -135,7 +135,7 @@
         <none/>
       </tuple>
     </pickle>
-    <pickle> <int>1</int> </pickle>
+    <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
@@ -148,16 +148,7 @@
       </tuple>
     </pickle>
     <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>ERP5 Geographic Address</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
+      <none/>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
@@ -171,16 +162,7 @@
       </tuple>
     </pickle>
     <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>default_address</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
+      <none/>
     </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
@@ -441,249 +423,6 @@
                                       <item>
                                           <key> <string>time</string> </key>
                                           <value> <float>0.485102847219</float> </value>
-                                      </item>
-                                    </dictionary>
-                                  </state>
-                                </object>
-                              </value>
-                          </item>
-                        </dictionary>
-                      </tuple>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OIBTree</string>
-          <string>OIBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>default_address</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.ERP5Type.Document.GeographicAddress</string>
-          <string>GeographicAddress</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>jerome</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <tuple>
-                <list>
-                  <string>nexedi</string>
-                  <string>acl_users</string>
-                </list>
-<string>jerome</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>default_address</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Address</string> </value>
-        </item>
-        <item>
-            <key> <string>sid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value> <long>1991631302</long> </value>
-        </item>
-        <item>
-            <key> <string>workflow_history</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>edit_workflow</string> </key>
-                    <value>
-                      <tuple>
-                        <dictionary>
-                          <item>
-                              <key> <string>action</string> </key>
-                              <value> <string>\'edit\'</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>actor</string> </key>
-                              <value> <string>jerome</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>comment</string> </key>
-                              <value> <string></string> </value>
-                          </item>
-                          <item>
-                              <key> <string>state</string> </key>
-                              <value> <string>current</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>time</string> </key>
-                              <value>
-                                <object>
-                                  <klass>
-                                    <global name="DateTime" module="DateTime.DateTime"/>
-                                  </klass>
-                                  <tuple>
-                                    <none/>
-                                  </tuple>
-                                  <state>
-                                    <dictionary>
-                                      <item>
-                                          <key> <string>_aday</string> </key>
-                                          <value> <string>Thu</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_amon</string> </key>
-                                          <value> <string>Aug</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_d</string> </key>
-                                          <value> <float>38215.3837809</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_day</string> </key>
-                                          <value> <int>18</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_dayoffset</string> </key>
-                                          <value> <int>4</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fday</string> </key>
-                                          <value> <string>Thursday</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fmon</string> </key>
-                                          <value> <string>August</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_hour</string> </key>
-                                          <value> <int>5</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_millis</string> </key>
-                                          <value> <long>1124356358669</long> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_minute</string> </key>
-                                          <value> <int>12</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_month</string> </key>
-                                          <value> <int>8</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_nearsec</string> </key>
-                                          <value> <float>38.0</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pday</string> </key>
-                                          <value> <string>Thu.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pm</string> </key>
-                                          <value> <string>am</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmhour</string> </key>
-                                          <value> <int>5</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmon</string> </key>
-                                          <value> <string>Aug.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_second</string> </key>
-                                          <value> <float>38.669</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_t</string> </key>
-                                          <value> <float>1124356358.67</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_tz</string> </key>
-                                          <value> <string>GMT-4</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_year</string> </key>
-                                          <value> <int>2005</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>time</string> </key>
-                                          <value> <float>0.383780891199</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>
