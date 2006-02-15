@@ -1842,8 +1842,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     method_dict = {}
     if withCMF:
-      methods = self.sql_catalog_object + self.sql_uncatalog_object \
-                + self.sql_update_object + self.sql_catalog_object_list
+      methods = getattr(self,'sql_catalog_object',()) + \
+                getattr(self,'sql_uncatalog_object',()) + \
+                getattr(self,'sql_update_object',()) + \
+                getattr(self,'sql_catalog_object_list',())
       for method_id in methods:
         method_dict[method_id] = 1
     method_list = map(lambda method_id: getattr(self, method_id, None), method_dict.keys())
