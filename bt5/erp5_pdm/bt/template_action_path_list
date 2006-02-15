@@ -22,7 +22,6 @@ Product | view
 Product | view_stock
 Service Module | metadata
 Service Module | print
-Service Module | translate
 Service Module | view
 Service | history
 Service | metadata
@@ -46,6 +45,15 @@ Transformation Optional Resource | history
 Transformation Optional Resource | metadata
 Transformation Optional Resource | print
 Transformation Optional Resource | view
+Transformation Rule | list
+Transformation Rule | metadata
+Transformation Rule | print
+Transformation Rule | translate
+Transformation Rule | view
+Transformation Sourcing Rule | history
+Transformation Sourcing Rule | metadata
+Transformation Sourcing Rule | print
+Transformation Sourcing Rule | view
 Transformation Transformed Resource | complete_quantity_matrix
 Transformation Transformed Resource | complete_variation_matrix
 Transformation Transformed Resource | history

@@ -401,9 +401,6 @@
    <name>Manage Transient Object Container</name>
   </permission>
   <permission>
-   <name>Manage Translation Services</name>
-  </permission>
-  <permission>
    <name>Manage Vocabulary</name>
   </permission>
   <permission>

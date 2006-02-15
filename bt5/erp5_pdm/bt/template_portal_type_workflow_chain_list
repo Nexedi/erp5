@@ -1,0 +1,11 @@
+Component | edit_workflow
+Component | validation_workflow
+Product | edit_workflow
+Product | validation_workflow
+Service | edit_workflow
+Service | validation_workflow
+Transformation Operation | edit_workflow
+Transformation Optional Resource | edit_workflow
+Transformation Transformed Resource | edit_workflow
+Transformation | edit_workflow
+Transformation | validation_workflow
