@@ -257,6 +257,17 @@
                                   </dictionary>
                                 </value>
                             </item>
+                            <item>
+                                <key> <string>transaction</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string></string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
                           </dictionary>
                         </value>
                     </item>
@@ -286,6 +297,7 @@
 <string>creation_date_range_max</string>
 <string>section_category</string>
 <string>count</string>
+<string>transaction</string>
                           </list>
                         </value>
                     </item>
@@ -329,7 +341,8 @@ amount_range_max=""\r\n
 creation_date_range_min=""\r\n
 creation_date_range_max=""\r\n
 section_category=""\r\n
-count=""</string> </value>
+count=""\r\n
+transaction=""</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -415,6 +428,7 @@ WHERE\n
     AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
   </dtml-if>\n
 \n
+  <dtml-if transaction> AND catalog.uid = <dtml-var transaction> </dtml-if>\n
   <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
   <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
@@ -563,6 +577,7 @@ WHERE\n
     AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
   </dtml-if>\n
 \n
+  <dtml-if transaction> AND catalog.uid = <dtml-var transaction> </dtml-if>\n
   <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
   <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
