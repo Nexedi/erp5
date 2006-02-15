@@ -75,7 +75,6 @@ kw[\'section_category\'] = params.get(\'section_category\')\n
 kw[\'stat\'] = 1\n
 kw[\'omit_output\'] = 1\n
 kw[\'transaction\'] = context.getUid()\n
-kw[\'delivery.start_date\'] = "%"\n
 \n
 result = context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, **kw)\n
 row = result[0]\n
