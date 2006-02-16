@@ -231,17 +231,20 @@ for c in gap_value_list :\n
                 preferences = preferences ))\n
       \n
       else :\n
-        result.append(ReportSection(\n
-          path = account.getPhysicalPath(),\n
-          title = "%s: %s" % (c.getId(), account.getTitle()),\n
-          level = 9,\n
-          form_id = \'Account_viewAccountingTransactionList\',\n
-          selection_name = \'acount_preference_selection\',\n
-          selection_params = params,\n
-          selection_columns = account_columns,\n
-          listbox_display_mode = \'FlatListMode\',\n
-          selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
-          preferences = preferences ))\n
+        if len(portal.portal_simulation.getInventoryList(\n
+                    node_uid = account.getUid(),\n
+                    **account_inventory_list_cache_params )):\n
+          result.append(ReportSection(\n
+            path = account.getPhysicalPath(),\n
+            title = "%s: %s" % (c.getId(), account.getTitle()),\n
+            level = 9,\n
+            form_id = \'Account_viewAccountingTransactionList\',\n
+            selection_name = \'acount_preference_selection\',\n
+            selection_params = params,\n
+            selection_columns = account_columns,\n
+            listbox_display_mode = \'FlatListMode\',\n
+            selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
+            preferences = preferences ))\n
 \n
 return result\n
 # vim: syntax=python\n
