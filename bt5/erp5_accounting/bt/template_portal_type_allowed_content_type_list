@@ -19,6 +19,9 @@ Preference | Accounting Transaction
 Preference | Payment Transaction
 Preference | Purchase Invoice Transaction
 Preference | Sale Invoice Transaction
+Purchase Invoice Transaction | Invoice Line
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
+Purchase Invoice Transaction | Trade Condition
 Sale Invoice Transaction | Invoice Line
 Sale Invoice Transaction | Sale Invoice Transaction Line
+Sale Invoice Transaction | Trade Condition
