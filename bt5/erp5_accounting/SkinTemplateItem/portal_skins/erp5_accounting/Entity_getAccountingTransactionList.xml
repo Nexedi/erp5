@@ -74,7 +74,11 @@ LOG = lambda msg : context.log(\'Entity_getAccountingTransactionList\', msg)\n
 \n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
+\n
+if kw.get(\'no_from_date\', 0) :\n
+  from_date = None \n
+else :\n
+  from_date = preference.getPreferredAccountingTransactionFromDate()\n
 if from_date :\n
   kwd[\'from_date\'] = from_date\n
 \n
@@ -183,6 +187,7 @@ return new_result\n
                             <string>LOG</string>
                             <string>context</string>
                             <string>preference</string>
+                            <string>None</string>
                             <string>from_date</string>
                             <string>at_date</string>
                             <string>simulation_state</string>
@@ -195,7 +200,6 @@ return new_result\n
                             <string>_getiter_</string>
                             <string>l</string>
                             <string>o</string>
-                            <string>None</string>
                             <string>c</string>
                           </tuple>
                         </value>

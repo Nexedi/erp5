@@ -106,6 +106,8 @@ preferences = {\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
   preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
+else :\n
+  params[\'no_from_date\'] = 1\n
 \n
 ## FIXME: issue in reporting famework in ERP5 ? \n
 from Products.ERP5Type.Cache import clearCache\n

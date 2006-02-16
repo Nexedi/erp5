@@ -110,6 +110,8 @@ preferences = {\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
   preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
+else :\n
+  params[\'no_from_date\'] = 1\n
 if source_payment :\n
   params[\'payment_uid\'] = context.restrictedTraverse(source_payment).getUid()\n
 if destination_section :\n
@@ -131,7 +133,7 @@ account_columns = (\n
 #  (\'translated_simulation_state_title\', \'State\'),\n
   (\'debit\', \'Debit\'),\n
   (\'credit\', \'Credit\'),\n
-  (\'reference\', \'Accounting Transaction Reference\'),\n
+  (\'specific_reference\', \'Accounting Transaction Reference\'),\n
   (\'net_balance\', \'Balance\'),\n
 )\n
 \n

@@ -77,10 +77,14 @@ if kw.get(\'resource\'):\n
 \n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = kw.get(\'from_date\',\n
+if kw.get(\'no_from_date\', 0) :\n
+  from_date = None \n
+else :\n
+  from_date = kw.get(\'from_date\',\n
                 preference.getPreferredAccountingTransactionFromDate())\n
 if from_date :\n
   params[\'from_date\'] = from_date\n
+\n
 at_date =  kw.get(\'at_date\',\n
               preference.getPreferredAccountingTransactionAtDate())\n
 if at_date :\n
@@ -191,6 +195,7 @@ return float(\'%.02f\' % (row.total_price or 0.0) )\n
                             <string>KeyError</string>
                             <string>AttributeError</string>
                             <string>preference</string>
+                            <string>None</string>
                             <string>from_date</string>
                             <string>at_date</string>
                             <string>simulation_state</string>

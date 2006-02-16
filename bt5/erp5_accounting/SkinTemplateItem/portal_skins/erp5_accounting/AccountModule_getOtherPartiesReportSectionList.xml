@@ -99,7 +99,9 @@ params =  {\n
 \n
 params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
 if from_date:\n
-    params[\'from_date\'] = from_date\n
+  params[\'from_date\'] = from_date\n
+else :\n
+  params[\'no_from_date\'] = 1\n
 \n
 portal = context.portal_url.getPortalObject()\n
 simulation_tool = portal.portal_simulation\n

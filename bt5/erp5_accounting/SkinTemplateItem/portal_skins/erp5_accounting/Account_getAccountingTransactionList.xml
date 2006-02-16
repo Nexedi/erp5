@@ -73,7 +73,10 @@ from Products.ERP5Type.Document import newTempAccountingTransaction\n
 kwd={"omit_simulation" : 1}\n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = kw.get(\'from_date\', preference\\\n
+if kw.get(\'no_from_date\', 0) :\n
+  from_date = None \n
+else :\n
+  from_date = kw.get(\'from_date\', preference\\\n
                         .getPreferredAccountingTransactionFromDate())\n
 if from_date :\n
   kwd[\'from_date\'] = from_date\n
@@ -239,6 +242,7 @@ return new_result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>preference</string>
+                            <string>None</string>
                             <string>from_date</string>
                             <string>_write_</string>
                             <string>at_date</string>
@@ -254,7 +258,6 @@ return new_result\n
                             <string>_apply_</string>
                             <string>result</string>
                             <string>net_balance</string>
-                            <string>None</string>
                             <string>get_inventory_kw</string>
                             <string>getInventoryAssetPrice</string>
                             <string>last_total_debit</string>

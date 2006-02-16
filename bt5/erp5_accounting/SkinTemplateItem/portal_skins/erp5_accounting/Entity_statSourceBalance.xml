@@ -73,7 +73,10 @@ if kw.has_key(\'hide_grouping\'):\n
 \n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
+if kw.get(\'no_from_date\', 0) :\n
+  from_date = None \n
+else :\n
+  from_date = preference.getPreferredAccountingTransactionFromDate()\n
 if from_date :\n
   kwd[\'from_date\'] = from_date\n
 at_date = preference.getPreferredAccountingTransactionAtDate()\n
@@ -156,6 +159,7 @@ return float(\'%.02f\' % row.total_price or 0)\n
                             <string>_write_</string>
                             <string>context</string>
                             <string>preference</string>
+                            <string>None</string>
                             <string>from_date</string>
                             <string>at_date</string>
                             <string>simulation_state</string>
