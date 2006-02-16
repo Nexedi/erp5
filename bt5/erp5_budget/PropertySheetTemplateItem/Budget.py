@@ -28,7 +28,8 @@
 
 class Budget:
   """
-    Budget properties
+  Budget properties
   """
 
-  _categories = ( 'function', 'financial_section', 'budget_type', 'budget_priority', 'budget_severity', 'budget_group', )
+  _categories = ('function', 'financial_section', 'budget_type', 
+                 'budget_priority', 'budget_severity', 'budget_group')

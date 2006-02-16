@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005, 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Yoshinori Okuji <yo@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,12 +33,13 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.MetaNode import MetaNode
 
+from Products.ERP5.Document.InventoryCell import InventoryCell
 
 from zLOG import LOG
 
-class BudgetCell(Predicate, MetaNode ):
+class BudgetCell(Predicate, MetaNode):
     """
-       BudgetCell ...
+    BudgetCell ...
     """
 
     # Default Properties
@@ -53,6 +55,8 @@ class BudgetCell(Predicate, MetaNode ):
                       , PropertySheet.Arrow
                       , PropertySheet.Amount
                       , PropertySheet.Budget
+                      , PropertySheet.MappedValue
+                      , PropertySheet.VariationRange
                       )
 
     # CMF Type Definition
@@ -64,30 +68,57 @@ class BudgetCell(Predicate, MetaNode ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    security.declareObjectProtected(Permissions.View)
 
     security.declareProtected(Permissions.View, 'getTitle')
     def getTitle(self):
-	    cat_value = self.getPortalObject().portal_categories.getCategoryValue
-	    return '/'.join([cat_value(x).getTitle()
-			    for x in self.getMembershipCriterionCategoryList()])
+      """
+      Return a calculated title.
+      """
+      script = self._getTypeBasedMethod('asTitle')
+      try:
+        title = script()
+      except UnboundLocalError:
+        raise UnboundLocalError,\
+              "Did not find title script for portal type: %r" %\
+              self.getPortalType()
+      return title
     
     security.declareProtected(Permissions.View, 'getCurrentInventory')  
-    def getCurrentInventory(self):
-      return  self.portal_simulation.getCurrentInventory(node=self.getRelativeUrl())
+    def getCurrentInventory(self, **kw):
+      """
+      Returns current inventory
+      """
+      kw['node'] = self.getRelativeUrl()
+      resource = self.getResourceValue()
+      if resource is not None:
+        kw['resource'] = resource.getRelativeUrl()
+      return self.portal_simulation.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.View, 'getCurrentBalance')
     def getCurrentBalance(self):
-      return self.getQuantity(0.0) + self.portal_simulation.getCurrentInventory(node=self.getRelativeUrl())
+      """
+      Returns current balance
+      """
+      return self.getQuantity(0.0) + self.getCurrentInventory()
+
     security.declareProtected(Permissions.View, 'getConsumedBudget')
     def getConsumedBudget(self, src__=0):
-      financial_section = self.getMembershipCriterionCategoryList()[0]
-      function = self.getMembershipCriterionCategoryList()[1]
-      group = self.getMembershipCriterionCategoryList()[2]
-      return self.portal_simulation.getAvailableInventory(
-            src__ = src__,  
-            financialSectionCategory = self.portal_categories.getCategoryValue(financial_section).getUid(),
-            functionCategory = self.portal_categories.getCategoryValue(function).getUid(),
-            groupCategory = self.portal_categories.getCategoryValue(group).getUid(),
-            date = {'query' : [self.getParent().getParent().getStartDate(), self.getParent().getParent().getStopDate()], 'range' : 'minmax'},
-           )
+      """
+      Return consumed budget.
+      """
+      script = self._getTypeBasedMethod('getConsumedBudget')
+      try:
+        result = script(src__=src__)
+      except UnboundLocalError:
+        raise UnboundLocalError,\
+              "Did not find consumed budget script for portal type: %r" % \
+              self.getPortalType()
+      return result
+
+    security.declareProtected(Permissions.View, 'getAvailableBudget')
+    def getAvailableBudget(self):
+      """
+      Return available budget.
+      """
+      return self.getCurrentBalance() - self.getConsumedBudget()

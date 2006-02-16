@@ -66,26 +66,56 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>line = context.Budget_getFinancialSectionItemList()\n
-column = context.Budget_getFunctionItemList(begin=1)\n
-tab = [context.getGroupValue().getRelativeUrl()] \n
+            <value> <string encoding="cdata"><![CDATA[
+
+cell_range = []\n
+base_category_list = context.getVariationBaseCategoryList()\n
+for base_category in base_category_list:\n
+  if matrixbox == 1:\n
+    # XXX matrixbox is right_display (not as listfield) => invert display and value in item\n
+    cell_range.append(map(lambda x: (x[1],x[0]), \n
+                                    context.getVariationCategoryItemList(\n
+                                           base_category_list=(base_category,),\n
+                                           display_base_category=1)))\n
+  else:\n
+    cell_range.append(context.getVariationCategoryList(\n
+                                   base_category_list=(base_category,)))\n
 \n
-if matrixbox == 0:\n
-  if len(tab) :\n
-    cell_range = [line, column, tab]\n
-  else :\n
-    cell_range = [line, column]\n
-else:\n
-  if len(tab) :\n
-    cell_range = [[(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in line],\n
-        [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in column],\n
-        [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in tab]]\n
-  else :\n
-    cell_range = [[(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in line],\n
-        [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in column]]\n
+cell_range = filter(lambda x: x != [], cell_range )\n
 \n
 return cell_range\n
-</string> </value>
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+# # line = context.Budget_getFinancialSectionItemList()\n
+# line = []\n
+# column = context.Budget_getFunctionItemList(begin=1)\n
+# tab = [context.getGroupValue().getRelativeUrl()] \n
+# \n
+# if matrixbox == 0:\n
+#   if len(tab) :\n
+#     cell_range = [line, column, tab]\n
+#   else :\n
+#     cell_range = [line, column]\n
+# else:\n
+#   if len(tab) :\n
+#     cell_range = [[(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in line],\n
+#         [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in column],\n
+#         [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in tab]]\n
+#   else :\n
+#     cell_range = [[(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in line],\n
+#         [(x, context.portal_categories.getCategoryValue(x).getTitle()) for x in column]]\n
+# \n
+# return cell_range\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -94,12 +124,24 @@ return cell_range\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/BudgetLine_asCellRange</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_budget/BudgetLine_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0</string> </value>
+            <value> <string>matrixbox=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -135,17 +177,15 @@ return cell_range\n
                         <value>
                           <tuple>
                             <string>matrixbox</string>
+                            <string>kw</string>
+                            <string>cell_range</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>line</string>
-                            <string>column</string>
-                            <string>tab</string>
-                            <string>len</string>
-                            <string>cell_range</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>base_category_list</string>
                             <string>_getiter_</string>
-                            <string>x</string>
+                            <string>base_category</string>
+                            <string>map</string>
+                            <string>filter</string>
                           </tuple>
                         </value>
                     </item>
@@ -170,6 +210,27 @@ return cell_range\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

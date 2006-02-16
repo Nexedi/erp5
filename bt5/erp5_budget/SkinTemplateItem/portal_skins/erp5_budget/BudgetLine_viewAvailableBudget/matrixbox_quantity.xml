@@ -213,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -271,7 +271,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getQuantity() + cell.getCurrentInventory() - cell.getConsumedBudget()</string> </value>
+            <value> <string>python: cell.getAvailableBudget()</string> </value>
         </item>
       </dictionary>
     </pickle>

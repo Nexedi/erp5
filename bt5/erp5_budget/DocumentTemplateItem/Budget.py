@@ -31,11 +31,14 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Predicate import Predicate
 
+from Products.ERP5.Document.Delivery import Delivery
+from Products.ERP5.Document.Inventory import Inventory
+
 from zLOG import LOG
 
-class Budget( Predicate ):
+class Budget(Predicate):
     """
-       Budget means a kind of budget stock.
+    Budget means a kind of budget stock.
     """
 
     # Default Properties
@@ -43,9 +46,9 @@ class Budget( Predicate ):
                       , PropertySheet.XMLObject
                       , PropertySheet.SimpleItem
                       , PropertySheet.Folder
-	 	                  , PropertySheet.Predicate
-		                  , PropertySheet.SortIndex
-		                  , PropertySheet.Task
+                      , PropertySheet.Predicate
+                      , PropertySheet.SortIndex
+                      , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Budget
                       )
@@ -59,4 +62,4 @@ class Budget( Predicate ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    security.declareObjectProtected(Permissions.View)

@@ -66,9 +66,39 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context = context.asContext(criterion_property_list=[\'quantity\',\'stop_date\'] \n
-        , range_criterion = {\'stop_date\':(context.getStartDate(),context.getStopDate())\n
-                             ,\'quantity\':(0,context.getQuantity())})\n
+            <value> <string>return context.generatePredicate(multimembership_criterion_base_category_list = (\'resource\',),\n
+                                 criterion_property_list = (\'start_date\', \'stop_date\'))\n
+\n
+\n
+\n
+context = context.asContext(\n
+             multimembership_criterion_base_category_list = (\'resource\',),\n
+             _range_criterion = {\'start_date\': (context.getStartDate(),\n
+                                               context.getStopDate())\n
+                               })\n
+return context\n
+\n
+\n
+\n
+return context.generatePredicate(criterion_property_list=(\'start_date\', \'stop_date\'))\n
+\n
+return context.generatePredicate(_range_criterion = {\'start_date\': (context.getStartDate(),\n
+                                               context.getStopDate())\n
+                               })\n
+\n
+return context.generatePredicate(criterion_property_list=(\'start_date\',))\n
+\n
+return context.generatePredicate(multimembership_criterion_base_category_list = (\'resource\',),\n
+                                                      criterion_property_list = (\'start_date\',))\n
+\n
+\n
+\n
+\n
+context = context.asContext(\n
+             criterion_property_list=[\'start_date\'], \n
+             range_criterion = {\'start_date\': (context.getStartDate(),\n
+                                               context.getStopDate())\n
+                               })\n
 return context\n
 </string> </value>
         </item>
@@ -80,7 +110,7 @@ return context\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/BudgetCell_asPredicate</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_budget/BudgetCell_asPredicate</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

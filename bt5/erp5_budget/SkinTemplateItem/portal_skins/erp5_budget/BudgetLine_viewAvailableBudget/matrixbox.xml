@@ -210,12 +210,7 @@
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>None</string>
-                          <string>None</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -242,10 +237,6 @@
                           <string>quantity</string>
                           <string>quantity</string>
                         </tuple>
-                        <tuple>
-                          <string>membership_criterion_category_list</string>
-                          <string>membership_criterion_category_list</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -264,16 +255,7 @@
                 <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>mapped_value_property_list</string>
-                          <string>mapped_value_property_list</string>
-                        </tuple>
-                        <tuple>
-                          <string>membership_criterion_base_category_list</string>
-                          <string>membership_criterion_base_category_list</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -283,23 +265,13 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>None</string>
-                          <string>None</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>tabs</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>None</string>
-                          <string>None</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
         </item>
@@ -77,8 +83,6 @@
                     <key> <string>buttom</string> </key>
                     <value>
                       <list>
-                        <string>membership_criterion_base_category_list</string>
-                        <string>mapped_value_property_list</string>
                         <string>matrixbox</string>
                       </list>
                     </value>
@@ -86,14 +90,15 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>matrixbox_membership_criterion_category_list</string>
                         <string>matrixbox_quantity</string>
                       </list>
                     </value>
@@ -103,17 +108,14 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_group</string>
-                        <string>my_resource</string>
+                        <string>my_resource_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -129,7 +131,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BudgetLine_view</string> </value>
+            <value> <string>BudgetLine_viewAvailableBudget</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -145,7 +147,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Lines</string> </value>
+            <value> <string>Available Budget</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -41,6 +41,9 @@
    <role>Reviewer</role>
   </permission>
   <permission>
+   <name>AccessContentsInformation</name>
+  </permission>
+  <permission>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
    <role>Reviewer</role>
@@ -49,6 +52,9 @@
    <name>Add BTreeFolder2s</name>
    <role>Manager</role>
    <role>Reviewer</role>
+  </permission>
+  <permission>
+   <name>Add Base18 Tools</name>
   </permission>
   <permission>
    <name>Add Browser Id Manager</name>
@@ -162,6 +168,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add ERP5Shop Tools</name>
+  </permission>
+  <permission>
    <name>Add ERP5SyncML Tools</name>
    <role>Manager</role>
   </permission>
@@ -206,6 +215,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add MMM Shop Toolss</name>
+  </permission>
+  <permission>
    <name>Add MailHost objects</name>
    <role>Manager</role>
   </permission>
@@ -230,7 +242,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add Plugin Registrys</name>
+   <name>Add Portal ZSyncer Tools</name>
   </permission>
   <permission>
    <name>Add Python Scripts</name>
@@ -301,6 +313,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add ZSyncers</name>
+  </permission>
+  <permission>
    <name>Add Zope Tutorials</name>
    <role>Manager</role>
   </permission>
@@ -325,6 +340,9 @@
   <permission>
    <name>Add portal topics</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add shop category</name>
   </permission>
   <permission>
    <name>Change Browser Id Manager</name>
@@ -435,7 +453,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Change user folder</name>
+   <name>Checkout shopping cart</name>
   </permission>
   <permission>
    <name>Copy or Move</name>
@@ -466,6 +484,9 @@
   <permission>
    <name>Download ExtFile/ExtImage</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Download Product</name>
   </permission>
   <permission>
    <name>Edit CMFWiki Page</name>
@@ -525,14 +546,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Manage Groups</name>
-  </permission>
-  <permission>
    <name>Manage Transient Object Container</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Manage Translation Services</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -556,6 +570,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Manage currencies</name>
+  </permission>
+  <permission>
    <name>Manage extensions</name>
   </permission>
   <permission>
@@ -573,6 +590,15 @@
   <permission>
    <name>Manage properties</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Manage shop</name>
+  </permission>
+  <permission>
+   <name>Manage shop catalog</name>
+  </permission>
+  <permission>
+   <name>Manage shop category</name>
   </permission>
   <permission>
    <name>Manage users</name>
@@ -630,9 +656,6 @@
   <permission>
    <name>Search ZCatalog</name>
    <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Search for principals</name>
   </permission>
   <permission>
    <name>Set own password</name>
@@ -709,6 +732,15 @@
   <permission>
    <name>WebDAV access</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>ZSyncer: Use ZSyncer</name>
+  </permission>
+  <permission>
+   <name>ZopeProfiler: manage</name>
+  </permission>
+  <permission>
+   <name>ZopeProfiler: view</name>
   </permission>
  </permission_list>
  <portal_type>Budget Transaction Module</portal_type>

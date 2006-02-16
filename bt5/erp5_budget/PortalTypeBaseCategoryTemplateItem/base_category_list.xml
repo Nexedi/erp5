@@ -1,15 +1,4 @@
 <base_category_list>
- <portal_type id="Accounting Transaction Line">
-  <item>group</item>
-  <item>function</item>
-  <item>financial_section</item>
- </portal_type>
- <portal_type id="Budget">
-  <item>group</item>
- </portal_type>
- <portal_type id="Budget Line">
-  <item>group</item>
- </portal_type>
  <portal_type id="Budget Transaction">
   <item>group</item>
  </portal_type>

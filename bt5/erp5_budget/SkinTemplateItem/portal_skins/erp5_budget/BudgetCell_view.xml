@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -95,6 +101,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_title</string>
                         <string>my_quantity</string>
                       </list>
                     </value>
@@ -134,7 +141,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Budget Cell</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

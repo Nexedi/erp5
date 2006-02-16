@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005, 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Yoshinori Okuji <yo@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,9 +33,9 @@ from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Amount import Amount
 from zLOG import LOG
 
-class BudgetTransaction( DeliveryLine ):
+class BudgetTransaction(DeliveryLine):
     """
-       BudgetTransaction an order or transfer of budget.
+    BudgetTransaction an order or transfer of budget.
     """
 
     # Default Properties
@@ -58,14 +59,20 @@ class BudgetTransaction( DeliveryLine ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    security.declareObjectProtected(Permissions.View)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'isAccountable')
     def isAccountable(self):
-      """supersedes the DeliveryLine definition"""
+      """
+      Supersedes the DeliveryLine definition
+      """
       return 1
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getSimulationState')
     def getSimulationState(self):
-      """supersedes the DeliveryLine definition"""
+      """
+      Supersedes the DeliveryLine definition
+      """
       return self.portal_workflow.getInfoFor(self, 'simulation_state')

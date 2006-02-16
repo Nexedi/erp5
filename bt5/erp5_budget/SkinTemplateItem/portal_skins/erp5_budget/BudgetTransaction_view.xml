@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -97,9 +103,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_group</string>
                         <string>my_source</string>
-                        <string>my_resource</string>
+                        <string>my_resource_title</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -107,10 +113,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_stop_date</string>
+                        <string>my_start_date</string>
                         <string>my_destination</string>
                         <string>my_quantity</string>
-                        <string>my_simulation_state</string>
                       </list>
                     </value>
                 </item>

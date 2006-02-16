@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateTransaction</string> </value>
+            <value> <string>BudgetTransaction_checkFeasability</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -84,6 +84,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>

@@ -66,49 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#context.updateCellRange(base_id=\'cell\', script_id=\'BudgetLine_asCellRange\')\n
-#cell_range_key_list = context.getCellRangeKeyList()\n
-\n
-#portal_object = context.getPortalObject()\n
-\n
-#category_list = [\'financial_section\',\'function\']\n
-#context.setVariationBaseCategoryList(category_list)\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-# context.setVariationBaseCategoryList =[\'function\',\'financial_section\']\n
-# context.setFinancialSectionList =  Budget_getFinancialSectionItemList() \n
-# context.setFunctionList = Budget_getFunctionItemList()\n
-\n
-\n
-#l = newTempBase(portal_object,portal_object.getId() )\n
-# \n
-# if cell_range_key_list != [[None, None]] :\n
-#   for k in cell_range_key_list:\n
-#     category_list = [\'function\',\'financial_section\']\n
-#     function_list = context.Budget_getFunctionItemList()                  # [x for x in k if x.startswith(\'function\')]\n
-#     financial_section_list = context.Budget_getFinancialSectionItemList() #[x for x in k if x.startswith(\'financial_section\')]\n
-#     \n
-#   \n
-#     \n
-#     \n
-#     \n
-#     \n
-#     \n
-#       \n
-#     \n
-#     c = context.newCell(*k)\n
-#     c.edit(mapped_value_property_list = (\'max_quantity\'),\n
-#            force_update = 1,\n
-#            membership_criterion_category_list = category_list,\n
-#            financial_section_list = financial_section_list,\n
-#            function_list = function_list, \n
-#           )\n
+            <value> <string>context.edit(\n
+  variation_base_category_list=[\'group\']\n
+)\n
+# variation_base_category_list=[\'financial_section\', \'function\']\n
 </string> </value>
         </item>
         <item>
@@ -118,12 +79,24 @@
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/BudgetLine_init</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_budget/BudgetLine_init</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -148,7 +121,12 @@
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -170,6 +148,27 @@
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

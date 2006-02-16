@@ -34,9 +34,9 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
 
-class BudgetTransfer( Supply ):
+class BudgetTransfer(Supply):
     """
-       BudgetTransfer  ...
+    BudgetTransfer  ...
     """
 
     # Default Properties
@@ -44,11 +44,9 @@ class BudgetTransfer( Supply ):
                       , PropertySheet.XMLObject
                       , PropertySheet.Folder
                       , PropertySheet.Task
-		      , PropertySheet.Arrow
-		      , PropertySheet.Movement
-		      )
-
-  
+                      , PropertySheet.Arrow
+                      , PropertySheet.Movement
+      )
     
     # CMF Type Definition
     meta_type='ERP5 Folder'
@@ -59,4 +57,4 @@ class BudgetTransfer( Supply ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    security.declareObjectProtected(Permissions.View)

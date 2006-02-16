@@ -66,29 +66,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-budget_list = context.getPortalObject().budget_module.objectValues()\n
-budget_cell=[(\'\', \'\')]\n
-for o in budget_list:\n
-    if o.getPortalType() == \'Budget\':\n
-    \n
-         if date >= o.getStartDate() and date <= o.getStopDate():             \n
-             lines = o.objectValues()\n
-             for l in lines:\n
-                cells = l.objectValues()\n
-                if l.getGroup() == group:\n
-                    for c in cells:\n
-                           item=[]                           \n
-                           title = c.getTitle()\n
-                           item.append(title) \n
-                           item.append(c.getRelativeUrl())\n
-                           budget_cell.append(item) \n
-\n
-return budget_cell\n
-
-
-]]></string> </value>
+            <value> <string>from Products.CMFCore.utils import getToolByName\n
+domain_tool = getToolByName(context, \'portal_domains\')\n
+budget_cell_list = [x.getObject() for x in \\\n
+                    domain_tool.searchPredicateList(\n
+                      context, portal_type=[\'Budget Cell\'],\n
+                      tested_base_category_list=[\'resource\'])]\n
+return [(\'\',\'\')]+[(x.getTitle(), x.getRelativeUrl()) for x in budget_cell_list]\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -97,12 +82,24 @@ return budget_cell\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_budget/BudgetTransaction_getBudgetCellList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_budget/BudgetTransaction_getBudgetCellList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string> date,group</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,26 +119,22 @@ return budget_cell\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>date</string>
-                            <string>group</string>
-                            <string>_getattr_</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
                             <string>context</string>
-                            <string>budget_list</string>
-                            <string>budget_cell</string>
+                            <string>domain_tool</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>o</string>
-                            <string>lines</string>
-                            <string>l</string>
-                            <string>cells</string>
-                            <string>c</string>
-                            <string>item</string>
-                            <string>title</string>
+                            <string>_getattr_</string>
+                            <string>x</string>
+                            <string>budget_cell_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -164,6 +157,27 @@ return budget_cell\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

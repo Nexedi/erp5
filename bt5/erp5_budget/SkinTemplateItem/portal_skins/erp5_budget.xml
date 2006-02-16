@@ -25,6 +25,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -39,10 +45,6 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>erp5_budget</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Budgets</string> </value>
         </item>
       </dictionary>
     </pickle>

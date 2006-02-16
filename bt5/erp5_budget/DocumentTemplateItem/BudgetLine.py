@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005, 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Yoshinori Okuji <yo@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -31,12 +32,15 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.Variated import Variated
+
+from Products.ERP5.Document.InventoryLine import InventoryLine
 
 from zLOG import LOG
 
-class BudgetLine( Predicate, XMLMatrix ):
+class BudgetLine(Predicate, XMLMatrix, Variated):
     """
-       BudgetLine  a line of budget...
+    BudgetLine  a line of budget...
     """
 
     # Default Properties
@@ -49,8 +53,11 @@ class BudgetLine( Predicate, XMLMatrix ):
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Budget
-		      )
-
+                      , PropertySheet.Amount
+                      , PropertySheet.Document
+                      , PropertySheet.VariationRange
+                      , PropertySheet.Assignment
+    )
 
     # CMF Type Definition
     meta_type='ERP5 Budget Line'
@@ -61,4 +68,4 @@ class BudgetLine( Predicate, XMLMatrix ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    security.declareObjectProtected(Permissions.View)

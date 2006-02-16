@@ -36,18 +36,18 @@ from Products.ERP5.Document.SupplyLine import SupplyLine
 from Products.ERP5.Document.Amount import Amount
 from zLOG import LOG
 
-class BudgetTransferLine( SupplyLine ):
+class BudgetTransferLine(SupplyLine):
     """
-       BudgetTransferLine  ...
+    BudgetTransferLine
     """
 
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
-		                  , PropertySheet.Amount
+                      , PropertySheet.Amount
                       , PropertySheet.Task
                       , PropertySheet.Arrow
-		      )
+    )
     
     # CMF Type Definition
     meta_type='ERP5 Document'
@@ -58,4 +58,4 @@ class BudgetTransferLine( SupplyLine ):
 
     # Declarative security
     security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    security.declareObjectProtected(Permissions.View)
