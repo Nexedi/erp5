@@ -33,14 +33,6 @@ class PaymentCondition:
   """
 
   _properties = (
-        {   'id'          : 'payment_amount',
-            'description' : 'amount',
-            'type'        : 'float',
-            'mode'        : 'w' },
-        {   'id'          : 'payment_ratio',
-            'description' : 'percentage of total amount',
-            'type'        : 'float',
-            'mode'        : 'w' },
         {   'id'          : 'payment_term',
             'description' : 'payment term in a number of days',
             'type'        : 'int',
