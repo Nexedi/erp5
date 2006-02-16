@@ -55,7 +55,6 @@ class Invoice(AccountingTransaction):
                       , PropertySheet.Movement
                       , PropertySheet.Amount
                       , PropertySheet.Reference
-                      , PropertySheet.PaymentCondition
                       , PropertySheet.TradeCondition
                       , PropertySheet.ValueAddedTax
                       , PropertySheet.EcoTax
