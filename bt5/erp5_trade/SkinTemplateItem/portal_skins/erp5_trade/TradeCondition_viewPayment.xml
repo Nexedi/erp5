@@ -98,18 +98,24 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_payment_condition_payment_mode</string>
-                        <string>my_payment_condition_payment_term</string>
-                        <string>my_payment_condition_payment_end_of_month</string>
-                        <string>my_payment_condition_payment_additional_term</string>
-                        <string>my_payment_condition_trade_date</string>
+                        <string>my_payment_condition_quantity</string>
+                        <string>my_payment_condition_efficiency</string>
+                        <string>my_payment_condition_payment_date</string>
+                        <string>my_payment_condition_source_payment</string>
+                        <string>my_payment_condition_destination_payment</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_payment_condition_payment_mode</string>
+                        <string>my_payment_condition_payment_term</string>
+                        <string>my_payment_condition_payment_end_of_month</string>
+                        <string>my_payment_condition_payment_additional_term</string>
+                        <string>my_payment_condition_trade_date</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

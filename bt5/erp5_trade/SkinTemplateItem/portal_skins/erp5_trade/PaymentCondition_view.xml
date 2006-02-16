@@ -97,8 +97,10 @@
                       <list>
                         <string>my_title</string>
                         <string>my_description</string>
-                        <string>my_payment_ratio</string>
-                        <string>my_payment_amount</string>
+                        <string>my_quantity</string>
+                        <string>my_efficiency</string>
+                        <string>my_source_payment</string>
+                        <string>my_destination_payment</string>
                       </list>
                     </value>
                 </item>
@@ -111,6 +113,7 @@
                         <string>my_payment_end_of_month</string>
                         <string>my_payment_additional_term</string>
                         <string>my_trade_date</string>
+                        <string>my_payment_date</string>
                       </list>
                     </value>
                 </item>
