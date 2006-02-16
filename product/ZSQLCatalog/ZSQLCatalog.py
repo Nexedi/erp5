@@ -703,7 +703,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     path = self.getpath(uid, sql_catalog_id=sql_catalog_id)
     obj = self.aq_parent.unrestrictedTraverse(path)
-    if not obj:
+    if obj is None:
       if REQUEST is None:
         REQUEST=self.REQUEST
       obj = self.resolve_url(path, REQUEST)
