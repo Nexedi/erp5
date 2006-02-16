@@ -61,7 +61,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>panel1</string>
+                <string>panel2</string>
               </list>
             </value>
         </item>
@@ -70,13 +71,22 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>panel1</string> </key>
                     <value>
                       <list>
                         <string>from_date</string>
                         <string>at_date</string>
                         <string>transaction_section_category</string>
                         <string>transaction_simulation_state</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>panel2</string> </key>
+                    <value>
+                      <list>
+                        <string>gap</string>
+                        <string>balance</string>
                       </list>
                     </value>
                 </item>
