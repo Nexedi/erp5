@@ -59,7 +59,6 @@ class PaymentCondition:
             'mode'        : 'w' },
       )
 
-  _categories = ( 'trade_date', 'payment_mode' )
-
-
+  _categories = ( 'trade_date', 'payment_mode',
+                  'source_payment', 'destination_payment', )
 
