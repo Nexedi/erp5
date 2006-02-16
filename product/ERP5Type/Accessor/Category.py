@@ -169,7 +169,9 @@ class ListGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      return instance._getAcquiredCategoryMembershipList(self._key, base=0, **kw)
+      if not kw.has_key('base'):
+        kw['base'] = 0
+      return instance._getAcquiredCategoryMembershipList(self._key, **kw)
     psyco.bind(__call__)
 
 SetGetter = ListGetter # XXX ERROR
