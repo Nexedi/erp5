@@ -86,6 +86,8 @@
                     <value>
                       <list>
                         <string>gap</string>
+                        <string>from_date_balance</string>
+                        <string>at_date_balance</string>
                         <string>balance</string>
                       </list>
                     </value>

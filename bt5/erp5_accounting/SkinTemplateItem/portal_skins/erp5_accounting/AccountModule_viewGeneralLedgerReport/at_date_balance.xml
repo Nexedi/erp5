@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>balance</string> </value>
+            <value> <string>at_date_balance</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -247,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Balance of the Period</string> </value>
+                    <value> <string>Balance at Stop Date</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_simulation.getInventoryAssetPrice(section_category=here.REQUEST.get(\'transaction_section_category\'), node_category="gap/"+here.REQUEST.get(\'gap\'), simulation_state=here.REQUEST.get(\'transaction_simulation_state\'), from_date=here.REQUEST.get(\'from_date\'), at_date=here.REQUEST.get(\'at_date\'))</string> </value>
+            <value> <string>python: here.portal_simulation.getInventoryAssetPrice(section_category=here.REQUEST.get(\'transaction_section_category\'), node_category="gap/"+here.REQUEST.get(\'gap\'), simulation_state=here.REQUEST.get(\'transaction_simulation_state\'), at_date=here.REQUEST.get(\'at_date\'))</string> </value>
         </item>
       </dictionary>
     </pickle>
