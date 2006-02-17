@@ -78,8 +78,8 @@ if kw.get(\'no_from_date\', 0) :\n
 else :\n
   from_date = kw.get(\'from_date\', preference\\\n
                         .getPreferredAccountingTransactionFromDate())\n
-if from_date :\n
-  kwd[\'from_date\'] = from_date\n
+if from_date:\n
+    kwd[\'from_date\'] = from_date\n
 at_date = kw.get(\'at_date\', preference\\\n
                         .getPreferredAccountingTransactionAtDate())\n
 if at_date :\n
