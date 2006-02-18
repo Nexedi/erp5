@@ -382,6 +382,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   security.declareObjectPublic()
 
   def __init__(self, domain_dict = None):
+    #LOG('DomainSelection', 0, '__init__ is called with %r' % (domain_dict,))
     if domain_dict is not None:
       self.domain_dict = domain_dict
       for k,v in domain_dict.items():
@@ -405,34 +406,40 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
         # Special treatment for parent
         select_expression.append(d.getParentSqlExpression(table='catalog', 
                                strict_membership=strict_membership))
-      elif k is not None and getattr(aq_base(d), 'isCategory', 0):
-        # This is a category, we must join
-        select_expression.append('%s.%s = %s_category.uid' % \
-                               (join_table, join_column, k))
-        select_expression.append(d.asSqlExpression(table='%s_category' % k, 
-                               strict_membership=strict_membership))
-                               # XXX We should take into account k explicitely
-                               # if we want to support category acquisition
-      elif k is not None and getattr(aq_base(d), 'isPredicate', 0):
-        select_expression.append(d.asSqlExpression(table='%s_category' % k,
-                               strict_membership=strict_membership))
-    result = "( %s )" % ' AND '.join(select_expression)
-    #LOG('asSqlExpression', 0, str(result))
+      elif k is not None:
+        if getattr(aq_base(d), 'isPredicate', 0):
+          select_expression.append(d.asSqlExpression(table='%s_category' % k,
+                                                     strict_membership=strict_membership))
+        else:
+          # This is a category, we must join
+          select_expression.append('%s.%s = %s_category.uid' % \
+                                (join_table, join_column, k))
+          select_expression.append(d.asSqlExpression(table='%s_category' % k, 
+                                strict_membership=strict_membership))
+                                # XXX We should take into account k explicitely
+                                # if we want to support category acquisition
+    if select_expression:
+      result = "( %s )" % ' AND '.join(select_expression)
+    else:
+      result = ''
+    #LOG('DomainSelection', 0, 'asSqlExpression returns %r' % (result,))
     return result
 
   security.declarePublic('asSqlJoinExpression')
   def asSqlJoinExpression(self, domain_id=None, exclude_domain_id=None):
     join_expression = []
+    #LOG('DomainSelection', 0, 'domain_id = %r, exclude_domain_id = %r, self.domain_dict = %r' % (domain_id, exclude_domain_id, self.domain_dict))
     for k, d in self.domain_dict.items():
       if k == 'parent':
         pass
-      elif k is not None and getattr(aq_base(d), 'isCategory', 0):
-        # This is a category, we must join
-        join_expression.append('category AS %s_category' % k)
-      elif k is not None and getattr(aq_base(d), 'isPredicate', 0):
-        join_expression.append(d.asSqlJoinExpression(table='%s_category' % k))
+      elif k is not None:
+        if getattr(aq_base(d), 'isPredicate', 0):
+          join_expression.append(d.asSqlJoinExpression(table='%s_category' % k))
+        else:
+          # This is a category, we must join
+          join_expression.append('category AS %s_category' % k)
     result = "%s" % ' , '.join(join_expression)
-    #LOG('asSqlJoinExpression', 0, str(result))
+    #LOG('DomainSelection', 0, 'asSqlJoinExpression returns %r' % (result,))
     return result
 
   security.declarePublic('asDomainDict')

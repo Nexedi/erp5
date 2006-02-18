@@ -77,7 +77,10 @@ def getAsList(a):
     l.append(e)
   return l
 
-def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list, form_id, selection_name):
+def makeTreeBody(form = None, root_dict = None, domain_path = '',
+                 depth = 0, total_depth = None, unfolded_list = (),
+                 form_id = None, selection_name = None,
+                 base_category = None):
   """
     This method builds a report tree
 
@@ -90,34 +93,40 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
   #LOG('makeTreeBody domain_path', 0, str(domain_path))
   #LOG('makeTreeBody unfolded_list', 0, str(unfolded_list))
 
+  #LOG('makeTreeBody', 0, 'form = %r, root_dict = %r, domain_path = %r, depth = %r, total_depth = %r, unfolded_list = %r, form_id = %r, selection_name = %r, base_category = %r' % (form, root_dict, domain_path, depth, total_depth, unfolded_list, form_id, selection_name, base_category))
   if total_depth is None:
     total_depth = max(1, len(unfolded_list))
 
-  if type(domain_path) is type('a'): domain_path = domain_path.split('/')
+  if isinstance(domain_path, str):
+    domain_path = domain_path.split('/')
+
+  if form_id is None:
+    form_id = form.id
 
   portal_categories = getattr(form, 'portal_categories', None)
   portal_domains = getattr(form, 'portal_domains', None)
   portal_object = form.portal_url.getPortalObject()
 
-  if len(domain_path):
+  if base_category is None and len(domain_path):
     base_category = domain_path[0]
-  else:
-    base_category = None
 
   if root_dict is None:
     root_dict = {}
 
+  #LOG('makeTreeBody', 0, 'domain_path = %r, base_category = %r' % (domain_path, base_category))
+
   is_empty_level = 1
+  category = base_category
   while is_empty_level:
-    if not root_dict.has_key(base_category):
+    if category not in root_dict:
       root = None
       if portal_categories is not None:
-        if base_category in portal_categories.objectIds():
-          root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
+        if category in portal_categories.objectIds():
+          root = root_dict[category] = root_dict[None] = portal_categories[category]
           domain_path = domain_path[1:]
       if root is None and portal_domains is not None:
-        if base_category in portal_domains.objectIds():
-          root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
+        if category in portal_domains.objectIds():
+          root = root_dict[category] = root_dict[None] = portal_domains[category]
           domain_path = domain_path[1:]
       if root is None:
         try:
@@ -126,30 +135,40 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
           root = None
         domain_path = ()
     else:
-      root = root_dict[None] = root_dict[base_category]
+      root = root_dict[None] = root_dict[category]
       if len(domain_path) >= 1:
         domain_path = domain_path[1:]
       else:
         domain_path = ()
     is_empty_level = root is not None and (root.objectCount() == 0) and (len(domain_path) != 0)
-    if is_empty_level: base_category = domain_path[0]
+    if is_empty_level:
+      category = domain_path[0]
 
+  #LOG('makeTreeBody', 0, 'root = %r, depth = %r, category = %r' % (root, depth, category))
   tree_body = ''
   if root is None: return tree_body
 
   for o in root.objectValues():
     tree_body += '<TR>' + '<TD WIDTH="16" NOWRAP>' * depth
-    if o.getRelativeUrl() in unfolded_list:
+    relative_url = o.getRelativeUrl()
+    if base_category is not None and not relative_url.startswith(base_category + '/'):
+      url = '%s/%s' % (base_category, relative_url)
+    else:
+      url = relative_url
+    if url in unfolded_list:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
 <a href="portal_selections/foldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" >- <b>%s</b></a>
-</TD>""" % (total_depth - depth + 1, o.getRelativeUrl() , form_id, selection_name, depth, o.id)
+</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.id)
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = o
-      tree_body += makeTreeBody(form, new_root_dict, domain_path, depth + 1, total_depth, unfolded_list, form_id, selection_name)
+      tree_body += makeTreeBody(form = form, root_dict = new_root_dict, domain_path = domain_path,
+                                depth = depth + 1, total_depth = total_depth, unfolded_list = unfolded_list,
+                                selection_name = selection_name, base_category = base_category)
     else:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
 <a href="portal_selections/unfoldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" >+ %s</a>
-</TD>""" % (total_depth - depth + 1, o.getRelativeUrl() , form_id, selection_name, depth, o.id)
+</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.id)
+    #tree_body += '</TD>' * depth + '</TR>'
 
   return tree_body
 
@@ -1982,8 +2001,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
           try:
               if selection_domain_path == ('portal_categories',):
                 selection_domain_path = default_selected
-              select_tree_body = makeTreeBody(form, None, selection_domain_path,
-                      0, None, selection_domain_current, form.id, selection_name)
+              select_tree_body = makeTreeBody(form = form, domain_path = selection_domain_path,
+                                              unfolded_list = selection_domain_current,
+                                              selection_name = selection_name)
           except KeyError:
               select_tree_body = ''
 
