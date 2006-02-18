@@ -19,18 +19,30 @@ SELECT
 </dtml-if>
 FROM
   <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
-  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>
-  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>
+  <dtml-if selection_domain>
+    <dtml-let expression="selection_domain.asSqlJoinExpression()">
+      <dtml-if expression> , <dtml-var expression> </dtml-if>
+    </dtml-let>
+  </dtml-if>
+  <dtml-if selection_report>
+    <dtml-let expression="selection_report.asSqlJoinExpression()">
+      <dtml-if expression> , <dtml-var expression> </dtml-if>
+    </dtml-let>
+  </dtml-if>
 WHERE
   1 = 1
 <dtml-if where_expression>
   AND <dtml-var where_expression>
 </dtml-if>
 <dtml-if selection_domain>
-  AND <dtml-var "selection_domain.asSqlExpression()">
+  <dtml-let expression="selection_domain.asSqlExpression()">
+    <dtml-if expression> AND <dtml-var expression> </dtml-if>
+  </dtml-let>
 </dtml-if>
 <dtml-if selection_report>
-  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">
+  <dtml-let expression="selection_report.asSqlExpression(strict_membership=1)">
+    <dtml-if expression> AND <dtml-var expression> </dtml-if>
+  </dtml-let>
 </dtml-if>
 <dtml-if sort_on>
 ORDER BY
