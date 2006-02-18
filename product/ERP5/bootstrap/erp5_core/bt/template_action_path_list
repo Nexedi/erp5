@@ -38,6 +38,11 @@ Bank Account | transactions
 Bank Account | view
 Base Category | list
 Base Category | view
+Base Domain | history
+Base Domain | list
+Base Domain | metadata
+Base Domain | print_pdf
+Base Domain | view
 Business Template | export
 Business Template | get_portal_type_properties
 Business Template | guess_portal_types
@@ -100,6 +105,17 @@ Document | metadata
 Document | print
 Document | translate
 Document | view
+Domain Tool | fast_input
+Domain Tool | list
+Domain Tool | localroles
+Domain Tool | metadata
+Domain Tool | syndication
+Domain Tool | view
+Domain | history
+Domain | list
+Domain | metadata
+Domain | print_pdf
+Domain | view
 Email | history
 Email | metadata
 Email | print

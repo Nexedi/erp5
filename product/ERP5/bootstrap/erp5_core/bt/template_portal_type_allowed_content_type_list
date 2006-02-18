@@ -3,6 +3,7 @@ Alarm Tool | Alarm
 Applied Rule | Simulation Movement
 Bank Account | Agent
 Base Category | Category
+Base Domain | Domain
 Category Tool | Base Category
 Category | Category
 Currency Exchange Line | Currency Exchange Cell
@@ -11,6 +12,8 @@ Currency Module | ERP5Currency
 Currency | Currency Exchange Line
 Delivery Builder | Predicate Group
 Delivery Tool | Delivery Builder
+Domain Tool | Base Domain
+Domain | Domain
 Order Builder | Predicate Group
 Order Tool | Order Builder
 Organisation Module | Organisation
