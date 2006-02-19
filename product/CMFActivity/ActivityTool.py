@@ -598,7 +598,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def invoke(self, message):
       message(self)
-      
+ 
     def invokeGroup(self, method_id, message_list):
       # Invoke a group method.
       object_list = []
@@ -608,6 +608,8 @@ class ActivityTool (Folder, UniqueObject):
       # Filter the list of messages. If an object is not available, ignore such a message.
       # In addition, expand an object if necessary, and make sure that no duplication happens.
       for m in message_list:
+        # alternate method is used to segregate objects which cannot be grouped.
+        alternate_method_id = m.activity_kw.get('alternate_method_id')
         try:
           obj = m.getObject(self)
           i = len(new_message_list) # This is an index of this message in new_message_list.
@@ -616,12 +618,32 @@ class ActivityTool (Folder, UniqueObject):
               path = subobj.getPath()
               if path not in path_dict:
                 path_dict[path] = i
-                expanded_object_list.append(subobj)
+                if alternate_method_id is not None \
+                   and hasattr(aq_base(subobj), alternate_method_id):
+                  # if this object is alternated, generate a new single active object.
+                  activity_kw = m.activity_kw.copy()
+                  if 'group_method_id' in activity_kw:
+                    del activity_kw['group_method_id']
+                  active_obj = subobj.activate(**activity_kw)
+                  #LOG('ActivityTool', 0, 'sub object %r has an alternate method %r, so invoking separately' % (subobj, alternate_method_id))
+                  getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
+                else:
+                  expanded_object_list.append(subobj)
           else:
             path = obj.getPath()
             if path not in path_dict:
               path_dict[path] = i
-              expanded_object_list.append(obj)
+              if alternate_method_id is not None \
+                  and hasattr(aq_base(obj), alternate_method_id):
+                # if this object is alternated, generate a new single active object.
+                activity_kw = m.activity_kw.copy()
+                if 'group_method_id' in activity_kw:
+                  del activity_kw['group_method_id']
+                active_obj = obj.activate(**activity_kw)
+                #LOG('ActivityTool', 0, 'object %r has an alternate method %r, so invoking separately' % (obj, alternate_method_id))
+                getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
+              else:
+                expanded_object_list.append(obj)
           object_list.append(obj)
           new_message_list.append(m)
         except:
@@ -629,7 +651,7 @@ class ActivityTool (Folder, UniqueObject):
           m.exc_type = sys.exc_info()[0]
           LOG('WARNING ActivityTool', 0,
               'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
-              
+
       if len(expanded_object_list) > 0:
         try:
           method = self.unrestrictedTraverse(method_id)
@@ -659,7 +681,7 @@ class ActivityTool (Folder, UniqueObject):
             m = new_message_list[i]
             if i in failed_message_dict:
               m.is_executed = 0
-              LOG('WARNING ActivityTool', 0, 
+              LOG('ActivityTool', WARNING,
                   'the method %s partially failed on object %s' % (m.method_id, m.object_path,))
             else:
               try:
@@ -668,7 +690,7 @@ class ActivityTool (Folder, UniqueObject):
               except:
                 m.is_executed = 0
                 m.exc_type = sys.exc_info()[0]
-                LOG('WARNING ActivityTool', 0,
+                LOG('ActivityTool', WARNING,
                     'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
             
     def newMessage(self, activity, path, active_process, activity_kw, method_id, *args, **kw):
