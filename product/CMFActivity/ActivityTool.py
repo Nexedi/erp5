@@ -652,47 +652,49 @@ class ActivityTool (Folder, UniqueObject):
           LOG('WARNING ActivityTool', 0,
               'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
 
-      if len(expanded_object_list) > 0:
-        try:
+      try:
+        if len(expanded_object_list) > 0:
           method = self.unrestrictedTraverse(method_id)
           # FIXME: how to pass parameters?
           # FIXME: how to apply security here?
           # NOTE: expanded_object_list must be set to failed objects by the callee.
           #       If it fully succeeds, expanded_object_list must be empty when returning.
           result = method(expanded_object_list)
-        except:
-          # In this case, the group method completely failed.
-          for m in new_message_list:
-            m.is_executed = 0
-            m.exc_type = sys.exc_info()[0]
-          LOG('WARNING ActivityTool', 0,
-              'Could not call method %s on objects %s' % (method_id, expanded_object_list), error=sys.exc_info())
         else:
-          # Obtain all indices of failed messages. Note that this can be a partial failure.
-          failed_message_dict = {}
-          for obj in expanded_object_list:
-            path = obj.getPath()
-            i = path_dict[path]
-            failed_message_dict[i] = None
-            
-          # Only for succeeded messages, an activity process is invoked (if any).
-          for i in xrange(len(object_list)):
-            object = object_list[i]
-            m = new_message_list[i]
-            if i in failed_message_dict:
+          result = None
+      except:
+        # In this case, the group method completely failed.
+        for m in new_message_list:
+          m.is_executed = 0
+          m.exc_type = sys.exc_info()[0]
+        LOG('WARNING ActivityTool', 0,
+            'Could not call method %s on objects %s' % (method_id, expanded_object_list), error=sys.exc_info())
+      else:
+        # Obtain all indices of failed messages. Note that this can be a partial failure.
+        failed_message_dict = {}
+        for obj in expanded_object_list:
+          path = obj.getPath()
+          i = path_dict[path]
+          failed_message_dict[i] = None
+
+        # Only for succeeded messages, an activity process is invoked (if any).
+        for i in xrange(len(object_list)):
+          object = object_list[i]
+          m = new_message_list[i]
+          if i in failed_message_dict:
+            m.is_executed = 0
+            LOG('ActivityTool', WARNING,
+                'the method %s partially failed on object %s' % (m.method_id, m.object_path,))
+          else:
+            try:
+              m.activateResult(self, result, object)
+              m.is_executed = 1
+            except:
               m.is_executed = 0
+              m.exc_type = sys.exc_info()[0]
               LOG('ActivityTool', WARNING,
-                  'the method %s partially failed on object %s' % (m.method_id, m.object_path,))
-            else:
-              try:
-                m.activateResult(self, result, object)
-                m.is_executed = 1
-              except:
-                m.is_executed = 0
-                m.exc_type = sys.exc_info()[0]
-                LOG('ActivityTool', WARNING,
-                    'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
-            
+                  'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
+ 
     def newMessage(self, activity, path, active_process, activity_kw, method_id, *args, **kw):
       # Some Security Cheking should be made here XXX
       global is_initialized
