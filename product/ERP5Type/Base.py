@@ -608,7 +608,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
     TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1
 
-    #LOG("Get Acquired Property key",0,str(key))
     if storage_id is None: storage_id=key
     #LOG("Get Acquired Property storage_id",0,str(storage_id))
     # If we hold an attribute and mask_value is set, return the attribute
@@ -1893,7 +1892,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # immediateReindexObject.
     root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
     if self.isIndexable and root_indexable:
-      self.activate(group_method_id='portal_catalog/catalogObjectList', **kw).immediateReindexObject(*args, **kw)
+      self.activate(group_method_id='portal_catalog/catalogObjectList', alternate_method_id='alternateReindexObject', **kw).immediateReindexObject(*args, **kw)
 
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject

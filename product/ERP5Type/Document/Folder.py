@@ -513,7 +513,7 @@ be a problem)."""
     """
     root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
     if self.isIndexable and root_indexable:
-      self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', **kw).recursiveImmediateReindexObject(*args, **kw)
+      self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', alternate_method_id='alternateReindexObject', **kw).recursiveImmediateReindexObject(*args, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
   def getIndexableChildValueList(self):
