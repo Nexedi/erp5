@@ -17,7 +17,6 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 from types import StringType
 
-#class PatchedActionInformation(ActionInformation.oldActionInformation):
 if 1:
 
     security = ClassSecurityInfo()
@@ -143,7 +142,23 @@ if 1:
                              , optional=self.getOption()
                              )
 
-#ActionInformation.ActionInformation = PatchedActionInformation
+    def getMapping(self):
+        """ Get a mapping of this object's data.
+        """
+        return { 'id': self.id,
+                 'title': self.title or self.id,
+                 'description': self.description,
+                 'category': self.category or 'object',
+                 'condition': getattr(self, 'condition', None)
+                              and self.condition.text or '',
+                 'permissions': self.permissions,
+                 'visible': bool(self.visible),
+                 'action': self.getActionExpression(),
+                 'optional': self.getOption(),
+                 'icon': self.getIconExpression(),
+                 'priority': self.getPriority() }
+
+
 ActionInformation.__init__ = __init__
 ActionInformation.getAction = getAction
 ActionInformation._getIconObject = _getIconObject
@@ -152,5 +167,27 @@ ActionInformation.setIconExpression = setIconExpression
 ActionInformation.getOption = getOption
 ActionInformation.getPriority = getPriority
 ActionInformation.clone = clone
+ActionInformation.getMapping = getMapping
 
 PatchedActionInformation = ActionInformation
+
+try:
+  from Products.CMFCore.ActionInformation import ActionInfo
+
+  original_init = ActionInfo.__init__
+  def __init__(self, action, ec):
+    original_init(self, action, ec)
+    if not isinstance(action, dict):
+      if self.data['icon']:
+        self.data['icon'] = self._getIcon
+        self._lazy_keys.append('icon')
+      else:
+        self.data['icon'] = ''
+
+  def _getIcon(self):
+    return self._action._getIconObject()(self._ec)
+
+  ActionInfo.__init__ = __init__
+  ActionInfo._getIcon = _getIcon
+except ImportError:
+  pass
