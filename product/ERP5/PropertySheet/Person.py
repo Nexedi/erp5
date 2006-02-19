@@ -148,11 +148,9 @@ class Person:
     , 'acquisition_depends'      : None
     , 'mode'                     : 'w'
     },
-    # Using an empty id generate automaticality getSubordination() and setSubordination()
-    #   methods on Person. These methods allow us to save subordination on the default career.
-    { 'id'                  : 'career'
+    { 'id'                  : 'default_career'
     , 'storage_id'          : 'default_career'
-    , 'description'         : 'The default career hold some important properties of a Person.'
+    , 'description'         : 'The default career hold some properties of a Person.'
     , 'type'                : 'content'
     , 'portal_type'         : ( 'Career', )
     , 'acquired_property_id': ( 'start_date', 'stop_date', 'title', 'description'
@@ -165,6 +163,27 @@ class Person:
                               , 'role', 'role_id', 'role_title', 'role_value'
                               , 'function', 'function_id', 'function_title', 'function_value'
                               )
+    , 'deprecated'          : 1
+    , 'mode'                : 'w'
+    },
+    # Career accessors like getCareerTitle ... are deprecated, instead
+    # we should use getDefaultCareerTitle
+    { 'id'                  : 'career'
+    , 'storage_id'          : 'default_career'
+    , 'description'         : 'The default career hold some properties of a Person.'
+    , 'type'                : 'content'
+    , 'portal_type'         : ( 'Career', )
+    , 'acquired_property_id': ( 'start_date', 'stop_date', 'title', 'description'
+                              , 'subordination', 'subordination_title', 'subordination_value'
+                              , 'subordination_uid_list', 'subordination_uid'
+                              , 'collective_agreement_title', 'salary_coefficient'
+                              , 'skill_list', 'skill_id_list', 'skill_title_list', 'skill_value_list'
+                              , 'salary_level', 'salary_level_id', 'salary_level_title', 'salary_level_value'
+                              , 'grade', 'grade_id', 'grade_title', 'grade_value'
+                              , 'role', 'role_id', 'role_title', 'role_value'
+                              , 'function', 'function_id', 'function_title', 'function_value'
+                              )
+    , 'deprecated'          : 1
     , 'mode'                : 'w'
     },
   )
