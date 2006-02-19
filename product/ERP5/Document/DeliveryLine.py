@@ -237,7 +237,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       """
         Reindex children and simulation
       """
-      self.recursiveReindexObject()
+      self.recursiveReindexObject(*k, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
     def getInventoriatedQuantity(self):
