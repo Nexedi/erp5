@@ -67,6 +67,11 @@ class Inventory(Delivery):
       """
       return 'delivered' # For now, consider that Inventory has no workflow XXX
 
+    security.declarePublic('alternateReindexObject')
+    def alternateReindexObject(self, **kw):
+      """This method is called when an inventory object is included in a group of catalogged objects.
+      """
+      return self.immediateReindexObject(**kw)
 
     def immediateReindexObject(self,**kw):
       """
@@ -118,42 +123,7 @@ class Inventory(Delivery):
         from Products.ERP5Type.Document import newTempBase
         stock_object_list.append(newTempDeliveryLine(self,self.getId(),
                                  uid=self.getUid()))
-      LOG('stock_object_list',0,[x.__dict__ for x in stock_object_list])
+      #LOG('stock_object_list',0,[x.__dict__ for x in stock_object_list])
       self.portal_catalog.catalogObjectList(stock_object_list,
            method_id_list=('z_catalog_stock_list',),
            disable_cache=1,check_uid=0)
-
-    security.declarePublic( 'recursiveReindexObject' )
-    def recursiveReindexObject(self, *args, **kw):
-      """
-      Do not use group_method_id for the inventory, but it can
-      be used for inventory lines and cells
-      """
-      root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
-      self._reindexObject()
-      if self.isIndexable and root_indexable:
-        self.activate(group_method_id='portal_catalog/catalogObjectList', 
-            expand_method_id='getIndexableChildValueList', 
-            **kw).recursiveImmediateReindexObject(*args, **kw)
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
-    def getIndexableChildValueList(self):
-      """
-        Get indexable childen recursively.
-      """
-      value_list = []
-      if self.isIndexable:
-        #value_list.append(self) # do not include self
-        for c in self.objectValues():
-          if hasattr(aq_base(c), 'getIndexableChildValueList'):
-            value_list.extend(c.getIndexableChildValueList())
-      return value_list
-
-    def _reindexObject(self, *args, **kw):
-      """
-      Defined here because we want to 
-      Make sure to call without the group_method_id for inventories
-      """
-      root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
-      if self.isIndexable and root_indexable:
-        self.activate(**kw).immediateReindexObject(*args, **kw)
