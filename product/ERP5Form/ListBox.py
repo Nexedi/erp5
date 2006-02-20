@@ -713,7 +713,9 @@ class ListBoxWidget(Widget.Widget):
               # expressions instead
               try:
                 params[k] = eval(v)
-              except TypeError:
+              except (ConflictError, RuntimeError):
+                raise
+              except:
                 params[k] = v
 
         # Allow overriding list_method, count_method and stat_method by params
