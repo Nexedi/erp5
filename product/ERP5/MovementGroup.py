@@ -900,5 +900,5 @@ class AggregateMovementGroup(RootMovementGroup):
     else :
       return 0
 
-allow_class(BrandMovementGroup)
+allow_class(AggregateMovementGroup)
 
