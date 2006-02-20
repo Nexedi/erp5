@@ -415,6 +415,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
           select_expression.append('%s.%s = %s_category.uid' % \
                                 (join_table, join_column, k))
           select_expression.append(d.asSqlExpression(table='%s_category' % k, 
+                                base_category=k,
                                 strict_membership=strict_membership))
                                 # XXX We should take into account k explicitely
                                 # if we want to support category acquisition
