@@ -708,15 +708,7 @@ class ListBoxWidget(Widget.Widget):
           for (k,v) in default_params:
             if REQUEST.form.has_key(k):
               params[k] = REQUEST.form[k]
-            elif not params.has_key(k):
-              # Probalby eval must be removed, we have tales
-              # expressions instead
-              try:
-                params[k] = eval(v)
-              except (ConflictError, RuntimeError):
-                raise
-              except:
-                params[k] = v
+            params.setdefault(k, v)
 
         # Allow overriding list_method, count_method and stat_method by params
         if params.has_key('list_method_id'):
