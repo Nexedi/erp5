@@ -735,7 +735,8 @@ class Arrow:
             'description' : 'The title of the source advice of this movement',
             'type'        : 'string',
             'acquisition_base_category'     : ('source_advice',),
-            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
+            'acquisition_portal_type'       : Expression('python: \
+                                                portal.getPortalNodeTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getTitle',
             'acquisition_depends'           : None,
@@ -745,7 +746,8 @@ class Arrow:
             'description' : 'The id of the source advice of this movement',
             'type'        : 'string',
             'acquisition_base_category'     : ('source_advice',),
-            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
+            'acquisition_portal_type'       : Expression('python: \
+                                                portal.getPortalNodeTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getId',
             'acquisition_depends'           : None,
@@ -755,7 +757,8 @@ class Arrow:
             'description' : 'The titles of the source advice of this movement',
             'type'        : 'string',
             'acquisition_base_category'     : ('source_advice',),
-            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
+            'acquisition_portal_type'       : Expression('python: \
+                                                portal.getPortalNodeTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
@@ -766,7 +769,8 @@ class Arrow:
             'description' : 'The title of the destination advice of this movement',
             'type'        : 'string',
             'acquisition_base_category'     : ('destination_advice',),
-            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
+            'acquisition_portal_type'       : Expression('python: \
+                                                portal.getPortalNodeTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getTitle',
             'acquisition_depends'           : None,
@@ -776,7 +780,8 @@ class Arrow:
             'description' : 'The id of the destination advice of this movement',
             'type'        : 'string',
             'acquisition_base_category'     : ('destination_advice',),
-            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
+            'acquisition_portal_type'       : Expression('python: \
+                                                portal.getPortalNodeTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getId',
             'acquisition_depends'           : None,
@@ -786,7 +791,8 @@ class Arrow:
             'description' : 'The titles of the destination advice of this movement',
             'type'        : 'string',
             'acquisition_base_category'     : ('destination_advice',),
-            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
+            'acquisition_portal_type'       : Expression('python: \
+                                                portal.getPortalNodeTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
