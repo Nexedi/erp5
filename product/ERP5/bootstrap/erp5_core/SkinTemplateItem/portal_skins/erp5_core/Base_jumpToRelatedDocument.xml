@@ -74,7 +74,10 @@ form = getattr(context,form_id)\n
 field = form.get_field(field_id)\n
 base_category = field.get_value(\'base_category\')\n
 portal_type = map(lambda x:x[0],field.get_value(\'portal_type\'))\n
-jump_reference_list = context.getAcquiredValueList(base_category, portal_type=portal_type)\n
+kw = {}\n
+for k, v in field.get_value(\'parameter_list\') :\n
+  kw[k] = v\n
+jump_reference_list = context.getAcquiredValueList(base_category, portal_type=portal_type, filter=kw)\n
 \n
 if len(jump_reference_list)==1:\n
   jump_reference = jump_reference_list[0]\n
@@ -133,7 +136,7 @@ else:\n
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>getattr</string>
                             <string>form</string>
@@ -141,12 +144,16 @@ else:\n
                             <string>base_category</string>
                             <string>map</string>
                             <string>portal_type</string>
+                            <string>kw</string>
+                            <string>_getiter_</string>
+                            <string>k</string>
+                            <string>v</string>
+                            <string>_write_</string>
                             <string>jump_reference_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>jump_reference</string>
                             <string>selection_uid_list</string>
-                            <string>kw</string>
                           </tuple>
                         </value>
                     </item>
