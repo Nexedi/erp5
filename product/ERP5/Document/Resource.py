@@ -81,7 +81,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
     def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
                                           root=1, display_id='title', 
                                           display_base_category=1,
-                                          current_category=None):
+                                          current_category=None, **kw):
         """
           Returns possible variations
 
@@ -146,7 +146,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
         if len(other_base_category_list) != 0:
           result += Variated.getVariationRangeCategoryItemList(
               self, base_category_list=other_base_category_list,
-              base=base, display_base_category=display_base_category)
+              base=base, display_base_category=display_base_category, **kw)
         # Return result
         return result
 

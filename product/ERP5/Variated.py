@@ -281,7 +281,7 @@ class Variated(Base):
   def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
                                         root=1, display_id='title', 
                                         display_base_category=1,
-                                        current_category=None):
+                                        current_category=None, **kw):
     """
     Returns possible variations
       => [(display, value)]
@@ -297,7 +297,7 @@ class Variated(Base):
              getCategoryChildLogicalPathItemList(
                              base=base,
                              display_base_category=display_base_category,
-                             display_none_category=0)
+                             display_none_category=0, **kw)
     # Return result
     return result
 
