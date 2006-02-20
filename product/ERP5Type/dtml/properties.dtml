@@ -179,8 +179,9 @@ property values, edit the values and click &quot;Save Changes&quot;.
   <td colspan="2">&nbsp;</td>
   <td align="left" valign="top">
   <div class="form-element">
-  <input name="manage_editProperties:method" type="submit" 
-   class="form-element" value="Save Changes" />
+  <!-- XXX FIXME: Can not save currently tales attribute -->
+  <!--input name="manage_editProperties:method" type="submit" 
+   class="form-element" value="Save Changes" /-->
 <dtml-if property_extensible_schema__>
   <input name="manage_delProperties:method" type="submit" 
    class="form-element" value="Delete" />
