@@ -387,20 +387,7 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string encoding="base64">Jyc=</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string encoding="base64">Jyc=</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string encoding="base64">Jyc=</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
