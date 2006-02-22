@@ -535,7 +535,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
-                bypass_init_script = 1,
+                created_by_builder = 1,
               )
     
     sequence.edit(
@@ -563,7 +563,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
-                bypass_init_script = 1,
+                created_by_builder = 1,
               )
     
     invoice_line = simple_invoice.newContent(
@@ -599,7 +599,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
-                bypass_init_script = 1,
+                created_by_builder = 1,
               )
     
     invoice_line = simple_invoice.newContent(
@@ -689,7 +689,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
-                bypass_init_script = 1,
+                created_by_builder = 1,
               )
     
     invoice_line1 = simple_invoice.newContent(
@@ -732,7 +732,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
-                bypass_init_script = 1,
+                created_by_builder = 1,
               )
     
     invoice_line = simple_invoice.newContent(
@@ -807,7 +807,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
-                bypass_init_script = 1,
+                created_by_builder = 1,
               )
     
     notebook_line = multi_line_invoice.newContent(

@@ -291,7 +291,7 @@ class TestAccounting(ERP5TypeTestCase):
       portal_type = self.accounting_transaction_portal_type,
       source_section_value = sequence.get('client'),
       resource_value = sequence.get('EUR'),
-      bypass_init_script = 1,
+      created_by_builder = 1,
     )
     
     # setting both source and destination shouldn't use mirror accounts
@@ -399,7 +399,7 @@ class TestAccounting(ERP5TypeTestCase):
           destination_value = sequence.get('client'),
           resource = invoice_prop['currency'],
           start_date = date, stop_date = date,
-          bypass_init_script = 0,
+          created_by_builder = 0,
       )
       
       for line_type in ['income', 'receivable', 'collected_vat'] :
@@ -440,7 +440,7 @@ class TestAccounting(ERP5TypeTestCase):
         resource_value = sequence.get('EUR'),
         start_date = self.start_date,
         stop_date = self.start_date,
-        bypass_init_script = 0,
+        created_by_builder = 0,
     )
     
     line = invoice.newContent(

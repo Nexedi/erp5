@@ -333,7 +333,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery = delivery_module.newContent(
                                   portal_type=self.getDeliveryPortalType(),
                                   id=new_delivery_id,
-                                  bypass_init_script=1,
+                                  created_by_builder=1,
                                   activate_kw=activate_kw,**kw)
         # Put properties on delivery
         delivery.edit(**property_dict)

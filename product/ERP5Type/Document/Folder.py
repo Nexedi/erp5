@@ -66,14 +66,16 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
-          container=None, bypass_init_script=0, activate_kw=None, is_indexable=None, **kw):
+          container=None, created_by_builder=0, activate_kw=None,
+          is_indexable=None, **kw):
     """
       Creates a new content
     """
     if container is None:
       container = self
     if id is None:
-      new_id = str(container.generateNewId(id_group = id_group, default=default, method=method))
+      new_id = str(container.generateNewId(id_group = id_group,
+                                           default=default, method=method))
     else:
       new_id = str(id)
     if portal_type is None: 
@@ -83,10 +85,14 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
     self.portal_types.constructContent(type_name=portal_type,
                                        container=container,
                                        id=new_id,
-                                       bypass_init_script=bypass_init_script,
+                                       created_by_builder=created_by_builder,
                                        activate_kw=activate_kw,
                                        is_indexable=is_indexable
                                        ) # **kw) removed due to CMF bug
+    # TODO :the **kw makes it impossible to create content not based on
+    # ERP5TypeInformation, because factory method often to not support 
+    # keywords arguments.
+    
     new_instance = container[new_id]
     if kw != {} : new_instance._edit(force_update=1, **kw)
     if immediate_reindex: new_instance.immediateReindexObject()

@@ -169,13 +169,11 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     #   Agent methods
     #
     security.declarePublic('constructInstance')
-    def constructInstance( self, container, id, bypass_init_script=0, 
-                                 *args, **kw ):
+    def constructInstance( self, container, id, *args, **kw ):
         """
         Build a "bare" instance of the appropriate type in
         'container', using 'id' as its id.
-        Call the init_script for the portal_type, unless the
-        keyword arg __bypass_init_script is set to True.
+        Call the init_script for the portal_type.
         Returns the object.
         """
         # This is part is copied from CMFCore/TypesTool
@@ -190,18 +188,15 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         if len(self._roles):
             self.assignRoleToSecurityGroup(ob)
 
-        # TODO: bypass_init_script must be passed as an argument
-        # to the init_script, and the init_script must always be called;
-        # so that user can decide what init should be done when this is 
-        # created by DeliveryBuilder.
-        if self.init_script and not bypass_init_script:
+        if self.init_script :
             # Acquire the init script in the context of this object
             init_script = getattr(ob, self.init_script)
             init_script(*args, **kw)
 
         return ob
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getPropertySheetList')
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+                              'getPropertySheetList')
     def getPropertySheetList( self ):
         """
             Return list of content types.
@@ -212,57 +207,69 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         result.sort()
         return result
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getHiddenContentTypeList')
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+                              'getHiddenContentTypeList')
     def getHiddenContentTypeList( self ):
         """
             Return list of content types.
         """
         return self.hidden_content_type_list
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getBaseCategoryList')
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+                              'getBaseCategoryList')
     def getBaseCategoryList( self ):
         result = self.portal_categories.getBaseCategoryList()
         result.sort()
         return result
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getConstraintList')
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+                              'getConstraintList')
     def getConstraintList( self ):
         from Products.ERP5Type import Constraint
         result = Constraint.__dict__.keys()
-        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),  result)
+        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),
+                        result)
         result.sort()
         return result
 
-    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getGroupList')
+    security.declareProtected(ERP5Permissions.AccessContentsInformation,
+                              'getGroupList')
     def getGroupList( self ):
         return self.defined_group_list
 
-    security.declareProtected(ERP5Permissions.ModifyPortalContent, 'assignRoleToSecurityGroup')
+    security.declareProtected(ERP5Permissions.ModifyPortalContent,
+                              'assignRoleToSecurityGroup')
     def assignRoleToSecurityGroup(self, object):
         """
-        Assign Local Roles to Groups on object, based on Portal Type Role Definitions
+        Assign Local Roles to Groups on object, based on Portal Type
+        Role Definitions
         """
         #FIXME We should check the type of the acl_users folder instead of
         #      checking which product is installed.
         if ERP5UserManager is not None:
-          user_name = getSecurityManager().getUser().getId() # We use id for roles in ERP5Security
+          # We use id for roles in ERP5Security
+          user_name = getSecurityManager().getUser().getId()
         elif NuxUserGroups is not None:
           user_name = getSecurityManager().getUser().getUserName()
         else:
-          raise RuntimeError, 'Product "NuxUserGroups" was not found on your setup. '\
+          raise RuntimeError, 'Product "ERP5Security" was not found on'\
+                'your setup. '\
                 'Please install it to benefit from group-based security'
 
         # Retrieve applicable roles
-        role_mapping = self.getFilteredRoleListFor(object=object) # kw provided in order to take any appropriate action
+        # kw provided in order to take any appropriate action
+        role_mapping = self.getFilteredRoleListFor(object=object)
         role_category_list = {}
         for role, definition_list in role_mapping.items():
             if not role_category_list.has_key(role):
                 role_category_list[role] = []
             # For each role definition, we look for the base_category_script
-            # and try to use it to retrieve the values for the base_category list
+            # and try to use it to retrieve the values for
+            # the base_category list
             for definition in definition_list:
                 # get the list of base_categories that are statically defined
-                category_base_list = [x.split('/')[0] for x in definition['category']]
+                category_base_list = [x.split('/')[0]
+                                      for x in definition['category']]
                 # get the list of base_categories that are to be fetched through the script
                 actual_base_category_list = [x for x in definition['base_category'] if x not in category_base_list]
                 # get the aggregated list of base categories, to preserve the order
