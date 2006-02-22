@@ -11,12 +11,12 @@ def fixProductNames(self, REQUEST=None):
         contentType.product = 'ERP5Type'
   return msg
 
-def changeObjectClass(self, container, object_id, new_class):
-  """Creates a copy of object_id inside container, changing its class to
+def changeObjectClass(self, object_id, new_class):
+  """Creates a copy of object_id inside self, changing its class to
   new_class"""
-  old_obj = container._getObj(object_id)
+  old_obj = self._getOb(object_id)
+  self.manage_delObjects([object_id])
   new_obj = new_class(object_id)
   new_obj.__dict__.update(old_obj.__dict__)
-  container._setObject(object_id, new_obj)
-  
+  self._setObject(object_id, new_obj)
   
