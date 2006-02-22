@@ -100,8 +100,8 @@
                         <string>my_source_title</string>
                         <string>my_product_line</string>
                         <string>my_industrial_phase_list</string>
-                        <string>validation_state</string>
                         <string>my_reference</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
