@@ -86,7 +86,7 @@ class DomainTool(BaseTool):
       # Search the columns of the predicate table
       for column in portal_catalog.getColumnIds():
         if column.startswith('predicate.'):
-          column_list.append(column.split('.')[1])
+          column_list.append(column.split('.')[1])          
       for column in column_list:
         if column not in checked_column_list:
           range_property = 0
@@ -223,4 +223,30 @@ class DomainTool(BaseTool):
         mapped_value = mapped_value.asContext(**mapped_value_property_dict)
       return mapped_value
 
+
+
+    def getChildDomainValueList(self, parent,**kw):
+      """
+      Return child domain objects already present adn thois generetaded dynamically
+      """
+      # get static domain
+      object_list = list(parent.objectValues())
+      # get dynamic object genretade from script
+      object_list.extend(parent.getDomainGeneratorList())
+      return object_list
+
+    def getDomainByPath(self, path):
+      """
+      Return the domain object for a given path
+      """
+      domain = None
+      for subdomain in path.split('/'):
+        if domain is None:
+          domain = self[subdomain]        
+        domains = self.getChildDomainValueList(domain)
+        for d in domains:
+          if d.getId() == subdomain:
+            domain = d
+      return domain
+  
 InitializeClass(DomainTool)
