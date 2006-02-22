@@ -12,6 +12,8 @@ Mail Message | history
 Mail Message | metadata
 Mail Message | print
 Mail Message | view
+Person | jump_to_opportunity
+Person | jump_to_support_request
 Phone Call | history
 Phone Call | metadata
 Phone Call | print

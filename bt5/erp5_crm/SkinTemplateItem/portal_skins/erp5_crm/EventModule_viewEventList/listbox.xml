@@ -334,7 +334,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Type</string>
+                          <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
@@ -346,11 +346,11 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>getSourceOrganisationTitle</string>
+                          <string>source_organisation_title</string>
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>event_state</string>
+                          <string>translated_event_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -495,7 +495,24 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_organisation_title</string>
+                          <string>Organisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_event_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

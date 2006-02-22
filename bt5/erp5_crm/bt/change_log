@@ -1,3 +1,11 @@
+2006-02-22 kevin
+* Fix bad default lisbox parameters.
+
+2006-06-02 Jerome
+* add missing 'follow_up' base category.
+* improve 'Respond' feature in event workflow
+* make filtering work in Event Module + other small UI fixes.
+
 2005-11-11 Romain
 * Correct naming convention.
 
