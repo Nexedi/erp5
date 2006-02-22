@@ -153,7 +153,7 @@ class RAMDict(Queue):
         else:            
           self.deleteMessage(activity_tool, m)
 
-  def getMessageList(self, activity_tool, processing_node=None):
+  def getMessageList(self, activity_tool, processing_node=None,**kw):
     new_queue = []
     for m in self.getDict(activity_tool).values():
       m.processing_node = 1

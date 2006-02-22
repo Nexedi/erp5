@@ -11,7 +11,8 @@ class_file:
 method_id
 processing_node
 priority
-to_processing_date</params>
+to_processing_date
+include_processing</params>
 <dtml-if to_processing_date>UPDATE message
 SET
   processing = 0
@@ -25,7 +26,10 @@ AND
 </dtml-if>SELECT * FROM
     message
 WHERE
-    processing <> 1
+1 = 1
+<dtml-if expr="not(include_processing)">
+    AND processing <> 1
+</dtml-if>
 <dtml-if processing_node> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
 <dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
 <dtml-if path>AND path = <dtml-sqlvar path type="string"> </dtml-if>

@@ -97,6 +97,7 @@ class Message:
     self.kw = kw
     self.is_executed = 0
     self.exc_type = None
+    self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info ?
 
@@ -782,7 +783,7 @@ class ActivityTool (Folder, UniqueObject):
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivitiesAdvanced?manage_tabs_message=Activities%20Cleared')) 
 
     security.declarePublic('getMessageList')
-    def getMessageList(self):
+    def getMessageList(self,**kw):
       """
         List messages waiting in queues
       """
@@ -792,7 +793,7 @@ class ActivityTool (Folder, UniqueObject):
       message_list = []
       for activity in activity_list:
         try:
-          message_list += activity.getMessageList(self)
+          message_list += activity.getMessageList(self,**kw)
         except AttributeError:
           LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list

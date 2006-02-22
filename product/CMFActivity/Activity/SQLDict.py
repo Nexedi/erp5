@@ -390,7 +390,8 @@ class SQLDict(RAMDict):
                 raise ActivityFlushError, (
                     'The document %s does not exist' % path)
       # Parse each message in SQL dict
-      result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
+      result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,
+                             processing_node=None,include_processing=0)
       for line in result:
         path = line.path
         method_id = line.method_id
@@ -417,15 +418,16 @@ class SQLDict(RAMDict):
               raise ActivityFlushError, (
                   'The document %s does not exist' % path)
 
-  def getMessageList(self, activity_tool, processing_node=None):
+  def getMessageList(self, activity_tool, processing_node=None,include_processing=0,**kw):
     # YO: reading all lines might cause a deadlock
     message_list = []
     if hasattr(activity_tool,'SQLDict_readMessageList'):
-      result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node=None, to_processing_date=None)
+      result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node=None, to_processing_date=None,include_processing=include_processing)
       for line in result:
         m = self.loadMessage(line.message, uid = line.uid)
         m.processing_node = line.processing_node
         m.priority = line.priority
+        m.processing = line.processing
         message_list.append(m)
     return message_list
 
@@ -450,7 +452,8 @@ class SQLDict(RAMDict):
       else:
         max_processing_date = None
       result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node = -1,
-                                                     to_processing_date = max_processing_date) # Only assign non assigned messages
+                                                     to_processing_date = max_processing_date,
+                                                     include_processing=0) # Only assign non assigned messages
       get_transaction().commit() # Release locks before starting a potentially long calculation
       path_dict = {}
       for line in result:

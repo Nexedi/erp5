@@ -200,7 +200,7 @@ class SQLQueue(RAMQueue):
   #   uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)
   #   activity_tool.SQLQueue_assignMessage(uid = uid_list, processing_node = STOP_STATE)
 
-  def getMessageList(self, activity_tool, processing_node=None):
+  def getMessageList(self, activity_tool, processing_node=None,**kw):
     message_list = []
     if hasattr(activity_tool,'SQLQueue_readMessageList'):
       result = activity_tool.SQLQueue_readMessageList(path=None, method_id=None, processing_node=None)

@@ -186,7 +186,7 @@ class Queue:
   def dumpMessage(self, m):
     return pickle.dumps(m)
 
-  def getMessageList(self, activity_tool, processing_node=None):
+  def getMessageList(self, activity_tool, processing_node=None,**kw):
     return []  
   
   # Transaction Management
