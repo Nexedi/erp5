@@ -8,13 +8,16 @@ class_name:
 class_file:
 </dtml-comment>
 <params>delay
-processing_node</params>
+processing_node
+retry</params>
 UPDATE
   message
 SET
   date = DATE_SUB(date, INTERVAL <dtml-sqlvar delay type="int"> SECOND),
   processing_date = DATE_SUB(processing_date, INTERVAL <dtml-sqlvar delay type="int"> SECOND),
-  retry = 0
+<dtml-if retry>
+  retry = GREATEST(retry,<dtml-sqlvar retry type="int">) - <dtml-sqlvar retry type="int">
+</dtml-if> 
 WHERE
   1 = 1
 <dtml-if processing_node>
