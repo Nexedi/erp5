@@ -68,29 +68,17 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = context\n
 \n
-if hasattr(context, \'startBuilding\') :\n
-  context.startBuilding()\n
-  context.updateCausalityState()\n
+if kw.get(\'created_by_builder\', 0): \n
+  return\n
 \n
 transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-#                       source=\'account/services_exterieurs\',\n
-                       id=\'expense\',\n
-                       immediate_reindex=1)\n
+                       id=\'expense\', )\n
 transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-#                       source=\'account/dette_fournisseur\',\n
-                       id=\'payable\',\n
-                       immediate_reindex=1)\n
+                       id=\'payable\', )\n
 transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-#                       source=\'account/tva_recuperable_196\',\n
-                       id=\'refundable_vat\',\n
-                       immediate_reindex=1)\n
-# collected_vat (only needed for EU)\n
-#transaction.newContent(portal_type=\'Purchase Invoice Transaction Line\',\n
-##                       source=\'account/tva_collectee_196\',\n
-#                       id=\'collected_vat\',\n
-#                       immediate_reindex=1)\n
+                       id=\'refundable_vat\', )\n
 \n
-context.AccountingTransaction_InitFromPreferences()\n
+context.AccountingTransaction_initFromPreferences()\n
 </string> </value>
         </item>
         <item>
@@ -135,7 +123,6 @@ context.AccountingTransaction_InitFromPreferences()\n
                             <string>kw</string>
                             <string>context</string>
                             <string>transaction</string>
-                            <string>hasattr</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>

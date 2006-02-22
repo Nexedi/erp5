@@ -68,27 +68,17 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = context\n
 \n
-if hasattr(context, \'startBuilding\') :\n
-  context.startBuilding()\n
-  context.updateCausalityState()\n
+if kw.get(\'created_by_builder\', 0): \n
+  return\n
 \n
 transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
-#                       source=\'account/creance_client\',\n
-                       id=\'receivable\',\n
-                       quantity=0,\n
-                       immediate_reindex=1)\n
+                       id=\'receivable\', )\n
 transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
-#                       source=\'account/dette_fournisseur\',\n
-                       id=\'payable\',\n
-                       quantity=0,\n
-                       immediate_reindex=1)\n
+                       id=\'payable\', )\n
 transaction.newContent(portal_type=\'Accounting Transaction Line\',\n
-#                       source=\'account/banques_etablissements_financiers\',\n
-                       id=\'bank\',\n
-                       quantity=0,\n
-                       immediate_reindex=1)\n
+                       id=\'bank\', )\n
 \n
-context.AccountingTransaction_InitFromPreferences()\n
+context.AccountingTransaction_initFromPreferences()\n
 </string> </value>
         </item>
         <item>
@@ -133,7 +123,6 @@ context.AccountingTransaction_InitFromPreferences()\n
                             <string>kw</string>
                             <string>context</string>
                             <string>transaction</string>
-                            <string>hasattr</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>

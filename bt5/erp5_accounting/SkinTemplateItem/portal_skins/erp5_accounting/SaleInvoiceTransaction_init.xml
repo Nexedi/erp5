@@ -68,27 +68,20 @@
             <key> <string>_body</string> </key>
             <value> <string>transaction = context\n
 \n
-if hasattr(context, \'startBuilding\') :\n
-  context.startBuilding()\n
-  context.updateCausalityState()\n
+if kw.get(\'created_by_builder\', 0): \n
+  return\n
 \n
 transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-#                       source=\'account/prestation_service\',\n
                        id=\'income\',\n
-                       quantity=0,\n
-                       immediate_reindex=1)\n
+                       quantity=0, )\n
 transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-#                       source=\'account/creance_client\',\n
                        id=\'receivable\',\n
-                       quantity=0,\n
-                       immediate_reindex=1)\n
+                       quantity=0, )\n
 transaction.newContent(portal_type=\'Sale Invoice Transaction Line\',\n
-#                       source=\'account/tva_collectee_196\',\n
                        id=\'collected_vat\',\n
-                       quantity=0,\n
-                       immediate_reindex=1)\n
+                       quantity=0, )\n
 \n
-context.AccountingTransaction_InitFromPreferences()\n
+context.AccountingTransaction_initFromPreferences()\n
 </string> </value>
         </item>
         <item>
@@ -133,7 +126,6 @@ context.AccountingTransaction_InitFromPreferences()\n
                             <string>kw</string>
                             <string>context</string>
                             <string>transaction</string>
-                            <string>hasattr</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>
