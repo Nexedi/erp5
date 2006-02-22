@@ -113,7 +113,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if not REQUEST:
         REQUEST = get_request()
-
+        
       if not hasattr(self, 'selection_data'):
         self.selection_data = PersistentMapping()
       user_id = self.portal_membership.getAuthenticatedMember().getUserName()
@@ -416,8 +416,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
-        selection = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection[0]
+        selection_list = selection(method = method, context=self, REQUEST=REQUEST)
+        o = selection_list[0]
         url = o.absolute_url()
       else:
         url = REQUEST.url
@@ -434,8 +434,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
-        selection = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection[-1]
+        selection_list = selection(method = method, context=self, REQUEST=REQUEST)
+        o = selection_list[-1]
         url = o.absolute_url()
       else:
         url = REQUEST.url
@@ -452,8 +452,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
-        selection = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection[(int(selection_index) + 1) % len(selection)]
+        selection_list = selection(method = method, context=self, REQUEST=REQUEST)
+        o = selection_list[(int(selection_index) + 1) % len(selection_list)]
         url = o.absolute_url()
       else:
         url = REQUEST.url
@@ -470,8 +470,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.method_path)
-        selection = selection(method = method, context=self, REQUEST=REQUEST)
-        o = selection[(int(selection_index) - 1) % len(selection)]
+        selection_list = selection(method = method, context=self, REQUEST=REQUEST)
+        o = selection_list[(int(selection_index) - 1) % len(selection_list)]
         url = o.absolute_url()
       else:
         url = REQUEST.url
@@ -835,7 +835,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         if isinstance(v,DateTime):
           del kw[k]
       # XXX End of the part to remove
-      LOG('SelectionTool.getPickle, kw',0,kw)
+      #LOG('SelectionTool.getPickle, kw',0,kw)
       pickle_string = pickle.dumps(kw)
       msg = MIMEBase('application','octet-stream')
       msg.set_payload(pickle_string)
