@@ -213,7 +213,6 @@ Person | print
 Person | profile
 Person | report
 Person | terminate_career
-Person | translate
 Person | view
 Predicate | print_pdf
 Predicate | view

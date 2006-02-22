@@ -122,7 +122,13 @@ module_portal_type_value.addAction( "list_ui"\n
                                   , "View"\n
                                   , "object_ui"\n
                                   )\n
-\n
+module_portal_type_value.addAction( "print_pdf"\n
+                                  , "Print"\n
+                                  , "string:${object_url}/Base_printPdf"\n
+                                  , ""\n
+                                  , "View"\n
+                                  , "object_print"\n
+                                  )\n
 # Create the skin directory if does not exist yet\n
 portal_skins_folder_name = portal_skins_folder\n
 portal_skins = portal.portal_skins\n
@@ -169,6 +175,13 @@ object_portal_type_value.addAction( "view"\n
                                   , "View"\n
                                   , "object_view"\n
                                   )\n
+object_portal_type_value.addAction( "history"\n
+                                  , "History"\n
+                                  , "string:${object_url}/Base_viewHistory"\n
+                                  , ""\n
+                                  , "View"\n
+                                  , "object_view"\n
+                                  )\n
 object_portal_type_value.addAction( "metadata"\n
                                   , "Metadata"\n
                                   , "string:${object_url}/Base_viewMetadata"\n
@@ -176,8 +189,13 @@ object_portal_type_value.addAction( "metadata"\n
                                   , "Manage properties"\n
                                   , "object_view"\n
                                   )\n
-\n
-\n
+object_portal_type_value.addAction( "print_pdf"\n
+                                  , "Print"\n
+                                  , "string:${object_url}/Base_printPdf"\n
+                                  , ""\n
+                                  , "View"\n
+                                  , "object_print"\n
+                                  )\n
 # Finally add the module to the site\n
 portal.newContent( portal_type = module_portal_type\n
                  , id          = module_id\n
