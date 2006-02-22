@@ -319,7 +319,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Sale Order</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
@@ -364,7 +364,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Sale Order</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
@@ -562,7 +562,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Sale Order</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>
@@ -616,7 +616,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Sale Order</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_title</string>

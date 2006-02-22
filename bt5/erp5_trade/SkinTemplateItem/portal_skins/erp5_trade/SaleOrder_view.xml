@@ -100,7 +100,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_section</string>
+                        <string>my_source_section_title</string>
                         <string>my_order</string>
                         <string>my_received_date</string>
                         <string>my_origin</string>
@@ -120,15 +120,12 @@
                       <list>
                         <string>my_destination_reference</string>
                         <string>my_destination_title</string>
-                        <string>my_destination_decision_person_title</string>
-                        <string>my_destination_decision_organisation_title</string>
+                        <string>my_destination_decision_title</string>
                         <string>my_group</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_trade_condition_title</string>
-                        <string>my_translated_simulation_state</string>
-                        <string>total_quantity</string>
-                        <string>total_price</string>
+                        <string>simulation_state</string>
                       </list>
                     </value>
                 </item>

@@ -5,7 +5,7 @@
       <tuple>
         <tuple>
           <string>Products.Formulator.StandardFields</string>
-          <string>FloatField</string>
+          <string>ListField</string>
         </tuple>
         <none/>
       </tuple>
@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>total_price</string> </value>
+            <value> <string>my_price_currency</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,12 +31,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>not_float</string> </key>
-                    <value> <string>You did not enter a floating point number.</string> </value>
-                </item>
-                <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -56,14 +62,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,7 +78,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -88,7 +98,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -112,20 +130,10 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -145,15 +153,37 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -184,16 +214,8 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -208,24 +230,38 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-1234.5</string> </value>
-                </item>
-                <item>
-                    <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Total Price</string> </value>
+                    <value> <string>Currency</string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -251,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTotalPrice()</string> </value>
+            <value> <string>python:here.CurrencyModule_getCurrencyItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

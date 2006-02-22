@@ -1,3 +1,6 @@
+2006-02-22 romain
+* use proxy field in sale trade condition, sale order.
+
 2006-02-16 jerome
 * update Payment Condition forms to use souce/destination payment categories, quantity and efficiency.
 
