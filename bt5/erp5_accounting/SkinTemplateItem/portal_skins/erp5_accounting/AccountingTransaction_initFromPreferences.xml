@@ -77,6 +77,10 @@ try : \n
     resource = preference_tool.getPreferredAccountingTransactionCurrency())\n
 except AttributeError, e :\n
   context.log(\'AccountingTransaction_InitFromPreferences\', \'error : %s\' % e)\n
+\n
+if hasattr(context, \'startBuilding\') :\n
+  context.startBuilding()\n
+  context.updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -87,7 +91,7 @@ except AttributeError, e :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_InitFromPreferences</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_initFromPreferences</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -127,6 +131,7 @@ except AttributeError, e :\n
                             <string>_getattr_</string>
                             <string>AttributeError</string>
                             <string>e</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +148,7 @@ except AttributeError, e :\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransaction_InitFromPreferences</string> </value>
+            <value> <string>AccountingTransaction_initFromPreferences</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
