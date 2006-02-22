@@ -125,7 +125,11 @@ for l in result:\n
                      parent_specific_reference=l.parent_specific_reference,\n
                      translated_simulation_state_title =\n
                              o.getTranslatedSimulationStateTitle(),\n
+\n
+# FIXME: overriding \'portal_type\' in asContext is clearly a bad idea, as many methods are storred on the portal type \n
+# (hence the translated_simulation_state_title hack) -j\xc3\xa9rome\n
                      portal_type=l.portal_type,\n
+\n
                      account_uid=l.account_uid, )\n
     new_result.append(c)\n
 \n
