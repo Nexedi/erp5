@@ -147,8 +147,11 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
   #LOG('makeTreeBody', 0, 'root = %r, depth = %r, category = %r' % (root, depth, category))
   tree_body = ''
   if root is None: return tree_body
-
-  for o in root.objectValues():
+  if hasattr(root, 'getChildDomainValueList'):
+    oblist = root.getChildDomainValueList(root)
+  else:
+    oblist = root.objectValues()
+  for o in oblist:
     tree_body += '<TR>' + '<TD WIDTH="16" NOWRAP>' * depth
     relative_url = o.getRelativeUrl()
     if base_category is not None and not relative_url.startswith(base_category + '/'):
@@ -247,7 +250,11 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
           else:
             tree_list += [(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
   else:
-    for o in root.objectValues():
+    if hasattr(root, 'getChildDomainValueList'):
+      oblist = root.getChildDomainValueList(root)
+    else:
+      oblist = root.objectValues()
+    for o in oblist:
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = o
       selection_domain = DomainSelection(domain_dict = new_root_dict)
@@ -487,7 +494,7 @@ class ListBoxWidget(Widget.Widget):
         """
           Returns
         """
-        if REQUEST is None: REQUEST=get_request()
+        if REQUEST is None: REQUEST=get_request()        
         return self.render(field, key, value, REQUEST, render_format=render_format)
 
     def render(self, field, key, value, REQUEST, render_format='html'):
@@ -518,7 +525,7 @@ class ListBoxWidget(Widget.Widget):
         # First, grasp and intialize the variables we may need later
         #
         ###############################################################
-        render_start = DateTime()
+        #render_start = DateTime()
         here = REQUEST['here']
         reset = REQUEST.get('reset', 0)
         form = field.aq_parent
@@ -863,7 +870,7 @@ class ListBoxWidget(Widget.Widget):
           stat_method = None
           show_stat = 0
 
-        #LOG('ListBox', 0, 'domain_tree = %s, selection.getDomainPath() = %s, selection.getDomainList() = %s' % (repr(domain_tree), repr(selection.getDomainPath()), repr(selection.getDomainList())))
+          #LOG('ListBox', 0, 'domain_tree = %s, selection.getDomainPath() = %s, selection.getDomainList() = %s' % (repr(domain_tree), repr(selection.getDomainPath()), repr(selection.getDomainList())))
         if domain_tree:
           selection_domain_path = selection.getDomainPath()
           selection_domain_current = selection.getDomainList()
@@ -878,15 +885,17 @@ class ListBoxWidget(Widget.Widget):
                   root = root_dict[base_category] = portal_categories.restrictedTraverse(domain)
               if root is None and portal_domains is not None:
                 if base_category in portal_domains.objectIds():
-                  root = root_dict[base_category] = portal_domains.restrictedTraverse(domain)
+                  base_domain = portal_domains.getDomainByPath(domain)
+                  root =  base_domain
+                  root_dict[base_category] = base_domain.getRelativeUrl()
               if root is None:
                 try:
                   root_dict[None] = portal_object.restrictedTraverse(domain)
                 except KeyError:
                   root = None
               #LOG('domain_tree root aq_parent', 0, str(root_dict[base_category].aq_parent))
-            selection.edit(domain = DomainSelection(domain_dict = root_dict))
-            #LOG('selection.domain', 0, str(selection.domain.__dict__))
+            selection.edit(domain = DomainSelection(domain_dict = root_dict).__of__(here))
+            # LOG('selection.domain', 0, str(selection.domain.__dict__))
         else:
           selection.edit(domain = None)
 
@@ -2000,7 +2009,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
                                               selection_name = selection_name)
           except KeyError:
               select_tree_body = ''
-
+          
           select_tree_html = """<!-- Select Tree -->
 %s
 <table cellpadding="0" border="0">
@@ -2017,9 +2026,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
 <!-- End of Table Wrapping for Select Tree -->
 </td></tr>
 </table>""" % (select_tree_html,list_html)
-        render_end = DateTime()
-        result = (render_end-render_start) * 86400
-        LOG('Listbox render end call', 0, result)
+        #render_end = DateTime()
+        #result = (render_end-render_start) * 86400
+        #LOG('Listbox render end call', 0, result)
         return list_html
 
 ListBoxWidgetInstance = ListBoxWidget()
