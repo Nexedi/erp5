@@ -173,7 +173,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
               setattr(self, k, v)
 
     def __call__(self, method = None, context=None, REQUEST=None):
-        #LOG("Selection", 0, str(self.__dict__))
+        #LOG("Selection", 0, str((self.__dict__))
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
         if self.invert_mode is 0:
@@ -402,6 +402,10 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
                       join_table="catalog", join_column="uid"):
     select_expression = []
     for k, d in self.domain_dict.items():
+      if isinstance(d, str):
+        # get the domain object
+        site = self.getPortalObject()
+        d = site['portal_domains'].getDomainByPath(d)
       if k == 'parent':
         # Special treatment for parent
         select_expression.append(d.getParentSqlExpression(table='catalog', 
@@ -423,7 +427,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
       result = "( %s )" % ' AND '.join(select_expression)
     else:
       result = ''
-    #LOG('DomainSelection', 0, 'asSqlExpression returns %r' % (result,))
+    #LOG('DomainSelection', 0, 'asSqlExpression returns %r' % (result,))      
     return result
 
   security.declarePublic('asSqlJoinExpression')
@@ -431,6 +435,10 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
     join_expression = []
     #LOG('DomainSelection', 0, 'domain_id = %r, exclude_domain_id = %r, self.domain_dict = %r' % (domain_id, exclude_domain_id, self.domain_dict))
     for k, d in self.domain_dict.items():
+      if isinstance(d, str):
+        # we must the domain
+        site = self.getPortalObject()
+        d = site['portal_domains'].getDomainByPath(d)
       if k == 'parent':
         pass
       elif k is not None:
