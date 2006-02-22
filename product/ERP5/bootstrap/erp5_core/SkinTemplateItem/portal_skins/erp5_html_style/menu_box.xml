@@ -117,8 +117,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
           <td valign="middle" align="right" nowrap>\n
             <select name="action_select" size="1" tal:attributes="onChange string:submitAction(this.form,\'${absolute_url}/Base_doAction\')">\n
               <option selected value="" i18n:translate="" i18n:domain="ui">Action...</option>\n
-              <tal:block tal:repeat="content here/allowedContentTypes | nothing"\n
-                    tal:on-error="nothing">\n
+              <tal:block tal:repeat="content here/allowedContentTypes | nothing">\n
                <tal:block tal:condition="python: not content.id in here.portal_types.getTypeInfo(here).getHiddenContentTypeList()">\n
                  <option value="" tal:attributes="value python: \'add \' + content.id"\n
                    i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content/Title" i18n:name="portal_type" i18n:translate="" i18n:domain="ui">portal type</tal:block></option>\n
