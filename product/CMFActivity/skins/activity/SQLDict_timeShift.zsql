@@ -13,7 +13,8 @@ UPDATE
   message
 SET
   date = DATE_SUB(date, INTERVAL <dtml-sqlvar delay type="int"> SECOND),
-  processing_date = DATE_SUB(processing_date, INTERVAL <dtml-sqlvar delay type="int"> SECOND)
+  processing_date = DATE_SUB(processing_date, INTERVAL <dtml-sqlvar delay type="int"> SECOND),
+  retry = 0
 WHERE
   1 = 1
 <dtml-if processing_node>
