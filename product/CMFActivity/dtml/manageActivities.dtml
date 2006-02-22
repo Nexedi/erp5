@@ -39,8 +39,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top">Named Parameters</th>
     <th align="left" valign="top">Processing Node</th>
     <th align="left" valign="top">Priority</th>
+    <th align="left" valign="top">Processing</th>
   </tr>
-  <dtml-in getMessageList>
+  <dtml-in expr="getMessageList(include_processing=1)">
       <tr>
         <td align="left" valign="top"><a href="manageCancel?object_path=<dtml-var "'/'.join(object_path)">&method_id=<dtml-var method_id>">Cancel</a> <a href="manageInvoke?object_path=<dtml-var "'/'.join(object_path)">&method_id=<dtml-var method_id>">Invoke</a></td>
         <td align="left" valign="top"><a href="<dtml-var "'/'.join(object_path)">"><dtml-var "'/'.join(object_path)"></a></td>
@@ -53,6 +54,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td align="left" valign="top"><dtml-var "_.str(kw)[1:-1]"></td>
         <td align="left" valign="top"><dtml-var processing_node></td>
         <td align="left" valign="top"><dtml-var priority></td>
+        <td align="left" valign="top">
+          <dtml-if expr="processing is not None">
+             <dtml-var processing>
+          </dtml-if>
+        </td>
       </tr>
   </dtml-in>
 </table>
