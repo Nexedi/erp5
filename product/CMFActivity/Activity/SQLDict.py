@@ -211,7 +211,7 @@ class SQLDict(RAMDict):
       if len(result) == 0:
         # If the result is still empty, shift the dates so that SQLDict can dispatch pending active
         # objects quickly.
-        self.timeShift(activity_tool, VALIDATION_ERROR_DELAY, processing_node)
+        self.timeShift(activity_tool, VALIDATION_ERROR_DELAY, processing_node,retry=1)
       elif len(result) > 0:
         #LOG('SQLDict dequeueMessage', 100, 'result = %r' % (list(result)))
         line = result[0]
@@ -551,11 +551,11 @@ class SQLDict(RAMDict):
     return VALID
 
   # Required for tests (time shift)
-  def timeShift(self, activity_tool, delay, processing_node=None):
+  def timeShift(self, activity_tool, delay, processing_node=None,retry=None):
     """
       To simulate timeShift, we simply substract delay from
       all dates in SQLDict message table
     """
-    activity_tool.SQLDict_timeShift(delay = delay, processing_node = processing_node)
+    activity_tool.SQLDict_timeShift(delay = delay, processing_node = processing_node,retry=retry)
 
 registerActivity(SQLDict)
