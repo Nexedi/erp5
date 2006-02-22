@@ -1,3 +1,6 @@
+2006-02-22 kevin
+* Fix bad default lisbox parameters.
+
 2006-02-22 romain
 * use proxy field in sale trade condition, sale order.
 
