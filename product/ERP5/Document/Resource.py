@@ -476,18 +476,11 @@ class Resource(XMLMatrix, CoreResource, Variated):
       """
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
       result = self._getIndustrialPrice(context)
-      if result is None:
-        self._updateIndustrialPrice(context)
-        result = self._getIndustrialPrice(context)
       return result
 
     def _getIndustrialPrice(self, context):
       # Default value is None
       return None
-
-    def _updateIndustrialPrice(self, context):
-      # Do nothing by default
-      pass
 
     # Predicate handling
     security.declareProtected(Permissions.AccessContentsInformation, 
