@@ -57,13 +57,3 @@ class SupplyRule(MappedValue, XMLMatrix):
                       , PropertySheet.CategoryCore
                       )
 
-    security.declarePrivate( '_edit' )
-    def _edit(self, **kw):
-      """
-      Solve here some constraints
-      """
-      ERP5MappedValue._edit(self, **kw)
-      self.setPredicateValueList(self.getCategoryMembershipList(('taille','coloris'), base=1))
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-    edit = WorkflowMethod( _edit )
