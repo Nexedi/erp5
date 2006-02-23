@@ -28,6 +28,9 @@ from Products.ERP5Type.Cache import CachingMethod
 
 from zLOG import LOG
 
+# This user is used to bypass all security checks.
+SUPER_USER = '__erp5security-=__'
+
 manage_addERP5UserManagerForm = PageTemplateFile(
     'www/ERP5Security_addERP5UserManager', globals(), __name__='manage_addERP5UserManagerForm' )
 
@@ -67,6 +70,10 @@ class ERP5UserManager(BasePlugin):
         o We expect the credentials to be those returned by
             ILoginPasswordExtractionPlugin.
         """
+        # Forbidden the usage of the super user.
+        if credentials.get('login') == SUPER_USER:
+          return None
+
         def _authenticateCredentials(login, password, path):
             if login is None or password is None:
                 return None
@@ -80,7 +87,6 @@ class ERP5UserManager(BasePlugin):
 
             if user.getPassword() == password and\
                 user.getCareerRole() == 'internal':
-              LOG('authenticateCredentials', 0, user.getId())
               return login, login # use same for user_id and login
 
             return None
@@ -99,21 +105,32 @@ class ERP5UserManager(BasePlugin):
             user_info = []
             plugin_id = self.getId()
 
-            if not exact_match:
-              id_tuple = tuple(['%%%s%%' % id for id in id_tuple])
-
-            user_objects = [user for user in self.getUserByLogin(id_tuple)\
-                if user.getCareerRole() == 'internal']
-                #XXX is this static check ok ?
-
-            for user in user_objects:
-                LOG('enumerateUsers', 0, user.getReference())
-                info = { 'id' : user.getReference()
-                       , 'login' : user.getReference()
-                       , 'pluginid' : plugin_id
-                       }
-
+            id_list = []
+            for id in id_tuple:
+              if SUPER_USER == id:
+                info = { 'id' : SUPER_USER
+                        , 'login' : SUPER_USER
+                        , 'pluginid' : plugin_id
+                        }
                 user_info.append(info)
+              else:
+                if exact_match:
+                  id_list.append(id)
+                else:
+                  id_list.append('%%%s%%' % id)
+
+            if id_list:
+              user_objects = [user for user in self.getUserByLogin(tuple(id_list))\
+                  if user.getCareerRole() == 'internal']
+                  #XXX is this static check ok ?
+
+              for user in user_objects:
+                  info = { 'id' : user.getReference()
+                          , 'login' : user.getReference()
+                          , 'pluginid' : plugin_id
+                          }
+
+                  user_info.append(info)
 
             return tuple(user_info)
 
@@ -135,7 +152,8 @@ class ERP5UserManager(BasePlugin):
         # because we aren't logged in, we have to create our own
         # SecurityManager to be able to access the Catalog
         sm = getSecurityManager()
-        newSecurityManager(self, self.getPortalObject().portal_catalog.getOwner())
+        if sm.getUser() != SUPER_USER:
+          newSecurityManager(self, self.getUser(SUPER_USER))
 
         result = self.getPortalObject().portal_catalog(portal_type="Person", reference=login)
 

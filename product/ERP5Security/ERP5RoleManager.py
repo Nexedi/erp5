@@ -20,7 +20,9 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
-from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin
+from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin, IRoleEnumerationPlugin
+
+from ERP5UserManager import SUPER_USER
 
 manage_addERP5RoleManagerForm = PageTemplateFile(
     'www/ERP5Security_addERP5RoleManager', globals(), __name__='manage_addERP5RoleManagerForm' )
@@ -37,7 +39,7 @@ def addERP5RoleManager( dispatcher, id, title=None, REQUEST=None ):
                                 '?manage_tabs_message='
                                 'ERP5RoleManager+added.'
                             % dispatcher.absolute_url())
-        
+ 
 class ERP5RoleManager( BasePlugin ):
 
     """ PAS plugin to add 'Member' as default
@@ -51,7 +53,7 @@ class ERP5RoleManager( BasePlugin ):
 
         self._id = self.id = id
         self.title = title
-        
+
     #
     #   IRolesPlugin implementation
     #
@@ -60,9 +62,17 @@ class ERP5RoleManager( BasePlugin ):
         """ See IRolesPlugin.
         We only ever return Member for every principal
         """
-        
+        if principal.getId() == SUPER_USER:
+          # If this is the super user, give all the roles present in this system.
+          # XXX no API to do this in PAS.
+          rolemakers = self._getPAS().plugins.listPlugins( IRoleEnumerationPlugin )
+          roles = []
+          for rolemaker_id, rolemaker in rolemakers:
+            roles.extend([role['id'] for role in rolemaker.enumerateRoles()])
+          return tuple(roles)
+
         return ('Member',)
-    
+
 classImplements( ERP5RoleManager
                , IRolesPlugin
                )

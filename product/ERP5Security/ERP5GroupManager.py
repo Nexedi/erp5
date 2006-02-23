@@ -24,10 +24,13 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
 from Products.ERP5Type.Cache import CachingMethod
+from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 
 from pickle import dumps, loads
 
 from zLOG import LOG
+
+from ERP5UserManager import SUPER_USER
 
 manage_addERP5GroupManagerForm = PageTemplateFile(
     'www/ERP5Security_addERP5GroupManager', globals(), __name__='manage_addERP5GroupManagerForm' )
@@ -65,6 +68,10 @@ class ERP5GroupManager(BasePlugin):
   def getGroupsForPrincipal(self, principal, request=None):
     """ See IGroupsPlugin.
     """
+    # If this is the super user, skip the check.
+    if principal.getId() == SUPER_USER:
+      return ()
+
     def _getGroupsForPrincipal(user_name, path):
       security_category_dict = {} # key is the base_category_list,
                                   # value is the list of fetched categories
@@ -73,10 +80,9 @@ class ERP5GroupManager(BasePlugin):
 
       # because we aren't logged in, we have to create our own
       # SecurityManager to be able to access the Catalog
-      #FIXME here we assume that the portal owner will always have
-      #      enough rights, which might as well be wrong
       sm = getSecurityManager()
-      newSecurityManager(self, self.getPortalObject().getOwner())
+      if sm.getUser() != SUPER_USER:
+        newSecurityManager(self, self.getUser(SUPER_USER))
 
       # To get the complete list of groups, we try to call the
       # ERP5Type_getSecurityCategoryMapping which should return a list
