@@ -1068,8 +1068,30 @@ def setDefaultProperties(property_holder, object=None):
             createDefaultAccessors(property_holder, '%s_range_%s' % (prop['id'], value), prop=range_prop,
                 read_permission=read_permission, write_permission=write_permission)
 
+        # Create translation accesor, if translatable is set
+        if prop.get('translatable', 0):
+          # make accesso like getTranslatedProperty
+          createTranslationAccessors(property_holder, 'translated_%s' % (prop['id']),
+                                 read_permission=read_permission, write_permission=write_permission)              
+          # make accessor to translation_domain
+          # first create default one as a normal property
+          txn_prop = {}
+          txn_prop['description'] = ''
+          txn_prop['default'] = ''
+          txn_prop['id'] = 'translation_domain'
+          txn_prop['type'] = 'string'          
+          txn_prop['mode'] = 'w'
+          createDefaultAccessors(property_holder, '%s_%s' %(prop['id'], txn_prop['id']), prop=txn_prop,
+                                 read_permission=read_permission, write_permission=write_permission)
+          # then overload accesors getPropertyTranslationDomain
+          if prop.has_key('translation_domain'):
+            default = prop['translation_domain']
+          else:
+            default = ''
+          createTranslationAccessors(property_holder, '%s_translation_domain' % (prop['id']),
+                                     read_permission=read_permission, write_permission=write_permission, default=default)
         createDefaultAccessors(property_holder, prop['id'], prop=prop,
-            read_permission=read_permission, write_permission=write_permission)
+                               read_permission=read_permission, write_permission=write_permission)
       else:
         raise TypeError, '"%s" is illegal type for propertysheet' % \
                                             prop['type']
@@ -1084,8 +1106,7 @@ def setDefaultProperties(property_holder, object=None):
         'mode'       : 'w'
       }
       # XXX These are only for backward compatibility.
-      if cat == 'group':
-        prop['storage_id'] = 'group'
+      if cat == 'group':        prop['storage_id'] = 'group'
       elif cat == 'site':
         prop['storage_id'] = 'location'
       createDefaultAccessors(property_holder, prop['id'], prop=prop,
@@ -2055,7 +2076,7 @@ def createCategoryAccessors(property_holder, id,
     setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
 
 
-from Accessor import Value, Related, RelatedValue
+from Accessor import Value, Related, RelatedValue, Translation
 
 def createValueAccessors(property_holder, id,
     read_permission=Permissions.AccessContentsInformation,
@@ -2579,6 +2600,30 @@ def createRelatedValueAccessors(property_holder, id,
   accessor_name = '_categoryGet' + UpperCase(id) + 'RelatedProperty'
   if not hasattr(property_holder, accessor_name):
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
+
+def createTranslationAccessors(property_holder, id,
+    read_permission=Permissions.AccessContentsInformation,
+    write_permission=Permissions.ModifyPortalContent, default=''):
+  """
+  Generate the translation accessor for a class and a property
+  """
+  if 'translated' in id:
+    accessor_name = 'get' + UpperCase(id)
+    accessor = Translation.TranslatedPropertyGetter(accessor_name, id)
+    if not hasattr(property_holder, accessor_name):
+      setattr(property_holder, accessor_name, accessor)
+      property_holder.security.declareProtected(read_permission, accessor_name)
+    accessor_name = '_baseGet' + UpperCase(id)
+    if not hasattr(property_holder, accessor_name):
+      setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
+  if 'translation_domain' in id:
+    # Getter
+    accessor_name = 'get' + UpperCase(id)
+    accessor = Translation.PropertyTranslationDomainGetter(accessor_name, id, "" ,default=default)
+    setattr(property_holder, accessor_name, accessor)
+    property_holder.security.declareProtected(read_permission, accessor_name)
 
 
 #####################################################
