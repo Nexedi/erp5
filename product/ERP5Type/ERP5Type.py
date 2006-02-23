@@ -169,7 +169,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     #   Agent methods
     #
     security.declarePublic('constructInstance')
-    def constructInstance( self, container, id, *args, **kw ):
+    def constructInstance( self, container, id,
+                           created_by_builder=0, *args, **kw ):
         """
         Build a "bare" instance of the appropriate type in
         'container', using 'id' as its id.
