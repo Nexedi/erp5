@@ -528,7 +528,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     obj.setCategoryList(['test_base_cat/test_cat'])
     get_transaction().commit()
     self.tic()
-    self.assert_(obj in test.getCategoryMemberValueList())
+    self.assert_(obj in [x.getObject() for x in test.getCategoryMemberValueList()])
 
 if __name__ == '__main__':
     framework()
