@@ -723,6 +723,9 @@ be a problem)."""
 
   security.declareProtected( Permissions.AccessContentsInformation, 'objectValues' )
   def objectValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, sort_order=None, **kw):
+    """
+    Returns a list containing object contained in this folder.
+    """
     #LOG('objectValues', 0, 'spec = %r, kw = %r' % (spec, kw))
     if meta_type is not None:
       spec = meta_type
