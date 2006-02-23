@@ -785,8 +785,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return result
       
                                       
-    def _getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
-                                         spec=(), filter=None, acquired_object_dict = None, **kw ):
+    def _getSingleCategoryAcquiredMembershipList(self, context, base_category,
+                                         base = 0, spec = (), filter = None,
+                                         acquired_portal_type = (),
+                                         acquired_object_dict = None,
+                                         **kw ):
       """
         Returns the acquired membership of the context for a single base category
         represented as a list of relative URLs
@@ -824,6 +827,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       if type(spec) is type('a'):
         spec = [spec]
+
+      if type(acquired_portal_type) == type(''):
+        acquired_portal_type = [acquired_portal_type]
 
       if acquired_object_dict is None:
         acquired_object_dict = {} # Initial call may include filter, etc. - do not keep
@@ -946,10 +952,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 #LOG('my_acquisition_object',0, str(getattr(my_acquisition_object, '_categories', ())))
                 #LOG('my_acquisition_object',0, str(base_category))
                 if base_category in getattr(my_acquisition_object, '_categories', ()):
-                  if spec is () or my_acquisition_object.portal_type in spec:
+                  if (not acquired_portal_type) or my_acquisition_object.portal_type in acquired_portal_type:
                     #LOG("Recursive call ",0,str((spec, my_acquisition_object.portal_type)))
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
                         base_category, spec=spec, filter=filter, portal_type=portal_type, base=base,
+                        acquired_portal_type=acquired_portal_type,
                         acquired_object_dict=acquired_object_dict)
                   else:
                     #LOG("No recursive call ",0,str((spec, my_acquisition_object.portal_type)))
