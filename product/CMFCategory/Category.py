@@ -412,7 +412,7 @@ class Category(Folder):
         can be useful to create reporting trees based on the
         ZSQLCatalog
       """
-      #LOG('asSqlExpression', 0, str(self))
+      #LOG('Category.asSqlExpression self', 0, str(self))
       #LOG('asSqlExpression parent', 0, str(self.aq_parent))
       if base_category is None:
         base_category = self
@@ -470,6 +470,8 @@ class Category(Folder):
       Returns a list of objects or brains
       """
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
+      if base_category is None:
+        base_category = self.getBaseCategoryId()
       return self.portal_categories.getCategoryMemberValueList(self,
             base_category = base_category,
             spec=spec, filter=filter, portal_type=portal_type, strict_membership=strict_membership)
