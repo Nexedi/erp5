@@ -39,6 +39,8 @@ class SimpleItem:
             'type'        : 'string',
             'default'     : '',
             'mode'        : 'w',
+            'translatable': '1',
+            'translation_domain' : 'erp5_content',
             },
         {   'id'          : 'description',
             'description' : '',
