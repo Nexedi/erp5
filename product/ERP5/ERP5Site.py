@@ -464,6 +464,15 @@ class ERP5Site ( FolderMixIn, CMFSite ):
              self._getPortalConfiguration('portal_supply_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                               'getPortalSupplyMovementTypeList')
+    def getPortalSupplyMovementTypeList(self):
+      """
+        Return supply movement types.
+      """
+      return self._getPortalGroupedTypeList('supply_movement') or\
+             self._getPortalConfiguration('portal_supply_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalAcquisitionMovementTypeList')
     def getPortalAcquisitionMovementTypeList(self):
       """
@@ -471,7 +480,8 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       """
       return tuple(list(self.getPortalOrderMovementTypeList()) +
                    list(self.getPortalDeliveryMovementTypeList()) +
-                   list(self.getPortalInvoiceMovementTypeList()))
+                   list(self.getPortalInvoiceMovementTypeList()) +
+                   list(self.getPortalSupplyMovementTypeList()))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalMovementTypeList')
