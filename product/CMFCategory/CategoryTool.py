@@ -1341,7 +1341,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
       This returns a catalog_search resource with can then be used by getCategoryMemberItemList
       """
       from Products.ERP5Form.Selection import DomainSelection
-      if base_category is None: base_category = 'related'
+      if base_category is None: 
+        raise CategoryError('getCategoryMemberValueList must know the base category')
       strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       catalog_search = self.portal_catalog(portal_type = portal_type,
                       # TODO: make it work in catalog tool
