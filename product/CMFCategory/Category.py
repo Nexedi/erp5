@@ -544,7 +544,7 @@ class BaseCategory(Category):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    def asSqlExpression(self, strict_membership=0, table='category'):
+    def asSqlExpression(self, strict_membership=0, table='category', base_category=None):
       """
         A Predicate can be rendered as an sql expression. This
         can be useful to create reporting trees based on the
