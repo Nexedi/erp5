@@ -240,13 +240,14 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
 
     security.declareProtected(ERP5Permissions.ModifyPortalContent,
                               'assignRoleToSecurityGroup')
-    def assignRoleToSecurityGroup(self, object):
-        """
+    def assignRoleToSecurityGroup(self, object, user_name = None):
+      """
         Assign Local Roles to Groups on object, based on Portal Type
         Role Definitions
-        """
-        #FIXME We should check the type of the acl_users folder instead of
-        #      checking which product is installed.
+      """
+      #FIXME We should check the type of the acl_users folder instead of
+      #      checking which product is installed.
+      if user_name is None:
         if ERP5UserManager is not None:
           # We use id for roles in ERP5Security
           user_name = getSecurityManager().getUser().getId()
@@ -257,121 +258,113 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                 'your setup. '\
                 'Please install it to benefit from group-based security'
 
-        # Retrieve applicable roles
-        # kw provided in order to take any appropriate action
-        role_mapping = self.getFilteredRoleListFor(object=object)
-        role_category_list = {}
-        for role, definition_list in role_mapping.items():
-            if not role_category_list.has_key(role):
-                role_category_list[role] = []
-            # For each role definition, we look for the base_category_script
-            # and try to use it to retrieve the values for
-            # the base_category list
-            for definition in definition_list:
-                # get the list of base_categories that are statically defined
-                category_base_list = [x.split('/')[0]
-                                      for x in definition['category']]
-                # get the list of base_categories that are to be fetched through the script
-                actual_base_category_list = [x for x in definition['base_category'] if x not in category_base_list]
-                # get the aggregated list of base categories, to preserve the order
-                category_order_list = []
-                category_order_list.extend(definition['base_category'])
-                for bc in category_base_list:
-                    if bc not in category_order_list:
-                        category_order_list.append(bc)
+      # Retrieve applicable roles
+      role_mapping = self.getFilteredRoleListFor(object=object) # kw provided in order to take any appropriate action
+      role_category_list_dict = {}
+      for role, definition_list in role_mapping.items():
+        # For each role definition, we look for the base_category_script
+        # and try to use it to retrieve the values for the base_category list
+        for definition in definition_list:
+          # get the list of base_categories that are statically defined
+          static_base_category_list = [x.split('/', 1)[0] for x in definition['category']]
+          # get the list of base_categories that are to be fetched through the script
+          dynamic_base_category_list = [x for x in definition['base_category'] if x not in static_base_category_list]
+          # get the aggregated list of base categories, to preserve the order
+          category_order_list = []
+          category_order_list.extend(definition['base_category'])
+          for bc in static_base_category_list:
+            if bc not in category_order_list:
+              category_order_list.append(bc)
 
-                # get the script and apply it if actual_base_category_list is not empty
-                if len(actual_base_category_list) > 0:
-                    base_category_script_id = definition['base_category_script']
-                    base_category_script = getattr(object, base_category_script_id, None)
-                    if base_category_script is not None:
-                        # call the script, which should return either a dict or a list of dicts
-                        category_result = base_category_script(actual_base_category_list, user_name, object, object.getPortalType())
-                        # If we decide in the script that we don't want to update the security for this object,
-                        # we can just have it return None instead of a dict or list of dicts
-                        if category_result is None:
-                            continue
-                        if type(category_result) is type({}):
-                            category_result = [category_result]
-                    else:
-                        raise RuntimeError, 'Script %s was not found to fetch values for'\
-                                ' base categories : %s' % (base_category_script_id,
-                                                      ', '.join(actual_base_category_list))
-                else:
-                    category_result = [{}]
-                # add the result to role_category_list, aggregated with category_order and statically defined categories
-                for category_dict in category_result:
-                    category_value_dict = {'category_order':category_order_list}
-                    category_value_dict.update(category_dict)
-                    for c in definition['category']:
-                        bc, value = c.split('/', 1)
-                        category_value_dict[bc] = value
-                    role_category_list[role].append(category_value_dict)
+          # get the script and apply it if dynamic_base_category_list is not empty
+          if len(dynamic_base_category_list) > 0:
+            base_category_script_id = definition['base_category_script']
+            base_category_script = getattr(object, base_category_script_id, None)
+            if base_category_script is not None:
+              # call the script, which should return either a dict or a list of dicts
+              category_result = base_category_script(dynamic_base_category_list, user_name, object, object.getPortalType())
+              # If we decide in the script that we don't want to update the security for this object,
+              # we can just have it return None instead of a dict or list of dicts
+              if category_result is None:
+                continue
+              elif isinstance(category_result, dict):
+                category_result = [category_result]
+            else:
+              raise RuntimeError, 'Script %s was not found to fetch values for'\
+                      ' base categories : %s' % (base_category_script_id,
+                                            ', '.join(dynamic_base_category_list))
+          else:
+            category_result = [{}]
+          # add the result to role_category_list_dict, aggregated with category_order and statically defined categories
+          role_category_list = role_category_list_dict.setdefault(role, [])
+          for category_dict in category_result:
+            category_value_dict = {'category_order':category_order_list}
+            category_value_dict.update(category_dict)
+            for c in definition['category']:
+              bc, value = c.split('/', 1)
+              category_value_dict[bc] = value
+            role_category_list.append(category_value_dict)
 
-        # Generate security group ids from category_value_dicts
-        role_group_id_dict = {}
-        group_id_generator = getattr(object, ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
-        if group_id_generator is None:
-            raise RuntimeError, '%s script was not found' % ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
-        for role, value_list in role_category_list.items():
-            if not role_group_id_dict.has_key(role):
-                role_group_id_dict[role] = []
-            role_group_dict = {}
-            for category_dict in value_list:
-                group_id = group_id_generator(**category_dict)
-                # If group_id is not defined, do not use it
-                if group_id not in (None, ''):
-                  if type(group_id) is type('a'):
-                    # Single group is defined (this is usually for group membership)
-                    role_group_dict[group_id] = 1
-                  else:
-                    # Multiple groups are defined (this is usually for users)
-                    # but it could be extended to ad hoc groups
-                    for user_id in group_id:
-                      role_group_dict[user_id] = 1
-            role_group_id_dict[role].extend(role_group_dict.keys())
+      # Generate security group ids from category_value_dicts
+      role_group_id_dict = {}
+      group_id_generator = getattr(object, ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
+      if group_id_generator is None:
+        raise RuntimeError, '%s script was not found' % ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+      for role, value_list in role_category_list_dict.items():
+        role_group_dict = {}
+        for category_dict in value_list:
+          group_id = group_id_generator(**category_dict)
+          # If group_id is not defined, do not use it
+          if group_id not in (None, ''):
+            if isinstance(group_id, str):
+              # Single group is defined (this is usually for group membership)
+              role_group_dict[group_id] = 1
+            else:
+              # Multiple groups are defined (this is usually for users)
+              # but it could be extended to ad hoc groups
+              for user_id in group_id:
+                role_group_dict[user_id] = 1
+        role_group_id_dict.setdefault(role, []).extend(role_group_dict.keys())
 
-        # Switch index from role to group id
-        group_id_role_dict = {}
-        for role, group_list in role_group_id_dict.items():
-            for group_id in group_list:
-                if not group_id_role_dict.has_key(group_id):
-                    group_id_role_dict[group_id] = []
-                group_id_role_dict[group_id].append(role)
+      # Switch index from role to group id
+      group_id_role_dict = {}
+      for role, group_list in role_group_id_dict.items():
+        for group_id in group_list:
+          group_id_role_dict.setdefault(group_id, []).append(role)
 
-        # Update role assignments to groups
-        if ERP5UserManager is not None: # Default implementation
-          # Clean old group roles
-          old_group_list = object.get_local_roles()
-          object.manage_delLocalRoles([x[0] for x in old_group_list])
-          # Save the owner
-          for group, role_list in old_group_list:
-            if 'Owner' in role_list:
-              if not group_id_role_dict.has_key(group):
-                group_id_role_dict[group] = ('Owner',)
-              else:
-                group_id_role_dict[group].append('Owner')
-          # Assign new roles
-          for group, role_list in group_id_role_dict.items():
-              object.manage_addLocalRoles(group, role_list)
-        else: # NuxUserGroups implementation
-          # Clean old group roles
-          old_group_list = object.get_local_group_roles()
+      # Update role assignments to groups
+      if ERP5UserManager is not None: # Default implementation
+        # Clean old group roles
+        old_group_list = object.get_local_roles()
+        object.manage_delLocalRoles([x[0] for x in old_group_list])
+        # Save the owner
+        for group, role_list in old_group_list:
+          if 'Owner' in role_list:
+            if not group_id_role_dict.has_key(group):
+              group_id_role_dict[group] = ('Owner',)
+            else:
+              group_id_role_dict[group].append('Owner')
+        # Assign new roles
+        for group, role_list in group_id_role_dict.items():
+          object.manage_addLocalRoles(group, role_list)
+      else: # NuxUserGroups implementation
+        # Clean old group roles
+        old_group_list = object.get_local_group_roles()
+        # We duplicate role settings to mimic PAS
+        object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
+        object.manage_delLocalRoles([x[0] for x in old_group_list])
+        # Save the owner
+        for group, role_list in old_group_list:
+          if 'Owner' in role_list:
+            if not group_id_role_dict.has_key(group):
+              group_id_role_dict[group] = ('Owner',)
+            else:
+              group_id_role_dict[group].append('Owner')
+        # Assign new roles
+        for group, role_list in group_id_role_dict.items():
           # We duplicate role settings to mimic PAS
-          object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
-          object.manage_delLocalRoles([x[0] for x in old_group_list])
-          # Save the owner
-          for group, role_list in old_group_list:
-            if 'Owner' in role_list:
-              if not group_id_role_dict.has_key(group):
-                group_id_role_dict[group] = ('Owner',)
-              else:
-                group_id_role_dict[group].append('Owner')
-          # Assign new roles
-          for group, role_list in group_id_role_dict.items():
-              # We duplicate role settings to mimic PAS
-              object.manage_addLocalGroupRoles(group, role_list)
-              object.manage_addLocalRoles(group, role_list)
+          object.manage_addLocalGroupRoles(group, role_list)
+          object.manage_addLocalRoles(group, role_list)
 
     security.declarePublic('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, object=None, **kw):
