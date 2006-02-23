@@ -828,6 +828,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       self.produceUid()
       if len(self._v_uid_buffer) > 0:
         uid = self._v_uid_buffer.pop()
+        # Vincent added this 2006/01/25
+        #if uid > 4294967296: # 2**32
+        #if uid > 10000000: # arbitrary level : below it's normal, above it's suspicious
+        #   LOG('SQLCatalog', WARNING, 'Newly generated UID (%s) seems too big ! - vincent' % (uid,))
+        #   raise RuntimeError, 'Newly generated UID (%s) seems too big ! - vincent' % (uid,)
+        # end
         if self._max_uid is None:
           self._max_uid = Length()
         if uid > self._max_uid():
