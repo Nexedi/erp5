@@ -509,6 +509,26 @@ class TestCMFCategory(ERP5TypeTestCase):
     value_list = pc.getRelatedValueList(c)
     self.assertEquals(len(value_list), 1)
 
+  def test_17_CategoriesAndDomainSelection(self, quiet=0,
+      run=run_all_test):
+    """ Tests Categories and Domain Selection """
+    if not run: return
+    if not quiet:
+      message = 'Test Domain Selection and Categories'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ', 0, message)
+      
+    category_tool = self.getCategoryTool()
+    base = category_tool.newContent(portal_type = 'Base Category',
+                                   id='test_base_cat')
+    test = base.newContent(portal_type = 'Category', id = 'test_cat')
+    base.recursiveReindexObject()
+    obj = self.getOrganisationModule().newContent(
+          portal_type = 'Organisation')
+    obj.setCategoryList(['test_base_cat/test_cat'])
+    get_transaction().commit()
+    self.tic()
+    self.assert_(obj in test.getCategoryMemberValueList())
 
 if __name__ == '__main__':
     framework()
