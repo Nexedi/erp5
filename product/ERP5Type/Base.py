@@ -2243,12 +2243,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     return None
 
   security.declareProtected(Permissions.ModifyPortalContent,'assignRoleToSecurityGroup')
-  def assignRoleToSecurityGroup(self):
+  def assignRoleToSecurityGroup(self, **kw):
     """
       Set or reset local roles assignments based on local roles
       definition in portal type.
     """
-    self._getTypesTool()[self.getPortalType()].assignRoleToSecurityGroup(self)
+    self._getTypesTool()[self.getPortalType()].assignRoleToSecurityGroup(self, **kw)
 
   # Template Management
   security.declareProtected(Permissions.View, 'getDocumentTemplateList')
