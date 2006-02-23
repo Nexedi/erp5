@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
+#                         Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -34,42 +34,52 @@ from Products.ERP5.Document.Resource import Resource
 from zLOG import LOG
 
 class Currency(Resource):
-    """
-      Currency
-    """
+  """
+    Currency
+  """
 
-    meta_type = 'ERP5 Currency'
-    portal_type = 'Currency'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  meta_type = 'ERP5 Currency'
+  portal_type = 'Currency'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+  # Declarative interfaces
+  __implements__ = ( Interface.Variated, )
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Price
-                      , PropertySheet.Resource
-                      , PropertySheet.Reference
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Price
+                    , PropertySheet.Resource
+                    , PropertySheet.Reference
+                    )
 
-    # Unit conversion
-    security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
-    def convertQuantity(self, quantity, from_unit, to_unit):
+  # Unit conversion
+  security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
+  def convertQuantity(self, quantity, from_unit, to_unit):
+    return quantity
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'convertCurrency')
+  def convertCurrency(self, quantity, to_currency):
+    if to_currency is self:
       return quantity
+    return quantity
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'convertCurrency')
-    def convertCurrency(self, quantity, to_currency):
-      if to_currency is self:
-        return quantity
-      return quantity
-
-      
+  # Unit precision
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPrecisionAsInteger')
+  def getPrecisionAsInteger(self):
+    float_precision = str(self.getBaseUnitQuantity())
+    decimal_split   = float_precision.split('.')
+    integer_part    = decimal_split[0]
+    floating_part   = decimal_split[1]
+    if floating_part[-1] == '0':
+      return 0
+    else:
+      return len(floating_part)
