@@ -399,7 +399,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   security.declarePublic('asSqlExpression')
   def asSqlExpression(self, table_map=None, domain_id=None, 
                       exclude_domain_id=None, strict_membership=0,
-                      join_table="catalog", join_column="uid"):
+                      join_table="catalog", join_column="uid", base_category=None):
     select_expression = []
     for k, d in self.domain_dict.items():
       if isinstance(d, str):
