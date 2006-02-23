@@ -50,11 +50,13 @@ if ERP5UserManager is None:
 from RoleProviderBase import RoleProviderBase
 from RoleInformation import ori
 
+from TranslationProviderBase import TranslationProviderBase
+
 from zLOG import LOG
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
-class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
+class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, TranslationProviderBase ):
     """
     ERP5 Types are based on FactoryTypeInformation
 
@@ -75,6 +77,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     manage_options = ( SimpleItemWithProperties.manage_options[:1]
                      + ActionProviderBase.manage_options
                      + RoleProviderBase.manage_options
+                     + TranslationProviderBase.manage_options
                      + SimpleItemWithProperties.manage_options[1:]
                      )
 
