@@ -495,6 +495,10 @@ class Resource(XMLMatrix, CoreResource, Variated):
       p.setMembershipCriterionCategoryList(('resource/%s' % self.getRelativeUrl(),))
       return p
 
+    def _pricingSortMethod(self, a, b):
+      # Simple method : the one that matches the highest number of criterions wins
+      return cmp(len(b.getAcquiredCategoryList()), len(a.getAcquiredCategoryList()))
+
     security.declareProtected(Permissions.AccessContentsInformation, 
                               '_getPriceParameterDict')
     def _getPriceParameterDict(self, context=None, REQUEST=None, **kw):
@@ -505,6 +509,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
       new_category_list = []
       if context is not None:
         new_category_list += context.getCategoryList()
+      #XXX This should be 'category_list' instead of 'categories' to respect
+      # the naming convention. Must take care of side effects when fixing
       if kw.has_key('categories'):
         new_category_list.extend(kw['categories'])
         del kw['categories']
@@ -542,6 +548,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
         mapped_value = domain_tool.generateMappedValue(
                                                tmp_context,
                                                portal_type=portal_type_list,
+                                               sort_method=self._pricingSortMethod,
                                                has_cell_content=0, **kw)
         if mapped_value is not None:
           mapped_value_list.append(mapped_value)
@@ -552,6 +559,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
         'surcharge_ratio': [],
         'discount_ratio': [],
         'exclusive_discount_ratio': None,
+        'variable_additional_price': [],
+        'non_discountable_additional_price': [],
       }
       for mapped_value in mapped_value_list:
         for price_parameter_name in price_parameter_dict.keys():
@@ -567,6 +576,18 @@ class Resource(XMLMatrix, CoreResource, Variated):
                                                 price_parameter_value
       return price_parameter_dict
       
+    security.declareProtected(Permissions.AccessContentsInformation,
+        '_getPricingVariable')
+    def _getPricingVariable(self):
+      """
+      Return the value of the property used to calculate variable pricing
+      This basically calls a script like Product_getPricingVariable
+      """
+      method = self._getTypeBasedMethod('_getPricingVariable')
+      if method is None:
+        return 0.0
+      return float(method())
+
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getPrice')
     def getPrice(self, context=None, REQUEST=None, **kw):
@@ -578,9 +599,18 @@ class Resource(XMLMatrix, CoreResource, Variated):
       # Calculate the unit price
       unit_base_price = None
       # Calculate
-#     (base_price + SUM(addtional_price)) * 
-#     (1 + SUM(surcharge_ratio)) * 
-#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))))
+#     ((base_price + SUM(additional_price) +
+#     variable_value * SUM(variable_additional_price)) *
+#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))) +
+#     SUM(non_discountable_additional_price)) *
+#     (1 + SUM(surcharge_ratio))
+      # Or, as one single line :
+#     ((bp + S(ap) + v * S(vap)) * (1 - m(1, M(S(dr), edr))) + S(ndap)) * (1 + S(sr))
+      # Variable value is dynamically configurable through a python script.
+      # It can be anything, depending on business requirements.
+      # It can be seen as a way to define a pricing model that not only
+      # depends on discrete variations, but also on a continuous property of the object
+
       base_price = price_parameter_dict['base_price']
       if base_price in [None, '']:
         # XXX Compatibility
@@ -591,11 +621,10 @@ class Resource(XMLMatrix, CoreResource, Variated):
         # Sum additional price
         for additional_price in price_parameter_dict['additional_price']:
           unit_base_price += additional_price
-        # Surcharge ratio
-        sum_surcharge_ratio = 1
-        for surcharge_ratio in price_parameter_dict['surcharge_ratio']:
-          sum_surcharge_ratio += surcharge_ratio
-        unit_base_price = unit_base_price * sum_surcharge_ratio
+        # Sum variable additional price
+        variable_value = self._getPricingVariable()
+        for variable_additional_price in price_parameter_dict['variable_additional_price']:
+          unit_base_price += variable_additional_price * variable_value
         # Discount
         sum_discount_ratio = 0
         for discount_ratio in price_parameter_dict['discount_ratio']:
@@ -609,6 +638,15 @@ class Resource(XMLMatrix, CoreResource, Variated):
         if d_ratio != 0:
           d_ratio = 1 - min(1, d_ratio)
           unit_base_price = unit_base_price * d_ratio
+        # Sum non discountable additional price
+        for non_discountable_additional_price in\
+            price_parameter_dict['non_discountable_additional_price']:
+          unit_base_price += non_discountable_additional_price
+        # Surcharge ratio
+        sum_surcharge_ratio = 1
+        for surcharge_ratio in price_parameter_dict['surcharge_ratio']:
+          sum_surcharge_ratio += surcharge_ratio
+        unit_base_price = unit_base_price * sum_surcharge_ratio
       # Divide by the priced quantity
       if unit_base_price is not None:
         priced_quantity = self.getPricedQuantity()
