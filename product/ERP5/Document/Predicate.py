@@ -94,36 +94,36 @@ class Predicate(Folder):
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
       self._range_criterion = {}
-#       LOG('PREDICATE TEST', 0, 
-#           'testing %s on context of %s' % \
-#               (self.getRelativeUrl(), context.getRelativeUrl()))
+#    LOG('PREDICATE TEST', 0, 
+#        'testing %s on context of %s' % \
+#        (self.getRelativeUrl(), context.getRelativeUrl()))
     for property, value in self._identity_criterion.items():
       result = result and (context.getProperty(property) == value)
-#       LOG('predicate test', 0, 
-#           '%s after prop %s : %s == %s' % \
-#               (result, property, context.getProperty(property), value))
+#      LOG('predicate test', 0, 
+#          '%s after prop %s : %s == %s' % \
+#          (result, property, context.getProperty(property), value))
     for property, (min, max) in self._range_criterion.items():
       value = context.getProperty(property)
       if min is not None:
         result = result and (value >= min)
-#         LOG('predicate test', 0, 
-#             '%s after prop %s : %s >= %s' % \
-#                 (result, property, value, min))
+#        LOG('predicate test', 0, 
+#            '%s after prop %s : %s >= %s' % \
+#            (result, property, value, min))
       if max is not None:
         result = result and (value < max)
-#         LOG('predicate test', 0, 
-#             '%s after prop %s : %s < %s' % \
-#                 (result, property, value, max))
+#        LOG('predicate test', 0, 
+#            '%s after prop %s : %s < %s' % \
+#            (result, property, value, max))
     multimembership_criterion_base_category_list = \
         self.getMultimembershipCriterionBaseCategoryList()
     membership_criterion_base_category_list = \
         self.getMembershipCriterionBaseCategoryList()
     tested_base_category = {}
-#     LOG('predicate test', 0, 
-#         'categories will be tested in multi %s single %s as %s' % \
-#             (multimembership_criterion_base_category_list, 
-#              membership_criterion_base_category_list, 
-#              self.getMembershipCriterionCategoryList()))
+#    LOG('predicate test', 0, 
+#        'categories will be tested in multi %s single %s as %s' % \
+#        (multimembership_criterion_base_category_list, 
+#        membership_criterion_base_category_list, 
+#        self.getMembershipCriterionCategoryList()))
     membership_criterion_category_list = \
                             self.getMembershipCriterionCategoryList()
     if tested_base_category_list is not None:
@@ -142,26 +142,26 @@ class Predicate(Folder):
       if (bc in multimembership_criterion_base_category_list):
         tested_base_category[bc] = tested_base_category[bc] and \
                                    context.isMemberOf(c)
-#         LOG('predicate test', 0, 
-#             '%s after multi membership to %s' % \
-#                  (tested_base_category[bc], c))
+#        LOG('predicate test', 0, 
+#            '%s after multi membership to %s' % \
+#            (tested_base_category[bc], c))
       elif (bc in membership_criterion_base_category_list):
         tested_base_category[bc] = tested_base_category[bc] or \
                                    context.isMemberOf(c)
 
-#         LOG('predicate test', 0, 
-#             '%s after single membership to %s' % \
-#                 (tested_base_category[bc], c))
+#        LOG('predicate test', 0, 
+#            '%s after single membership to %s' % \
+#            (tested_base_category[bc], c))
     result = result and (0 not in tested_base_category.values())
-#     LOG('predicate test', 0, 
-#         '%s after category %s ' % (result, tested_base_category.items()))
+#    LOG('predicate test', 0, 
+#        '%s after category %s ' % (result, tested_base_category.items()))
     # Test method calls
     test_method_id = self.getTestMethodId()
     if (test_method_id is not None) and result:
       method = getattr(context,test_method_id)
       result = result and method()
-#     LOG('predicate test', 0, 
-#         '%s after method %s ' % (result, test_method_id))
+#    LOG('predicate test', 0, 
+#        '%s after method %s ' % (result, test_method_id))
     # XXX Add here additional method calls
     return result
 
@@ -385,7 +385,9 @@ class Predicate(Folder):
     as a trick to simplify the development of Predicates and forms.
     """
     new_membership_criterion_category_list = list(self.getMembershipCriterionCategoryList())
+    new_membership_criterion_base_category_list = list(self.getMembershipCriterionBaseCategoryList())
     new_multimembership_criterion_base_category_list = list(self.getMultimembershipCriterionBaseCategoryList())
+
     for base_category in multimembership_criterion_base_category_list:
       category_list = self.getProperty(base_category + '_list')
       if category_list is not None and len(category_list)>0:
@@ -393,6 +395,7 @@ class Predicate(Folder):
           new_membership_criterion_category_list.append(base_category + '/' + category)
         if base_category not in new_multimembership_criterion_base_category_list:
           new_multimembership_criterion_base_category_list.append(base_category)
+
     for base_category in membership_criterion_base_category_list:
       category_list = self.getProperty(base_category + '_list')
       if category_list is not None and len(category_list)>0:
@@ -400,6 +403,7 @@ class Predicate(Folder):
           new_membership_criterion_category_list.append(base_category + '/' + category)
         if base_category not in new_membership_criterion_base_category_list:
           new_membership_criterion_base_category_list.append(base_category)
+
     new_criterion_property_list =  list(self.getCriterionPropertyList())
     identity_criterion = getattr(self,'_identity_criterion',{})
     range_criterion = getattr(self,'_range_criterion',{})
@@ -421,6 +425,7 @@ class Predicate(Folder):
     # we have a predicate with local properties
     new_self = self.asContext(
         membership_criterion_category=new_membership_criterion_category_list,
+        membership_criterion_base_category=new_membership_criterion_base_category_list,
         multimembership_criterion_base_category=new_multimembership_criterion_base_category_list,
         criterion_property_list=new_criterion_property_list,
         _identity_criterion=identity_criterion,
