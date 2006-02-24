@@ -521,7 +521,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
                               result[0]['modification_date'].ISO())
     self.assertEquals(now, result[0]['modification_date'].ISO())
     
-  def test_18_buildSQLQuery(self, quiet=0, run=1) :#run_all_test):
+  def test_18_buildSQLQuery(self, quiet=0, run=0) :#run_all_test):
     """Tests that buildSQLQuery works with another query_table than 'catalog'"""
     if not run: return
     if not quiet:
