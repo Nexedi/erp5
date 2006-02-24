@@ -536,7 +536,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
       # to get some price values.
       mapped_value_list = []
       domain_tool = getToolByName(self,'portal_domains')
-      portal_type_list = self.getPortalSupplyTypeList()
+      portal_type_list = self.getPortalSupplyPathTypeList()
 
       category_list_list = [no_option_category_list] + \
           [no_option_category_list+[x] for x in option_category_list]
@@ -578,12 +578,16 @@ class Resource(XMLMatrix, CoreResource, Variated):
       
     security.declareProtected(Permissions.AccessContentsInformation,
         '_getPricingVariable')
-    def _getPricingVariable(self):
+    def _getPricingVariable(self, context=None):
       """
       Return the value of the property used to calculate variable pricing
       This basically calls a script like Product_getPricingVariable
       """
-      method = self._getTypeBasedMethod('_getPricingVariable')
+      if context is not None:
+        method = context._getTypeBasedMethod('_getPricingVariable')
+      if method is None or context is None:
+        method = self._getTypeBasedMethod('_getPricingVariable')
+
       if method is None:
         return 0.0
       return float(method())
@@ -622,7 +626,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
         for additional_price in price_parameter_dict['additional_price']:
           unit_base_price += additional_price
         # Sum variable additional price
-        variable_value = self._getPricingVariable()
+        variable_value = self._getPricingVariable(context=context)
         for variable_additional_price in price_parameter_dict['variable_additional_price']:
           unit_base_price += variable_additional_price * variable_value
         # Discount
