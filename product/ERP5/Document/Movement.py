@@ -311,10 +311,9 @@ class Movement(XMLObject, Amount):
     """
     result = self.getSourceInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0:
-        return 0.0
-      else :
+      if result > 0:
         return result
+    return 0.0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceInventoriatedTotalAssetCredit')
@@ -326,8 +325,7 @@ class Movement(XMLObject, Amount):
     if result is not None :
       if result < 0:
         return -result
-      else :
-        return 0.0
+    return 0.0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationInventoriatedTotalAssetPrice')
@@ -357,10 +355,9 @@ class Movement(XMLObject, Amount):
     """
     result = self.getDestinationInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0:
-        return 0.0
-      else :
+      if result > 0:
         return result
+    return 0.0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationInventoriatedTotalAssetCredit')
@@ -372,8 +369,7 @@ class Movement(XMLObject, Amount):
     if result is not None :
       if result < 0:
         return -result
-      else :
-        return 0.0
+    return 0.0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceAssetPrice')
