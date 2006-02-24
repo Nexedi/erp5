@@ -53,6 +53,16 @@ class SupplyLine:
        'description' : 'A surcharge ratio',
        'type'        : 'float',
        'mode'        : 'w' },
+    {  'id'          : 'variable_additional_price',
+       'description' : 'A per unit additional price that depends on a'\
+                       'continuous property',
+       'type'        : 'float',
+       'mode'        : 'w' },
+    {  'id'          : 'non_discountable_additional_price',
+       'description' : 'A per unit additional price that is not impacted by'\
+                       'discount ratio',
+       'type'        : 'float',
+       'mode'        : 'w' },
     # Pricing calculation
     # Matrix definition
     # Quantity step
@@ -81,6 +91,18 @@ class SupplyLine:
        'multivalued' : 1,
        'mode'        : 'w' },
     {  'id'          : 'surcharge_ratio_quantity_step',
+       'description' : 'A list of quantity values which define ' \
+                       'acceptable ranges',
+       'type'        : 'float',
+       'multivalued' : 1,
+       'mode'        : 'w' },
+    {  'id'          : 'variable_additional_price_quantity_step',
+       'description' : 'A list of quantity values which define ' \
+                       'acceptable ranges',
+       'type'        : 'float',
+       'multivalued' : 1,
+       'mode'        : 'w' },
+    {  'id'          : 'non_discountable_additional_price_quantity_step',
        'description' : 'A list of quantity values which define ' \
                        'acceptable ranges',
        'type'        : 'float',
