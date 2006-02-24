@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Document.BankingOperation import BankingOperation
+from Products.ERP5Banking.Document.BankingOperation import BankingOperation
 
 class CashDelivery(BankingOperation):
   """
