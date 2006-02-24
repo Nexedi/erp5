@@ -195,6 +195,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
         if self.init_script :
             # Acquire the init script in the context of this object
             init_script = getattr(ob, self.init_script)
+            kw['created_by_builder'] = created_by_builder
             init_script(*args, **kw)
 
         return ob
