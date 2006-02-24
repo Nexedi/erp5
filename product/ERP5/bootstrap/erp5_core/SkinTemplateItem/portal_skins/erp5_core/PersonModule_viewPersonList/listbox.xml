@@ -438,19 +438,19 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_categories/group</string>
+                          <string>group</string>
                           <string>Group</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/region</string>
+                          <string>region</string>
                           <string>Region</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/role</string>
+                          <string>role</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/skill</string>
+                          <string>skill</string>
                           <string>Skill</string>
                         </tuple>
                         <tuple>
@@ -466,7 +466,7 @@ Role & Region
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

@@ -1,3 +1,12 @@
+2006-02-24 yo
+* Use PasswordField instead of StringField for User Password in Person_viewDetails.
+
+2006-02-23 kevin
+* Add precision on currencies.
+
+2006-02-22 kevin
+* Fix bad default lisbox parameters.
+
 2006-02-22 jerome
 * reraise error in allowed content type drop down menu
 

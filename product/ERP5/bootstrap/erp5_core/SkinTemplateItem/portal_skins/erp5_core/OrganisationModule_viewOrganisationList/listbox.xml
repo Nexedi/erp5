@@ -454,23 +454,23 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_categories/activity</string>
+                          <string>activity</string>
                           <string>Activity</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/function</string>
+                          <string>function</string>
                           <string>Function</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/role</string>
+                          <string>role</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/region</string>
+                          <string>region</string>
                           <string>Region</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/group</string>
+                          <string>group</string>
                           <string>Group</string>
                         </tuple>
                       </list>
@@ -478,7 +478,7 @@
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
