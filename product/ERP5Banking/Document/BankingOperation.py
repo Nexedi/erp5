@@ -61,6 +61,15 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
                     , PropertySheet.Amount
                     )
 
+  security.declareProtected(Permissions.View, 'getAggregateReference')
+  def getAggregateReference(self, **kw):
+    """Return the reference of an aggregate value.
+    """
+    value = self.getAggregateValue()
+    if value is not None:
+      return value.getReference()
+
+
 ### Dynamic patch
 Delivery.getBaobabSourceUid = lambda x: x.getSourceUid()
 Delivery.getBaobabSourceUid__roles__ = PermissionRole(Permissions.View)
