@@ -71,15 +71,3 @@ class Currency(Resource):
     if to_currency is self:
       return quantity
     return quantity
-
-  # Unit precision
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPrecisionAsInteger')
-  def getPrecisionAsInteger(self):
-    float_precision = str(self.getBaseUnitQuantity())
-    decimal_split   = float_precision.split('.')
-    integer_part    = decimal_split[0]
-    floating_part   = decimal_split[1]
-    if floating_part[-1] == '0':
-      return 0
-    else:
-      return len(floating_part)
