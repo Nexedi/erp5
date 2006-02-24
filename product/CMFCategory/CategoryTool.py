@@ -1349,7 +1349,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       from Products.ERP5Form.Selection import DomainSelection
       if base_category is None:
-        if context.getPortalType() == "Base Category":
+        if context.getPortalType() in ( "Base Category", "Category") :
           base_category = context.getBaseCategoryId()
         else:
           raise CategoryError('getCategoryMemberValueList must know the base category')
