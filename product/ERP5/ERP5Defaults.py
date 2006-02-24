@@ -167,7 +167,7 @@ portal_payment_condition_type_list = ('Condition Paiement',)
 
 portal_supply_type_list = ('Purchase Supply','Sale Supply')
 
-portal_supply_movement_type_list = ('Supply Line','Supply Cell')
+portal_supply_path_type_list = ('Supply Line','Supply Cell')
 
 # This transaction lines are special because destination must be None.
 portal_balance_transaction_line_type_list = ('Balance Transaction Line',)
