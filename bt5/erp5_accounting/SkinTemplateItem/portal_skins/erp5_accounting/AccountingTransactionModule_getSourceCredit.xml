@@ -70,15 +70,15 @@
   params = selection.getParams()\n
 else:\n
   params = {}\n
-kw = {} \n
+kw = {}\n
 kw[\'section_category\'] = params.get(\'section_category\')\n
 kw[\'stat\'] = 1\n
-kw[\'omit_output\'] = 1\n
+kw[\'omit_input\'] = 1\n
 kw[\'transaction\'] = context.getUid()\n
 \n
-result = context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, **kw)\n
+result = context.AccountingTransactionModule_zGetAccountingTransactionList(selection=selection, selection_params=kw, **kw)\n
 row = result[0]\n
-return float(\'%.02f\' % (row.total_price or 0.0))\n
+return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
 </string> </value>
         </item>
         <item>
