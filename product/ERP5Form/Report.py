@@ -139,6 +139,7 @@ class ERP5Report(ERP5Form):
         extra_context = self.pt_getContext()
         extra_context['options'] = kwargs
         extra_context['form'] = self
+        extra_context['request'] = get_request()
         extra_context['container'] = container ## PROBLEM NOT TAKEN INTO ACCOUNT
         extra_context['here'] = object
         extra_context['report_method'] = report_method
