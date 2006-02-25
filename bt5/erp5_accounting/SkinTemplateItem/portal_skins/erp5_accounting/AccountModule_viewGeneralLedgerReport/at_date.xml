@@ -311,7 +311,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>At Date (or Stop Date)</string> </value>
+                    <value> <string>At Date</string> </value>
                 </item>
               </dictionary>
             </value>
