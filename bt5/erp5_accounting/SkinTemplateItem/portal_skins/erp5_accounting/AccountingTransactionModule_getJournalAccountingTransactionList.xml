@@ -117,10 +117,12 @@ for transaction in context\\\n
   \n
   destination_section = transaction.getDestinationSectionValue()\n
   we_are_destination =  destination_section is not None and (\'group/%s\' %\n
-    destination_section.getGroup(\'\')).startswith(transaction_section_category)\n
+              destination_section.getProperty(\'group\', \'\'))\\\n
+             .startswith(transaction_section_category)\n
   source_section = transaction.getSourceSectionValue()\n
   we_are_source = (source_section is not None) and (\'group/%s\' %\n
-    source_section.getGroup(\'\')).startswith(transaction_section_category)\n
+              source_section.getProperty(\'group\', \'\'))\\\n
+             .startswith(transaction_section_category)\n
   \n
   if we_are_source :\n
     specific_reference = transaction.getSourceReference()\n
