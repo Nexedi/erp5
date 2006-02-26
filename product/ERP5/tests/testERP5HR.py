@@ -46,10 +46,6 @@ os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 
-from Products.ERP5.Document.Person import Person
-from Products.ERP5.Document.Organisation import Organisation
-
-
 
 class TestHR(ERP5TypeTestCase):
   """
@@ -61,7 +57,6 @@ class TestHR(ERP5TypeTestCase):
   # pseudo constants
   RUN_ALL_TEST = 1
   QUIET = 0
-
 
 
   ##################################
@@ -621,7 +616,66 @@ class TestHR(ERP5TypeTestCase):
     # Person's subordination is acquired from default career
     self.assertEquals(person.getSubordination(), default_career.getSubordination())
     
+  def stepAddCareerStepInAnotherOrganisation(self, sequence=None, **kw) :
+    """Adds another career step on the person."""
+    person = sequence.get('person')
+    other_organisation = self.getOrganisationModule().newContent(
+                            portal_type = 'Organisation',
+                            title = 'Another Organistion')
+    new_career_title = 'new career title'
+    # Create a new career step.
+    person.Career_shiftDefault()
+    self.assertEquals( 2,
+          len(person.contentValues(filter={'portal_type':'Career'})))
+    person.setDefaultCareerSubordination(other_organisation.getRelativeUrl())
+    person.setDefaultCareerTitle(new_career_title)
+    
+    # Get the new and the old career, as Career_shiftDefault changes
+    # objects id, this may be the only safe way ...
+    old_career_step = None
+    new_career_step = None
+    for career in person.contentValues(filter={'portal_type':'Career'}):
+      if career.getTitle() == new_career_title :
+        new_career_step = career
+      else :
+        old_career_step = career
+    self.assertNotEquals(new_career_step, None)
+    self.assertNotEquals(old_career_step, None)
+    
+    sequence.edit( old_career_step = old_career_step,
+                   new_career_step = new_career_step,
+                   new_organisation = other_organisation,
+                   old_organisation = sequence.get('organisation') )
 
+  def stepCheckCareerSubordination (self, sequence=None, **kw) :
+    """checks that setting subordination on a career does not conflict 
+        with acquisition."""
+    person = sequence.get('person')
+    old_career_step = sequence.get('old_career_step')
+    new_career_step = sequence.get('new_career_step')
+    new_organisation = sequence.get('new_organisation')
+    old_organisation = sequence.get('old_organisation')
+    new_organisation_title = new_organisation.getTitle()
+    old_organisation_title = old_organisation.getTitle()
+    
+    self.assert_( "subordination/%s" % old_organisation.getRelativeUrl() in
+                    old_career_step.getCategoryList(),
+                '%s not in %s' % (old_organisation.getRelativeUrl(),
+                                  old_career_step.getCategoryList()))
+    self.assertEquals( old_career_step.getSubordination(),
+                       old_organisation.getRelativeUrl() )
+    self.assertEquals( old_career_step.getSubordinationTitle(),
+                       old_organisation_title )
+  
+    self.assert_( "subordination/%s" % new_organisation.getRelativeUrl() in
+                    new_career_step.getCategoryList(),
+                '%s not in %s' % (new_organisation.getRelativeUrl(),
+                                  new_career_step.getCategoryList()))
+    self.assertEquals( new_career_step.getSubordination(),
+                       new_organisation.getRelativeUrl() )
+    self.assertEquals( new_career_step.getSubordinationTitle(),
+                       new_organisation_title )
+    
   ##################################
   ##  Tests
   ##################################
@@ -657,8 +711,21 @@ class TestHR(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-
-
+  def test_03_Subordination(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Tests that career steps subordination properties behave correctly
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    step_list = [ 'CreatePerson'
+                , 'CreateOrganisation'
+                , 'SetPersonCareer'
+                , 'AddCareerStepInAnotherOrganisation'
+                , 'CheckCareerSubordination'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 if __name__ == '__main__':
   framework()
