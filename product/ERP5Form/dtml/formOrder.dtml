@@ -25,7 +25,7 @@ Change the display order and grouping of the fields in this form.
     </td></tr>
   
   <tr><td align="left">
-    <dtml-let fields="get_fields_in_group(group)" fields_amount="_.len(fields)">
+    <dtml-let fields="get_fields_in_group(group, include_disabled=1)" fields_amount="_.len(fields)">
     <table border="0" cellspacing="0" cellpadding="0">
     <dtml-in fields>
     <dtml-let field=sequence-item field_id="field.id">
