@@ -545,11 +545,13 @@ class Resource(XMLMatrix, CoreResource, Variated):
         tmp_context = self.asContext(context=context, 
                                      categories=category_list,
                                      REQUEST=REQUEST, **kw)
+        tmp_kw = kw.copy()
+        if 'sort_method' not in tmp_kw:
+          tmp_kw['sort_method'] = self._pricingSortMethod
         mapped_value = domain_tool.generateMappedValue(
                                                tmp_context,
                                                portal_type=portal_type_list,
-                                               sort_method=self._pricingSortMethod,
-                                               has_cell_content=0, **kw)
+                                               has_cell_content=0, **tmp_kw)
         if mapped_value is not None:
           mapped_value_list.append(mapped_value)
       # Get price parameters
