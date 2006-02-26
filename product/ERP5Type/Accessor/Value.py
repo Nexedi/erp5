@@ -177,6 +177,64 @@ class TitleListGetter(Method):
 
 TitleSetGetter = TitleListGetter # Error XXX
 
+class DefaultReferenceGetter(Method):
+    """
+      Gets a default reference object
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self', )
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self, id, key):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+
+    def __call__(self, instance, *args, **kw):
+      o = instance._getDefaultAcquiredValue(self._key,
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()))
+      if o is None:
+        return None
+      return o.getReference()
+
+    psyco.bind(__call__)
+
+class ReferenceListGetter(Method):
+    """
+      Gets a list of reference objects
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self',)
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self, id, key):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+
+    def __call__(self, instance, *args, **kw):
+      return [x.getReference() for x in instance._getAcquiredValueList(self._key,
+                                                    spec=kw.get('spec',()),
+                                                    filter=kw.get('filter', None),
+                                                    portal_type=kw.get('portal_type',()))
+                                                  ]
+
+    psyco.bind(__call__)
+
+ReferenceSetGetter = ReferenceListGetter # Error XXX
+
 class DefaultUidGetter(Method):
     """
       Gets a default reference object

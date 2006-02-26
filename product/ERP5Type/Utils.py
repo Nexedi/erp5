@@ -2128,6 +2128,24 @@ def createValueAccessors(property_holder, id,
   if not hasattr(property_holder, accessor_name):
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
+  accessor_name = 'get' + UpperCase(id) + 'ReferenceList'
+  accessor = Value.ReferenceListGetter(accessor_name, id)
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor)
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'ReferenceList'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
+  accessor_name = 'get' + UpperCase(id) + 'ReferenceSet'
+  accessor = Value.ReferenceSetGetter(accessor_name, id)
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor)
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'ReferenceSet'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
   accessor_name = 'get' + UpperCase(id) + 'IdList'
   accessor = Value.IdListGetter(accessor_name, id)
   if not hasattr(property_holder, accessor_name):
@@ -2234,6 +2252,22 @@ def createValueAccessors(property_holder, id,
   if not hasattr(property_holder, accessor_name):
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
   accessor_name = '_categoryGet' + UpperCase(id) + 'Title'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
+  accessor_name = 'getDefault' + UpperCase(id) + 'Reference'
+  accessor = Value.DefaultReferenceGetter(accessor_name, id)
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor)
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = 'get' + UpperCase(id) + 'Reference'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Reference'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+  accessor_name = '_categoryGet' + UpperCase(id) + 'Reference'
   if not hasattr(property_holder, accessor_name):
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
