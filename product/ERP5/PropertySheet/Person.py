@@ -120,6 +120,20 @@ class Person:
     , 'acquisition_depends'      : None
     , 'mode'                     : 'w'
     },
+    { 'id'                       : 'mobile_telephone'
+    , 'storage_id'               : 'mobile_telephone'
+    , 'description'              : 'The current mobile telephone of the person'
+    , 'type'                     : 'content'
+    , 'portal_type'              : ( 'Telephone', )
+    , 'acquisition_base_category': ( 'subordination', )
+    , 'acquisition_portal_type'  : ( 'Organisation', )
+    , 'acquisition_copy_value'   : 0
+    , 'acquisition_mask_value'   : 1
+    , 'acquisition_sync_value'   : 0
+    , 'acquisition_accessor_id'  : 'getDefaultMobileTelephoneValue'
+    , 'acquisition_depends'      : None
+    , 'mode'                     : 'w'
+    },
     { 'id'                       : 'fax'
     , 'storage_id'               : 'default_fax'
     , 'description'              : 'The current fax of the person'
@@ -148,26 +162,20 @@ class Person:
     , 'acquisition_depends'      : None
     , 'mode'                     : 'w'
     },
-    { 'id'                  : 'default_career'
-    , 'storage_id'          : 'default_career'
-    , 'description'         : 'The default career hold some properties of a Person.'
-    , 'type'                : 'content'
-    , 'portal_type'         : ( 'Career', )
-    , 'acquired_property_id': ( 'start_date', 'stop_date', 'title', 'description'
-                              , 'subordination', 'subordination_title', 'subordination_value'
-                              , 'subordination_uid_list', 'subordination_uid'
-                              , 'collective_agreement_title', 'salary_coefficient'
-                              , 'skill_list', 'skill_id_list', 'skill_title_list', 'skill_value_list'
-                              , 'salary_level', 'salary_level_id', 'salary_level_title', 'salary_level_value'
-                              , 'grade', 'grade_id', 'grade_title', 'grade_value'
-                              , 'role', 'role_id', 'role_title', 'role_value'
-                              , 'function', 'function_id', 'function_title', 'function_value'
-                              )
-    , 'deprecated'          : 1
-    , 'mode'                : 'w'
+    { 'id'                       : 'alternate_email'
+    , 'storage_id'               : 'alternate_email'
+    , 'description'              : 'An alternate email of the person'
+    , 'type'                     : 'content'
+    , 'portal_type'              : ( 'Email', )
+    , 'acquisition_base_category': ( 'subordination', )
+    , 'acquisition_portal_type'  : ( 'Organisation', )
+    , 'acquisition_copy_value'   : 0
+    , 'acquisition_mask_value'   : 1
+    , 'acquisition_sync_value'   : 0
+    , 'acquisition_accessor_id'  : 'getDefaultAlternateEmailValue'
+    , 'acquisition_depends'      : None
+    , 'mode'                     : 'w'
     },
-    # Career accessors like getCareerTitle ... are deprecated, instead
-    # we should use getDefaultCareerTitle
     { 'id'                  : 'career'
     , 'storage_id'          : 'default_career'
     , 'description'         : 'The default career hold some properties of a Person.'
