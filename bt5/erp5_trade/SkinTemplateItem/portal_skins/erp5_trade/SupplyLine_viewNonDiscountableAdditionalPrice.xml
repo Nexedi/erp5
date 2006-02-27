@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -74,7 +80,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>Default</string> </key>
                     <value>
                       <list>
                         <string>my_resource_title</string>
@@ -86,36 +92,36 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
+                    <key>                 <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_comment</string>
+                        <string>matrixbox</string>
+                        <string>mapped_value_property_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key>                 <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>my_base_price</string>
-                        <string>my_additional_price</string>
-                        <string>my_variable_additional_price</string>
-                        <string>my_discount_ratio</string>
-                        <string>my_exclusive_discount_ratio</string>
+                        <string>matrixbox_predicate_category_list</string>
+                        <string>matrixbox_variation_category_list</string>
+                        <string>matrixbox_non_discountable_additional_price</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key>                 <string>right</string> </key>
+                    <value>
+                      <list>
                         <string>my_non_discountable_additional_price</string>
-                        <string>my_surcharge_ratio</string>
+                        <string>my_non_discountable_additional_price_quantity_step_list</string>
                       </list>
                     </value>
                 </item>
@@ -124,7 +130,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SupplyLine_view</string> </value>
+            <value> <string>SupplyLine_viewNonDiscountableAdditionalPrice</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -132,7 +138,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SupplyLine_viewBasePrice</string> </value>
+            <value> <string>SupplyLine_viewNonDiscountableAdditionalPrice</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -148,7 +154,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Base Price</string> </value>
+            <value> <string>Non Discountable Additional Price</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

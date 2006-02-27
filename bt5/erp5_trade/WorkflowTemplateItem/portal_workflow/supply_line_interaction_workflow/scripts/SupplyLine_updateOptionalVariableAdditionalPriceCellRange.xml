@@ -66,12 +66,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getDestinationValue() is None:\n
-  return context.generatePredicate(membership_criterion_base_category_list = (\'resource\',),\n
-                                                   criterion_property_list = (\'start_date\',))\n
-\n
-return context.generatePredicate(membership_criterion_base_category_list = (\'destination\', \'resource\'),\n
-                                                 criterion_property_list = (\'start_date\',))\n
+            <value> <string>supply_line = state_change.object\n
+price_parameter = \'variable_additional_price\'\n
+base_id = \'path_optional_%s\' % price_parameter\n
+supply_line.updateQuantityPredicate(price_parameter)\n
+supply_line.updateCellRange(base_id=base_id, option_variation=1)\n
 </string> </value>
         </item>
         <item>
@@ -82,7 +81,7 @@ return context.generatePredicate(membership_criterion_base_category_list = (\'de
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_trade/SupplyCell_asPredicate</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_workflow/supply_line_interaction_workflow/scripts/SupplyLine_updateOptionalVariableAdditionalPriceCellRange</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -92,7 +91,7 @@ return context.generatePredicate(membership_criterion_base_category_list = (\'de
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args,**kw</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,17 +111,17 @@ return context.generatePredicate(membership_criterion_base_category_list = (\'de
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
+                            <string>state_change</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>None</string>
+                            <string>supply_line</string>
+                            <string>price_parameter</string>
+                            <string>base_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -139,7 +138,7 @@ return context.generatePredicate(membership_criterion_base_category_list = (\'de
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SupplyCell_asPredicate</string> </value>
+            <value> <string>SupplyLine_updateOptionalVariableAdditionalPriceCellRange</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -86,7 +86,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>supply</string>
+                <string>supply_path</string>
               </tuple>
             </value>
         </item>
