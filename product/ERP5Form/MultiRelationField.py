@@ -409,8 +409,10 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
             if value == '':
               # Clean request if necessary
               if REQUEST.has_key( relation_field_id):
-                REQUEST.pop(relation_field_id)
-
+                for subdict_name in ['form', 'other']:
+                  subdict = getattr(REQUEST, subdict_name)
+                  if subdict.has_key(relation_field_id):
+                    subdict.pop(relation_field_id)
             else:
               # Got a true value
 
