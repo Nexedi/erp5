@@ -585,6 +585,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
       Return the value of the property used to calculate variable pricing
       This basically calls a script like Product_getPricingVariable
       """
+      method = None
       if context is not None:
         method = context._getTypeBasedMethod('getPricingVariable')
       if method is None or context is None:
