@@ -586,9 +586,9 @@ class Resource(XMLMatrix, CoreResource, Variated):
       This basically calls a script like Product_getPricingVariable
       """
       if context is not None:
-        method = context._getTypeBasedMethod('_getPricingVariable')
+        method = context._getTypeBasedMethod('getPricingVariable')
       if method is None or context is None:
-        method = self._getTypeBasedMethod('_getPricingVariable')
+        method = self._getTypeBasedMethod('getPricingVariable')
 
       if method is None:
         return 0.0
