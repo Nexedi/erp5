@@ -53,9 +53,9 @@ class ProxyWidget(Widget.Widget):
   """
 
   property_names = Widget.Widget.property_names + [
-    'form_id', \
-    'field_id', \
-    'extra_context', \
+    'form_id',
+    'field_id',
+    'extra_context',
   ]
 
   form_id = fields.StringField(
@@ -89,7 +89,6 @@ class ProxyWidget(Widget.Widget):
                                 default=(), 
                                 required=0)
 
- 
   def render(self, field, key, value, REQUEST):
     """
       Render proxy field
@@ -99,7 +98,9 @@ class ProxyWidget(Widget.Widget):
       proxy_form = getattr(form, field.get_value('form_id'))
       proxy_field = getattr(proxy_form, field.get_value('field_id'))
     except AttributeError:
-      LOG('ProxyField', WARNING, 'could not get a field from a proxy field %s in %s' % (field.id, form.id))
+      LOG('ProxyField', WARNING, 
+          'could not get a field from a proxy field %s in %s' % \
+              (field.id, form.id))
       return ''
     extra_context = REQUEST.other.get('erp5_extra_context', {})
     for k, v in field.get_value('extra_context'):
@@ -118,7 +119,9 @@ class ProxyWidget(Widget.Widget):
       proxy_form = getattr(form, field.get_value('form_id'))
       proxy_field = getattr(proxy_form, field.get_value('field_id'))
     except AttributeError:
-      LOG('ProxyField', WARNING, 'could not get a field from a proxy field %s in %s' % (field.id, form.id))
+      LOG('ProxyField', WARNING, 
+          'could not get a field from a proxy field %s in %s' % \
+              (field.id, form.id))
       return ''
     REQUEST = get_request()
     extra_context = REQUEST.other.get('erp5_extra_context', {})
@@ -157,3 +160,19 @@ class ProxyField(ZMIField):
 
   widget = ProxyWidgetInstance
   validator = ProxyValidatorInstance
+
+  def _get_default(self, key, value, REQUEST):
+    """
+    Return default value of the field.
+    """
+    value = ZMIField._get_default(self, key, value, REQUEST)
+    if value in (None, ''):
+      form = self.aq_parent
+      try:
+        proxy_form = getattr(form, self.get_value('form_id'))
+        proxy_self = getattr(proxy_form, self.get_value('field_id'))
+      except AttributeError:
+        pass
+      else:
+        value = proxy_self.get_value('default', REQUEST=REQUEST)
+    return value
