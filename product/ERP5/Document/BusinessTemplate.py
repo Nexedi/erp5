@@ -708,7 +708,13 @@ class PathTemplateItem(ObjectTemplateItem):
     id = id_list[0]
     if re.search('[\*\?\[\]]', id) is None:
       # If the id has no meta character, do not have to check all objects.
-      obj = folder._getOb(id)
+      try:
+        obj = folder._getOb(id)
+      except AttributeError:
+        # XXX FIXME 
+        LOG("WARNING!", 100,
+            "Can not resolve '%s' during business template installation." % id)
+        return []
       return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
