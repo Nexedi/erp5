@@ -71,8 +71,8 @@ class AccountingTransaction(Delivery):
       in draft or cancelled state
       """
       if self.getSimulationState() not in ("draft", "cancelled") :
-          from OFS.ObjectManager import BeforeDeleteException
-          raise BeforeDeleteException, "Accounting Transaction can only be "\
-                                   "deleted in draft or cancelled states."
+        from OFS.ObjectManager import BeforeDeleteException
+        raise BeforeDeleteException, \
+              "%s can only be deleted in draft or cancelled states." % self.getPortalType()
       Delivery.manage_beforeDelete(self, item, container) 
     
