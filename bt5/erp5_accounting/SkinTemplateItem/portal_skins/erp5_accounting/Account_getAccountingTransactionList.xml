@@ -66,9 +66,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>LOG=lambda message: context.log("Account_getAccountingTransactionList", message)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+LOG=lambda message: context.log("Account_getAccountingTransactionList", message)\n
 \n
 from Products.ERP5Type.Document import newTempAccountingTransaction\n
+\n
+# WARNINGS by Vincent (2006/01/31)\n
+# This hack do a rounding on intermediate amount values.\n
+# This prevent floating point bugs such as :\n
+#   >>> 54.99\n
+#   54.990000000000002\n
+# kev: isn\'t it better to set precision as an integer ?\n
+precision = float(10 ** context.Section_getCurrencyPrecision())\n
 \n
 kwd={"omit_simulation" : 1}\n
 # read settings from user preference\n
@@ -151,7 +161,7 @@ if from_date not in (None, MARKER) and kw.get(\'from_date_summary\', 0) :\n
     from_date_summary = newTempAccountingTransaction(\n
           context.getPortalObject(), "temp_%s" % context.getUid())\n
     from_date_summary.setUid(\'new_000\')\n
-    net_balance = last_total_debit - last_total_credit\n
+    net_balance = (last_total_debit - last_total_credit) * precision # WARNING : See Above\n
     from_date_summary.edit(\n
           title = context.Base_TranslateString("Previous Balance"),\n
           translated_portal_type = "",\n
@@ -171,9 +181,9 @@ if src__:\n
 \n
 for l in result:\n
   o = l.getObject()\n
-  net_balance += l.balance or 0.0\n
+  net_balance += (l.balance or 0.0) * precision # WARNING : See above\n
   if o is not None:\n
-    c = o.asContext( net_balance = net_balance,\n
+    c = o.asContext( net_balance = net_balance / precision, # WARNING : See above\n
                      balance = l.balance,\n
                      credit = l.credit,\n
                      debit = l.debit,\n
@@ -187,7 +197,9 @@ for l in result:\n
     new_result.append(c)\n
 \n
 return new_result\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -238,9 +250,11 @@ return new_result\n
                             <string>LOG</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempAccountingTransaction</string>
-                            <string>kwd</string>
+                            <string>float</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>precision</string>
+                            <string>kwd</string>
                             <string>preference</string>
                             <string>None</string>
                             <string>from_date</string>

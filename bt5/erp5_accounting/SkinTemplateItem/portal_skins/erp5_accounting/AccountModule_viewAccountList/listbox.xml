@@ -458,15 +458,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_categories/gap</string>
+                          <string>gap</string>
                           <string>GAP</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/account_type</string>
+                          <string>account_type</string>
                           <string>Account Type</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/financial_section</string>
+                          <string>financial_section</string>
                           <string>Financial Section</string>
                         </tuple>
                       </list>
@@ -540,15 +540,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_categories/gap</string>
+                          <string>gap</string>
                           <string>GAP</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/account_type</string>
+                          <string>account_type</string>
                           <string>Account Type</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/financial_section</string>
+                          <string>financial_section</string>
                           <string>Financial Section</string>
                         </tuple>
                       </list>

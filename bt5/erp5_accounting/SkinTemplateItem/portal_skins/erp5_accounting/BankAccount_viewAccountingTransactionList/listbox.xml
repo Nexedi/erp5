@@ -409,11 +409,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_categories/group</string>
+                          <string>group</string>
                           <string>Group</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/region</string>
+                          <string>region</string>
                           <string>Region</string>
                         </tuple>
                       </list>

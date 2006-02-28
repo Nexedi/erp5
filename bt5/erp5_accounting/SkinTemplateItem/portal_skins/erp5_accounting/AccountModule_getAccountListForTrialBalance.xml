@@ -129,9 +129,8 @@ def formatValues(dict) :\n
         while i != len(integer):\n
           value += \' \' + integer[i:i+3]\n
           i += 3\n
-        dict[k] = \'%s.%s\'%(value, str(value_list[1])[:2])\n
-        # XXX ohada l10n local hack, we only use integer part !\n
-        #dict[k] = \'%s\'%(value)\n
+        value = \'%s.%s\'%(value, str(value_list[1])[:2])\n
+        dict[k] = value\n
         if k in (\'opening_balance\', \'closing_balance\') :\n
           if negative:\n
             dict[k] = \'%s CR\'%(value)\n

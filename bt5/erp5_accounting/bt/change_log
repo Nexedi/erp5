@@ -1,3 +1,18 @@
+2006-02-28 Kevin
+* Update SaleInvoiceTransaction_zSelectMovement to not include a 'AS movement' statement in SQL query.
+
+2006-02-27 Kevin
+* Update Section_getCurrencyPrecision (more generic now).
+* Update Account_getAccountingTransactionList to get the default rounding value. As I understand, Account_getAccountingTransactionList is not only used to generated the General Ledger report but is also involved in all Transaction tabs. This mean that Section_getCurrencyPrecision is not generic enough, because the organisation that hold the currency in which the amount must be displayed is not easy to guess. Perhaps using the one defined on preferences is the way to do... (but this has heavy consequences).
+* Update AccountingTransaction_roundDebitCredit, to round more efficiently.
+
+2006-02-23 Kevin
+* Add AccountingTransaction_roundDebitCredit.
+* Add Section_getCurrencyPrecision (not finished yet, will be used in AccountingTransaction_roundDebitCredit and Account_getAccountingTransactionList to get the precision).
+
+2006-02-22 kevin
+* Add a patch in Account_getAccountingTransactionList to get round values (based on a hack done by vincent for french accounting).
+
 2006-02-17 kevin
 * Add Balance at the start-date and stop-date on General Ledger Report.
 

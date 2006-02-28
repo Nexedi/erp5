@@ -66,19 +66,39 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
+            <value> <string encoding="cdata"><![CDATA[
+
+""" Round debit & credit in a generated accounting transaction """\n
 \n
-transaction = context\n
-preference_tool = getToolByName(context, \'portal_preferences\')\n
+precision = int(context.Section_getCurrencyPrecision(mapping_id=\'source_section\'))\n
 \n
-transaction.edit (\n
-    source_section = preference_tool.getPreferredAccountingTransactionSourceSection(),\n
-    resource = preference_tool.getPreferredAccountingTransactionCurrency())\n
+debit_list = []\n
+credit_list = []\n
+line = None\n
+total_quantity = 0\n
 \n
-if hasattr(transaction, \'startBuilding\') :\n
-  transaction.startBuilding()\n
-  transaction.updateCausalityState()\n
-</string> </value>
+for line in context.getMovementList(portal_type =\n
+                    context.getPortalAccountingMovementTypeList()) :\n
+  if line.getSourceDebit() > 0 :\n
+    # line.setSourceDebit((line.getSourceDebit() * precision) / int(precision))\n
+    line.setSourceDebit( float((\'%.\'+str(precision)+\'f\') % (line.getSourceDebit())) )\n
+    total_quantity += line.getQuantity()\n
+  else :\n
+    # line.setSourceCredit((line.getSourceCredit() * precision) / int(precision))\n
+    line.setSourceCredit( float((\'%.\'+str(precision)+\'f\') % (line.getSourceCredit())) )\n
+    total_quantity += line.getQuantity()\n
+\n
+if abs(total_quantity) > 2:\n
+  # if the difference is important, then it\'s probably a misconfiguration in the rule\n
+  # so we have to raise an errror.\n
+  raise ValueError, \'debit != credit for %s => %s\' % (\n
+        context.getPath(), total_quantity)\n
+\n
+if line is not None :\n
+  line.setQuantity(line.getQuantity() - total_quantity)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -88,11 +108,17 @@ if hasattr(transaction, \'startBuilding\') :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_initFromPreferences</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingTransaction_roundDebitCredit</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -118,15 +144,20 @@ if hasattr(transaction, \'startBuilding\') :\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
-                            <string>context</string>
-                            <string>transaction</string>
-                            <string>preference_tool</string>
+                            <string>int</string>
                             <string>_getattr_</string>
-                            <string>hasattr</string>
+                            <string>context</string>
+                            <string>precision</string>
+                            <string>debit_list</string>
+                            <string>credit_list</string>
+                            <string>None</string>
+                            <string>line</string>
+                            <string>total_quantity</string>
+                            <string>_getiter_</string>
+                            <string>float</string>
+                            <string>str</string>
+                            <string>abs</string>
+                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +174,7 @@ if hasattr(transaction, \'startBuilding\') :\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransaction_initFromPreferences</string> </value>
+            <value> <string>AccountingTransaction_roundDebitCredit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
