@@ -1325,7 +1325,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         try:
           portal_id = key.split('/')[-1]
           portal_type = pt._getOb(portal_id)
-        except KeyError:
+        except AttributeError:
           LOG("portal types not found : ", 100, portal_id)
           continue
         property_list = self._objects[key]
@@ -1350,7 +1350,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       try:
         portal_id = key.split('/')[-1]
         portal_type = pt._getOb(portal_id)
-      except KeyError:
+      except AttributeError:
         LOG("portal types not found : ", 100, portal_id)
         continue
       property_list = self._objects[key]
