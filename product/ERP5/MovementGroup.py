@@ -299,6 +299,29 @@ class CausalityMovementGroup(RootMovementGroup):
     
 allow_class(CausalityMovementGroup)
 
+class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
+  """ Groups movement that comes from simulation movement that shares the
+  same explanation relation. For example, it groups in an Invoice
+  movements from the same Packing List. """
+  
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    explanation_relative_url = self._getExplanationRelativeUrl(movement)
+    self.explanation = explanation_relative_url
+
+  def _getExplanationRelativeUrl(self, movement):
+    """ Get the order value for a movement """
+    root_applied_rule = movement.getRootAppliedRule()
+    explanation_value = root_applied_rule.getCausalityValue()
+    explanation_relative_url = None
+    if explanation_value is not None:
+      explanation_relative_url = explanation_value.getRelativeUrl()
+    return explanation_relative_url
+    
+  def test(self,movement):
+    return self._getExplanationRelativeUrl(movement) == self.explanation
+    
+allow_class(CausalityMovementGroup)
 
 class PathMovementGroup(RootMovementGroup):
   """ Group movements that have the same source and the same destination."""
