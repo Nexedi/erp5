@@ -321,7 +321,7 @@ class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
   def test(self,movement):
     return self._getExplanationRelativeUrl(movement) == self.explanation
     
-allow_class(CausalityMovementGroup)
+allow_class(RootAppliedRuleCausalityMovementGroup)
 
 class PathMovementGroup(RootMovementGroup):
   """ Group movements that have the same source and the same destination."""
@@ -340,6 +340,17 @@ class PathMovementGroup(RootMovementGroup):
       movement.getDestination() == self.destination
 
 allow_class(PathMovementGroup)
+
+class ColourMovementGroup(RootMovementGroup):
+  """ Group movements that have the same source and the same destination."""
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.colour = movement.getColour()
+
+  def test(self, movement):
+    return movement.getColour() == self.colour
+
+allow_class(ColourMovementGroup)
 
 class SectionPathMovementGroup(RootMovementGroup):
   """ Groups movement that have the same source_section and
