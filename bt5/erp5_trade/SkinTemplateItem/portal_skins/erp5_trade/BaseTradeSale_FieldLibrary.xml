@@ -108,6 +108,7 @@
                         <string>my_price</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
+                        <string>my_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>

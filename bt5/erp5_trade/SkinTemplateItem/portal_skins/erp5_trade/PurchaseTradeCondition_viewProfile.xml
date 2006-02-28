@@ -110,9 +110,9 @@
                     <value>
                       <list>
                         <string>my_destination_title</string>
-                        <string>my_destination_section</string>
-                        <string>my_destination_decision_organisation_title</string>
-                        <string>my_destination_administration_organisation_title</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_destination_administration_title</string>
                         <string>my_destination_payment_title</string>
                       </list>
                     </value>

@@ -100,7 +100,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_section</string>
+                        <string>my_source_section_title</string>
                         <string>my_source_administration_title</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
@@ -117,11 +117,9 @@
                         <string>my_destination_section_title</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_translated_simulation_state_title</string>
+                        <string>simulation_state</string>
                         <string>my_causality_state</string>
                         <string>my_container_state</string>
-                        <string>total_quantity</string>
-                        <string>total_price</string>
                       </list>
                     </value>
                 </item>

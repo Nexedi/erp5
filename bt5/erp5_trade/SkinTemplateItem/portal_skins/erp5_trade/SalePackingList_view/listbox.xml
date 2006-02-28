@@ -319,7 +319,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Sale Packing List Line</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
@@ -360,7 +360,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Sale Packing List Line</string>
+                          <string>Title</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>

@@ -308,21 +308,33 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>colour</string> </key>
+                    <key> <string>cpu_type</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>morphology</string> </key>
+                    <key> <string>hd_size</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>keyboard_layout</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>memory_size</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>optical_drive</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -351,9 +363,11 @@
                     <key>                 <string>sub_list</string> </key>
                     <value>
                       <list>
-<string>morphology</string>
-<string>colour</string>
-<string>size</string>
+<string>memory_size</string>
+<string>keyboard_layout</string>
+<string>optical_drive</string>
+<string>cpu_type</string>
+<string>hd_size</string>
                       </list>
                     </value>
                 </item>
@@ -416,7 +430,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>colour</string> </value>
+            <value> <string>cpu_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -632,16 +646,12 @@
 <string></string>
                         </tuple>
                         <list>
-                          <string>Colour/green</string>
-                          <string>colour/apparel_model_module/2/4</string>
+                          <string>cpu_type/celeron_24_ghz</string>
+                          <string>cpu_type/celeron_24_ghz</string>
                         </list>
                         <list>
-                          <string>Colour/red</string>
-                          <string>colour/apparel_model_module/2/3</string>
-                        </list>
-                        <list>
-                          <string>Colour/blue</string>
-                          <string>colour/apparel_model_module/2/2</string>
+                          <string>cpu_type/pentium_iv_26_ghz</string>
+                          <string>cpu_type/pentium_iv_26_ghz</string>
                         </list>
                       </list>
                     </value>
@@ -656,7 +666,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>colour</string> </value>
+                    <value> <string>cpu_type</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -691,7 +701,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>morphology</string> </value>
+            <value> <string>hd_size</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -907,12 +917,16 @@
 <string></string>
                         </tuple>
                         <list>
-                          <string>Morphology/Bonnet B</string>
-                          <string>morphology/apparel_model_module/2/5</string>
+                          <string>hd_size/60_gb</string>
+                          <string>hd_size/60_gb</string>
                         </list>
                         <list>
-                          <string>Morphology/Bonnet A</string>
-                          <string>morphology/apparel_model_module/2/1</string>
+                          <string>hd_size/80_gb</string>
+                          <string>hd_size/80_gb</string>
+                        </list>
+                        <list>
+                          <string>hd_size/40_gb</string>
+                          <string>hd_size/40_gb</string>
                         </list>
                       </list>
                     </value>
@@ -927,7 +941,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>morphology</string> </value>
+                    <value> <string>hd_size</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -962,7 +976,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>size</string> </value>
+            <value> <string>keyboard_layout</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -1178,32 +1192,20 @@
 <string></string>
                         </tuple>
                         <list>
-                          <string>Size/40</string>
-                          <string>size/40</string>
+                          <string>keyboard_layout/azerty_keyboard_be</string>
+                          <string>keyboard_layout/azerty_keyboard_be</string>
                         </list>
                         <list>
-                          <string>Size/38</string>
-                          <string>size/38</string>
+                          <string>keyboard_layout/azerty_keyboard_fr</string>
+                          <string>keyboard_layout/azerty_keyboard_fr</string>
                         </list>
                         <list>
-                          <string>Size/42</string>
-                          <string>size/42</string>
+                          <string>keyboard_layout/qwertz_keyboard_de</string>
+                          <string>keyboard_layout/qwertz_keyboard_de</string>
                         </list>
                         <list>
-                          <string>Size/44</string>
-                          <string>size/44</string>
-                        </list>
-                        <list>
-                          <string>Size/46</string>
-                          <string>size/46</string>
-                        </list>
-                        <list>
-                          <string>Size/48</string>
-                          <string>size/48</string>
-                        </list>
-                        <list>
-                          <string>Size/50</string>
-                          <string>size/50</string>
+                          <string>keyboard_layout/qwerty_keyboard_uk</string>
+                          <string>keyboard_layout/qwerty_keyboard_uk</string>
                         </list>
                       </list>
                     </value>
@@ -1218,7 +1220,553 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>size</string> </value>
+                    <value> <string>keyboard_layout</string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />\n
+
+
+]]></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.StandardFields</string>
+          <string>MultiListField</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>memory_size</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+<string></string>
+<string></string>
+                        </tuple>
+                        <list>
+                          <string>memory_size/1024</string>
+                          <string>memory_size/1024</string>
+                        </list>
+                        <list>
+                          <string>memory_size/256_mb</string>
+                          <string>memory_size/256_mb</string>
+                        </list>
+                        <list>
+                          <string>memory_size/512_mb</string>
+                          <string>memory_size/512_mb</string>
+                        </list>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>memory_size</string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />\n
+
+
+]]></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.StandardFields</string>
+          <string>MultiListField</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>optical_drive</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+<string></string>
+<string></string>
+                        </tuple>
+                        <list>
+                          <string>optical_drive/dvd_r_cd_rw_combo_drive</string>
+                          <string>optical_drive/dvd_r_cd_rw_combo_drive</string>
+                        </list>
+                        <list>
+                          <string>optical_drive/dvd_rw_drive</string>
+                          <string>optical_drive/dvd_rw_drive</string>
+                        </list>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>optical_drive</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

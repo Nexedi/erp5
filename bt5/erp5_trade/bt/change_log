@@ -1,3 +1,6 @@
+2006-02-28 romain
+* add proxy field in purchase trade condition, purchase order, sale packing list, purchase packing list.
+
 2006-02-27 alex
 * Added Non Discountable Additional Price and Variable Additional Price to Supply Lines
 
