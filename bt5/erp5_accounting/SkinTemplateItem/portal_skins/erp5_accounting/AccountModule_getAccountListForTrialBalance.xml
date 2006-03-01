@@ -308,7 +308,10 @@ for account in accounts :\n
     item = { \'id\' : account.getGapId(),\n
              \'title\': account.getTitle(), }\n
     item.update( getDefaultColumnValues( node_uid = account.getUid() ) )\n
-    report_items.append( account.asContext( **formatValues(item) ) )\n
+    if ( item[\'opening_balance\'] != 0 or\n
+         item[\'credit_movement\'] != 0 or\n
+         item[\'debit_movement\'] != 0 ) :\n
+      report_items.append( account.asContext( **formatValues(item) ) )\n
 \n
 return report_items\n
 # vim: syntax=python\n
