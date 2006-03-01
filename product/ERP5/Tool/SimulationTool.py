@@ -184,12 +184,14 @@ class SimulationTool (BaseTool):
         from_date=None, to_date=None, at_date=None,
         resource=None, node=None, payment=None,
         section=None, mirror_section=None,
+        item=None, input=0, output=0,
         resource_category=None, node_category=None, payment_category=None,
         section_category=None, mirror_section_category=None,
+        strict_simulation_state=0,
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
         input_simulation_state = None, output_simulation_state=None,
         variation_text=None, sub_variation_text=None,
-        variation_category=None,
+        variation_category=None, is_accountable=None,
         **kw) :
       """
       generates keywork and calls buildSqlQuery
@@ -197,6 +199,10 @@ class SimulationTool (BaseTool):
       new_kw = {}
       new_kw.update(kw)
       sql_kw = {}
+
+      # input and output are used by getTrackingList
+      sql_kw['input'] = input
+      sql_kw['output'] = output
 
       date_dict = {'query':[], 'operator':'and'}
       if from_date :
@@ -221,6 +227,13 @@ class SimulationTool (BaseTool):
       if len(resource_uid_list) :
         new_kw[table + '.resource_uid'] = resource_uid_list
 
+      if is_accountable is not None:
+        new_kw[table + '.is_accountable'] = is_accountable
+
+      item_uid_list = self._generatePropertyUidList(item)
+      if len(item_uid_list) :
+        new_kw[table + '.aggregate_uid'] = item_uid_list
+        
       node_uid_list = self._generatePropertyUidList(node)
       if len(node_uid_list) :
         new_kw[table + '.node_uid'] = node_uid_list
@@ -270,38 +283,44 @@ class SimulationTool (BaseTool):
       #  new_kw['variationCategory'] = variation_category_uid_list
 
       # Simulation States
-      # first, we evaluate simulation_state
-      if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
-        if len(simulation_state) :
-          sql_kw['input_simulation_state'] = simulation_state
-          sql_kw['output_simulation_state'] = simulation_state
-      # then, if omit_transit == 1, we evaluate (simulation_state - transit_simulation_state) for input_simulation_state
-      if omit_transit == 1 :
+      # If strict_simulation_state is set, we directly put it into the dictionary
+      if strict_simulation_state:
+        if type(simulation_state) in [type(''),type([]),type(())]:
+          if len(simulation_state):
+            new_kw['simulation_state'] = simulation_state
+      else:
+        # first, we evaluate simulation_state
         if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
           if len(simulation_state) :
-            if (type(transit_simulation_state) is type('')) or (type(transit_simulation_state) is type([])) or (type(transit_simulation_state) is type(())) :
-              if len(transit_simulation_state) :
-                # when we know both are usable, we try to calculate (simulation_state - transit_simulation_state)
-                if type(simulation_state) is type('') :
-                  simulation_state = [simulation_state]
-                if type(transit_simulation_state) is type('') :
-                  transit_simulation_state = [transit_simulation_state]
-                delivered_simulation_state_list = []
-                for state in simulation_state :
-                  if state not in transit_simulation_state :
-                    delivered_simulation_state_list.append(state)
-                sql_kw['input_simulation_state'] = delivered_simulation_state_list
-      # alternatively, the user can directly define input_simulation_state and output_simulation_state
-      if (type(input_simulation_state) is type('')) or (type(input_simulation_state) is type([])) or (type(input_simulation_state) is type(())) :
-        if len(input_simulation_state) :
-          sql_kw['input_simulation_state'] = input_simulation_state
-      if (type(output_simulation_state) is type('')) or (type(output_simulation_state) is type([])) or (type(output_simulation_state) is type(())) :
-        if len(output_simulation_state) :
-          sql_kw['output_simulation_state'] = output_simulation_state
-      if type(sql_kw.get('input_simulation_state')) is type('') :
-        sql_kw['input_simulation_state'] = [sql_kw['input_simulation_state']]
-      if type(sql_kw.get('output_simulation_state')) is type('') :
-        sql_kw['output_simulation_state'] = [sql_kw['output_simulation_state']]
+            sql_kw['input_simulation_state'] = simulation_state
+            sql_kw['output_simulation_state'] = simulation_state
+        # then, if omit_transit == 1, we evaluate (simulation_state - transit_simulation_state) for input_simulation_state
+        if omit_transit == 1 :
+          if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
+            if len(simulation_state) :
+              if (type(transit_simulation_state) is type('')) or (type(transit_simulation_state) is type([])) or (type(transit_simulation_state) is type(())) :
+                if len(transit_simulation_state) :
+                  # when we know both are usable, we try to calculate (simulation_state - transit_simulation_state)
+                  if type(simulation_state) is type('') :
+                    simulation_state = [simulation_state]
+                  if type(transit_simulation_state) is type('') :
+                    transit_simulation_state = [transit_simulation_state]
+                  delivered_simulation_state_list = []
+                  for state in simulation_state :
+                    if state not in transit_simulation_state :
+                      delivered_simulation_state_list.append(state)
+                  sql_kw['input_simulation_state'] = delivered_simulation_state_list
+        # alternatively, the user can directly define input_simulation_state and output_simulation_state
+        if (type(input_simulation_state) is type('')) or (type(input_simulation_state) is type([])) or (type(input_simulation_state) is type(())) :
+          if len(input_simulation_state) :
+            sql_kw['input_simulation_state'] = input_simulation_state
+        if (type(output_simulation_state) is type('')) or (type(output_simulation_state) is type([])) or (type(output_simulation_state) is type(())) :
+          if len(output_simulation_state) :
+            sql_kw['output_simulation_state'] = output_simulation_state
+        if type(sql_kw.get('input_simulation_state')) is type('') :
+          sql_kw['input_simulation_state'] = [sql_kw['input_simulation_state']]
+        if type(sql_kw.get('output_simulation_state')) is type('') :
+          sql_kw['output_simulation_state'] = [sql_kw['output_simulation_state']]
 
       # It is necessary to use here another SQL query (or at least a subquery)
       # to get _DISTINCT_ uid from predicate_category table.
@@ -327,15 +346,15 @@ class SimulationTool (BaseTool):
       # build the group by expression
       group_by_expression_list = []
       if kw.get('group_by_node',0):
-        group_by_expression_list.append('stock.node_uid')
+        group_by_expression_list.append('%s.node_uid' % table)
       if kw.get('group_by_sub_variation',0):
-        group_by_expression_list.append('stock.sub_variation_text')
+        group_by_expression_list.append('%s.sub_variation_text' % table)
       if kw.get('group_by_variation',0):
-        group_by_expression_list.append('stock.variation_text')
+        group_by_expression_list.append('%s.variation_text' % table)
       if kw.get('group_by_mirror_node',0):
-        group_by_expression_list.append('stock.mirror_node_uid')
+        group_by_expression_list.append('%s.mirror_node_uid' % table)
       if len(group_by_expression_list):
-        group_by_expression_list.append('stock.resource_uid') # Always group by resource
+        group_by_expression_list.append('%s.resource_uid' % table) # Always group by resource
         sql_kw['group_by_expression'] = ', '.join(group_by_expression_list)
 
       sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
@@ -768,7 +787,8 @@ class SimulationTool (BaseTool):
     # Traceability management                  
     security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
     def getTrackingList(self, src__=0,
-        selection_domain=None, selection_report=None, **kw) :
+        selection_domain=None, selection_report=None,
+        strict_simulation_state=1, **kw) :
       """
       Returns a list of items in the form
       
@@ -778,6 +798,7 @@ class SimulationTool (BaseTool):
         section_uid
         resource_uid
         variation_text
+        delivery_uid
       
       If at_date is provided, returns the a list which answers
       to the question "where are those items at this date" or
@@ -826,34 +847,36 @@ class SimulationTool (BaseTool):
 
       simulation_state - only take rows with specified simulation_state
 
-      transit_simulation_state - take rows with specified transit_simulation_state and quantity < 0
-
-      omit_transit - do not evaluate transit_simulation_state
-
-      input_simulation_state - only take rows with specified input_simulation_state and quantity > 0
-
-      output_simulation_state - only take rows with specified output_simulation_state and quantity < 0
-
       selection_domain, selection_report - see ListBox
 
       **kw  - if we want extended selection with more keywords (but bad performance)
               check what we can do with buildSqlQuery
+
+      Extra parameters for getTrackingList :
+
+      item
+      
+      input - if set, answers to the question "which are those items which have been
+              delivered for the first time after from_date". Cannot be used with output
+
+      output - if set, answers to the question "which are those items which have been
+               delivered for the last time before at_date or to_date". Cannot be used with input
       
       """
-      new_kw = {}
+      new_kw = self._generateSQLKeywordDict(table='item',strict_simulation_state=strict_simulation_state,**kw)
       new_kw['at_date'] = kw.get('at_date')
-      new_kw['node_uid'] = self.portal_categories.getCategoryUid(kw.get('node'))
 
-      section_uid_list = self._generatePropertyUidList(kw.get('section'))
-      if len(section_uid_list) :
-        new_kw['section_uid_list'] = section_uid_list
+      # Extra parameters for the SQL Method
+      new_kw['join_on_item'] = new_kw.get('at_date') or \
+                               new_kw.get('input') or \
+                               new_kw.get('output')
+      new_kw['date_condition_in_join'] = not (new_kw.get('input') or new_kw.get('output'))
 
-      for property_name in ('portal_type', 'variation_text', 'simulation_state'):
-        property_list = self._generatePropertyUidList(kw.get(property_name), as_text=1)
-        if len(property_list) :
-          new_kw['%s_list' % property_name] = property_list
 
-      return self.Resource_zGetTrackingList(src__=src__, **new_kw)
+      return self.Resource_zGetTrackingList(src__=src__, 
+                                            selection_domain=selection_domain,
+                                            selection_report=selection_report,
+                                            **new_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingList')
     def getCurrentTrackingList(self, **kw):
