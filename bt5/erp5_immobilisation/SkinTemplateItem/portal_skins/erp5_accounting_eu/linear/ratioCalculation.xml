@@ -66,30 +66,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if start_remaining_annuities:\n
-  return 1./start_remaining_annuities\n
+            <value> <string>if initial_remaining_annuities:\n
+  return 1./initial_remaining_annuities\n
 return None\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAABgAAAEAAAABzHAAAAGUAAGUAAGUAAGUAAGUAAGQBAIQFAFoBAGQAAFMoAgAAAE5j
-BQAAAAcAAAADAAAASwAAAHMbAAAAfAAAbwwAAWQBAHwAABVTbgEAAXQBAFNkAABTKAIAAABOZgMx
-LjAoAgAAAHMZAAAAc3RhcnRfcmVtYWluaW5nX2FubnVpdGllc3MEAAAATm9uZSgHAAAAcxkAAABz
-dGFydF9yZW1haW5pbmdfYW5udWl0aWVzcxgAAABzdG9wX3JlbWFpbmluZ19hbm51aXRpZXNzDwAA
-AGN1cnJlbnRfYW5udWl0eXMaAAAAc3RhcnRfcmVtYWluaW5nX2R1cmFiaWxpdHlzGQAAAHN0b3Bf
-cmVtYWluaW5nX2R1cmFiaWxpdHlzAgAAAGt3cwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2NyaXB0
-IChQeXRob24pcxAAAAByYXRpb0NhbGN1bGF0aW9uAQAAAHMEAAAABwEMASgCAAAAcwQAAABOb25l
-cxAAAAByYXRpb0NhbGN1bGF0aW9uKAIAAABzBAAAAE5vbmVzEAAAAHJhdGlvQ2FsY3VsYXRpb24o
-AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_eu/linear/ratioCalculation</string> </value>
+            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_accounting_eu/linear/ratioCalculation</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
+            <value> <string>initial_remaining_annuities=None, start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,12 +103,13 @@ AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>initial_remaining_annuities</string>
                             <string>start_remaining_annuities</string>
                             <string>stop_remaining_annuities</string>
                             <string>current_annuity</string>
@@ -134,6 +129,7 @@ AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

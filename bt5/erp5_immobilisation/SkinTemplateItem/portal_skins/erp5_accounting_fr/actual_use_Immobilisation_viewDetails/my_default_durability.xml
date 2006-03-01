@@ -199,7 +199,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Durability at the date of immobilisation movement (calculated)</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

@@ -141,7 +141,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Does this movement immobilise the item (unless, it unimmobilises it)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

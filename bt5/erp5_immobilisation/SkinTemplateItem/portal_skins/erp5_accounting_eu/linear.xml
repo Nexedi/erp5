@@ -75,11 +75,21 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>specific_parameter_list</string> </value>
+                      <value> <string>continuous</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>tokens</string> </value>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>with_amortisation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -90,6 +100,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>continuous</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>cut_annuities</string> </key>
@@ -116,14 +130,12 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>specific_parameter_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Linear Amortisation</string> </value>
+        </item>
+        <item>
+            <key> <string>with_amortisation</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>

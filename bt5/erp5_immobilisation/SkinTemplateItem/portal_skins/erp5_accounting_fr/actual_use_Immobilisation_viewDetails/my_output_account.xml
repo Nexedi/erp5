@@ -205,7 +205,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>It is where the item is placed after it has been unimmobilised. It is debited by the current value of the item when it is unimmobilised (but not when the item attains a "natural" end of immobilisation)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

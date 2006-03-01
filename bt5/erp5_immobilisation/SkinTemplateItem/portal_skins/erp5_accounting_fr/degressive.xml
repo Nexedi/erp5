@@ -75,11 +75,31 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>specific_parameter_list</string> </value>
+                      <value> <string>continuous</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>tokens</string> </value>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>with_amortisation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>needed_specific_parameter_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -90,6 +110,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>continuous</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>cut_annuities</string> </key>
@@ -104,6 +128,14 @@
             <value> <string>degressive</string> </value>
         </item>
         <item>
+            <key> <string>needed_specific_parameter_list</string> </key>
+            <value>
+              <tuple>
+                <string>degressive_coefficient | degressive_coefficient | Degressive Coefficient</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>price_calculation_basis</string> </key>
             <value> <string>annuity start price</string> </value>
         </item>
@@ -116,16 +148,12 @@
             <value> <string>greater annuity</string> </value>
         </item>
         <item>
-            <key> <string>specific_parameter_list</string> </key>
-            <value>
-              <tuple>
-                <string>degressive_coefficient</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Degressive Amortisation</string> </value>
+        </item>
+        <item>
+            <key> <string>with_amortisation</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>

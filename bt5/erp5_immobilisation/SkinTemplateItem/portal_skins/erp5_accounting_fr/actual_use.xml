@@ -65,17 +65,27 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>specific_parameter_list</string> </value>
+                      <value> <string>cut_annuities</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
+                      <value> <string>boolean</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>cut_annuities</string> </value>
+                      <value> <string>with_amortisation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>boolean</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>continuous</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -92,8 +102,12 @@
             </value>
         </item>
         <item>
+            <key> <string>continuous</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>cut_annuities</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>date_precision</string> </key>
@@ -105,7 +119,7 @@
         </item>
         <item>
             <key> <string>price_calculation_basis</string> </key>
-            <value> <string>start price</string> </value>
+            <value> <string>period recalculated start price</string> </value>
         </item>
         <item>
             <key> <string>prorata_precision</string> </key>
@@ -116,12 +130,12 @@
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>specific_parameter_list</string> </key>
-            <value> <string></string> </value>
+            <key> <string>title</string> </key>
+            <value> <string>Actual Use</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <key> <string>with_amortisation</string> </key>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>

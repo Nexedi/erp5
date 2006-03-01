@@ -384,7 +384,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Lines in this Accounting Transaction</string> </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>

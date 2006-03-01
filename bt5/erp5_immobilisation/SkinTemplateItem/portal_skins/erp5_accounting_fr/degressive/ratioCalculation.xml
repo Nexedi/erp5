@@ -66,60 +66,48 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if not (start_remaining_annuities and current_annuity is not None):\n
+            <value> <string>if initial_remaining_annuities is None or current_annuity is None:\n
+  context.log(\'Error in degressive ratioCalculation :\',\n
+            \'initial_remaining_annuities (%s) or current_annuity (%s) is None\' % (initial_remaining_annuities, current_annuity))\n
   return None\n
-degressive_coef = kw.get(\'degressive_coefficient\', None)\n
+degressive_coef = kw.get(\'initial_degressive_coefficient\', None)\n
 if not degressive_coef:\n
+  context.log(\'Error in degressive ratioCalculation :\',\n
+            \'initial_degressive_coefficient (%s) is None or 0\' % degressive_coef)\n
   return None\n
   \n
 \n
 # Calculate the ratio for each annuity\n
 annuity_ratio_list = []\n
-first_linear_ratio = 1./start_remaining_annuities\n
+first_linear_ratio = 1./initial_remaining_annuities\n
 degressive_ratio = first_linear_ratio * degressive_coef\n
 \n
-for i in range(start_remaining_annuities):\n
-  linear_ratio = 1. / (start_remaining_annuities - i)\n
+for i in range(int(initial_remaining_annuities)):\n
+  linear_ratio = 1. / (initial_remaining_annuities - i)\n
   applied_ratio = max(linear_ratio, degressive_ratio)\n
   annuity_ratio_list.append(applied_ratio)\n
 \n
 try:\n
   return annuity_ratio_list[current_annuity]\n
-except:\n
+except IndexError:\n
+  context.log(\'Error in degressive ratioCalculation :\',\n
+              \'current_annuity (%s) exceeds initial_remaining_annuities (%s)\' % (current_annuity, initial_remaining_annuities))\n
   return None\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAABgAAAEAAAABzHAAAAGUAAGUAAGUAAGUAAGUAAGQBAIQFAFoBAGQAAFMoAgAAAE5j
-BQAAABMAAAANAAAASwAAAHPPAAAAfAAAbwoAAXwCAHQCAGoJAAxvCAABdAIAU24BAAF0AwB8BQBk
-AQCDAgBkAgB0AgCDAgB9CAB8CAAMbwgAAXQCAFNuAQABZwAAfQkAZAMAfAAAFX0KAHwKAHwIABR9
-CwB4SgB0CQB0CgB8AACDAQCDAQBEXTYAfQ4AZAMAfAAAfA4AGBV9DwB0DQB8DwB8CwCDAgB9EQB0
-AwB8CQBkBACDAgB8EQCDAQABcXIAV3kRAHQPAHwJAHwCAIMCAFNXbgsAAQEBdAIAU24BAFhkAABT
-KAUAAABOcwMAAABnZXRzFgAAAGRlZ3Jlc3NpdmVfY29lZmZpY2llbnRmAzEuMHMGAAAAYXBwZW5k
-KBAAAABzGQAAAHN0YXJ0X3JlbWFpbmluZ19hbm51aXRpZXNzDwAAAGN1cnJlbnRfYW5udWl0eXME
-AAAATm9uZXMJAAAAX2dldGF0dHJfcwIAAABrd3MPAAAAZGVncmVzc2l2ZV9jb2VmcxIAAABhbm51
-aXR5X3JhdGlvX2xpc3RzEgAAAGZpcnN0X2xpbmVhcl9yYXRpb3MQAAAAZGVncmVzc2l2ZV9yYXRp
-b3MJAAAAX2dldGl0ZXJfcwUAAAByYW5nZXMBAAAAaXMMAAAAbGluZWFyX3JhdGlvcwMAAABtYXhz
-DQAAAGFwcGxpZWRfcmF0aW9zCQAAAF9nZXRpdGVtXygTAAAAcxkAAABzdGFydF9yZW1haW5pbmdf
-YW5udWl0aWVzcxgAAABzdG9wX3JlbWFpbmluZ19hbm51aXRpZXNzDwAAAGN1cnJlbnRfYW5udWl0
-eXMaAAAAc3RhcnRfcmVtYWluaW5nX2R1cmFiaWxpdHlzGQAAAHN0b3BfcmVtYWluaW5nX2R1cmFi
-aWxpdHlzAgAAAGt3cwQAAABOb25lcwkAAABfZ2V0YXR0cl9zDwAAAGRlZ3Jlc3NpdmVfY29lZnMS
-AAAAYW5udWl0eV9yYXRpb19saXN0cxIAAABmaXJzdF9saW5lYXJfcmF0aW9zEAAAAGRlZ3Jlc3Np
-dmVfcmF0aW9zCQAAAF9nZXRpdGVyX3MFAAAAcmFuZ2VzAQAAAGlzDAAAAGxpbmVhcl9yYXRpb3MD
-AAAAbWF4cw0AAABhcHBsaWVkX3JhdGlvcwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3Jp
-cHQgKFB5dGhvbilzEAAAAHJhdGlvQ2FsY3VsYXRpb24BAAAAcx4AAAAVAQgBGAEIAQgEBgEKAQoC
-EwAGAQ4BEgEUAgMBFAIoAgAAAHMEAAAATm9uZXMQAAAAcmF0aW9DYWxjdWxhdGlvbigCAAAAcwQA
-AABOb25lcxAAAAByYXRpb0NhbGN1bGF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24p
-cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_fr/degressive/ratioCalculation</string> </value>
+            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_accounting_fr/degressive/ratioCalculation</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
+            <value> <string>initial_remaining_annuities=None, start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,12 +127,13 @@ cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>initial_remaining_annuities</string>
                             <string>start_remaining_annuities</string>
                             <string>stop_remaining_annuities</string>
                             <string>current_annuity</string>
@@ -153,17 +142,20 @@ cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                             <string>kw</string>
                             <string>None</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>degressive_coef</string>
                             <string>annuity_ratio_list</string>
                             <string>first_linear_ratio</string>
                             <string>degressive_ratio</string>
                             <string>_getiter_</string>
                             <string>range</string>
+                            <string>int</string>
                             <string>i</string>
                             <string>linear_ratio</string>
                             <string>max</string>
                             <string>applied_ratio</string>
                             <string>_getitem_</string>
+                            <string>IndexError</string>
                           </tuple>
                         </value>
                     </item>
@@ -176,6 +168,7 @@ cwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

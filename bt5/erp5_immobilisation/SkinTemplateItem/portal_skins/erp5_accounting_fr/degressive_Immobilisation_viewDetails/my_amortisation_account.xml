@@ -205,7 +205,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>This account is credited by the value of the annuity at each financial year end ; its role is to gather annuities values in a single account. Then one can know the real value of the item by deducting amortisation account value from immobilisation account value. Amortisation account is entirely debited from the added annuities values when the item is unimmobilised.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

@@ -205,7 +205,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>This account is the one the item is coming from. It is credited by the value of the item when it is immobilised.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

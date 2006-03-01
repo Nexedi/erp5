@@ -1,1 +1,69 @@
-portal_types/Accounting Transaction Module[id=aggregate_amortisation_calculation]
+Accounting Transaction Module | build_amortisation
+Amortisation Transaction Line | history
+Amortisation Transaction Line | metadata
+Amortisation Transaction Line | print
+Amortisation Transaction Line | view
+Amortisation Transaction | causality_report
+Amortisation Transaction | details
+Amortisation Transaction | history
+Amortisation Transaction | jump_causality_items
+Amortisation Transaction | metadata
+Amortisation Transaction | print
+Amortisation Transaction | view
+Immobilisation Line | eu_linear_amortisation_method_view_details
+Immobilisation Line | eu_no_amortisation_amortisation_method_view_details
+Immobilisation Line | fr_actual_use_amortisation_method_view_details
+Immobilisation Line | fr_degressive_amortisation_method_view_details
+Immobilisation Line | fr_uncontinuous_degressive_amortisation_method_view_details
+Immobilisation Line | history
+Immobilisation Line | metadata
+Immobilisation Line | print
+Immobilisation Line | view
+Immobilisation Module | list_ui
+Immobilisation Module | print
+Immobilisation Module | sort_on
+Immobilisation Module | view
+Immobilisation | history
+Immobilisation | immobilisation_validity_errors
+Immobilisation | metadata
+Immobilisation | print
+Immobilisation | view
+Internal Packing List Line | eu_linear_amortisation_method_view_details
+Internal Packing List Line | eu_no_amortisation_amortisation_method_view_details
+Internal Packing List Line | fr_actual_use_amortisation_method_view_details
+Internal Packing List Line | fr_degressive_amortisation_method_view_details
+Internal Packing List Line | fr_uncontinuous_degressive_amortisation_method_view_details
+Internal Packing List | immobilisation_validity_errors
+Inventory Cell | eu_linear_amortisation_method_view_details
+Inventory Cell | eu_no_amortisation_amortisation_method_view_details
+Inventory Cell | fr_actual_use_amortisation_method_view_details
+Inventory Cell | fr_degressive_amortisation_method_view_details
+Inventory Cell | fr_uncontinuous_degressive_amortisation_method_view_details
+Inventory Line | eu_linear_amortisation_method_view_details
+Inventory Line | eu_no_amortisation_amortisation_method_view_details
+Inventory Line | fr_actual_use_amortisation_method_view_details
+Inventory Line | fr_degressive_amortisation_method_view_details
+Inventory Line | fr_uncontinuous_degressive_amortisation_method_view_details
+Inventory | immobilisation_validity_errors
+Purchase Packing List Cell | eu_linear_amortisation_method_view_details
+Purchase Packing List Cell | eu_no_amortisation_amortisation_method_view_details
+Purchase Packing List Cell | fr_actual_use_amortisation_method_view_details
+Purchase Packing List Cell | fr_degressive_amortisation_method_view_details
+Purchase Packing List Cell | fr_uncontinuous_degressive_amortisation_method_view_details
+Purchase Packing List Line | eu_linear_amortisation_method_view_details
+Purchase Packing List Line | eu_no_amortisation_amortisation_method_view_details
+Purchase Packing List Line | fr_actual_use_amortisation_method_view_details
+Purchase Packing List Line | fr_degressive_amortisation_method_view_details
+Purchase Packing List Line | fr_uncontinuous_degressive_amortisation_method_view_details
+Purchase Packing List | immobilisation_validity_errors
+Sale Packing List Cell | eu_linear_amortisation_method_view_details
+Sale Packing List Cell | eu_no_amortisation_amortisation_method_view_details
+Sale Packing List Cell | fr_actual_use_amortisation_method_view_details
+Sale Packing List Cell | fr_degressive_amortisation_method_view_details
+Sale Packing List Cell | fr_uncontinuous_degressive_amortisation_method_view_details
+Sale Packing List Line | eu_linear_amortisation_method_view_details
+Sale Packing List Line | eu_no_amortisation_amortisation_method_view_details
+Sale Packing List Line | fr_actual_use_amortisation_method_view_details
+Sale Packing List Line | fr_degressive_amortisation_method_view_details
+Sale Packing List Line | fr_uncontinuous_degressive_amortisation_method_view_details
+Sale Packing List | immobilisation_validity_errors

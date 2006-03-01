@@ -259,7 +259,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Date of this movement</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

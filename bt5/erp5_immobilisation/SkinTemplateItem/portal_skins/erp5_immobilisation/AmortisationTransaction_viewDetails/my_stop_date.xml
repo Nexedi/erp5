@@ -259,7 +259,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Stop date</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

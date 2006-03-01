@@ -203,7 +203,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Reference of this transaction for third party</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

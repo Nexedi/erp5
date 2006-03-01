@@ -66,8 +66,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if start_remaining_annuities is None or stop_remaining_annuities is None \\\n
-     or start_remaining_durability is None or stop_remaining_durability is None:\n
+            <value> <string>initial_durability = kw.get(\'initial_durability\')\n
+if start_remaining_annuities is None or stop_remaining_annuities is None \\\n
+     or start_remaining_durability is None or stop_remaining_durability is None \\\n
+     or initial_durability is None:\n
+  context.log(\'Error for actual use ratio calculation : one of theses properties is None : start_remaining_annuities, stop_remaining_annuities, start_remaining_durability, stop_remaining_durability, or initial_durability :\' % (\n
+     repr(start_remaining_annuities), repr(stop_remaining_annuities), repr(start_remaining_durability), repr(stop_remaining_durability), repr(initial_durability)),\'\')\n
   return None\n
 \n
 consumpted_durability = start_remaining_durability - stop_remaining_durability\n
@@ -75,37 +79,26 @@ annuities_number = start_remaining_annuities - stop_remaining_annuities\n
 \n
 try:\n
   per_annuity_consumption = (consumpted_durability / (annuities_number + 0.))\n
-  return per_annuity_consumption / start_remaining_durability\n
-except:\n
+  ratio = per_annuity_consumption / start_remaining_durability\n
+  return ratio\n
+  #return ratio * start_remaining_durability / initial_durability\n
+except ZeroDivisionError:\n
   return None\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAABgAAAEAAAABzHAAAAGUAAGUAAGUAAGUAAGUAAGQBAIQFAFoBAGQAAFMoAgAAAE5j
-BQAAAAoAAAAIAAAASwAAAHN8AAAAfAAAdAEAaggAcCQAAXwBAHQBAGoIAHAXAAF8AwB0AQBqCABw
-CgABfAQAdAEAaggAbwgAAXQBAFNuAQABfAMAfAQAGH0HAHwAAHwBABh9CAB5GgB8BwB8CABkAQAX
-FX0JAHwJAHwDABVTV24LAAEBAXQBAFNuAQBYZAAAUygCAAAATmYDMC4wKAgAAABzGQAAAHN0YXJ0
-X3JlbWFpbmluZ19hbm51aXRpZXNzBAAAAE5vbmVzGAAAAHN0b3BfcmVtYWluaW5nX2FubnVpdGll
-c3MaAAAAc3RhcnRfcmVtYWluaW5nX2R1cmFiaWxpdHlzGQAAAHN0b3BfcmVtYWluaW5nX2R1cmFi
-aWxpdHlzFQAAAGNvbnN1bXB0ZWRfZHVyYWJpbGl0eXMQAAAAYW5udWl0aWVzX251bWJlcnMXAAAA
-cGVyX2FubnVpdHlfY29uc3VtcHRpb24oCgAAAHMZAAAAc3RhcnRfcmVtYWluaW5nX2FubnVpdGll
-c3MYAAAAc3RvcF9yZW1haW5pbmdfYW5udWl0aWVzcw8AAABjdXJyZW50X2FubnVpdHlzGgAAAHN0
-YXJ0X3JlbWFpbmluZ19kdXJhYmlsaXR5cxkAAABzdG9wX3JlbWFpbmluZ19kdXJhYmlsaXR5cwIA
-AABrd3MEAAAATm9uZXMVAAAAY29uc3VtcHRlZF9kdXJhYmlsaXR5cxAAAABhbm51aXRpZXNfbnVt
-YmVycxcAAABwZXJfYW5udWl0eV9jb25zdW1wdGlvbigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
-aG9uKXMQAAAAcmF0aW9DYWxjdWxhdGlvbgEAAABzEAAAABoBGgEIAgoBCgIDAQ4BDwIoAgAAAHME
-AAAATm9uZXMQAAAAcmF0aW9DYWxjdWxhdGlvbigCAAAAcwQAAABOb25lcxAAAAByYXRpb0NhbGN1
-bGF0aW9uKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAA
-AA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_fr/actual_use/ratioCalculation</string> </value>
+            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_accounting_fr/actual_use/ratioCalculation</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
+            <value> <string>initial_remaining_annuities=None, start_remaining_annuities=None, stop_remaining_annuities=None, current_annuity=None, start_remaining_durability=None, stop_remaining_durability=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,22 +118,29 @@ AA==</string> </value>
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>initial_remaining_annuities</string>
                             <string>start_remaining_annuities</string>
                             <string>stop_remaining_annuities</string>
                             <string>current_annuity</string>
                             <string>start_remaining_durability</string>
                             <string>stop_remaining_durability</string>
                             <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>initial_durability</string>
                             <string>None</string>
+                            <string>context</string>
+                            <string>repr</string>
                             <string>consumpted_durability</string>
                             <string>annuities_number</string>
                             <string>per_annuity_consumption</string>
+                            <string>ratio</string>
+                            <string>ZeroDivisionError</string>
                           </tuple>
                         </value>
                     </item>
@@ -153,6 +153,7 @@ AA==</string> </value>
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

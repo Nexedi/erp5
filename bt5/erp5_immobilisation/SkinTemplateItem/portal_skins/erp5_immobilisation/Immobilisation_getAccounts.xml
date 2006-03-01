@@ -69,7 +69,10 @@
             <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def display(x):\n
-  pcg_id = x.getPcgId()\n
+  try:\n
+    pcg_id = x.getGap().split(\'/\')[-1]\n
+  except:\n
+    pcg_id = None\n
   account_title = x.getTitle()\n
   display = "%s - %s" % (pcg_id, account_title)\n
   return display\n
@@ -78,52 +81,24 @@ def sort_method(x, y):\n
   return cmp(x[0], y[0])\n
 \n
 def getList():\n
-  list = map(lambda o: (display(o), \'account/%s\' % o.getId()), context.account.objectValues())\n
+  list = map(lambda o: (display(o), \'account_module/%s\' % o.getId()), context.account_module.objectValues())\n
   list.sort(sort_method)\n
   return list\n
 \n
 \n
 getList = CachingMethod(getList, \'getList\')\n
-return [(\'\',\'\')] + getList()[:-1]\n
+return [(\'\',\'\')] + getList()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAYAAAAKAAAAAwAA
-AHNlAAAAZAEAawAAbAEAfQEAAWQCAIQAAIkAAGQDAIQAAIkBAIcAAIcBAGQEAIYAAH0EAHwBAHwE
-AGQFAIMCAH0EAGQGAGQGAGYCAGcBAHQFAHwEAIMAAGQAAGQHAAuFAgCDAgAXU2QAAFMoCAAAAE4o
-AQAAAHMNAAAAQ2FjaGluZ01ldGhvZGMBAAAABQAAAAQAAABDAAAAczwAAAB0AAB8AABkAQCDAgCD
-AAB9AgB0AAB8AABkAgCDAgCDAAB9AwBkAwB8AgB8AwBmAgAWfQQAfAQAU2QAAFMoBAAAAE5zCAAA
-AGdldFBjZ0lkcwgAAABnZXRUaXRsZXMHAAAAJXMgLSAlcygFAAAAcwkAAABfZ2V0YXR0cl9zAQAA
-AHhzBgAAAHBjZ19pZHMNAAAAYWNjb3VudF90aXRsZXMHAAAAZGlzcGxheSgFAAAAcwEAAAB4cwkA
-AABfZ2V0YXR0cl9zBgAAAHBjZ19pZHMNAAAAYWNjb3VudF90aXRsZXMHAAAAZGlzcGxheSgAAAAA
-KAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMHAAAAZGlzcGxheQMAAABzCAAAAAABEgESARABYwIA
-AAAEAAAABgAAAEMAAABzIwAAAHQAAHQBAHwAAGQBAIMCAHQBAHwBAGQBAIMCAIMCAFNkAABTKAIA
-AABOaQAAAAAoBAAAAHMDAAAAY21wcwkAAABfZ2V0aXRlbV9zAQAAAHhzAQAAAHkoBAAAAHMBAAAA
-eHMBAAAAeXMDAAAAY21wcwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
-bilzCwAAAHNvcnRfbWV0aG9kCQAAAHMCAAAAAAFjAAAAAAYAAAAIAAAAAwAAAHNFAAAAdAAAhwAA
-ZAEAhgAAdAEAdAEAdAIAZAIAgwIAZAMAgwIAgwAAgwIAfQQAdAEAfAQAZAQAgwIAiAEAgwEAAXwE
-AFNkAABTKAUAAABOYwEAAAADAAAABQAAAAMAAABzIAAAAIgAAHwAAIMBAGQBAHQCAHwAAGQCAIMC
-AIMAABZmAgBTKAMAAABOcwoAAABhY2NvdW50LyVzcwUAAABnZXRJZCgDAAAAcwcAAABkaXNwbGF5
-cwEAAABvcwkAAABfZ2V0YXR0cl8oAwAAAHMBAAAAb3MHAAAAZGlzcGxheXMJAAAAX2dldGF0dHJf
-KAEAAABzBwAAAGRpc3BsYXkoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwsAAAA8bGFtYmRhLjEx
-Pg0AAABzAAAAAHMHAAAAYWNjb3VudHMMAAAAb2JqZWN0VmFsdWVzcwQAAABzb3J0KAUAAABzAwAA
-AG1hcHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwQAAABsaXN0cwsAAABzb3J0X21ldGhvZCgG
-AAAAcwMAAABtYXBzBwAAAGRpc3BsYXlzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMEAAAAbGlz
-dHMLAAAAc29ydF9tZXRob2QoAgAAAHMHAAAAZGlzcGxheXMLAAAAc29ydF9tZXRob2QoAAAAAHMP
-AAAAU2NyaXB0IChQeXRob24pcwcAAABnZXRMaXN0DAAAAHMGAAAAAAEtARABcwcAAABnZXRMaXN0
-cwAAAABpAQAAACgGAAAAcxcAAABQcm9kdWN0cy5FUlA1VHlwZS5DYWNoZXMNAAAAQ2FjaGluZ01l
-dGhvZHMHAAAAZGlzcGxheXMLAAAAc29ydF9tZXRob2RzBwAAAGdldExpc3RzCQAAAF9nZXRpdGVt
-XygGAAAAcxcAAABQcm9kdWN0cy5FUlA1VHlwZS5DYWNoZXMNAAAAQ2FjaGluZ01ldGhvZHMHAAAA
-ZGlzcGxheXMLAAAAc29ydF9tZXRob2RzBwAAAGdldExpc3RzCQAAAF9nZXRpdGVtXygAAAAAKAIA
-AABzBwAAAGRpc3BsYXlzCwAAAHNvcnRfbWV0aG9kcw8AAABTY3JpcHQgKFB5dGhvbilzGgAAAElt
-bW9iaWxpc2F0aW9uX2dldEFjY291bnRzAQAAAHMKAAAADQIJBgkDDwYPASgBAAAAcxoAAABJbW1v
-YmlsaXNhdGlvbl9nZXRBY2NvdW50cygBAAAAcxoAAABJbW1vYmlsaXNhdGlvbl9nZXRBY2NvdW50
-cygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Immobilisation_getAccounts</string> </value>
+            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/Immobilisation_getAccounts</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -158,7 +133,6 @@ cygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string
                             <string>display</string>
                             <string>sort_method</string>
                             <string>getList</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

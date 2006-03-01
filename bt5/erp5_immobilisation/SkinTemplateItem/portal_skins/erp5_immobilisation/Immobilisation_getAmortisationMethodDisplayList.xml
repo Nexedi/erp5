@@ -66,7 +66,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return_list = []\n
+            <value> <string>return_list = [(\'No Change\', \'no_change\'), (\'Unimmobilise\', \'unimmobilise\')]\n
+\n
 amortisation_method_list = context.Immobilisation_getAmortisationMethodList()\n
 for method in amortisation_method_list:\n
   id = method[1].getId()\n
@@ -78,30 +79,25 @@ return [(\'\',\'\')] + return_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAMAAAAQwAA
-AHO9AAAAZwAAfQAAdAEAdAIAZAEAgwIAgwAAfQMAeI0AdAQAfAMAgwEARF1/AH0FAHQBAHQGAHwF
-AGQCAIMCAGQDAIMCAIMAAH0HAHQBAHQGAHwFAGQCAIMCAGQEAIMCAHAEAAF8BwB9CAB0AQB8AABk
-BQCDAgBkBgB0BgB8BQBkBwCDAgB8CABmAgAWZAgAdAYAfAUAZAcAgwIAfAcAZgIAFmYCAIMBAAFx
-JQBXZAkAZAkAZgIAZwEAfAAAF1NkAABTKAoAAABOcygAAABJbW1vYmlsaXNhdGlvbl9nZXRBbW9y
-dGlzYXRpb25NZXRob2RMaXN0aQEAAABzBQAAAGdldElkcwUAAAB0aXRsZXMGAAAAYXBwZW5kcwcA
-AAAoJXMpICVzaQAAAABzBQAAACVzLyVzcwAAAAAoCQAAAHMLAAAAcmV0dXJuX2xpc3RzCQAAAF9n
-ZXRhdHRyX3MHAAAAY29udGV4dHMYAAAAYW1vcnRpc2F0aW9uX21ldGhvZF9saXN0cwkAAABfZ2V0
-aXRlcl9zBgAAAG1ldGhvZHMJAAAAX2dldGl0ZW1fcwIAAABpZHMHAAAAZGlzcGxheSgJAAAAcwsA
-AAByZXR1cm5fbGlzdHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cxgAAABhbW9ydGlzYXRpb25f
-bWV0aG9kX2xpc3RzCQAAAF9nZXRpdGVyX3MGAAAAbWV0aG9kcwkAAABfZ2V0aXRlbV9zAgAAAGlk
-cwcAAABkaXNwbGF5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcy8AAABJbW1vYmlsaXNh
-dGlvbl9nZXRBbW9ydGlzYXRpb25NZXRob2REaXNwbGF5TGlzdAEAAABzDgAAAAYBEgENAAYBGwEi
-AUACKAEAAABzLwAAAEltbW9iaWxpc2F0aW9uX2dldEFtb3J0aXNhdGlvbk1ldGhvZERpc3BsYXlM
-aXN0KAEAAABzLwAAAEltbW9iaWxpc2F0aW9uX2dldEFtb3J0aXNhdGlvbk1ldGhvZERpc3BsYXlM
-aXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Immobilisation_getAmortisationMethodDisplayList</string> </value>
+            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/Immobilisation_getAmortisationMethodDisplayList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
