@@ -435,7 +435,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
 
     # Asset Price API
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryAssetPrice')
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getInventoryAssetPrice')
     def getInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -443,7 +444,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
       kw['resource'] = self.getRelativeUrl()
       return self.portal_simulation.getInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getCurrentInventoryAssetPrice')
     def getCurrentInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -451,7 +453,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
       kw['resource'] = self.getRelativeUrl()
       return self.portal_simulation.getCurrentInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getAvailableInventoryAssetPrice')
     def getAvailableInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -459,7 +462,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
       kw['resource'] = self.getRelativeUrl()
       return self.portal_simulation.getAvailableInventoryAssetPrice(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getFutureInventoryAssetPrice')
     def getFutureInventoryAssetPrice(self, **kw):
       """
       Returns list of inventory grouped by section or site
@@ -469,7 +473,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
 
     # Industrial price API
-    security.declareProtected(Permissions.AccessContentsInformation, 'getIndustrialPrice')
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'getIndustrialPrice')
     def getIndustrialPrice(self, context=None, REQUEST=None, **kw):
       """
         Returns industrial price
@@ -492,12 +497,15 @@ class Resource(XMLMatrix, CoreResource, Variated):
       from Products.ERP5 import newTempPredicateGroup as newTempPredicate
       p = newTempPredicate(self.getId(), uid = self.getUid())
       p.setMembershipCriterionBaseCategoryList(('resource',))
-      p.setMembershipCriterionCategoryList(('resource/%s' % self.getRelativeUrl(),))
+      p.setMembershipCriterionCategoryList(('resource/%s'
+          % self.getRelativeUrl(),))
       return p
 
     def _pricingSortMethod(self, a, b):
-      # Simple method : the one that matches the highest number of criterions wins
-      return cmp(len(b.getAcquiredCategoryList()), len(a.getAcquiredCategoryList()))
+      # Simple method : the one that matches the highest number
+      # of criterions wins
+      return cmp(len(b.getAcquiredCategoryList()),
+          len(a.getAcquiredCategoryList()))
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               '_getPriceParameterDict')
@@ -611,12 +619,16 @@ class Resource(XMLMatrix, CoreResource, Variated):
 #     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))) +
 #     SUM(non_discountable_additional_price)) *
 #     (1 + SUM(surcharge_ratio))
-      # Or, as one single line :
-#     ((bp + S(ap) + v * S(vap)) * (1 - m(1, M(S(dr), edr))) + S(ndap)) * (1 + S(sr))
+      # Or, as (nearly) one single line :
+#     ((bp + S(ap) + v * S(vap))
+#       * (1 - m(1, M(S(dr), edr)))
+#       + S(ndap))
+#     * (1 + S(sr))
       # Variable value is dynamically configurable through a python script.
       # It can be anything, depending on business requirements.
       # It can be seen as a way to define a pricing model that not only
-      # depends on discrete variations, but also on a continuous property of the object
+      # depends on discrete variations, but also on a continuous property
+      # of the object
 
       base_price = price_parameter_dict['base_price']
       if base_price in [None, '']:
@@ -630,7 +642,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
           unit_base_price += additional_price
         # Sum variable additional price
         variable_value = self._getPricingVariable(context=context)
-        for variable_additional_price in price_parameter_dict['variable_additional_price']:
+        for variable_additional_price in \
+            price_parameter_dict['variable_additional_price']:
           unit_base_price += variable_additional_price * variable_value
         # Discount
         sum_discount_ratio = 0
