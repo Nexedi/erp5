@@ -611,6 +611,13 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       return self._getPortalGroupedStateList('future_inventory') or\
              self._getPortalConfiguration('portal_future_inventory_state_list')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalUpdatableAmortisationTransactionStateList')
+    def getPortalUpdatableAmortisationTransactionStateList(self):
+      """
+        Return states when Amortisation Transaction can be updated by amortisation_transaction_builder.
+      """
+      return self._getPortalConfiguration('portal_updatable_amortisation_transaction_state_list')
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalColumnBaseCategoryList')
     def getPortalColumnBaseCategoryList(self):
