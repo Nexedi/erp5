@@ -1,0 +1,50 @@
+<allowed_content_type_list>
+ <portal_type id="Agent">
+  <item>Agent Privilege</item>
+ </portal_type>
+ <portal_type id="Bank Account">
+  <item>Agent</item>
+ </portal_type>
+ <portal_type id="Currency">
+  <item>Currency Exchange Line</item>
+ </portal_type>
+ <portal_type id="Currency Exchange Line">
+  <item>Currency Exchange Cell</item>
+ </portal_type>
+ <portal_type id="Currency Module">
+  <item>Currency</item>
+  <item>ERP5Currency</item>
+ </portal_type>
+ <portal_type id="Organisation">
+  <item>Address</item>
+  <item>ChatAddress</item>
+  <item>Bank Account</item>
+  <item>Link</item>
+  <item>Telephone</item>
+  <item>Fax</item>
+  <item>Document</item>
+  <item>Email</item>
+  <item>Image</item>
+  <item>File</item>
+  <item>Credit Card</item>
+ </portal_type>
+ <portal_type id="Organisation Module">
+  <item>Organisation</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>Address</item>
+  <item>Assignment</item>
+  <item>ChatAddress</item>
+  <item>Telephone</item>
+  <item>Credit Card</item>
+  <item>Email</item>
+  <item>File</item>
+  <item>Fax</item>
+  <item>Career</item>
+  <item>Bank Account</item>
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Person Module">
+  <item>Person</item>
+ </portal_type>
+</allowed_content_type_list>

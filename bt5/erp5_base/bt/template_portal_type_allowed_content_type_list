@@ -1,0 +1,30 @@
+Agent | Agent Privilege
+Bank Account | Agent
+Currency Exchange Line | Currency Exchange Cell
+Currency Module | Currency
+Currency Module | ERP5Currency
+Currency | Currency Exchange Line
+Organisation Module | Organisation
+Organisation | Address
+Organisation | Bank Account
+Organisation | ChatAddress
+Organisation | Credit Card
+Organisation | Document
+Organisation | Email
+Organisation | Fax
+Organisation | File
+Organisation | Image
+Organisation | Link
+Organisation | Telephone
+Person Module | Person
+Person | Address
+Person | Assignment
+Person | Bank Account
+Person | Career
+Person | ChatAddress
+Person | Credit Card
+Person | Email
+Person | Fax
+Person | File
+Person | Image
+Person | Telephone

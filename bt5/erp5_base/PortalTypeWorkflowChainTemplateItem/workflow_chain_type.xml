@@ -1,0 +1,70 @@
+<workflow_chain>
+ <chain>
+  <type>Address</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Agent</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Assignment</type>
+  <workflow>edit_workflow, assignment_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Bank Account</type>
+  <workflow>bank_account_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Career</type>
+  <workflow>career_workflow</workflow>
+ </chain>
+ <chain>
+  <type>ChatAddress</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Credit Card</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Currency</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Currency Exchange Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Email</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Fax</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>File</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Image</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Link</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Organisation</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Person</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Telephone</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
