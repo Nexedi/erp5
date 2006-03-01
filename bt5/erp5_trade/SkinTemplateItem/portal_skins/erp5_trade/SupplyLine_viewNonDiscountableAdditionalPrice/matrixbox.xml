@@ -220,7 +220,7 @@
                 </item>
                 <item>
                     <key> <string>cell_base_id</string> </key>
-                    <value> <string>path_optional_additional_price</string> </value>
+                    <value> <string>path_optional_non_discountable_additional_price</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_portal_type</string> </key>
