@@ -35,13 +35,14 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Acquisition import Explicit, Implicit
 from Products.PythonScripts.Utility import allow_class
 from DateTime import DateTime
 
 from zLOG import LOG
 
-class Delivery(XMLObject):
+class Delivery(XMLObject, ImmobilisationDelivery):
     """
         Each time delivery is modified, it MUST launch a reindexing of
         inventories which are related to the resources contained in the Delivery
