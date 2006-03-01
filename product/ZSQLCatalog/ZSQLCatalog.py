@@ -593,10 +593,13 @@ class ZCatalog(Folder, Persistent, Implicit):
     """ wrapper around catalog """
     self.catalogObjectList([obj], sql_catalog_id=sql_catalog_id)
 
-  def catalogObjectList(self, object_list, sql_catalog_id=None,**kw):
+  def catalogObjectList(self, object_list, sql_catalog_id=None, **kw):
     """Catalog a list of objects.
     """
-    hot_reindexing = (self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    hot_reindexing = (self.hot_reindexing_state is not None) and \
+                     (catalog is not None) and \
+                     (self.source_sql_catalog_id == catalog.id)
     
     wrapped_object_list = []
     failed_object_list = []
@@ -611,6 +614,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             "method if no unique id is provided when cataloging"
             )
         url = string.join(url(), '/')
+        url = '/'.join(url())
         url_list.append(url)
 
       try:
@@ -623,7 +627,6 @@ class ZCatalog(Folder, Persistent, Implicit):
       else:
         wrapped_object_list.append(obj)
 
-    catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       catalog.catalogObjectList(wrapped_object_list,**kw)
       if hot_reindexing:
