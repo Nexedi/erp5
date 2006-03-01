@@ -38,10 +38,11 @@ number_of_seconds_in_minute = 60.
 number_of_days_in_year = 365.
 hour = 1/24.
 same_movement_interval = hour
+  
+accountable_days_in_month = 30.
+accountable_months_in_year = 12.
 
 
-#def addToDate(date, to_add={'year':0, 'month':0, 'day':0, 'hour':0, 'minute':0, 'second':0},year=0,month=0,day=0,
-#              hour=0,minute=0,second=0):
 def addToDate(date,to_add=None, **kw):
   """
   Return a new DateTime object with the corresponding added values.
@@ -233,8 +234,37 @@ def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year)
     return months / number_of_months_in_year
   else:
     return days / days_in_year
- 
- 
+  
+  
+def getAccountableYearFraction(from_date=None, to_date=None):
+  """
+  Returns a year fraction according to accounting rules,
+  i.e. 30 days per month
+  """
+  from_date = roundDate(from_date)
+  to_date = roundDate(to_date)
+  
+  months = getMonthAndDaysBetween(from_date, to_date)['month']
+  days = getMonthAndDaysBetween(from_date, to_date)['day']
+  new_from_date = addToDate(from_date, month=months)
+  if days != 0:
+    if new_from_date.month() == to_date.month():
+      days_before = new_from_date.day() - 1
+    else:
+      days_before = days_before = (accountable_days_in_month+1) - new_from_date.day()
+    days_after = to_date.day() - 1
+    if days_before < 0:
+      days_before = 0
+    if days_after > accountable_days_in_month:
+      days_after = accountable_days_in_month
+    days = days_before + days_after
+  else:
+    days = 0
+  year_fraction = months / accountable_months_in_year
+  year_fraction += (1 / accountable_months_in_year) * ( days / accountable_days_in_month)
+  return year_fraction
+  
+  
 def getBissextilCompliantYearFraction(from_date=None, to_date=None, reference_date=DateTime('2000/01/01')):
   """
   Returns a ratio corresponding to the fraction of the year
@@ -284,3 +314,9 @@ def roundMonthToGreaterEntireYear(months_number):
     years_number += 1
   return int(years_number) * 12
   
+
+def roundDate(date):
+  """
+  Returns a date at 0:00
+  """
+  return DateTime('%s/%s/%s' % (date.year(), date.month(), date.day()))
