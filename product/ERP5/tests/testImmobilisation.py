@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
-#          Guillaume MICHON <guillaume@nexedi.com>
+#          Guillaume Michon <guillaume.michon@e-asc.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -44,5856 +44,3358 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.DateUtils import millis, centis
+from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from DateTime import DateTime
 from Acquisition import aq_base, aq_inner
 from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from testOrder import TestOrderMixin
 import time
-from copy import deepcopy
+from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD
+
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
+
+# XXX You need to add "immobilisation_state" column in catalog, getting
+# "getImmobilisationState" to catalog an object, in order to make this
+# test working
+# Related queries : z_create_catalog and z_catalog_object_list
+
+class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
+
+  run_all_test = 1
+  # Different variables used for this test
+  item_portal_type = 'Apparel Fabric Item'
+  organisation_portal_type = 'Organisation'
+  account_portal_type = 'Account'
+  currency_portal_type = 'Currency'
+  linear_method = 'eu/linear'
+  degressive_method = 'fr/degressive'
+  uncontinuous_degressive_method = 'fr/uncontinuous_degressive'
+  actual_use_method = 'fr/actual_use'
+  no_amortisation_method = 'eu/no_amortisation'
+  diverged = 'diverged'
+  solved = 'solved'
   
-
-class TestImmobilisation(ERP5TypeTestCase):
-
+  reindex_done = 0
 
   def getTitle(self):
-    """
-    default title
-    """
     return "Immobilisation"
-
-  # Different variables used for this test
-  run_all_test = 1
-  source_company_id = 'Nexedi'
-  sale_manager_id = 'guillaume'
-  first_name1 = 'Guillaume'
-  last_name1 = 'MICHON'
   
-  item_portal_type = 'Apparel Fabric Item'
-  item_module_name = 'apparel_fabric_item_module'
-  
-  item_id_list = ['vpn_1', 'vpn_2', 'vpn_3', 'vpn_4', 'vpn_5', 'vpn_6', 'vpn_7', 'vpn_8', 'vpn_9', 'vpn_10', 'vpn_11', 'vpn_12']
-  current_step = {}
-  
-  currency_list = [ 'EUR', 'USD' ]
-  
-  organisation_data_list = [ 
-        { 'id':'nexedi', 'end_date':DateTime('2004/01/01'), 'currency':'EUR' },
-        { 'id':'coramy', 'end_date':DateTime('2003/04/01'), 'currency':'EUR' }
-     ]
-     
-     
-  delivery_type = "Purchase Packing List"
-  delivery_line_data_list = [
-      { 'id':'1_1', 'parent_id':'1', 'items':['vpn_1', 'vpn_2', 'vpn_3', 'vpn_8', 'vpn_9', 'vpn_10', 'vpn_11'], 'date':'2000/01/01', 'source_section':None, 'destination_section':'nexedi' },
-      { 'id':'4_1', 'parent_id':'2', 'items':['vpn_4'], 'date':'2002/06/14', 'source_section':None, 'destination_section':'nexedi' },
-      { 'id':'4_2', 'parent_id':'3', 'items':['vpn_4'], 'date':'2003/03/15', 'source_section':'nexedi', 'destination_section':'coramy' },
-      { 'id':'4_3', 'parent_id':'4', 'items':['vpn_4'], 'date':'2003/06/15', 'source_section':'coramy', 'destination_section':None },
-      { 'id':'4_4', 'parent_id':'5', 'items':['vpn_4'], 'date':'2003/12/18', 'source_section':None, 'destination_section':None },
-      { 'id':'5_1', 'parent_id':'6', 'items':['vpn_5', 'vpn_6'], 'date':'2000/01/01', 'source_section':None, 
-                                                                                'destination_section':'nexedi'},
-      { 'id':'5_2', 'parent_id':'7', 'items':['vpn_5', 'vpn_6'], 'date':'2003/03/12', 'source_section':'nexedi', 
-                                                                                'destination_section':'coramy' },
-      { 'id':'5_3', 'parent_id':'8', 'items':['vpn_5', 'vpn_6'], 'date':'2005/01/01', 'source_section':'coramy', 
-                                                                                'destination_section':'nexedi'},
-      { 'id':'7_1', 'parent_id':'9', 'items':['vpn_7'], 'date':'2000/01/01', 'source_section':None, 'destination_section':'nexedi' },
-      { 'id':'7_2', 'parent_id':'9', 'items':['vpn_7'], 'date':'2003/03/12', 'source_section':'nexedi', 'destination_section':'coramy' },
-      { 'id':'7_3', 'parent_id':'9', 'items':['vpn_7'], 'date':'2006/06/23', 'source_section':'coramy', 'destination_section':'nexedi' },
-      { 'id':'7_4', 'parent_id':'9', 'items':['vpn_7'], 'date':'2007/02/01', 'source_section':'nexedi', 'destination_section':'coramy' },
-        
-     ]
-     
-  
-  account_data_list = [
-        { 'id':'amortisation_1'  , 'pcg_id':'2/28/281/2811' },
-        { 'id':'amortisation_2'  , 'pcg_id':'2/28/281/2812' },
-        { 'id':'amortisation_3'  , 'pcg_id':'2/28/281/2813' },
-        { 'id':'immobilisation_1', 'pcg_id':'2/21/211'      },
-        { 'id':'immobilisation_2', 'pcg_id':'2/21/212'      },
-        { 'id':'immobilisation_3', 'pcg_id':'2/21/213'      },
-        { 'id':'vat_1'           , 'pcg_id':'4/44/444'      },
-        { 'id':'vat_2'           , 'pcg_id':'4/44/445'      },
-        { 'id':'vat_3'           , 'pcg_id':'4/44/447'      },
-        { 'id':'in_out_1'        , 'pcg_id':'3/32'          },
-        { 'id':'in_out_2'        , 'pcg_id':'3/33'          },
-        { 'id':'in_out_3'        , 'pcg_id':'3/34'          },
-        { 'id':'in_out_4'        , 'pcg_id':'3/35'          },
-        { 'id':'in_out_5'        , 'pcg_id':'3/37'          },
-        { 'id':'in_out_6'        , 'pcg_id':'3/39'          },
-        { 'id':'depreciation_1'  , 'pcg_id':'6/68/681'      },
-        { 'id':'depreciation_2'  , 'pcg_id':'6/68/681/6811' },
-        { 'id':'depreciation_3'  , 'pcg_id':'6/68/681/6815' } ]
-  
-  property_list = ( ('value'         , 'AmortisationStartPrice'),
-                    ('method'        , 'AmortisationMethod'),
-                    ('date'          , 'StopDate'),
-                    ('immobilisation', 'Immobilisation'),
-                    ('duration'      , 'AmortisationDuration'),
-                    ('durability'    , 'Durability'),
-                    ('disposal_price', 'DisposalPrice'),
-                    ('vat'           , 'Vat'),
-                    ('coef'          , 'DegressiveCoefficient'),
-                    ('amo_acc'       , 'AmortisationAccount'),
-                    ('immo_acc'      , 'ImmobilisationAccount'),
-                    ('vat_acc'       , 'VatAccount'),
-                    ('in_acc'        , 'InputAccount'),
-                    ('out_acc'       , 'OutputAccount'),
-                    ('depr_acc'      , 'DepreciationAccount')  )
-  
-  
-  immobilisation_movement_change_list = {
-          'linear':     [ {}, {'id':'linear_4', 'duration':24}, {'id':'linear_4', 'disposal_price':10000.} ],
-          'complex':    [ {'id':'complex_7', 'date':DateTime("2006/06/24")  + centis} ],
-          'actual_use': [ {'id':'actual_use_2', 'date':DateTime('2006/07/01') } ],
-          'degressive': [ {'id':'degressive_1', 'duration':96}, {'id':'degressive_1', 'duration':60}, {'id':'degressive_1', 'duration':180} ],
-          'solver_3':   [ {'id':'solver_3_1', 'duration':36},
-                          {'id':'solver_3_1', 'depr_acc':'account/depreciation_2', 'duration':60},
-                          {'id':'solver_3_1', 'date':DateTime('2004/01/01')},
-                          {'id':'solver_3_1', 'depr_acc':'account/depreciation_1', 'date':DateTime('2003/01/01')} ],
-          }
-        
-        
-  immobilisation_movement_data_list = {
-          # coef is optional in case of linear amortisation
-          'linear_1' :        { 'value':300000., 'method':'eu/linear', 'date':DateTime("2002/02/01"), 
-                                'amo_acc':'amortisation_1', 'vat' : 30000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_1',  'in_acc':'in_out_1', 'out_acc' : 'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 36, 'durability' : 36,
-                                'disposal_price' : 0
-                              },
-          'linear_2' :        { 'date':DateTime("2003/09/14"), 'immobilisation':0, 'item':'vpn_1', 'durability':0 },
-          'linear_3' :        { 'value':100000., 'method':'eu/linear', 'date':DateTime("2004/02/01"), 
-                                'amo_acc':'amortisation_1', 'vat'  : 10000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1',
-                                'item':'vpn_1',  'in_acc':'in_out_1', 'out_acc' : 'in_out_2',
-                                'depr_acc':'depreciation_1', 'duration' : 12, 'durability' : 12,
-                                'disposal_price' : 0
-                              },
-          'linear_4' :        { 'value': 50000., 'method':'eu/linear', 'date':DateTime("2005/01/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :   2000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1',
-                                'item':'vpn_1',  'in_acc':'in_out_1', 'out_acc' : 'in_out_2',
-                                'depr_acc':'depreciation_1', 'duration' : 5, 'durability' : 5,
-                                'disposal_price' : 0
-                              },
-          'degressive_1' :    { 'value':300000., 'method':'fr/degressive', 'date':DateTime("2002/02/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :  30000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_2', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 120, 'durability' : 120,
-                                'disposal_price' : 0
-                              },
-          'degressive_2' :    { 'date':DateTime("2003/09/14"), 'immobilisation': 0,'item':'vpn_2', 'durability':0 },
-          'degressive_3' :    { 'value':169824.22, 'method':'fr/degressive', 'date':DateTime("2004/02/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :  16982.422, 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_2', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 96, 'durability' : 96,
-                                'disposal_price' : 0
-                              },
-          'degressive_4' :    { 'value':100000., 'method':'fr/degressive', 'date':DateTime("2005/01/01"),
-                                'amo_acc':'amortisation_1', 'vat' :   5000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_2', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 85, 'durability' : 85,
-                                'disposal_price' : 0
-                              },
-          'same_day_1' :      { 'date':DateTime("2003/01/01"), 'immobilisation':0, 'item':'vpn_3', 'durability':0 },
-          'same_day_2' :      { 'value':100000., 'method':'eu/linear', 'date':DateTime("2003/01/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :   5000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_3', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 36, 'durability' : 36,
-                                'disposal_price' : 0
-                              },
-          'same_day_3' :      { 'date':DateTime("2003/01/01"), 'immobilisation':0, 'item':'vpn_3', 'durability':0 },
-          'same_day_4' :      { 'value':200000., 'method':'eu/linear', 'date':DateTime("2003/01/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :   5000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_3', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 36 , 'durability' : 36,
-                                'disposal_price' : 0
-                              },
-          'owner_change_1_1' :{ 'value': 30000., 'method':'eu/linear', 'date':DateTime("2001/01/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :   3000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_4', 'in_acc':'in_out_1',  'out_acc' :'in_out_2', 
-                                'depr_acc' : 'depreciation_1', 'duration' : 36, 'durability' : 36,
-                                'disposal_price' : 0
-                              },
-          'owner_change_1_2' :{ 'date':DateTime("2001/03/01"), 'immobilisation':0, 'item':'vpn_4', 'durability':0 },
-          'owner_change_1_3' :{ 'value': 20000., 'method':'eu/linear', 'date':DateTime("2002/07/06"), 
-                                'amo_acc':'amortisation_1', 'vat' :   2000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_4', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 24, 'durability' : 24,
-                                'disposal_price' : 0
-                              },
-          'owner_change_2_1' :{ 'value':100000., 'method':'eu/linear', 'date':DateTime("2001/01/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :  10000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_5', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 120, 'durability' : 120,
-                                'disposal_price' : 0
-                              },
-          'owner_change_2_2' :{ 'date':DateTime("2002/12/01"), 'immobilisation':0, 'item':'vpn_5', 'durability':0 },
-          'owner_change_2_3' :{ 'value': 50000., 'method':'eu/linear', 'date':DateTime("2003/03/12") - 1/25.,
-                                'amo_acc':'amortisation_1', 'vat' :   5000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_5', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 60, 'durability' : 60,
-                                'disposal_price' : 0
-                              },
-          'owner_change_2_4' :{ 'date':DateTime("2004/08/15"), 'immobilisation':0, 'item':'vpn_5', 'durability':0 },
-          'owner_change_2_5' :{ 'value': 20000., 'method':'eu/linear', 'date':DateTime("2005/01/01") - 1/25.,
-                                'amo_acc':'amortisation_1', 'vat' :   2000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_5', 'in_acc':'in_out_1',  'out_acc' :'in_out_2', 
-                                'depr_acc' : 'depreciation_1', 'duration' : 2, 'durability' : 2,
-                                'disposal_price' : 0
-                              },
-          'owner_change_3_1' :{ 'value':100000., 'method':'eu/linear', 'date':DateTime("2001/01/01"),
-                                'amo_acc':'amortisation_1', 'vat' :  10000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_6', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 120, 'durability' : 120,
-                                'disposal_price' : 0
-                              },
-          'owner_change_3_2' :{ 'date':DateTime("2002/12/01"), 'immobilisation':0, 'item':'vpn_6', 'durability':0 },
-          'owner_change_3_3' :{ 'value': 50000., 'method':'eu/linear', 'date':DateTime("2003/03/12") + 1/25.,
-                                'amo_acc':'amortisation_1', 'vat' :   5000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_6', 'in_acc':'in_out_1',  'out_acc' :'in_out_2', 
-                                'depr_acc' : 'depreciation_1', 'duration' : 60, 'durability' : 60,
-                                'disposal_price' : 0
-                              },
-          'owner_change_3_4' :{ 'date':DateTime("2004/08/15"), 'immobilisation':0, 'item':'vpn_6', 'durability':0 },
-          'owner_change_3_5' :{ 'value': 20000., 'method':'eu/linear', 'date':DateTime("2005/01/01") + 1/25.,
-                                'amo_acc':'amortisation_1', 'vat' :   2000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_6', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 2, 'durability' : 2,
-                                'disposal_price' : 0
-                              },
-          'complex_1' :       { 'value':300000., 'method':'eu/linear', 'date':DateTime("2001/06/12"),
-                                'amo_acc':'amortisation_1', 'vat' :  30000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_7', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 120, 'durability' : 120,
-                                'disposal_price' : 0
-                              },
-          'complex_2' :       { 'date':DateTime("2001/12/15"), 'immobilisation':0, 'item':'vpn_7', 'durability':0 },
-          'complex_3' :       { 'value':284712.33, 'method':'eu/linear', 'date':DateTime("2002/06/01"),
-                                'amo_acc':'amortisation_1', 'vat' :  28471.23, 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_7', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 114, 'durability' : 114,
-                                'disposal_price' : 0
-                              },
-          'complex_4' :       { 'value':200000., 'method':'fr/degressive', 'date':DateTime("2003/03/12")- 1/25.,
-                                'amo_acc':'amortisation_2', 'vat' :  15000., 'immobilisation': 1, 
-                                'immo_acc':'immobilisation_2', 'vat_acc':'vat_2', 'coef':2.5,
-                                'item':'vpn_7', 'in_acc':'in_out_3',  'out_acc' :'in_out_4',
-                                'depr_acc' : 'depreciation_2', 'duration' : 120, 'durability' : 120,
-                                'disposal_price' : 0
-                              },
-          'complex_5' :       { 'date':DateTime("2003/12/30"), 'immobilisation':0, 'item':'vpn_7', 'durability':0 },
-          'complex_6' :       { 'value':150000., 'method':'eu/linear', 'date':DateTime("2006/06/24"), 
-                                'amo_acc':'amortisation_3', 'vat' :  15000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_3', 'vat_acc':'vat_3', 'coef':2.5,
-                                'item':'vpn_7', 'in_acc':'in_out_5',  'out_acc' :'in_out_6',
-                                'depr_acc' : 'depreciation_3', 'duration' : 15, 'durability' : 15,
-                                'disposal_price' : 0
-                              },
-          'complex_7' :       { 'date':DateTime("2007/02/01") + 1/25., 'immobilisation':0, 'item':'vpn_7', 'durability':0 },
-          'complex_8' :       { 'value':10000., 'method':'fr/linear', 'date':DateTime('2010/04/01'),
-                                'amo_acc':'amortisation_1', 'vat': 1000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1',
-                                'item':'vpn_7', 'in_acc':'in_out_1', 'out_acc' : 'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 24, 'durability' : 100,
-                                'disposal_price' : 0
-                              },
-          'actual_use_1' :    { 'value':100000., 'method':'fr/actual_use', 'date':DateTime("2004/01/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :  10000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_8', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 36, 'durability' : 100,
-                                'disposal_price' : 2000
-                              },
-          'actual_use_2' :    { 'value':10000., 'method':'fr/actual_use', 'date':DateTime("2005/07/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :  1000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_8', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 12, 'durability' : 5,
-                                'disposal_price' : 2000
-                              },
-          'solver_1_1':       { 'value':10000., 'method':'fr/linear', 'date':DateTime("2001/01/01"), 
-                                'amo_acc':'amortisation_1', 'vat' :  1000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_9', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 60, 'durability' : 5,
-                                'disposal_price' : 0
-                              },
-          'solver_2_1':       { 'value':50000., 'method':'fr/linear', 'date':DateTime("2002/01/01"),
-                                'amo_acc':'amortisation_1', 'vat' : 5000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_10', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 60, 'durability' : 5,
-                                'disposal_price' : 0
-                              },
-          'solver_3_1':       { 'value':30000., 'method':'fr/linear', 'date':DateTime("2003/01/01"),
-                                'amo_acc':'amortisation_1', 'vat' : 3000., 'immobilisation': 1,
-                                'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
-                                'item':'vpn_11', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',
-                                'depr_acc' : 'depreciation_1', 'duration' : 60, 'durability' : 5,
-                                'disposal_price' : 0
-                              },
-                                
-            }
-
-            
-  immobilisation_movement_list = { 'linear'     :['linear_1', 'linear_2', 'linear_3', 'linear_4'],
-                                   'degressive' :['degressive_1', 'degressive_2', 'degressive_3', 'degressive_4'],
-                                   'same_day'   :['same_day_1', 'same_day_2', 'same_day_3', 'same_day_4'],
-                                   'owner_change_1':['owner_change_1_1', 'owner_change_1_2', 'owner_change_1_3'],
-                                   'owner_change_2':['owner_change_2_1', 'owner_change_2_2', 'owner_change_2_3', 'owner_change_2_4',
-                                                     'owner_change_2_5'],
-                                   'owner_change_3':['owner_change_3_1', 'owner_change_3_2', 'owner_change_3_3', 'owner_change_3_4',
-                                                     'owner_change_3_5'],
-                                   'complex'    :['complex_1', 'complex_2', 'complex_3', 'complex_4', 'complex_5', 'complex_6',   
-                                                  'complex_7', 'complex_8'],
-                                   'actual_use' :['actual_use_1', 'actual_use_2'],
-                                   'solver_1' : ['solver_1_1'],
-                                   'solver_2' : ['solver_2_1'],
-                                   'solver_3' : ['solver_3_1'] } 
-
-
-  validation_switch_list = { 'linear' :     [0,1,0],
-                             'degressive' : [0,1,0,3,2],
-                             'same_day'   : [0,1,2,3] }
-  
-  
-  simulation_value_list = { 
-            'linear': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   91506.85,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 8493.15,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   8493.15,            'destination_section':None, 'destination':None, },
-                              ], # linear_1
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  70136.99,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    70136.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 161643.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 152191.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    13835.62,          'destination_section':None, 'destination':None, },
-                              ], # linear_1, linear_2
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  70136.99,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    70136.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 161643.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 152191.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    13835.62,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   8469.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     8469.95,          'destination_section':None, 'destination':None, },
-                              ], # linear_1, linear_2, linear_3
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  70136.99,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    70136.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 161643.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 152191.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    13835.62,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   9316.94,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      846.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    52000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                              ], # linear_1, linear_2, linear_3, linear_4
-                              
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   9316.94,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      846.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    52000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                              ], # linear_2, linear_3, linear_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   9316.94,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      846.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    52000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                              ], # linear_3, linear_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   8469.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     8469.95,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 199976.79,          'destination_section':None, 'destination':None, }, 
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 110025.53,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    10002.32,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   9316.94,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      846.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    52000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                              ], # linear_1, linear_3, linear_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   8469.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     8469.95,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 199976.79,          'destination_section':None, 'destination':None, }, 
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 110025.53,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    10002.32,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   9316.94,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      846.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    52000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                              ], # linear_1, linear_3, linear_4 => reexpand
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   8469.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     8469.95,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 199976.79,          'destination_section':None, 'destination':None, }, 
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 110025.53,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    10002.32,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   9316.94,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      846.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    52000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  25000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    25000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  25000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    25000.,            'destination_section':None, 'destination':None, },
-                              ], # linear_1, linear_3, linear_4 => reexpand, linear_4 modified
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91506.85,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   100000.  ,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   8469.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     8469.95,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 199976.79,          'destination_section':None, 'destination':None, }, 
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 110025.53,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    10002.32,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    91530.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  91530.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   9316.94,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      846.99,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    52000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    20000.,            'destination_section':None, 'destination':None, },
-                                  # immobilisation end
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  40000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  10400.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      400.,            'destination_section':None, 'destination':None, },
-                              ], # linear_1, linear_3, linear_4 => reexpand, linear_4 modified for the second time
-                              
-                      ],
-                        
-            'degressive': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  57812.50,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    57812.50,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                              ], # degressive_1
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 112109.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 206679.69,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    18789.06,          'destination_section':None, 'destination':None, },
-                              ], # degressive_1, degressive_2
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 112109.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 206679.69,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    18789.06,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   186806.64,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16982.42,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  37867.71,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    37867.71,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  26034.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    26034.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  17898.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17898.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  12305.16,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    12305.16,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9023.78,          'destination_section':None, 'destination':None, },
-                              ], # degressive_1, degressive_2, degressive_3
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': - 112109.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 206679.69,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/09/14'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    18789.06,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   186806.64,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16982.42,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    48647.56,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    12117.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   105000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                              ], # degressive_1, degressive_2, degressive_3, degressive_4
-                              
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   186806.64,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16982.42,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    48647.56,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    12117.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   105000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                              ], # degressive_2, degressive_3, degressive_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   186806.64,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16982.42,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    48647.56,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    12117.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   105000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                              ], # degressive_3, degressive_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  57812.50,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    57812.50,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   3613.28,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     3613.28,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   186806.64,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16982.42,          'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   130175.78,            'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    48647.56,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   169824.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    12117.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   105000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    31250.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    21484.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    14770.51,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10154.72,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6981.37,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   5119.67,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5119.67,            'destination_section':None, 'destination':None, },
-                              ], # degressive_1, degressive_3, degressive_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  57812.50,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    57812.50,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   3613.28,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     3613.28,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   186806.64,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16982.42,          'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   130175.78,            'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    48647.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  37867.71,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    37867.71,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  26034.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    26034.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  17898.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17898.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  12305.16,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    12305.16,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   9023.78,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9023.78,          'destination_section':None, 'destination':None, },
-                                  
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                              ], # degressive_1, degressive_3, reexpand
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  57812.50,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    57812.50,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                  
-                                # immobilisation end and start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-
-                              ], # degressive_1, reexpand
-
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  57812.50,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    57812.50,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None,},
-                                  
-                                # immobilisation end and start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                              
-                                # Correction
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 17187.5,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   17187.5,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  9082.03,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    9082.03,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2630.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2630.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':      901.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -    901.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     2652.19,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   2652.19,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     2351.44,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   2351.44,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':    13719.18,          'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  13719.18,          'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':    13719.18,          'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  13719.18,          'destination_section':None, 'destination':None,},
-                              ], # degressive_1, reexpand after validation
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  57812.50,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    57812.50,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                  
-                                # immobilisation end and start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                              
-                                # Correction
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 17187.5,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   17187.5,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  9082.03,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    9082.03,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2630.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2630.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':      901.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -    901.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     2652.19,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   2652.19,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     2351.44,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   2351.44,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':    13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':    13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-                                  
-                                # Correction 2
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   51562.5,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     51562.5,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   14355.47,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     14355.47,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':      5364.99,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -    5364.99,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     11305.62,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   11305.62,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':      1424.96,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -    1424.96,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     15940.80,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   15940.80,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     15940.80,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   15940.80,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     15940.80,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   15940.80,         'destination_section':None, 'destination':None, },
-                              ], # degressive_1, reexpand after second validation
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    68750.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  57812.50,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    57812.50,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    43359.38,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32519.53,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    24389.65,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18292.24,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    13719.18,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                  
-                                # immobilisation end and start
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                              
-                                # Correction
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': - 17187.5,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':   17187.5,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  9082.03,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    9082.03,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2630.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2630.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':      901.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -    901.41,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     2652.19,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   2652.19,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     2351.44,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   2351.44,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2221.62,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':    13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':    13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity':   13719.18 },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  13719.18,          'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': - 13719.18 },
-
-                                # Correction 2
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     40104.17,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   40104.17,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     24533.42,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   24533.42,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':     10689.06,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   10689.06,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':      2200.68,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -    2200.68,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    2777.08,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      2777.08,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    4487.98,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      4487.98,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    1083.18,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      1083.18,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':      1754.15,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -    1754.15,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   11822.21,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     11822.21,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      9851.84,         'destination_section':None, 'destination':None, },
-                                  
-                                # New annuities
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2014/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2014/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2015/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2015/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2016/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2016/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2017/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -    9851.84,         'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2017/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':      9851.84,         'destination_section':None, 'destination':None, },
-                                
-                              ], # degressive_1, reexpand after change after second validation
-                        
-                          ],
-                          
-            'same_day': [ 
-                              [ ],
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   105000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 33333.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    33333.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 33333.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    33333.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 33333.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    33333.33,          'destination_section':None, 'destination':None, },
-                               ], # same_day_1, same_day_2
-                               
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   105000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                              ], # same_day_1, same_day_2, same_day_3
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   105000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   205000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 66666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    66666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 66666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    66666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 66666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    66666.67,          'destination_section':None, 'destination':None, },
-                              ], # same_day_1, same_day_2, same_day_3, same_day_4
-                              [],
-                              [],
-                              [],
-                              [] # These four empty lists are here to pass the Simulation verification
-                        ],
-                       
-      'owner_change_1': [ 
-                              [ ],
-                              [ ],
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/07/06'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/07/06'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    22000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/07/06'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  4904.11,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     4904.11,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2000.,            'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2003/03/15'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  20000.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2003/03/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':    14405.48,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2003/03/15'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   1309.59,          'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2003/03/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     6904.11,          'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   457.15,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      457.15,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  9815.2,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     9815.2,           'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  2823.55,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     2823.55,          'destination_section':None, 'destination':None, },
-                                
-                              ]                                
-                              
-                         ],
-       
-       'owner_change_2': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  1917.81,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     1917.81,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':    85890.41,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   7808.22,          'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    21917.81,          'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   545.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      545.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  9961.55,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     9961.55,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  7505.28,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     7505.28,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  78082.19,          'destination_section':'coramy', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':    66076.47,          'destination_section':'coramy', 'destination':'in_out_2', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   6006.95,          'destination_section':'coramy', 'destination':'vat_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18012.67,          'destination_section':'coramy', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                              ], # owner_change_2_1
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.932,         'destination_section':None, 'destination':None, },
-                              ], # owner_change_2_1, owner_change_2_2
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.93,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    55000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  7534.25,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     7534.25,            'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':'coramy', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':    35109.59,          'destination_section':'coramy', 'destination':'in_out_2', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   3191.78,          'destination_section':'coramy', 'destination':'vat_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18082.19,          'destination_section':'coramy', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  1658.07,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     1658.07,          'destination_section':None, 'destination':None, },
-                                
-                              ], # owner_change_2_1, owner_change_2_2, owner_change_2_3
-                                
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.93,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    55000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  3726.03,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     3726.03,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value':     3572.60,          'destination_section':None, 'destination':None, },
-                                
-                              ], # owner_change_2_1, owner_change_2_2, owner_change_2_3, owner_change_2_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.93,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    55000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  3726.03,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     3726.03,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value':     3572.60,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    22000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    20000.,            'destination_section':None, 'destination':None, },
-                                
-                              ], # owner_change_2_1, owner_change_2_2, owner_change_2_3, owner_change_2_4, owner_change_2_5
-                         ],
-                         
-       'owner_change_3': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  1917.81,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     1917.81,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':    85890.41,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   7808.22,          'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    21917.81,          'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   545.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      545.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  9961.55,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     9961.55,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  7505.28,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     7505.28,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  78082.19,          'destination_section':'coramy', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':    66076.47,          'destination_section':'coramy', 'destination':'in_out_2', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   6006.95,          'destination_section':'coramy', 'destination':'vat_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18012.67,          'destination_section':'coramy', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10011.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10011.59,          'destination_section':None, 'destination':None, },
-                              ], # owner_change_3_1
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.932,         'destination_section':None, 'destination':None, },
-                              ], # owner_change_3_1, owner_change_3_2
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.93,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    55000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  7534.25,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     7534.25,            'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':'coramy', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':    35109.59,          'destination_section':'coramy', 'destination':'in_out_2', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   3191.78,          'destination_section':'coramy', 'destination':'vat_1', },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18082.19,          'destination_section':'coramy', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10086.58,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  1658.07,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     1658.07,          'destination_section':None, 'destination':None, },
-                              ], # owner_change_3_1, owner_change_3_2, owner_change_3_3
-                                
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.93,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    55000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  3726.03,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     3726.03,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value':     3572.60,          'destination_section':None, 'destination':None, },
-                                
-                              ], # owner_change_3_1, owner_change_3_2, owner_change_3_3, owner_change_3_4
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  9150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     9150.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  19150.68,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -  88934.25,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     8084.93,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    55000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -   5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -   547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':      547.95,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  3726.03,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     3726.03,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value':    50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value':     3572.60,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    22000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 20000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    20000.,            'destination_section':None, 'destination':None, },
-                                
-                              ], # owner_change_3_1, owner_change_3_2, owner_change_3_3, owner_change_3_4, owner_change_3_5
-                         ],
-                         
-                         
-       'complex': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 16684.93,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    16684.93,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5753.42,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5753.42,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   272317.81,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -  24756.16,         'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    52438.36,          'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  1643.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     1643.84,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  6821.92,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     6821.92,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 247561.64,          'destination_section':'coramy', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':   164005.48,          'destination_section':'coramy', 'destination':'in_out_2', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  14909.59,         'destination_section':'coramy', 'destination':'vat_1', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    98465.75,          'destination_section':'coramy', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15685.70,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15685.70,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  2532.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2532.59,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': - 149095.89,          'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   143965.36,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -  13087.76,          'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    18218.29,          'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  4796.14,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     4796.14,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29671.01,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  7397.43,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     7397.43,          'destination_section':None, 'destination':None, },
-                                
-                              ], # complex_1
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                              ], # complex_1, complex_2
-                              
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  28471.23,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5746.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5746.79,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   287536.46,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -  26139.68,         'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    23315.54,          'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  1636.29,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     1636.29,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29862.23,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29862.23,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29862.23,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29862.23,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29862.23,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29862.23,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  6790.59,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     6790.59,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 261396.79,          'destination_section':'coramy', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':   179721.54,          'destination_section':'coramy', 'destination':'in_out_2', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16338.32,         'destination_section':'coramy', 'destination':'vat_1', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    98013.57,          'destination_section':'coramy', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15622.30,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15622.30,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  2522.35,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2522.35,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': - 163383.22,          'destination_section':'nexedi', 'destination':'immobilisation_1', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   159762.42,          'destination_section':'nexedi', 'destination':'in_out_2', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -  14523.86,          'destination_section':'nexedi', 'destination':'vat_1', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    18144.65,          'destination_section':'nexedi', 'destination':'amortisation_1', },
-                                # annuities
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  4776.52,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     4776.52,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29549.65,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 22263.44,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    22263.44,          'destination_section':None, 'destination':None, },
-                                
-                               ], # complex_1, complex_2, complex_3
-                               
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  28471.23,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5746.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5746.79,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23315.54,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287536.46,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    26139.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': - 200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_3',
-                                  'value':   215000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 48958.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    48958.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 36718.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    36718.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 27539.06,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    27539.06,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  5163.57,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     5163.57,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'immobilisation_2',
-                                  'value': - 200000.,            'destination_section':'coramy', 'destination':'immobilisation_2', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'in_out_4',
-                                  'value':    83262.63,          'destination_section':'coramy', 'destination':'in_out_4', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'vat_2',
-                                  'value': -   5809.02,          'destination_section':'coramy', 'destination':'vat_2', },
-                                { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'amortisation_2',
-                                  'value':   122546.39,          'destination_section':'coramy', 'destination':'amortisation_2', },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value':  - 16136.17,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_2',
-                                  'value':    16136.17,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value':  -  1824.92,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_2',
-                                  'value':     1824.92,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': -  77453.61,          'destination_section':'nexedi', 'destination':'immobilisation_2', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value':    63954.46,          'destination_section':'nexedi', 'destination':'in_out_4', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value': -   4461.94,          'destination_section':'nexedi', 'destination':'vat_2', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    17961.09,          'destination_section':'nexedi', 'destination':'amortisation_2', },
-                                # annuities
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  3541.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     3541.22,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 19982.61,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    19982.61,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 12845.96,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    12845.96,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  8258.12,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     8258.12,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  5308.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     5308.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4777.91,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4777.91,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4777.91,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2013/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4777.91,          'destination_section':None, 'destination':None, },
-                                
-                               ], # complex_1, complex_2, complex_3, complex_4
-                               
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  28471.23,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5746.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5746.79,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23315.54,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287536.46,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    26139.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': - 200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_3',
-                                  'value':   215000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 36718.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    36718.75,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value':   200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value': -  40885.42,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value':    11933.59,          'destination_section':None, 'destination':None, },
-                                
-                               ], # complex_1, complex_2, complex_3, complex_4, complex_5
-                               
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  28471.23,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5746.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5746.79,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23315.54,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287536.46,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    26139.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': - 200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_3',
-                                  'value':   215000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 36718.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    36718.75,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value':   200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value': -  40885.42,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value':    11933.59,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'immobilisation_3',
-                                  'value': - 150000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'in_out_5',
-                                  'value':   165000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'vat_3',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':  - 62691.47,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    62691.47,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':  - 10175.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    10175.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end and start
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'immobilisation_3',
-                                  'value': - 150000.,            'destination_section':'nexedi', 'destination':'immobilisation_3', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'in_out_6',
-                                  'value':    84846.83,          'destination_section':'nexedi', 'destination':'in_out_6', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'vat_3',
-                                  'value': -   7713.35,          'destination_section':'nexedi', 'destination':'vat_3', },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'amortisation_3',
-                                  'value':    72866.52,          'destination_section':'nexedi', 'destination':'amortisation_3', },
-                                # annuities
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_3',
-                                  'value':  - 18805.27,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_3',
-                                  'value':    18805.27,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'depreciation_3',
-                                  'value':  - 58328.21,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'amortisation_3',
-                                  'value':    58328.21,          'destination_section':None, 'destination':None, },
-                                
-                               ], # complex_1, complex_2, complex_3, complex_4, complex_5, complex_6
-                               
-                               
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  28471.23,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5746.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5746.79,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23315.54,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287536.46,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    26139.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': - 200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_3',
-                                  'value':   215000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 36718.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    36718.75,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value':   200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value': -  40885.42,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value':    11933.59,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'immobilisation_3',
-                                  'value': - 150000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'in_out_5',
-                                  'value':   165000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'vat_3',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':  - 62691.47,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    62691.47,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':  - 10175.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    10175.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'immobilisation_3',
-                                  'value':   150000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'in_out_6',
-                                  'value': -  84846.83,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'vat_3',
-                                  'value':     7713.35,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value': -  72866.52,          'destination_section':None, 'destination':None, },
-                                
-                               ], # complex_1, complex_2, complex_3, complex_4, complex_5, complex_6, complex_7
-                               
-                               [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  28471.23,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5746.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5746.79,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23315.54,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287536.46,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    26139.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': - 200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_3',
-                                  'value':   215000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 36718.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    36718.75,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value':   200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value': -  40885.42,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value':    11933.59,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'immobilisation_3',
-                                  'value': - 150000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'in_out_5',
-                                  'value':   165000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'vat_3',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':  - 62691.47,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    62691.47,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':  - 10175.05,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    10175.05,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'immobilisation_3',
-                                  'value':   150000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'in_out_6',
-                                  'value': -  84846.83,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'vat_3',
-                                  'value':     7713.35,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value': -  72866.52,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    11000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -  1000.,             'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  5000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     5000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  5000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     5000.,            'destination_section':None, 'destination':None, },
-                               ], # complex_1, complex_2, complex_3, complex_4, complex_5, complex_6, complex_7, complex_8
-
-                               [ # immobilisation start
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   330000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    15287.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   300000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  15287.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':     28471.23,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   313183.56,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  28471.23,          'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    17568.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  5746.79,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     5746.79,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   284712.33,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23315.54,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287536.46,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':    26139.68,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': - 200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_3',
-                                  'value':   215000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  -  4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':     4166.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'depreciation_2',
-                                  'value':  - 36718.75,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value':    36718.75,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value':   200000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
-                                  'value': -  40885.42,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
-                                  'value':    11933.59,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'immobilisation_3',
-                                  'value': - 150000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'in_out_5',
-                                  'value':   165000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'vat_3',
-                                  'value': -  15000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':    0.,                'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    0.,                'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_3',
-                                  'value':    0.,                'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':    0.,                'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'source':'amortisation_3',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'immobilisation_3',
-                                  'value':   150000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'in_out_6',
-                                  'value': - 165000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'source':'vat_3',
-                                  'value':    15000.,          'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'immobilisation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'in_out_1',
-                                  'value':    11000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -  1000.,             'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  5000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     5000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  5000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     5000.,            'destination_section':None, 'destination':None, },
-                               ], # complex_1, complex_2, complex_3, complex_4, complex_5, complex_6, complex_7, complex_8 => reexpand, complex_7 modified
-                 ],
-                 
-            'actual_use' : [
-                               [
-                                # immobilisation start
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 32666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 32666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 32666.67,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    32666.67,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   2200.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      200.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  98000.,            'destination_section':None, 'destination':None },
-                               ], # actual_use_1
-                               
-                               [
-                                # immobilisation start
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 62237.18,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    62237.18,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 30862.82,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    30862.82,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2005/07/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/07/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   7590.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/07/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      690.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/07/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  93100.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2005/07/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/07/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    11000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/07/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   1000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   4032.88,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     4032.88,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   3967.12,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     3967.12,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   2200.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      200.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   8000.,            'destination_section':None, 'destination':None },
-                                ], # actual_use_1, actual_use_2
-                               [
-                                # immobilisation start
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':   110000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 37301.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    37301.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 37301.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    37301.32,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 18497.37,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18497.37,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2006/07/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':   100000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/07/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   7590.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/07/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      690.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/07/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  93100.,            'destination_section':None, 'destination':None, },
-                                # immobilisation start
-                                { 'date':DateTime('2006/07/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/07/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    11000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/07/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -   1000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   4032.88,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     4032.88,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   3967.12,          'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     3967.12,          'destination_section':None, 'destination':None, },
-                                # immobilisation end
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': -   2200.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':      200.,            'destination_section':None, 'destination':None },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -   8000.,            'destination_section':None, 'destination':None },
-                                ], # actual_use_1, actual_use_2 => actual_use_2 modified
-
-                 ],
-       'solver_1': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    11000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  1000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   2000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     2000.,            'destination_section':None, 'destination':None, },
-                              ],
-                        ],
-       'solver_2': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  50000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    55000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  5000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                              ],
-                        ],
-       'solver_3': [ 
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                              ], # Duration 60
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -  10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    10000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -      0.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':        0.,            'destination_section':None, 'destination':None, },
-                              ], # Duration 36
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                              ], # Depreciation account changed
-                              [ # immobilisation start
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                              ], # Depreciation account changed, date changed
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                              ], # Original conditions
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': -6000. },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                              ], # After profit_and_loss (quantity modified)
-#                               [ # immobilisation start
-#                                 { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-#                                   'value': -  30000.,            'destination_section':None, 'destination':None, },
-#                                 { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-#                                   'value':    33000.,            'destination_section':None, 'destination':None, },
-#                                 { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-#                                   'value':  -  3000.,            'destination_section':None, 'destination':None, },
-#                                 # annuities
-#                                 { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-#                                   'value': -   6000.,            'destination_section':None, 'destination':None,},
-#                                 { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-#                                   'value':     6000.,            'destination_section':None, 'destination':None,},
-#                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-#                                   'value': -   6000.,            'destination_section':None, 'destination':None, },
-#                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-#                                   'value':     6000.,            'destination_section':None, 'destination':None,
-#                                   'profit_quantity': -6000. },
-#                                 { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-#                                   'value': -   6000.,            'destination_section':None, 'destination':None, },
-#                                 { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-#                                   'value':     6000.,            'destination_section':None, 'destination':None,
-#                                   'profit_quantity': 6000. },
-#                                 { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-#                                   'value': -   6000.,            'destination_section':None, 'destination':None, },
-#                                 { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-#                                   'value':     6000.,            'destination_section':None, 'destination':None, },
-#                                 { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-#                                   'value': -   6000.,            'destination_section':None, 'destination':None, },
-#                                 { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-#                                   'value':     6000.,            'destination_section':None, 'destination':None, },
-#                               ], # After profit_and_loss (source modified)
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': -6000. },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                                  #'profit_quantity': 6000. },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': 6000. },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                              ], # After profit_and_loss (a transaction set to 0)
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': -6000. },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': 6000. },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': 2000. },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None, },
-                              ], # After profit_and_loss (the previous transaction reset to 8000)
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': -6000. },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': 6000. },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': 2000. },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': 6000. },
-                              ], # After profit_and_loss (another transaction set to 0)
-                              [ # immobilisation start
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': -  30000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'in_out_1',
-                                  'value':    33000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value':  -  3000.,            'destination_section':None, 'destination':None, },
-                                # annuities
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': -6000. },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,},
-                                  #'profit_quantity': 6000. },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': 2000. },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value': -   6000.,            'destination_section':None, 'destination':None, },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     6000.,            'destination_section':None, 'destination':None,
-                                  'profit_quantity': 6000. },
-                                { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     0.,            'destination_section':None, 'destination':None, }
-                              ], # After profit_and_loss (artificial simulation movement set to 0)
-                        ]                        
-       }
-
-
-  aggregated = [ [
-{ 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -200000.00,   'destination':None },
-                              { 'source':'in_out_1',         'value': 220000.00,   'destination':None },
-                              { 'source':'vat_1',         'value': -20000.00,   'destination':None },
-] },
-{ 'date':DateTime('2001/06/12'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -300000.00,   'destination':None },
-                              { 'source':'in_out_1',         'value': 330000.00,   'destination':None },
-                              { 'source':'vat_1',         'value': -30000.00,   'destination':None },
-] },
-{ 'date':DateTime('2001/12/15'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': 300000.00,   'destination':None },
-                              { 'source':'amortisation_1',         'value': -15287.67,   'destination':None },
-                              { 'source':'in_out_2',         'value': -313183.56,   'destination':None },
-                              { 'source':'vat_1',         'value': 28471.23,   'destination':None },
-] },
-{ 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -35287.67,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 35287.67,   'destination':None },
-] },
-{ 'date':DateTime('2002/02/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -600000.00,   'destination':None },
-                              { 'source':'in_out_1',         'value': 660000.00,   'destination':None },
-                              { 'source':'vat_1',         'value': -60000.00,   'destination':None },
-] },
-{ 'date':DateTime('2002/06/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -284712.33,   'destination':None },
-                              { 'source':'in_out_1',         'value': 313183.56,   'destination':None },
-                              { 'source':'vat_1',         'value': -28471.23,   'destination':None },
-] },
-{ 'date':DateTime('2002/07/06'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -20000.00,   'destination':None },
-                              { 'source':'in_out_1',         'value': 22000.00,   'destination':None },
-                              { 'source':'vat_1',         'value': -2000.00,   'destination':None },
-] },
-{ 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': 200000.00,   'destination':None },
-                              { 'source':'amortisation_1',         'value': -38301.37,   'destination':None },
-                              { 'source':'in_out_2',         'value': -177868.49,   'destination':None },
-                              { 'source':'vat_1',         'value': 16169.86,   'destination':None },
-] },
-{ 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -201031.08,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 201031.08,   'destination':None },
-] },
-{ 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': 284712.33,   'destination':None },
-                              { 'source':'amortisation_1',         'value': -23315.54,   'destination':None },
-                              { 'source':'in_out_2',         'value': -287536.46,   'destination':None },
-                              { 'source':'vat_1',         'value': 26139.68,   'destination':None },
-] },
-{ 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -100000.00,   'destination':None },
-                              { 'source':'in_out_1',         'value': 110000.00,   'destination':None },
-                              { 'source':'vat_1',         'value': -10000.00,   'destination':None },
-                              { 'source':'immobilisation_2',         'value': -200000.00,   'destination':None },
-                              { 'source':'in_out_3',         'value': 215000.00,   'destination':None },
-                              { 'source':'vat_2',         'value': -15000.00,   'destination':None },
-] },
-{ 'date':DateTime('2003/03/15'), 'source_section':'coramy', 'destination_section':'nexedi', 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -20000.00,   'destination':'immobilisation_1' },
-                              { 'source':'in_out_2',         'value': 14405.48,   'destination':'in_out_2' },
-                              { 'source':'vat_1',         'value': -1309.59,   'destination':'vat_1' },
-                              { 'source':'amortisation_1',         'value': 6904.11,   'destination':'amortisation_1' },
-] },
-{ 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -1553.04,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 1553.04,   'destination':None },
-                              { 'source':'depreciation_2',         'value': -4166.67,   'destination':None },
-                              { 'source':'amortisation_2',         'value': 4166.67,   'destination':None },
-] },
-{ 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_2',         'value': 200000.00,   'destination':None },
-                              { 'source':'amortisation_2',         'value': -40885.42,   'destination':None },
-                              { 'source':'in_out_4',         'value': -171048.18,   'destination':None },
-                              { 'source':'vat_2',         'value': 11933.59,   'destination':None },
-] },
-{ 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -165559.29,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 165559.29,   'destination':None },
-] },
-{ 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'destination_section':'nexedi', 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': -300000.00,   'destination':'immobilisation_1' },
-                              { 'source':'in_out_1',         'value': 186806.64,   'destination':'in_out_2' },
-                              { 'source':'vat_1',         'value': -16982.42,   'destination':'vat_1' },
-                              { 'source':'amortisation_1',         'value': 130175.78,   'destination':'amortisation_1' },
-] },
-{ 'date':DateTime('2004/02/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': 300000.00,   'destination':None },
-                              { 'source':'amortisation_1',         'value': -199976.79,   'destination':None },
-                              { 'source':'in_out_2',         'value': -110025.53,   'destination':None },
-                              { 'source':'vat_1',         'value': 10002.32,   'destination':None },
-                              { 'source':'immobilisation_1',         'value': -100000.00,   'destination':None },
-                              { 'source':'in_out_1',         'value': 110000.00,   'destination':None },
-                              { 'source':'vat_1',         'value': -10000.00,   'destination':None },
-] },
-{ 'date':DateTime('2004/04/01'), 'source_section':'coramy', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -29815.20,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 29815.20,   'destination':None },
-                              { 'source':'depreciation_2',         'value': -36718.75,   'destination':None },
-                              { 'source':'amortisation_2',         'value': 36718.75,   'destination':None },
-] },
-{ 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_1',         'value': 100000.00,   'destination':None },
-                              { 'source':'amortisation_1',         'value': -28547.95,   'destination':None },
-                              { 'source':'in_out_2',         'value': -78597.26,   'destination':None },
-                              { 'source':'vat_1',         'value': 7145.21,   'destination':None },
-] },
-{ 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -152260.84,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 152260.84,   'destination':None },
-                              { 'source':'immobilisation_1',         'value': 269824.22,   'destination':None },
-                              { 'source':'amortisation_1',         'value': -140177.62,   'destination':None },
-                              { 'source':'in_out_2',         'value': -142611.26,   'destination':None },
-                              { 'source':'vat_1',         'value': 12964.66,   'destination':None },
-                              { 'source':'immobilisation_1',         'value': -190000.00,   'destination':None },
-                              { 'source':'in_out_1',         'value': 201000.00,   'destination':None },
-                              { 'source':'vat_1',         'value': -11000.00,   'destination':None },
-] },
-{ 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -10275.60,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 10275.60,   'destination':None },
-] },
-{ 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -121250.00,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 121250.00,   'destination':None },
-] },
-{ 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_3',         'value': -150000.00,   'destination':None },
-                              { 'source':'in_out_5',         'value': 165000.00,   'destination':None },
-                              { 'source':'vat_3',         'value': -15000.00,   'destination':None },
-] },
-{ 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -21484.38,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 21484.38,   'destination':None },
-                              { 'source':'depreciation_3',         'value': -62691.47,   'destination':None },
-                              { 'source':'amortisation_3',         'value': 62691.47,   'destination':None },
-] },
-{ 'date':DateTime('2007/02/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'immobilisation_3',         'value': 150000.00,   'destination':None },
-                              { 'source':'in_out_6',         'value': -84846.83,   'destination':None },
-                              { 'source':'vat_3',         'value': 7713.35,   'destination':None },
-                              { 'source':'amortisation_3',         'value': -72866.52,   'destination':None },
-] },
-{ 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -14770.51,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 14770.51,   'destination':None },
-                              { 'source':'depreciation_3',         'value': -10175.05,   'destination':None },
-                              { 'source':'amortisation_3',         'value': 10175.05,   'destination':None },
-] },
-{ 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -10154.72,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 10154.72,   'destination':None },
-] },
-{ 'date':DateTime('2010/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -6981.37,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 6981.37,   'destination':None },
-] },
-{ 'date':DateTime('2011/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -5119.67,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 5119.67,   'destination':None },
-] },
-{ 'date':DateTime('2012/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -5119.67,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 5119.67,   'destination':None },
-] },
-{ 'date':DateTime('2013/01/01'), 'source_section':'nexedi', 'destination_section':None, 
-                    'data': [
-                              { 'source':'depreciation_1',         'value': -5119.67,   'destination':None },
-                              { 'source':'amortisation_1',         'value': 5119.67,   'destination':None },
-] },
- ],
-                  
-                  # Solvers test
-                  [
-                   { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    10000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      11000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     1000., 'destination':None, } ] },
-                   { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    50000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      55000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     5000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -     2000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       2000., 'destination':None, } ] },
-                   { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    30000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      33000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     3000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      12000., 'destination':None, } ] },
-                   { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    18000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    18000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    18000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    16000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      16000., 'destination':None, } ] },
-                   { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       6000., 'destination':None, } ] },
-                                                                                
-                  ],
-                  
-                  # Solvers test, duration 36
-                  [
-                   { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    10000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      11000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     1000., 'destination':None, } ] },
-                   { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    50000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      55000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     5000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -     2000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       2000., 'destination':None, } ] },
-                   { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    30000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      33000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     3000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      12000., 'destination':None, } ] },
-                   { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    22000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      22000., 'destination':None, } ] },
-                   { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    22000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      22000., 'destination':None, } ] },
-                   { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    22000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      22000., 'destination':None, } ] },
-                   { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    10000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      10000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value':          0., 'destination':None, }, ] },
-                   { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -        0., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':          0., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value':          0., 'destination':None, }, ] },
-                                                                                
-                  ],
-                  
-                  # Solvers test, depreciation account changed, not solved
-                  [
-                   { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    10000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      11000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     1000., 'destination':None, } ] },
-                   { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    50000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      55000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     5000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -     2000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       2000., 'destination':None, } ] },
-                   { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    30000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      33000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     3000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      12000., 'destination':None, } ] },
-                   { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    22000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      22000., 'destination':None, } ] },
-                   { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    22000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      22000., 'destination':None, } ] },
-                   { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    22000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      22000., 'destination':None, } ] },
-                   { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    10000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      10000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value':          0., 'destination':None, }, ] },
-                   { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -        0., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':          0., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value':          0., 'destination':None, }, ] },
-                                                                                
-                  ],
-                  
-                  # Solvers test, depreciation account changed, solved
-                  [
-                   { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    10000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      11000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     1000., 'destination':None, } ] },
-                   { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    50000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      55000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     5000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -     2000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       2000., 'destination':None, } ] },
-                   { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    30000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      33000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     3000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      12000., 'destination':None, } ] },
-                   { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    10000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      16000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value':          0., 'destination':None, }, ] },
-                   { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -        0., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       6000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value':          0., 'destination':None, }, ] },
-                                                                                
-                  ],
-                  
-                  # Solvers test, depreciation account changed, solver_3 date changed
-                  [
-                   { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    10000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      11000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     1000., 'destination':None, } ] },
-                   { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    50000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      55000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     5000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -     2000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       2000., 'destination':None, } ] },
-                   { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -        0., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':          0., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -        0., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      12000., 'destination':None, } ] },
-                   { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    30000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      33000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     3000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -        0., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      12000., 'destination':None, } ] },
-                   { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, } ] },  
-                   { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    10000., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      16000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value':          0., 'destination':None, }, ] },
-                   { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -        0., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -        0., 'destination':None, },
-                                                  { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       6000., 'destination':None, } ] },
-                   { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_2',     'value': -     6000., 'destination':None, },
-                                                  #{ 'source':'depreciation_1',     'value': -        0., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       6000., 'destination':None, } ] },
-                  ],
-                  
-                  # Solvers test, original values
-                  [
-                   { 'date':DateTime('2001/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    10000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      11000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     1000., 'destination':None, } ] },
-                   { 'date':DateTime('2002/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    50000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      55000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     5000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -     2000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       2000., 'destination':None, } ] },
-                   { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'immobilisation_1',   'value': -    30000., 'destination':None, },
-                                                  { 'source':'in_out_1',           'value':      33000., 'destination':None, },
-                                                  { 'source':'vat_1',              'value': -     3000., 'destination':None, },
-                                                  { 'source':'depreciation_1',     'value': -    12000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      12000., 'destination':None, } ] },
-                   { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    18000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    18000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    18000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      18000., 'destination':None, } ] },
-                   { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -    16000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':      16000., 'destination':None, } ] },
-                   { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',     'value': -     6000., 'destination':None, },
-                                                  { 'source':'amortisation_1',     'value':       6000., 'destination':None, } ] },
-                                                                                
-                  ],
-                ]
-             
-        
-  validation_list = [ [ { 'date':DateTime('2003/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2004/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2005/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2006/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2009/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2010/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2011/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2012/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2013/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2004/02/01'), 'source_section':'organisation/nexedi', 'destination_section':None}, ],
-                      [ { 'date':DateTime('2003/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2004/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2005/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2006/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2009/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2010/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2011/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2012/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2013/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                        { 'date':DateTime('2004/02/01'), 'source_section':'organisation/nexedi', 'destination_section':None}, ],
-                      ]
-  validation_step = 0
-  
-  solve_list = [ [ { 'date':DateTime('2001/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2002/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2003/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2004/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2005/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2006/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None}, ],
-                 [ { 'date':DateTime('2001/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2002/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2003/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2004/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2005/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2006/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None}, ],
-                 [ { 'date':DateTime('2001/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2002/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2003/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2004/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2005/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2006/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None},
-                   { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None}, ],
-                 # Profit and loss
-                 [ { 'date':DateTime('2005/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None} ],
-                 #[ { 'date':DateTime('2006/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None} ],
-                 [ { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None} ],
-                 [ { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None} ],
-                 [ { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None} ],
-                 [ { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None} ] ]
-                   
-  
-  solver_dict = { 'solver_3' : ['update_from_simulation_amortisation', 'update_from_simulation_amortisation',
-                                'update_from_simulation_amortisation', 'profit_loss_amortisation',
-                                'profit_loss_amortisation', 'profit_loss_amortisation', #'profit_loss_amortisation',
-                                'profit_loss_amortisation', 'profit_loss_amortisation', 'profit_loss_amortisation' ] }
-                                
-  transaction_change_list = [ 
-      { 'transaction': { 'date':DateTime('2005/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None,
-                         'source':'account/amortisation_1', 'destination':None},
-        'changes': { 'Quantity':36000. } },
-#       { 'transaction': { 'date':DateTime('2006/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None,
-#                          'source':'account/amortisation_1', 'destination':None},
-#         'changes': { 'Source':'account/amortisation_2' } },
-      { 'transaction': { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None,
-                         'source':'account/amortisation_1', 'destination':None},
-        'changes': { 'Quantity':0. } },
-      { 'transaction': { 'date':DateTime('2007/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None,
-                         'source':'account/amortisation_1', 'destination':None},
-        'changes': { 'Quantity':8000. } },
-      { 'transaction': { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None,
-                         'source':'account/amortisation_1', 'destination':None},
-        'changes': { 'Quantity':0. } },
-                            ]
-                            
-  zero_simulation_movement_list = [
-      { 'transaction' : { 'date':DateTime('2008/01/01'), 'source_section':'organisation/nexedi', 'destination_section':None,
-                         'source':'account/amortisation_1', 'destination':None},
-      'item': 'vpn_11' }
-                                  ]
-      
-  
-                       
-  def assertDifference(self, a, b, diff=0.02):
-   """
-   Raise an error if the difference between a and b is
-   greater than diff
-   """
-   self.failUnless( self.areNear(a,b,diff) )
-   
-  
-  def roundedEquals(self, a, b, precision=2):
-    LOG("roundedEquals", 0, "compares %s and %s, precision = %s ; rounded values = %s and %s" % (repr(a), repr(b), repr(precision), repr(round(a,precision)), repr(round(b,precision))))
-    return round(a,precision) == round(b,precision)
-  
-  def areNear(self, a, b, diff=0.02):
+  def stepCommitTransaction(self, sequence=None, sequence_list=None, **kw):
     """
-    Return true if the difference between a and b 
-    is lower than diff
+    For debugging
     """
-    difference = a - b
-    return abs(a-b) <= diff
-  
-  
+    get_transaction().commit()
+
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
-    """
-    return ('erp5_trade', 'erp5_accounting', 
-            'erp5_apparel', 'erp5_immobilisation')
 
-  def convertToLowerCase(self, key):
     """
-      This function returns an attribute name 
-      thanks to the name of a class
-      for example convert 'Purchase Order' to 'purchase_order' 
-    """
-    result = key.lower()
-    result = result.replace(' ','_')
-    return result
+    return ("erp5_core_patch_immo",
+            "erp5_trade",
+            "erp5_pdm", # Needed by accounting
+            "erp5_accounting",
+            "erp5_apparel", # In order to use items
+            "erp5_immobilisation",
+            )
 
-
-  def getSqlConnection(self):
-    return getattr(self.getPortal(), 'erp5_sql_connection', None)
-  
-  def getItemModule(self):
-    return getattr(self.getPortal(), self.item_module_name, None)
-  
-  def getCurrencyModule(self):
-    return getattr(self.getPortal(), 'currency', None)
-  
-  def getOrganisationModule(self):
-    return getattr(self.getPortal(), 'organisation', None)
-  
+  def getCategoriesTool(self):
+    return getattr(self.getPortal(), 'portal_categories', None)
+  def getRuleTool(self):
+    return getattr(self.getPortal(), 'portal_rules', None)
   def getAccountingModule(self):
     return getattr(self.getPortal(), 'accounting_module', None)
-  
+  def getOrganisationModule(self):
+    return self.getPortal().getDefaultModule(portal_type=self.organisation_portal_type)
+  def getItemModule(self):
+    return self.getPortal().getDefaultModule(portal_type=self.item_portal_type)
+  def getPackingListModule(self):
+    return self.getPortal().getDefaultModule(portal_type=self.packing_list_portal_type)
   def getAccountModule(self):
-    return getattr(self.getPortal(), 'account_module', None)
-  
-  def getDeliveryModule(self):
-    return getattr(self.getPortal(), 'purchase_packing_list_module', None)
-  
-  def getPortalId(self):
-    return self.getPortal().getId()
- 
-  def sqlQuery(self, sql):
-    sql_connection = self.getSqlConnection()
-    return sql_connection.manage_test(sql)
-    
-  
-  def failIfDifferentSet(self, a,b):
-    for i in a:
-      self.failUnless(i in b)
-    for i in b:
-      self.failUnless(i in a)
-    self.assertEquals(len(a),len(b))
+    return self.getPortal().getDefaultModule(portal_type=self.account_portal_type)
+  def getCurrencyModule(self):
+    return self.getPortal().getDefaultModule(portal_type=self.currency_portal_type)
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     self.login()
     portal = self.getPortal()
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-#     # First set Acquisition
-#     portal.ERP5_setAcquisition()
-#     # Then reindex
-    LOG('before reindex', 0, "")
-    portal.ERP5Site_reindexAll()
-    self.stepTic()
-    LOG('afterSetup',0,'portal.portal_categories.immediateReindexObject')
-    self.getAccountingModule().manage_addLocalRoles('guillaume', ('Assignor',))
-    portal.portal_categories.immediateReindexObject()
-    for o in portal.portal_categories.objectValues():
-      o.recursiveImmediateReindexObject()
-    self.stepTic()
-    LOG('afterSetup',0,'portal.portal_simulation.immediateReindexObject')
-    portal.portal_simulation.immediateReindexObject()
-    for o in portal.portal_simulation.objectValues():
-      o.recursiveImmediateReindexObject()
-    self.stepTic()
-    LOG('afterSetup',0,'portal.portal_rules.immediateReindexObject')
-    portal.portal_rules.immediateReindexObject()
-    self.stepTic()
     
+    # remove all message in the message_table because
+    # the previous test might have failed
+    message_list = portal.portal_activities.getMessageList()
+    for message in message_list:
+      portal.portal_activities.manageCancel(message.object_path,message.method_id)
+
     # Then add new components
-    # Currencies
-    currency_module = self.getCurrencyModule()
-    for currency_id in self.currency_list:
-      currency_module.newContent(id=currency_id, portal_type="Currency")
-    self.stepTic()
+    self.createCurrency()
+    self.createCategories()
+    self.createOrganisationList()
+    self.createItemList()
+    self.createAccountList()
+    get_transaction().commit()
+    self.tic()
 
-    # Construct item module
-    #portal.newContent(portal_type='Nexedi VPN Module',id='vpn',title='VPN List')
-    
-    # Items
-    item_module = self.getItemModule()
-    for item_id in self.item_id_list:
-      item_module.newContent(id=item_id, portal_type=self.item_portal_type)
-    self.stepTic()
-    
-    # Build all movement groups
-    #self.getPortal().SimulationTool_constructMovementGroupList()
-
-    # Organisations
-    organisation_module = self.getOrganisationModule()
-    for organisation_data in self.organisation_data_list:
-      organisation = organisation_module.newContent(id=organisation_data['id'], immediate_reindex=1)
-      end_date = organisation_data.get('end_date')
-      currency_id = organisation_data.get('currency')
-      if currency_id is not None:
-        currency_id = 'currency/%s' % currency_id
-        organisation.setSocialCapitalCurrencyId(currency_id)
-      if end_date is not None:
-        organisation.setFinancialYearStopDate(end_date)
-    self.stepTic()
-        
-    # Accounts
-    account_module = self.getAccountModule()
-    for account_data in self.account_data_list:
-      account = account_module.newContent(id = account_data['id'])
-      account.setPcg(account_data['pcg_id'])
-    self.stepTic()
-   
-    # Deliveries
-    delivery_module = self.getDeliveryModule()
-    del_type = self.delivery_type
-    del_line_type = del_type + " Line"
-    
-    for delivery_line_data in self.delivery_line_data_list:
-      parent_id = delivery_line_data['parent_id']
-      del_line_id = delivery_line_data['id']
-      date = DateTime(delivery_line_data['date'])
-      source_section = delivery_line_data['source_section']
-      destination_section = delivery_line_data['destination_section']
-      if source_section is not None: source_section = organisation_module[source_section]
-      if destination_section is not None: destination_section = organisation_module[destination_section]
-      item_id_list = delivery_line_data['items']
-      
-      delivery = getattr(delivery_module, parent_id, None)
-      if delivery is None:
-        # Create the parent of current delivery line
-        delivery = delivery_module.newContent(id = parent_id, portal_type = del_type)
-      delivery_line = delivery.newContent(id = del_line_id, portal_type = del_line_type)
-      delivery_line.setStopDate(date)
-      if source_section is not None: delivery_line.setSourceSectionValue(source_section)
-      if destination_section is not None: delivery_line.setDestinationSectionValue(destination_section)
-      item_list = []
-      for item_id in item_id_list:
-        item_list.append(item_module[item_id])
-      self.tic()
-      delivery_line.immediateReindexObject()
-      delivery_line.setAggregateValueList(item_list)
-      LOG('delivery_line : ', 0, delivery_line.getRelativeUrl())
-      delivery_line.immediateReindexObject()
-      
-      get_transaction().commit()
-      self.stepTic()
-      LOG('test :', 0, 'delivery line %s ; aggregate value list = %s' % (repr(delivery_line), repr(delivery_line.getAggregateValueList())))
-      my_item = item_list[0]
-    self.stepTic()
-      
-    # Build the default rule
-    #self.getPortal().portal_types.constructContent(type_name='Amortisation Rule',
-    #                    container=self.getPortal().portal_rules,
-    #                    id='default_amortisation_rule')
-
-                        
-                        
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('guillaume', '', ['Manager'], [])
+    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('guillaume').__of__(uf)
     newSecurityManager(None, user)
 
-  def stepAddZeroSimulationMovement(self, sequence=None, **kw):
+  def createCategories(self):
     """
-    Add a zero simulation movement to a specific delivery
+    Replace OrderMixin method
     """
-    zero_step = getattr(self, 'zero_step', -1)
-    zero_step += 1
-    to_change = self.zero_simulation_movement_list[zero_step]['transaction']
-    item_id = self.zero_simulation_movement_list[zero_step]['item']
-    item = getattr(self.getItemModule(), item_id)
-    applied_rule = item.getCausalityRelatedValueList(portal_type='Applied Rule')
-    applied_rule = applied_rule[0]
-    LOG('applied rule', 0, applied_rule)
-    found = 0
-    for transaction in self.getAccountingModule().objectValues():
-      if not found:
-        if transaction.getDestinationSection() == to_change['destination_section'] and \
-        transaction.getSourceSection() == to_change['source_section'] and \
-        transaction.getStopDate() == to_change['date']:
-          for line in transaction.contentValues():
-            if line.getSource() == to_change['source'] and line.getDestination() == to_change['destination']:
-              mov = applied_rule.newContent(portal_type = "Simulation Movement",
-                                            source = to_change['source'],
-                                            destination = to_change['destination'],
-                                            source_section = to_change['source_section'],
-                                            destination_section = to_change['destination_section'],
-                                            resource = 'currency/EUR',
-                                            start_date = to_change['date'],
-                                            stop_date = to_change['date'],
-                                            quantity = 0.)
-              mov.immediateReindexObject()
-              found = 1
-              break
-    if not found:
-      LOG('TEST WARNING :', 0, 'transaction %s not found to change transaction properties' % (repr(to_change)))
-      
-    self.zero_step = zero_step
-      
-    
-  def constructImmobilisationMovement(self, immobilisation_id=None, sequence=None, **kw):
-    """
-    Create an immobilisation movement
-    """
-    if (sequence is None) or (immobilisation_id is None):
-      return
-    
-    immobilisation_data = self.immobilisation_movement_data_list[immobilisation_id]
-    item = self.getItemModule()._getOb(immobilisation_data['item'])
-    LOG('test :', 0, 'for immobilisation %s, item = %s' % (repr(immobilisation_id),repr(item)))
-    
-    immo = item.newContent(id=immobilisation_id, portal_type = 'Immobilisation')
-    LOG('test :', 0, 'content of item %s : %s' % (repr(item), repr(map(lambda o:repr(o), item.objectValues()))))
-    for property, property_sheet_name in self.property_list:
-      property_value = immobilisation_data.get(property)
-      if property_value is not None:
-        if property[-3:] == 'acc': property_value = 'account/%s' % property_value
-        setter = getattr(immo, 'set' + property_sheet_name)
-        setter(property_value)
-        
-    item.recursiveImmediateReindexObject()
-    item.immediateExpandAmortisation()
-    return immo
-  
-      
-  def stepCreateImmobilisations(self, sequence=None, sequence_list=None, **kw):
-    """
-    Construct all of the immobilisations needed for the current test
-    """
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    immobilisation_list = sequence.get('immobilisation_list') or []
-    for i in range(len(self.immobilisation_movement_list[immobilisation_list_name])):
-      immobilisation_name = self.immobilisation_movement_list[immobilisation_list_name][i]
-      immo = self.constructImmobilisationMovement(immobilisation_name, sequence=sequence)
-      immobilisation_list.append(immo)
-      
-    sequence.set('immobilisation_list', immobilisation_list)
-    
-   
-  def stepArtificialExpand(self, sequence=None, **kw):
-    """
-    Reexpand the simulation and set the needed properties in sequence
-    """
-    immobilisation_list = sequence.get('immobilisation_list')
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    step = self.current_step.get(immobilisation_list_name, -1)
-    step += 1
-    self.current_step[immobilisation_list_name] = step
-    item = immobilisation_list[0].getParent()
-    item.immediateExpandAmortisation()
-    
-  def stepVerifyConvergence(self, sequence=None, **kw):
-    """
-    Fails if any transaction is divergent
-    """
-    accounting = self.getAccountingModule()
-    for transaction in accounting.contentValues():
-      if transaction.isDivergent() or self.getWorkflowTool().getStatusOf('amortisation_transaction_divergence_workflow', transaction)['amortisation_causality_state'] == 'diverged':
-        LOG('transaction %s is divergent !... data follows' % repr(transaction), 0, '')
-        LOG('workflow status', 0, self.getWorkflowTool().getStatusOf('amortisation_transaction_divergence_workflow', transaction)['amortisation_causality_state'])
-        LOG('source_section : %s,' % repr(transaction.getSourceSection()), 0, 'destination_section = %s, start_date = %s, stop_date = %s' % (repr(transaction.getDestinationSection()), repr(transaction.getStartDate()), repr(transaction.getStopDate())))
-        LOG('lines :', 0, '')
-        for line in transaction.contentValues():
-          LOG('line %s... source =' % repr(line), 0, '%s, destination = %s, resource = %s, quantity = %s' % (repr(line.getSource()), repr(line.getDestination()), repr(line.getResource()), repr(line.getQuantity())))
-          for mov in line.getDeliveryRelatedValueList():
-            LOG('in line %s...' % repr(line), 0, 'simulation movement %s : source = %s, destination = %s, source_section = %s, destination_section = %s, resource = %s, start_date = %s, stop_date = %s, quantity = %s, profit_quantity = %s, corrected_quantity = %s, ratio = %s' % (repr(mov), repr(mov.getSource()), repr(mov.getDestination()), repr(mov.getSourceSection()), repr(mov.getDestinationSection()), repr(mov.getResource()), repr(mov.getStartDate()), repr(mov.getStopDate()), repr(mov.getQuantity()), repr(mov.getProfitQuantity()), repr(mov.getCorrectedQuantity()), repr(mov.getDeliveryRatio())))  
-        self.failUnless(0)
-      else:
-        for l in transaction.getMovementList():
-          for m in l.getDeliveryRelatedValueList():
-            if m.isDivergent():
-              LOG('movement %s is divergent' % repr(m), 0, '')
-              self.failUnless(0)
+    # Create group categories
+    category_tool = self.getCategoryTool()
+    if len(category_tool.group.contentValues())==0:
+      self.createCategoryTree(category_tool.group,
+                     [ ("group A",
+                                  [("group Aa", [("group Aa1",[]),("group Aa2",[])]),
+                                  ("group Ab", [("group Ab1",[]),("group Ab2",[])])]
+                       ),
+                       ("group B",
+                                  [("group Ba", []),
+                                   ("group Bb", [])],
+                       ),
+                       ("group C", []),
+                     ]
+                  )
 
-
-  def stepRetrieveData(self, sequence=None, **kw):
+  def createCategoryTree(self, current_category, category_tree):
     """
-    Set the needed properties in sequence
+    Create a category tree
     """
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    immobilisation_id = self.immobilisation_movement_list[immobilisation_list_name][0]
-    immobilisation_data = self.immobilisation_movement_data_list[immobilisation_id]
-    item = self.getItemModule()._getOb(immobilisation_data['item'])
-    
-    immobilisation_list = list(item.objectValues())
-    sequence.edit(immobilisation_list = immobilisation_list)
-  
-  def stepUpdateAllFromSimulation(self, sequence=None, **kw):
-    """
-    Launch updateFromSimulation on all amortisation transactions
-    """
-    accounting = self.getAccountingModule()
-    for transaction in accounting.objectValues():
-      LOG('transaction %s' % repr(transaction), 0, '(source_section : %s, destination_section : %s, date : %s)' % (repr(transaction.getSourceSection()), repr(transaction.getDestinationSection()), repr(transaction.getStopDate())))
-      for line in transaction.objectValues():
-        LOG('--- line %s' % repr(line), 0, '(source : %s, destination : %s, quantity : %s, uid : %s)' % (repr(line.getSource()), repr(line.getDestination()), repr(line.getQuantity()), repr(line.getUid())))
-        movements = line.getDeliveryRelatedValueList()
-        total = 0
-        for movement in movements:
-          LOG('------ movement', 0, repr(movement.getQuantity()))
-          total += movement.getQuantity()
-        LOG('total for line :', 0, repr(total))
-#         if line.getQuantity() != total:
-#           LOG('line %s is divergent (transaction %s)' % (repr(line), repr(transaction)), 0, '')
-#         else:
-#           LOG('line %s is convergent (transaction %s)' % (repr(line), repr(transaction)), 0, '')
-      if self.getWorkflowTool().getStatusOf('amortisation_transaction_divergence_workflow',transaction)\
-          ['amortisation_causality_state'] == 'diverged':
-        LOG('transaction %s is detected divergent by the system' % repr(transaction), 0, '')
-        self.getWorkflowTool().doActionFor(transaction, 'update_from_simulation_amortisation', 'amortisation_transaction_divergence_workflow')
-    
-          
-  def stepApplySolver(self, sequence=None, **kw):
-    """
-    Apply the solvers on the amortisation transactions
-    """
-    # First search the deliver
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    solver_step_dict = getattr(self, "solver_step", {})
-    if solver_step_dict == {}:
-      self.solver_step = {}
-    solver_step = solver_step_dict.get(immobilisation_list_name, 0)
-    to_solve_list = self.solve_list[solver_step]
-    solver_type = self.solver_dict[immobilisation_list_name][solver_step]
-    LOG('solver_step =',0, solver_step)
-    LOG('solver_type =',0, solver_type)
-
-    accounting = self.getAccountingModule()
-    for to_solve in to_solve_list:
-      LOG('looking for transaction', 0, repr(to_solve))
-      found = 0
-      for transaction in accounting.objectValues():
-        LOG('testing transaction', 0, '%s (dest_sect = %s, source_sect = %s, date = %s, state=%s)' % (repr(transaction), repr(transaction.getDestinationSection()), repr(transaction.getSourceSection()), repr(transaction.getStopDate()), repr(self.getWorkflowTool().getStatusOf('amortisation_transaction_divergence_workflow', transaction)['amortisation_causality_state'])))
-        if transaction.getDestinationSection() == to_solve['destination_section'] and \
-          transaction.getSourceSection() == to_solve['source_section'] and \
-          transaction.getStopDate() == to_solve['date'] and \
-          self.getWorkflowTool().getStatusOf('amortisation_transaction_divergence_workflow',transaction)\
-          ['amortisation_causality_state'] == 'diverged':
-          LOG('applying solver %s on transaction %s :' % (solver_type, repr(transaction)), 0, '')
-          for sub in transaction.contentValues():
-            LOG('transaction contains %s' % repr(sub), 0, 'source %s, dest %s, qty %s' % (repr(sub.getSource()), repr(sub.getDestination()), repr(sub.getQuantity())))
-          self.getWorkflowTool().doActionFor(transaction, solver_type, 'amortisation_transaction_divergence_workflow')
-          #transaction.updateFromSimulation()
-          LOG('new state :', 0, self.getWorkflowTool().getStatusOf('amortisation_transaction_divergence_workflow',transaction)['amortisation_causality_state'])
-          found = 1
-          break
-      if not found:
-        LOG('TEST WARNING :', 0, 'transaction %s not found' % repr(to_solve))
-      LOG('after applying solver', 0, '')
-      for transaction in accounting.objectValues():
-        LOG('transaction %s' % repr(transaction), 0, '(source_section : %s, destination_section : %s, date : %s)' % (repr(transaction.getSourceSection()), repr(transaction.getDestinationSection()), repr(transaction.getStopDate())))
-        LOG('workflow state :', 0, self.getWorkflowTool().getStatusOf('amortisation_transaction_divergence_workflow',transaction)['amortisation_causality_state'])
-        LOG('state by testing... isDivergent :', 0, transaction.isDivergent())
-        for line in transaction.objectValues():
-          LOG('--- line %s' % repr(line), 0, '(source : %s, destination : %s, quantity : %s, uid : %s)' % (repr(line.getSource()), repr(line.getDestination()), repr(line.getQuantity()), repr(line.getUid())))
-          movements = line.getDeliveryRelatedValueList()
-          total = 0
-          for movement in movements:
-            LOG('------ movement (isDivergent : %s)' % repr(movement.isDivergent()), 0, repr(movement.getQuantity()))
-            total += movement.getQuantity()
-          LOG('total for line :', 0, repr(total))
+    for category, new_tree in category_tree:
+      new_category = current_category.newContent(portal_type='Category', id=category)
+      self.createCategoryTree(new_category, new_tree)
       
-    self.solver_step[immobilisation_list_name] = solver_step + 1
-    
-  def stepChangeTransactionProperties(self, sequence=None, **kw):
+  def createCurrency(self):
+    currency_module = self.getCurrencyModule()
+    if len(currency_module.contentValues())==0:
+      currency_module.newContent(id="EUR")
+
+  def createOrganisationList(self):
     """
-    Modify some attributes belonging to a transaction
+    Create some organisations relating to the group tree
     """
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    transaction_change_dict = getattr(self, "transaction_change_step", {})
-    if transaction_change_dict == {}:
-      self.transaction_change_step = {}
-    step = transaction_change_dict.get(immobilisation_list_name, 0)
-    transaction_change = self.transaction_change_list[step]
-    to_change = transaction_change['transaction']
-    
-    accounting = self.getAccountingModule()
-    found = 0
-    for transaction in accounting.objectValues():
-      if not found:
-        if transaction.getDestinationSection() == to_change['destination_section'] and \
-        transaction.getSourceSection() == to_change['source_section'] and \
-        transaction.getStopDate() == to_change['date']:
-          for line in transaction.contentValues():
-            LOG('for changing properties, testing line %s' % repr(line), 0, 'source = %s, destination = %s' % (repr(line.getSource()), repr(line.getDestination())))
-            if line.getSource() == to_change['source'] and line.getDestination() == to_change['destination']:
-              for (key, value) in transaction_change['changes'].items():
-                setter = getattr(line, 'set' + key)
-                LOG('setting value %s for' % repr(value), 0, key)
-                setter(value)
-                LOG('getQuantity :', 0, line.getQuantity())
-              for m in line.getDeliveryRelatedValueList():
-                m.immediateReindexObject()
-              transaction.notifySimulationChange()
-              LOG('line modified... getSource :', 0, line.getSource())
-              found = 1
-              break
-    if not found:
-      LOG('TEST WARNING :', 0, 'transaction %s not found to change transaction properties' % (repr(to_change)))
-    
-    self.transaction_change_step[immobilisation_list_name] = step + 1
-    
-    
-  def stepIncrementStep(self, sequence=None, **kw):
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    LOG('==================== STEP INCREMENTED =====================', 0, '')
-    self.current_step[immobilisation_list_name] = self.current_step[immobilisation_list_name] + 1  
-  
-   
-  def stepNextTestStep(self, sequence=None, **kw):
+    organisation_module = self.getOrganisationModule()
+    if len(organisation_module.contentValues())==0:
+      for organisation_id, group, mapping in (
+                               ("A",  "group/group A", "group/group A"),
+                               ("Aa", "group/group A", "group/group A/group Aa"),
+                               ("Ab", "group/group A", "group/group A/group Ab"),
+                               ("Aa1", "group/group A", "group/group A/group Aa/group Aa1"),
+                               ("Aa2", "group/group A", "group/group A/group Aa/group Aa2"),
+                               ("Ab1", "group/group A", "group/group A/group Ab/group Ab1"),
+                               ("Ab2", "group/group A", "group/group A/group Ab/group Ab2"),
+                               ("B",  "group/group B", "group/group B"),
+                               ("Ba", "group/group B", "group/group B/group Ba"),
+                               ("Bb", "group/group B", "group/group B/group Bb"),
+                               ("standalone", "", ""),
+                             ):
+        organisation_module.newContent(id = organisation_id,
+                                       group = group,
+                                       mapping = mapping,
+                                       )
+      for organisation_id in ('A','Aa','Ab','B','Ba','Bb','standalone'):
+        organisation = organisation_module[organisation_id]
+        organisation.edit(price_currency_value = self.getCurrencyModule()["EUR"],
+                          financial_year_stop_date = DateTime('2000/01/01'))
+                                       
+  def createAccountList(self):
     """
-    Construct the next immobilisation needed for the current test
-    If all of the immobilisations are already constructed, unvalidate or validate the
-    next immobilisation to be validated or unvalidated
+    Create some accounts
     """
-    LOG('===================== NEXT STEP ===============================', 0, '')
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    immobilisation_list = sequence.get('immobilisation_list') or []
-    step = self.current_step.get(immobilisation_list_name, -1)
-    step += 1
-    
-    LOG('testImmobilisation :', 0, 'step = %s, immobilisation_list = %s' % (repr(step), repr(immobilisation_list)))
-    immobilisation_movement_list = self.immobilisation_movement_list[immobilisation_list_name]
-    if step < len(immobilisation_movement_list):
-      LOG('NextTestStep', 0, 'create')
-      immobilisation_name = immobilisation_movement_list[step]
-      immobilisation = self.constructImmobilisationMovement(immobilisation_name, sequence=sequence)
-      immobilisation_list.append(immobilisation)
-      
-    else:
-      # Validate or unvalidate the next immobilisation to be validated or unvalidated
-      switch_list = self.validation_switch_list.get(immobilisation_list_name, [])
-      switch_number = step - len(immobilisation_movement_list)
-      LOG('stepNextTestStep :', 0, 'immobilisation_list_name=%s, switch_list=%s, switch_number=%s, switch_list[switch_number]=%s' % (repr(immobilisation_list_name), repr(switch_list), repr(switch_number), repr(switch_number)))
-      if switch_list is not None and switch_number < len(switch_list):
-        LOG('NextTestStep', 0, 'switch')
-        self.switchImmobilisationValidity( switch_list[switch_number], sequence=sequence )
-      else:
-        # Modify data on immobilisation movements
-        LOG ('NextTestStep', 0, 'modify')
-        change_number = switch_number - len(switch_list)
-        LOG('change_number =', 0, '%i, len(immobilisation_movement_change_list) = %i' % (change_number, len(self.immobilisation_movement_change_list[immobilisation_list_name])))
-        change_data = self.immobilisation_movement_change_list[immobilisation_list_name][change_number]
-        self.changeMovementData(change_data, sequence=sequence)
-        
-    self.current_step[immobilisation_list_name] = step
-    sequence.edit(immobilisation_list = immobilisation_list)
-    
-    
-  def changeMovementData(self, change_data, sequence=None, **kw):
+    account_module = self.getAccountModule()
+    if len(account_module.contentValues())==0:
+      for i in range(15):
+        account_id = 'account%i' % i
+        account = account_module.newContent(id=account_id, gap='gap')
+        account.validate()
+    self.account_dict = {
+    'input_account':              '%s/%s' % (self.getAccountModule().getId(),'account1'),
+    'output_account':             '%s/%s' % (self.getAccountModule().getId(),'account2'),
+    'immobilisation_account':     '%s/%s' % (self.getAccountModule().getId(),'account3'),
+    'amortisation_account':       '%s/%s' % (self.getAccountModule().getId(),'account4'),
+    'depreciation_account':       '%s/%s' % (self.getAccountModule().getId(),'account5'),
+    'immobilisation_vat_account': '%s/%s' % (self.getAccountModule().getId(),'account6'),
+    'extra_cost_account':         '%s/%s' % (self.getAccountModule().getId(),'account7'),
+    }
+    self.monthly_dict = {
+    'monthly_amortisation_account':'%s/%s' % (self.getAccountModule().getId(),'account8'),
+    }
+    self.extra_account_dict = {
+    'immobilisation_account':   '%s/%s' % (self.getAccountModule().getId(),'account9'),
+    'amortisation_account':     '%s/%s' % (self.getAccountModule().getId(),'account10'),
+    'depreciation_account':     '%s/%s' % (self.getAccountModule().getId(),'account11'),
+    }
+    self.extra_monthly_dict = {
+    'monthly_amortisation_account':'%s/%s' % (self.getAccountModule().getId(),'account12'),
+    }
+
+  def createItemList(self):
     """
-    Modify data on the given immobilisation movement
-    """
-    movement_id = change_data['id']
-    immobilisation_list = sequence.get('immobilisation_list')
-    LOG('changeMovementData ; change_data =', 0, repr(change_data))
-    for immo in immobilisation_list:
-      if immo.getId() == movement_id:
-        immobilisation = immo
-    LOG('immobilisation = ', 0, repr(immobilisation))
-    for (key, value) in change_data.items():
-      if key != 'id':
-        for (property_key, immobilisation_key) in self.property_list:
-          if property_key == key:
-            LOG('setting key', 0, repr(immobilisation_key))
-            setter = getattr(immobilisation, 'set' + immobilisation_key, None)
-            setter(value)
-    LOG('blabla', 0, repr(immobilisation.getStopDate()))
-    item = immobilisation.getParent()
-    item.immediateExpandAmortisation()
-    
-    
-  def stepDeleteAggregation(self, **kw):
-    """
-    Delete the aggregation
-    """
-    accounting_module = self.getAccountingModule()
-    accounting_module.deleteContent(accounting_module.contentIds())
-    LOG('accounting content', 0, accounting_module.contentIds())
-    
-  def stepCleanItemModule(self, **kw):
-    """
-    Delete the content of the item module
+    Create some items
     """
     item_module = self.getItemModule()
-    item_module.deleteContent(item_module.contentIds())
+    if len(item_module.contentValues())==0:
+      for i in range(20):
+        item_id = 'item%i' % i
+        item_module.newContent(id=item_id)
+
+  def stepCreatePackingList(self, sequence=None, sequence_list=None, **kw):
+    property_dict = {}
+    for property in ('source_section','destination_section','datetime'):
+      value_list = sequence.get(property)
+      if value_list is not None:
+        if type(value_list) == type([]):
+          value = value_list[0]
+          value_list.remove(value)
+        else:
+          value = value_list
+      else:
+        value = value_list
+      property_dict[property] = value
+          
+    pl_module = self.getPackingListModule()
+    pl = pl_module.newContent(portal_type = self.packing_list_portal_type)
+    pl.edit( source_section_value =      property_dict['source_section'],
+             destination_section_value = property_dict['destination_section'],
+             start_date =                property_dict['datetime'],
+             stop_date =                 property_dict['datetime'],)
+    packing_list_list = sequence.get('packing_list_list', [])
+    packing_list_list.append(pl)
+    sequence.set('packing_list_list', packing_list_list)
+
     
-  def stepCleanSimulation(self, **kw):
+  def stepCreateComplexPackingListStructure(self, sequence=None, sequence_list=None, **kw):
     """
-    Delete the simulation contents
+    Create a complex structure of PL and items
+    Item    1    2    3   4
+    PL 1    X    X
+    PL 2                  X
+    PL 3    X         X 
+    PL 4         X    X
     """
-    simulation = self.getPortal().portal_simulation
-    simulation.deleteContent(simulation.contentIds())
+    sequence.edit(destination_section =  self.getOrganisationModule()["A"],
+                  datetime= self.datetime,
+                  item_list_list = [[ self.getItemModule()['item1'] ], [ self.getItemModule()['item2'] ]])              
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(item_list_list = [[self.getItemModule()['item4']]], datetime = self.datetime+5)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(item_list_list = [[ self.getItemModule()['item1'],self.getItemModule()['item3'] ]],
+                  datetime = self.datetime+10)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(item_list_list = [[ self.getItemModule()['item2'],self.getItemModule()['item3'] ]],
+                  datetime = self.datetime+15)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    
   
-  def switchImmobilisationValidity(self, immobilisation_number, sequence=None, **kw):
+  def stepEditPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    pl.edit()
+    
+  def stepDeletePackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    pl_in_list = 0
+    if pl is None: 
+      pl = sequence.get('packing_list_list', []) [-1]
+      pl_in_list = 1
+    pl_id = pl.getId()
+    LOG('deleting packing list', 0, pl_id)
+    self.getPackingListModule().manage_delObjects([pl_id])
+    if pl_in_list:
+      sequence.set('packing_list_list', sequence.get('packing_list_list')[:-1])
+    
+  def stepUseFirstPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list_list')[0]
+    sequence.set('packing_list', pl)
+
+  def stepUseSecondPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list_list')[1]
+    sequence.set('packing_list', pl)
+
+  def stepUseThirdPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list_list')[2]
+    sequence.set('packing_list', pl)
+    
+  def stepUseFourthPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list_list')[3]
+    sequence.set('packing_list', pl)
+    
+  def stepDeleteCurrentPackingListFromSequence(self, sequence=None, sequence_list=None, **kw):
+    sequence.set('packing_list', None)
+    
+  def stepDeleteAllPackingLists(self, sequence=None, sequence_list=None, **kw):
+    id_list = self.getPackingListModule().contentIds()
+    self.getPackingListModule().manage_delObjects(id_list)
+    sequence.set('packing_list_list', [])
+    
+  def stepDeleteAccounting(self, sequence=None, sequence_list=None, **kw):
+    id_list = self.getAccountingModule().contentIds()
+    self.getAccountingModule().manage_delObjects(id_list)
+    
+  def stepValidateAccounting(self, sequence=None, sequence_list=None, **kw):
+    for transaction in self.getAccountingModule().contentValues():
+      transaction.stop()
+      transaction.deliver()
+
+  def stepAggregateItems(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list_list', [])[-1]
+    parameter_dict = sequence.get('parameter_dict', {})
+    if parameter_dict is None: parameter_dict = {}
+    item_list_list = sequence.get('item_list_list') # This is a list of list in
+                                                    # order to make multiple lines
+    for item_list in item_list_list:
+      pl_line = pl.newContent(portal_type = self.packing_list_line_portal_type)
+      pl_line.edit(aggregate_value_list = item_list, **parameter_dict)
+
+  def stepTestPackingListInvalidImmobilisationState(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl=sequence.get('packing_list_list', [])[-1]
+    self.stepTestPackingListImmobilisationState(pl, "invalid")
+  
+  def stepTestPackingListValidImmobilisationState(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    self.stepTestPackingListImmobilisationState(pl, "valid")
+  
+  def stepTestPackingListCalculatingImmobilisationState(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    self.stepTestPackingListImmobilisationState(pl, "calculating")
+    
+  def stepTestPackingListImmobilisationState(self, pl, state, **kw):
+    self.assertEquals(pl.getImmobilisationState(), state)
+
+    
+  def stepCreatePackingListsForContinuousAmortisationPeriodList(self, sequence=None, sequence_list=None, **kw):
     """
-    Switch the validity state of given immobilisation
+    Create a list of packing lists describing a continuous period list :
+    2000/01/01 : immobilisation (1)
+    2001/01/01 : immobilisation with different values (2)
+    2002/01/01 : immobilisation with no values  (3)
+    2002/07/01 : owner change
+    2002/10/01 : owner set to None
+    2003/01/01 : immobilisation with no values (4)
     """
-    immobilisation_list = sequence.get('immobilisation_list')
-    immobilisation = immobilisation_list[immobilisation_number]
-    if immobilisation.checkImmobilisationConsistency():
-      immobilisation_list_name = sequence.get('immobilisation_list_name')
-      immobilisation_data = self.immobilisation_movement_data_list \
-                                        [ self.immobilisation_movement_list[immobilisation_list_name][immobilisation_number] ]
-      immobilisation.setStopDate(immobilisation_data['date'])
-      LOG('switching %s to valid' % repr(immobilisation), 0, '')
-    else:
-      immobilisation.setStopDate(None)
-      LOG('switching %s to unvalid' % repr(immobilisation), 0, '')
+    item = sequence.get('item')
+    amortisation_method = sequence.get('amortisation_method')
+    parameter_dict = sequence.get('parameter_dict', {})
+    parameter_dict.update(self.account_dict)
+    parameter_dict.update( {'amortisation_method':amortisation_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':72,
+                            'immobilisation_vat':0,
+                          } )
+    sequence.edit(item_list_list = [[item]],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["A"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    parameter_dict.update( {'amortisation_start_price':12000,
+                            'disposal_price':0,
+                            'amortisation_duration':48,
+                            'immobilisation_vat':0 })
+    sequence.edit(datetime = DateTime('2001/01/01'),
+                  parameter_dict = parameter_dict)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    for parameter in ('amortisation_start_price', 'disposal_price', 'amortisation_duration', 'immobilisation_vat'):
+      del parameter_dict[parameter]
+    sequence.edit(datetime = DateTime('2002/01/01'),
+                  parameter_dict = parameter_dict)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(datetime = DateTime('2003/01/01'))
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    
+    # Create owner changing movements
+    sequence.edit(datetime = DateTime('2002/07/01'),
+                  destination_section=self.getOrganisationModule()["B"],
+                  parameter_dict=None)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(datetime = DateTime('2002/10/01'),destination_section=None)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    
+    
+  def stepCreatePackingListsForUncontinuousAmortisationPeriodList(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a list of packing lists describing an uncontinuous period list :
+    2000/01/01 : immobilisation (1)
+    2001/01/01 : unimmobilisation (2)
+    2001/07/01 : unimmobilisation (3)
+    2002/01/01 : owner change
+    2003/01/01 : immobilisation (4)
+    2004/01/01 : owner change
+    """
+    item = sequence.get('item')
+    amortisation_method = sequence.get('amortisation_method')
+    parameter_dict = sequence.get('parameter_dict', {})
+    parameter_dict.update(self.account_dict)
+    parameter_dict.update( {'amortisation_method':amortisation_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':72,
+                            'immobilisation_vat':0,
+                          } )
+    sequence.edit(item_list_list = [[item]],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["A"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    parameter_dict.update( {'amortisation_method':UNIMMOBILISING_METHOD,
+                            'amortisation_start_price':12000,
+                            'amortisation_start_price':0,
+                            'amortisation_duration':48,
+                            'immobilisation_vat':0 })
+    for parameter in ('amortisation_start_price', 'disposal_price', 'amortisation_duration', 'immobilisation_vat'):
+      del parameter_dict[parameter]
+    sequence.edit(datetime = DateTime('2001/01/01'),
+                  parameter_dict = parameter_dict)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(datetime = DateTime('2001/07/01'),
+                  parameter_dict = parameter_dict)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    parameter_dict.update( {'amortisation_method':amortisation_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':72,
+                            'immobilisation_vat':0,
+                          } )
+    sequence.edit(datetime = DateTime('2003/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["B"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    
+    # Create owner changing movements
+    sequence.edit(datetime = DateTime('2002/01/01'),
+                  parameter_dict=None,
+                  destination_section=self.getOrganisationModule()["B"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(datetime = DateTime('2004/01/01'),
+                  destination_section=self.getOrganisationModule()["A"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
       
-    item = immobilisation.getParent()
-    item.immediateExpandAmortisation()
+    
+  def stepCreatePackingListsForSimpleItemImmobilisation(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a list of packing lists describing a continuous period list :
+    2000/01/01 : immobilisation (1)
+    2003/07/01 : immobilisation (2)
+    """
+    item = sequence.get('item')
+    amortisation_method = sequence.get('amortisation_method')
+    parameter_dict = sequence.get('parameter_dict', {})
+    parameter_dict.update(self.account_dict)
+    parameter_dict.update( {'amortisation_method':amortisation_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':72,
+                            'immobilisation_vat':0,
+                          } )
+    sequence.edit(item_list_list = [[item]],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["A"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    parameter_dict.update( {'amortisation_start_price':12000,
+                            'amortisation_duration':84,
+                            'immobilisation_vat':0,
+                            'degressive_coefficient':2.5,
+                            'durability':100 })
+    sequence.edit(datetime = DateTime('2003/07/01'),
+                  parameter_dict = parameter_dict)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
       
     
-    
-  def stepVerifySimulation(self, sequence=None, sequence_list=None, **kw):
+  def stepCreatePackingListsForSimulationTest(self, sequence=None, sequence_list=None, **kw):
     """
-    Verify if the movements created in simulation correspond
-    to the expected ones
-    """    
-    #for delivery in self.getDeliveryModule().objectValues():
-    #  for delivery_line in delivery.objectValues():  
-    #    sql = 'select cat2.id from catalog as cat1, catalog as cat2, category where category.uid = cat1.uid '
-    #    sql += 'and cat1.id = %s and cat2.uid = category.category_uid' % repr(delivery_line.getId())
-    #    LOG('test :', 0, 'sql method on delivery %s : %s' % (repr(delivery_line.getId()), repr(map(lambda x:x['id'],self.sqlQuery(sql)))))
-    #    LOG('test :', 0, 'aggregate value list = %s' % repr(delivery_line.getAggregateValueList()))
-    immobilisation_list_name = sequence.get('immobilisation_list_name')
-    current_step = self.current_step.get(immobilisation_list_name, 0)
-    immobilisation_list = sequence.get('immobilisation_list')
-    if immobilisation_list is not None:
-      item = immobilisation_list[0].getParent()
-      LOG('verify simulation, item = ', 0, repr(item))
-    else:
-      immobilisation_id = self.immobilisation_movement_list[immobilisation_list_name][0]
-      immobilisation_data = self.immobilisation_movement_data_list[immobilisation_id]
-      item = self.getItemModule()._getOb(immobilisation_data['item'])
-      LOG('verify simulation... item = ', 0, repr(item))
-    test_name = sequence.get('immobilisation_list_name')
+    Create a list of packing lists describing a continuous period list :
+    2000/01/01 : immobilisation (1)
+    2001/01/01 : immobilisation (2)
+    The second movement changes some accounts
+    """
+    item = sequence.get('item')
+    amortisation_method = sequence.get('amortisation_method')
+    parameter_dict = sequence.get('parameter_dict', {})
+    parameter_dict.update(self.account_dict)
+    parameter_dict.update( {'amortisation_method':amortisation_method,
+                            'amortisation_start_price':8000,
+                            'disposal_price':0,
+                            'amortisation_duration':36,
+                            'immobilisation_vat':1000,
+                            'extra_cost_price':2000,
+                          } )
+    sequence.edit(item_list_list = [[item]],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Aa1"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    parameter_dict.update( {'amortisation_start_price':12000,
+                            'amortisation_duration':36,
+                            'immobilisation_vat':0,
+                            'extra_cost_price':0,
+                            'degressive_coefficient':2,
+                            'durability':100,
+                            })
+    parameter_dict.update(self.extra_account_dict)
+    sequence.edit(datetime = DateTime('2001/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Aa2"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
     
-    expected = deepcopy(self.simulation_value_list[test_name][current_step])
+    
+  def stepCreatePackingListsForNoChangeMethodSimulationTest(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a list of packing lists describing a continuous period list :
+    2000/01/01 : immobilisation (1)
+    2001/01/01 : immobilisation (2)
+    The second movement changes only the owner (or not)
+    """
+    item = sequence.get('item')
+    amortisation_method = sequence.get('amortisation_method')
+    parameter_dict = sequence.get('parameter_dict', {})
+    parameter_dict.update(self.account_dict)
+    parameter_dict.update( {'amortisation_method':amortisation_method,
+                            'amortisation_start_price':8000,
+                            'disposal_price':0,
+                            'amortisation_duration':36,
+                            'immobilisation_vat':1000,
+                            'extra_cost_price':2000,
+                          } )
+    sequence.edit(item_list_list = [[item]],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Aa1"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    for property in ('amortisation_start_price','amortisation_duration','immobilisation_vat',
+                     'extra_cost_price','disposal_price'):
+      del parameter_dict[property]
+    parameter_dict['amortisation_method'] = NO_CHANGE_METHOD
+    sequence.edit(datetime = DateTime('2001/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Aa2"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
     
     
-    applied_rule_list = item.getCausalityRelatedValueList(portal_type = 'Applied Rule')
-    applied_rule_list = [o for o in applied_rule_list if o.getSpecialiseValue().getPortalType() == 'Amortisation Rule']
-    LOG('testImmobilisation :',0,'verifying number of applied rules on item %s : %i' % (repr(item.getId()), len(applied_rule_list)))
+  def stepChangeCurrentPackingListDestinationSectionForOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Change the destination section of the packing list in order to make a owner change,
+    but the actual owner (i.e. group) does not change
+    """
+    pl = sequence.get('packing_list_list')[-1]
+    pl.edit(destination_section_value = self.getOrganisationModule()['Ab1'])
+    pl.contentValues()[0].edit(**self.account_dict)
+          
+    
+  def stepChangeCurrentPackingListDestinationSectionForActualOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Change the destination section of the packing list in order to make the actual owner (i.e. group) change
+    """
+    pl = sequence.get('packing_list_list')[-1]
+    pl.edit(destination_section_value = self.getOrganisationModule()['Ba'])
+    pl.contentValues()[0].edit(**self.account_dict)
+          
+    
+  def stepCreatePackingListsForMonthlyAmortisationTest(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a list of packing lists describing a continuous period list :
+    2000/01/01 : immobilisation (1)
+    2002/03/01 : immobilisation (2), owner does not change
+    2002/04/16 : immobilisation (3), owner does not change
+    2002/05/16 : immobilisation (3), owner changes
+    2002/06/16 : immobilisation (4), actual owner changes
+    """
+    item = sequence.get('item')
+    amortisation_method = sequence.get('amortisation_method')
+    parameter_dict = sequence.get('parameter_dict', {})
+    parameter_dict.update(self.account_dict)
+    parameter_dict.update(self.monthly_dict)
+    parameter_dict.update( {'amortisation_method':amortisation_method,
+                            'amortisation_start_price':9000,
+                            'disposal_price':1000,
+                            'amortisation_duration':36,
+                            'immobilisation_vat':1000,
+                            'extra_cost_price':2000,
+                          } )
+    sequence.edit(item_list_list = [[item]],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Aa1"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    for property in ('amortisation_start_price','amortisation_duration','immobilisation_vat',
+                     'extra_cost_price','disposal_price'):
+      del parameter_dict[property]
+    for property in self.account_dict.keys():
+      del parameter_dict[property]
+    parameter_dict.update(self.extra_monthly_dict)
+    sequence.edit(datetime = DateTime('2002/03/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Aa2"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    parameter_dict.update(self.monthly_dict)
+    sequence.edit(datetime = DateTime('2002/04/16'),
+                  parameter_dict = parameter_dict)
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(datetime = DateTime('2002/05/16'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Ab1"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    sequence.edit(datetime = DateTime('2002/06/16'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["Ba"])
+    self.stepCreatePackingList(sequence=sequence)
+    self.stepAggregateItems(sequence=sequence)
+    
+    
+  def stepBuildAccounting(self, sequence=None, sequence_list=None, **kw):
+    """
+    Build completely accounting
+    """
+    self.stepPartialBuildAccounting(sequence=sequence, sequence_list=sequence_list, build_parameter_dict={}, **kw)
+  
+  def stepPartialBuildAccounting(self, sequence=None, sequence_list=None, build_parameter_dict=None, **kw):
+    """
+    Build a part of the simulation according to sequence data
+    """
+    if build_parameter_dict is None:
+      build_parameter_dict = sequence.get('build_parameter_dict',{})
+    self.getPortal().AccountingTransactionModule_activateBuildAmortisationTransaction(**build_parameter_dict)
+    
+  def stepAdoptPrevision(self,sequence=None, sequence_list=None, **kw):
+    """
+    Launch adopt_prevision() on each Amortisation Transaction
+    """
+    for transaction in self.getAccountingModule().contentValues():
+      if hasattr(transaction, 'adoptPrevision'):
+        transaction.adoptPrevision()
+        LOG('Launched adoptPrevision() for transaction', 0, transaction.getRelativeUrl())
+      else:
+        LOG('Cannot launch adoptPrevision() for transaction', 0, transaction.getRelativeUrl())
+        
+  def stepAcceptDecision(self, sequence=None, sequence_list=None, **kw):
+    """
+    Launch accept_decision() on each Amortisation Transaction
+    """
+    for transaction in self.getAccountingModule().contentValues():
+      LOG('transaction %s causality state :' % transaction, 0, transaction.getCausalityState())
+      try:
+        self.getPortal().portal_workflow.doActionFor(transaction,
+                                                     'accept_decision_action',
+                                                     'amortisation_transaction_causality_workflow')
+        LOG('Launched acceptDecision() for transaction', 0, transaction.getRelativeUrl())
+      except:
+        LOG('Cannot launch acceptDecision() for transaction', 0, transaction.getRelativeUrl())
+#       if hasattr(transaction, 'acceptDecision'):
+#         transaction.acceptDecision()
+#         LOG('Launched acceptDecision() for transaction', 0, transaction.getRelativeUrl())
+#       else:
+#         LOG('Cannot launch acceptDecision() for transaction', 0, transaction.getRelativeUrl())
+        
+  def stepChangeAccountingPrice(self, sequence=None, sequence_list=None, **kw):
+    """
+    Modify a price on an accounting line
+    """
+    found = 0
+    transaction_list = self.getAccountingModule().contentValues()
+    for transaction in transaction_list:
+      if transaction.getStopDate() == DateTime('2000/01/01'):
+        for line in transaction.contentValues():
+          if line.getSource() == self.account_dict['input_account'] and \
+             line.getQuantity() == 10000 and not found:
+            found = 1
+            line.edit(quantity=15000)
+  
+  def stepTestAllAppliedRulesAreEmpty(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test if all applied rules are empty
+    """
+    for item in self.getItemModule().contentValues():
+      applied_rule = item.getCausalityRelatedValueList(portal_type = 'Applied Rule')
+      if len(applied_rule) > 0:
+        applied_rule = applied_rule[0]
+        LOG('testing if applied rule is empty for item', 0, item)
+        self.assertEquals(len(applied_rule.contentValues()), 0)
+      
+  
+  def stepTestLinearAmortisationImmobilisationPeriods(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated immobilisation periods
+    """
+    item = sequence.get('item')
+    c_period_list = item.getImmobilisationPeriodList()
+    e_period_list = [ { 'start_date':DateTime('2000/01/01'), 'stop_date':DateTime('2001/01/01'),
+                        'initial_date':DateTime('2000/01/01'),
+                        'start_price':10000, 'owner':self.getOrganisationModule()["A"],
+                        'initial_price':10000, 'start_method':'eu/linear',
+                        'initial_method':'eu/linear', 'start_duration':72,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2001/01/01'), 'stop_date':DateTime('2002/01/01'),
+                        'initial_date':DateTime('2000/01/01'),
+                        'start_price':12000, 'owner':self.getOrganisationModule()["A"],
+                        'initial_price':10000, 'start_method':'eu/linear',
+                        'initial_method':'eu/linear', 'start_duration':48,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2002/01/01'), 'stop_date':DateTime('2002/07/01'),
+                        'initial_date':DateTime('2000/01/01'),
+                        'start_price':0, 'owner':self.getOrganisationModule()["A"],
+                        'initial_price':10000, 'start_method':'eu/linear',
+                        'initial_method':'eu/linear', 'start_duration':None,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2002/07/01'), 'stop_date':DateTime('2002/10/01'),
+                        'initial_date':DateTime('2002/07/01'),
+                        'owner':self.getOrganisationModule()["B"],
+                        'initial_price':5833.33, 'start_method':'eu/linear',
+                        'initial_method':'eu/linear', 'start_duration':42,
+                        'initial_duration':42 },
+                    ]
+    self._testImmobilisationPeriods(c_period_list, e_period_list)
+
+        
+  def stepTestLinearAmortisationImmobilisationPeriodsUncontinuous(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated immobilisation periods
+    """
+    item = sequence.get('item')
+    c_period_list = item.getImmobilisationPeriodList()
+    e_period_list = [ { 'start_date':DateTime('2000/01/01'), 'stop_date':DateTime('2001/01/01'),
+                        'initial_date':DateTime('2000/01/01'),
+                        'start_price':10000, 'owner':self.getOrganisationModule()["A"],
+                        'initial_price':10000, 'start_method':'eu/linear',
+                        'initial_method':'eu/linear', 'start_duration':72,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2003/01/01'), 'stop_date':DateTime('2004/01/01'),
+                        'initial_date':DateTime('2003/01/01'),
+                        'start_price':10000, 'owner':self.getOrganisationModule()["B"],
+                        'initial_price':10000, 'start_method':'eu/linear',
+                        'initial_method':'eu/linear', 'start_duration':72,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2004/01/01'),
+                        'initial_date':DateTime('2004/01/01'),
+                        'owner':self.getOrganisationModule()["A"],
+                        'initial_price':8333.33, 'start_method':'eu/linear',
+                        'initial_method':'eu/linear', 'start_duration':60,
+                        'initial_duration':60 },
+                    ]
+    self._testImmobilisationPeriods(c_period_list, e_period_list)
+
+            
+  def stepTestDegressiveAmortisationImmobilisationPeriods(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated immobilisation periods
+    """
+    item = sequence.get('item')
+    c_period_list = item.getImmobilisationPeriodList()
+    e_period_list = [ { 'start_date':DateTime('2000/01/01'), 'stop_date':DateTime('2001/01/01'),
+                        'initial_date':DateTime('2000/01/01'),
+                        'start_price':10000, 'owner':self.getOrganisationModule()["A"],
+                        'initial_price':10000, 'start_method':'fr/uncontinuous_degressive',
+                        'initial_method':'fr/uncontinuous_degressive', 'start_duration':72,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2001/01/01'), 'stop_date':DateTime('2002/07/01'),
+                        'initial_date':DateTime('2001/01/01'),
+                        'start_price':12000, 'owner':self.getOrganisationModule()["A"],
+                        'initial_price':12000, 'start_method':'fr/uncontinuous_degressive',
+                        'initial_method':'fr/uncontinuous_degressive', 'start_duration':48,
+                        'initial_duration':48 },
+                      { 'start_date':DateTime('2002/07/01'), 'stop_date':DateTime('2002/10/01'),
+                        'initial_date':DateTime('2002/07/01'),
+                        'start_price':4500, 'owner':self.getOrganisationModule()["B"],
+                        'initial_price':4500, 'start_method':'fr/uncontinuous_degressive',
+                        'initial_method':'fr/uncontinuous_degressive', 'start_duration':30,
+                        'initial_duration':30 },
+                    ]
+    self._testImmobilisationPeriods(c_period_list, e_period_list)
+      
+
+  def stepTestDegressiveAmortisationImmobilisationPeriodsUncontinuous(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated immobilisation periods
+    """
+    item = sequence.get('item')
+    c_period_list = item.getImmobilisationPeriodList()
+    e_period_list = [ { 'start_date':DateTime('2000/01/01'), 'stop_date':DateTime('2001/01/01'),
+                        'initial_date':DateTime('2000/01/01'),
+                        'start_price':10000, 'owner':self.getOrganisationModule()["A"],
+                        'initial_price':10000, 'start_method':'fr/uncontinuous_degressive',
+                        'initial_method':'fr/uncontinuous_degressive', 'start_duration':72,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2003/01/01'), 'stop_date':DateTime('2004/01/01'),
+                        'initial_date':DateTime('2003/01/01'),
+                        'start_price':10000, 'owner':self.getOrganisationModule()["B"],
+                        'initial_price':10000, 'start_method':'fr/uncontinuous_degressive',
+                        'initial_method':'fr/uncontinuous_degressive', 'start_duration':72,
+                        'initial_duration':72 },
+                      { 'start_date':DateTime('2004/01/01'),
+                        'initial_date':DateTime('2004/01/01'),
+                        'owner':self.getOrganisationModule()["A"],
+                        'start_method':'fr/uncontinuous_degressive',
+                        'initial_method':'fr/uncontinuous_degressive', 'start_duration':60,
+                        'initial_duration':60 },
+                    ]
+    self._testImmobilisationPeriods(c_period_list, e_period_list)
+      
+      
+  def _testImmobilisationPeriods(self,c_period_list,e_period_list):
+    LOG('c_period_list :', 0, c_period_list)
+    e_period_cursor = 0
+    for c_period in c_period_list:
+      LOG('c_period :', 0, c_period)
+      if e_period_cursor >= len(e_period_list):
+        LOG('More calculated periods than expected !', 0, '')
+        self.assertEquals(len(c_period_list), len(e_period_list))
+      e_period = e_period_list[e_period_cursor]
+      LOG('e_period :', 0, e_period)
+      e_period_cursor += 1
+      for key in e_period.keys():
+        e_value = e_period[key]
+        LOG('testing c_period %s "%s" value' % (e_period_cursor-1, key), 0, '')
+        self.failUnless(c_period.has_key(key))
+        c_value = c_period[key]
+        is_float = 0
+        try:
+          if type(c_value) != type(DateTime()):
+            c_value=float(c_value)
+            is_float = 1
+        except:
+          pass
+        if is_float:
+          self.assertEquals(round(c_value,2),e_value)
+        else:
+          self.assertEquals(c_value,e_value)
+    if e_period_cursor != len(e_period_list):
+      LOG('More expected periods than calculated !', 0, '')
+      self.assertEquals(len(c_period_list), len(e_period_list))
+
+
+  def stepTestLinearAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated prices
+    """
+    item = sequence.get('item')
+    price_list = [
+           (DateTime('2001/01/01'), 8333.33),
+           (DateTime('2002/01/01'), 6666.67),
+           (DateTime('2003/01/01'), 5000),
+           (DateTime('2003/02/01'), 4861.11),
+           (DateTime('2003/02/16'), 4791.67),
+           (DateTime('2004/01/01'), 3333.33),
+           (DateTime('2005/01/01'), 1666.67),
+           (DateTime('2006/01/01'), 0),
+           (DateTime('2020/01/01'), 0),
+           ]
+    for date, e_price in price_list:
+      c_price = item.getAmortisationPrice(at_date=date)
+      LOG('testing amortisation price at date', 0, date)
+      self.assertEquals(round(c_price,2), e_price)
+      
+    
+  def stepTestDegressiveAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated prices
+    """
+    item = sequence.get('item')
+    price_list = [
+           (DateTime('2001/01/01'), 6666.67),
+           (DateTime('2002/01/01'), 4444.44),
+           (DateTime('2003/01/01'), 2962.96),
+           (DateTime('2003/02/01'), 2880.66),
+           (DateTime('2003/02/16'), 2839.51),
+           (DateTime('2004/01/01'), 1975.31),
+           (DateTime('2005/01/01'), 987.65),
+           (DateTime('2006/01/01'), 0),
+           (DateTime('2020/01/01'), 0),
+           ]
+    for date, e_price in price_list:
+      c_price = item.getAmortisationPrice(at_date=date)
+      LOG('testing amortisation price at date', 0, date)
+      self.assertEquals(round(c_price,2), e_price)
+      
+    
+  def stepTestUncontinuousDegressiveAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated prices
+    """
+    item = sequence.get('item')
+    price_list = [
+           (DateTime('2001/01/01'), 6666.67),
+           (DateTime('2002/01/01'), 4444.44),
+           (DateTime('2003/01/01'), 2962.96),
+           (DateTime('2003/02/01'), 2880.66),
+           (DateTime('2003/02/16'), 2839.51),
+           (DateTime('2004/01/01'), 9857.14),
+           (DateTime('2005/01/01'), 6336.73),
+           (DateTime('2006/01/01'), 4073.62),
+           (DateTime('2020/01/01'), 0.),
+           ]
+    for date, e_price in price_list:
+      c_price = item.getAmortisationPrice(at_date=date)
+      LOG('testing amortisation price at date', 0, date)
+      self.assertEquals(round(c_price,2), e_price)
+      
+    
+  def stepTestActualUseAmortisationPriceCalculation(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated prices
+    """
+    item = sequence.get('item')
+    price_list = [
+           (DateTime('2001/01/01'), 7428.57),
+           (DateTime('2002/01/01'), 4857.14),
+           (DateTime('2003/01/01'), 2285.71),
+           (DateTime('2003/02/01'), 2071.43),
+           (DateTime('2003/02/16'), 1964.29),
+           (DateTime('2003/07/01'), 1000.00),
+           (DateTime('2004/01/01'), 800),
+           (DateTime('2005/01/01'), 400),
+           (DateTime('2006/01/01'), 0),
+           (DateTime('2020/01/01'), 0),
+           ]
+    for date, e_price in price_list:
+      c_price = item.getAmortisationPrice(at_date=date)
+      LOG('testing amortisation price at date', 0, date)
+      self.assertEquals(round(c_price,2), e_price)
+      
+    
+  def stepTestNoAmortisationMethodPriceCalculation(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test calculated prices
+    """
+    item = sequence.get('item')
+    price_list = [
+           (DateTime('2001/01/01'), 10000),
+           (DateTime('2002/01/01'), 10000),
+           (DateTime('2003/01/01'), 10000),
+           (DateTime('2003/02/01'), 10000),
+           (DateTime('2003/02/16'), 10000),
+           (DateTime('2004/01/01'), 12000),
+           (DateTime('2005/01/01'), 12000),
+           (DateTime('2006/01/01'), 12000),
+           (DateTime('2020/01/01'), 12000),
+           ]
+    for date, e_price in price_list:
+      c_price = item.getAmortisationPrice(at_date=date)
+      LOG('testing amortisation price at date', 0, date)
+      self.assertEquals(round(c_price,2), e_price)
+      
+  
+  def _createExpectedMovement(self, date, quantity, source=None, destination=None,
+                              source_section=None, destination_section=None):
+    r_dict = {'start_date':DateTime(date), 'stop_date':DateTime(date), 
+              'quantity':quantity, 'resource':'currency_module/EUR'}
+    my_account_dict = dict(self.account_dict)
+    my_account_dict.update(self.monthly_dict)
+    my_extra_account_dict = dict(self.extra_account_dict)
+    my_extra_account_dict.update(self.extra_monthly_dict)
+    for name, prop in (('source',source), ('destination',destination)):
+      if prop is None:
+        r_dict[name] = None
+      elif prop.split('_')[-1] == 'extra':
+        r_dict[name] = my_extra_account_dict['_'.join(prop.split('_')[:-1])]
+      else:
+        r_dict[name] = my_account_dict[prop]
+    for name, prop in (('source_section_value', source_section), ('destination_section_value', destination_section)):
+      if prop is None:
+        r_dict[name] = None
+      else:
+        r_dict[name] = self.getOrganisationModule()[prop]
+    return r_dict
+
+        
+  def stepTestLinearAmortisationSimulationBuild(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for linear amortisation
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 1666.67, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -1666.67, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 1666.67, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -1666.67, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 1666.67, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -1666.67, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 833.33, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -833.33, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 833.33, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -833.33, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2005/01/01', 1666.67, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2005/01/01', -1666.67, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2006/01/01', 1666.67, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2006/01/01', -1666.67, 'depreciation_account', None, 'A', None))
+        
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
     self.assertEquals(len(applied_rule_list),1)
     applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
     
-    # Verify each written simulation movement
-    simulation_movement_list = list(applied_rule.objectValues())
-    LOG('test :', 0, 'simulation_movement_list = %s' % repr(simulation_movement_list))
-    simulation_movement_list.sort(lambda a,b: cmp(a.getStopDate(), b.getStopDate()))
-    for simulation_movement in simulation_movement_list:
-      source_section = simulation_movement.getSourceSectionId()
-      destination_section = simulation_movement.getDestinationSectionId()
-      destination = simulation_movement.getDestinationId()
-      source = simulation_movement.getSourceId()
-      value = simulation_movement.getQuantity()
-      date = simulation_movement.getStopDate()
-      
-      LOG('testImmobilisation :',0,'verifying simulation movement %s : source=%s, destination=%s, source_section=%s, destination_section=%s, value=%s, date=%s' % (repr(simulation_movement.getId()), repr(source), repr(destination), repr(source_section), repr(destination_section), repr(value), repr(date)))
-      LOG('testImmobilisation :',0, 'remaining expected movements : %s' % repr(expected))
-      i = 0
-      expected_movement = None
-      while expected_movement is None and i<len(expected):
-        current_movement = expected[i]
-        if current_movement['date'] == date and current_movement['source'] == source \
-                                            and current_movement['destination'] == destination \
-                                            and current_movement['source_section'] == source_section \
-                                            and current_movement['destination_section'] == destination_section \
-                                            and self.roundedEquals(current_movement['value'], value):
-          expected_profit_quantity = current_movement.get('profit_quantity', 0)
-          profit_quantity = simulation_movement.getProfitQuantity()
-          if profit_quantity is None:
-            profit_quantity = 0
-          if self.roundedEquals(profit_quantity,expected_profit_quantity):
-            expected_movement = current_movement
-          else:
-            LOG('found a movement, but profit_quantity differs', 0, current_movement)
-            LOG('profit quantity of transaction', 0, profit_quantity)
-        i += 1
-      
-      self.failUnless(expected_movement is not None)
-      
-      if expected_movement is not None:
-        del expected[i-1]
-        
-    # Then verify if there are expected simulation movements
-    # which have not been matched
-    LOG('testImmobilisation :',0,'verifying if expected values have all been matched... remaining = %s' % repr(expected))
-    self.assertEquals(len(expected),0)
-    
-      
-      
-  def stepPrepareLinearTest(self, sequence=None, **kw):
-    """
-    Prepare data in sequence for the linear test
-    """
-    sequence.edit(immobilisation_list_name = 'linear')
-
-    
-  def stepPrepareDegressiveTest(self, sequence=None, **kw):
-    """
-    Prepare data in sequence for the degressive test
-    """
-    sequence.edit(immobilisation_list_name = 'degressive')
-    
-    
-  def stepPrepareSameDayTest(self, sequence=None, **kw):
-    """
-    Prepare data in sequence for the test on same day
-    """
-    sequence.edit(immobilisation_list_name = 'same_day')
-    
-    
-  def stepPrepareFirstOwnerChangeTest(self, sequence=None, **kw):
-    """
-    Prepare data in sequence for the first test on ownership changing
-    """
-    sequence.edit(immobilisation_list_name = 'owner_change_1')
-    
-    
-  def stepPrepareSecondOwnerChangeTest(self, sequence=None, **kw):
-    """
-    Prepare data in sequence for the second test on ownership changing
-    """
-    sequence.edit(immobilisation_list_name = 'owner_change_2')
-    
-    
-  def stepPrepareThirdOwnerChangeTest(self, sequence=None, **kw):
-    """
-    Prepare data in sequence for the third test on ownership changing
-    """
-    sequence.edit(immobilisation_list_name = 'owner_change_3')
-      
   
-  def stepPrepareComplexTest(self, sequence=None, **kw):
+  def stepTestUncontinuousDegressiveAmortisationSimulationBuild(self, sequence=None, sequence_list=None, **kw):
     """
-    Prepare data in sequence for the complex test
+    Test built simulation for uncontinuous degressive amortisation
     """
-    sequence.edit(immobilisation_list_name = 'complex')
-
-
-  def stepPrepareActualUseTest(self, sequence=None, **kw):
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2222.22, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2222.22, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 1481.48, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -1481.48, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 493.83, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -493.83, 'depreciation_account', None, 'A', None))
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', -7530.86, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', 10000, 'immobilisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', -2469.14, 'output_account', None, 'A', None))
+    # New immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', 12000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', -12000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2142.86, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2142.86, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2005/01/01', 3520.41, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2005/01/01', -3520.41, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2006/01/01', 2263.12, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2006/01/01', -2263.12, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2007/01/01', 1454.86, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2007/01/01', -1454.86, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2008/01/01', 935.27, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2008/01/01', -935.27, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2009/01/01', 841.74, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2009/01/01', -841.74, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2010/01/01', 841.74, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2010/01/01', -841.74, 'depreciation_account', None, 'A', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def stepTestNoAmortisationMethodSimulationBuild(self, sequence=None, sequence_list=None, **kw):
     """
-    Prepare data in sequence for the actual use test
+    Test built simulation for no amortisation method
     """
-    sequence.edit(immobilisation_list_name = 'actual_use')
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # No annuity
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', 10000, 'immobilisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', -10000, 'output_account', None, 'A', None))
+    # New immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', 12000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/07/01', -12000, 'immobilisation_account', None, 'A', None))
+    # No annuity
     
-  def stepPrepareFirstSolverTest(self, sequence=None, **kw):
-    sequence.edit(immobilisation_list_name = 'solver_1')
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
     
-  def stepPrepareSecondSolverTest(self, sequence=None, **kw):
-    sequence.edit(immobilisation_list_name = 'solver_2')
-    
-  def stepPrepareThirdSolverTest(self, sequence=None, **kw):
-    sequence.edit(immobilisation_list_name = 'solver_3')
-
-  def stepValidateTransaction(self, sequence=None, **kw):
+  
+  def stepTestSimulationBuildForContinuousMethodWithoutOwnerChange(self, sequence=None, sequence_list=None, **kw):
     """
-    Validate some existing Amortisation Transaction
-    according to the data structure of this test script
+    Test built simulation for a linear amortisation method without owner change
     """
-    accounting = self.getAccountingModule()
-    to_validate_list = self.validation_list[self.validation_step]
-    self.validation_step += 1
-    for to_validate in to_validate_list:
-      LOG('looking for transaction', 0, repr(to_validate))
-      for transaction in accounting.objectValues():
-        LOG('transaction :', 0, 'destination_section=%s, source_section=%s, stop_date=%s' % (repr(transaction.getDestinationSection()), repr(transaction.getSourceSection()), repr(transaction.getStopDate())))
-        if transaction.getDestinationSection() == to_validate['destination_section'] and \
-          transaction.getSourceSection() == to_validate['source_section'] and \
-          transaction.getStopDate() == to_validate['date'] and \
-          self.getWorkflowTool().getStatusOf('amortisation_transaction_workflow',transaction)\
-          ['amortisation_transaction_state'] != 'delivered':
-          LOG('changing status', 0, "%s (%s to %s, date %s)" % (repr(transaction), repr(transaction.getSourceSection()), repr(transaction.getDestinationSection()), repr(transaction.getStopDate())))
-          LOG('current status', 0, repr(self.getWorkflowTool().getStatusOf('amortisation_transaction_workflow', transaction)['amortisation_transaction_state']))
-          
-          AccountingTransaction_viewAccountingTransactionLineList = transaction.contentValues(filter={'portal_type': ('Accounting Transaction Line', 'Sale Invoice Transaction Line', 'Purchase Invoice Transaction Line', 'Amortisation Transaction Line')})
-          sum = 0
-          for transaction_line in AccountingTransaction_viewAccountingTransactionLineList:
-            LOG('line : ', 0, '%s to %s (%s)' % (repr(transaction_line.getSource()), repr(transaction_line.getDestination()), repr(transaction_line.getQuantity())))
-            quantity = transaction_line.getQuantity() or 0.0
-            sum += quantity
-          LOG('sum', 0, round(sum*100))
-          
-          self.getWorkflowTool().doActionFor(transaction, 'stop_action', 'amortisation_transaction_workflow')
-          LOG('new status', 0, repr(self.getWorkflowTool().getStatusOf('amortisation_transaction_workflow', transaction)['amortisation_transaction_state']))
-          LOG('rechanging', 0, repr(transaction))
-          LOG('source_section =', 0, '%s, resource = %s' % (repr(transaction.getSourceSection()), repr(transaction.getResource())))
-          self.getWorkflowTool().doActionFor(transaction, 'deliver_action', 'amortisation_transaction_workflow')
-          LOG('new status', 0, repr(self.getWorkflowTool().getStatusOf('amortisation_transaction_workflow', transaction)['amortisation_transaction_state']))
-          for transaction_line in AccountingTransaction_viewAccountingTransactionLineList:
-            LOG('line : ', 0, '%s to %s (%s)' % (repr(transaction_line.getSource()), repr(transaction_line.getDestination()), repr(transaction_line.getQuantity())))
-            LOG('line.getDeliveryRelated', 0, repr(transaction_line.getDeliveryRelatedValueList()))
-          break
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    # Account transfer
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account_extra', 'amortisation_account', 'Aa', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -10000, 'immobilisation_account_extra', 'immobilisation_account', 'Aa', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account_extra', 'depreciation_account', 'Aa', 'Aa'))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 3333.33, 'amortisation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -3333.33, 'depreciation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 3333.33, 'amortisation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -3333.33, 'depreciation_account_extra', None, 'Aa', None))
     
-          
-  def stepTic(self,**kw):
-    portal = self.getPortal()
-    LOG('Tic :', 0, 'before : %s' % repr(portal.portal_activities.getMessageList()))
-    tries = 0
-    while len(portal.portal_activities.getMessageList())>0:
-      try:
-        self.tic()
-      except:
-        LOG('TEST WARNING : error during tic', 0, '')
-        # Wait for 2 minutes
-        if tries < 5:
-          from time import sleep
-          sleep(120)
-          tries += 1
-        else:
-          LOG('Timeout', 0, '')
-          self.failUnless(0)
-    LOG('Tic :', 0, 'after : %s' % repr(portal.portal_activities.getMessageList()))
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def stepTestSimulationBuildForContinuousMethodWithOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a linear amortisation method with owner change but no actual owner (ie group) change
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    # Account transfer
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', 'amortisation_account', 'Ab', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -10000, 'immobilisation_account', 'immobilisation_account', 'Ab', 'Aa'))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 3333.33, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -3333.33, 'depreciation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 3333.33, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -3333.33, 'depreciation_account', None, 'Ab', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def stepTestSimulationBuildForContinuousMethodWithActualOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a linear amortisation method with actual owner change (ie group)
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'output_account', None, 'Aa', None))
+    # New immobilisation for new owner
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 6666.67, 'input_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'immobilisation_account', None, 'Ba', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 3333.33, 'amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -3333.33, 'depreciation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 3333.33, 'amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -3333.33, 'depreciation_account', None, 'Ba', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def stepTestSimulationBuildForUncontinuousMethodWithoutOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a uncontinuous degressive amortisation method without owner change
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 6666.67, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'depreciation_account', None, 'Aa', None))
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'output_account', None, 'Aa', None))
+    # New immobilisation for new owner
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 12000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -12000, 'immobilisation_account_extra', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 8000, 'amortisation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -8000, 'depreciation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2666.67, 'amortisation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2666.67, 'depreciation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 1333.33, 'amortisation_account_extra', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -1333.33, 'depreciation_account_extra', None, 'Aa', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def stepTestSimulationBuildForUncontinuousMethodWithOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a uncontinuous degressive amortisation method with owner change but no actual owner change
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 6666.67, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'depreciation_account', None, 'Aa', None))
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'output_account', None, 'Aa', None))
+    # New immobilisation for new owner
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 12000, 'input_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -12000, 'immobilisation_account', None, 'Ab', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 8000, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -8000, 'depreciation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2666.67, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2666.67, 'depreciation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 1333.33, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -1333.33, 'depreciation_account', None, 'Ab', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
     
     
-  def stepAggregate(self, **kw):
-    self.getPortal().AccountingTransactionModule_aggregateSimulationMovementsToAccounting(from_date=None, to_date=None)
+  def stepTestSimulationBuildForUncontinuousMethodWithActualOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a uncontinuous degressive amortisation method with actual owner change
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 6666.67, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'depreciation_account', None, 'Aa', None))
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'output_account', None, 'Aa', None))
+    # New immobilisation for new owner
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 12000, 'input_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -12000, 'immobilisation_account', None, 'Ba', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 8000, 'amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -8000, 'depreciation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2666.67, 'amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2666.67, 'depreciation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 1333.33, 'amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -1333.33, 'depreciation_account', None, 'Ba', None))
     
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+        
+  
+  def stepTestSimulationBuildForNoChangeMethodWithoutOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a no change amortisation method without owner change
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
     
-  def stepVerifyAggregation(self, sequence=None, **kw):
-    def cmpfunc(a,b):
-      if a.getStopDate() - b.getStopDate() < 0: return -1
-      if a.getStopDate() - b.getStopDate() > 0: return 1
-      return 0
-
-    # Gathering informations to test "delivery" category
-    expected_simulation_movement_list = {}
-    for name, value in self.simulation_value_list.items():
-      if len(value) != 0:
-        step = self.current_step.get(name, 0)
-        for simulation_movement in value[step]:
-          date                = simulation_movement['date']
-          source_section      = simulation_movement['source_section']
-          destination_section = simulation_movement['destination_section']
-          source              = simulation_movement['source']
-          destination         = simulation_movement['destination']
-          value               = simulation_movement['value']
-          if expected_simulation_movement_list.get( (date, source_section, destination_section, source, destination), None) is None:
-            expected_simulation_movement_list[ (date, source_section, destination_section, source, destination) ] = []
-          expected_simulation_movement_list[(date, source_section, destination_section, source, destination) ].append(value)
-             
-    aggregation_step = getattr(self,"aggregation_step",None)
-    if aggregation_step is None:
-      aggregation_step = 0
-    LOG('aggregation_step', 0, aggregation_step)
-    expected = deepcopy(self.aggregated[aggregation_step])
-    self.aggregation_step = aggregation_step + 1
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
     
-    accounting_transaction_list = list(self.getAccountingModule().objectValues())
-    accounting_transaction_list.sort(cmpfunc)
-
-    for accounting_transaction in accounting_transaction_list:
-      # Check if this accounting transaction is expected
-      expected_transaction = None
-      i = 0
-      date = accounting_transaction.getStopDate()
-      source_section = accounting_transaction.getSourceSection()
-      destination_section = accounting_transaction.getDestinationSection()
-      LOG('testImmobilisation :',0,'verifying accounting transaction %s : destination_section=%s, source_section=%s, date=%s' % (repr(accounting_transaction.getId()), repr(destination_section), repr(source_section), repr(date)))
-      LOG('testImmobilisation :',0, 'remaining expected transactions : %s' % repr(expected))
-      while expected_transaction is None and i<len(expected):
-        current_transaction = expected[i]
-        expected_date = current_transaction['date']
-        expected_source_section = current_transaction['source_section']
-        expected_destination_section = current_transaction['destination_section']
-        if expected_source_section is not None: expected_source_section = 'organisation/' + expected_source_section
-        if expected_destination_section is not None: expected_destination_section = 'organisation/' + expected_destination_section
-        if current_transaction['date'] == date and expected_source_section == source_section \
-                                               and expected_destination_section == destination_section:
-          expected_transaction = current_transaction
-        i += 1
-       
-      if expected_transaction is None:
-        LOG('PROBLEM : unable to match accounting transaction to an expected one', 0, '')
-        for accounting_transaction_line in accounting_transaction.objectValues():
-          LOG('transaction line : ', 0, 'source=%s, destination=%s, value=%s' % (repr(accounting_transaction_line.getSource()), repr(accounting_transaction_line.getDestination()), repr(accounting_transaction_line.getQuantity())))
+  
+  def stepTestSimulationBuildForNoChangeMethodWithOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a no change amortisation method with owner change but no actual owner (ie group) change
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    # Account transfer
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', 'amortisation_account', 'Ab', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -10000, 'immobilisation_account', 'immobilisation_account', 'Ab', 'Aa'))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 3333.33, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -3333.33, 'depreciation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 3333.33, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -3333.33, 'depreciation_account', None, 'Ab', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def stepTestSimulationBuildForNoChangeMethodWithActualOwnerChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a no change amortisation method with actual owner change (ie group)
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 9000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 10000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'output_account', None, 'Aa', None))
+    # New immobilisation for new owner
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 6666.67, 'input_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -6666.67, 'immobilisation_account', None, 'Ba', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 3333.33, 'amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -3333.33, 'depreciation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 3333.33, 'amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -3333.33, 'depreciation_account', None, 'Ba', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def stepTestSimulationBuildForMonthlyAmortisation(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test built simulation for a linear amortisation method with a monthly amortisation
+    """
+    def createMonthlyAnnuityList(start_date, stop_date, month_value, account, section):
+      return_list = []
+      current_date = start_date
+      while DateTime(current_date) <= DateTime(stop_date):
+        return_list.append(self._createExpectedMovement(
+              current_date, month_value, account, None, section, None))
+        year, month, day = [int(x) for x in current_date.split('/')]
+        month += 1
+        if month == 13:
+          month = 1
+          year += 1
+        current_date = '%s/%s/%s' % (year, month, day)
+      return return_list
         
-      self.failUnless(expected_transaction is not None)
-      # We matched this accounting transaction with an expected one
-      # Now we check if each of its lines matchs with an expected one
-      #if expected_transaction is not None:
-      for accounting_transaction_line in accounting_transaction.objectValues():
-        # Check if this accounting transaction line is expected
-        expected_transaction_line = None
-        j = 0
-        source = accounting_transaction_line.getSource()
-        destination = accounting_transaction_line.getDestination()
-        value = accounting_transaction_line.getQuantity()
-        
-        LOG('testImmobilisation :',0,'verifying accounting transaction  line %s : destination=%s, source=%s, value=%s' % (repr(accounting_transaction_line.getId()), repr(destination), repr(source), repr(value)))
-        LOG('testImmobilisation :',0, 'remaining expected transaction lines : %s' % repr(expected_transaction['data']))
-        while expected_transaction_line is None and j<len(expected_transaction['data']):
-          current_transaction_line = expected_transaction['data'][j]
-          expected_value = current_transaction_line['value']
-          expected_source = current_transaction_line['source']
-          expected_destination = current_transaction_line['destination']
-          if expected_source is not None: expected_source = 'account/' + expected_source
-          if expected_destination is not None: expected_destination = 'account/' + expected_destination
-          if expected_source == source and expected_destination == destination \
-                                       and self.roundedEquals(expected_value, value):
-            expected_transaction_line = current_transaction_line
-          j += 1
-       
-        self.failUnless(expected_transaction_line is not None)
-        # The current accounting transaction line is matched, we delete it
-        # in the "expected" data
-        del expected_transaction['data'][j-1]
-        
-        # Check if "delivery" category is well formed
-        simulation_movement_list = accounting_transaction_line.getDeliveryRelatedValueList()
-        
-        date = accounting_transaction.getStopDate()
-        source_section = accounting_transaction.getSourceSection()
-        destination_section = accounting_transaction.getDestinationSection()
-        source = accounting_transaction_line.getSource()
-        destination = accounting_transaction_line.getDestination()
-        if source_section is not None:
-          source_section = source_section.split('/')[-1]
-        if destination_section is not None:
-          destination_section = destination_section.split('/')[-1]
-        if source is not None:
-          source = source.split('/')[-1]
-        if destination is not None:
-          destination = destination.split('/')[-1]
-        
-        # To check the delivery category, we need to find which
-        # simulation movements are expected in getDeliveryRelatedValueList
-        expected_list = expected_simulation_movement_list.get( (date, source_section, destination_section, source, destination) , [])
-        if expected_list is []:
-          LOG('test :', 0, 'unable to find key "(%s,%s,%s,%s,%s)"... expected_simulation_movement_list = %s' % (repr(date), repr(source_section), repr(destination_section), repr(source), repr(destination), repr(expected_simulation_movement_list)))
-        
-        LOG('testImmobilisation :', 0, 'verifying DeliveryRelatedValueList for line %s... expected = %s, found = %s' % (repr(accounting_transaction_line.getId()), repr(expected_list), repr(simulation_movement_list)))
-        for simulation_movement in simulation_movement_list:
-          value = simulation_movement.getQuantity()
-          LOG('testImmobilisation :', 0, 'in DeliveryRelatedValueList, verifying if we find %s in expected list' % repr(value))
-          matching_movement = None
-          j = 0
-          while matching_movement is None and j<len(expected_list):
-            current_movement = expected_list[j]
-            LOG('testImmobilisation :', 0, 'current_movement = %s, value = %s' % (repr(current_movement), repr(value)))
-            LOG('testImmobilisation :', 0, 'rounded current = %s, rounded value = %s' % (repr(round(current_movement,2)), repr(round(value, 2))))
-            if self.roundedEquals(current_movement,value):
-              matching_movement = current_movement
-            j += 1
-          
-          self.failUnless(matching_movement is not None)
-          if matching_movement == expected_list[j-1]:
-            j -= 1
-          del expected_list[j]
-        
-          
-      LOG('testImmobilisation :', 0, 'Verify if transaction %s is empty... remaining expected = %s' % (repr(accounting_transaction.getId()), repr(expected_transaction['data'])))
-      # Deleting 0 remaining lines
-      for k in range(len(expected_transaction['data'][:])):
-        remaining_line = expected_transaction['data'][k]
-        if remaining_line['value'] == 0:
-          del expected_transaction['data'][k]
-      self.assertEquals( len(expected_transaction['data']), 0 )
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation 2000/01/01
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 2000, 'extra_cost_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -11000, 'immobilisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -1000, 'immobilisation_vat_account', None, 'Aa', None))
+    # Annuities
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2000/02/01', '2001/01/01', 277.78, 'amortisation_account', 'Aa'))  # 3333.33/12
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2000/02/01', '2001/01/01', -277.78, 'monthly_amortisation_account', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 3333.33, 'monthly_amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2001/02/01', '2002/01/01', 277.78, 'amortisation_account', 'Aa'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2001/02/01', '2002/01/01', -277.78, 'monthly_amortisation_account', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 3333.33, 'monthly_amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -3333.33, 'depreciation_account', None, 'Aa', None))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/02/01', '2002/03/01', 277.78, 'amortisation_account', 'Aa'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/02/01', '2002/03/01', -277.78, 'monthly_amortisation_account', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 555.56, 'monthly_amortisation_account', None, 'Aa', None)) # 3333.33/6
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -555.56, 'depreciation_account', None, 'Aa', None))
+    # Optional transfer 2002/03/01
+    # Annuities
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/04/01', '2002/04/16', 277.78, 'amortisation_account', 'Aa'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/04/01', '2002/04/16', -277.78, 'monthly_amortisation_account_extra', 'Aa'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/05/01', '2002/05/01', 138.89, 'amortisation_account', 'Aa')) # 277.78 / 2
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/05/01', '2002/05/01', -138.89, 'monthly_amortisation_account_extra', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 416.67, 'monthly_amortisation_account_extra', None, 'Aa', None)) # 277.78 * 1.5
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -416.67, 'depreciation_account', None, 'Aa', None))
+    # Optional transfer 2002/04/16
+    # Annuities
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/05/01', '2002/06/01', 138.89, 'amortisation_account', 'Aa')) # 277.78 / 2
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/05/01', '2002/06/01', -138.89, 'monthly_amortisation_account', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 277.78, 'monthly_amortisation_account', None, 'Aa', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -277.78, 'depreciation_account', None, 'Aa', None))
+    # Account transfer 2002/05/16
+    e_simulation_movement_list.append(self._createExpectedMovement( # 6666.67 + 277.78 * 4.5
+              '2002/05/16', 7916.67, 'amortisation_account', 'amortisation_account', 'Ab', 'Aa'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/05/16', -11000, 'immobilisation_account', 'immobilisation_account', 'Ab', 'Aa'))
+    # Annuities
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/06/01', '2002/07/01', 138.89, 'amortisation_account', 'Ab'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/06/01', '2002/07/01', -138.89, 'monthly_amortisation_account', 'Ab'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 277.78, 'monthly_amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -277.78, 'depreciation_account', None, 'Ab', None))
+    # Unimmobilisation 2002/06/16
+    e_simulation_movement_list.append(self._createExpectedMovement( # 6666.67 + 277.78 * 5.5
+              '2002/06/16', -8194.44, 'amortisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/06/16', 11000, 'immobilisation_account', None, 'Ab', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/06/16', -2805.56, 'output_account', None, 'Ab', None))
+    # New immobilisation for new owner 2002/06/16
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/06/16', 2805.56, 'input_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/06/16', -2805.56, 'immobilisation_account', None, 'Ba', None))
+    # Annuities
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/07/01', '2002/07/01', 150.46, 'amortisation_account', 'Ba')) # (1805.56 / 6) / 2
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/07/01', '2002/07/01', -150.46, 'monthly_amortisation_account', 'Ba'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/08/01', '2002/12/01', 300.93, 'amortisation_account', 'Ba')) # 1805.56 / 6
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2002/08/01', '2002/12/01', -300.93, 'monthly_amortisation_account', 'Ba'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2003/01/01', '2003/01/01', 150.46, 'amortisation_account', 'Ba'))
+    e_simulation_movement_list.extend(createMonthlyAnnuityList(
+              '2003/01/01', '2003/01/01', -150.46, 'monthly_amortisation_account', 'Ba'))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 1805.56, 'monthly_amortisation_account', None, 'Ba', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -1805.56, 'depreciation_account', None, 'Ba', None))
+              
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+  
+  def _testSimulationBuild(self, c_simulation_movement_list, e_simulation_movement_list):
+    for c_movement in c_simulation_movement_list:
+      LOG('c_movement %s :' % c_movement, 0, 
+       'date=%s, source=%s, source_section=%s, destination=%s, destination_section=%s, quantity=%s, resource=%s, profit_quantity=%s' % (
+          (c_movement.getStopDate(), c_movement.getSource(), c_movement.getSourceSection(),
+           c_movement.getDestination(), c_movement.getDestinationSection(), c_movement.getQuantity(), 
+           c_movement.getResource(), c_movement.getProfitQuantity())
+         )
+      )
+      e_found_movement = None
+      e_cursor = 0
+      while e_cursor < len(e_simulation_movement_list) and e_found_movement is None:
+        e_movement = e_simulation_movement_list[e_cursor]
+        wrong_movement = 0
+        key_cursor = 0
+        key_list = e_movement.keys()
+        while key_cursor < len(key_list) and not wrong_movement:
+          key = key_list[key_cursor]
+          e_value = e_movement[key]
+          key = 'get' + ''.join([k.capitalize() for k in key.split('_')])
+          c_value = getattr(c_movement,key)()
+          is_float = 0
+          try:
+            if type(c_value) != type(DateTime()):
+              c_value=float(c_value)
+              is_float = 1
+          except:
+            pass
+          if is_float:
+            wrong_movement = (round(c_value,2) != round(e_value,2))
+          else:
+            wrong_movement = (c_value != e_value)
+          key_cursor += 1
+        if not wrong_movement:
+          e_found_movement = e_movement
+        e_cursor += 1
+      if e_found_movement is None:
+        LOG('No expected movement found for this calculated one !',0,'')
+        self.failUnless(e_found_movement is not None)
+      e_simulation_movement_list.remove(e_found_movement)
+    if len(e_simulation_movement_list) > 0:
+      LOG('More expected movements than calculated ! Remaining expected ones are', 0, e_simulation_movement_list)
+      self.assertEquals(len(e_simulation_movement_list),0)
       
-      LOG('verify aggregation... expected before delete =', 0, repr(expected))
-      del expected[i-1]
-      LOG('verify aggregation... expected after delete =', 0, repr(expected))
-          
-    LOG('testImmobilisation :', 0, 'Verify if all expected transaction have been matched... remaining = %s' % repr(expected))
-    self.assertEquals(len(expected), 0)
-        
-      
     
-  def testImmobilisation(self, quiet=0,run=1):
+  def _buildExpectedTransaction(self, date, source_section, destination_section, causality_state, causality_list=[]):
+    r_dict = {'start_date':DateTime(date), 'stop_date':DateTime(date), 
+              'resource':'currency_module/EUR', 'line_list':[],
+              'causality_state':causality_state}
+    for name, prop in (('source_section_value', source_section), ('destination_section_value', destination_section)):
+      if prop is None:
+        r_dict[name] = None
+      else:
+        r_dict[name] = self.getOrganisationModule()[prop]
+    causality_value_list = []
+    for causality in causality_list:
+      causality_value_list.append(self.getItemModule()[causality])
+    if len(causality_value_list) != 0:
+      r_dict['causality_value_list'] = causality_value_list
+    return r_dict
+  
+      
+  def _buildExpectedTransactionLine(self, source, destination, quantity):
+    r_dict = {'quantity':quantity}
+    my_account_dict = dict(self.account_dict)
+    my_account_dict.update(self.monthly_dict)
+    my_extra_account_dict = dict(self.extra_account_dict)
+    my_extra_account_dict.update(self.extra_monthly_dict)
+    for name, prop in (('source',source), ('destination',destination)):
+      if prop is None:
+        r_dict[name] = None
+      elif prop.split('_')[-1] == 'extra':
+        r_dict[name] = my_extra_account_dict['_'.join(prop.split('_')[:-1])]
+      else:
+        r_dict[name] = my_account_dict[prop]
+    return r_dict
+
+      
+  def stepTestPartialAccountingBuild(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test partial accounting build, based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01, and partial build is done with at_date=2002/01/01 and items = 1 & 2
+    """
+    e_transaction_list = []
+    transaction = self._buildExpectedTransaction('2000/01/01','A',None,self.solved,['item1','item2'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,20000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-20000)]
+    e_transaction_list.append(transaction)
+    transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1','item2'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,5000),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-5000)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1','item2'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,5000),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-5000)]
+    e_transaction_list.append(transaction)
+    
+    c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
+    c_transaction_list = [o.getObject() for o in c_transaction_list]
+    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    self._testAccountingBuild(c_transaction_list, e_transaction_list)
+    
+    
+  def stepTestMultiItemAccountingBuild(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 3 items, with complete build
+    """
+    e_transaction_list = []
+    transaction = self._buildExpectedTransaction('2000/01/01','A',None,self.solved,['item1','item2','item3'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,30000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-30000)]
+    e_transaction_list.append(transaction)
+    transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1','item2','item3'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1','item2','item3'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1','item2','item3'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
+    e_transaction_list.append(transaction)                               
+    transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1','item2','item3'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,7500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-7500)]
+    e_transaction_list.append(transaction)
+    
+    c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
+    c_transaction_list = [o.getObject() for o in c_transaction_list]
+    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    self._testAccountingBuild(c_transaction_list, e_transaction_list)
+  
+    
+  def stepTestSimpleAccountingBuild(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build
+    """
+    e_transaction_list = []
+    transaction = self._buildExpectedTransaction('2000/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,10000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-10000)]
+    e_transaction_list.append(transaction)
+    transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                               
+    transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)
+    
+    c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
+    c_transaction_list = [o.getObject() for o in c_transaction_list]
+    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    self._testAccountingBuild(c_transaction_list, e_transaction_list)
+  
+    
+  def stepTestSimulationBuildAfterFirstAccountingChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build.
+    Then a movement is added, at 2002/01/01, changing the owner
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Annuities set to 0 due to their link with transactions
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 0, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -0, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 0, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -0, 'depreciation_account', None, 'A', None))              
+    # Unimmobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -5000, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 10000, 'immobilisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -5000, 'output_account', None, 'A', None))
+    # New immobilisation for new owner
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 5000, 'input_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -5000, 'immobilisation_account', None, 'B', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'B', None))
+              
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def stepTestSimulationBuildAfterSecondAccountingChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build.
+    Then a movement is added, at 2002/01/01, changing the owner, and accounting is built again.
+    Then the second movement is deleted
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Annuities reset to their real value
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))              
+    # Unimmobilisation, set to 0 due to their link to transactions
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -0, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 0, 'immobilisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -0, 'output_account', None, 'A', None))
+    # New immobilisation for new owner, set to 0 due to their link to transactions
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 0, 'input_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -0, 'immobilisation_account', None, 'B', None))
+    # Annuities, set to 0 due to their link to transactions
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 0, 'amortisation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -0, 'depreciation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 0, 'amortisation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -0, 'depreciation_account', None, 'B', None))
+              
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def stepTestSimulationBuildAfterPackingListModification(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build.
+    Then a movement is added, at 2002/01/01, changing the owner, and accounting is built again.
+    Then the second movement is deleted, and the accounting is rebuilt
+    Then adopt_prevision() is launched on accounting transactions
+    Then the first movement is modified, setting amortisation_account to another value
+    """
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account_extra', None, 'A', None))              
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Unimmobilisation, set to 0 before
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 0, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 0, 'immobilisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 0, 'output_account', None, 'A', None))
+    # Still annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Immobilisation on B, set to 0 previously
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 0, 'input_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -0, 'immobilisation_account', None, 'B', None))
+    # Annuities to B set to 0 previously
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 0, 'amortisation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -0, 'depreciation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 0, 'amortisation_account', None, 'B', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -0, 'depreciation_account', None, 'B', None))
+    
+              
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def stepTestAccountingBuildAfterFirstChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build.
+    Then a movement is added, at 2002/01/01, changing the owner, and the accounting is rebuilt
+    """
+    e_transaction_list = []
+    # Immobilisation
+    transaction = self._buildExpectedTransaction('2000/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,10000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-10000)]
+    e_transaction_list.append(transaction)
+    # Annuities
+    transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500),
+                                # Unimmobilisation
+                                self._buildExpectedTransactionLine('amortisation_account',None,-5000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,10000),
+                                self._buildExpectedTransactionLine('output_account',None,-5000)]
+    # Annuities ; these ones are divergent
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.diverged,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                               
+    transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.diverged,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)
+    # Immobilisation for new owner
+    transaction = self._buildExpectedTransaction('2002/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,5000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-5000)]
+    e_transaction_list.append(transaction)
+    # Annuities
+    transaction = self._buildExpectedTransaction('2003/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                              
+    transaction = self._buildExpectedTransaction('2004/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)
+    
+    c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
+    c_transaction_list = [o.getObject() for o in c_transaction_list]
+    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    self._testAccountingBuild(c_transaction_list, e_transaction_list)
+  
+    
+  def stepTestAccountingBuildAfterSecondChange(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build.
+    Then a movement is added, at 2002/01/01, changing the owner, and the accounting is rebuilt
+    Then the second movement is deleted and the account is built again
+    """
+    e_transaction_list = []
+    # Immobilisation
+    transaction = self._buildExpectedTransaction('2000/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,10000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-10000)]
+    e_transaction_list.append(transaction)
+    # Annuities
+    transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.diverged,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500),
+                                # Unimmobilisation, divergent
+                                self._buildExpectedTransactionLine('amortisation_account',None,-5000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,10000),
+                                self._buildExpectedTransactionLine('output_account',None,-5000)]
+    # Annuities ; these ones were not solved but are now convergent again
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                               
+    transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)
+    # Immobilisation for new owner, divergent
+    transaction = self._buildExpectedTransaction('2002/01/01','B',None,self.diverged,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,5000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-5000)]
+    e_transaction_list.append(transaction)
+    # Annuities, divergent
+    transaction = self._buildExpectedTransaction('2003/01/01','B',None,self.diverged,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2004/01/01','B',None,self.diverged,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)
+    
+    c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
+    c_transaction_list = [o.getObject() for o in c_transaction_list]
+    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    self._testAccountingBuild(c_transaction_list, e_transaction_list)
+  
+    
+  def stepTestAccountingBuildAfterAdoptPrevision(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build.
+    Then a movement is added, at 2002/01/01, changing the owner, and the accounting is rebuilt
+    Then the second movement is deleted and the accounting is built again
+    Then adopt_prevision() is launched
+    """
+    e_transaction_list = []
+    # Immobilisation
+    transaction = self._buildExpectedTransaction('2000/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,10000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-10000)]
+    e_transaction_list.append(transaction)
+    # Annuities
+    transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500),
+                                # Unimmobilisation, set to 0 by solver
+                                self._buildExpectedTransactionLine('amortisation_account',None,-0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,0),
+                                self._buildExpectedTransactionLine('output_account',None,-0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,0),
+                                self._buildExpectedTransactionLine('output_account',None,-0)]
+    # Annuities
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                               
+    transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)
+    # Immobilisation for new owner, set to 0 by solver
+    transaction = self._buildExpectedTransaction('2002/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-0),
+                                self._buildExpectedTransactionLine('input_account',None,0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-0)]
+    e_transaction_list.append(transaction)
+    # Annuities, set to 0 by solver
+    transaction = self._buildExpectedTransaction('2003/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0),
+                                self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2004/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0),
+                                self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0)]
+    e_transaction_list.append(transaction)
+    
+    c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
+    c_transaction_list = [o.getObject() for o in c_transaction_list]
+    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    self._testAccountingBuild(c_transaction_list, e_transaction_list)
+  
+    
+  def stepTestAccountingBuildAfterPackingListModification(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test accounting build based on a single movement of 10000 for a 4 year linear amortisation
+    on the 2000/01/01 for 1 item, with complete build.
+    Then a movement is added, at 2002/01/01, changing the owner, and accounting is built again.
+    Then the second movement is deleted, and the accounting is rebuilt
+    Then adopt_prevision() is launched on accounting transactions
+    Then the first movement is modified, setting amortisation_account to another value
+    """
+    e_transaction_list = []
+    # Immobilisation
+    transaction = self._buildExpectedTransaction('2000/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,10000),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-10000)]
+    e_transaction_list.append(transaction)
+    # Annuities
+    transaction = self._buildExpectedTransaction('2001/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500),
+                                self._buildExpectedTransactionLine('amortisation_account_extra',None,2500)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2002/01/01','A',None,self.diverged,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,2500),
+                                self._buildExpectedTransactionLine('amortisation_account_extra',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500),
+                                # Unimmobilisation
+                                self._buildExpectedTransactionLine('amortisation_account',None,-0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,0),
+                                self._buildExpectedTransactionLine('output_account',None,-0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,0),
+                                self._buildExpectedTransactionLine('output_account',None,-0)]
+    # Annuities
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2003/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('amortisation_account_extra',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)                               
+    transaction = self._buildExpectedTransaction('2004/01/01','A',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('amortisation_account_extra',None,2500),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-2500)]
+    e_transaction_list.append(transaction)
+    # Immobilisation for new owner, set to 0 by solver
+    transaction = self._buildExpectedTransaction('2002/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('input_account',None,0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-0),
+                                self._buildExpectedTransactionLine('input_account',None,0),
+                                self._buildExpectedTransactionLine('immobilisation_account',None,-0)]
+    e_transaction_list.append(transaction)
+    # Annuities, set to 0 by solver
+    transaction = self._buildExpectedTransaction('2003/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0),
+                                self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0)]
+    e_transaction_list.append(transaction)                                
+    transaction = self._buildExpectedTransaction('2004/01/01','B',None,self.solved,['item1'])
+    transaction['line_list'] = [self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0),
+                                self._buildExpectedTransactionLine('amortisation_account',None,0),
+                                self._buildExpectedTransactionLine('depreciation_account',None,-0)]
+    e_transaction_list.append(transaction)
+    
+    c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
+    c_transaction_list = [o.getObject() for o in c_transaction_list]
+    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    self._testAccountingBuild(c_transaction_list, e_transaction_list)
+  
+    
+  def stepTestSimulationBuildAfterAcceptDecision(self, sequence=None, sequence_list=None, **kw):
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list[-1]['profit_quantity'] = -5000
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))              
+              
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def stepTestFirstSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Correction movements
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 833.33, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -833.33, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 833.33, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -833.33, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 833.33, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -833.33, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'depreciation_account', None, 'A', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def stepTestSecondSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Correction movements
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'depreciation_account', None, 'A', None))
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def stepTestThirdSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # No more correction movement
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def stepTestFourthSimulationBuildAfterAccountingValidation(self, sequence=None, sequence_list=None, **kw):
+    item = sequence.get('item')
+    e_simulation_movement_list = []
+    # Immobilisation
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', 10000, 'input_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2000/01/01', -10000, 'immobilisation_account', None, 'A', None))
+    # Annuities
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'depreciation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'depreciation_account', None, 'A', None))
+    # Correction movements
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', -2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', -2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', -2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', -2500, 'amortisation_account', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2001/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2002/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2003/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
+    e_simulation_movement_list.append(self._createExpectedMovement(
+              '2004/01/01', 2500, 'amortisation_account_extra', None, 'A', None))
+    
+    
+    applied_rule_list = item.getCausalityRelatedValueList(portal_type='Applied Rule')
+    LOG('Check number of applied rules for item', 0, item.getRelativeUrl())
+    self.assertEquals(len(applied_rule_list),1)
+    applied_rule = applied_rule_list[0]
+    c_simulation_movement_list = applied_rule.contentValues()
+    self._testSimulationBuild(c_simulation_movement_list, e_simulation_movement_list)
+    
+    
+  def _testAccountingBuild(self, c_transaction_list, e_transaction_list):
+    for c_transaction in c_transaction_list:
+      LOG('c_transaction %s :' % c_transaction, 0, 
+          'date=%s, source_section=%s, destination_section=%s, resource=%s, state=%s' % (
+          (c_transaction.getStopDate(), c_transaction.getSourceSection(),
+           c_transaction.getDestinationSection(), c_transaction.getResource(), c_transaction.getCausalityState())
+         )
+      )
+      e_found_transaction = None
+      e_cursor = 0
+      while e_cursor < len(e_transaction_list) and e_found_transaction is None:
+        e_transaction = e_transaction_list[e_cursor]
+        wrong_transaction = 0
+        key_cursor = 0
+        key_list = e_transaction.keys()
+        if 'line_list' in key_list:
+          key_list.remove('line_list')
+#         # XXX remove causality_state
+#         if 'causality_state' in key_list:
+#           key_list.remove('causality_state')
+        while key_cursor < len(key_list) and not wrong_transaction:
+          key = key_list[key_cursor]
+          e_value = e_transaction[key]
+          key = 'get' + ''.join([k.capitalize() for k in key.split('_')])
+          c_value = getattr(c_transaction,key)()
+          is_float = 0
+          try:
+            if type(c_value) != type(DateTime()):
+              c_value=float(c_value)
+              is_float = 1
+          except:
+            pass
+          if is_float:
+            wrong_transaction = (round(c_value,2) != round(e_value,2))
+          else:
+            wrong_transaction = (c_value != e_value)
+          key_cursor += 1
+        if not wrong_transaction:
+          e_found_transaction = e_transaction
+        e_cursor += 1
+      if e_found_transaction is None:
+        LOG('No expected transaction found for this calculated one !',0,'')
+        self.failUnless(e_found_transaction is not None)
+      e_transaction_list.remove(e_transaction)
+      
+      e_line_list = e_transaction['line_list']
+      c_line_list = c_transaction.contentValues()
+      for c_line in c_line_list:
+        LOG('c_line %s :' % c_line, 0, 
+          'source=%s,destination=%s,quantity=%s' % (
+          (c_line.getSource(),c_line.getDestination(),c_line.getQuantity())
+         )
+      )
+        e_found_line = None
+        e_line_cursor = 0
+        while e_line_cursor < len(e_line_list) and e_found_line is None:
+          e_line = e_line_list[e_line_cursor]
+          wrong_line = 0
+          key_cursor = 0
+          key_list = e_line.keys()
+          while key_cursor < len(key_list) and not wrong_line:
+            key = key_list[key_cursor]
+            e_value = e_line[key]
+            key = 'get' + ''.join([k.capitalize() for k in key.split('_')])
+            c_value = getattr(c_line,key)()
+            is_float = 0
+            try:
+              if type(c_value) != type(DateTime()):
+                c_value=float(c_value)
+                is_float = 1
+            except:
+              pass
+            if is_float:
+              wrong_line = (round(c_value,2) != round(e_value,2))
+            else:
+              wrong_line = (c_value != e_value)
+            key_cursor += 1
+          if not wrong_line:
+            e_found_line = e_line
+          e_line_cursor += 1
+        if e_found_line is None:
+          LOG('No expected line found for this calculated one !',0,'')
+          self.failUnless(e_found_line is not None)
+        e_line_list.remove(e_found_line)
+      if len(e_line_list) > 0:
+        LOG('More expected lines than calculated ! Remaining expected ones are', 0, e_line_list)
+        self.assertEquals(len(e_line_list),0)
+      
+    if len(e_transaction_list) > 0:
+      LOG('More expected movements than calculated ! Remaining expected ones are', 0, e_transaction_list)
+      self.assertEquals(len(e_transaction_list),0)
+                                    
+                
+  def stepSetTest01SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(destination_section = self.getOrganisationModule()["A"],
+                  datetime = self.datetime,
+                  item_list_list = [[ self.getItemModule()['item1'] ]]
+                  )
+  def test_01_singlePackingListImmobilisationStateChange(self, quiet=0, run=run_all_test):
+    # Test if an added packing list has a correct immobilisation state
+    if not run: return
+    if not quiet:
+      message = '\nTest Single Packing List Immobilisation State Change'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
     sequence_list = SequenceList()
-    
-    # 1)
-    # Linear amortisation
-    # 4 movements. Depending on validity of each of them, different cases occur.
-    # We play with validity to make a maximum of cases occur
-    sequence_string = 'PrepareLinearTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                      'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                      'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                      'NextTestStep Tic VerifySimulation'
+    sequence_string = 'SetTest01SequenceData \
+                       CreatePackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       Tic \
+                       TestPackingListValidImmobilisationState \
+                       AggregateItems \
+                       TestPackingListCalculatingImmobilisationState \
+                       Tic \
+                       TestPackingListValidImmobilisationState \
+                      '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+  
+  def stepSetTest02SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(destination_section = self.getOrganisationModule()["A"],
+                  datetime= [self.datetime, self.datetime+5, self.datetime+10],
+                  item_list_list = [[ self.getItemModule()['item2'] ]]
+                  )
+  def test_02_singleItemImmobilisationStateChange(self, quiet=0, run=run_all_test):
+    # Test if an edit on a preceding delivery switches the following in calculating state
+    if not run: return
+    if not quiet:
+      message = '\nTest Single Item Immobilisation State Change'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest02SequenceData \
+                       DeleteAllPackingLists \
+                       CreatePackingList \
+                       AggregateItems \
+                       CreatePackingList \
+                       AggregateItems \
+                       CreatePackingList \
+                       AggregateItems \
+                       Tic \
+                       UseSecondPackingList \
+                       EditPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseFirstPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       Tic \
+                       TestPackingListValidImmobilisationState \
+                       UseSecondPackingList \
+                       TestPackingListValidImmobilisationState \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+                       
+  def test_03_complexItemStructureImmobilisationStateChange(self, quiet=0, run=run_all_test):
+    # Test on a complex structure if an edit on a PL changes correctly immobilisation states
+    if not run: return
+    if not quiet:
+      message = '\nTest Complex Item Structure Immobilisation State Change'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'DeleteAllPackingLists \
+                       CreateComplexPackingListStructure \
+                       Tic \
+                       UseSecondPackingList \
+                       EditPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseFirstPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListValidImmobilisationState \
+                       Tic \
+                       UseFirstPackingList \
+                       EditPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseSecondPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       Tic \
+                       UseThirdPackingList \
+                       EditPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseFirstPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseSecondPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       Tic \
+                       EditPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseFirstPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseSecondPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListValidImmobilisationState \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+    
+    
+  def stepSetTest04SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item5'],
+                  destination_section = self.getOrganisationModule()["A"],
+                  amortisation_method = self.linear_method)
+  def stepTest04ModifyPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    for line in pl.contentValues():
+      line.edit(amortisation_start_price=None)
+  def test_04_TestContinuousMethodMovementValidity(self, quiet=0, run=run_all_test):
+    # Create a continuous method with some movements, then test their validity
+    # by invalidating some of them
+    if not run: return
+    if not quiet:
+      message = '\nTest Continuous Method Movement Validity'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest04SequenceData \
+                       DeleteAllPackingLists \
+                       CreatePackingListsForContinuousAmortisationPeriodList \
+                       Tic \
+                       UseFirstPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseSecondPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseFirstPackingList \
+                       Test04ModifyPackingList \
+                       UseSecondPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       Tic \
+                       UseFirstPackingList \
+                       TestPackingListInvalidImmobilisationState \
+                       UseSecondPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListValidImmobilisationState \
+                       UseSecondPackingList \
+                       DeletePackingList \
+                       UseFirstPackingList \
+                       TestPackingListInvalidImmobilisationState \
+                       UseThirdPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListCalculatingImmobilisationState \
+                       Tic \
+                       UseThirdPackingList \
+                       TestPackingListInvalidImmobilisationState \
+                       UseFourthPackingList \
+                       TestPackingListInvalidImmobilisationState \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+    
+  def stepSetTest05SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item6'],
+                  amortisation_method = self.linear_method)
+  def test_05_TestImmobilisationPeriodsWithContinuousMethodDuringContinuousTime(self, quiet=0, run=run_all_test):
+    # Test the calculated amortisation periods with a continuous amortisation method
+    # and with no stop of immobilisation
+    if not run: return
+    if not quiet:
+      message = '\nTest Immobilisation Periods With Continuous Method During Continuous Time'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest05SequenceData \
+                       CreatePackingListsForContinuousAmortisationPeriodList \
+                       Tic \
+                       TestLinearAmortisationImmobilisationPeriods \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
 
-    # 2)
-    # Degressive amortisation
-    # Same as first test, with degressive amortisation
-    sequence_string = 'PrepareDegressiveTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                          'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                          'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                          'NextTestStep Tic VerifySimulation '
+    
+  def stepSetTest06SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item7'],
+                  amortisation_method = self.linear_method)
+  def test_06_TestImmobilisationPeriodsWithContinuousMethodDuringUncontinuousTime(self, quiet=0, run=run_all_test):
+    # Test the calculated amortisation periods with a continuous amortisation method
+    # and with stops of immobilisation in the time
+    if not run: return
+    if not quiet:
+      message = '\nTest Immobilisation Periods With Continuous Method During Uncontinuous Time'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest06SequenceData \
+                       CreatePackingListsForUncontinuousAmortisationPeriodList \
+                       Tic \
+                       TestLinearAmortisationImmobilisationPeriodsUncontinuous \
+                       '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
 
-    # 3)
-    # Immobilisation movement are on the same day, exactly the same date
-    # The behavior is uncertain and results should be wrong since sort is made on date, but the
-    # expand process must not be broken.
-    # No Simulation verification is made since it can change from a test to another
-    sequence_string = 'PrepareSameDayTest Tic NextTestStep Tic NextTestStep Tic '
-    sequence_string +=                       'NextTestStep Tic NextTestStep Tic '
-    sequence_string +=                       'NextTestStep NextTestStep NextTestStep NextTestStep'
-    sequence_list.addSequenceString(sequence_string)
-    
-    # 4)
-    # Owner changing
-    # Test the behavior of automatic acknowledgement of ownership change
-    # Test also the behavior if sometimes deliveries are made on None during immobilisation period
-    sequence_string = 'PrepareFirstOwnerChangeTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                                'NextTestStep Tic VerifySimulation '
-    sequence_list.addSequenceString(sequence_string)
-    
-    # 5)
-    # Owner changing
-    # Test the behavior of automatic acknowledgement of ownership change
-    # This time, manual immobilisation movements are present. Verify if their date is correctly modified
-    sequence_string = 'PrepareSecondOwnerChangeTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                                 'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                                 'NextTestStep Tic VerifySimulation '
-    sequence_list.addSequenceString(sequence_string)
-    
-    # 6)
-    # Owner changing
-    # Test the behavior of automatic acknowledgement of ownership change
-    # Same as the previous test, but immobilisation movements are located after the deliveries; they were located before on previous test
-    sequence_string = 'PrepareThirdOwnerChangeTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                                'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                                'NextTestStep Tic VerifySimulation '
-    sequence_list.addSequenceString(sequence_string)
-    
-    # 7)
-    # Complex test
-    # Item is immobilised and unimmobilised several times, with several deliveries, and some immobilisation are on the same
-    # date as deliveries, but not only.
-    sequence_string = 'PrepareComplexTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                       'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                       'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    sequence_string +=                       'NextTestStep Tic VerifySimulation Aggregate VerifyAggregation'
-    sequence_list.addSequenceString(sequence_string)
 
-    # 8)
-    # Actual use
-    # Item is immobilised using the actual use amortisation method
-    sequence_string = 'PrepareActualUseTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation'
+  def stepSetTest07SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item8'],
+                  amortisation_method = self.uncontinuous_degressive_method,
+                  parameter_dict = {'degressive_coefficient': 2})
+  def test_07_TestImmobilisationPeriodsWithUncontinuousMethodDuringContinuousTime(self, quiet=0, run=run_all_test):
+    # Test the calculated amortisation periods with a uncontinuous amortisation method
+    # and with no stop of immobilisation in the time
+    if not run: return
+    if not quiet:
+      message = '\nTest Immobilisation Periods With Uncontinuous Method During Continuous Time'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest07SequenceData \
+                       CreatePackingListsForContinuousAmortisationPeriodList \
+                       Tic \
+                       TestDegressiveAmortisationImmobilisationPeriods \
+                       '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+        
     
-   
-    ### The following tests verify the behavior when a reexpand is made after the aggregation
-    # 9)
-    # On linear test : no changes have been made, the simulation should have not changed
-    # Then : change of the last immobilisation movement duration, it should change the annuities values and add some annuities
-    # Then : change of disposal value to create some new movements to add to this period
-    sequence_string =  'PrepareLinearTest Tic RetrieveData ArtificialExpand VerifySimulation '
-    sequence_string += 'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation'
+  def stepSetTest08SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item9'],
+                  amortisation_method = self.uncontinuous_degressive_method,
+                  parameter_dict = {'degressive_coefficient': 2})
+  def test_08_TestImmobilisationPeriodsWithUncontinuousMethodDuringUncontinuousTime(self, quiet=0, run=run_all_test):
+    # Test the calculated amortisation periods with an uncontinuous amortisation method
+    # and with stops of immobilisation in the time
+    if not run: return
+    if not quiet:
+      message = '\nTest Immobilisation Periods With Uncontinuous Method During Uncontinuous Time'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest08SequenceData \
+                       CreatePackingListsForUncontinuousAmortisationPeriodList \
+                       Tic \
+                       TestDegressiveAmortisationImmobilisationPeriodsUncontinuous \
+                       '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+        
     
-    # 10)
-    # On complex test : add an immobilisation movement, it should create a new period
-    # then, change of the last immobilisation movement date, it should annulate some annuities
-    sequence_string = 'PrepareComplexTest Tic RetrieveData Tic NextTestStep Tic VerifySimulation '
-    sequence_string += 'Tic NextTestStep Tic VerifySimulation'
+  def stepSetTest09SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item10'],
+                  amortisation_method = self.linear_method)
+  def test_09_TestAmortisationPriceAndSimulationForLinearAmortisation(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Amortisation Price And Simulation For Linear Amortisation'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest09SequenceData \
+                       CreatePackingListsForSimpleItemImmobilisation \
+                       Tic \
+                       TestLinearAmortisationPriceCalculation \
+                       TestLinearAmortisationSimulationBuild \
+                       '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+        
     
-    # 11)
-    # On actual use test : change the last immobilisation movement date, it should create some annuities, and
-    # relocate some movements
-    sequence_string = 'PrepareActualUseTest Tic RetrieveData Tic NextTestStep Tic VerifySimulation'
+  def stepSetTest10SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item11'],
+                  amortisation_method = self.degressive_method,
+                  parameter_dict={'degressive_coefficient':2})
+  def test_10_TestAmortisationPriceForDegressiveAmortisation(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Amortisation Price For Degressive Amortisation'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest10SequenceData \
+                       CreatePackingListsForSimpleItemImmobilisation \
+                       Tic \
+                       TestDegressiveAmortisationPriceCalculation \
+                       '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+        
     
-    # 12)
-    # On degressive test : annulation of some immobilisation movements, it should annulate entire aggregated periods
-    # Then : validate the transactions and reexpand, it should create correction movements
-    # Then : validate and expand again, it should create correction movements taking in account existing correction movements
-    # Then : re-expand, the created correction movements which are not validated should be modified
-    sequence_string = 'PrepareDegressiveTest Tic RetrieveData Tic NextTestStep Tic '
-    sequence_string += 'VerifySimulation Tic NextTestStep Tic VerifySimulation Tic DeleteAggregation '
-    sequence_string += 'Aggregate Tic ValidateTransaction Tic NextTestStep Tic VerifySimulation Tic '
-    sequence_string += 'Aggregate Tic ValidateTransaction Tic NextTestStep Tic VerifySimulation Tic NextTestStep Tic VerifySimulation '
+  def stepSetTest11SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item12'],
+                  amortisation_method = self.uncontinuous_degressive_method,
+                  parameter_dict={'degressive_coefficient':2})
+  def test_11_TestAmortisationPriceAndSimulationForUncontinuousDegressiveAmortisation(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Amortisation Price And Simulation For Uncontinuous Degressive Amortisation'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest11SequenceData \
+                       CreatePackingListsForSimpleItemImmobilisation \
+                       Tic \
+                       TestUncontinuousDegressiveAmortisationPriceCalculation \
+                       TestUncontinuousDegressiveAmortisationSimulationBuild \
+                       '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+        
     
-    # 13) 14) 15) 16)
-    # To test the solvers, we clean the contents, then create a specific set of immobilisations
-    #self.aggregation_step = 1
-    sequence_string = 'CleanSimulation DeleteAggregation '
+  def stepSetTest12SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item13'],
+                  amortisation_method = self.actual_use_method,
+                  parameter_dict={'durability':1000})
+  def test_12_TestAmortisationPriceForActualUseDegressiveAmortisation(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Amortisation Price For Actual Use Amortisation'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest12SequenceData \
+                       CreatePackingListsForSimpleItemImmobilisation \
+                       Tic \
+                       TestActualUseAmortisationPriceCalculation \
+                       '
     sequence_list.addSequenceString(sequence_string)
-    sequence_string = 'PrepareFirstSolverTest Tic NextTestStep Tic VerifySimulation'
-    sequence_list.addSequenceString(sequence_string)
-    sequence_string = 'PrepareSecondSolverTest Tic NextTestStep Tic VerifySimulation'
-    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+        
     
-    sequence_string = 'PrepareThirdSolverTest Tic NextTestStep Tic VerifySimulation Aggregate Tic UpdateAllFromSimulation Tic VerifyAggregation VerifyConvergence '
-    # And then modify and apply the solvers...
-    # 1- updateFromSimulation : modify the duration => the quantity changes, and some movements are annulated
-    sequence_string += 'NextTestStep Tic VerifySimulation ApplySolver Tic VerifyAggregation VerifyConvergence '
-    # 2- updateFromSimulation : restore the duration, and modify an account => movements are annulated and recreated,
-    #                           it just affects the lines
-    sequence_string += 'NextTestStep Tic VerifySimulation VerifyAggregation ApplySolver Tic VerifyAggregation VerifyConvergence '
-    # 3- updateFromSimulation : modify the immobilisation date => movements are annulated and recreated, it affects transactions
-    sequence_string += 'NextTestStep Tic VerifySimulation ApplySolver Tic UpdateAllFromSimulation Tic VerifyAggregation VerifyConvergence '
-    # 4- Clean the aggregation to be clearer, and reestablish the original conditions
-    sequence_string += 'DeleteAggregation NextTestStep Tic VerifySimulation Aggregate Tic UpdateAllFromSimulation Tic VerifyAggregation VerifyConvergence '
-    # 5- ProfitAndLoss : quantity is doubled, profit_quantity should be set in some simulation movements
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
-#     # 6- ProfitAndLoss : source is modified, the movement should be disconnected
-#     sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver VerifySimulation VerifyConvergence '
-    # 7- ProfitAndLoss : a transaction is set to 0
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
-    # 8- ProfitAndLoss : the previous transaction is reset to 8000
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
-    # 9- ProfitAndLoss : another transaction is set to 0, then we add a non-0 simulation movement
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
-    sequence_string += 'AddZeroSimulationMovement Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
-    
+  def stepSetTest13SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item14'],
+                  amortisation_method = self.no_amortisation_method,
+                 )
+  def test_13_TestAmortisationPriceForNoAmortisationMethod(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Amortisation Price For No Amortisation Method'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest13SequenceData \
+                       CreatePackingListsForSimpleItemImmobilisation \
+                       Tic \
+                       TestNoAmortisationMethodPriceCalculation \
+                       TestNoAmortisationMethodSimulationBuild \
+                       '
     sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
+  # Test owner changes. The expected behavior is the following :
+  # ----------------------------------------------------------------------------------------------
+  # |                   | Owner does not change |  Owner changes but the  | Actual owner changes |
+  # |                   |                       |  actual owner does not  |                      |
+  # ----------------------------------------------------------------------------------------------
+  # |NO_CHANGE movement |     Nothing to do     |        Transfer         |Stop immo - start immo|
+  # |Continuous movement|   Optional transfer   |        Transfer         |Stop immo - start immo|
+  # |       Other       | Stop immo - start immo| Stop immo - start immo  |Stop immo - start immo|
+  # ----------------------------------------------------------------------------------------------
+  # "Optional Transfer" means "transfer from old accounts to new ones if they change"
+  # "Transfer" means "transfer all non-solded accounts from a section to another"
+  # "Continuous movement" means "same method as previous period and method is continuous"
+  # Note that section can change without changing owner.
+  # "Actual owner changes" means "the 'group' property of both owners differ"
+  def stepSetTest14SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item15'],
+                  amortisation_method = self.linear_method)
+  def test_14_TestOwnerChangeSimulationForContinuousAmortisationMethod(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Owner Change Simulation For Continuous Amortisation Method'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest14SequenceData \
+                       CreatePackingListsForSimulationTest \
+                       Tic \
+                       TestSimulationBuildForContinuousMethodWithoutOwnerChange \
+                       ChangeCurrentPackingListDestinationSectionForOwnerChange \
+                       Tic \
+                       TestSimulationBuildForContinuousMethodWithOwnerChange \
+                       ChangeCurrentPackingListDestinationSectionForActualOwnerChange \
+                       Tic \
+                       TestSimulationBuildForContinuousMethodWithActualOwnerChange \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+        
     
-    sequence_list.play(self)
+  def stepSetTest15SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item16'],
+                  amortisation_method = self.uncontinuous_degressive_method,
+                  parameter_dict = {'degressive_coefficient':2})
+  def test_15_TestOwnerChangeSimulationForUnContinuousAmortisationMethod(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Owner Change Simulation For Uncontinuous Amortisation Method'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest15SequenceData \
+                       CreatePackingListsForSimulationTest \
+                       Tic \
+                       TestSimulationBuildForUncontinuousMethodWithoutOwnerChange \
+                       ChangeCurrentPackingListDestinationSectionForOwnerChange \
+                       Tic \
+                       TestSimulationBuildForUncontinuousMethodWithOwnerChange \
+                       ChangeCurrentPackingListDestinationSectionForActualOwnerChange \
+                       Tic \
+                       TestSimulationBuildForUncontinuousMethodWithActualOwnerChange \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
+  def stepSetTest16SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item17'],
+                  amortisation_method = self.linear_method)
+  def test_16_TestOwnerChangeSimulationForContinuousAmortisationMethod(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Owner Change Simulation For Continuous Amortisation Method'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest16SequenceData \
+                       CreatePackingListsForNoChangeMethodSimulationTest \
+                       Tic \
+                       TestSimulationBuildForNoChangeMethodWithoutOwnerChange \
+                       ChangeCurrentPackingListDestinationSectionForOwnerChange \
+                       Tic \
+                       TestSimulationBuildForNoChangeMethodWithOwnerChange \
+                       ChangeCurrentPackingListDestinationSectionForActualOwnerChange \
+                       Tic \
+                       TestSimulationBuildForNoChangeMethodWithActualOwnerChange \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
+  def stepSetTest17SequenceData(self, sequence=None, sequence_list=None, **kw):
+    sequence.edit(item = self.getItemModule()['item18'],
+                  amortisation_method = self.linear_method)
+  def test_17_TestMonthlyAmortisation(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Monthly Amortisation'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest17SequenceData \
+                       CreatePackingListsForMonthlyAmortisationTest \
+                       Tic \
+                       TestSimulationBuildForMonthlyAmortisation \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
+  def stepSetTest18SequenceData(self, sequence=None, sequence_list=None, **kw):
+    item_list = ['item1','item2','item3']
+    item_list = [self.getItemModule()[item] for item in item_list]
+    parameter_dict = dict(self.account_dict)
+    parameter_dict.update( {'amortisation_method':self.linear_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':48,
+                            'immobilisation_vat':0,
+                          } )
+    build_parameter_dict = { 'at_date':DateTime('2002/01/01'),
+                             'item_uid_list': [x.getUid() for x in [self.getItemModule()[y] for y in ['item1','item2']]],
+                           }
+    sequence.edit(item_list_list = [item_list],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["A"],
+                  build_parameter_dict = build_parameter_dict)
+  def test_18_TestAccountingBuilding(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Simple Accounting Build'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest18SequenceData \
+                       DeleteAllPackingLists \
+                       Tic \
+                       TestAllAppliedRulesAreEmpty \
+                       CreatePackingList \
+                       AggregateItems \
+                       Tic \
+                       PartialBuildAccounting \
+                       Tic \
+                       TestPartialAccountingBuild \
+                       DeleteAccounting \
+                       Tic \
+                       BuildAccounting \
+                       Tic \
+                       TestMultiItemAccountingBuild \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
+  def stepSetTest19SequenceData(self, sequence=None, sequence_list=None, **kw):
+    item_list = ['item1']
+    item_list = [self.getItemModule()[item] for item in item_list]
+    parameter_dict = dict(self.account_dict)
+    parameter_dict.update( {'amortisation_method':self.linear_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':48,
+                            'immobilisation_vat':0,
+                          } )
+    sequence.edit(item_list_list = [item_list],
+                  item=self.getItemModule()['item1'],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["A"])
+  def stepSetTest19SequenceData2(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add a section change packing_list at date 2002/01/01
+    """
+    parameter_dict = {}
+    sequence.edit(datetime = DateTime('2002/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["B"])
+  def stepTest19ModifyPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    for line in pl.contentValues():
+      line.edit(amortisation_account=self.extra_account_dict['amortisation_account'])
+  def test_19_TestAccountingBuildingAndDivergence(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Accounting Build And Divergence Behavior'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest19SequenceData \
+                       DeleteAccounting \
+                       Tic \
+                       DeleteAllPackingLists \
+                       Tic \
+                       TestAllAppliedRulesAreEmpty \
+                       CreatePackingList \
+                       AggregateItems \
+                       Tic \
+                       BuildAccounting \
+                       Tic \
+                       TestSimpleAccountingBuild \
+                       SetTest19SequenceData2 \
+                       CreatePackingList \
+                       AggregateItems \
+                       Tic \
+                       TestSimulationBuildAfterFirstAccountingChange \
+                       BuildAccounting \
+                       Tic \
+                       TestAccountingBuildAfterFirstChange \
+                       DeletePackingList \
+                       Tic \
+                       TestSimulationBuildAfterSecondAccountingChange \
+                       BuildAccounting \
+                       Tic \
+                       TestAccountingBuildAfterSecondChange \
+                       AdoptPrevision \
+                       Tic \
+                       TestAccountingBuildAfterAdoptPrevision \
+                       Test19ModifyPackingList \
+                       Tic \
+                       TestSimulationBuildAfterPackingListModification \
+                       BuildAccounting \
+                       Tic \
+                       TestAccountingBuildAfterPackingListModification \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
+  def stepSetTest20SequenceData(self, sequence=None, sequence_list=None, **kw):
+    item_list = ['item1']
+    item_list = [self.getItemModule()[item] for item in item_list]
+    parameter_dict = dict(self.account_dict)
+    parameter_dict.update( {'amortisation_method':self.linear_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':48,
+                            'immobilisation_vat':0,
+                          } )
+    sequence.edit(item_list_list = [item_list],
+                  item=self.getItemModule()['item1'],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["A"])
+  def test_20_TestAccountingAcceptDecisionSolver(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nTest Accounting Accept Decision Solver'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest20SequenceData \
+                       DeleteAccounting \
+                       Tic \
+                       DeleteAllPackingLists \
+                       Tic \
+                       TestAllAppliedRulesAreEmpty \
+                       CreatePackingList \
+                       AggregateItems \
+                       Tic \
+                       BuildAccounting \
+                       Tic \
+                       TestSimpleAccountingBuild \
+                       ChangeAccountingPrice \
+                       Tic \
+                       AcceptDecision \
+                       Tic \
+                       TestSimulationBuildAfterAcceptDecision \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
+  def stepSetTest21SequenceData(self, sequence=None, sequence_list=None, **kw):
+    item_list = ['item1']
+    item_list = [self.getItemModule()[item] for item in item_list]
+    parameter_dict = dict(self.account_dict)
+    parameter_dict.update( {'amortisation_method':self.linear_method,
+                            'amortisation_start_price':10000,
+                            'disposal_price':0,
+                            'amortisation_duration':48,
+                            'immobilisation_vat':0,
+                          } )
+    sequence.edit(item_list_list = [item_list],
+                  item=self.getItemModule()['item1'],
+                  datetime = DateTime('2000/01/01'),
+                  parameter_dict = parameter_dict,
+                  destination_section = self.getOrganisationModule()["A"])
+  def stepTest21FirstModifyPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    for line in pl.contentValues():
+      line.edit(amortisation_duration=36)
+  def stepTest21SecondModifyPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    for line in pl.contentValues():
+      line.edit(amortisation_duration=24)
+  def stepTest21ThirdModifyPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    for line in pl.contentValues():
+      line.edit(amortisation_duration=48)
+  def stepTest21FourthModifyPackingList(self, sequence=None, sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    if pl is None: pl = sequence.get('packing_list_list', [])[-1]
+    for line in pl.contentValues():
+      line.edit(amortisation_account=self.extra_account_dict['amortisation_account'])
+  def test_21_TestSimulationBuildingWithValidatedTransactions(self, quiet=0, run=run_all_test):
+    """
+    The expand process takes care of already validated transactions : it creates
+    some correction simulation movements in order to compensate simulation movements
+    whose corresponding delivery is already validated.
+    This test tests this behavior
+    """
+    if not run: return
+    if not quiet:
+      message = '\nTest Simulation Building With Validated Transactions'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    sequence_list = SequenceList()
+    sequence_string = 'SetTest21SequenceData \
+                       DeleteAccounting \
+                       Tic \
+                       DeleteAllPackingLists \
+                       Tic \
+                       TestAllAppliedRulesAreEmpty \
+                       CreatePackingList \
+                       AggregateItems \
+                       Tic \
+                       BuildAccounting \
+                       Tic \
+                       TestSimpleAccountingBuild \
+                       ValidateAccounting \
+                       Tic \
+                       Test21FirstModifyPackingList \
+                       Tic \
+                       TestFirstSimulationBuildAfterAccountingValidation \
+                       Test21SecondModifyPackingList \
+                       Tic \
+                       TestSecondSimulationBuildAfterAccountingValidation \
+                       Test21ThirdModifyPackingList \
+                       Tic \
+                       TestThirdSimulationBuildAfterAccountingValidation \
+                       Test21FourthModifyPackingList \
+                       Tic \
+                       TestFourthSimulationBuildAfterAccountingValidation \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)    
+
+
 
 
 if __name__ == '__main__':
@@ -5904,3 +3406,4 @@ else:
         suite = unittest.TestSuite()
         suite.addTest(unittest.makeSuite(TestImmobilisation))
         return suite
+
