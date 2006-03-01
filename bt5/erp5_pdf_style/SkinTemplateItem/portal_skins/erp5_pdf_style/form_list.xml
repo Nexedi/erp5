@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.ERP5Form.PDFTemplate</string>
+          <string>PDFTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="iso-8859-1" ?>\n
+<document filename="erp5_list.pdf"\n
+   xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+   xmlns:metal="http://xml.zope.org/namespaces/metal"  \n
+   tal:define="global frame_width python:25.8"\n
+   metal:define-macro="master">\n
+  <title>List Print</title>\n
+  <author>Nexedi</author>\n
+  <subject>Print Example</subject>\n
+  <content>\n
+  <tal:block metal:define-macro="form_layout"\n
+     tal:define="groups python: form.get_groups(include_empty=1);\n
+                 field_errors python: request.get(\'field_errors\',{});\n
+                 dummy python: request.set(\'here\',here);\n
+                 listbox python:form.get_fields_in_group(groups[0])[0];">\n
+\n
+\n
+    <tal:block tal:condition="python: listbox.meta_type == \'ListBox\'">\n
+      <div metal:use-macro="here/listbox_pdf_macro/macros/listbox" />\n
+    </tal:block>\n
+\n
+\n
+  </tal:block>\n
+  </content>\n
+</document>\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_list</string> </value>
+        </item>
+        <item>
+            <key> <string>pdf_stylesheet</string> </key>
+            <value> <string>empty_pdf</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

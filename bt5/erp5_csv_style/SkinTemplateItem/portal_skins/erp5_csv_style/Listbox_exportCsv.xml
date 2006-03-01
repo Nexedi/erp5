@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# export_only : allow to disable the uid column and the id of columns\n
+result = \'\'\n
+request = context.REQUEST\n
+\n
+translate = context.portal_url.getPortalObject().Localizer.erp5_ui.gettext\n
+\n
+listboxline_list = context.get_value(\'default\', render_format=\'list\', REQUEST=request)\n
+\n
+for listboxline in listboxline_list:\n
+  if listboxline.isTitleLine():\n
+    line_result = \'\'\n
+    line_result2 = \'\'\n
+\n
+    if not export_only:\n
+      listboxline.setListboxLineDisplayListMode([\'uid\'])  #XXX do not display uid column\n
+\n
+    for column_item in listboxline.getColumnItemList():\n
+\n
+      column_id = column_item[0]\n
+      column_property = column_item[1]\n
+\n
+      if column_id is not None:\n
+        if same_type(column_id,\'\'):\n
+          column_id = column_id.replace(\'"\',\'""\')\n
+          line_result += \'"%s"\' % column_id.decode(\'utf-8\')\n
+        else:\n
+          line_result += str(column_id)\n
+\n
+      line_result += str(\',\')\n
+\n
+      if column_property is not None:\n
+        if same_type(column_property,\'\'):\n
+          column_property = translate(column_property.decode(\'utf-8\'))\n
+          column_property = column_property.replace(\'"\',\'""\')\n
+          line_result2 += \'"%s"\' % column_property\n
+        else:\n
+          line_result2 += str(column_property)\n
+\n
+      line_result2 += str(\',\')\n
+\n
+    if len(line_result) > 1:\n
+      line_result = line_result[:-1]\n
+\n
+    if len(line_result2) > 1:\n
+      line_result2 = line_result2[:-1]\n
+\n
+    if not export_only:\n
+      result += line_result+\'\\n\' #XXX do not display id\n
+    result += line_result2+\'\\n\'\n
+\n
+\n
+\n
+\n
+  if listboxline.isDataLine():\n
+    line_result = \'\'\n
+\n
+    if not export_only:\n
+      listboxline.setListboxLineDisplayListMode([\'uid\'])  #XXX do not display uid column\n
+\n
+    for column_property in listboxline.getColumnPropertyList():\n
+\n
+      if column_property is not None:\n
+        if same_type(column_property,\'\'):\n
+          column_property = column_property.replace(\'"\',\'""\')\n
+          line_result += \'"%s"\' % column_property.decode(\'utf-8\')\n
+        elif same_type(column_property,1.0):\n
+          column_property = str(column_property).replace(\'.\',\',\')\n
+          line_result += \'"%s"\' % column_property\n
+        else:\n
+          line_result += str(column_property)\n
+\n
+      line_result += str(\',\')\n
+\n
+    if len(line_result) > 1:\n
+      line_result = line_result[:-1]\n
+\n
+    result += line_result+\'\\n\'\n
+\n
+return result\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/apparel5/portal_skins/erp5_csv_style/Listbox_exportCsv</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>export_only=0,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>export_only</string>
+                            <string>kw</string>
+                            <string>result</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>translate</string>
+                            <string>listboxline_list</string>
+                            <string>_getiter_</string>
+                            <string>listboxline</string>
+                            <string>line_result</string>
+                            <string>line_result2</string>
+                            <string>column_item</string>
+                            <string>_getitem_</string>
+                            <string>column_id</string>
+                            <string>column_property</string>
+                            <string>None</string>
+                            <string>same_type</string>
+                            <string>str</string>
+                            <string>len</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Listbox_exportCsv</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
