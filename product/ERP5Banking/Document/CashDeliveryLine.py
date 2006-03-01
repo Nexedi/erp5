@@ -76,6 +76,9 @@ class CashDeliveryLine(BaobabMixin, DeliveryLine):
     """
       Returns a calculated source
     """
+    script = self._getTypeBasedMethod('getBaobabSource')
+    if script is not None:
+      return script(self)      
     if self.portal_type in out_portal_type_list:
       return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getRelativeUrl()
     elif self.portal_type in in_portal_type_list:
@@ -87,6 +90,9 @@ class CashDeliveryLine(BaobabMixin, DeliveryLine):
     """
       Returns a calculated destination
     """
+    script = self._getTypeBasedMethod('getBaobabDestination')
+    if script is not None:
+      return script(self)
     if self.portal_type in in_portal_type_list:
       return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('entrante').getUid()
     elif self.portal_type in out_portal_type_list :
