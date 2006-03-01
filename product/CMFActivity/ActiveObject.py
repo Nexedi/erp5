@@ -71,18 +71,24 @@ class ActiveObject(ExtensionClass.Base):
                             going to be executed                                                              
       
     """
+    # Get activate values from activate_kw, then _v_activate_kw
+    # only if they are not set directly as arguments to activate()
     if activate_kw is not None:
-      kw.update(activate_kw)
+      for key,value in activate_kw.items():
+        if not kw.has_key(key):
+          kw[key] = value
+    # This volatile variable '_v_activate_kw' can be used to pass parameters
+    # automatically to activate.
+    if hasattr(self, '_v_activate_kw'):
+      for key,value in self._v_activate_kw.items():
+        if not kw.has_key(key):
+          kw[key] = value
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
     try:
-      # This volatile variable '_v_activate_kw' can be used to pass parameters
-      # automatically to activate.
-      if hasattr(self, '_v_activate_kw'):
-        kw.update(self._v_activate_kw)
       return activity_tool.activate(self, activity, active_process, **kw)
     except ConflictError:
       raise
