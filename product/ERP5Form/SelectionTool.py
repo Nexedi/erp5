@@ -920,11 +920,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return object
 
     # Related document searching
-    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None, sub_index=None, **kw):
+    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None, 
+                                        sub_index=None, **kw):
       """
-        Returns a search related document dialog
-        
-        A set of forwarders us defined to circumvent limitations of HTML
+      Returns a search related document dialog
+      A set of forwarders us defined to circumvent limitations of HTML
       """
       if sub_index != None:
         REQUEST.form['sub_index'] = sub_index
@@ -945,10 +945,12 @@ class SelectionTool( UniqueObject, SimpleItem ):
           o.immediateReindexObject()
           object_uid = o.getUid() 
         else:
-          return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
+          return "Sorrry, Error, the calling object was not catalogued. " \
+                 "Do not know how to do ?"
 
       # Find the field which was clicked on
-      form = getattr(o, form_id) # Important to get from the object instead of self
+      # Important to get from the object instead of self
+      form = getattr(o, form_id) 
       field = None
       relation_index = 0
 
@@ -959,12 +961,38 @@ class SelectionTool( UniqueObject, SimpleItem ):
       for field in form.get_fields(include_disabled=0):
         if field.get_value('editable',REQUEST=REQUEST):
           field_list.append(field)
+
+      relation_field_found = 0
       for field in field_list:
-        if getattr(field, 'is_relation_field', None):
+        try:
+          dumb = field.get_value('is_relation_field')
+        # XXX FIXME Exception name is not in locals.
+        # This can be related to a bad python file import
+        # I already had this kind of error with another python software, 
+        # and the only solution I found was to use ihooks to 
+        # import python files.
+        # I have to check this.
+#         except KeyError:
+        except:
+          pass
+#           relation_index += 1
+        else:
           if index == relation_index:
+            relation_field_found = 1
             break
           else:
             relation_index += 1
+
+#         if getattr(field, 'is_relation_field', None):
+#           if index == relation_index:
+#             relation_field_found = 1
+#             break
+#           else:
+#             relation_index += 1
+
+      if not relation_field_found:
+        raise SelectionError, "SelectionTool: can not find the relation" \
+                              " field %s" % index 
       
       field_value = REQUEST.form['field_%s' % field.id]
 
@@ -973,7 +1001,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       # reselt current selection
       self.portal_selections.setSelectionFor( selection_name, None)
 
-      # XXX portal_status_message = "Please select one object to precise the value: '%s' in the field: '%s'" % ( field_value, field.get_orig_value('title') )
+      # XXX portal_status_message = 
+      # "Please select one object to precise the value: 
+      # '%s' in the field: '%s'" % (field_value, field.get_orig_value('title'))
       portal_status_message = "Please select one object."
 
       if field.meta_type == "MultiRelationStringField":
@@ -982,21 +1012,29 @@ class SelectionTool( UniqueObject, SimpleItem ):
           # we need to facilitate user search
 
           # first: store current field value in the selection
-          base_category = field.get_value( 'base_category')
+          base_category = field.get_value('base_category')
 
-          property_get_related_uid_method_name = "get"+ string.join( map( lambda x: string.upper(x[0]) + x[1:] ,string.split(base_category,'_') ) , '' ) + "UidList"
+          property_get_related_uid_method_name = \
+            "get%sUidList" % ''.join(['%s%s' % (x[0].upper(), x[1:]) \
+                                      for x in base_category.split('_')])
           
-          current_uid_list = getattr( o, property_get_related_uid_method_name )( portal_type=map(lambda x:x[0],field.get_value('portal_type')))
-
+          current_uid_list = getattr(o, property_get_related_uid_method_name)\
+                               (portal_type=[x[0] for x in \
+                                  field.get_value('portal_type')])
           # Checked current uid
           kw ={}
           kw[field.get_value('catalog_index')] = field_value
-          self.portal_selections.setSelectionParamsFor(selection_name, kw.copy())
-          self.portal_selections.setSelectionCheckedUidsFor(selection_name , current_uid_list )
+          self.portal_selections.setSelectionParamsFor(selection_name, 
+                                                       kw.copy())
+          self.portal_selections.setSelectionCheckedUidsFor(
+                                             selection_name, 
+                                             current_uid_list)
 
           field_value = ''
           REQUEST.form['field_%s' % field.id] = field_value
-          # XXX portal_status_message = "Please select one or more object to define the field: '%s'" % field.get_orig_value('title')
+          # XXX portal_status_message = 
+          # "Please select one or more object to define the field: 
+          # '%s'" % field.get_orig_value('title')
           portal_status_message = "Please select one (or more) object."
 
 
@@ -1010,8 +1048,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
       form_pickle, form_signature = self.getPickleAndSignature(**pickle_kw)
       REQUEST.form_pickle = form_pickle
       REQUEST.form_signature = form_signature
-
-
         
       base_category = None
       kw = {}
@@ -1101,29 +1137,26 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     def _aq_dynamic(self, name):
       """
-        Generate viewSearchRelatedDocumentDialog0, viewSearchRelatedDocumentDialog1,... if necessary
+        Generate viewSearchRelatedDocumentDialog0, 
+                 viewSearchRelatedDocumentDialog1,... if necessary
       """
       aq_base_name = getattr(aq_base(self), name, None)
       if aq_base_name == None:
-
         dynamic_method_name = 'viewSearchRelatedDocumentDialog'
         zope_security = '__roles__'
-        if (name[:len(dynamic_method_name)] == dynamic_method_name) and (name[-len(zope_security):] != zope_security) :
+        if (name[:len(dynamic_method_name)] == dynamic_method_name) and \
+           (name[-len(zope_security):] != zope_security):
 
-          #method_count_string = name[len(dynamic_method_name):]
-
-          method_count_string_list = string.split( name[len(dynamic_method_name):] , '_' )
-
+          method_count_string_list = string.split( 
+                                       name[len(dynamic_method_name):], 
+                                       '_')
           method_count_string = method_count_string_list[0]
-
-          
           # be sure that method name is correct
           try:
             method_count = string.atoi(method_count_string)
           except TypeError:
             return aq_base_name
           else:
-
             if len(method_count_string_list) > 1:
               # be sure that method name is correct
               try:
@@ -1132,21 +1165,26 @@ class SelectionTool( UniqueObject, SimpleItem ):
                 return aq_base_name
             else:
               sub_index = None
-
-
             
             # generate dynamicaly needed forwarder methods
-            def viewSearchRelatedDocumentDialogWrapper(self, form_id, REQUEST=None, **kw):
+            def viewSearchRelatedDocumentDialogWrapper(self, form_id, 
+                                                       REQUEST=None, **kw):
               """
                 viewSearchRelatedDocumentDialog Wrapper
               """
-              LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw',0,kw)
+              LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw', 
+                  0, kw)
               if sub_index == None:
-                return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, **kw)
+                return self.viewSearchRelatedDocumentDialog(
+                                         method_count, form_id, 
+                                         REQUEST=REQUEST, **kw)
               else:
-                return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, sub_index=sub_index, **kw)
+                return self.viewSearchRelatedDocumentDialog(
+                                   method_count, form_id, 
+                                   REQUEST=REQUEST, sub_index=sub_index, **kw)
             
-            setattr(self.__class__, name, viewSearchRelatedDocumentDialogWrapper)
+            setattr(self.__class__, name, 
+                    viewSearchRelatedDocumentDialogWrapper)
 
             klass = aq_base(self).__class__
             if hasattr(klass, 'security'):
@@ -1154,8 +1192,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
               klass.security.declareProtected(ERP5Permissions.View, name)
             else:
               # XXX security declaration always failed....
-              LOG('WARNING ERP5Form SelectionTool, security not defined on',0,klass.__name__)
-
+              LOG('WARNING ERP5Form SelectionTool, security not defined on',
+                  0, klass.__name__)
             return getattr(self, name)
         else:
           return aq_base_name

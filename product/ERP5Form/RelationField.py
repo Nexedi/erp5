@@ -36,6 +36,7 @@ from Products.PythonScripts.Utility import allow_class
 
 import string
 
+from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 MAX_SELECT = 30 # Max. number of catalog result
 new_content_prefix = '_newContent_'
@@ -43,17 +44,14 @@ new_content_prefix = '_newContent_'
 
 class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
     """
-        RelationStringField widget
-
-        Works like a string field but includes one buttons
-
-        - one search button which updates the field and sets a relation
-
-        - creates object if not there
-
+    RelationStringField widget
+    Works like a string field but includes one buttons
+    - one search button which updates the field and sets a relation
+    - creates object if not there
     """
     property_names = Widget.TextWidget.property_names + \
-      ['update_method', 'jump_method', 'allow_jump', 'base_category', 'portal_type', 'allow_creation', 'container_getter_id', 'catalog_index',
+      ['update_method', 'jump_method', 'allow_jump', 'base_category', 
+       'portal_type', 'allow_creation', 'container_getter_id', 'catalog_index',
        'relation_setter_id', 'columns','sort','parameter_list','list_method',
        'first_item', 'items', 'size', 'extra_item']
 
@@ -159,7 +157,6 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
                                  default='',
                                  required=0)
 
-
     def render(self, field, key, value, REQUEST):
         """Render text input field.
         """
@@ -169,7 +166,8 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         portal_url = getToolByName(here, 'portal_url')
         portal_url_string = portal_url()
         portal_object = portal_url.getPortalObject()
-        html_string = Widget.TextWidget.render(self, field, key, value, REQUEST)
+        html_string = Widget.TextWidget.render(self, field, key, value, 
+                                               REQUEST)
 
         if REQUEST.has_key(relation_item_id):
           # Define default tales on the fly
@@ -189,20 +187,39 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
 
         #elif value != field.get_value('default'):
         else:
-            html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method"/>' \
-              %  (portal_url_string, portal_object.getPath(),
-                  getattr(field.aq_parent, '_v_relation_field_index', 0))
+          html_string += \
+             '&nbsp;<input type="image" ' \
+             'src="%s/images/exec16.png" value="update..." ' \
+             'name="%s/portal_selections/viewSearchRelatedDocumentDialog%s' \
+             ':method"/>' % \
+               (portal_url_string, portal_object.getPath(),
+                getattr(field.aq_parent, '_v_relation_field_index', 0))
 
-        relation_field_index = getattr(field.aq_parent, '_v_relation_field_index', 0)
-        field.aq_parent._v_relation_field_index = relation_field_index + 1 # Increase index
-
-        if value not in ( None, '' ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default') and field.get_value('allow_jump') == 1 :
+        relation_field_index = getattr(field.aq_parent, 
+                                       '_v_relation_field_index', 0)
+        # Increase index
+        field.aq_parent._v_relation_field_index = relation_field_index + 1 
+    
+#         import pdb; pdb.set_trace()
+#         field.get_value('default')
+        if (value not in ( None, '' )) and \
+           (not REQUEST.has_key(relation_item_id)) and \
+           (value == field.get_value('default')) and \
+           (field.get_value('allow_jump') == 1):
           if REQUEST.get('selection_name') is not None:
-            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"/></a>' \
-              % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
+            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&' \
+                           'form_id=%s&selection_name=%s&selection_index=%s' \
+                           '"><img src="%s/images/jump.png"/></a>' % \
+                     (here.absolute_url(), field.get_value('jump_method'), 
+                      field.id, field.aq_parent.id, 
+                      REQUEST.get('selection_name'), 
+                      REQUEST.get('selection_index'),
+                      portal_url_string)
           else:
-            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"/></a>' \
-              % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
+            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&' \
+                           'form_id=%s"><img src="%s/images/jump.png"/></a>' \
+                      % (here.absolute_url(), field.get_value('jump_method'), 
+                         field.id, field.aq_parent.id,portal_url_string)
         return html_string
 
     def render_view(self, field, value):
@@ -216,9 +233,12 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         portal_url_string = getToolByName(here, 'portal_url')()
         if value not in ('', None):
           html_string = '<a href="%s/%s?field_id=%s&form_id=%s">%s</a>' \
-            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, html_string)
-          html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"/></a>' \
-            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, portal_url_string)
+                      % (here.absolute_url(), field.get_value('jump_method'), 
+                         field.id, field.aq_parent.id, html_string)
+          html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s">' \
+                         '<img src="%s/images/jump.png"/></a>' % \
+                       (here.absolute_url(), field.get_value('jump_method'), 
+                        field.id, field.aq_parent.id, portal_url_string)
         return html_string
 
 class RelationEditor:
@@ -226,9 +246,9 @@ class RelationEditor:
       A class holding all values required to update a relation
     """
 
-    def __init__(self, field_id, base_category, portal_type, uid, portal_type_item,
-                 key, value, relation_setter_id, container_getter_id,
-                 display_text):
+    def __init__(self, field_id, base_category, portal_type, uid, 
+                 portal_type_item, key, value, relation_setter_id, 
+                 container_getter_id, display_text):
       self.field_id = field_id
       self.uid = uid
       self.base_category = base_category
@@ -248,7 +268,8 @@ class RelationEditor:
         relation_item_id = 'item_%s' % self.field_id
         REQUEST.set(relation_item_id, ((self.display_text, self.uid),))
         REQUEST.set(relation_field_id, self.uid)
-        REQUEST.set(self.field_id[len('field_'):], self.value) # XXX Dirty
+        # XXX Dirty
+        REQUEST.set(self.field_id[len('field_'):], self.value) 
       else:
         # Make sure no default value appears
         REQUEST.set(self.field_id[len('field_'):], None)
@@ -258,14 +279,16 @@ class RelationEditor:
 
     def edit(self, o):
       if self.uid is not None:
-        if type(self.uid) is type('a') and self.uid.startswith(new_content_prefix):
+        if type(self.uid) is type('a') and \
+            self.uid.startswith(new_content_prefix):
           # Create a new content
           portal_type = self.uid[len(new_content_prefix):]
           container = None
           for p_item in self.portal_type_item:
             if p_item[0] == portal_type:
               if self.container_getter_id:
-                container = getattr(o, self.container_getter_id)(portal_type = portal_type)
+                container = getattr(o, self.container_getter_id)(
+                                                portal_type=portal_type)
               else:
                 portal_module = o.getPortalObject().getDefaultModuleId( p_item[0] )
                 container = getattr(o.getPortalObject(), portal_module)
@@ -310,7 +333,8 @@ class RelationStringFieldValidator(Validator.StringValidator):
     """
 
     message_names = Validator.StringValidator.message_names +\
-                    ['relation_result_too_long', 'relation_result_ambiguous', 'relation_result_empty',]
+                    ['relation_result_too_long', 'relation_result_ambiguous', 
+                     'relation_result_empty',]
 
     relation_result_too_long = "Too many documents were found."
     relation_result_ambiguous = "Select appropriate document in the list."
@@ -369,16 +393,17 @@ class RelationStringFieldValidator(Validator.StringValidator):
           display_text = 'Object has been deleted'
         return RelationEditor(key, base_category, portal_type, relation_uid,
                               portal_type_item, catalog_index, value, 
-                              relation_setter_id, container_getter_id, display_text)
+                              relation_setter_id, container_getter_id, 
+                              display_text)
 
       # We must be able to erase the relation
       if value == '':
         display_text = 'Delete the relation'
+        # Will be interpreted by Base_edit as "delete relation" 
+        # (with no uid and value = '')
         return RelationEditor(key, base_category, portal_type, None,
                               portal_type_item, catalog_index, value, 
                               relation_setter_id, container_getter_id, display_text)
-                              # Will be interpreted by Base_edit as "delete relation" (with no uid and value = '')
-
 
       kw ={}
       kw[catalog_index] = value
@@ -407,9 +432,10 @@ class RelationStringFieldValidator(Validator.StringValidator):
         else:
           display_text = 'Object has been deleted'
 
-        return RelationEditor(key, base_category, portal_type, relation_uid,
-                              portal_type_item, catalog_index, value, 
-                              relation_setter_id, container_getter_id, display_text)
+        return RelationEditor(
+                  key, base_category, portal_type, relation_uid,
+                  portal_type_item, catalog_index, value, 
+                  relation_setter_id, container_getter_id, display_text)
       # If the length is 0, raise an error
       elif len(relation_list) == 0:
         if field.get_value('allow_creation') == 1 :
@@ -419,8 +445,8 @@ class RelationStringFieldValidator(Validator.StringValidator):
       # If the length is short, raise an error
       elif len(relation_list) < MAX_SELECT:
         #menu_item_list += [('-', '')]
-        menu_item_list += map(lambda x: (x.getObject().getProperty(catalog_index), x.uid),
-                                                                        relation_list)
+        menu_item_list.extend([(x.getObject().getProperty(catalog_index), 
+                               x.uid) for x in relation_list])
         REQUEST.set(relation_item_id, menu_item_list)
         self.raise_error('relation_result_ambiguous', field)
       else:
@@ -435,10 +461,20 @@ RelationStringFieldValidatorInstance = RelationStringFieldValidator()
 
 class RelationStringField(ZMIField):
     meta_type = "RelationStringField"
-    is_relation_field = 1
+    security = ClassSecurityInfo()
 
     widget = RelationStringFieldWidgetInstance
     validator = RelationStringFieldValidatorInstance
 
+    security.declareProtected('Access contents information', 'get_value')
+    def get_value(self, id, **kw):
+      """Get value for id.
 
-
+      Optionally pass keyword arguments that get passed to TALES
+      expression.
+      """
+      if id == 'is_relation_field':
+        result = 1
+      else:
+        result = ZMIField.get_value(self, id, **kw)
+      return result

@@ -36,6 +36,7 @@ from Products.ERP5Form import RelationField
 from Products.ERP5Form.RelationField import MAX_SELECT, new_content_prefix
 from Globals import get_request
 from Products.PythonScripts.Utility import allow_class
+from AccessControl import ClassSecurityInfo
 
 import string
 from zLOG import LOG
@@ -505,17 +506,25 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
             # Can return editor
             return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
 
-
-
 MultiRelationStringFieldWidgetInstance = MultiRelationStringFieldWidget()
 MultiRelationStringFieldValidatorInstance = MultiRelationStringFieldValidator()
 
 class MultiRelationStringField(ZMIField):
     meta_type = "MultiRelationStringField"
-    is_relation_field = 1
+    security = ClassSecurityInfo()
 
     widget = MultiRelationStringFieldWidgetInstance
     validator = MultiRelationStringFieldValidatorInstance
 
+    security.declareProtected('Access contents information', 'get_value')
+    def get_value(self, id, **kw):
+      """Get value for id.
 
-
+      Optionally pass keyword arguments that get passed to TALES
+      expression.
+      """
+      if id == 'is_relation_field':
+        result = 1
+      else:
+        result = ZMIField.get_value(self, id, **kw)
+      return result
