@@ -67,7 +67,7 @@ def Localizer_translate(self, domain, msgid, mapping=None, *args, **kw):
     if type(mapping) is type({}):
       if isinstance(translated_str, unicode) :
         translated_str = translated_str.encode('utf8')
-      return unicode(Template(translated_str).substitute(mapping), 'utf8')
+      return Template(translated_str).substitute(mapping)
     return translated_str
 
 def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
