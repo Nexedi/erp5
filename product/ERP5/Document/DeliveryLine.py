@@ -38,10 +38,11 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Variated import Variated
 from Products.CMFCategory.Renderer import Renderer
+from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
 
 from zLOG import LOG
 
-class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
+class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated, ImmobilisationMovement):
     """
       A DeliveryLine object allows to implement lines in
       Deliveries (packing list, order, invoice, etc.)

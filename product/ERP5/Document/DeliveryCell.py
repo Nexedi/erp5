@@ -37,10 +37,11 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.OrderLine import OrderLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.MappedValue import MappedValue
+from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
 
 from zLOG import LOG
 
-class DeliveryCell(MappedValue, Movement):
+class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     """
       A DeliveryCell allows to define specific quantities
       for each variation of a resource in a delivery line.
