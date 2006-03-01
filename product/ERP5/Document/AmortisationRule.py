@@ -31,11 +31,13 @@ from DateTime import DateTime
 from copy import deepcopy
 from string import lower, capitalize
 
-from Products.ERP5Type.DateUtils import centis, getClosestDate, addToDate
+from Products.ERP5Type.DateUtils import millis, centis, getClosestDate, addToDate
 from Products.ERP5Type.DateUtils import getDecimalNumberOfYearsBetween
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5.Document.ImmobilisationMovement import NO_CHANGE_METHOD
+
 
 from zLOG import LOG
 
@@ -62,70 +64,22 @@ class AmortisationRule(Rule):
                       , PropertySheet.DublinCore
                       )
 
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An ERP5 Rule..."""
-         , 'icon'           : 'rule_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addAmortisationRule'
-         , 'immediate_view' : 'rule_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ()
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'rule_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'rule_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-
     movement_name_dict = { 'immobilisation':   { 'immo':  'start_immo',
                                                  'amo':   'start_amo',
                                                  'vat':   'start_vat',
-                                                 'in_out':'start_in_out' },
+                                                 'input': 'start_input',
+                                                 'extra_input':'start_extra_input' },
                            'unimmobilisation': { 'immo':  'stop_immo',
                                                  'amo':   'stop_amo',
-                                                 'vat':   'stop_vat',
-                                                 'in_out':'stop_in_out' },
+                                                 'output':'stop_output' },
                            'annuity':          { 'depr':  'annuity_depr',
-                                                 'amo':   'annuity_amo' },
+                                                 'amo':   'annuity_amo',
+                                                 'temp_amo':'annuity_temp_amo',
+                                                 'temp_depr':'annuity_temp_depr' },
+                           'transfer':         { 'immo':  'transfer_immo',
+                                                 'amo':   'transfer_amo',
+                                                 'in_out':'transfer_in_out',
+                                                 'depr':  'transfer_depr'},
                            'correction':         'correction'
                          }
             
@@ -149,17 +103,9 @@ An ERP5 Rule..."""
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
-      valid_state_list = ['delivered']
+      invalid_state_list = self.getPortalUpdatableAmortisationTransactionStateList()
       to_aggregate_movement_list = []
                                                  
-      class CachedValues:
-        """
-        This empty class is used to pass an object through the heavy price calculation,
-        in order to cache already calculated results, so the calculation is shorter
-        """
-        pass
-        
-
       def updateSimulationMovementProperties(simulation_movement, calculated_movement, set_ratio=0):
         """
         Update the properties of the given simulation movement according
@@ -171,7 +117,6 @@ An ERP5 Rule..."""
         """
         modified_properties = []
         for (key, value) in calculated_movement.items():
-          #if value != None and key not in ('name','status','id','divergent'):
           if key not in ('name','status','id','divergent'):
             getter_name = 'get%s' % ''.join([capitalize(o) for o in key.split('_')])
             getter = getattr(simulation_movement, getter_name)
@@ -186,7 +131,7 @@ An ERP5 Rule..."""
             setter_name = 'set%s' % ''.join([capitalize(o) for o in key.split('_')])
             setter = getattr(simulation_movement, setter_name)
             setter(value)
-        simulation_movement.setStartDate(simulation_movement.getStopDate())
+        simulation_movement.edit(start_date=simulation_movement.getStopDate())
         if set_ratio:
           simulation_movement.setDefaultDeliveryProperties()
         #simulation_movement.immediateReindexObject()
@@ -210,7 +155,7 @@ An ERP5 Rule..."""
           simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
           updateSimulationMovementProperties(simulation_movement = simulation_movement,
                                              calculated_movement = property_dict)
-        if aggregated_movement['status'] in valid_state_list:
+        if aggregated_movement['status'] not in invalid_state_list:
           # The Simulation Movement corresponds to an Amortisation Transaction Line
           # whose Amortisation Transaction is in a valid state, so we cannot modify
           # the Simulation Movement. Some new Simulation Movements are so created
@@ -273,7 +218,8 @@ An ERP5 Rule..."""
           if ('quantity' in modified_properties and len(modified_properties)>1) or \
               ('quantity' not in modified_properties and len(modified_properties)>0):
             to_aggregate_movement_list.append(simulation_movement)
-            simulation_movement.setDelivery('')
+            simulation_movement.edit(delivery='', profit_quantity=0, 
+                  activate_kw={'tag':'disconnect_amortisation_transaction'})
            
         return 0
    
@@ -307,8 +253,8 @@ An ERP5 Rule..."""
         the already made correction
         """
         method_movements_created = 0
-        for (type, aggregated_movement_list) in aggregated_movement_dict.items():
-          if type != self.movement_name_dict['correction']:
+        for (m_type, aggregated_movement_list) in aggregated_movement_dict.items():
+          if m_type != self.movement_name_dict['correction']:
             for aggregated_movement in aggregated_movement_list:
               movements_created = updateSimulationMovementToZero(aggregated_movement = aggregated_movement,
                                                                  correction_number   = correction_number,
@@ -319,7 +265,7 @@ An ERP5 Rule..."""
         # Some correction movements may still be unused, we need to set them to 0
         unused_correction_list = []
         for correction_movement_list_list in correction_movement_dict.values():
-          for correction_movement_list in correction_movement_list:
+          for correction_movement_list in correction_movement_list_list:
             for correction_movement in correction_movement_list:
               unused_correction_list.append(correction_movement)
         correction_movement_list = aggregated_movement_dict.get( self.movement_name_dict['correction'], [] )
@@ -339,6 +285,7 @@ An ERP5 Rule..."""
       ### Start of expand() ###
         
       delivery_line_type = 'Simulation Movement'
+      to_notify_delivery_list = []
       # Get the item we come from
       my_item = applied_rule.getCausalityValue()
       # Only expand if my_item is not None
@@ -346,26 +293,22 @@ An ERP5 Rule..."""
         return
 
       ### First, plan the theorical accounting movements
-      cached_values = CachedValues()
       accounting_movement_list = []
-      immobilisation_movement_list = my_item.getImmobilisationMovementValueList(cached_data=cached_values)
-      period_number = 0
-      current_immo_movement = None
-      for mvt_number in range(len(immobilisation_movement_list)):
-        # Update previous, current and next movement variables
-        prev_immo_movement = current_immo_movement
-        current_immo_movement = immobilisation_movement_list[mvt_number]
-        if current_immo_movement.getImmobilisation():
-          period_number += 1
-        next_immo_movement = None
-        if mvt_number < len(immobilisation_movement_list) - 1:
-          next_immo_movement = immobilisation_movement_list[mvt_number + 1]
-        # Calculate the accounting movements
-        accounting_movements = self._getAccountingMovement(current_immo_movement=current_immo_movement,
-                                                          next_immo_movement=next_immo_movement,
-                                                          previous_immo_movement=prev_immo_movement,
-                                                          period_number = period_number,
-                                                          cached_data = cached_values)
+      immo_cache_dict = {'period':{}, 'price':{}}
+      immo_period_list = my_item.getImmobilisationPeriodList(immo_cache_dict=immo_cache_dict)
+      for period_number in range(len(immo_period_list)):
+        immo_cache_dict['price'] = {}
+        previous_period = None
+        next_period = None
+        immo_period = immo_period_list[period_number]
+        if period_number != 0: previous_period=immo_period_list[period_number-1]
+        if period_number != len(immo_period_list)-1: next_period=immo_period_list[period_number+1]
+        accounting_movements = self._getAccountingMovement(immo_period=immo_period,
+                                                           previous_period=previous_period,
+                                                           next_period=next_period,
+                                                           period_number=period_number,
+                                                           item=my_item,
+                                                           immo_cache_dict=immo_cache_dict)
         accounting_movement_list.extend(accounting_movements)
 
       ### The next step is to create the simulation movements
@@ -388,8 +331,6 @@ An ERP5 Rule..."""
           # we store it according to the state of the corresponding
           # Amortisation Transaction. We also make a data structure
           # to make easier the future work of correspondance
-          accounting_status = portal_workflow.getStatusOf('amortisation_transaction_workflow', delivery_value.getParent())
-          accounting_status = accounting_status['amortisation_transaction_state']
           movement_dict = { 'stop_date':                movement.getStopDate(),
                             'start_date':               movement.getStartDate(),
                             'quantity':                 movement.getQuantity(),
@@ -399,18 +340,15 @@ An ERP5 Rule..."""
                             'destination':              movement.getDestination(),
                             'resource_value':           movement.getResourceValue(),
                             'id':                       movement.getId(),
-                            'status':                   accounting_status,
+                            'status':                   delivery_value.getRootDeliveryValue().getSimulationState(),
                             'divergent':                movement.isDivergent() }
           self._placeMovementInStructure(aggregated_period_dict, movement_dict, movement_id_period_number, movement_id_name)
           # Add the delivery to the list to be notified (since each aggregated movement will be modified)
-          parent = delivery_value.getParent()
-          if parent:
-            path = parent.getPhysicalPath()
-            if not path in self._v_notify_dict.keys():
-              self._v_notify_dict[path] = None
+          parent = delivery_value.getRootDeliveryValue()
+          if parent is not None:
+            to_notify_delivery_list.append(parent)
       # Deletion of non-aggregated movements
-      applied_rule.deleteContent(to_delete_id_list)
-
+      applied_rule.manage_delObjects(to_delete_id_list)
 
       # Re-handle data of calculated movements to make easier the future
       # work of correspondance
@@ -438,21 +376,23 @@ An ERP5 Rule..."""
       matched_dict = self._matchAmortisationPeriods(calculated_period_dict, aggregated_period_dict)
       
       # We can now apply the calculated movements on the applied rule
+      new_period=0
       try:
-        new_period = max(aggregated_period_dict.keys()) + 1
+        if aggregated_period_dict != {}:
+          new_period = max(aggregated_period_dict.keys()) + 1
       except TypeError:
-        new_period = 0
+        pass
       for (c_period_number, calculated_dict) in calculated_period_dict.items():
         # First, look for a potential found match
         match = matched_dict.get(c_period_number, None)
         if match is None:
           # We did not find any match for this calculated period, so we
           # simply add the Simulation Movements into the Simulation
-          for (type, movement_list) in calculated_dict.items():
+          for (mov_type, movement_list) in calculated_dict.items():
             for movement_number in range(len(movement_list)):
               movement = movement_list[movement_number]
               if movement['quantity'] != 0:
-                new_id = '%s_%i_%i' % (type, new_period, movement_number)
+                new_id = '%s_%i_%i' % (mov_type, new_period, movement_number)
                 simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
                 # Set the properties
                 updateSimulationMovementProperties(simulation_movement = simulation_movement,
@@ -468,15 +408,15 @@ An ERP5 Rule..."""
           correction_data = self._getCorrectionMovementData(aggregated_movement_dict)
           correction_number = correction_data['correction_number']
           correction_movement_dict = correction_data['correction_movement_dict']
-          for (type, calculated_movement_list) in calculated_dict.items():
-            aggregated_movement_list = aggregated_movement_dict.get(type, [])
+          for (mov_type, calculated_movement_list) in calculated_dict.items():
+            aggregated_movement_list = aggregated_movement_dict.get(mov_type, [])
             new_aggregated_number = 0
             for aggregated_movement in aggregated_movement_list:
               movement_id = int( aggregated_movement['id'].split('_')[-1] )
               if movement_id + 1 > new_aggregated_number:
                 new_aggregated_number = movement_id + 1
 
-            if type in self.movement_name_dict['annuity'].values():
+            if mov_type in self.movement_name_dict['annuity'].values():
               # Annuity movement
               # We use relocate to match the movements.
               to_delete_from_aggregated = []
@@ -494,7 +434,7 @@ An ERP5 Rule..."""
                   to_delete_from_aggregated.append(aggregated_movement)
                 else:
                   # No matching found. We simply create the annuity
-                  new_id = '%s_%i_%i' % (type, aggregated_period_number, new_aggregated_number)
+                  new_id = '%s_%i_%i' % (mov_type, aggregated_period_number, new_aggregated_number)
                   simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
                   updateSimulationMovementProperties(simulation_movement = simulation_movement,
                                                      calculated_movement = calculated_movement)
@@ -538,7 +478,7 @@ An ERP5 Rule..."""
                   aggregated_movement_list.remove(aggregated_movement)
                 else:
                   # There is no aggregated movement left. We simply create the remaining calculated movements
-                  new_id = '%s_%i_%i' % (type, aggregated_period_number, new_aggregated_number)
+                  new_id = '%s_%i_%i' % (mov_type, aggregated_period_number, new_aggregated_number)
                   simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
                   updateSimulationMovementProperties(simulation_movement = simulation_movement,
                                                      calculated_movement = calculated_movement)
@@ -554,7 +494,7 @@ An ERP5 Rule..."""
             # We delete this movement type from aggregation, in order to determine
             # the types which have not been matched later
             try:
-              del aggregated_movement_dict[type]
+              del aggregated_movement_dict[mov_type]
             except KeyError:
               pass
          
@@ -585,7 +525,13 @@ An ERP5 Rule..."""
       if len(to_aggregate_movement_list) > 0:
         self.portal_deliveries.amortisation_transaction_builder.build(
             movement_relative_url_list = [m.getRelativeUrl() for m in to_aggregate_movement_list])
-            
+
+      # Finally notify modified deliveries in order to update causality state
+      for delivery_value in to_notify_delivery_list:
+        delivery_value.activate(
+            after_tag='disconnect_amortisation_transaction'
+            ).AmortisationTransaction_afterBuild()
+        delivery_value.edit()
 
         
     def _getCorrectionMovementData(self, aggregated_movement_dict):
@@ -637,7 +583,7 @@ An ERP5 Rule..."""
         matching = { 'max':0, 'score':0 }
         for matching_parameter in parameter_list:
           matching['max'] = matching['max'] + 1
-          if movement_a[matching_parameter] == movement_b[matching_parameter]:
+          if movement_a.get(matching_parameter) == movement_b.get(matching_parameter):
             matching['score'] = matching['score'] + 1
         return matching
             
@@ -648,7 +594,7 @@ An ERP5 Rule..."""
           # We first compare the dates of immobilisation, so we can compare the annuity suit
           # first directly, and then by relocating in time
           relocate_list = [0, 1, -1]
-          aggregated_immobilisation = calculated_dict.get(self.movement_name_dict['immobilisation']['immo'], [])
+          aggregated_immobilisation = aggregated_dict.get(self.movement_name_dict['immobilisation']['immo'], [])
           if len(calculated_immobilisation) != 0 and len(aggregated_immobilisation) != 0:
             c_immobilisation_movement = calculated_immobilisation[-1]
             a_immobilisation_movement = aggregated_immobilisation[-1]
@@ -659,7 +605,7 @@ An ERP5 Rule..."""
             else:
               date_difference = int(- getDecimalNumberOfYearsBetween(c_date, a_date))
             if abs(date_difference) >= 1:
-              relocate_list.extend(date_difference-1, date_difference, date_difference+1)
+              relocate_list.extend([date_difference-1, date_difference, date_difference+1])
               for o in relocate_list[:]:
                 while relocate_list.count(o) > 1:
                   relocate_list.remove(o)
@@ -672,12 +618,16 @@ An ERP5 Rule..."""
             a_annuity_list = aggregated_dict.get(self.movement_name_dict['annuity']['amo'], [])
             c_annuity_list = calculated_dict.get(self.movement_name_dict['annuity']['amo'], [])
             for i in range(len(a_annuity_list)):
+              a_annuity = a_annuity_list[i]
               if not (i + relocate < 0 or i + relocate > len(c_annuity_list) - 1):
-                a_annuity = a_annuity_list[i]
                 c_annuity = c_annuity_list[i + relocate]
-                this_matching = calculateMovementMatch(a_annuity, c_annuity)
-                relocate_matching['score'] = relocate_matching['score'] + this_matching['score']
-                relocate_matching['max'] = relocate_matching['max'] + this_matching['max']
+              else:
+                # Simulate an empty c_annuity to take into account non-matched movements
+                c_annuity = {}
+              this_matching = calculateMovementMatch(a_annuity, c_annuity)
+              relocate_matching['score'] = relocate_matching['score'] + this_matching['score']
+              relocate_matching['max'] = relocate_matching['max'] + this_matching['max']
+            
             # Compare the current relocated matching with the best relocated matching found until now
             if current_matching['max'] == 0:
               current_matching_ratio = 0
@@ -724,6 +674,7 @@ An ERP5 Rule..."""
           matching_ratio_list.append( { 'calculated_period' : calculated_period_number,
                                         'aggregated_period' : aggregated_period_number,
                                         'ratio'             : ratio,
+                                        'max'               : current_matching['max'],
                                         'relocate'          : current_matching['relocate'],
                                         'non-annuity'       : current_matching['non-annuity'] } )
 
@@ -765,24 +716,24 @@ An ERP5 Rule..."""
 
 
     security.declareProtected(Permissions.View, '_getAccountingMovement')
-    def _getAccountingMovement(self,current_immo_movement,next_immo_movement=None, previous_immo_movement=None,
-                               period_number=0, **kw):
+    def _getAccountingMovement(self, immo_period, previous_period, next_period, period_number=0, item=None, **kw):
       """
-      Calculates the value of accounting movements during the period
+      Calculates the value of accounting movements during the given period
       between the two given immobilisation movements.
-      If next_immo_movement is None, accounting movements are made at infinite.
       """
       # These methods are used to create dictionaries containing data to return
       def buildImmobilisationCalculatedMovementList(date, period, source_section, destination_section, 
                                                     currency, movement_list=[]):
         return buildSpecificCalculatedMovementList(date, period, 0, source_section, destination_section,
                                                    currency, movement_list, 'immobilisation')
-      
       def buildUnimmobilisationCalculatedMovementList(date, period, source_section, destination_section,
                                                       currency, movement_list=[]):
         return buildSpecificCalculatedMovementList(date, period, 0, source_section, destination_section,
                                                    currency, movement_list, 'unimmobilisation')
-
+      def buildTransferCalculatedMovementList(date, period, source_section, destination_section, 
+                                                    currency, movement_list=[]):
+        return buildSpecificCalculatedMovementList(date, period, 0, source_section, destination_section,
+                                                   currency, movement_list, 'transfer')
       def buildAnnuityCalculatedMovementList(date, period, annuity, source_section, destination_section,
                                              currency, movement_list=[]):
         return buildSpecificCalculatedMovementList(date, period, annuity, source_section, destination_section,
@@ -799,138 +750,244 @@ An ERP5 Rule..."""
                                       destination_section, currency, movement_list = []):
         return_list = []
         for movement in movement_list:
-          return_list.append(
+          return_list.append(dict(movement))
+          return_list[-1].update(
                 { 'stop_date'          : date,
                   'name'               : '%s_%i_%i' % (movement['name'], period, annuity),
-                  'quantity'           : movement['quantity'],
-                  'source'             : movement['source'],
-                  'destination'        : movement['destination'],
                   'source_section_value'      : source_section,
                   'destination_section_value' : destination_section,
                   'resource_value'     : currency } )
         return return_list
 
-      
-      item = current_immo_movement.getParent()
+      returned_list = [] 
       if item is not None:
-        # Get some variables
-        disposal_price = current_immo_movement.getDisposalPrice()
-        begin_price = current_immo_movement.getAmortisationOrDefaultAmortisationPrice(**kw)
-        begin_remaining = current_immo_movement.getAmortisationOrDefaultAmortisationDuration(**kw)
-        section = current_immo_movement.getSectionValue()
-        currency = current_immo_movement.getPriceCurrency()
-        if currency is not None:
-          currency = self.currency[currency.split('/')[-1]]
-        start_date = current_immo_movement.getStopDate()
-        stop_date = None
-        if next_immo_movement is not None:
-          stop_date = next_immo_movement.getStopDate()
-        returned_list = []
+        if immo_period is not None:
+          # Get some variables
+          start_movement =       immo_period.get('start_movement')
+          start_date =           immo_period.get('start_date')
+          start_method =         immo_period.get('start_method')
+          initial_method =       immo_period.get('initial_method')
+          initial_date =         immo_period.get('initial_date')
+          initial_duration =     immo_period.get('initial_duration')
+          disposal_price =       immo_period.get('initial_disposal_price')
+          initial_price =        immo_period.get('initial_price')
+          section =              immo_period.get('owner')
+          continuous =           immo_period.get('continuous')
+          new_owner = section
+          currency = section.getPriceCurrency()
+          if currency is not None:
+          # XXX FIXME : do something if currency is None
+            currency = self.currency_module[currency.split('/')[-1]]
+          stop_date = immo_period.get('stop_date', addToDate(initial_date, month=initial_duration))
         
-        # Calculate particular accounting movements (immobilisation beginning, end, ownership change...)
-        immobilised_before = item.isImmobilised(at_date = start_date - centis)
-        immobilised_after = current_immo_movement.getImmobilisation()
-        replace = 0  # replace is used to know if we need to reverse an one-side movement
-                     # in order to have a one-side movement whose destination side is unset
-        if immobilised_before and previous_immo_movement is not None:
-          immo_begin_price = previous_immo_movement.getAmortisationOrDefaultAmortisationPrice(**kw)
-          immo_end_price = current_immo_movement.getDefaultAmortisationPrice(**kw) # We use this method in order
-                                                      # to get the calculated value of the item, and not the
-                                                      # value entered later by the user
-          if immo_end_price is not None:
-            # Set "end of amortisation period" data
-            amortisation_price = immo_begin_price - immo_end_price
-            end_vat = previous_immo_movement.getVat() * immo_end_price / immo_begin_price
-            immo_end_price_vat = immo_end_price + end_vat
+        # Period start and previous period stop
+        # Possible cases :
+        # 1) Item is unimmobilised before : start immobilisation
+        # 2) Item is immobilised before :
+        # ----------------------------------------------------------------------------------------------
+        # |                   | Owner does not change |  Owner changes but the  | Actual owner changes |
+        # |                   |                       |  actual owner does not  |                      |
+        # ----------------------------------------------------------------------------------------------
+        # |NO_CHANGE movement |     Nothing to do     |        Transfer         |Stop immo - start immo|
+        # |Continuous movement|   Optional transfer   |        Transfer         |Stop immo - start immo|
+        # |       Other       | Stop immo - start immo| Stop immo - start immo  |Stop immo - start immo|
+        # ----------------------------------------------------------------------------------------------
+        # "Optional Transfer" means "transfer from old accounts to new ones if they change"
+        # "Transfer" means "transfer all non-solded accounts from a section to another"
+        # "Continuous movement" means "same method as previous period and method is continuous"
+        # Note that section can change without changing owner.
+        # "Actual owner changes" means "the 'group' property of both owners differ"
+        
+        build_unimmo = 0
+        build_immo = 0
+        build_transfer = 0
+        build_optional_transfer = 0
+        previous_method = None
+        previous_stop_date = None
+        previous_owner = None
+        if immo_period is None:
+          if previous_period is not None:
+            build_unimmo = 1
+        else:
+          if previous_period is not None:
+            previous_method = previous_period['initial_method']
+            previous_stop_date = previous_period['stop_date']
+            previous_owner = previous_period['owner']
+          if previous_stop_date is None or previous_stop_date != start_date:
+            build_unimmo = 1
+            build_immo = 1
+          else:
+            previous_group = previous_owner.getGroup()
+            new_group = new_owner.getGroup()
+            if previous_group is None or \
+               new_group is None or \
+               previous_group != new_group:
+              build_unimmo = 1
+              build_immo = 1
+            else:
+              if start_method not in ("",NO_CHANGE_METHOD) and (\
+                   previous_method is None or \
+                   start_method != previous_method or \
+                   not start_movement.getAmortisationMethodParameterForItem(item, "continuous")["continuous"]):
+                build_unimmo = 1
+                build_immo = 1
+              else:
+                if previous_owner != new_owner:
+                  build_transfer = 1
+                else:
+                  if start_movement.getAmortisationMethodParameterForItem(item, "continuous")["continuous"]:
+                    build_optional_transfer = 1
+                  #else nothing to do
+        if previous_period is None:
+          build_unimmo = 0
+          build_transfer = 0
+          build_optional_transfer = 0              
+
+        # Build previous period unimmobilisation    
+        if build_unimmo:
+          previous_initial_price = previous_period['initial_price']
+          previous_start_date = previous_period['start_date']
+          previous_stop_date = previous_period['stop_date']
+          previous_start_movement = previous_period['start_movement']
+          previous_section = previous_owner
+          previous_currency = previous_section.getPriceCurrency()
+          if previous_currency is not None:
+            # XXX FIXME : do something if currency is None
+            previous_currency = self.currency_module[previous_currency.split('/')[-1]]
+          previous_stop_price = item.getAmortisationPrice(at_date=previous_stop_date, **kw)
+          if previous_stop_price is not None:
+            previous_amortised_price = previous_initial_price - previous_stop_price
             returned_list.extend( 
-                buildUnimmobilisationCalculatedMovementList(date = start_date,
+                buildUnimmobilisationCalculatedMovementList(date = previous_stop_date,
                                                             period = period_number - 1,
-                                                            source_section = None,
-                                                            destination_section = previous_immo_movement.getSectionValue(),
-                                                            currency = currency,
+                                                            source_section = previous_section,
+                                                            destination_section = None,
+                                                            currency = previous_currency,
                                                             movement_list=[
                             { 'name'               : 'immo',
-                              'quantity'           : -immo_begin_price,
-                              'source'             : None,
-                              'destination'        : previous_immo_movement.getImmobilisationAccount() },
-                            { 'name'               : 'vat',
-                              'quantity'           : -end_vat,
-                              'source'             : None,
-                              'destination'        : previous_immo_movement.getVatAccount() },
+                              'quantity'           : previous_initial_price,
+                              'source'             : previous_period['start_immobilisation_account']
+                                                  or previous_period['initial_immobilisation_account'],
+                              'destination'        : None, },
                             { 'name'               : 'amo',
-                              'quantity'           : amortisation_price,
-                              'source'             : None,
-                              'destination'        : previous_immo_movement.getAmortisationAccount() },
-                            { 'name'               : 'in_out',
-                              'quantity'           : immo_end_price_vat,
-                              'source'             : None,
-                              'destination'        : previous_immo_movement.getOutputAccount() }
+                              'quantity'           : -previous_amortised_price,
+                              'source'             : previous_period['start_amortisation_account']
+                                                  or previous_period['initial_amortisation_account'],
+                              'destination'        : None, },
+                            { 'name'               : 'output',
+                              'quantity'           : previous_amortised_price - previous_initial_price,
+                              'source'             : previous_period['start_output_account']
+                                                  or previous_period['initial_output_account'],
+                              'destination'        : None, }
                      ] ) )
-            replace = 1
 
-        if immobilised_after:
-          # Set "begin of amortisation" data
-          immo_begin_price = begin_price
-          begin_vat = current_immo_movement.getVat()
-          if len(returned_list) > 0 and round(immo_begin_price,2) == round(immo_end_price,2) and round(begin_vat,2) == round(end_vat,2):
-            # Gather data into a single movement
-            returned_list[0]['source'] = current_immo_movement.getImmobilisationAccount()
-            returned_list[1]['source'] = current_immo_movement.getVatAccount()
-            returned_list[2]['source'] = current_immo_movement.getAmortisationAccount()
-            returned_list[3]['source'] = current_immo_movement.getInputAccount()
-            for i in range(4):
-              returned_list[i]['source_section_value'] = section
-            replace = 0
-          else:
-            # Create another movement
-            returned_list.extend( 
-                buildImmobilisationCalculatedMovementList(date = start_date,
-                                                          period = period_number,
-                                                          source_section = section,
-                                                          destination_section = None,
-                                                          currency = currency,
-                                                          movement_list=[
-                            { 'name'               : 'immo',
-                              'quantity'           : - immo_begin_price,
-                              'source'             : current_immo_movement.getImmobilisationAccount(),
-                              'destination'        : None },
-                            { 'name'               : 'vat',
-                              'quantity'           : - begin_vat,
-                              'source'             : current_immo_movement.getVatAccount(),
-                              'destination'        : None },
-                            { 'name'               : 'amo',
-                              'quantity'           : 0,
-                              'source'             : current_immo_movement.getAmortisationAccount(),
-                              'destination'        : None },
-                            { 'name'               : 'in_out',
-                              'quantity'           : immo_begin_price + begin_vat,
-                              'source'             : current_immo_movement.getInputAccount(),
-                              'destination'        : None }
-                         ] ) )
-        if replace:
-          # Replace destination by source on the immobilisation-ending writings
-          for i in range(4):
-            returned_list[i]['source']               = returned_list[i]['destination']
-            returned_list[i]['source_section_value'] = returned_list[i]['destination_section_value']
-            returned_list[i]['destination']               = None
-            returned_list[i]['destination_section_value'] = None
-            returned_list[i]['quantity'] = - returned_list[i]['quantity']
 
+        # Build current period immobilisation
+        if build_immo:
+          initial_vat = immo_period.get("initial_vat") or 0
+          returned_list.extend( 
+              buildImmobilisationCalculatedMovementList(date = start_date,
+                                                        period = period_number,
+                                                        source_section = section,
+                                                        destination_section = None,
+                                                        currency = currency,
+                                                        movement_list=[
+                          { 'name'               : 'immo',
+                            'quantity'           : - initial_price,
+                            'source'             : immo_period.get('start_immobilisation_account')
+                                                or immo_period.get('initial_immobilisation_account'),
+                            'destination'        : None },
+                          { 'name'               : 'vat',
+                            'quantity'           : - initial_vat,
+                            'source'             : immo_period.get('start_vat_account')
+                                                or immo_period.get('initial_vat_account'),
+                            'destination'        : None },
+                          { 'name'               : 'amo',
+                            'quantity'           : 0,
+                            'source'             : immo_period.get('start_amortisation_account')
+                                                or immo_period.get('initial_amortisation_account'),
+                            'destination'        : None },
+                          { 'name'               : 'input',
+                            'quantity'           : immo_period.get('initial_main_price') + initial_vat,
+                            'source'             : immo_period.get('start_input_account')
+                                                or immo_period.get('initial_input_account'),
+                            'destination'        : None },
+                          { 'name'               : 'extra_input',
+                            'quantity'           : immo_period.get('initial_extra_cost_price') or 0,
+                            'source'             : immo_period.get('start_extra_cost_account')
+                                                or immo_period.get('initial_extra_cost_account'),
+                            'destination'        : None }
+                      ] ) )
+                        
+        # Build accounts transfer if the owner changes
+        # XXX FIXME : do something if currency != previous currency
+        if build_transfer:
+          transfer_line_list = []
+          for name, key in (('immo','immobilisation_account'),
+                            ('amo', 'amortisation_account')):
+            previous_account = previous_period.get('start_'+ key) or previous_period['initial_'+key]
+            new_account = immo_period.get('start_' + key) or immo_period.get('initial_'+key)
+            cumulated_price = previous_period.get('cumulated_price_dict',{}).get( (previous_account,previous_owner), 0)
+            if cumulated_price != 0:
+              transfer_line_list.append({ 'name'               : name,
+                                          'quantity'           : cumulated_price,
+                                          'source'             : new_account,
+                                          'destination'        : previous_account })
+          returned_list.extend(
+              buildTransferCalculatedMovementList(date = start_date,
+                                                  period = period_number,
+                                                  source_section = new_owner,
+                                                  destination_section = previous_owner,
+                                                  currency = currency,
+                                                  movement_list = transfer_line_list))
+                        
+        # Build accounts transfer if they change
+        # XXX FIXME : do something if currency != previous currency
+        if build_optional_transfer:
+          transfer_line_list = []
+          for name, key in (('immo','immobilisation_account'),
+                            ('amo', 'amortisation_account'),
+                            ('depr', 'depreciation_account')):
+            previous_account = previous_period.get('start_'+ key) or previous_period['initial_'+key]
+            new_account = immo_period.get('start_' + key) or immo_period['initial_'+key]
+            cumulated_price = previous_period.get('cumulated_price_dict',{}).get( (previous_account, previous_owner), 0)
+            if previous_account != new_account and cumulated_price != 0:
+              transfer_line_list.append({ 'name'               : name,
+                                          'quantity'           : cumulated_price,
+                                          'source'             : new_account,
+                                          'destination'        : previous_account })
+          returned_list.extend(
+              buildTransferCalculatedMovementList(date = start_date,
+                                                  period = period_number,
+                                                  source_section = new_owner,
+                                                  destination_section = previous_owner,
+                                                  currency = currency,
+                                                  movement_list = transfer_line_list))
         # Calculate the annuities
-        current_price = begin_price
-        if immobilised_after:
+        def buildAnnuity(from_date, to_date, depr_account, amo_account, precision, depr_name, amo_name):
           # Search for the first financial end date after the first immobilisation movement
-          end_date = getClosestDate(target_date=start_date,
-                                    date=section.getFinancialYearStopDate(),
-                                    precision='year',
+          end_date = getClosestDate(target_date=from_date,
+              date=section.getFinancialYearStopDate(),
+                                    precision=precision,
                                     before=0)
+          adding_dict = {precision:1}
+          if end_date == initial_date:
+            end_date = addToDate(end_date, **adding_dict)
           annuity_number = 0
-          while (stop_date is None and current_price > disposal_price) or \
-                (stop_date is not None and end_date - stop_date < 0):
+          if continuous:
+            current_price = item.getAmortisationPrice(at_date=from_date, **kw)
+            if current_price is None:
+              current_price = initial_price
+          else:
+            current_price = initial_price
+          # Proceed for each annuity
+          while end_date - to_date < 0:
+            annuity_price = 0
             annuity_end_price = item.getAmortisationPrice(at_date=end_date, **kw)
             if annuity_end_price is None:
               break
-            if annuity_end_price is not None:
+            # Count this annuity only if it is in the current period
+            if end_date - from_date > 0:
               annuity_price = current_price - annuity_end_price
               if annuity_price < 0:
                 break
@@ -943,77 +1000,94 @@ An ERP5 Rule..."""
                                                        destination_section = None,
                                                        currency = currency,
                                                        movement_list=[
-                                { 'name'               : 'depr',
+                                { 'name'               : depr_name,
                                   'quantity'           : - annuity_price,
-                                  'source'             : current_immo_movement.getDepreciationAccount(),
+                                  'source'             : depr_account,
                                   'destination'        : None },
-                                { 'name'               : 'amo',
+                                { 'name'               : amo_name,
                                   'quantity'           : annuity_price,
-                                  'source'             : current_immo_movement.getAmortisationAccount(),
+                                  'source'             : amo_account,
                                   'destination'        : None }
                           ] ) )
             current_price -= annuity_price
-            end_date = addToDate(end_date, {'year':1})
+            end_date = addToDate(end_date, **adding_dict)
             annuity_number += 1
-
-          # Proceed the last annuity (incomplete, from financial year end date to stop_date)
-          if stop_date is not None:
-            # We use getDefaultAmortisationPrice in order to get the calculated value of the item,
-            # and not the value entered later by the user for the next immobilisation period
-            annuity_end_price = next_immo_movement.getDefaultAmortisationPrice(**kw)
-            if annuity_end_price is not None and annuity_end_price < current_price:
-              annuity_price = current_price - annuity_end_price
-              if annuity_price != 0:
-                returned_list.extend( 
-                    buildAnnuityCalculatedMovementList(date = end_date,
-                                                       period = period_number,
-                                                       annuity = annuity_number,
-                                                       source_section = section,
-                                                       destination_section = None,
-                                                       currency = currency,
-                                                       movement_list=[
-                                { 'name'               : 'depr',
-                                  'quantity'           : - annuity_price,
-                                  'source'             : current_immo_movement.getDepreciationAccount(),
-                                  'destination'        : None },
-                                { 'name'               : 'amo',
-                                  'quantity'           : annuity_price,
-                                  'source'             : current_immo_movement.getAmortisationAccount(),
-                                  'destination'        : None }
-                          ] ) )
-                
-          # Construct an unimmobilisation set of movements if the disposal value
-          # is greater than 0
-          if stop_date is None and disposal_price and current_price <= disposal_price:
-            end_date = addToDate(end_date, year=-1)
-            amortisation_price = begin_price - current_price
-            end_vat = current_immo_movement.getVat() * current_price / begin_price
-            immo_end_price_vat = current_price + end_vat
-            returned_list.extend( 
-                buildUnimmobilisationCalculatedMovementList(date = end_date,
-                                                            period = period_number,
-                                                            source_section = current_immo_movement.getSectionValue(),
-                                                            destination_section = None,
-                                                            currency = currency,
-                                                            movement_list=[
-                            { 'name'               : 'immo',
-                              'quantity'           : begin_price,
-                              'source'             : current_immo_movement.getImmobilisationAccount(),
+  
+          # Proceed the last annuity (maybe incomplete, from financial year end date to to_date)
+          annuity_end_price = item.getAmortisationPrice(at_date=to_date, **kw)
+          if annuity_end_price is not None and annuity_end_price < current_price:
+            annuity_price = current_price - annuity_end_price
+            if annuity_price != 0:
+              returned_list.extend( 
+                  buildAnnuityCalculatedMovementList(date = end_date,
+                                                     period = period_number,
+                                                     annuity = annuity_number,
+                                                     source_section = section,
+                                                     destination_section = None,
+                                                     currency = currency,
+                                                     movement_list=[
+                            { 'name'               : depr_name,
+                              'quantity'           : - annuity_price,
+                              'source'             : depr_account,
                               'destination'        : None },
-                            { 'name'               : 'vat',
-                              'quantity'           : end_vat,
-                              'source'             : current_immo_movement.getVatAccount(),
-                              'destination'        : None },
-                            { 'name'               : 'amo',
-                              'quantity'           : - amortisation_price,
-                              'source'             : current_immo_movement.getAmortisationAccount(),
-                              'destination'        : None },
-                            { 'name'               : 'in_out',
-                              'quantity'           : - immo_end_price_vat,
-                              'source'             : current_immo_movement.getOutputAccount(),
+                            { 'name'               : amo_name,
+                              'quantity'           : annuity_price,
+                              'source'             : amo_account,
                               'destination'        : None }
-                     ] ) )
-        return returned_list
+                        ] ) )
+        
+       #######
+        if immo_period is not None:
+          monthly_account = immo_period.get('start_monthly_amortisation_account') \
+                         or immo_period.get('initial_monthly_amortisation_account')
+          final_depreciation_account = immo_period.get('start_depreciation_account') \
+                                    or immo_period.get('initial_depreciation_account')
+          amortisation_account = immo_period.get('start_amortisation_account') \
+                              or immo_period.get('initial_amortisation_account')
+          # Build monthly annuities
+          if monthly_account is not None:
+            buildAnnuity(from_date=start_date,
+                         to_date=stop_date,
+                         depr_account=monthly_account,
+                         amo_account=amortisation_account,
+                         precision='month',
+                         depr_name='temp_depr',
+                         amo_name='temp_amo')
+            inter_depreciation_account = monthly_account
+          else:
+            inter_depreciation_account = amortisation_account
+          
+          # Build yearly annuities
+          buildAnnuity(from_date=start_date,
+                       to_date=stop_date,
+                       depr_account=final_depreciation_account,
+                       amo_account=inter_depreciation_account,
+                       precision='year',
+                       depr_name='depr',
+                       amo_name='amo')
+        
+          # Accumulate quantities and add them to the period dict
+          if previous_period is not None:
+            cumulated_price_dict = dict(previous_period.get('cumulated_price_dict',{}))
+          else:
+            cumulated_price_dict = {}
+          for line in returned_list:
+            quantity = line['quantity']
+            if quantity != 0:
+              source = line['source']
+              destination = line['destination']
+              source_section_value = line['source_section_value']
+              destination_section_value = line['destination_section_value']
+              if source is not None and source_section_value is not None:
+                cumulated_source = cumulated_price_dict.get( (source, source_section_value), 0)
+                cumulated_source += quantity
+                cumulated_price_dict[(source, source_section_value)] = cumulated_source
+              if destination is not None and destination_section_value is not None:
+                cumulated_destination = cumulated_price_dict.get( (destination, destination_section_value), 0)
+                cumulated_destination -= quantity
+                cumulated_price_dict[(destination_section_value)] = cumulated_destination
+          immo_period['cumulated_price_dict'] = cumulated_price_dict
+      return returned_list
 
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
