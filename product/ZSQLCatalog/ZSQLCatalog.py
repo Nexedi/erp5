@@ -613,7 +613,6 @@ class ZCatalog(Folder, Persistent, Implicit):
             "A cataloged object must support the 'getPhysicalPath' "
             "method if no unique id is provided when cataloging"
             )
-        url = string.join(url(), '/')
         url = '/'.join(url())
         url_list.append(url)
 
