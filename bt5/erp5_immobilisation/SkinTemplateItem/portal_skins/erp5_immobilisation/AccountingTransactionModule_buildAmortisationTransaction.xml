@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+builder_kw = {\'activate_kw\':{\'tag\':\'build_amortisation_transaction\'},\n
+              \'update_requested\':1}\n
+\n
+applied_rule_list = []\n
+if len(item_uid_list) > 0:\n
+  item_value_list = [context.portal_catalog.getObject(uid) for uid in item_uid_list]\n
+  for item_value in item_value_list:\n
+    applied_rule = item_value.getCausalityRelatedValueList(portal_type=\'Applied Rule\')\n
+    if len(applied_rule) == 1:\n
+      applied_rule_list.append(applied_rule[0])\n
+  builder_kw[\'applied_rule_uid\'] = [x.getUid() for x in applied_rule_list]\n
+\n
+if at_date not in (None, \'None\'):\n
+  date_dict = {\'query\':[at_date],\n
+               \'range\':\'ngt\'}\n
+  builder_kw[\'movement.stop_date\'] = date_dict\n
+\n
+if len(item_uid_list) > 0 and len(applied_rule_list) == 0:\n
+  context.log(\'ERP5 Amortisation Build :\',\'No applied rule to select for build with item_uid_list %s\' % item_uid_list)\n
+  return None\n
+\n
+context.portal_deliveries.amortisation_transaction_builder.build(**builder_kw)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/AccountingTransactionModule_buildAmortisationTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>at_date=None, item_uid_list=[]</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>at_date</string>
+                            <string>item_uid_list</string>
+                            <string>builder_kw</string>
+                            <string>applied_rule_list</string>
+                            <string>len</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>uid</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>item_value_list</string>
+                            <string>item_value</string>
+                            <string>applied_rule</string>
+                            <string>_getitem_</string>
+                            <string>x</string>
+                            <string>_write_</string>
+                            <string>None</string>
+                            <string>date_dict</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingTransactionModule_buildAmortisationTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

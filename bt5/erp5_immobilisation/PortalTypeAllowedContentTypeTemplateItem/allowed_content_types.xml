@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Accounting Transaction Module">
+  <item>Amortisation Transaction</item>
+ </portal_type>
+ <portal_type id="Amortisation Transaction">
+  <item>Amortisation Transaction Line</item>
+ </portal_type>
+ <portal_type id="Immobilisation">
+  <item>Immobilisation Line</item>
+ </portal_type>
+ <portal_type id="Immobilisation Module">
+  <item>Immobilisation</item>
+ </portal_type>
+</allowed_content_type_list>
