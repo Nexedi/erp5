@@ -101,10 +101,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_source_section</string>
-                        <string>my_source_reference</string>
-                        <string>my_title</string>
                         <string>my_destination_section_title</string>
+                        <string>my_destination_reference</string>
+                        <string>my_title</string>
+                        <string>my_source_section_title</string>
                         <string>my_reference</string>
                         <string>my_resource</string>
                       </list>
