@@ -68,18 +68,14 @@
             <key> <string>_body</string> </key>
             <value> <string>sort_dict = { \'income\': \'\\0\\0\',\n
               \'expense\': \'\\0\\0\',\n
-              \'receivable\': \'\\0\\1\',\n
-              \'payable\': \'\\0\\1\',\n
-              \'collected_vat\': \'\\0\\2\',\n
-              \'refundable_vat\': \'\\0\\3\' }\n
+              \'receivable\': \'\\0\\2\',\n
+              \'payable\': \'\\0\\2\',\n
+              \'collected_vat\': \'\\0\\1\',\n
+              \'refundable_vat\': \'\\0\\1\' }\n
 \n
 def sortInvoiceTransactionLine(a, b):\n
-  a_id = a.getId()\n
-  if a_id in sort_dict:\n
-    a_id = sort_dict[a_id]\n
-  b_id = b.getId()\n
-  if b_id in sort_dict:\n
-    b_id = sort_dict[b_id]\n
+  a_id = sort_dict.get(a.getId(), a.getId())\n
+  b_id = sort_dict.get(b.getId(), b.getId())\n
   return cmp(a_id, b_id)\n
 \n
 \n
