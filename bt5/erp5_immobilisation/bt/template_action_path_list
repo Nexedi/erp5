@@ -10,6 +10,11 @@ Amortisation Transaction | jump_causality_items
 Amortisation Transaction | metadata
 Amortisation Transaction | print
 Amortisation Transaction | view
+Delivery Cell | eu_linear_amortisation_method_view_details
+Delivery Cell | eu_no_amortisation_amortisation_method_view_details
+Delivery Cell | fr_actual_use_amortisation_method_view_details
+Delivery Cell | fr_degressive_amortisation_method_view_details
+Delivery Cell | fr_uncontinuous_degressive_amortisation_method_view_details
 Immobilisation Line | eu_linear_amortisation_method_view_details
 Immobilisation Line | eu_no_amortisation_amortisation_method_view_details
 Immobilisation Line | fr_actual_use_amortisation_method_view_details
