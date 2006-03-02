@@ -1639,6 +1639,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         related_method = getattr(self, method_id, None)
         if related_method is not None:
           table_id = {'src__' : 1} # Return query source, do not evaluate
+          table_id['query_table'] = query_table
           table_index = 0
           for t_tuple in related_table_map[(table_list,method_id)]:
             table_id['table_%s' % table_index] = t_tuple[1] # table_X is set to mapped id
