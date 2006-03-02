@@ -75,7 +75,6 @@ class Item(XMLObject, Amount, ImmobilisableItem):
                       , PropertySheet.Item
                       , PropertySheet.Amount
                       , PropertySheet.Reference
-                      , PropertySheet.Amortisation
                       )
 
     security.declareProtected(Permissions.ModifyPortalContent,'generateNewId')
