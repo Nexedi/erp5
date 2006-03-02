@@ -1,29 +1,9 @@
-Address | edit_workflow
-Agent | edit_workflow
-Assignment | assignment_workflow
-Assignment | edit_workflow
-Bank Account | bank_account_workflow
-Bank Account | edit_workflow
-Career | career_workflow
 Category | edit_workflow
-ChatAddress | edit_workflow
-Credit Card | edit_workflow
-Currency Exchange Line | edit_workflow
-Currency | edit_workflow
 Document | edit_workflow
-Email | edit_workflow
 Favorite | edit_workflow
-Fax | edit_workflow
-File | edit_workflow
-Image | edit_workflow
 Link | edit_workflow
 Mapped Value | edit_workflow
 News Item | edit_workflow
-Organisation | edit_workflow
-Organisation | validation_workflow
-Person | edit_workflow
-Person | validation_workflow
 Predicate | rule_interaction_workflow
 Preference | preference_workflow
 Simulation Movement | simulation_movement_interaction_workflow
-Telephone | edit_workflow

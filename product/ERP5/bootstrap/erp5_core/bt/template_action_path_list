@@ -1,17 +1,3 @@
-Address | history
-Address | metadata
-Address | print
-Address | print_pdf
-Address | view
-Agent Privilege | history
-Agent Privilege | metadata
-Agent Privilege | print
-Agent Privilege | view
-Agent | download
-Agent | history
-Agent | metadata
-Agent | signature
-Agent | view
 Alarm Tool | metadata
 Alarm Tool | print
 Alarm Tool | view
@@ -26,16 +12,6 @@ Applied Rule | print
 Applied Rule | print_pdf
 Applied Rule | translate
 Applied Rule | view
-Assignment | history
-Assignment | metadata
-Assignment | print_pdf
-Assignment | view
-Bank Account | history
-Bank Account | jump_active_accounting_pref
-Bank Account | metadata
-Bank Account | print_pdf
-Bank Account | transactions
-Bank Account | view
 Base Category | list
 Base Category | view
 Base Domain | history
@@ -54,10 +30,6 @@ Business Template | view
 Business Template | view_catalog
 Business Template | view_detail
 Business Template | view_portal_types
-Career | history
-Career | metadata
-Career | print_pdf
-Career | view
 Category Tool | fast_input
 Category Tool | list
 Category Tool | localroles
@@ -66,29 +38,6 @@ Category Tool | syndication
 Category Tool | view
 Category | list
 Category | view
-ChatAddress | history
-ChatAddress | metadata
-ChatAddress | print
-ChatAddress | translate
-ChatAddress | view
-Credit Card | history
-Credit Card | metadata
-Credit Card | print_pdf
-Credit Card | view
-Currency Exchange Line | history
-Currency Exchange Line | metadata
-Currency Exchange Line | print
-Currency Exchange Line | view
-Currency Module | Translate
-Currency Module | csv_export
-Currency Module | csv_import
-Currency Module | print
-Currency Module | search
-Currency Module | view
-Currency | history
-Currency | metadata
-Currency | print
-Currency | view
 Delivery Builder | history_view
 Delivery Builder | metadata
 Delivery Builder | print
@@ -116,41 +65,15 @@ Domain | list
 Domain | metadata
 Domain | print_pdf
 Domain | view
-Email | history
-Email | metadata
-Email | print
-Email | view
 Favorite | history
 Favorite | metadata
 Favorite | translate
 Favorite | view
-Fax | fax
-Fax | history
-Fax | metadata
-Fax | previous_call
-Fax | print
-Fax | view
-File | download
-File | history
-File | metadata
-File | print
-File | view
 Folder | edit
 Folder | foldercontents
 Folder | localroles
 Folder | syndication
 Folder | view
-Image | download
-Image | fullsize_view
-Image | history
-Image | metadata
-Image | print
-Image | translate
-Image | view
-Link | history
-Link | metadata
-Link | translate
-Link | view
 Mapped Value | history
 Mapped Value | metadata
 Mapped Value | print
@@ -171,49 +94,6 @@ Order Tool | list_ui
 Order Tool | print
 Order Tool | sort_on
 Order Tool | view
-Organisation Module | csv_export
-Organisation Module | csv_import
-Organisation Module | list_ui
-Organisation Module | print
-Organisation Module | search
-Organisation Module | sort_on
-Organisation Module | translate
-Organisation Module | view
-Organisation | coordinates
-Organisation | details
-Organisation | document_view
-Organisation | financial_view
-Organisation | history
-Organisation | list
-Organisation | metadata
-Organisation | print
-Organisation | view
-Person Module | career_print
-Person Module | csv_export
-Person Module | csv_import
-Person Module | email_report
-Person Module | exchange
-Person Module | list_emails
-Person Module | list_ui
-Person Module | print
-Person Module | report
-Person Module | search
-Person Module | search_phones
-Person Module | sort_on
-Person Module | view
-Person | assignment
-Person | career
-Person | details
-Person | document_view
-Person | exchange
-Person | financial_view
-Person | history
-Person | metadata
-Person | print
-Person | profile
-Person | report
-Person | terminate_career
-Person | view
 Predicate | print_pdf
 Predicate | view
 Preference Tool | advanced
@@ -242,12 +122,6 @@ Simulation Movement | translate
 Simulation Movement | view
 Simulation Tool | csv_export
 Simulation Tool | view
-Telephone | call
-Telephone | history
-Telephone | metadata
-Telephone | previous_call
-Telephone | print
-Telephone | view
 Template Tool | diff
 Template Tool | download
 Template Tool | download_from_repository

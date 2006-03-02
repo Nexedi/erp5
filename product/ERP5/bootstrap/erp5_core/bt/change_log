@@ -1,3 +1,14 @@
+2006-02-28 aurel
+* add Domain Generator Method field in BaseDomain_view
+* modify ERP5Site_reindexAll to reindex domains
+
+2006-02-27 Romain
+* Modify Base_edit. Save simple fields before relation_fields (in order to use interaction workflow).
+
+2006-02-24 Seb
+* cut this business template in several small
+parts (erp5_base, erp5_html_style, erp5_pdf_style, erp5_csv_style)
+
 2006-02-24 yo
 * Use PasswordField instead of StringField for User Password in Person_viewDetails.
 

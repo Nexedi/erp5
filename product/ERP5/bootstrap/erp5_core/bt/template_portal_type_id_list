@@ -1,42 +1,22 @@
-Address
-Agent
-Agent Privilege
 Alarm
 Alarm Tool
 Applied Rule
-Assignment
-Bank Account
 Base Category
 Base Domain
-Career
 Category
 Category Tool
-ChatAddress
-Credit Card
-Currency
-Currency Exchange Cell
-Currency Exchange Line
-Currency Module
 Delivery Builder
 Delivery Tool
 Document
 Domain
 Domain Tool
-Email
 Favorite
-Fax
-File
 Folder
-Image
 Link
 Mapped Value
 News Item
 Order Builder
 Order Tool
-Organisation
-Organisation Module
-Person
-Person Module
 Predicate
 Preference
 Preference Tool
@@ -44,7 +24,6 @@ Route Tool
 Rule Tool
 Simulation Movement
 Simulation Tool
-Telephone
 Template Tool
 Trash Bin
 Trash Folder
