@@ -734,6 +734,7 @@ class PathTemplateItem(ObjectTemplateItem):
       for relative_url in self._resolvePath(p, [], path.split('/')):
         obj = p.unrestrictedTraverse(relative_url)
         obj = obj._getCopy(context)
+        obj = obj.__of__(context)
         id_list = obj.objectIds()
         obj = self.removeProperties(obj)
         if hasattr(aq_base(obj), 'groups'):
