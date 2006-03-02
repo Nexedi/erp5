@@ -97,6 +97,12 @@ context.portal_trash.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id
 for o in list(context.portal_trash.objectValues()):\n
   o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
 \n
+# Next we index domains\n
+print "#### Indexing domains ####"\n
+context.portal_domains.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+for o in list(context.portal_domains.objectValues()):\n
+  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+\n
 # Next we index applied rules\n
 print "#### Indexing applied rules ####"\n
 context.portal_rules.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n

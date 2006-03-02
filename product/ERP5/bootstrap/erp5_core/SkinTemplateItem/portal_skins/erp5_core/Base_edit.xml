@@ -247,9 +247,9 @@ try:\n
     \n
   # Maybe we should build a list of objects we need\n
   # Update basic attributes\n
+  context.edit(REQUEST=request,**kw)\n
   for encapsulated_editor in encapsulated_editor_list:\n
     encapsulated_editor.edit(context)\n
-  context.edit(REQUEST=request,**kw)\n
 \n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
