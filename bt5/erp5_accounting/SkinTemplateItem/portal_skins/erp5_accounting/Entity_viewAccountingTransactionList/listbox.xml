@@ -354,7 +354,7 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
+                          <string>parent_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
@@ -370,7 +370,7 @@
                           <string>Specific Reference</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
+                          <string>getTranslatedSimulationStateTitle</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
@@ -622,7 +622,7 @@
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
+                          <string>parent_portal_type</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
@@ -638,7 +638,7 @@
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state</string>
+                          <string>getTranslatedSimulationStateTitle</string>
                           <string>AccountingTransactionLine_getParentUrl</string>
                         </tuple>
                         <tuple>
