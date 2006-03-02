@@ -80,8 +80,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
       /organisation
     """
-    #return ('erp5_core',)
-    return ()
+    return ('erp5_base',)
 
   def getCategoriesTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)

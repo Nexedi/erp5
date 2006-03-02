@@ -113,7 +113,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       /person_client2 : empty
     """
     #return ('sync_crm',)
-    return ()
+    return ('erp5_base')
 
   def getSynchronizationTool(self):
     return getattr(self.getPortal(), 'portal_synchronizations', None)

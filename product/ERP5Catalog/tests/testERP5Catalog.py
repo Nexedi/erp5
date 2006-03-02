@@ -53,6 +53,9 @@ class TestERP5Catalog(ERP5TypeTestCase):
   def getTitle(self):
     return "ERP5Catalog"
 
+  def getBusinessTemplateList(self):
+    return ('erp5_base',)
+
   # Different variables used for this test
   run_all_test = 1
 

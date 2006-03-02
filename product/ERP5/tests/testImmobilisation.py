@@ -96,7 +96,8 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
       Return the list of business templates.
 
     """
-    return ("erp5_core_patch_immo",
+    return ("erp5_base",
+            "erp5_core_patch_immo",
             "erp5_trade",
             "erp5_pdm", # Needed by accounting
             "erp5_accounting",

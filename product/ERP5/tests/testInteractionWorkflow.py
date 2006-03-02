@@ -68,6 +68,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     ZopeTestCase._print('\n%s ' % message)
     LOG('Testing... ',0,message)
 
+  def getBusinessTemplateList(self):
+    return ('erp5_base',)
+
   def afterSetUp(self):
     self.login()
     #self.createData()

@@ -117,7 +117,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       the unit test framework in order to know which business templates
       need to be installed to run the test on.
     """
-    return ( 'erp5_trade'  # erp5_trade is not required to make erp5_banking_cash_transfer working.
+    return ( 'erp5_base'   # Organisation,Person,Currency modules
+           , 'erp5_trade'  # erp5_trade is not required to make erp5_banking_cash_transfer working.
                            # As explained below erp5_trade is just used to help us initialize ressources
                            #   via Internal Packing List.
            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking

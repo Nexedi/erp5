@@ -121,7 +121,7 @@ class TestAccounting(ERP5TypeTestCase):
   
   def getBusinessTemplateList(self):
     """ """
-    return ('erp5_pdm', 'erp5_trade', 'erp5_accounting',)
+    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_accounting',)
 
   def stepTic(self, **kw):
     self.tic()
