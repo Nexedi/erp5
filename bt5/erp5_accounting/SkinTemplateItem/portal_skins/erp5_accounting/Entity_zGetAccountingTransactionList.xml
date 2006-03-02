@@ -156,21 +156,21 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>getUid</string>
-                            <string>query</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
+<string>getUid</string>
+<string>query</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>resource_uid</string>
+<string>from_date</string>
+<string>at_date</string>
+<string>to_date</string>
+<string>transaction_simulation_state</string>
+<string>transaction_section_category</string>
+<string>transaction_portal_type</string>
+<string>node_uid</string>
+<string>hide_grouping</string>
                             <string>resource_uid</string>
-                            <string>from_date</string>
-                            <string>at_date</string>
-                            <string>to_date</string>
-                            <string>transaction_simulation_state</string>
-                            <string>transaction_section_category</string>
-                            <string>transaction_portal_type</string>
-                            <string>node_uid</string>
-                            <string>hide_grouping</string>
-                            <string>resource_uid</string>
-                            <string>stat</string>
+<string>stat</string>
                           </list>
                         </value>
                     </item>
@@ -206,7 +206,7 @@ transaction_section_category\r\n
 transaction_portal_type:list\r\n
 node_uid:list\r\n
 hide_grouping=""\r\n
-resource_uid=""\n
+resource_uid=""\r\n
 stat</string> </value>
         </item>
         <item>
@@ -356,6 +356,8 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
 <dtml-if transaction_section_category>\n
   AND section_category.category_uid =\n
      <dtml-var expr="portal_categories.resolveCategory(transaction_section_category).getUid()">\n
+<dtml-else>\n
+  AND section_category.category_strict_membership = 1\n
 </dtml-if>\n
 <dtml-if hide_grouping>\n
   AND (child.grouping_reference IS NULL or child.grouping_reference = "")\n
@@ -516,6 +518,8 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
 <dtml-if transaction_section_category>\n
   AND section_category.category_uid =\n
      <dtml-var expr="portal_categories.resolveCategory(transaction_section_category).getUid()">\n
+<dtml-else>\n
+  AND section_category.category_strict_membership = 1\n
 </dtml-if>\n
 <dtml-if hide_grouping>\n
   AND (child.grouping_reference IS NULL or child.grouping_reference = "")\n
