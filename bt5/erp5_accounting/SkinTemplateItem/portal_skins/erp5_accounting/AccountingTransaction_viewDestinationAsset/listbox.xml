@@ -432,12 +432,7 @@
                 <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>resource</string>
-                          <string>resource</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -496,7 +491,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>accounting_transaction_line_selection</string> </value>
+                    <value> <string>accounting_transaction_destination_asset_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -518,12 +513,23 @@
                 <item>
                     <key> <string>stat_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>destination_asset_debit</string>
+                          <string>AccountingTransactionLine_statDestinationAssetDebit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_asset_credit</string>
+                          <string>AccountingTransactionLine_statDestinationAssetCredit</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -561,6 +567,25 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>AccountingTransaction_searchInvoiceTransactionLines</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <tuple>
