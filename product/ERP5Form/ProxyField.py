@@ -166,6 +166,7 @@ class ProxyField(ZMIField):
     Optionally pass keyword arguments that get passed to TALES
     expression.
     """
+    result = None
     if id in self.widget.property_names:
       result = ZMIField.get_value(self, id, **kw)
     else:
