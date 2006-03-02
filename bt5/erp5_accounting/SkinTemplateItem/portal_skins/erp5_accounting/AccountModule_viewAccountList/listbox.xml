@@ -323,11 +323,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>ID</string>
                         </tuple>
                         <tuple>
                           <string>gap_title</string>
-                          <string>Gap</string>
+                          <string>GAP</string>
                         </tuple>
                         <tuple>
                           <string>preferred_gap_id</string>
