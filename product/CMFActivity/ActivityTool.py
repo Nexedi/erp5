@@ -34,14 +34,13 @@ from Products.ERP5Type.Error import Error
 from Products.PythonScripts.Utility import allow_class
 from App.ApplicationManager import ApplicationManager
 from AccessControl import ClassSecurityInfo, Permissions
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ActivityBuffer import ActivityBuffer
-from AccessControl.SecurityManagement import newSecurityManager
 import threading
 import sys
 from ZODB.POSException import ConflictError
@@ -121,9 +120,19 @@ class Message:
   def changeUser(self, user_name, activity_tool):
     uf = activity_tool.getPortalObject().acl_users
     user = uf.getUserById(user_name)
+    # if the user is not found, try to get it from a parent acl_users
+    # XXX this is still far from perfect, because we need to store all informations
+    # about the user (like original user folder, roles) to replay the activity with
+    # exactly the same security context as if it had been executed without activity.
+    if user is None:
+      uf = activity_tool.getPortalObject().aq_parent.acl_users
+      user = uf.getUserById(user_name)
     if user is not None:
       user = user.__of__(uf)
       newSecurityManager(None, user)
+    else :
+      LOG("CMFActivity", 0, "Unable to find user %s in the portal" % user_name)
+      noSecurityManager()
     return user
 
   def activateResult(self, activity_tool, result, object):
