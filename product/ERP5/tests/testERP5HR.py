@@ -74,7 +74,7 @@ class TestHR(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base')
+    return ('erp5_base',)
 
 
   def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):

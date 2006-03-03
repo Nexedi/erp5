@@ -76,7 +76,7 @@ class TestERP5Category(ERP5TypeTestCase):
       Return the list of business templates.
 
     """
-    return ('erp5_base')
+    return ('erp5_base',)
 
   def enableActivityTool(self):
     """
