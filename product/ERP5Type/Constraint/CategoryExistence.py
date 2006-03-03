@@ -37,6 +37,7 @@ class CategoryExistence(Constraint):
     { 'id'            : 'category_existence',
       'description'   : 'Category causality must be defined',
       'type'          : 'CategoryExistence',
+      'portal_type'   : ('Person', 'Organisation')
       'causality'     : None,
     },
   """
@@ -49,16 +50,23 @@ class CategoryExistence(Constraint):
     errors = []
     # For each attribute name, we check if defined
     for base_category in self.constraint_definition.keys():
+      if base_category in ('portal_type', ):
+        continue
+      
       # Check existence of base category
       error_message = "Category existence error for base category '%s': " % \
                       base_category
       if base_category not in object.getBaseCategoryList():
         error_message += " this document has no such category"
-      elif len(object.getCategoryMembershipList(base_category)) == 0:
+      elif len(object.getCategoryMembershipList(base_category,
+                portal_type = self.constraint_definition\
+                                  .get('portal_type', ()))) == 0:
         error_message += " this category was not defined"
       else:
         error_message = None
+      
       # Raise error
       if error_message:
         errors.append(self._generateError(object, error_message))
     return errors
+
