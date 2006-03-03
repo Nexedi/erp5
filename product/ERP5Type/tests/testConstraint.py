@@ -125,7 +125,22 @@ class TestConstraint(ERP5TypeTestCase):
 #     group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
 #     object.edit(group_value=group1)
     object.edit(group='testGroup1')
-
+    self.assertNotEquals(
+          object.getGroup(portal_type=()),
+          None )
+    
+  def stepSetObjectGroupOrganisation(self, sequence=None,
+                         sequence_list=None, **kw):
+    """
+      Set a group to object, forcing portal_type color to Organisation
+    """
+    object = sequence.get('object')
+    object.setGroup(object.getRelativeUrl(),
+                    portal_type='Organisation')
+    self.assertNotEquals(
+          object.getGroup(portal_type='Organisation'),
+          None )
+    
   def stepSetObjectGroupList(self, sequence=None,
                              sequence_list=None, **kw):
     """
@@ -222,7 +237,8 @@ class TestConstraint(ERP5TypeTestCase):
       Call checkConsistency of a Constraint.
     """
     error_list = sequence.get('error_list')
-    self.failIfDifferentSet(error_list, [])
+    self.failIfDifferentSet(error_list, [],
+          "error_list : %s" % error_list)
 
   def stepCheckIfConstraintFailed(self, sequence=None, 
                                   sequence_list=None, **kw):
@@ -230,7 +246,8 @@ class TestConstraint(ERP5TypeTestCase):
       Call checkConsistency of a Constraint.
     """
     error_list = sequence.get('error_list')
-    self.failUnless(error_list != [])
+    self.failUnless(error_list != [],
+          "error_list : %s" % error_list)
 
   def stepCreateConstraint(self, sequence=None, 
                            sequence_list=None, **kw):
@@ -507,6 +524,18 @@ class TestConstraint(ERP5TypeTestCase):
                                   id='category_existence',
                                   description='CategoryExistence test',
                                   group=None)
+  
+  def stepCreateCategoryExistence3(self, sequence=None, 
+                                   sequence_list=None, **kw):
+    """
+      Create a PropertyExistence Constraint with portal_type
+    """
+    self._createGenericConstraint(sequence, 
+                                  klass_name='CategoryExistence',
+                                  id='category_existence',
+                                  description='CategoryExistence test',
+                                  group=None,
+                                  portal_type = ('Organisation', ))
 
   def test_05_CategoryExistence(self, quiet=0, run=run_all_test):
     """
@@ -544,6 +573,35 @@ class TestConstraint(ERP5TypeTestCase):
               CreateObject \
               SetObjectGroup \
               CreateCategoryExistence2 \
+              Tic \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with property not defined on object
+    sequence_string = '\
+              CreateObject \
+              CreateCategoryExistence3 \
+              Tic \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with property defined on object, but wrong portal type
+    sequence_string = '\
+              CreateObject \
+              SetObjectGroup \
+              CreateCategoryExistence3 \
+              Tic \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with property defined on object
+    sequence_string = '\
+              CreateObject \
+              SetObjectGroupOrganisation \
+              CreateCategoryExistence3 \
               Tic \
               CallCheckConsistency \
               CheckIfConstraintSucceeded \
