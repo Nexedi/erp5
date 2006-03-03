@@ -1114,13 +1114,14 @@ class ERP5Generator(PortalGenerator):
           return
         if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
           bootstrap_dir = self.getBootstrapDirectory()
-          template = os.path.join(bootstrap_dir, 'erp5_core')
-          if not os.path.exists(template):
-            template = os.path.join(bootstrap_dir, 'erp5_core.bt5')
+          for bt in ('erp5_core','erp5_html_style'):
+            template = os.path.join(bootstrap_dir, bt)
+            if not os.path.exists(template):
+              template = os.path.join(bootstrap_dir, '%s.bt5' % bt)
 
-          id = template_tool.generateNewId()
-          template_tool.download(template, id=id)
-          template_tool[id].install(**kw)
+            id = template_tool.generateNewId()
+            template_tool.download(template, id=id)
+            template_tool[id].install(**kw)
 
 # Patch the standard method
 CMFSite.getPhysicalPath = ERP5Site.getPhysicalPath
