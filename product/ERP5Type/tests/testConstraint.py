@@ -50,7 +50,7 @@ class TestConstraint(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ()
+    return ('erp5_base',)
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users

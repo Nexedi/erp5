@@ -26,7 +26,7 @@ class TestERP5Type(ERP5TypeTestCase):
       """
         Return the list of business templates.
       """
-      return ()
+      return ('erp5_base',)
 
     def afterSetUp(self):
       self.login()
