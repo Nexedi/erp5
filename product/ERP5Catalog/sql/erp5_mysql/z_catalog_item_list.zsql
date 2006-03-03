@@ -8,6 +8,7 @@ class_name:
 class_file:
 </dtml-comment>
 <params>isMovement
+isAccountable
 uid
 getStopDate
 getDestinationUid
@@ -27,7 +28,7 @@ WHERE
 
 <dtml-let movement_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
-    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item]">
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getAggregateUidList[loop_item]">
       <dtml-call expr="movement_list.append(loop_item)">
     </dtml-if>
   </dtml-in>
