@@ -34,7 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Document.Folder import Folder
 
 
-class Agent(Folder, Image, XMLObject):
+class Agent(Folder, Image):
   """
     An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges.
   """
@@ -56,3 +56,34 @@ class Agent(Folder, Image, XMLObject):
                     , PropertySheet.Task
                     , PropertySheet.Agent
                     )
+
+
+  def __init__(self, *args, **kw):
+    Folder.__init__(self, *args, **kw)
+    Image.__init__(self, *args, **kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'viewImage')
+  viewImage = Image.index_html
+  
+  def importSignature(self, import_file=None, form_id=None, REQUEST=None, **kw):
+
+    if REQUEST is None:
+      REQUEST = getattr(self, 'REQUEST', None)
+        
+    if (import_file is None) or (len(import_file.read()) == 0) :
+      if REQUEST is not None :
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=No+file+or+an+empty+file+was+specified"
+                                  % self.absolute_url())
+        return
+      else :
+        raise RuntimeError, 'No file or an empty file was specified'
+
+    import_file.seek(0)
+    self.manage_editPhoto(file=import_file)
+    #    self._data = import_file.read()
+
+    if REQUEST is not None:
+      ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
+      REQUEST.RESPONSE.redirect("%s?portal_status_message=Signature+Imported+Successfully"
+                                % ret_url)
+
