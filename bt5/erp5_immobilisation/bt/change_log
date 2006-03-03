@@ -1,0 +1,5 @@
+2006-03-02 Guillaume
+* Added immobilisation skins to Delivery Cell
+
+2006-03-01 Guillaume
+* New version of immobilisations. The previous version was using 'immobilisation movements' inside an item. The new one adds the 'immobilisation movement' concept on each delivery movement. Now we can immobilise many items at once
