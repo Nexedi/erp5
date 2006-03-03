@@ -32,6 +32,7 @@ CREATE TABLE `catalog` (
   `invoice_state` varchar(255) default '',
   `payment_state` varchar(255) default '',
   `event_state` varchar(255) default '',
+  `immobilisation_state` varchar(255) default '',
   `reference` varchar(255) default '',
   `grouping_reference` varchar(255) default '',
   `source_reference` varchar(255) default '',

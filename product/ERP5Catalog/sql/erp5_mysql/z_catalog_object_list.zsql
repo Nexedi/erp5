@@ -26,6 +26,7 @@ invoice_state
 validation_state
 payment_state
 event_state
+getImmobilisationState
 getReference
 getGroupingReference
 getSourceReference
@@ -60,6 +61,7 @@ VALUES
   <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getImmobilisationState[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getGroupingReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getSourceReference[loop_item]" type="string" optional>,
