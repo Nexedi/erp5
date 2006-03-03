@@ -9,6 +9,7 @@ Agent Privilege | print
 Agent Privilege | view
 Agent | download
 Agent | history
+Agent | import
 Agent | metadata
 Agent | signature
 Agent | view
