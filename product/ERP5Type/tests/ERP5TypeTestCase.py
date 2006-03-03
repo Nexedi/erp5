@@ -296,13 +296,13 @@ class ERP5TypeTestCase(PortalTestCase):
             portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
 
 
-    def failIfDifferentSet(self, a,b):
+    def failIfDifferentSet(self, a, b, msg=""):
       LOG('failIfDifferentSet',0,'a:%s b:%s' % (repr(a),repr(b)))
       for i in a:
-        self.failUnless(i in b)
+        self.failUnless(i in b, msg)
       for i in b:
-        self.failUnless(i in a)
-      self.assertEquals(len(a),len(b))
+        self.failUnless(i in a, msg)
+      self.assertEquals(len(a), len(b), msg)
 
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, title='',quiet=0,
