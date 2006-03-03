@@ -120,6 +120,7 @@
                         <string>my_stop_date</string>
                         <string>simulation_state</string>
                         <string>my_trade_condition_title</string>
+                        <string>total_price</string>
                       </list>
                     </value>
                 </item>

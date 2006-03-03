@@ -57,10 +57,20 @@
  <portal_type id="Purchase Trade Condition Module">
   <item>Purchase Trade Condition</item>
  </portal_type>
+ <portal_type id="Returned Sale Packing List">
+  <item>Returned Sale Packing List Line</item>
+  <item>Container</item>
+ </portal_type>
+ <portal_type id="Returned Sale Packing List Line">
+  <item>Returned Sale Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Returned Sale Packing List Module">
+  <item>Returned Sale Packing List</item>
+ </portal_type>
  <portal_type id="Sale Order">
-  <item>Payment Condition</item>
   <item>Sale Order Line</item>
   <item>Discount</item>
+  <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Order Line">
   <item>Delivery Cell</item>

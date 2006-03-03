@@ -31,6 +31,8 @@ Purchase Packing List | packing_list_interaction_workflow
 Purchase Packing List | packing_list_workflow
 Purchase Supply | edit_workflow
 Purchase Trade Condition | edit_workflow
+Returned Sale Packing List | edit_workflow
+Returned Sale Packing List | packing_list_workflow
 Sale Order Line | edit_workflow
 Sale Order Line | trade_matrix_workflow
 Sale Order | edit_workflow

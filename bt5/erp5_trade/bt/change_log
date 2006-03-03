@@ -1,3 +1,9 @@
+2006-30-03 Seb
+* Added Returned Sale Packing List properties
+
+2006-03-03 romain
+* add proxy field in internal packing list.
+
 2006-02-28 romain
 * add proxy field in purchase trade condition, purchase order, sale packing list, purchase packing list.
 

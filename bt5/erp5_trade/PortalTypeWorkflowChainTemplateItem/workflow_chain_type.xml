@@ -68,6 +68,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Returned Sale Packing List</type>
+  <workflow>packing_list_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sale Order</type>
   <workflow>order_interaction_workflow, order_workflow, edit_workflow</workflow>
  </chain>

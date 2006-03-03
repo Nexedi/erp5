@@ -145,6 +145,32 @@ Purchase Trade Condition | view_discount
 Purchase Trade Condition | view_history
 Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
+Returned Sale Packing List Cell | history_view
+Returned Sale Packing List Cell | metadata
+Returned Sale Packing List Cell | print
+Returned Sale Packing List Cell | view
+Returned Sale Packing List Line | history
+Returned Sale Packing List Line | metadata
+Returned Sale Packing List Line | price_view
+Returned Sale Packing List Line | print
+Returned Sale Packing List Line | quantity_view
+Returned Sale Packing List Line | view
+Returned Sale Packing List Module | csv_export
+Returned Sale Packing List Module | csv_import
+Returned Sale Packing List Module | list_ui
+Returned Sale Packing List Module | print
+Returned Sale Packing List Module | search
+Returned Sale Packing List Module | sort_on
+Returned Sale Packing List Module | view
+Returned Sale Packing List Module | workflow_report
+Returned Sale Packing List | choose_solve_actions
+Returned Sale Packing List | container_fast_input
+Returned Sale Packing List | history
+Returned Sale Packing List | jump_related_sale_invoice
+Returned Sale Packing List | metadata
+Returned Sale Packing List | print
+Returned Sale Packing List | view
+Returned Sale Packing List | view_container_list
 Sale Order Line | history
 Sale Order Line | metadata
 Sale Order Line | price_view
@@ -230,6 +256,8 @@ Supply Line | discount_ratio
 Supply Line | exclusive_discount_ratio
 Supply Line | history_view
 Supply Line | metadata_view
+Supply Line | non_discountable__additional_price
 Supply Line | print
 Supply Line | surcharge_ratio
+Supply Line | variable_additional_price
 Supply Line | view

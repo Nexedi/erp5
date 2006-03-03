@@ -3,6 +3,7 @@ Internal Packing List Line | Delivery Cell
 Inventory Line | Inventory Cell
 Purchase Order Line | Delivery Cell
 Purchase Packing List Line | Purchase Packing List Cell
+Returned Sale Packing List Line | Returned Sale Packing List Cell
 Sale Order Line | Delivery Cell
 Sale Packing List Line | Sale Packing List Cell
 Supply Line | Supply Cell

@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_print</string> </value>
+            <value> <string>object_exchange</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>print</string> </value>
+            <value> <string>container_fast_input</string> </value>
         </item>
         <item>
             <key> <string>optional</string> </key>
@@ -52,7 +52,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Modify portal content</string>
               </tuple>
             </value>
         </item>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Print</string> </value>
+            <value> <string>Container Fast Input</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -85,7 +85,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_printPdf</string> </value>
+            <value> <string>string:${object_url}/SalePackingList_fastInputForm</string> </value>
         </item>
       </dictionary>
     </pickle>
