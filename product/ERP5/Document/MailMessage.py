@@ -90,6 +90,9 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
     XMLObject._edit(self, *args, **kw)
 
   def cleanIncomingMessage(self, **kw):
+    """
+      Clean up the the message data that came from the portal_mailin tool.
+    """
     # Delete attachments
     attachments = kw.get('attachments', {})
     if kw.has_key('attachments'):
@@ -103,6 +106,49 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
         kw['body'] = method(kw['body'])
         del kw['header']['content-transfer-encoding']
     return kw
+
+  def getBodyEncoding(self):
+    """
+      Extract the charset encoding from mail header.
+    """
+    charset = None
+    header = self.getHeader()
+    if header != None and header.has_key('content-type'):
+      content_type = header['content-type'].replace('\n', ' ')
+      content_type_info = content_type.split(';')
+      for ct_info in content_type_info:
+        info = ct_info.strip().lower()
+        if info.startswith('charset='):
+          charset = info[len('charset='):]
+          # Some charset statements are quoted
+          if charset.startswith('"') or charset.startswith("'"): charset = charset[1:]
+          if charset.endswith(  '"') or charset.endswith(  "'"): charset = charset[:-1]
+          break
+    return charset
+
+  def getEncodedBody(self, output_charset="utf-8"):
+    """
+      Return the entire body message encoded in the given charset.
+    """
+    body_charset = self.getBodyEncoding()
+    if body_charset == None or body_charset.lower() == output_charset.lower():
+      return self.getBody()
+    else:
+      unicode_body = unicode(self.getBody(), body_charset)
+      return unicode_body.encode(output_charset)
+
+  def getHeader(self):
+    """
+      Get the header dict of the message.
+    """
+    header = self.header
+    if header == None or type(header) == type({}):
+      return header
+    elif type(header) == type(''):
+      # Must do an 'eval' because the header is a dict stored as a text (see ERP5/PropertySheet/MailMessage.py)i
+      return eval(header)
+    else:
+      raise 'TypeError', "Type of 'header' property can't be determined."
 
   def send(self, from_url=None, to_url=None, msg=None, subject=None):
     """
