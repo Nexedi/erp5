@@ -85,7 +85,7 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
     XMLObject.__init__(self, *args, **kw)
 
   def _edit(self, *args, **kw):
-    LOG('MailMessage._edit', 0, str(kw))
+    #LOG('MailMessage._edit', 0, str(kw))
     kw = self.cleanIncomingMessage(**kw)
     XMLObject._edit(self, *args, **kw)
 
