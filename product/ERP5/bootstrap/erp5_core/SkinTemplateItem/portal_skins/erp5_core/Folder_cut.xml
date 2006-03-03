@@ -66,11 +66,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
+            <value> <string>portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 # make sure nothing is checked after\n
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
-\n
 \n
 REQUEST=context.REQUEST\n
 # do we still need ids ? XXX finish the work here\n
@@ -81,9 +83,11 @@ REQUEST=context.REQUEST\n
 if uids != []:\n
   #context.manage_cutObjects(uids=REQUEST[\'uids\'], REQUEST=REQUEST)\n
   context.manage_cutObjects(uids=uids, REQUEST=REQUEST)\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Cut.\')\n
+  message = N_("Item(s)+Cut.")\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
 else:\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Folder_viewContentList?portal_status_message=Please+select+one+or+more+items+to+cut+first.\')\n
+  message = N_("Please+select+one+or+more+items+to+cut+first.")\n
+  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Folder_viewContentList?portal_status_message=%s\' % message)\n
 </string> </value>
         </item>
         <item>
@@ -129,9 +133,12 @@ else:\n
                             <string>uids</string>
                             <string>listbox_uid</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>selected_uids</string>
                             <string>REQUEST</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>

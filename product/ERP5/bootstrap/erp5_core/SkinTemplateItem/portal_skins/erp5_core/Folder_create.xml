@@ -66,7 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>REQUEST=context.REQUEST\n
+            <value> <string>portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+REQUEST=context.REQUEST\n
 \n
 # Add an object of the same type as the container\n
 # or if allowed content types is 1 add that type\n
@@ -77,7 +80,8 @@ except IndexError:\n
   # return only a portal_status_message if the IndexError is raised because\n
   # there are no elemnts in context.allowedContentTypes()\n
   if not context.allowedContentTypes():\n
-    return REQUEST.RESPONSE.redirect(\'%s?portal_status_message=You are not allowed to add new content in this context.\' %context.absolute_url())\n
+    message = N_("You are not allowed to add new content in this context.")\n
+    return REQUEST.RESPONSE.redirect(\'%s?portal_status_message=%s\' % (context.absolute_url(), message))\n
   else:\n
     raise\n
 url = new_object.absolute_url()\n
@@ -126,9 +130,12 @@ return REQUEST.RESPONSE.redirect(url)\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>REQUEST</string>
                             <string>new_object</string>
                             <string>IndexError</string>
+                            <string>message</string>
                             <string>url</string>
                           </tuple>
                         </value>

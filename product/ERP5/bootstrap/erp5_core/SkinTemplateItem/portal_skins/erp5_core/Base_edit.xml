@@ -69,7 +69,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
-\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
 request=context.REQUEST\n
 \n
 #### Workaround for bug #21\n
@@ -265,17 +266,19 @@ except FormValidationError, validation_errors:\n
   return form(request)\n
 \n
 else:\n
+  message = N_("Data+Updated.")\n
   if not selection_index:\n
-    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+    redirect_url = \'%s/%s?portal_status_message=%s\' % ( context.absolute_url()\n
                               , form_id\n
-                              , \'portal_status_message=Data+Updated.\'\n
+                              , message\n
                               )\n
   else:\n
-    redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&%s\' % ( context.absolute_url()\n
+    redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&portal_status_message=%s\' % ( \n
+                                context.absolute_url()\n
                               , form_id\n
                               , selection_index\n
                               , selection_name\n
-                              , \'portal_status_message=Data+Updated.\'\n
+                              , message\n
                               )\n
 \n
 \n
@@ -339,6 +342,8 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>request</string>
                             <string>redirect_url</string>
                             <string>_getitem_</string>
@@ -393,6 +398,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>field_errors</string>
                             <string>field_id</string>
                             <string>callable</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>

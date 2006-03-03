@@ -69,6 +69,9 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from ZODB.POSException import ConflictError\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
 selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
@@ -94,7 +97,8 @@ def Object_hasRelation(object):\n
 \n
 ret_url = context.absolute_url() + \'/\' + form_id\n
 if error:\n
-  qs = \'?portal_status_message=Sorry+your+selection+has+changed\'\n
+  message = N_("Sorry+your+selection+has+changed")\n
+  qs = \'?portal_status_message=%s\' % message\n
 elif uids is not None:\n
   # Check if there is some related objets.\n
   object_used = 0\n
@@ -103,19 +107,24 @@ elif uids is not None:\n
     if Object_hasRelation(object):\n
       object_used += 1\n
   if object_used>0:\n
-      if object_used == 1:   \n
-        qs = \'?portal_status_message=Sorry,+1+Item+Is+In+Use.\'\n
+      if object_used == 1:\n
+        message = N_("Sorry,+1+Item+Is+In+Use.")\n
+        qs = \'?portal_status_message=%s\' % message\n
       else:\n
-        qs = \'?portal_status_message=Sorry,+%s+Items+Are+In+Use.\' % repr(object_used)\n
+        message = N_("Sorry,+${count}+Items+Are+In+Use.",\n
+                     mapping={\'count\': repr(object_used)})\n
+        qs = \'?portal_status_message=%s\' % message  \n
   else:\n
     try : \n
       context.manage_delObjects(uids=uids, REQUEST=REQUEST)\n
-      qs = \'?portal_status_message=Deleted.\'\n
+      message = N_("Deleted.")\n
+      qs = \'?portal_status_message=%s\' % message\n
     except ConflictError : raise\n
     except Exception, message : \n
       qs = \'?portal_status_message=%s\' % message\n
 else:\n
-  qs = \'?portal_status_message=Please+select+one+or+more+items+first.\'\n
+  message = N_("Please+select+one+or+more+items+first.")\n
+  qs = \'?portal_status_message=%s\' % message\n
 \n
 return REQUEST.RESPONSE.redirect( ret_url + qs )\n
 
@@ -173,12 +182,15 @@ return REQUEST.RESPONSE.redirect( ret_url + qs )\n
                             <string>ConflictError</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>selected_uids</string>
                             <string>error</string>
                             <string>REQUEST</string>
                             <string>qs</string>
                             <string>ret_url</string>
                             <string>Object_hasRelation</string>
+                            <string>message</string>
                             <string>None</string>
                             <string>object_used</string>
                             <string>_getiter_</string>
@@ -187,7 +199,6 @@ return REQUEST.RESPONSE.redirect( ret_url + qs )\n
                             <string>object</string>
                             <string>repr</string>
                             <string>Exception</string>
-                            <string>message</string>
                           </tuple>
                         </value>
                     </item>

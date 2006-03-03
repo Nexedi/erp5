@@ -72,18 +72,26 @@ if context.cb_dataValid:\n
   # We first look if the content of objects to paste is allowed\n
   # inside this folder\n
   object_list = context.cb_dataItems()\n
-  portal_type_list = map(lambda x: x.getPortalType(),object_list)\n
-  allowed_type_list = map(lambda x: x.id, context.allowedContentTypes())\n
-  for portal_type in portal_type_list:\n
-    if portal_type not in allowed_type_list:\n
-      error_message = \'Sorry+you+can+not+paste+theses+Items+here\'\n
+  try:\n
+    portal_type_list = [x.getPortalType() for x in object_list]\n
+  except AttributeError:\n
+    error_message = \'Sorry+you+can+not+paste+theses+Items+here\'\n
+  else:\n
+    allowed_type_list = [x.id for x in context.allowedContentTypes()]\n
+    for portal_type in portal_type_list:\n
+      if portal_type not in allowed_type_list:\n
+        error_message = \'Sorry+you+can+not+paste+theses+Items+here\'\n
 if context.cb_dataValid and error_message==\'\':\n
-  new_item_list = context.manage_pasteObjects(REQUEST[\'__cp\'])\n
-  new_id_list = map(lambda i: i[\'new_id\'],new_item_list)\n
-  for my_id in new_id_list:\n
-    context[my_id].flushActivity(invoke=0, method_id=\'immediateReindexObject\')\n
-    context[my_id].recursiveImmediateReindexObject()\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Pasted.\')\n
+  try:\n
+    new_item_list = context.manage_pasteObjects(REQUEST[\'__cp\'])\n
+  except KeyError:\n
+    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Nothing+To+Paste.\')\n
+  else:\n
+    new_id_list = [i[\'new_id\'] for i in new_item_list]\n
+    for my_id in new_id_list:\n
+      context[my_id].flushActivity(invoke=0, method_id=\'immediateReindexObject\')\n
+      context[my_id].recursiveImmediateReindexObject()\n
+    return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=Item(s)+Pasted.\')\n
 elif context.cb_dataValid and error_message!=\'\':\n
   return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % error_message)\n
 else:\n
@@ -130,17 +138,22 @@ else:\n
                           <tuple>
                             <string>form_id</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>REQUEST</string>
                             <string>error_message</string>
                             <string>object_list</string>
-                            <string>map</string>
-                            <string>portal_type_list</string>
-                            <string>allowed_type_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>x</string>
+                            <string>portal_type_list</string>
+                            <string>AttributeError</string>
+                            <string>allowed_type_list</string>
                             <string>portal_type</string>
                             <string>_getitem_</string>
                             <string>new_item_list</string>
+                            <string>KeyError</string>
+                            <string>i</string>
                             <string>new_id_list</string>
                             <string>my_id</string>
                           </tuple>

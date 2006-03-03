@@ -1,3 +1,9 @@
+2006-03-03 Seb
+* Commit Guillaume's fix to Resource_zGetTrackingList
+
+2006-03-02 romain
+* Correct Folder_paste.
+
 2006-02-28 aurel
 * add Domain Generator Method field in BaseDomain_view
 * modify ERP5Site_reindexAll to reindex domains

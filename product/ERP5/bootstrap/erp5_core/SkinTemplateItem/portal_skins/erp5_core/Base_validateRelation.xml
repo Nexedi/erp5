@@ -70,6 +70,8 @@
 
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 from ZTUtils import make_query\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
 \n
 request=context.REQUEST\n
 \n
@@ -86,7 +88,8 @@ if o is None:\n
   if o is not None:\n
     o.immediateReindexObject()\n
   else:\n
-    return ValueError, "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"\n
+    message = N_("Sorrry, Error, the calling object was not catalogued. Do not know how to do ?")\n
+    return ValueError, message\n
 \n
 def checkSameKeys(a , b):\n
   """\n
@@ -252,7 +255,7 @@ except FormValidationError, validation_errors:\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
 else:\n
-  message = \'Relation+Unchanged.\'\n
+  message = N_(\'Relation+Unchanged.\')\n
 \n
 if redirect_url is None:\n
   if not selection_index:\n
@@ -323,11 +326,14 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>make_query</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>request</string>
                             <string>None</string>
                             <string>base_category</string>
                             <string>o</string>
                             <string>redirect_url</string>
+                            <string>message</string>
                             <string>ValueError</string>
                             <string>checkSameKeys</string>
                             <string>getOrderedUids</string>
@@ -363,7 +369,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>complete_value</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
-                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
