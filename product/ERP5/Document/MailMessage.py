@@ -81,20 +81,20 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
                     )
 
   def __init__(self, *args, **kw):
+    kw = self.cleanIncomingMessage(**kw)
     XMLObject.__init__(self, *args, **kw)
-    self.attachments = attachments
 
   def _edit(self, *args, **kw):
-    # LOG('MailMessage._edit', 0, str(kw))
-    self._cleanIncomingMessage(**kw)
+    LOG('MailMessage._edit', 0, str(kw))
+    kw = self.cleanIncomingMessage(**kw)
     XMLObject._edit(self, *args, **kw)
-    self.attachments = attachments
 
-  def _cleanIncomingMessage(**kw):
+  def cleanIncomingMessage(self, **kw):
     # Delete attachments
     attachments = kw.get('attachments', {})
     if kw.has_key('attachments'):
       del kw['attachments']
+    self.attachments = attachments
     # Decode MIME base64/32/16 data
     if kw.has_key('header') and kw['header'].has_key('content-transfer-encoding'):
       content_encoding = kw['header']['content-transfer-encoding']
@@ -102,6 +102,7 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
         method = supported_encoding[content_encoding]
         kw['body'] = method(kw['body'])
         del kw['header']['content-transfer-encoding']
+    return kw
 
   def send(self, from_url=None, to_url=None, msg=None, subject=None):
     """
