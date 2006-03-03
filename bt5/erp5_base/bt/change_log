@@ -1,2 +1,5 @@
+2006-03-03 Seb
+* Two skins were moved from portal_skins/erp5_core to portal_skins/erp5_base
+
 2006-02-24 Seb
 * Created this business template in order to split erp5_core
