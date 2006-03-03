@@ -315,7 +315,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/absolute_url</string> </value>
+            <value> <string>python: here.absolute_url() + \'/viewImage\'</string> </value>
         </item>
       </dictionary>
     </pickle>
