@@ -67,6 +67,9 @@
     <item type="str">translated_validation_state_title | translation/translated_message/z_related_translated_validation_state</item>
     <item type="str">translated_opportunity_state | translation/translated_message/z_related_translated_opportunity_state</item>
     <item type="str">translated_opportunity_state_title | translation/translated_message/z_related_translated_opportunity_state</item>
+    <item type="str">item_resourceCategory | category/category_uid/z_related_resource_uid_from_item</item>
+    <item type="str">item_sectionCategory | category/category_uid/z_related_section_uid_from_item</item>
+    <item type="str">item_nodeCategory | category/category_uid/z_related_node_uid_from_item</item>
   </property>
   <property id="sql_catalog_request_keys" type="tuple">
   </property>
@@ -123,6 +126,7 @@
     <item type="str">predicate_category</item>
     <item type="str">roles_and_users</item>
     <item type="str">stock</item>
+    <item type="str">item</item>
   </property>
   <property id="sql_uncatalog_object" type="tuple">
     <item type="str">z0_uncatalog_category</item>
