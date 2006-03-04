@@ -72,6 +72,7 @@
 # and try to complete some fields\n
 order = context\n
 trade_condition_list = []\n
+N_ = context.Base_translateString\n
 \n
 trade_condition_portal_type = \'Purchase Trade Condition\'\n
 trade_condition_list = order.getSpecialiseValueList(portal_type=(\n
@@ -79,134 +80,109 @@ trade_condition_list = order.getSpecialiseValueList(portal_type=(\n
 \n
 if len(trade_condition_list)==0:\n
   # Search a matching Trade Condition\n
-  trade_condition_list = context.portal_domains.searchPredicateList(order,portal_type=(\'Purchase Trade Condition\',),test=0)\n
+  trade_condition_list = context.portal_domains.searchPredicateList(order,\n
+        portal_type=(\'Purchase Trade Condition\',), test=0)\n
   \n
 # Results\n
 if len(trade_condition_list ) == 0 :\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
-                                  , \'portal_status_message=No+Trade+Condition.\')\n
+               , \'portal_status_message=\'+ N_(\'No Trade Condition.\'))\n
 elif len(trade_condition_list ) > 1 :\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
-                                  , \'portal_status_message=Too+many+Trade+Condition.\')\n
-else : \n
+               , \'portal_status_message=\' + N(\'Too many Trade Conditions.\'))\n
+else :\n
   trade_condition=trade_condition_list[0].getObject()\n
 \n
   # Update Order Profile\n
   categories = order.getCategoryList()\n
   # Destination\n
-  if order.getDestinationValue() == None and trade_condition.getDestinationValue() is not None :\n
-    categories += (\'destination/\'+trade_condition.getDestinationRelativeUrl(),)\n
+  if order.getDestinationValue() == None and \\\n
+          trade_condition.getDestinationValue() is not None :\n
+    categories += (\'destination/\'+trade_condition.getDestination(),)\n
   # destination_decision\n
   if (order.getDestinationDecisionValue() is None) and \\\n
      (trade_condition.getDestinationDecisionValue() is not None) :\n
-    categories += (\'destination_decision/\'+trade_condition.getDestinationDecisionRelativeUrl(),)\n
+    categories += (\'destination_decision/\'+\n
+                              trade_condition.getDestinationDecision(),)\n
   # destination_administration\n
   if (order.getDestinationAdministrationValue() is None) and \\\n
      (trade_condition.getDestinationAdministrationValue() is not None) :\n
-    categories += (\'destination_administration/\'+trade_condition.getDestinationAdministrationRelativeUrl(),)\n
+    categories += (\'destination_administration/\'+\n
+                              trade_condition.getDestinationAdministration(),)\n
   # destination_payment\n
   if (order.getDestinationPaymentValue() is None) and \\\n
      (trade_condition.getDestinationPaymentValue() is not None) :\n
-    categories += (\'destination_payment/\'+trade_condition.getDestinationPaymentRelativeUrl(),)\n
+    categories += (\'destination_payment/\'+trade_condition.getDestinationPayment(),)\n
 \n
-  # SOURCE_section\n
+  # source_section\n
   if order.getSourceSectionValue() is None :\n
     # if source_section is not defined on TradeCondition, use Order source\n
     if trade_condition.getSourceSectionValue() is not None :\n
-      categories += (\'source_section/\'+trade_condition.getSourceSectionRelativeUrl(),)\n
+      categories += (\'source_section/\'+trade_condition.getSourceSection(),)\n
     elif trade_condition.getSourceValue() is not None:\n
-      categories += (\'source_section/\'+order.getSourceRelativeUrl(),)\n
-#     else :\n
-#       categories += (\'source_section/\'+order.getSourceRelativeUrl(),)\n
+      categories += (\'source_section/\' + trade_condition.getSource(),)\n
   # source_decision\n
   if order.getSourceDecisionValue(portal_type=\'Organisation\') is None :\n
     # if source_decision is not defined on TradeCondition, use Order source\n
     if trade_condition.getSourceDecisionValue(portal_type=\'Organisation\')\\\n
        is not None :\n
-      categories += (\'source_decision/\'+trade_condition.getSourceDecisionValue(portal_type=\'Organisation\').getRelativeUrl(),)\n
-#     else :\n
-#       categories += (\'source_decision/\'+order.getSourceValue().getRelativeUrl(),)\n
+      categories += (\'source_decision/\'+trade_condition.getSourceDecision(\n
+                                  portal_type=\'Organisation\'),)\n
     elif order.getSourceValue() is not None:\n
-      categories += (\'source_decision/\'+order.getSourceRelativeUrl(),)\n
+      categories += (\'source_decision/\'+order.getSource(),)\n
   # source_administration\n
   if order.getSourceAdministrationValue() is None :\n
-    # if source_administration is not defined on TradeCondition, use Order source\n
+    # if source_administration is not defined on TradeCondition,\n
+    # use Order source\n
     if trade_condition.getSourceAdministrationValue() is not None :\n
-      categories += (\'source_administration/\'+trade_condition.getSourceAdministrationValue().getRelativeUrl(),)\n
-#     else :\n
-#       categories += (\'source_administration/\'+order.getSourceRelativeUrl(),)\n
+      categories += (\'source_administration/\' +\n
+                    trade_condition.getSourceAdministration(),)\n
     elif order.getSourceValue() is not None:\n
-      categories += (\'source_administration/\'+order.getSourceRelativeUrl(),)\n
+      categories += (\'source_administration/\'+order.getSource(),)\n
   # source_payment\n
   if order.getSourcePaymentValue() is None :\n
     # if source_payment is not defined on TradeCondition, use Order source\n
     if trade_condition.getSourcePaymentValue() is not None :\n
-      categories += (\'source_payment/\'+trade_condition.getSourcePaymentRelativeUrl(),)\n
-#     else :\n
+      categories += (\'source_payment/\'+trade_condition.getSourcePayment(),)\n
     elif order.getSourceValue() is not None:\n
-      categories += (\'source_payment/\'+order.getSourceRelativeUrl(),)\n
+      categories += (\'source_payment/\'+order.getSource(),)\n
 \n
-  # Copy of devise\n
-  if (order.getResourceValue() is None) and \\\n
-     (trade_condition.getResourceValue() is not None) :\n
-    categories += (\'resource/\'+trade_condition.getResourceRelativeUrl(),)\n
-\n
-  # Update Order Payment\n
-#   payment_term=\'\'\n
-#   if order.hasPaymentTerm() :\n
-#     payment_term = order.getPaymentTerm()\n
-#   elif trade_condition.hasPaymentTerm() :\n
-#     payment_term = trade_condition.getPaymentTerm()\n
-# \n
-#   payment_end_of_month=\'\'\n
-#   if order.hasPaymentEndOfMonth() :\n
-#     payment_end_of_month = order.getPaymentEndOfMonth()\n
-#   elif trade_condition.hasPaymentTerm() :\n
-#     payment_end_of_month = trade_condition.getPaymentEndOfMonth()\n
-# \n
-#   payment_additional_term=\'\'\n
-#   if order.hasPaymentAdditionalTerm() :\n
-#     payment_additional_term = order.getPaymentAdditionalTerm()\n
-#   elif trade_condition.hasPaymentAdditionalTerm() :\n
-#     payment_additional_term = trade_condition.getPaymentAdditionalTerm()\n
-# \n
-#   if (order.getPaymentModeValue() is None) and \\\n
-#      (trade_condition.getPaymentModeValue() is not None) :\n
-#     categories += (trade_condition.getPaymentModeValue().getRelativeUrl(),)\n
-# \n
-#   if (order.getTradeDateValue() is None) and \\\n
-#      (trade_condition.getTradeDateValue() is not None) :\n
-#     categories += (trade_condition.getTradeDateValue().getRelativeUrl(),)\n
+  # Copy Price Currency\n
+  if (order.getPriceCurrencyValue() is None) and \\\n
+     (trade_condition.getPriceCurrencyValue() is not None) :\n
+    categories += (\'price_currency/\'+trade_condition.getPriceCurrency(),)\n
 \n
   # Copy Incoterm\n
   if (order.getIncotermValue() is None) and \\\n
      (trade_condition.getIncotermValue() is not None) :\n
-    categories += (trade_condition.getIncotermValue().getRelativeUrl(),)\n
+    categories += (trade_condition.getIncoterm(),)\n
 \n
+  # Copy Delivery Mode\n
   if (order.getDeliveryModeValue() is None) and \\\n
      (trade_condition.getDeliveryModeValue() is not None) :\n
-    categories += (trade_condition.getDeliveryModeValue().getRelativeUrl(),)\n
+    categories += (trade_condition.getDeliveryMode(),)\n
 \n
   destination_decision_source_reference = \'\'\n
   if order.hasDestinationDecisionSourceReference() :\n
-    destination_decision_source_reference = order.getDestinationDecisionSourceReference()\n
+    destination_decision_source_reference = \\\n
+          order.getDestinationDecisionSourceReference()\n
   elif trade_condition.hasDestinationDecisionSourceReference() :\n
-    destination_decision_source_reference = trade_condition.getDestinationDecisionSourceReference()\n
+    destination_decision_source_reference = \\\n
+          trade_condition.getDestinationDecisionSourceReference()\n
 \n
   # copy PaymentCondition if no one is defined on Order\n
-  payment_condition_portal_type = \'Payment Condition\'\n
-  if len(order.contentIds(filter={\'portal_type\':payment_condition_portal_type})) == 0 :\n
-    to_copy=[]\n
-    to_copy=trade_condition.contentIds(filter={\'portal_type\':payment_condition_portal_type})\n
+  filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+  if len(order.contentIds(filter = filter_dict)) == 0 :\n
+    to_copy = trade_condition.contentIds(filter = filter_dict)\n
     if len(to_copy)>0 :\n
      copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
      new_id_list = order.manage_pasteObjects(copy_data)\n
 \n
   # copy Discount if no one is defined on Order\n
-  discount_portal_type = \'Discount\'\n
-  if len(order.contentIds(filter={\'portal_type\':discount_portal_type})) == 0 :\n
+  filter_dict = {\'portal_type\': \'Discount\'}\n
+  if len(order.contentIds(filter = filter_dict)) == 0 :\n
     to_copy=[]\n
-    to_copy=trade_condition.contentIds(filter={\'portal_type\':discount_portal_type})\n
+    to_copy=trade_condition.contentIds(filter = filter_dict)\n
     if len(to_copy)>0 :\n
      copy_data = trade_condition.manage_copyObjects(ids=to_copy)\n
      new_id_list = order.manage_pasteObjects(copy_data)\n
@@ -219,18 +195,18 @@ else : \n
 \n
   final_categories += (\'specialise/\'+trade_condition.getRelativeUrl(),)\n
 \n
-  order.edit(categories=final_categories, # payment_term=payment_term,\n
-#              payment_end_of_month=payment_end_of_month,\n
-#              payment_additional_term=payment_additional_term,\n
-             destination_decision_source_reference = destination_decision_source_reference)\n
+  order.edit(\n
+      categories = final_categories,\n
+      destination_decision_source_reference =\n
+              destination_decision_source_reference )\n
 \n
   redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
-                               \'portal_status_message=Order+updated.\')\n
+               \'portal_status_message=\'+N(\'Order updated.\'))\n
 \n
 if batch_mode:\n
   return None\n
 else:\n
-  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
+  context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
 
 
 ]]></string> </value>
@@ -253,7 +229,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id,batch_mode=0</string> </value>
+            <value> <string>form_id, batch_mode=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -284,20 +260,21 @@ else:\n
                             <string>context</string>
                             <string>order</string>
                             <string>trade_condition_list</string>
-                            <string>trade_condition_portal_type</string>
                             <string>_getattr_</string>
+                            <string>N_</string>
+                            <string>trade_condition_portal_type</string>
                             <string>len</string>
                             <string>redirect_url</string>
+                            <string>N</string>
                             <string>_getitem_</string>
                             <string>trade_condition</string>
                             <string>categories</string>
                             <string>None</string>
                             <string>destination_decision_source_reference</string>
-                            <string>payment_condition_portal_type</string>
+                            <string>filter_dict</string>
                             <string>to_copy</string>
                             <string>copy_data</string>
                             <string>new_id_list</string>
-                            <string>discount_portal_type</string>
                             <string>final_categories</string>
                             <string>_getiter_</string>
                             <string>category_item</string>
