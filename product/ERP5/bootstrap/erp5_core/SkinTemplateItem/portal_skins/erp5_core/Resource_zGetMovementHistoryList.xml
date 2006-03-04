@@ -630,6 +630,7 @@ SELECT\n
   stock.quantity AS total_quantity,\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
+  translation.translated_message as translated_simulation_state_title,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
@@ -638,7 +639,7 @@ SELECT\n
   section.relative_url AS section_relative_url\n
 \n
 FROM\n
-  stock\n
+  translation, stock\n
   LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
@@ -657,6 +658,10 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
+\n
+  AND translation.original_message = stock.simulation_state \n
+  AND translation.message_context = \'simulation_state_title\'\n
+  AND translation.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
 \n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
@@ -760,6 +765,7 @@ SELECT\n
   stock.quantity AS total_quantity,\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
+  translation.translated_message as translated_simulation_state_title,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
@@ -768,7 +774,7 @@ SELECT\n
   section.relative_url AS section_relative_url\n
 \n
 FROM\n
-  stock\n
+  translation, stock\n
   LEFT JOIN catalog AS section ON (section.uid = stock.section_uid)\n
 <dtml-in prefix="table" expr="from_table_list"> \n
   <dtml-if expr="table_key != \'stock\'">\n
@@ -787,6 +793,10 @@ WHERE\n
 \n
   AND node.uid = stock.node_uid\n
   AND resource.uid = stock.resource_uid\n
+\n
+  AND translation.original_message = stock.simulation_state \n
+  AND translation.message_context = \'simulation_state_title\'\n
+  AND translation.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
 \n
 <dtml-if omit_input>\n
   AND stock.quantity < 0\n
