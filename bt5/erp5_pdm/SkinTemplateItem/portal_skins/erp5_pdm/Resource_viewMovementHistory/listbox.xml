@@ -322,7 +322,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>simulation_state</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -359,7 +359,7 @@ resource_current_inventory</string> </value>
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_categories/site</string>
+                          <string>site</string>
                           <string>Site</string>
                         </tuple>
                       </list>
