@@ -99,7 +99,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <!-- We should probably call the default method instead -->\n
           <input class="input_image" type="image" src="/images/erp5_html_style/images/spacer.png" width="3" height="3" border="0"\n
                  alt="dummy" name="Base_doSelect:method"\n
-                 tal:define="form_action form/action | form/id | template/action | template/id | script/id"\n
+                 tal:define="form_action form_action | form/action | form/id | template/action | template/id | script/id"\n
                  tal:attributes="name python:form_action + \':method\';\n
                                  src string:$portal_url/images/spacer.png">\n
           <select name="favorite_select" size="1"\n
