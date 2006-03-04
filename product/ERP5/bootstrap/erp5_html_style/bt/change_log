@@ -1,2 +1,8 @@
+2006-03-04 jerome
+* stop translating portal status messages.
+
+2006-02-27 yo
+* Add a workaround to navigation_box and dialog_master so that the user can push enter.
+
 2006-02-24 Seb
 * Created this business template in order to split erp5_core
