@@ -144,7 +144,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
     <div class="Main"\n
        tal:condition="request/portal_status_message | nothing">\n
      <table><tr><td class="error"\n
-              i18n:translate="" i18n:domain="ui"\n
               tal:content="request/portal_status_message">\n
               </td></tr>\n
      </table>\n
