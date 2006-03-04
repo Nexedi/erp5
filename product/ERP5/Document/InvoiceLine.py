@@ -87,9 +87,8 @@ class InvoiceLine(DeliveryLine):
                                'isAccountable' )
     def isAccountable(self):
       """
-        Returns 1 if this needs to be accounted
-        Only account movements which are not associated to a delivery
-        Whenever delivery is there, delivery has priority
+        Invoice movements are never accountable, because they have no
+        impact on stock calculations.
       """
       # Never accountable
       return 0
