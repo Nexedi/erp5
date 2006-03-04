@@ -1,3 +1,6 @@
+2006-03-04 jerome
+* Use translated validation state in Resource_viewMovementHistory
+
 2006-02-20 Romain
 * Display translated title on Product.
 
