@@ -14,9 +14,9 @@
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from DateTime import DateTime
 from ZTUtils import make_query
-
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
+
 
 class InventoryBrain(ZSQLBrain):
   """
@@ -168,7 +168,7 @@ class InventoryListBrain(ZSQLBrain):
         if o is not None:
           explanation = o.getExplanationValue()
           if explanation is not None:
-            return '%s/%s' % (self.portal_url.getPortalObject().absolute_url(),
+            return '%s/%s/view' % (self.portal_url.getPortalObject().absolute_url(),
                               explanation.getRelativeUrl())
         else:
           return ''
@@ -251,18 +251,28 @@ class InventoryListBrain(ZSQLBrain):
   def getExplanationText(self):
     # Returns an explanation of the movement
     o = self.getObject()
-    explanation_text = 'Unknow'
     if o is not None:
+      N_ = lambda msg, **kw: o.Localizer.translate('ui', msg, **kw)
       # Get the delivery/order
       delivery = o.getExplanationValue()
       if delivery is not None:
-        explanation_text = "%s %s" % (delivery.getPortalType(),
-                                      delivery.getTitleOrId())
+        mapping = {
+          'delivery_portal_type' : delivery.getTranslatedPortalType(),
+          'delivery_title' : delivery.getTitleOrId()
+        }
         causality = delivery.getCausalityValue()
         if causality is not None:
-          explanation_text = "%s (%s %s)" % (explanation_text,
-                                             causality.getPortalType(),
-                                             causality.getTitleOrId())
+          mapping['causality_portal_type'] = \
+                            causality.getTranslatedPortalType()
+          mapping['causality_title'] = causality.getTitleOrId()
+          return N_("${delivery_portal_type} ${delivery_title} "\
+                    "(${causality_portal_type} ${causality_title})",
+                    mapping = mapping )
+        else :
+          return N_("${delivery_portal_type} ${delivery_title}",
+                    mapping = mapping )
+    else :
+      return N_('Unknown')
     return explanation_text
 
 class DeliveryListBrain(InventoryListBrain):
