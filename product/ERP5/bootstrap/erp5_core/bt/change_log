@@ -1,3 +1,6 @@
+2006-03-04 jerome
+* Return translated_simulation_state_title in Resource_zGetMovementHistoryList
+
 2006-03-03 Seb
 * Commit Guillaume's fix to Resource_zGetTrackingList
 
