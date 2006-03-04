@@ -882,11 +882,13 @@ class ListBoxWidget(Widget.Widget):
               base_category = domain.split('/')[0]
               if portal_categories is not None:
                 if base_category in portal_categories.objectIds():
-                  root = root_dict[base_category] = portal_categories.restrictedTraverse(domain)
+                  root = portal_categories.restrictedTraverse(domain, None)
+                  if root is not None :
+                    root_dict[base_category] = root
               if root is None and portal_domains is not None:
                 if base_category in portal_domains.objectIds():
                   base_domain = portal_domains.getDomainByPath(domain)
-                  root =  base_domain
+                  root = base_domain
                   root_dict[base_category] = base_domain.getRelativeUrl()
               if root is None:
                 try:
