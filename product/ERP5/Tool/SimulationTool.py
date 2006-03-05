@@ -191,10 +191,10 @@ class SimulationTool (BaseTool):
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
         input_simulation_state = None, output_simulation_state=None,
         variation_text=None, sub_variation_text=None,
-        variation_category=None,
-        **kw) :
+        variation_category=None, resource_uid=None, node_uid=None,
+        section_uid=None,  **kw) :
       """
-      generates keywork and calls buildSqlQuery
+      generates keywords and calls buildSqlQuery
       """
       new_kw = {}
       new_kw.update(kw)
@@ -222,7 +222,15 @@ class SimulationTool (BaseTool):
         date_dict['range'] = 'ngt'
       if len(date_dict) :
         new_kw[table + '.date'] = date_dict
-
+      
+      # clear ambiguities
+      if resource_uid is not None :
+        new_kw[table + '.resource_uid'] = resource_uid
+      if section_uid is not None :
+        new_kw[table + '.section_uid'] = section_uid
+      if node_uid is not None :
+        new_kw[table + '.node_uid'] = node_uid
+      
       resource_uid_list = self._generatePropertyUidList(resource)
       if len(resource_uid_list) :
         new_kw[table + '.resource_uid'] = resource_uid_list
