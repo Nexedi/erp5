@@ -82,19 +82,20 @@ LOG = lambda msg:context.log(\n
 sale_invoice.Delivery_setCausalityFromSimulation()\n
 \n
 related_packing_list = sale_invoice.getDefaultCausalityValue()\n
-LOG(\'causality %s \' %sale_invoice.getCausalityValueList())\n
+#LOG(\'causality %s \' %sale_invoice.getCausalityValueList())\n
 \n
-# get a price_currency for the order\n
+# get a price_currency from the packing list\n
 related_order  = related_packing_list.getDefaultCausalityValue()\n
-price_currency = related_order.getPriceCurrency()\n
-\n
-# copy some properties from the first related packing list\n
-sale_invoice.edit(\n
-  title = related_packing_list.getTitle(),\n
-  resource = price_currency,\n
-  price_currency = price_currency,\n
-  reference = related_packing_list.getReference(),\n
-)\n
+if related_order is not None :\n
+  price_currency = related_order.getPriceCurrency()\n
+  sale_invoice.edit(\n
+    resource = price_currency,\n
+    price_currency = price_currency,\n
+  )\n
+  \n
+# copy title, if not updating a new delivery\n
+if sale_invoice.getTitle() is None :\n
+  sale_invoice.setTitle(related_packing_list.getTitle())\n
 \n
 # initialize accounting_workflow to planned state\n
 if sale_invoice.getSimulationState() == \'draft\' : \n
@@ -168,6 +169,7 @@ sale_invoice.activate(\n
                             <string>_getattr_</string>
                             <string>related_packing_list</string>
                             <string>related_order</string>
+                            <string>None</string>
                             <string>price_currency</string>
                             <string>RuntimeError</string>
                             <string>e</string>
