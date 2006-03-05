@@ -87,7 +87,10 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Business Templates required for this test.
     """
-    return ('erp5_base','erp5_pdm','erp5_trade', 'erp5_apparel')
+    return ('erp5_base','erp5_pdm','erp5_trade', 'erp5_apparel',)
+  # TODO: install erp5_accounting to make sure we have invoicing rules
+  #     'erp5_accounting')
+  # actually we should test with and without invoicing system
 
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
@@ -138,14 +141,30 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       item.edit(quantity = (i+1)*10)
     sequence.edit(item_list = item_list)
       
-  def stepCreateOrganisationsForModule(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateOrganisationsForModule(self, sequence=None,
+                                        sequence_list=None, **kw):
     """
-      Create an organisation and a node
+      Create sections and nodes.
     """
-    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list, **kw)
-    sequence.edit(node=sequence.get('organisation'))
-    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list, **kw)
-    
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    node = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    mirror_node = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    section = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    mirror_section = sequence.get('organisation')
+    sequence.edit(
+          node = node,
+          section = section,
+          mirror_node = mirror_node,
+          mirror_section = mirror_section,
+        )
+
   def stepCreateAggregatingInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Create a Inventory object, with a line which aggregates Items
@@ -155,13 +174,13 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       inventory_list = []
     portal = self.getPortal()
     node = sequence.get('node')
-    organisation = sequence.get('organisation')
+    section = sequence.get('section')
     item_list = sequence.get('item_list')
     resource = sequence.get('resource')
     inventory_module = portal.getDefaultModule(portal_type = self.inventory_portal_type)
     inventory = inventory_module.newContent(portal_type = self.inventory_portal_type)
     inventory.edit(destination_value = node,
-                   destination_section_value = organisation,
+                   destination_section_value = section,
                    start_date = DateTime(),
                   )
     aggregate_value_list = [item_list[0], item_list[2]]
@@ -183,7 +202,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     inventory_module = portal.getDefaultModule(portal_type = self.inventory_portal_type)
     inventory = inventory_module.newContent(portal_type = self.inventory_portal_type)
     inventory.edit(destination_value = sequence.get('node'),
-                   destination_section_value = sequence.get('organisation'),
+                   destination_section_value = sequence.get('section'),
                    start_date = DateTime() + 1
                   )
     inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
@@ -193,37 +212,52 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
                         
-  def stepCreatePackingListForModule(self, sequence=None, sequence_list=None, **kw):
+  def stepCreatePackingListForModule(self, sequence=None,
+                                      sequence_list=None, **kw):
     """
       Create a single packing_list for Inventory Module testing
     """
     node = sequence.get('node')
-    organisation = sequence.get('organisation')
+    section = sequence.get('section')
+    mirror_node = sequence.get('mirror_node')
+    mirror_section = sequence.get('mirror_section')
     resource = sequence.get('resource')
-    packing_list_module = self.getPortal().getDefaultModule(portal_type=self.packing_list_portal_type)
-    packing_list = packing_list_module.newContent(portal_type=self.packing_list_portal_type)
-    packing_list.edit(destination_section_value = organisation,
+    packing_list_module = self.getPortal().getDefaultModule(
+                              portal_type=self.packing_list_portal_type)
+    packing_list = packing_list_module.newContent(
+                              portal_type=self.packing_list_portal_type)
+    packing_list.edit(
+                      source_section_value = mirror_section,
+                      source_value = mirror_node,
+                      destination_section_value = section,
                       destination_value = node,
                       start_date = DateTime() - 2,
                       stop_date = DateTime() - 2
                      )
-    packing_list_line = packing_list.newContent(portal_type=self.packing_list_line_portal_type)
+    self.assertNotEquals( packing_list.getSourceSectionValue(), None)
+    self.assertNotEquals( packing_list.getSourceValue(), None)
+    self.assertNotEquals( packing_list.getSourceSectionValue(),
+                          packing_list.getDestinationSectionValue() )
+
+    packing_list_line = packing_list.newContent(
+                  portal_type=self.packing_list_line_portal_type)
     packing_list_line.edit(resource_value = resource,
                            quantity = 100.
                           )
     # Switch to "started" state
     sequence.edit(packing_list = packing_list)
     workflow_tool = self.getPortal().portal_workflow
-    workflow_tool.doActionFor(sequence.get('packing_list'), "confirm_action", "packing_list_workflow")
+    workflow_tool.doActionFor(sequence.get('packing_list'),
+                      "confirm_action", "packing_list_workflow")
     # Apply tic so that the packing list is not in building state
     self.tic() # acceptable here because this is not the job
                # of the test to check if can do all transition
                # without processing messages
     packing_list = sequence.get('packing_list')
-    workflow_tool.doActionFor(sequence.get('packing_list'), "set_ready_action", "packing_list_workflow")
-    workflow_tool.doActionFor(sequence.get('packing_list'), "start_action", "packing_list_workflow")
-    
-    
+    workflow_tool.doActionFor(sequence.get('packing_list'),
+                      "set_ready_action", "packing_list_workflow")
+    workflow_tool.doActionFor(sequence.get('packing_list'),
+                      "start_action", "packing_list_workflow")
                         
   def stepCreateOrganisationList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1363,7 +1397,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       if len(found_list) == 0:
         LOG('TEST ERROR : Found a line with getInventoryList which is not expected.', 0, 'Found line : %s (inventory : %s) ; expected values with these attributes : %s' % (a_attributes, a_inventory, expected_list))
         LOG('SQL Query was : ', 0, repr(simulation.getInventoryList(src__=1, **kw)))
-        self.assertNotEquals(len(found), 0)
+        self.assertNotEquals(len(found_list), 0)
       found = found_list[0]
       LOG('found a line with inventory =', 0, repr(found['inventory']))
       del expected[found['id']]
@@ -1499,12 +1533,13 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     if step is None:
       step = 0
     expected = [(40.,0), (24.,1), (80.,0)]
-    inventory = simulation.getCurrentInventory(section=sequence.get('organisation').getRelativeUrl(),
-                                               node=sequence.get('node').getRelativeUrl(),
-                                               at_date=inventory_list[expected[step][1]].getStartDate()
-                                              )
+    inventory = simulation.getCurrentInventory(
+                    section=sequence.get('section').getRelativeUrl(),
+                    node=sequence.get('node').getRelativeUrl(),
+                    at_date=inventory_list[expected[step][1]].getStartDate()
+                )
     if inventory != expected[step][0]:
-      LOG('TEST ERROR : quantity differs between expected (%s) and real (%s) inventories.' % (repr(expected[step][0]), repr(inventory)),     0, 'section=%s, node=%s' % (sequence.get('organisation').getRelativeUrl(), sequence.get('node').getRelativeUrl()))
+      LOG('TEST ERROR : quantity differs between expected (%s) and real (%s) inventories.' % (repr(expected[step][0]), repr(inventory)),     0, 'section=%s, node=%s' % (sequence.get('section').getRelativeUrl(), sequence.get('node').getRelativeUrl()))
       self.assertEquals(inventory, expected[step][0])
     step+=1
     sequence.edit(step=step)
@@ -1597,6 +1632,6 @@ else:
     import unittest
     def test_suite():
         suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
+        suite.addTest(unittest.makeSuite(TestInventory))
         return suite
 
