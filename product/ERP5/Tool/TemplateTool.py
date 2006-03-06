@@ -260,11 +260,11 @@ class TemplateTool (BaseTool):
       if os.path.isdir(name): # new version of business template in plain format (folder)
         file_list = []
         def callback(arg, directory, files):
-          if 'CVS' not in directory:
+          if 'CVS' not in directory and '.svn' not in directory:
             for file in files:
               file_list.append(os.path.join(directory, file))
 
-        os.path.walk(name, callback, None)        
+        os.path.walk(name, callback, None)
         file_list.sort()
         # import bt object
         bt = self.newContent(portal_type='Business Template', id=id)

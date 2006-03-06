@@ -266,6 +266,8 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     for info in tar.getmembers():
       if 'CVS' in info.name.split('/'):
         continue
+      if '.svn' in info.name.split('/'):
+        continue
       if class_name in info.name.split('/'):
         if info.isreg():
           file = tar.extractfile(info)
