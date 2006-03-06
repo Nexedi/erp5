@@ -29,7 +29,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl import getSecurityManager
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface, Cache
 from Products.ERP5.Document.Domain import Domain
 from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from Products.ERP5Type.Base import TempBase
@@ -83,30 +83,32 @@ class WebSite(Domain):
       dynamic = Domain._aq_dynamic(self, name)
       if dynamic is not None :
         return dynamic
-      # Do some optimisation here for names which can not the names of documents
+      # Do some optimisation here for names which can not be names of documents
       if name.startswith('_') or name.startswith('portal_')\
           or name.startswith('aq_') or name.startswith('selection_') \
           or name.startswith('sort-') or name == 'getLayout':
         return None
       # Create a non recursion variable
-      if not hasattr(self, '_v_allow_lookup'): self._v_allow_lookup = {}
-      if self._v_allow_lookup.has_key(name):
-        return self._v_allow_lookup[name]
+      allow_lookup = Cache.getTransactionCache(self)
+      if not allow_lookup:
+        Cache.enableTransactionCache(self)
+        allow_lookup = Cache.getTransactionCache(self)
+      elif allow_lookup.has_key(name):
+        return allow_lookup[name]
       try:
-        self._v_allow_lookup[name] = None
-        old_manager = getSecurityManager()
         portal = self.getPortalObject()
         # Use the webmaster identity to find documents
         user = portal.acl_users.getUserById(self.getWebmaster())
-        if user is not None:
-          newSecurityManager(get_request(), user)
-          document = self.WebSite_getDocument(portal, name)
-          self._v_allow_lookup[name] = document
-          setSecurityManager(old_manager)
-        else:
-          document = None
+        if user is None:
+          return None
+        old_manager = getSecurityManager()
+        newSecurityManager(get_request(), user)
+        document = self.WebSite_getDocument(portal, name)
+        allow_lookup[name] = document
+        setSecurityManager(old_manager)
       except:
         # Cleanup non recursion dict in case of exception
-        if self._v_allow_lookup.has_key(name): del self._v_allow_lookup[name]
+        if allow_lookup.has_key(name):
+          del allow_lookup[name]
         raise
       return document
