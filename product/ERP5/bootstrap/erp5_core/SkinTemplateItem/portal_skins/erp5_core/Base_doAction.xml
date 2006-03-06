@@ -68,6 +68,9 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
 if not action_select : return\n
 \n
 is_list = int(is_list)\n
@@ -99,9 +102,11 @@ elif doAction0 == \'add\':\n
   new_content = context.newContent(portal_type=type_name,\n
                                    container=context,\n
                                    id=str(new_id))\n
-  redirect_url = \'%s/%s?%s\' % ( new_content.absolute_url()  \n
+  message = N_("Object+Created.")\n
+  redirect_url = \'%s/%s?portal_status_message=%s\' % ( \n
+                            new_content.absolute_url()  \n
                             , \'view\'\n
-                            , \'portal_status_message=Object+Created.\')\n
+                            , message)\n
   return request.RESPONSE.redirect( redirect_url )\n
 # Otherwise, check if this is an automatic menu (template)\n
 elif doAction0 == \'template\':\n
@@ -118,9 +123,10 @@ elif doAction0 == \'template\':\n
                             , \'view\'\n
                             , \'portal_status_message=Template+Created.\')\n
   else: \n
-    redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+    message = N_("Template+Does+not+Exist.")\n
+    redirect_url = \'%s/%s?portal_status_message=%s\' % ( context.absolute_url()\n
                             , \'view\'\n
-                            , \'portal_status_message=Template+Does+not+Exist.\')\n
+                            , message)\n
   return request.RESPONSE.redirect( redirect_url )\n
 \n
 return getattr(context,form_id)(request)\n
@@ -180,12 +186,14 @@ return getattr(context,form_id)(request)\n
                             <string>listbox_uid</string>
                             <string>md5_object_uid_list</string>
                             <string>is_list</string>
-                            <string>int</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>int</string>
                             <string>Base_doAction</string>
                             <string>_getitem_</string>
                             <string>doAction0</string>
-                            <string>context</string>
                             <string>request</string>
                             <string>uri</string>
                             <string>None</string>
@@ -193,6 +201,7 @@ return getattr(context,form_id)(request)\n
                             <string>type_name</string>
                             <string>str</string>
                             <string>new_content</string>
+                            <string>message</string>
                             <string>redirect_url</string>
                             <string>template_relative_url</string>
                             <string>template</string>

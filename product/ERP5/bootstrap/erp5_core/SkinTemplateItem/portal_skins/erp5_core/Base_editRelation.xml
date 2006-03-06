@@ -70,6 +70,8 @@
 
 # Updates attributes of an Zope document\n
 # which is in a class inheriting from ERP5 Base\n
+portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
 \n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
@@ -77,7 +79,8 @@ request=context.REQUEST\n
 o = context.portal_catalog.getObject(object_uid)\n
 \n
 if o is None:\n
-  return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"\n
+  message = N_(\'Sorrry, Error, the calling object was not catalogued. Do not know how to do ?\')\n
+  return message\n
 \n
 if listbox_uid is not None:\n
   selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
@@ -185,14 +188,17 @@ return context.Base_edit(form_id, selection_index=old_request.get(\'selection_in
                             <string>object_uid</string>
                             <string>listbox_uid</string>
                             <string>batch_mode</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>request</string>
                             <string>o</string>
                             <string>None</string>
+                            <string>message</string>
                             <string>selected_uids</string>
                             <string>previous_form_id</string>
                             <string>getattr</string>

@@ -75,7 +75,7 @@ REQUEST=context.REQUEST\n
 # or if allowed content types is 1 add that type\n
 \n
 try:\n
-  new_object = context.newContent() # We do not reindex in order to prevent conflicts\n
+  new_object = context.newContent()\n
 except IndexError:\n
   # return only a portal_status_message if the IndexError is raised because\n
   # there are no elemnts in context.allowedContentTypes()\n

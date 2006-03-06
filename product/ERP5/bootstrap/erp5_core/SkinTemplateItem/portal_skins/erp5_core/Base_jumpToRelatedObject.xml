@@ -66,20 +66,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>search_method = getattr(context, \'get%sRelatedValueList\' %\n
+            <value> <string>portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
+\n
+search_method = getattr(context, \'get%sRelatedValueList\' %\n
           string.join([string.capitalize(x) for x in base_category.split(\'_\')], \'\'))\n
 related_object_list = search_method(portal_type=portal_type)\n
 \n
 if len(related_object_list)==0:\n
   url = context.absolute_url()\n
-  message = \'No+%s+related.\' % portal_type.replace(\' \', \'+\')\n
+  modified_translated_portal_type = N_(portal_type).replace(\' \', \'+\')\n
+  message = N_(\'No+%(portal_type)+related.\',\n
+               mapping = {\'portal_type\': modified_translated_portal_type})\n
 \n
 elif len(related_object_list)==1:\n
   url = related_object_list[0].absolute_url()\n
-  message = \'%s+related+to+%s:+%s.\' %\\\n
-            (portal_type.replace(\' \', \'+\'),\n
-             context.getPortalType().replace(\' \', \'+\'), \n
-             context.getTitleOrId())\n
+  modified_translated_portal_type = N_(portal_type).replace(\' \', \'+\')\n
+  context_translated_portal_type = N_(context.getPortalType()).replace(\' \', \'+\')\n
+  message = N_("%(portal_type)+related+to+%(context_portal_type):+%(title).",\n
+               mapping = {\n
+                 \'portal_type\': modified_translated_portal_type,\n
+                 \'context_portal_type\': context_translated_portal_type,\n
+                 \'title\': context.getTitleOrId()\n
+               })\n
 \n
 else:\n
   request=context.REQUEST\n
@@ -140,9 +149,11 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                           <tuple>
                             <string>base_category</string>
                             <string>portal_type</string>
-                            <string>getattr</string>
-                            <string>context</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>N_</string>
+                            <string>getattr</string>
                             <string>string</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -152,8 +163,10 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>related_object_list</string>
                             <string>len</string>
                             <string>url</string>
+                            <string>modified_translated_portal_type</string>
                             <string>message</string>
                             <string>_getitem_</string>
+                            <string>context_translated_portal_type</string>
                             <string>request</string>
                             <string>selection_uid_list</string>
                             <string>kw</string>

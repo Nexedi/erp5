@@ -1,3 +1,6 @@
+2006-03-06 romain
+* translate message return by scripts in erp5_core.
+
 2006-03-04 jerome
 * Return translated_simulation_state_title in Resource_zGetMovementHistoryList
 

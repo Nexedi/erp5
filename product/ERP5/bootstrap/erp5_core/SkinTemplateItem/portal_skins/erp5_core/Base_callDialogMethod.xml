@@ -155,6 +155,7 @@ try:\n
     dialog_form = getattr(context, dialog_method, None)\n
     for k, v in kw.items() : \n
       request.set(k, v)\n
+    context.log("Base_callDialogMethod : dialog_form", dialog_form)\n
     return dialog_form(**kw)\n
   # else fallback to url argument passing (we remove None values, as it doesn\'t work with make_query)\n
   cleanedup_kw = {}\n
