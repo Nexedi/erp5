@@ -108,7 +108,7 @@ simulation_tool = portal.portal_simulation\n
 \n
 entity_columns = [\n
                        (\'date\', \'Date\'),\n
-                       (\'translated_portal_type\', \'Type\'),\n
+                       (\'parent_portal_type\', \'Type\'),\n
                        (\'Entity_getAccountingTransactionGapId\', \'GAP\'),\n
                        (\'parent_reference\', \'Invoice No\'),\n
                        (\'parent_title\', \'Title\'),\n
