@@ -124,21 +124,26 @@ class ERP5GroupManager(BasePlugin):
       # Fetch category values from defined scripts
       for (method_name, base_category_list) in \
           security_definition_list:
-        pickled_category_list = dumps(base_category_list)
+        base_category_list = tuple(base_category_list)
         method = getattr(self, method_name)
-        if not security_category_dict.has_key(pickled_category_list):
-          security_category_dict[pickled_category_list] = []
-        security_category_dict[pickled_category_list].extend(
-            method(base_category_list, person_id, person_object, ''))
+        security_category_list = security_category_dict.setdefault(base_category_list, [])
+        security_category_list.extend(method(base_category_list, person_id, person_object, ''))
 
       # Get group names from category values
-      group_id_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
-      for pickled_category_list, category_value_list in \
-          security_category_dict.items():
-        base_category_list = loads(pickled_category_list)
-        for category_dict in category_value_list:
-          security_group_list.append(group_id_generator(
-              category_order=base_category_list, **category_dict))
+      group_id_list_generator = getattr(self, 'ERP5Type_asSecurityGroupIdList', None)
+      if group_id_list_generator is not None:
+        for base_category_list, category_value_list in \
+            security_category_dict.items():
+          for category_dict in category_value_list:
+            security_group_list.extend(group_id_list_generator(
+                category_order=base_category_list, **category_dict))
+      else:
+        group_id_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
+        for base_category_list, category_value_list in \
+            security_category_dict.items():
+          for category_dict in category_value_list:
+            security_group_list.append(group_id_generator(
+                category_order=base_category_list, **category_dict))
 
       setSecurityManager(sm)
       return tuple(security_group_list)
