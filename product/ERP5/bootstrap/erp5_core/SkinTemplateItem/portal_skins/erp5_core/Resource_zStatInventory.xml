@@ -255,13 +255,12 @@ SELECT\n
   IFNULL(COUNT(DISTINCT stock.uid), 0) AS count,\n
   IFNULL(SUM(stock.quantity), 0.00) AS quantity,\n
   IFNULL(SUM(stock.total_price), 0.00) AS total_price\n
-  \n
+\n
 FROM\n
  <dtml-unless from_table_list>\n
   catalog,\n
  </dtml-unless>\n
   catalog AS child,\n
-  movement,\n
   stock,\n
   catalog AS node\n
   <dtml-if section_category>\n
@@ -277,25 +276,23 @@ FROM\n
      <dtml-in from_table_list>\n
      , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
      </dtml-in>\n
-  </dtml-if>  \n
+  </dtml-if>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 \n
 WHERE\n
-  movement.source_uid = catalog.uid\n
+  child.uid = stock.uid\n
+  AND catalog.uid = stock.node_uid\n
   <dtml-if where_expression> AND <dtml-var where_expression></dtml-if>\n
-  AND child.uid = movement.uid\n
-  AND stock.uid = movement.uid\n
   <dtml-if resource_uid>\n
     AND\n
       (\n
         <dtml-in resource_uid>\n
-          movement.resource_uid = <dtml-sqlvar sequence-item type="int">\n
+          stock.resource_uid = <dtml-sqlvar sequence-item type="int">\n
           <dtml-if sequence-end><dtml-else> OR </dtml-if>\n
         </dtml-in>\n
       )\n
   </dtml-if>\n
-  AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   <dtml-if from_date>\n
     AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
@@ -311,25 +308,25 @@ WHERE\n
   </dtml-if>\n
   <dtml-if omit_input>\n
     AND stock.quantity < 0\n
-    AND (movement.source_uid <> movement.destination_uid \n
+    AND (stock.node_uid <> stock.mirror_node_uid\n
      OR  stock.section_uid <> stock.mirror_section_uid\n
-     OR  movement.destination_uid IS NULL\n
-     OR  stock.mirror_section_uid IS NULL \n
+     OR  stock.mirror_node_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL\n
     )\n
   </dtml-if>\n
   <dtml-if omit_output>\n
     AND stock.quantity > 0\n
-    AND (movement.source_uid <> movement.destination_uid \n
+    AND (stock.node_uid <> stock.mirror_node_uid\n
      OR  stock.section_uid <> stock.mirror_section_uid\n
-     OR  movement.destination_uid IS NULL\n
-     OR  stock.mirror_section_uid IS NULL \n
+     OR  stock.mirror_node_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL\n
     )\n
   </dtml-if>\n
   <dtml-if simulation_state>\n
     AND\n
       (\n
         <dtml-in simulation_state>\n
-          child.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+          stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
           <dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>\n
       )\n
   </dtml-if>\n
@@ -401,13 +398,12 @@ SELECT\n
   IFNULL(COUNT(DISTINCT stock.uid), 0) AS count,\n
   IFNULL(SUM(stock.quantity), 0.00) AS quantity,\n
   IFNULL(SUM(stock.total_price), 0.00) AS total_price\n
-  \n
+\n
 FROM\n
  <dtml-unless from_table_list>\n
   catalog,\n
  </dtml-unless>\n
   catalog AS child,\n
-  movement,\n
   stock,\n
   catalog AS node\n
   <dtml-if section_category>\n
@@ -423,25 +419,23 @@ FROM\n
      <dtml-in from_table_list>\n
      , <dtml-var sequence-item> AS <dtml-var sequence-key>\n
      </dtml-in>\n
-  </dtml-if>  \n
+  </dtml-if>\n
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
 \n
 WHERE\n
-  movement.source_uid = catalog.uid\n
+  child.uid = stock.uid\n
+  AND catalog.uid = stock.node_uid\n
   <dtml-if where_expression> AND <dtml-var where_expression></dtml-if>\n
-  AND child.uid = movement.uid\n
-  AND stock.uid = movement.uid\n
   <dtml-if resource_uid>\n
     AND\n
       (\n
         <dtml-in resource_uid>\n
-          movement.resource_uid = <dtml-sqlvar sequence-item type="int">\n
+          stock.resource_uid = <dtml-sqlvar sequence-item type="int">\n
           <dtml-if sequence-end><dtml-else> OR </dtml-if>\n
         </dtml-in>\n
       )\n
   </dtml-if>\n
-  AND movement.is_accountable = 1\n
   AND node.uid = stock.node_uid\n
   <dtml-if from_date>\n
     AND stock.date >= <dtml-sqlvar from_date type="datetime">\n
@@ -457,25 +451,25 @@ WHERE\n
   </dtml-if>\n
   <dtml-if omit_input>\n
     AND stock.quantity < 0\n
-    AND (movement.source_uid <> movement.destination_uid \n
+    AND (stock.node_uid <> stock.mirror_node_uid\n
      OR  stock.section_uid <> stock.mirror_section_uid\n
-     OR  movement.destination_uid IS NULL\n
-     OR  stock.mirror_section_uid IS NULL \n
+     OR  stock.mirror_node_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL\n
     )\n
   </dtml-if>\n
   <dtml-if omit_output>\n
     AND stock.quantity > 0\n
-    AND (movement.source_uid <> movement.destination_uid \n
+    AND (stock.node_uid <> stock.mirror_node_uid\n
      OR  stock.section_uid <> stock.mirror_section_uid\n
-     OR  movement.destination_uid IS NULL\n
-     OR  stock.mirror_section_uid IS NULL \n
+     OR  stock.mirror_node_uid IS NULL\n
+     OR  stock.mirror_section_uid IS NULL\n
     )\n
   </dtml-if>\n
   <dtml-if simulation_state>\n
     AND\n
       (\n
         <dtml-in simulation_state>\n
-          child.simulation_state = <dtml-sqlvar sequence-item type="string">\n
+          stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
           <dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>\n
       )\n
   </dtml-if>\n
