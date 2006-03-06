@@ -72,7 +72,7 @@ portal = context.getPortalObject()\n
 \n
 period_list = context.getParentValue()\\\n
                             .searchFolder( simulation_state = [\'planned\', \'confirmed\', \'delivered\'],\n
-                                                    sort_on = (\'delivery.stop_date\', \'ASC\'))\n
+                                                    sort_on = [(\'delivery.stop_date\', \'ASC\'),] )\n
 \n
 if len(period_list) > 0 :\n
   last_period  = period_list[-1].getObject()\n
