@@ -76,4 +76,5 @@ class SplitAndDefer(CopyToTarget):
       )
       new_movement.activate(**self.additional_parameters).expand()
     movement._v_activate_kw = self.activate_kw
+    movement.activate(**self.additional_parameters).expand()
     CopyToTarget.solve(self, movement)
