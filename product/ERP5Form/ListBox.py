@@ -161,7 +161,7 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
     if url in unfolded_list:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
 <a href="portal_selections/foldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s" >- <b>%s</b></a>
-</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.getTranslatedTitle(), o.id)
+</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = o
       tree_body += makeTreeBody(form = form, root_dict = new_root_dict, domain_path = domain_path,
@@ -170,7 +170,7 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
     else:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
 <a href="portal_selections/unfoldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s">+ %s</a>
-</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.getTranslatedTitle(), o.id)
+</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
     #tree_body += '</TD>' * depth + '</TR>'
 
   return tree_body
@@ -1994,9 +1994,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           default_selected = ''
           for c in domain_root_list:
             if c[0] == selection_domain_path:
-              select_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], c[1])
+              select_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], translate('erp5_ui', c[1]))
             else:
-              select_tree_options += """<option value="%s">%s</option>\n""" % (c[0], c[1])
+              select_tree_options += """<option value="%s">%s</option>\n""" % (c[0], translate('erp5_ui', c[1]))
               if default_selected == '':
                 default_selected = c[0] #the first is selected
           select_tree_header = """<select name="domain_root_url"
@@ -2011,7 +2011,6 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
                                               selection_name = selection_name)
           except KeyError:
               select_tree_body = ''
-          
           select_tree_html = """<!-- Select Tree -->
 %s
 <table cellpadding="0" border="0">
