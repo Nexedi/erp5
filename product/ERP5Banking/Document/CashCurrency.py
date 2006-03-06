@@ -36,7 +36,8 @@ from zLOG import LOG
 
 class CashCurrency(Resource):
   """
-    A Resource
+    CashCurrency defines a cash model for a certain currency.
+    Typically, banknotes and coins.
   """
 
   meta_type = 'ERP5Banking Cash Currency'
@@ -65,8 +66,22 @@ class CashCurrency(Resource):
                     , PropertySheet.CashCurrency
                     )
 
-  security.declareProtected(Permissions.View,'getTitle')
-  def getTitle(self,**kw):
+  security.declareProtected(Permissions.View, 'getTitle')
+  def getTitle(self, **kw):
+    """
+      The title will depend on the Portal Type and the value, for example :
+        Piece de 500
+    """
+    title = self.getPortalType()
+    price = self.getBasePrice()
+    if price is None:
+      price = 'Not Defined'
+    else:
+      price = '%i' % int(price)
+    return '%s of %s' % (title, price)
+
+  security.declareProtected(Permissions.View, 'getTranslatedTitle')
+  def getTranslatedTitle(self,**kw):
     """
       The title will depend on the Portal Type and the value, for example :
         Piece de 500
