@@ -160,8 +160,8 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
       url = relative_url
     if url in unfolded_list:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
-<a href="portal_selections/foldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" >- <b>%s</b></a>
-</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.id)
+<a href="portal_selections/foldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s" >- <b>%s</b></a>
+</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.getTranslatedTitle(), o.id)
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = o
       tree_body += makeTreeBody(form = form, root_dict = new_root_dict, domain_path = domain_path,
@@ -169,8 +169,8 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
                                 selection_name = selection_name, base_category = base_category)
     else:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
-<a href="portal_selections/unfoldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" >+ %s</a>
-</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.id)
+<a href="portal_selections/unfoldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s">+ %s</a>
+</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, o.getTranslatedTitle(), o.id)
     #tree_body += '</TD>' * depth + '</TR>'
 
   return tree_body
