@@ -71,14 +71,13 @@ class CashCurrency(Resource):
       The title will depend on the Portal Type and the value, for example :
         Piece de 500
     """
-    title = self.portal_types[self.getPortalType()].title
+    title = self.getTranslatedPortalType()
     price = self.getBasePrice()
     if price is None:
       price = 'Not Defined'
     else:
       price = '%i' % int(price)
-    title = '%s de %s' % (title, price)
-    return title
+    return  self.Base_translateString('${title} of ${value}', mapping = {'title' : str(title), 'value' : str(price)})
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationList')
   def _setVariationList(self,value):
