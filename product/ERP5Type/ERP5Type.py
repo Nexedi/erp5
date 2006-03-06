@@ -264,8 +264,9 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
 
       # Retrieve applicable roles
       role_mapping = self.getFilteredRoleListFor(object=object) # kw provided in order to take any appropriate action
+      #LOG('ERP5TypeInformation', 0, 'role_mapping = %r, object = %r' % (role_mapping, object))
       role_category_list_dict = {}
-      for role, definition_list in role_mapping.items():
+      for role_text, definition_list in role_mapping.items():
         # For each role definition, we look for the base_category_script
         # and try to use it to retrieve the values for the base_category list
         for definition in definition_list:
@@ -287,6 +288,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
             if base_category_script is not None:
               # call the script, which should return either a dict or a list of dicts
               category_result = base_category_script(dynamic_base_category_list, user_name, object, object.getPortalType())
+              #LOG('ERP5TypeInformation', 0, 'category_result = %r' % (category_result,))
               # If we decide in the script that we don't want to update the security for this object,
               # we can just have it return None instead of a dict or list of dicts
               if category_result is None:
@@ -300,14 +302,16 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
           else:
             category_result = [{}]
           # add the result to role_category_list_dict, aggregated with category_order and statically defined categories
-          role_category_list = role_category_list_dict.setdefault(role, [])
-          for category_dict in category_result:
-            category_value_dict = {'category_order':category_order_list}
-            category_value_dict.update(category_dict)
-            for c in definition['category']:
-              bc, value = c.split('/', 1)
-              category_value_dict[bc] = value
-            role_category_list.append(category_value_dict)
+          for role in role_text.split(';'):
+            role = role.strip()
+            role_category_list = role_category_list_dict.setdefault(role, [])
+            for category_dict in category_result:
+              category_value_dict = {'category_order':category_order_list}
+              category_value_dict.update(category_dict)
+              for c in definition['category']:
+                bc, value = c.split('/', 1)
+                category_value_dict[bc] = value
+              role_category_list.append(category_value_dict)
 
       # Generate security group ids from category_value_dicts
       role_group_id_dict = {}
