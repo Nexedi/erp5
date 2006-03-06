@@ -62,6 +62,10 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     - Upgrade a template
   """
   run_all_test = 1
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_html_style',
+            'erp5_csv_style', 'erp5_pdf_style')
   
   def getTitle(self):
     return "Business Template"
