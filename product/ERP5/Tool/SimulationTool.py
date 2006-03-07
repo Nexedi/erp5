@@ -265,23 +265,23 @@ class SimulationTool (BaseTool):
 
       resource_category_uid_list = self._generatePropertyUidList(resource_category)
       if len(resource_category_uid_list) :
-        new_kw[table + '_resourceCategory'] = resource_category_uid_list
+        new_kw[table + '_resource_category_uid'] = resource_category_uid_list
 
       node_category_uid_list = self._generatePropertyUidList(node_category)
       if len(node_category_uid_list) :
-        new_kw[table + '_nodeCategory'] = node_category_uid_list
+        new_kw[table + '_node_category_uid'] = node_category_uid_list
 
       payment_category_uid_list = self._generatePropertyUidList(payment_category)
       if len(payment_category_uid_list) :
-        new_kw[table + '_paymentCategory'] = payment_category_uid_list
+        new_kw[table + '_payment_category_uid'] = payment_category_uid_list
 
       section_category_uid_list = self._generatePropertyUidList(section_category)
       if len(section_category_uid_list) :
-        new_kw[table + '_sectionCategory'] = section_category_uid_list
+        new_kw[table + '_section_category_uid'] = section_category_uid_list
 
       mirror_section_category_uid_list = self._generatePropertyUidList(mirror_section_category)
       if len(mirror_section_category_uid_list) :
-        new_kw[table + '_mirrorSectionCategory'] = mirror_section_category_uid_list
+        new_kw[table + '_mirror_section_category_uid'] = mirror_section_category_uid_list
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
