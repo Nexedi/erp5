@@ -1,5 +1,20 @@
+2006-03-07 Kevin
+* Fix setReferences script of accounting_workflow to let the script generate good IDs.
+
+2006-03-02 jerome
+* Reverse source & destination section in Purchase Invoice Transaction views.
+* Improve asset conversion forms to include stat columns and relation fields for source & destination sections.
+
+2006-03-01 Kevin
+* Fix Delivery_Build workflow script.
+* setReference script of accounting workflow can be recalled multiple times on the same object without any side effect.
+* Call setReference script on balance_action and stop action.
+* Don't let the user edit the "Invoice Number" on Sale Invoice Transactions.
+
 2006-02-28 Kevin
 * Update SaleInvoiceTransaction_zSelectMovement to not include a 'AS movement' statement in SQL query.
+* Move setReferences() call on accounting workflow from stop transition after script to confirm transition before script.
+* Update Delivery_build on accounting workflow to generate pay sheet accounting lines automatticaly when they reach the 'confirm' state.
 
 2006-02-27 Kevin
 * Update Section_getCurrencyPrecision (more generic now).

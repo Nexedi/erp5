@@ -79,15 +79,44 @@ builder_by_ptype = {\n
   \'Pay Sheet Transaction\' :  \'pay_sheet_transaction_builder\',\n
 }\n
 \n
-if builder_by_ptype.has_key(delivery_portal_type) : \n
+if builder_by_ptype.has_key(delivery_portal_type) :\n
   builder = getattr(portal_deliveries, builder_by_ptype[delivery_portal_type], None)\n
   if builder is None :\n
-    context.log(\'accounting_workflow/scripts/Delivery_build\', \n
+    context.log(\'accounting_workflow/scripts/Delivery_build\',\n
                 \'unable to build : no builder in %s\' % builder_by_ptype[delivery_portal_type])\n
     return\n
-  \n
-  # FIXME after_method_id is not enough here. \n
-  \n
+\n
+  ### Kev patch: Generate pay sheet accounting lines (inspired by order_workflow)\n
+  # (It could be great to make this Delivery_build script more generic)\n
+  if delivery_portal_type == \'Pay Sheet Transaction\':\n
+    PRIORITY     = 3\n
+    pay_sheet    = delivery\n
+    previous_tag = pay_sheet.getPath() + \'_firstUpdateAppliedRule\'\n
+    expand_tag   = pay_sheet.getPath() + \'_expand\'\n
+    activate_kw  = { \'tag\'     : expand_tag\n
+                   , \'priority\': PRIORITY\n
+                   }\n
+\n
+    pay_sheet.activate( tag       = expand_tag\n
+                      , after_tag = previous_tag\n
+                      , priority  = PRIORITY\n
+                      ).updateAppliedRule( rule_id     = \'default_invoice_rule\'\n
+                                         , activate_kw = activate_kw\n
+                                         )\n
+\n
+    builder = pay_sheet.portal_deliveries.pay_sheet_transaction_builder\n
+    builder.activate( activity  = \'SQLQueue\'\n
+                    , after_tag = expand_tag\n
+                    , priority  = PRIORITY\n
+                    ).build( explanation_uid = pay_sheet.getUid()\n
+                           , activate_kw     = activate_kw\n
+                           )\n
+    return\n
+  ### End of kev patch\n
+\n
+\n
+  # FIXME after_method_id is not enough here.\n
+\n
   # build accounting lines\n
   builder.activate(\n
       after_method_id=(\'expand\', \'updateAppliedRule\', \'edit\',\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))\\\n
@@ -152,6 +181,11 @@ if builder_by_ptype.has_key(delivery_portal_type) : \n
                             <string>None</string>
                             <string>builder</string>
                             <string>context</string>
+                            <string>PRIORITY</string>
+                            <string>pay_sheet</string>
+                            <string>previous_tag</string>
+                            <string>expand_tag</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>

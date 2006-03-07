@@ -79,13 +79,16 @@ if transaction.getPortalType() == \'Sale Invoice Transaction\':\n
     invoice_id_group = (\'accounting\', \'invoice\', source_section)\n
     invoice_reference = transaction.generateNewId(id_group = invoice_id_group)\n
     transaction.setReference(invoice_reference)\n
+\n
 # Generate new values for Source Reference and Destination Reference.\n
-source_id_group = (\'accounting\', \'section\', source_section)\n
-source_reference = transaction.generateNewId(id_group = source_id_group)\n
-transaction.setSourceReference(source_reference)\n
-destination_id_group = (\'accounting\', \'section\', destination_section)\n
-destination_reference = transaction.generateNewId(id_group = destination_id_group)\n
-transaction.setDestinationReference(destination_reference)\n
+if transaction.getSourceReference() in (None, \'\'):\n
+  source_id_group = (\'accounting\', \'section\', source_section)\n
+  source_reference = transaction.generateNewId(id_group = source_id_group)\n
+  transaction.setSourceReference(source_reference)\n
+if transaction.getDestinationReference() in (None, \'\'):\n
+  destination_id_group = (\'accounting\', \'section\', destination_section)\n
+  destination_reference = transaction.generateNewId(id_group = destination_id_group)\n
+  transaction.setDestinationReference(destination_reference)\n
 </string> </value>
         </item>
         <item>
