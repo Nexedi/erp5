@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2003 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2003-2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
+#                    Jean-Paul Smets <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
