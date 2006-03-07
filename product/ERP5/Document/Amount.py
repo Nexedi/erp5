@@ -148,7 +148,7 @@ class Amount(Base, Variated):
     self._setVariationCategoryList(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self, omit_option_base_category=0):
     """
