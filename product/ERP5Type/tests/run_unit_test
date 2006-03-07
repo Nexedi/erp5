@@ -15,7 +15,7 @@ $DIRECTORY/ERP5Type/tests/runUnitTest.py testAccounting >> $DIRECTORY/test_full_
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInvoice >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testResource >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testInteractionWorkflow >> $DIRECTORY/test_full_output 2>&1
-#$DIRECTORY/ERP5Type/tests/runUnitTest.py testImmobilisation >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testImmobilisation >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5BankingCashTransfer >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testDomainTool >> $DIRECTORY/test_full_output 2>&1
 $DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5Category >> $DIRECTORY/test_full_output 2>&1
