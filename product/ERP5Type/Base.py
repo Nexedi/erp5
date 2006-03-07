@@ -2289,6 +2289,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Add to catalog
     self.reindexObject()
 
+  security.declarePublic('serialize')
+  def serialize(self):
+    """Make the transaction accessing to this object atomic
+    """
+    self.id = self.id
+
 InitializeClass(Base)
 
 class TempBase(Base):
