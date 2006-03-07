@@ -1,3 +1,6 @@
+2006-03-03 kevin
+* Display an encoded UTF-8 body for Mail Message.
+
 2006-02-22 kevin
 * Fix bad default lisbox parameters.
 
