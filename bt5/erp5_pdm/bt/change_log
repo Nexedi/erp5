@@ -1,3 +1,7 @@
+2006-03-06 romain
+* Use proxy field.
+* Improve translation.
+
 2006-03-04 jerome
 * Use translated validation state in Resource_viewMovementHistory
 

@@ -246,6 +246,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>allow_jump</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -256,6 +264,16 @@
                 <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -287,7 +305,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -298,16 +316,40 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>jump_method</string> </key>
                     <value> <string>Base_jumpToRelatedDocument</string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -327,6 +369,16 @@
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

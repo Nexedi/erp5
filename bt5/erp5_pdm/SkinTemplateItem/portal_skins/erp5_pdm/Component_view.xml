@@ -101,7 +101,7 @@
                         <string>my_source_reference</string>
                         <string>my_resource</string>
                         <string>my_description</string>
-                        <string>state</string>
+                        <string>validation_state</string>
                       </list>
                     </value>
                 </item>

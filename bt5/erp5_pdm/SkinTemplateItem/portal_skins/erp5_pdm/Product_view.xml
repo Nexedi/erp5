@@ -98,8 +98,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_source_title</string>
-                        <string>my_product_line</string>
                         <string>my_industrial_phase_list</string>
+                        <string>my_product_line</string>
                         <string>my_reference</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
@@ -109,10 +109,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_base_height</string>
-                        <string>my_base_length</string>
                         <string>my_base_weight</string>
+                        <string>my_base_length</string>
                         <string>my_base_width</string>
+                        <string>my_base_height</string>
                       </list>
                     </value>
                 </item>

@@ -20,13 +20,10 @@ Product | price_view
 Product | print
 Product | view
 Product | view_stock
-Service Module | metadata
-Service Module | print
 Service Module | view
 Service | history
 Service | metadata
 Service | print
-Service | translate
 Service | view
 Transformation Module | csv_export
 Transformation Module | csv_import

@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_resource</string> </value>
+            <value> <string>validation_state</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -77,7 +83,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_resource</string> </value>
+                    <value> <string>validation_state</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
