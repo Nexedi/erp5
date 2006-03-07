@@ -1,3 +1,10 @@
+2006-02-27 Kevin
+* Update AccountingTransactionModule_viewAnnualSalaryReport to show more paysheet conflicts by default.
+* Add AccountingModule_checkPaySheetConsistency, a usefull, but dirty, script to track bad destination and destination_section on Pay Sheet Lines.
+
+2006-02-24 Kevin
+* Update PaySheetTransaction_viewAccountingLineList form.
+
 2006-02-15 Kevin
 * Add an Annual Report generator (must be refactored and cleaned up).
 * Update dependencies.

@@ -73,8 +73,9 @@ portal_catalog = context.getPortalObject().portal_catalog\n
 \n
 query = {\n
   "portal_type" : "Pay Sheet Transaction",\n
-  "simulation_state" : ["confirmed", "stopped", "delivered"],\n
+  "simulation_state" : ["confirmed", "stopped", "delivered", "draft", "planned"],\n
   "delivery.stop_date" : ">2004-12-31",\n
+  "delivery.start_date" : "<2005-12-31",\n
   "sort_on" : ("delivery.start_date", "ASC")\n
 }\n
 \n
@@ -104,20 +105,21 @@ for p, paysheets in paysheet_par_person.items() :\n
   gathered_data[p] = {}\n
   for paysheet in paysheets :\n
     start_month = paysheet.start_date.month() - 1\n
-    if not gathered_data[p].has_key (start_month) :\n
+    if not gathered_data[p].has_key(start_month) :\n
       gathered_data[p][start_month] = {}\n
-    if gathered_data[p][start_month].has_key ("salary") :\n
-      if not gathered_data[p][start_month].has_key("doubles") :\n
-        gathered_data[p][start_month]["doubles"] = 0\n
-      gathered_data[p][start_month]["doubles"] = gathered_data [p][start_month]["doubles"] + 1\n
+    if gathered_data[p][start_month].has_key("salary") :\n
+      if not gathered_data[p][start_month].has_key("duplicates") :\n
+        gathered_data[p][start_month]["duplicates"] = []\n
+      gathered_data[p][start_month]["duplicates"].append(paysheet)\n
     else :\n
       # get the taxable salary\n
       ps_details = paysheet.PaySheetTransaction_getDetails()\n
       salary_value = ps_details[salary_type]\n
       # Round the value the same way it is printed by PaySheetTransaction_viewPaySheetTransactionAsPDF.\n
       # In fact the rounding must be done by PaySheetTransaction_getDetails to homogenize the value in the paysheet module.\n
-      gathered_data [p][start_month]["salary"] = float(\'%.2f\' % salary_value)\n
-      gathered_data [p][start_month]["url"] = paysheet.getPath()\n
+      gathered_data[p][start_month]["salary"] = float(\'%.2f\' % salary_value)\n
+      gathered_data[p][start_month]["url"] = paysheet.getPath()\n
+      gathered_data[p][start_month]["state"] = paysheet.getSimulationState()\n
 \n
 # DISPLAY part\n
 \n
@@ -129,12 +131,14 @@ print """\n
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />\n
 <title>R\xc3\xa9capitulatif des salaires bruts</title>\n
 <style>\n
-a {\n
-  text-decoration : none;\n
-}\n
-a:hover {\n
-  text-decoration : underline;\n
-}\n
+a {text-decoration : none;}\n
+a:hover {text-decoration : underline;}\n
+\n
+.warning           {color: #f00;}\n
+.warning a:link    {color: #f00;}\n
+.warning a:visited {color: #f00;}\n
+.warning a:hover   {color: #f00;}\n
+\n
 table {\n
   border-collapse : collapse;\n
 }\n
@@ -194,8 +198,10 @@ for person_path, person_dict in gathered_data.items() :\n
         monthly_total[month] = 0\n
       monthly_total[month] = monthly_total[month] + person_dict[month]["salary"]\n
       print "<a href=\\"%s\\">%s</a>" % (person_dict[month]["url"], person_dict[month]["salary"])\n
-      if person_dict[month].has_key("doubles") :\n
-        print "!" * person_dict[month]["doubles"]\n
+      if person_dict[month].has_key("duplicates"):\n
+        print "[%s]<br/>" % (person_dict[month]["state"])\n
+        for dup_ps in person_dict[month]["duplicates"]:\n
+          print "<span class=\'warning\'><a href=\'%s\'><b>%s !</b> [%s]</a></span><br/>" % (dup_ps.absolute_url(), dup_ps.getGrossSalary(), dup_ps.getSimulationState())\n
     print "</td>"\n
   print "<td>%s</td></tr>" % person_total\n
   total += person_total\n
@@ -273,7 +279,7 @@ return printed\n
                             <string>_print</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>portal_catalog</string>
                             <string>query</string>
                             <string>paysheet_par_person</string>
@@ -297,6 +303,7 @@ return printed\n
                             <string>person_total</string>
                             <string>range</string>
                             <string>month</string>
+                            <string>dup_ps</string>
                             <string>check_total</string>
                           </tuple>
                         </value>
