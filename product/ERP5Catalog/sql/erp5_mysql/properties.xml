@@ -48,11 +48,11 @@
     <item type="str">explanation_portal_type | movement,catalog/portal_type/z_related_explanation</item>
     <item type="str">predicate_uid | predicate/uid/z_related_predicate</item>
     <item type="str">resourceType | movement,catalog/portal_type/z_related_resource</item>
-    <item type="str">stock_mirrorSectionCategory | category/category_uid/z_related_mirror_section_uid_from_stock</item>
-    <item type="str">stock_nodeCategory | category/category_uid/z_related_node_uid_from_stock</item>
-    <item type="str">stock_paymentCategory | category/category_uid/z_related_payment_uid_from_stock</item>
-    <item type="str">stock_resourceCategory | category/category_uid/z_related_resource_uid_from_stock</item>
-    <item type="str">stock_sectionCategory | category/category_uid/z_related_section_uid_from_stock</item>
+    <item type="str">stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</item>
+    <item type="str">stock_node_category_uid | category/category_uid/z_related_node_uid_from_stock</item>
+    <item type="str">stock_payment_category_uid | category/category_uid/z_related_payment_uid_from_stock</item>
+    <item type="str">stock_resource_category_uid | category/category_uid/z_related_resource_uid_from_stock</item>
+    <item type="str">stock_section_category_uid | category/category_uid/z_related_section_uid_from_stock</item>
     <item type="str">subordination_title | category,catalog/title/z_related_subordination</item>
     <item type="str">translated_portal_type | translation/translated_message/z_related_translated_portal_type</item>
     <item type="str">translated_simulation_state | translation/translated_message/z_related_translated_simulation_state_title</item>
@@ -67,9 +67,9 @@
     <item type="str">translated_validation_state_title | translation/translated_message/z_related_translated_validation_state</item>
     <item type="str">translated_opportunity_state | translation/translated_message/z_related_translated_opportunity_state</item>
     <item type="str">translated_opportunity_state_title | translation/translated_message/z_related_translated_opportunity_state</item>
-    <item type="str">item_resourceCategory | category/category_uid/z_related_resource_uid_from_item</item>
-    <item type="str">item_sectionCategory | category/category_uid/z_related_section_uid_from_item</item>
-    <item type="str">item_nodeCategory | category/category_uid/z_related_node_uid_from_item</item>
+    <item type="str">item_resource_category_uid | category/category_uid/z_related_resource_uid_from_item</item>
+    <item type="str">item_section_category_uid | category/category_uid/z_related_section_uid_from_item</item>
+    <item type="str">item_node_category_uid | category/category_uid/z_related_node_uid_from_item</item>
   </property>
   <property id="sql_catalog_request_keys" type="tuple">
   </property>
