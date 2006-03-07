@@ -1,0 +1,22 @@
+<allowed_content_type_list>
+ <portal_type id="Web Page">
+  <item>File</item>
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Web Page Module">
+  <item>Web Page</item>
+ </portal_type>
+ <portal_type id="Web Section">
+  <item>Web Section</item>
+  <item>File</item>
+  <item>Web Page</item>
+  <item>Image</item>
+ </portal_type>
+ <portal_type id="Web Site">
+  <item>Web Container</item>
+  <item>Web Section</item>
+ </portal_type>
+ <portal_type id="Web Site Module">
+  <item>Web Site</item>
+ </portal_type>
+</allowed_content_type_list>

@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
+                       ignore_layout request/ignore_layout | nothing;\n
+                       editable_mode request/editable_mode | nothing;\n
+                       layout_form python:not(layout_form_id) or ignore_layout or getattr(here, layout_form_id, None);\n
+                       layout_id layout_form/pt | string:view_master;">\n
+  <tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
+    <tal:block metal:fill-slot="main">\n
+      <tal:block tal:condition="not: editable_mode">\n
+        <tal:block tal:condition="python:(not ignore_layout) and default_content">\n
+          <tal:block tal:define="global here python:default_content;\n
+                                 global form python:here.WebPage_view;\n
+                                 global default_content_title python:here.getTitle()" />\n
+          <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
+        </tal:block>\n
+        <tal:block tal:condition="python: ignore_layout or (not default_content)">\n
+          <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
+        </tal:block>\n
+      </tal:block>\n
+      <tal:block tal:condition="editable_mode">\n
+        <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>section_form_view</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

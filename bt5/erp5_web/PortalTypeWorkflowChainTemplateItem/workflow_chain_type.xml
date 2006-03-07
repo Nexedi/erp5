@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Web Page</type>
+  <workflow>edit_workflow, publication_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Web Section</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Web Site</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

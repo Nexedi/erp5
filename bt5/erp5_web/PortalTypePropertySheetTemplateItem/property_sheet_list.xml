@@ -1,0 +1,13 @@
+<property_sheet_list>
+ <portal_type id="Web Page">
+  <item>Reference</item>
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Web Section">
+  <item>SortIndex</item>
+  <item>WebSite</item>
+ </portal_type>
+ <portal_type id="Web Site">
+  <item>WebSite</item>
+ </portal_type>
+</property_sheet_list>
