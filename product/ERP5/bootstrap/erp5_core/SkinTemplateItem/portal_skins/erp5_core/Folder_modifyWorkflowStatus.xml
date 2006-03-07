@@ -75,28 +75,15 @@ request=context.REQUEST\n
 \n
 try:\n
   # Validate the form\n
-  form = getattr(context,dialog_id)\n
-  #form.validate_all_to_request(request)\n
+  form = getattr(context, dialog_id)\n
   kw = {}\n
   for f in form.get_fields():\n
     k = f.id\n
-    v = getattr(request, k, getattr(request, k[3:], None))\n
+    fid = \'field_\' + k\n
+    v = getattr(request, fid, None)\n
     if v is not None:\n
       k = k[3:]\n
       kw[k] = v\n
-      \n
-  listbox = request.get(\'listbox\')\n
-  if listbox is not None:\n
-    listbox_line_list = []\n
-    listbox = getattr(request,\'listbox\',None)\n
-    listbox_keys = listbox.keys()\n
-    listbox_keys.sort()\n
-    for key in listbox_keys:\n
-      listbox_line = listbox[key]\n
-      listbox_line[\'listbox_key\'] = key\n
-      listbox_line_list.append(listbox[key])\n
-    listbox_line_list = tuple(listbox_line_list)\n
-    kw[\'listbox\'] = listbox_line_list\n
 \n
   selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
   if len(selection_uid_list) == 0 :\n
@@ -105,7 +92,7 @@ try:\n
     selection_list = []\n
     for uid in selection_uid_list :\n
       selection_list.append(context.portal_catalog.getObject(uid))\n
-   \n
+\n
   for o in selection_list:\n
     o = o.getObject()\n
     o.activate().Base_workflowStatusModify(batch = 1, **kw)\n
@@ -123,6 +110,7 @@ except FormValidationError, validation_errors:\n
   field_errors = form.ErrorFields(validation_errors)\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
+\n
 except ValueError, value_error:\n
   # Pack errors into the request\n
   redirect_url = \'%s/%s?%s%s\' % ( context.absolute_url(), form_id\n
@@ -187,7 +175,7 @@ except ValueError, value_error:\n
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>request</string>
                             <string>getattr</string>
                             <string>form</string>
@@ -195,16 +183,11 @@ except ValueError, value_error:\n
                             <string>_getiter_</string>
                             <string>f</string>
                             <string>k</string>
-                            <string>_getitem_</string>
+                            <string>fid</string>
                             <string>None</string>
                             <string>v</string>
+                            <string>_getitem_</string>
                             <string>_write_</string>
-                            <string>listbox</string>
-                            <string>listbox_line_list</string>
-                            <string>listbox_keys</string>
-                            <string>key</string>
-                            <string>listbox_line</string>
-                            <string>tuple</string>
                             <string>selection_uid_list</string>
                             <string>len</string>
                             <string>selection_list</string>

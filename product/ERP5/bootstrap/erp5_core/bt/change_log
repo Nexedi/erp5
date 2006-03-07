@@ -1,3 +1,6 @@
+2006-02-07 Kevin
+* Fix mass workflow status modification (Folder_modifyWorkflowStatus and Base_callViewDialogMethod updated).
+
 2006-03-06 romain
 * translate message return by scripts in erp5_core.
 

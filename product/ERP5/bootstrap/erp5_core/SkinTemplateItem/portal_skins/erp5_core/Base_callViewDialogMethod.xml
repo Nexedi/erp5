@@ -76,8 +76,6 @@ from ZTUtils import make_query\n
 \n
 request=context.REQUEST\n
 \n
-\n
-\n
 #Exceptions for Base_edit\n
 if dialog_method == \'Base_edit\':\n
   return context.Base_edit( form_id=form_id\n
@@ -89,6 +87,13 @@ if dialog_method == \'Workflow_statusModify\':\n
   return context.Workflow_statusModify( form_id=form_id\n
                                        , dialog_id=dialog_id\n
                                        )\n
+#Exceptions for Mass Workflow Modifications\n
+if dialog_method == \'Folder_modifyWorkflowStatus\':\n
+  return context.Folder_modifyWorkflowStatus( form_id        = form_id\n
+                                            , dialog_id      = dialog_id\n
+                                            , selection_name = selection_name\n
+                                            )\n
+#Exceptions for UI configurations\n
 if dialog_method == \'Base_configureUI\':\n
   return context.Base_configureUI( form_id=form_id\n
                              , selection_name=selection_name\n
