@@ -2128,6 +2128,24 @@ def createValueAccessors(property_holder, id,
   if not hasattr(property_holder, accessor_name):
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
+  accessor_name = 'get' + UpperCase(id) + 'TranslatedTitleList'
+  accessor = Value.TranslatedTitleListGetter(accessor_name, id)
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor)
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedTitleList'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
+  accessor_name = 'get' + UpperCase(id) + 'TranslatedTitleSet'
+  accessor = Value.TranslatedTitleSetGetter(accessor_name, id)
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor)
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedTitleSet'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
   accessor_name = 'get' + UpperCase(id) + 'ReferenceList'
   accessor = Value.ReferenceListGetter(accessor_name, id)
   if not hasattr(property_holder, accessor_name):
@@ -2252,6 +2270,22 @@ def createValueAccessors(property_holder, id,
   if not hasattr(property_holder, accessor_name):
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
   accessor_name = '_categoryGet' + UpperCase(id) + 'Title'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+
+  accessor_name = 'getDefault' + UpperCase(id) + 'TranslatedTitle'
+  accessor = Value.DefaultTranslatedTitleGetter(accessor_name, id)
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor)
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = 'get' + UpperCase(id) + 'TranslatedTitle'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+    property_holder.security.declareProtected(read_permission, accessor_name)
+  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'TranslatedTitle'
+  if not hasattr(property_holder, accessor_name):
+    setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
+  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedTitle'
   if not hasattr(property_holder, accessor_name):
     setattr(property_holder, accessor_name, accessor.dummy_copy(accessor_name))
 
