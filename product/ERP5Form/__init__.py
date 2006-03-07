@@ -168,6 +168,9 @@ def initialize( context ):
     # Register FSPDFTemplate icon
     registerIcon(PDFTemplate.FSPDFTemplate,
                         'www/PDF.png', globals())
+    # Register ProxyField icon
+    registerIcon(ProxyField.ProxyField,
+                        'www/ProxyField.png', globals())
 
 
 ## Initialize security ##
