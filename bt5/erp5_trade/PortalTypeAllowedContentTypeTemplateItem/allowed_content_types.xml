@@ -45,14 +45,18 @@
   <item>Purchase Packing List</item>
  </portal_type>
  <portal_type id="Purchase Supply">
+  <item>Purchase Supply Line</item>
   <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Purchase Supply Line">
+  <item>Purchase Supply Cell</item>
  </portal_type>
  <portal_type id="Purchase Supply Module">
   <item>Purchase Supply</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition">
-  <item>Payment Condition</item>
   <item>Discount</item>
+  <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition Module">
   <item>Purchase Trade Condition</item>
@@ -89,14 +93,18 @@
   <item>Sale Packing List</item>
  </portal_type>
  <portal_type id="Sale Supply">
+  <item>Sale Supply Line</item>
   <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Sale Supply Line">
+  <item>Sale Supply Cell</item>
  </portal_type>
  <portal_type id="Sale Supply Module">
   <item>Sale Supply</item>
  </portal_type>
  <portal_type id="Sale Trade Condition">
-  <item>Payment Condition</item>
   <item>Discount</item>
+  <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
   <item>Sale Trade Condition</item>

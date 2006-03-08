@@ -1,4 +1,11 @@
-2006-30-03 Seb
+2006-03-08 Romain
+* Added Sale Supply Line/Cell, Purchase Supply Line/Cell.
+* Use proxy field for Supply.
+
+2006-03-08 Seb
+* Added script for selecting deliveries in sale_packing_list_builder
+
+2006-03-03 Seb
 * Added Returned Sale Packing List properties
 
 2006-03-03 romain

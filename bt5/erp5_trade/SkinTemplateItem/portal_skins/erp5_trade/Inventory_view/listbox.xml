@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -45,6 +51,10 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -184,6 +194,10 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -334,11 +348,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
+<string>id</string>
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
+<string>description</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
@@ -471,8 +485,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>id</string>
+<string>id</string>
+<string>id</string>
                         </tuple>
                       </list>
                     </value>
@@ -523,7 +537,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
+            <value> <unicode>searchFolder</unicode> </value>
         </item>
       </dictionary>
     </pickle>

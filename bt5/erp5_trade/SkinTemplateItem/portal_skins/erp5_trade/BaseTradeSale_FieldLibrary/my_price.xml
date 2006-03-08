@@ -90,6 +90,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -150,6 +158,14 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>precision</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>

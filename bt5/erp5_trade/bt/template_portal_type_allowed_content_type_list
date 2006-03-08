@@ -15,7 +15,9 @@ Purchase Order | Purchase Order Line
 Purchase Packing List Line | Purchase Packing List Cell
 Purchase Packing List Module | Purchase Packing List
 Purchase Packing List | Purchase Packing List Line
+Purchase Supply Line | Purchase Supply Cell
 Purchase Supply Module | Purchase Supply
+Purchase Supply | Purchase Supply Line
 Purchase Supply | Supply Line
 Purchase Trade Condition Module | Purchase Trade Condition
 Purchase Trade Condition | Discount
@@ -33,7 +35,9 @@ Sale Packing List Line | Sale Packing List Cell
 Sale Packing List Module | Sale Packing List
 Sale Packing List | Container
 Sale Packing List | Sale Packing List Line
+Sale Supply Line | Sale Supply Cell
 Sale Supply Module | Sale Supply
+Sale Supply | Sale Supply Line
 Sale Supply | Supply Line
 Sale Trade Condition Module | Sale Trade Condition
 Sale Trade Condition | Discount

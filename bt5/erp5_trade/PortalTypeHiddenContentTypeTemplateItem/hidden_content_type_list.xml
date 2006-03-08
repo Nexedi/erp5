@@ -14,6 +14,12 @@
  <portal_type id="Purchase Packing List Line">
   <item>Purchase Packing List Cell</item>
  </portal_type>
+ <portal_type id="Purchase Supply">
+  <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Purchase Supply Line">
+  <item>Purchase Supply Cell</item>
+ </portal_type>
  <portal_type id="Returned Sale Packing List Line">
   <item>Returned Sale Packing List Cell</item>
  </portal_type>
@@ -22,6 +28,12 @@
  </portal_type>
  <portal_type id="Sale Packing List Line">
   <item>Sale Packing List Cell</item>
+ </portal_type>
+ <portal_type id="Sale Supply">
+  <item>Supply Line</item>
+ </portal_type>
+ <portal_type id="Sale Supply Line">
+  <item>Sale Supply Cell</item>
  </portal_type>
  <portal_type id="Supply Line">
   <item>Supply Cell</item>

@@ -445,6 +445,10 @@
                           <string>Supply Line</string>
                           <string>Supply Line</string>
                         </tuple>
+                        <tuple>
+                          <string>Purchase Supply Line</string>
+                          <string>Purchase Supply Line</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -531,7 +535,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Supply Lines</string> </value>
+                    <value> <string>Purchase Supply Lines</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
