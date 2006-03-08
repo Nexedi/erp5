@@ -644,8 +644,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     # the order/delivery builder will be reviewed. It might
     # be reviewed if we plan to configure movement groups in the zmi
     security.declareProtected( Permissions.ModifyPortalContent,
-                               'setInitialCausalityValueList')
-    def setInitialCausalityValueList(self):
+                               'setRootCausalityValueList')
+    def setRootCausalityValueList(self):
       """
       This 
       """
