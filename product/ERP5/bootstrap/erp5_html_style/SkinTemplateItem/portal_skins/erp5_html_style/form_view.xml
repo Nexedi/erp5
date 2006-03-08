@@ -15,7 +15,16 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <none/>
+              <dictionary>
+                <item>
+                    <key> <string>yo</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -115,7 +124,7 @@
               </tal:block>\n
               <tal:block tal:repeat="row rows">\n
                 <tal:block tal:condition="python: len(row)>0">\n
-                  <tal:block tal:condition="python: \'bottom\' not in groups[row[0]]">\n
+                  <tal:block tal:condition="python: \'bottom\' not in groups[row[0]].lower()">\n
                     <table width="100%" class="Border">\n
                       <tr>\n
                         <td tal:repeat="cell row" valign="top">\n
@@ -128,7 +137,7 @@
                       </tr>\n
                     </table>\n
                   </tal:block>\n
-                  <tal:block tal:condition="python: \'bottom\' in groups[row[0]]">\n
+                  <tal:block tal:condition="python: \'bottom\' in groups[row[0]].lower()">\n
                     <tal:block tal:repeat="cell row">\n
                       <tal:block tal:repeat="field python:form.get_fields_in_group(groups[cell])">\n
                         <tal:block tal:define="value python:request.get(field.id, None)"\n
