@@ -81,7 +81,7 @@ return current_section\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/erp5_web/WebSite_getSite</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getSite</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

@@ -154,7 +154,7 @@ return brain_list\n
                             <string>Products.ERP5Form.Selection</string>
                             <string>DomainSelection</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>content_cmp</string>
                             <string>domain</string>
                             <string>_write_</string>

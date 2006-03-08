@@ -54,7 +54,8 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
+<tal:block tal:define="default_content here/WebSite_getDefaultDocument | nothing;\n
+                       layout_form_id here/getApplicableLayout | nothing;\n
                        ignore_layout request/ignore_layout | nothing;\n
                        editable_mode request/editable_mode | nothing;\n
                        layout_form python:not(layout_form_id) or ignore_layout or getattr(here, layout_form_id, None);\n
