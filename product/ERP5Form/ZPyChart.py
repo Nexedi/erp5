@@ -34,7 +34,10 @@ from Products.Formulator.Field import ZMIField
 from Selection import Selection
 
 from Products.PythonScripts.PythonScript import PythonScript
-import pychart
+try:
+  import pychart
+except ImportError:
+  psychart = None
 
 from zLOG import LOG
 
