@@ -308,6 +308,10 @@ class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     explanation_relative_url = self._getExplanationRelativeUrl(movement)
     self.explanation = explanation_relative_url
+    explanation_value = movement.getPortalObject().restrictedTraverse(explanation_relative_url)
+    self.setGroupEdit(
+      root_causality_value_list = [explanation_value]
+    )
 
   def _getExplanationRelativeUrl(self, movement):
     """ Get the order value for a movement """
