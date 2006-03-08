@@ -351,7 +351,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       
   def _deliveryLineGroupProcessing(self, delivery, movement_group,
                                    collect_order_list, property_dict,
-                                   update_requested=0,
                                    activate_kw=None,**kw):
     """
       Build delivery line from a list of movement on a delivery
@@ -364,19 +363,18 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       for group in movement_group.getGroupList():
         self._deliveryLineGroupProcessing(
           delivery, group, collect_order_list[1:], property_dict.copy(),
-          update_requested=update_requested,activate_kw=activate_kw)
+          activate_kw=activate_kw)
     else:
       # Test if we can update an existing line, or if we need to create a new
       # one
       delivery_line = None
       update_existing_line = 0
-      if update_requested==1:
-        for delivery_line_to_update in delivery.contentValues(
-                 filter={'portal_type':self.getDeliveryLinePortalType()}):
-          if self.testObjectProperties(delivery_line_to_update, property_dict):
-            delivery_line = delivery_line_to_update
-            update_existing_line = 1
-            break
+      for delivery_line_to_update in delivery.contentValues(
+               filter={'portal_type':self.getDeliveryLinePortalType()}):
+        if self.testObjectProperties(delivery_line_to_update, property_dict):
+          delivery_line = delivery_line_to_update
+          update_existing_line = 1
+          break
       if delivery_line == None:
         # Create delivery line
         new_delivery_line_id = str(delivery.generateNewId())
