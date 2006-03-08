@@ -643,6 +643,41 @@ class PatchedDateTimeWidget(DateTimeWidget):
         else:
             return date_result
 
+    def render_view(self, field, value):
+        if value is None:
+            return ''
+
+        use_ampm = field.get_value('ampm_time_style')
+
+        year = "%04d" % value.year()
+        month = "%02d" % value.month()
+        day = "%02d" % value.day()
+        if use_ampm:
+            hour = "%02d" % value.h_12()
+        else:
+            hour = "%02d" % value.hour()
+        minute = "%02d" % value.minute()
+        ampm = value.ampm()
+
+        order = field.get_value('input_order')
+        if order == 'ymd':
+            output = [year, month, day]
+        elif order == 'dmy':
+            output = [day, month, year]
+        elif order == 'mdy':
+            output = [month, day, year]
+        else:
+            output = [year, month, day]
+        date_result = string.join(output, field.get_value('date_separator'))
+
+        if not field.get_value('date_only'):
+            time_result = hour + field.get_value('time_separator') + minute
+            if use_ampm:
+                time_result += '&nbsp;' + ampm
+            return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
+        else:
+            return date_result
+
 DateTimeField.widget = PatchedDateTimeWidget()
 
 from Products.Formulator.Validator import DateTimeValidator, ValidationError, DateTime
