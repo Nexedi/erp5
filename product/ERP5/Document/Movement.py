@@ -437,6 +437,17 @@ class Movement(XMLObject, Amount):
       Returns the object explanation of this movement.
     """
     return self.getDeliveryValue()
+  
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getInitialCausalityValueList')
+  def getRootCausalityValueList(self):
+    """
+      Returns the initial causality value for this movement.
+      This method will look at the causality and check if the
+      causality has already a causality
+    """
+    return self.getExplanationValue().getRootCausalityValueList()
+    
 
   # Simulation
   security.declareProtected( Permissions.AccessContentsInformation,

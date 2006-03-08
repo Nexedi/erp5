@@ -27,18 +27,13 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Base import Base
-from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
-from Acquisition import Explicit, Implicit
-from Products.PythonScripts.Utility import allow_class
-from DateTime import DateTime
 
 from zLOG import LOG
 
@@ -590,7 +585,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         my_applied_rule.setCausalityValue(self)
         # We must make sure this rule is indexed
         # now in order not to create another one later
-        my_applied_rule.reindexObject(**kw)
+        my_applied_rule.reindexObject(activate_kw=activate_kw,**kw)
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
@@ -623,4 +618,36 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         LOG("ERP5 Error:", 100,
             "Could not expand applied rule %s for delivery %s" %\
                 (applied_rule_id, self.getId()))
+
+
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getInitialCausalityValueList')
+    def getRootCausalityValueList(self):
+      """
+        Returns the initial causality value for this movement.
+        This method will look at the causality and check if the
+        causality has already a causality
+      """
+      causality_value_list = self.getCausalityValueList()
+      initial_list = []
+      if len(causality_value_list)==0:
+        initial_list = [self]
+      else:
+        for causality in causality_value_list:
+          tmp_causality_list = causality.getRootCausalityValueList()
+          initial_list.extend([x for x in tmp_causality_list 
+                               if x not in initial_list])
+      return initial_list
+
+
+    # XXX Temp hack, should be removed has soon as the structure of
+    # the order/delivery builder will be reviewed. It might
+    # be reviewed if we plan to configure movement groups in the zmi
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               'setInitialCausalityValueList')
+    def setInitialCausalityValueList(self):
+      """
+      This 
+      """
+      pass
 

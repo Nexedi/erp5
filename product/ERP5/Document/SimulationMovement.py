@@ -198,7 +198,7 @@ class SimulationMovement(Movement):
   # Causality Workflow Methods
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, **kw):
+  def expand(self, force=0, **kw):
     """
       Parses all existing applied rules and make sure they apply.
       Checks other possible rules and starts expansion process
@@ -214,13 +214,13 @@ class SimulationMovement(Movement):
     # we know that invoicing rule acts like this, and that it comes after
     # invoice or invoicing_rule, so we if we come from invoince rule or 
     # invoicing rule, we always expand regardless of the causality state.
-    if (self.getParent().getSpecialiseId() not in 
+    if ((self.getParent().getSpecialiseId() not in 
          ('default_invoicing_rule', 'default_invoice_rule')
          and self.getCausalityState() == 'expanded' ) or \
-         len(self.objectIds()) != 0:
+         len(self.objectIds()) != 0):
       # Reexpand
       for my_applied_rule in self.objectValues():
-        my_applied_rule.expand(**kw)
+        my_applied_rule.expand(force=force,**kw)
     else:
       portal_rules = getToolByName(self, 'portal_rules')
       # Parse each rule and test if it applies
@@ -228,7 +228,7 @@ class SimulationMovement(Movement):
         if rule.test(self):
           my_applied_rule = rule.constructNewAppliedRule(self, **kw)
       for my_applied_rule in self.objectValues() :
-        my_applied_rule.expand(**kw)
+        my_applied_rule.expand(force=force,**kw)
       # Set to expanded
       self.setCausalityState('expanded')
 
@@ -523,6 +523,17 @@ class SimulationMovement(Movement):
       return root_simulation_movement.getUid()
     return None
 
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getInitialCausalityValueList')
+  def getRootCausalityValueList(self):
+    """
+      Returns the initial causality value for this movement.
+      This method will look at the causality and check if the
+      causality has already a causality
+    """
+    root_rule = self.getRootAppliedRule()
+    return root_rule.getCausalityValueList()
+    
   # XXX FIXME Use a interaction workflow instead
   # XXX This behavior is now done by simulation_movement_interaction_workflow
   # The call to activate() must be done after actual call to 
