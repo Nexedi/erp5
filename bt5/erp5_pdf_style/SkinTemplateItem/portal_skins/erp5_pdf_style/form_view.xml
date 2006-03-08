@@ -79,21 +79,33 @@
               <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
                 <tr>\n
                   <td tal:attributes="colwidth python: \'5cm\'" >\n
-                    <para  style="TableHeader" tal:content="python: here.Localizer.erp5_ui.gettext(field.get_value(\'title\')).encode(\'utf-8\')"/>\n
+                    <para  style="TableHeader" tal:content="python: here.translation_service.translate(\'ui\', field.get_value(\'title\')).encode(\'utf-8\')"/>\n
                   </td>\n
-                  <td tal:attributes="colwidth python: None" tal:define="value python: field.get_value(\'default\')">\n
-                    <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
-                      <tal:block tal:repeat="item value">\n
-                        <para  style="TableStandard" tal:content="python: str(item)" />\n
+                  <tal:block tal:define="item_list python:field.has_value(\'items\') and field.get_value(\'items\') or None">\n
+                    <td tal:attributes="colwidth python: None" tal:define="value python: field.get_value(\'default\')">\n
+                      <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">\n
+                        <tal:block tal:repeat="item value">\n
+                            <para  style="TableStandard"\n
+                                   tal:content="python: str(item)"\n
+                                   tal:condition="not:item_list"/>\n
+                            <para  style="TableStandard"\n
+                                   tal:content="python: [i[0] for i in item_list if i[1] == item][0]"\n
+                                   tal:condition="item_list" />\n
+                        </tal:block>\n
                       </tal:block>\n
-                    </tal:block>\n
-                    <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
-                      <para  style="TableStandard" tal:content="python: \'%s \' % value" />\n
-                    </tal:block>\n
-                    <tal:block tal:condition="python: value == None">\n
-                      <para  style="TableStandard" tal:content="python: \' \'" />\n
-                    </tal:block>\n
-                  </td>\n
+                      <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
+                        <para  style="TableStandard"\n
+                               tal:content="python: str(value)"\n
+                               tal:condition="not:item_list" />\n
+                            <para  style="TableStandard"\n
+                                   tal:content="python: [i[0] for i in item_list if i[1] == value][0]"\n
+                                   tal:condition="item_list" />\n
+                      </tal:block>\n
+                      <tal:block tal:condition="python: value == None">\n
+                        <para  style="TableStandard" tal:content="python: \' \'" />\n
+                      </tal:block>\n
+                    </td>\n
+                  </tal:block>\n
                 </tr>\n
               </tal:block>\n
             </tal:block>\n
@@ -137,7 +149,10 @@
 \n
   </tal:block>\n
   </content>\n
-</document>
+</document>\n
+\n
+\n
+
 
 ]]></string> </value>
         </item>

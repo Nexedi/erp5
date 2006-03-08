@@ -1,2 +1,5 @@
+2006-03-08 jerome
+* Display the listfields value from items (only in form_view, still TODO in listbox_macro)
+
 2006-02-24 Seb
 * Created this business template in order to split erp5_core
