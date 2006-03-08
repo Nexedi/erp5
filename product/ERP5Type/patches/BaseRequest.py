@@ -15,7 +15,7 @@
 # ZPublisher should drop requests without a good http referer
 
 from ZPublisher.BaseRequest import BaseRequest
-from ZLOG import LOG
+from zLOG import LOG
 import AccessControl
 
 BaseRequest.erp5_old_traverse = BaseRequest.traverse
