@@ -37,7 +37,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 try:
   import pychart
 except ImportError:
-  psychart = None
+  pychart = None
 
 from zLOG import LOG
 
