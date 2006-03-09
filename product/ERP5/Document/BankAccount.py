@@ -62,11 +62,25 @@ class BankAccount(Folder, Coordinate, MetaNode):
                       , PropertySheet.SimpleItem
                       , PropertySheet.Task
                       , PropertySheet.Resource
+                      , PropertySheet.Reference
                       , PropertySheet.BankAccount
                       )
 
     # Declarative interfaces
     __implements__ = ( Interface.Coordinate )
+
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getReference')
+    def getReference(self, **kw):
+      """reference depends on the site configuration.
+      """
+      value = self._baseGetReference(**kw)
+      if value is None:
+        # Try to get a skin named PortalType_getReference.
+        portal_type = self.getPortalType()
+        method = getattr(self, '%s_getReference' % portal_type.replace(' ', ''), None)
+        if method is not None:
+          return method(**kw)
 
 
 # XXX The following "helper methods" have been commented out, and kept in the
