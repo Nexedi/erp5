@@ -59,11 +59,6 @@ except ImportError:
   pass
 
 
-# XXX You need to add "immobilisation_state" column in catalog, getting
-# "getImmobilisationState" to catalog an object, in order to make this
-# test working
-# Related queries : z_create_catalog and z_catalog_object_list
-
 class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
 
   run_all_test = 1
@@ -97,7 +92,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
 
     """
     return ("erp5_base",
-            "erp5_core_patch_immo",
             "erp5_trade",
             "erp5_pdm", # Needed by accounting
             "erp5_accounting",
@@ -270,6 +264,13 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
              destination_section_value = property_dict['destination_section'],
              start_date =                property_dict['datetime'],
              stop_date =                 property_dict['datetime'],)
+    # Set the Packing List to started state, because the expand
+    # process get only deliveries in current_inventory_state
+    pl.confirm()
+    pl.setReady()
+    pl.start()
+    # Artificially update causality state because we don't want to tic here
+    pl.updateCausalityState()
     packing_list_list = sequence.get('packing_list_list', [])
     packing_list_list.append(pl)
     sequence.set('packing_list_list', packing_list_list)
@@ -720,11 +721,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
         LOG('Launched acceptDecision() for transaction', 0, transaction.getRelativeUrl())
       except:
         LOG('Cannot launch acceptDecision() for transaction', 0, transaction.getRelativeUrl())
-#       if hasattr(transaction, 'acceptDecision'):
-#         transaction.acceptDecision()
-#         LOG('Launched acceptDecision() for transaction', 0, transaction.getRelativeUrl())
-#       else:
-#         LOG('Cannot launch acceptDecision() for transaction', 0, transaction.getRelativeUrl())
         
   def stepChangeAccountingPrice(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2586,9 +2582,10 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
   def _testAccountingBuild(self, c_transaction_list, e_transaction_list):
     for c_transaction in c_transaction_list:
       LOG('c_transaction %s :' % c_transaction, 0, 
-          'date=%s, source_section=%s, destination_section=%s, resource=%s, state=%s' % (
+          'date=%s, source_section=%s, destination_section=%s, resource=%s, state=%s, causality_list=%s' % (
           (c_transaction.getStopDate(), c_transaction.getSourceSection(),
-           c_transaction.getDestinationSection(), c_transaction.getResource(), c_transaction.getCausalityState())
+           c_transaction.getDestinationSection(), c_transaction.getResource(), c_transaction.getCausalityState(),
+           c_transaction.getCausalityList())
          )
       )
       e_found_transaction = None
@@ -2600,9 +2597,6 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
         key_list = e_transaction.keys()
         if 'line_list' in key_list:
           key_list.remove('line_list')
-#         # XXX remove causality_state
-#         if 'causality_state' in key_list:
-#           key_list.remove('causality_state')
         while key_cursor < len(key_list) and not wrong_transaction:
           key = key_list[key_cursor]
           e_value = e_transaction[key]
@@ -2615,6 +2609,10 @@ class TestImmobilisation(TestOrderMixin, ERP5TypeTestCase):
               is_float = 1
           except:
             pass
+          if type(c_value) == type([]):
+            c_value.sort(lambda a,b: cmp(a.getId(), b.getId()))
+          if type(e_value) == type([]):
+            e_value.sort(lambda a,b: cmp(a.getId(), b.getId()))
           if is_float:
             wrong_transaction = (round(c_value,2) != round(e_value,2))
           else:
