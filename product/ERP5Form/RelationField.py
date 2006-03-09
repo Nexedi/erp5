@@ -475,6 +475,8 @@ class RelationStringField(ZMIField):
       """
       if id == 'is_relation_field':
         result = 1
+      elif id == 'is_multi_relation_field':
+        result = 0
       else:
         result = ZMIField.get_value(self, id, **kw)
       return result

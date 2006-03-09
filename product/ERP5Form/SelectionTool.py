@@ -1006,7 +1006,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       # '%s' in the field: '%s'" % (field_value, field.get_orig_value('title'))
       portal_status_message = "Please select one object."
 
-      if field.meta_type == "MultiRelationStringField":
+      if field.get_value('is_multi_relation_field'):
         if sub_index is None:
           # user click on the wheel, not on the validation button
           # we need to facilitate user search

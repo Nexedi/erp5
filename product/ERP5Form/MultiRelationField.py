@@ -523,7 +523,7 @@ class MultiRelationStringField(ZMIField):
       Optionally pass keyword arguments that get passed to TALES
       expression.
       """
-      if id == 'is_relation_field':
+      if id in ('is_relation_field', 'is_multi_relation_field'):
         result = 1
       else:
         result = ZMIField.get_value(self, id, **kw)
