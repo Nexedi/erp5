@@ -52,10 +52,11 @@ from zLOG import LOG
 
 NEGLIGEABLE_PRICE = 10e-8
 
-class ImmobilisationValidityError(Exception): pass
-class ImmobilisationCalculationError(Exception): pass
-allow_class(ImmobilisationValidityError)
-allow_class(ImmobilisationCalculationError)
+#class ImmobilisationValidityError(Exception): pass
+#class ImmobilisationCalculationError(Exception): pass
+#allow_class(ImmobilisationValidityError)
+#allow_class(ImmobilisationCalculationError)
+from Products.ERP5Type.Errors import ImmobilisationValidityError, ImmobilisationCalculationError
 
 class ImmobilisableItem(XMLObject, Amount):
     """
@@ -99,9 +100,10 @@ class ImmobilisableItem(XMLObject, Amount):
       Returns a dictionary of lists containing movements related to amortisation system
       from_date is included, to_date is excluded
       filter_valid eliminates all invalid immobilisation movements in immobilisation movement list.
+      Also, only movements in current_inventory state are returned if filter_valid is set.
         If filter_valid is set and some movements are in state 'calculating', a ImmobilisationValidityError is launch
       immobilisation_movement and owner_change specify which lists to return
-      *_movement_list is the list of movements to use instead of looking in SQL. Warning : in the case of
+      immobilisation_movement_list is the list of movements to use instead of looking in SQL. Warning : in the case of
         movement_list is provided, no filter is applied on it (unless looking at each movement validity)
         and movement_list is supposed to be well sorted.
 
@@ -120,6 +122,7 @@ class ImmobilisableItem(XMLObject, Amount):
         sql_dict['aggregate_uid'] = self.getUid()
         if filter_valid:
           sql_dict['immobilisation_state'] = ['calculating','valid']
+          sql_dict['simulation_state'] = self.getPortalCurrentInventoryStateList()
         portal_type = sql_dict.get('portal_type',None)
         if portal_type is None:
           portal_type = self.getPortalDeliveryMovementTypeList() + \
@@ -563,12 +566,12 @@ class ImmobilisableItem(XMLObject, Amount):
 
 
     security.declareProtected(Permissions.View, 'getLastImmobilisationPeriod')
-    def getLastImmobilisationPeriod(self, at_date=None, **kw):
+    def getLastImmobilisationPeriod(self, to_date=None, **kw):
       """
       Returns the current immobilisation period, or the last one if the
       item is not currently immobilised, at the given at_date (excluded)
       """
-      period_list = self.getImmobilisationPeriodList(from_date=None, at_date=at_date, **kw)
+      period_list = self.getImmobilisationPeriodList(from_date=None, to_date=to_date, **kw)
       if len(period_list) == 0:
         return None
       return period_list[-1]
@@ -1033,14 +1036,14 @@ class ImmobilisableItem(XMLObject, Amount):
       """
       Return the list of successive movements affecting 
       owners of the item. If at_date is None, return the result all the time
+      Only the movements in current_inventory_state are taken into account
       """
-      # XXX Add a simulation_state condition ?
       # Get tracking list
       sql_kw = dict(kw)
       sql_kw['item'] = self.getRelativeUrl()
       sql_kw['sort-on'] = 'item.date'
       sql_kw['sort-order'] = 'ascending'
-      change_list = self.portal_simulation.getTrackingList(**sql_kw)
+      change_list = self.portal_simulation.getCurrentTrackingList(**sql_kw)
       to_date = kw.get('to_date')
       # Collect data
       movement_list = []
@@ -1054,7 +1057,7 @@ class ImmobilisableItem(XMLObject, Amount):
       if include_to_date:
         sql_kw['to_date'] = None
         sql_kw['at_date'] = to_date
-        last_movement = self.portal_simulation.getTrackingList(**sql_kw)
+        last_movement = self.portal_simulation.getCurrentTrackingList(**sql_kw)
         if len(last_movement) > 0:
           movement_uid = last_movement[-1]['delivery_uid']
           if movement_uid is not None:
