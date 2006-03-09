@@ -104,7 +104,10 @@ class ImmobilisationMovement(Movement, XMLObject):
                       )
 
                       
-  def _checkImmobilisationConsistency(self, fixit=0, mapped_value_property_list=()):
+  def _checkImmobilisationConsistency(self, fixit=0, mapped_value_property_list=(), to_translate=1):
+    """
+    If to_translate is set, the method may return a dictionary {'msg':'...', 'mapping':{} }
+    """
     relative_url = self.getRelativeUrl()
     
     def checkValuesAreNotNone(property_list):
@@ -159,9 +162,16 @@ class ImmobilisationMovement(Movement, XMLObject):
           error_found = 1
           date_error = 1
       if error_found:
+        if to_translate:
+          msg = {'msg':"An other movement already exists at the same date for item ${item}",
+                 'mapping': {'item':item.getRelativeUrl()}
+                }
+        else:
+          msg = "An other movement alreay exists at the same date for item %s" % item.getRelativeUrl()
         errors.append([self.getRelativeUrl(),
                       "Property value inconsistency", 0,
-                      "An other movement already exists at the same date for item %s" % item.getRelativeUrl()])
+                      msg
+                     ])
 
     # Return to avoid infinite loops in case of date errors
     if date_error:
