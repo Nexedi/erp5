@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Immobilisation_getAmortisationMethodDisplayList(return_errors=1)</string> </value>
+            <value> <string>python: here.Item_getImmobilisationPeriodAsObjectList(return_errors=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

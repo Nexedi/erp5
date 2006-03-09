@@ -62,7 +62,7 @@ an accounting immobilisation (in order to amortise an object)\n
 It is an instant movement without source or destination, but which\n
 implies a state change and a source_decision and a destination_decision\n
 Do not index in stock table\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

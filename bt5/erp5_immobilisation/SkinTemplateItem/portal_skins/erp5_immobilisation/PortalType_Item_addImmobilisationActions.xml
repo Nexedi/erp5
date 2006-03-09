@@ -111,7 +111,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/PortalType_Item_addImmobilisationActions</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/PortalType_Item_addImmobilisationActions</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

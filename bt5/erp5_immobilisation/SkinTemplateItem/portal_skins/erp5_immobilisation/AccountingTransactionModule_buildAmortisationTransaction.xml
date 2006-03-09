@@ -102,7 +102,7 @@ context.portal_deliveries.amortisation_transaction_builder.build(**builder_kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/AccountingTransactionModule_buildAmortisationTransaction</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/AccountingTransactionModule_buildAmortisationTransaction</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

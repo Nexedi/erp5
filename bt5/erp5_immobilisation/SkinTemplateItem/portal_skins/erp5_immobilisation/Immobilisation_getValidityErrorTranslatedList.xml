@@ -69,14 +69,28 @@
             <value> <string># Return a list of translated strings corresponding to errors for this movement validity\n
 translate = context.Base_translateString\n
 \n
-error_list = context.checkImmobilisationConsistency()\n
+def translateString(msg):\n
+  try:\n
+    msg = msg.get(\'msg\')\n
+    mapping = msg.get(\'mapping\')\n
+  except AttributeError:\n
+    mapping = None\n
+  if translate is None:\n
+    return msg\n
+  translate_kw = {\'catalog\':\'content\'}\n
+  if mapping is not None:\n
+    translate_kw[\'mapping\'] = mapping\n
+  return translate(msg, **translate_kw)\n
+\n
+\n
+error_list = context.checkImmobilisationConsistency(to_translate=1)\n
 if len(error_list) == 0:\n
   return [translate(\'Valid\', \'content\')]\n
 \n
 translated_list = []\n
 for error in error_list:\n
   object = context.getPortalObject().restrictedTraverse(error[0])\n
-  string = translate(error[3], \'content\')\n
+  string = translateString(error[3])\n
   object_title = object.getTitle() or object.getId()\n
   translated_list.append(\'%s : %s\' % (object_title, string))\n
 return translated_list\n
@@ -90,7 +104,7 @@ return translated_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/Immobilisation_getValidityErrorTranslatedList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Immobilisation_getValidityErrorTranslatedList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -124,6 +138,7 @@ return translated_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translate</string>
+                            <string>translateString</string>
                             <string>error_list</string>
                             <string>len</string>
                             <string>translated_list</string>

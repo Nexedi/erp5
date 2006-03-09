@@ -78,7 +78,7 @@ transaction.log(\'after add on transaction\',transaction)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_workflow/amortisation_transaction_interaction_workflow/scripts/AmortisationTransaction_afterAdd</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/amortisation_transaction_interaction_workflow/scripts/AmortisationTransaction_afterAdd</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

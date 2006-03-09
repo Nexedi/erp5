@@ -85,7 +85,7 @@ if immobilisation.getImmobilisationState() != \'calculating\':\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_workflow/immobilisation_movement_interaction_workflow/scripts/Immobilisation_updateImmobilisationState</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/immobilisation_movement_interaction_workflow/scripts/Immobilisation_updateImmobilisationState</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -94,7 +94,7 @@ transaction.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_workflow/amortisation_transaction_causality_workflow/scripts/AmortisationTransaction_acceptDecision</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/amortisation_transaction_causality_workflow/scripts/AmortisationTransaction_acceptDecision</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

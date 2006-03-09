@@ -5,11 +5,19 @@
  </chain>
  <chain>
   <type>Amortisation Transaction Line</type>
-  <workflow>amortisation_transaction_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, amortisation_transaction_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Delivery Cell</type>
   <workflow>immobilisation_movement_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Immobilisation</type>
+  <workflow>immobilisation_delivery_workflow, immobilisation_workflow, immobilisation_movement_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Immobilisation Line</type>
+  <workflow>edit_workflow, immobilisation_movement_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Internal Packing List</type>
@@ -45,7 +53,7 @@
  </chain>
  <chain>
   <type>Sale Packing List</type>
-  <workflow>immobilisation_workflow, immobilisation_movement_interaction_workflow</workflow>
+  <workflow>immobilisation_movement_interaction_workflow, immobilisation_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>

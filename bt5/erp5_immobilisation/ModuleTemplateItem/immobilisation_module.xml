@@ -20,9 +20,6 @@
    <name>Access session data</name>
   </permission>
   <permission>
-   <name>AccessContentsInformation</name>
-  </permission>
-  <permission>
    <name>Add Accelerated HTTP Cache Managers</name>
   </permission>
   <permission>

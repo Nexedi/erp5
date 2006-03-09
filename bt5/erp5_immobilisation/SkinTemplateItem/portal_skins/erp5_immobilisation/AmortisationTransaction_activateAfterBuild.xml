@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/AmortisationTransaction_activateAfterBuild</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/AmortisationTransaction_activateAfterBuild</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -110,7 +110,7 @@
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

@@ -91,7 +91,7 @@ context.activate(\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_workflow/copy_of_preference_workflow/scripts/ImmobilisationMovement_afterEdit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/immobilisation_workflow/scripts/ImmobilisationMovement_afterEdit</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

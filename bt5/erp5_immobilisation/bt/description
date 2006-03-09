@@ -15,11 +15,4 @@ After installing this BT, you should achieve some tasks :
 
 
 TODO : 
-- Handle exceptions in Item_viewImmobilisationPeriods
 - Handle currency changes in expand
-
-
-Notes : 
-- 'item' result table should be in erp5_core
-
-- z_catalog_object_list, z_create_catalog and Resource_zGetTrackingList need to be updated

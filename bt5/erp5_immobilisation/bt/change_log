@@ -1,3 +1,10 @@
+2006-03-09 Guillaume
+* Removed result table item
+* Handle errors in Item_viewImmobilisationPeriods
+* Translate immobilisation validity errors
+* Forgot some workflow chains on Immobilisation and Immobilisation Line
+* Added immobilisation_delivery_workflow
+
 2006-03-02 Guillaume
 * Added immobilisation skins to Delivery Cell
 

@@ -66,21 +66,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#from Document.ImmobilisableItem import ImmobilisationCalculationError\n
-#from Document.ImmobilisableItem import ImmobilisationValidityError\n
+            <value> <string>from Products.ERP5Type.Errors import ImmobilisationCalculationError, ImmobilisationValidityError\n
 \n
-# XXX TODO : handle errors\n
 immo_period_list = []\n
 error = \'\'\n
-#try:\n
-immo_period_list = context.getImmobilisationPeriodList()\n
-#except ImmobilisationCalculationError:\n
-#  error = \'A calculation error occured\'\n
-#except ImmobilisationValidityError:\n
-#  error = \'A movement validity error occured\'\n
+try:\n
+  immo_period_list = context.getImmobilisationPeriodList()\n
+except ImmobilisationCalculationError:\n
+  error = \'A calculation error occured\'\n
+except ImmobilisationValidityError:\n
+  error = \'A movement validity error occured\'\n
   \n
 if return_errors:\n
-  return error\n
+  return context.Base_translateString(error)\n
 \n
 immo_object_list = []\n
 for immo_period in immo_period_list:\n
@@ -96,7 +94,7 @@ return immo_object_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/Item_getImmobilisationPeriodAsObjectList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Item_getImmobilisationPeriodAsObjectList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -136,6 +134,9 @@ return immo_object_list\n
                           <tuple>
                             <string>return_errors</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Errors</string>
+                            <string>ImmobilisationCalculationError</string>
+                            <string>ImmobilisationValidityError</string>
                             <string>immo_period_list</string>
                             <string>error</string>
                             <string>_getattr_</string>

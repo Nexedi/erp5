@@ -5,6 +5,12 @@ Amortisation Transaction | amortisation_transaction_causality_workflow
 Amortisation Transaction | amortisation_transaction_interaction_workflow
 Amortisation Transaction | edit_workflow
 Delivery Cell | immobilisation_movement_interaction_workflow
+Immobilisation Line | edit_workflow
+Immobilisation Line | immobilisation_movement_interaction_workflow
+Immobilisation | edit_workflow
+Immobilisation | immobilisation_delivery_workflow
+Immobilisation | immobilisation_movement_interaction_workflow
+Immobilisation | immobilisation_workflow
 Internal Packing List Line | immobilisation_movement_interaction_workflow
 Internal Packing List | immobilisation_movement_interaction_workflow
 Internal Packing List | immobilisation_workflow

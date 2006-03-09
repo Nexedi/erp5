@@ -100,7 +100,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/AmortisationTransaction_jumpToRelatedItem</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/AmortisationTransaction_jumpToRelatedItem</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

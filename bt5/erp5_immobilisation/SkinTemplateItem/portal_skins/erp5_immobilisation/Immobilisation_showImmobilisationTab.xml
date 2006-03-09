@@ -81,7 +81,7 @@ return 1\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/Immobilisation_showImmobilisationTab</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Immobilisation_showImmobilisationTab</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -113,7 +113,7 @@ return 1\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>method</string>
                             <string>None</string>
                           </tuple>

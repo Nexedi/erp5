@@ -106,7 +106,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value>                 <string>immobilisation_vat_account</string> </value>
+            <value> <string>immobilisation_vat_account</string> </value>
         </item>
         <item>
             <key> <string>id_group</string> </key>

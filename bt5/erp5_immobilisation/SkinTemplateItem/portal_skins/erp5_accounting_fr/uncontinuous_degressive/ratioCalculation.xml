@@ -103,7 +103,7 @@ except IndexError:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_accounting_fr/degressive/ratioCalculation</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_fr/uncontinuous_degressive/ratioCalculation</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

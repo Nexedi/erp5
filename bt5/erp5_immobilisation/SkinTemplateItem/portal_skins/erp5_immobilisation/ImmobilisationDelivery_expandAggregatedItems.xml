@@ -83,7 +83,7 @@ for item in item_list:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/ImmobilisationDelivery_expandAggregatedItems</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/ImmobilisationDelivery_expandAggregatedItems</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

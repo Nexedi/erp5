@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_accounting_eu/Immobilisation_isUsingEuNoAmortisationAmortisationMethod</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_eu/Immobilisation_isUsingEuNoAmortisationAmortisationMethod</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -108,7 +108,7 @@
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

@@ -127,7 +127,7 @@ return returned_value\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5_bceao/portal_skins/erp5_immobilisation/Immobilisation_getTransactionDeliveryRelatedInfo</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_immobilisation/Immobilisation_getTransactionDeliveryRelatedInfo</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
