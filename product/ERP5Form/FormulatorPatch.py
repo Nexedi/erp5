@@ -573,7 +573,7 @@ def DateTimeField_get_default(self, key, value, REQUEST):
     # if there is something in the request then return None
     # sub fields should pick up defaults themselves
     if REQUEST is not None and hasattr(REQUEST, 'form') and \
-      REQUEST.form.has_key('subfield_%s_%s' % (self.id, 'year')):
+        REQUEST.form.has_key('subfield_%s_%s' % (key, 'year')):
         return None
     else:
         return self.get_value('default')
