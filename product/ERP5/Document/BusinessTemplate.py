@@ -1690,10 +1690,13 @@ class ActionTemplateItem(ObjectTemplateItem):
               # remove previous action
               obj.deleteActions(selections=(index,))
           action = self._objects[id]
+          action_text = action.action
+          if isinstance(action_text, Expression):
+            action_text = action_text.text
           obj.addAction(
                         id = action.id
                       , name = action.title
-                      , action = action.action.text
+                      , action = action_text
                       , condition = action.getCondition()
                       , permission = action.permissions
                       , category = action.category
@@ -1722,10 +1725,13 @@ class ActionTemplateItem(ObjectTemplateItem):
         for ai in obj.listActions():
           if getattr(ai, key) == value:
             raise TemplateConflictError, 'the portal type %s already has the action %s' % (obj.id, value)
+        action_text = action.action
+        if isinstance(action_text, Expression):
+          action_text = action_text.text
         obj.addAction(
                       id = action.id
                     , name = action.title
-                    , action = action.action.text
+                    , action = action_text
                     , condition = action.getCondition()
                     , permission = action.permissions
                     , category = action.category
