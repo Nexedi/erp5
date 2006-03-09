@@ -69,9 +69,11 @@
             <value> <string>from Products.CMFCore.utils import getToolByName\n
 translation_service = getToolByName(context, \'Localizer\', None)\n
 if translation_service is not None :\n
-  return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
-else :\n
-  return msg\n
+  try:\n
+    return translation_service.translate(catalog, msg, **kw).encode(encoding)\n
+  except AttributeError: # This happens in unit testing, because it is not able to find something with get_context()\n
+    pass\n
+return msg\n
 </string> </value>
         </item>
         <item>
@@ -129,6 +131,7 @@ else :\n
                             <string>translation_service</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
+                            <string>AttributeError</string>
                           </tuple>
                         </value>
                     </item>
