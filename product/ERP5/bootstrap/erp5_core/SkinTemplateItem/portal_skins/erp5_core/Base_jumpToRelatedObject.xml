@@ -67,7 +67,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
-from AccessControl import getSecurityManager\n
 N_ = context.Base_translateString\n
 \n
 search_method = getattr(context, \'get%sRelatedList\' %\n
@@ -98,11 +97,12 @@ elif len(related_list) == 1:\n
     url = context.absolute_url()\n
     message = N_("You are not authorized to view the related document.")\n
 else :\n
+  checkPerm = context.portal_membership.checkPermission\n
   # compute the list of objects we are actually authorized to view\n
   related_object_list = []\n
   for path in search_method(portal_type=portal_type) :\n
     obj = context.restrictedTraverse(path, None)\n
-    if obj is not None and getSecurityManager().validate("View", obj):\n
+    if obj is not None and checkPerm("View", obj):\n
       related_object_list.append(obj)\n
   if len(related_object_list) == 0 :\n
     url = context.absolute_url()\n
@@ -170,8 +170,6 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>portal_type</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>N_</string>
@@ -191,6 +189,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>None</string>
                             <string>related_object</string>
                             <string>unicode</string>
+                            <string>checkPerm</string>
                             <string>related_object_list</string>
                             <string>path</string>
                             <string>obj</string>
