@@ -1030,7 +1030,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
                                              selection_name, 
                                              current_uid_list)
 
-          field_value = ''
           REQUEST.form['field_%s' % field.id] = field_value
           # XXX portal_status_message = 
           # "Please select one or more object to define the field: 
@@ -1068,7 +1067,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       kw['previous_form_id'] = form_id
 
 
-      kw[field.get_value('catalog_index')] = field_value
+      kw[field.get_value('catalog_index')] = str(field_value).splitlines()
       
       """
       # We work with strings - ie. single values
@@ -1088,7 +1087,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       redirect_url = '%s/%s?%s' % ( o.absolute_url()
                                 , 'Base_viewRelatedObjectList'
                                 , make_query(kw)
-                                )    
+                                )
 
       REQUEST[ 'RESPONSE' ].redirect( redirect_url )
 
