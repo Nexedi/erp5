@@ -70,8 +70,7 @@
 \n
 # base_category_list : list of category values we need to retrieve\n
 # user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             When using PluggableAuthService with ERP5GroupMAnager, user_name is the id\n
-#             of the person linked to getUser().getId() through getReference() (which is its login).\n
+#             or from getSecurityManager().getUser().getId() [PluggableAuthService with ERP5GroupManager]\n
 # object : object which we want to assign roles to.\n
 # portal_type : portal type of object\n
 \n

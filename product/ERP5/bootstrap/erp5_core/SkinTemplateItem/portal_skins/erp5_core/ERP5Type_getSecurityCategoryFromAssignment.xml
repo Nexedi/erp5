@@ -66,12 +66,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX For now, this script requires proxy manager\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# XXX For now, this script requires proxy manager to retrieve the Person object in all cases\n
 \n
 # base_category_list : list of category values we need to retrieve\n
 # user_name : string obtained from getSecurityManager().getUser().getUserName() [NuxUserGroup]\n
-#             When using PluggableAuthService with ERP5GroupManager, user_name is the id\n
-#             of the person object whose \'reference\' is the login of the PAS user.\n
+#             or from getSecurityManager().getUser().getId() [PluggableAuthService with ERP5GroupManager]\n
 # object : object which we want to assign roles to.\n
 # portal_type : portal type of object\n
 \n
@@ -80,13 +81,17 @@
 category_list = []\n
 \n
 person_module = context.portal_url.getPortalObject().getDefaultModule(\'Person\')\n
-person_object = getattr(person_module, user_name, None)\n
+person_object_list = person_module.searchFolder(portal_type=\'Person\', reference=user_name)\n
 \n
-# if a person_object was not found in the module, we do nothing more\n
-# this happens for example when a manager with no associated person object\n
-# creates a person_object for a new user\n
-if person_object is None:\n
-  return []\n
+if len(person_object_list) != 1:\n
+  if len(person_object_list) > 1:\n
+    raise ConsistencyError, "Error: There is more than one Person with reference \'%s\'" % user_name\n
+  else:\n
+    # if a person_object was not found in the module, we do nothing more\n
+    # this happens for example when a manager with no associated person object\n
+    # creates a person_object for a new user\n
+    return []\n
+person_object = person_object_list[0]\n
 \n
 # We look for valid assignments of this user\n
 for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignment\'}):\n
@@ -101,7 +106,9 @@ for assignment in person_object.contentValues(filter={\'portal_type\': \'Assignm
     category_list.append(category_dict)\n
 \n
 return category_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -157,14 +164,17 @@ return category_list\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>person_module</string>
-                            <string>getattr</string>
-                            <string>None</string>
+                            <string>person_object_list</string>
+                            <string>len</string>
+                            <string>ConsistencyError</string>
+                            <string>_getitem_</string>
                             <string>person_object</string>
                             <string>_getiter_</string>
                             <string>assignment</string>
                             <string>category_dict</string>
                             <string>base_category</string>
                             <string>category_value</string>
+                            <string>None</string>
                             <string>_write_</string>
                             <string>RuntimeError</string>
                           </tuple>
