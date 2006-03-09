@@ -999,7 +999,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection_name = 'Base_viewRelatedObjectList'
       
       # reselt current selection
-      self.portal_selections.setSelectionFor( selection_name, None)
+      self.portal_selections.setSelectionFor(selection_name, None)
 
       # XXX portal_status_message = 
       # "Please select one object to precise the value: 
@@ -1007,7 +1007,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       portal_status_message = "Please select one object."
 
       if field.meta_type == "MultiRelationStringField":
-        if sub_index == None:
+        if sub_index is None:
           # user click on the wheel, not on the validation button
           # we need to facilitate user search
 
