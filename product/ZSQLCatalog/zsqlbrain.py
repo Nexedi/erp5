@@ -26,38 +26,13 @@ class  ZSQLBrain(Acquisition.Implicit):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
 
-  def __init__(self) :
-    """Init the brain and make sure path was retrieved from the RDB"""
-    if 'path' not in dir(self) and 'PATH' not in dir(self):
-      raise ValueError, "Unable to use ZSQLBrain if ZSQL Method does "\
-                        "not retrieves the `path` column from catalog table."
-
   def _aq_dynamic(self, name):
-    """Acquire an attribute from a real object.
-    """
-    if name.startswith('__') :
-      return None
-    o = self.getObject()
-    return getattr(o, name, None)
-
-#   def __getattr__(self, key):
-#     return "toto"
-#     if hasattr(self, key):
-#       return self.__dict__[key]
-#     elif hasattr(ZSQLBrain, key):
-#       return ZSQLBrain.__dict__[key]
-#     else:
-#       if self.o_self is None:
-#         self.o_self = self.getObject()
-#       if self.o_self is not None:
-#         try:
-#           result = self.o_self.getProperty(key)
-#           self.__dict__[key] = result
-#         except:
-#           result = 'Can not evaluate attribute: %s' % cname_id
-#       else:
-#           result = 'Object does not exist'
-#       return result
+   """Acquire an attribute from a real object.
+   """
+   if name.startswith('__') :
+     return None
+   o = self.getObject()
+   return getattr(o, name, None)
 
   def getURL(self):
     return self.path
@@ -75,17 +50,23 @@ class  ZSQLBrain(Acquisition.Implicit):
 
   def getObject(self, REQUEST=None):
     """Try to return the object for this record"""
+    if 'path' not in dir(self) and 'PATH' not in dir(self):
+      raise ValueError, "Unable to getObject from ZSQLBrain if ZSQL Method "\
+                  "does not retrieves the `path` column from catalog table."
     try:
       obj = self.aq_parent.unrestrictedTraverse(self.getPath())
       if obj is None:
         if REQUEST is None:
           REQUEST = self.REQUEST
-        obj = self.aq_parent.portal_catalog.resolve_url(self.getPath(), REQUEST)
+        obj = self.aq_parent.portal_catalog.resolve_url(
+                                  self.getPath(), REQUEST)
       return obj
     except ConflictError:
       raise
     except:
-      LOG("ZCatalog WARNING",0,"Could not access object path %s" % self.getPath(), error=sys.exc_info() )
+      LOG("ZCatalog WARNING", 0,
+          "Could not access object path %s" % self.getPath(),
+          error=sys.exc_info() )
       return None
 
   def absolute_url(self):
