@@ -26,9 +26,17 @@ class  ZSQLBrain(Acquisition.Implicit):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
 
+  def __init__(self) :
+    """Init the brain and make sure path was retrieved from the RDB"""
+    if 'path' not in dir(self) and 'PATH' not in dir(self):
+      raise ValueError, "Unable to use ZSQLBrain if ZSQL Method does "\
+                        "not retrieves the `path` column from catalog table."
+
   def _aq_dynamic(self, name):
     """Acquire an attribute from a real object.
     """
+    if name.startswith('__') :
+      return None
     o = self.getObject()
     return getattr(o, name, None)
 
