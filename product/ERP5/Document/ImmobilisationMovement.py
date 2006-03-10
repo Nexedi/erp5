@@ -43,7 +43,7 @@ from zLOG import LOG
 
 UNIMMOBILISING_METHOD = "unimmobilise"
 NO_CHANGE_METHOD = "no_change"
-AMORTISATION_METHOD_PREFIX = "erp5_accounting_"
+AMORTISATION_METHOD_PREFIX = "portal_skins/erp5_accounting_"
 IMMOBILISATION_NEEDED_PROPERTY_LIST = [
               ("date",   "stop_date",           "Date"),
               ("method", "amortisation_method", "Amortisation Method"),
@@ -270,7 +270,7 @@ class ImmobilisationMovement(Movement, XMLObject):
       parameter_dict[parameter] = None
     amortisation_method = self.getActualAmortisationMethodForItem(item, **kw)
     if amortisation_method not in (None, NO_CHANGE_METHOD, UNIMMOBILISING_METHOD, ""):
-      parameter_object = self.restrictedTraverse(AMORTISATION_METHOD_PREFIX + amortisation_method)
+      parameter_object = self.unrestrictedTraverse(AMORTISATION_METHOD_PREFIX + amortisation_method)
       if parameter_object is not None:
         for parameter in parameter_list:
           parameter_dict[parameter] = getattr(parameter_object, parameter, None)

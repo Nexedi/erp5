@@ -881,20 +881,20 @@ class ImmobilisableItem(XMLObject, Amount):
     #         'annuity_start_date':          annuity_start_date,
             })
         try:
-          ratio_script = self.unrestrictedTraverse('portal_skins/%s' % amortisation_method).ratioCalculation
+          ratio_script = self.unrestrictedTraverse(amortisation_method).ratioCalculation
         except KeyError:
           LOG('ERP5 Warning :', 0,
               'Unable to find the ratio calculation script %s for item %s at date %s' % (
-                 'portal_skins/%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date)))
+                 '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date)))
           raise ImmobilisationCalculationError, \
               'Unable to find the ratio calculation script %s for item %s at date %s' % (
-                 'portal_skins/%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date))
+                 '%s/ratioCalculation' % amortisation_method, self.getRelativeUrl(), repr(at_date))
               
         current_ratio = ratio_script(**ratio_params)
         if current_ratio is None:
           LOG("ERP5 Warning :",0,
               "Unable to calculate the ratio during the amortisation calculation on item %s at date %s : script %s returned None" % (
-                  self.getRelativeUrl(), repr(at_date), 'portal_skins/%s/ratioCalculation' % amortisation_method))
+                  self.getRelativeUrl(), repr(at_date), '%s/ratioCalculation' % amortisation_method))
           LOG('params were ', 0, ratio_params) 
           raise ImmobilisationCalculationError, \
               "Unable to calculate the ratio during the amortisation calculation on item %s at date %s" % (
