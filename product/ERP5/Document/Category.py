@@ -108,5 +108,7 @@ class Category(CMFCategory, Predicate, MetaNode, MetaResource):
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
-                      , PropertySheet.Codification )
+                      , PropertySheet.Codification
+                      , PropertySheet.Reference
+                      , PropertySheet.SortIndex)
  
