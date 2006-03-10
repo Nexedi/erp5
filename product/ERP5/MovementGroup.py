@@ -838,6 +838,32 @@ class FakeMovement:
         raise FakeMovementError,\
               "Could not call edit on Fakeovement with parameters: %r" % key
 
+class TitleMovementGroup(RootMovementGroup):
+
+  def getTitle(self,movement):
+    order_value = movement.getOrderValue()
+    title = ''
+    if order_value is not None:
+      if "Line" in order_value.getPortalType():
+        title = order_value.getTitle()
+      elif "Cell" in order_value.getPortalType():
+        title = order_value.getParentValue().getTitle()
+    return title
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    title = self.getTitle(movement)
+    self.title = title
+    self.setGroupEdit(
+        title=title
+    )
+
+  def test(self,movement):
+    if self.getTitle(movement) == self.title :
+      return 1
+    else :
+      return 0
+
 # XXX This should not be here
 # I (seb) have commited this because movement groups are not
 # yet configurable through the zope web interface
