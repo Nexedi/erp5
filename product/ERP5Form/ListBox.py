@@ -494,7 +494,7 @@ class ListBoxWidget(Widget.Widget):
         """
           Returns
         """
-        if REQUEST is None: REQUEST=get_request()        
+        if REQUEST is None: REQUEST=get_request()
         return self.render(field, key, value, REQUEST, render_format=render_format)
 
     def render(self, field, key, value, REQUEST, render_format='html'):
@@ -1778,9 +1778,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   else:
                     error_css = ''
                     error_message = ''
-                    #display_value = REQUEST.get('field_%s' % key, attribute_value)
                     display_value = attribute_value # XXX Make sure this is ok
-                  #LOG('ListBox', 0, 'display_value = %r' % display_value)
                   if type(display_value) == type(u''):
                     display_value = display_value.encode('utf-8')
                   if my_field.meta_type not in ('DateTimeField', 'ProxyField',):
@@ -1807,6 +1805,18 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   #                    column_value = column_value.encode('utf-8')
   #                  current_listboxline.addColumn(property_id , column_value)
                   if render_format == 'list':
+                    subfield = getattr(form,
+                                       "%s_%s" % (field.id, alias),
+                                       None)
+                    # If we have a listfield, then display the same
+                    # value that would be displayed in html
+                    if subfield is not None and subfield.has_value("items") :
+                      field_kw = {'cell': real_o}
+                      items = subfield.get_value('items', **field_kw)
+                      for display, value in items:
+                        if value == attribute_original_value :
+                          attribute_value_tmp = display
+                          break
                     # Make sure that attribute value is UTF-8
                     attribute_value_tmp  = attribute_original_value
                     if type(attribute_value_tmp) == type(u''):
