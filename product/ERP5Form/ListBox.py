@@ -1815,7 +1815,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       items = subfield.get_value('items', **field_kw)
                       for display, value in items:
                         if value == attribute_original_value :
-                          attribute_value_tmp = display
+                          attribute_original_value = display
                           break
                     # Make sure that attribute value is UTF-8
                     attribute_value_tmp  = attribute_original_value
