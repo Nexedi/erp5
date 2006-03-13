@@ -872,6 +872,9 @@ class ERP5Generator(PortalGenerator):
             # FIXME: addDefaultSQLMethods should be removed.
             portal_catalog.addDefaultSQLMethods('erp5_mysql')
 
+        # Clear Catalog   
+        portal_catalog.manage_catalogClear()
+
         # Add ERP5Form Tools
         addTool = p.manage_addProduct['ERP5Form'].manage_addTool
         if not p.hasObject('portal_selections'):
@@ -968,7 +971,6 @@ class ERP5Generator(PortalGenerator):
         if skins_tool is None:
           return
         portal_catalog = p.portal_catalog
-        portal_catalog.manage_catalogClear()
         skins_tool["erp5_core"].ERP5Site_reindexAll()
 
     def setupUserFolder(self, p):
