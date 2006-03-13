@@ -51,8 +51,8 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>uid</string>
-                            <string>SearchableText</string>
+<string>uid</string>
+<string>SearchableText</string>
                           </list>
                         </value>
                     </item>
@@ -98,7 +98,7 @@ SearchableText</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_sql_connection</string> </value>
+            <value> <string>erp5_deferred_mysql</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
