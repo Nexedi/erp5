@@ -113,7 +113,9 @@ except FormValidationError, validation_errors:\n
   return form(request)\n
 \n
 except ValidationFailed, error_message:\n
-  # I hope the error_message is already translated (if we need to use mapping)\n
+  if hasattr(error_message, \'msg\'):\n
+    # use of Message class to store message+mapping+domain\n
+    error_message = error_message.msg\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
                                   , \'portal_status_message=%s\' % error_message\n
                                   )\n
@@ -193,6 +195,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>validation_errors</string>
                             <string>field_errors</string>
                             <string>error_message</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>

@@ -102,6 +102,15 @@ for workflow_item in workflow_item_list:\n
         if value == "\'edit\'":\n
           value = "edit"\n
         value = wf_transitions[value].title or wf_transitions[value].actbox_name or value\n
+    if key == \'error_message\' and not same_type(value, \'\'):\n
+      # use of Message class\n
+      value = \'%s\' %value    \n
+    elif key == \'error_message\' and same_type(value, \'\'):\n
+      # old message way\n
+      value = context.Localizer.erp5_ui.gettext(value)\n
+    if same_type(value, \'\') and key != \'error_message\':\n
+      value = context.Localizer.erp5_ui.gettext(value)\n
+\n
     if same_type(value, \'\'):\n
       value = context.Localizer.erp5_ui.gettext(value)\n
     o.setProperty(key, value)\n

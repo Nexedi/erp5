@@ -1,4 +1,18 @@
-2006-02-07 Kevin
+2006-03-13 Aurel
+* modify Base_getWorkflowHistoryItemList and Workflow_statusModify in order to take Message class into account
+
+2006-03-09 Seb
+* Added try/except in Base_translateString
+
+2006-03-08 Kevin
+* Allow Accounting Transaction and similar as subobjects of Preference but hide them (feature needed for jp's template system).
+* Replace getPreferredDateInputOrder() calls by getPreferredDateOrder()
+* Call Base_translateString() instead of Base_TranslateString()
+
+2006-03-08 JPS
+* Make sure group membership is acquired through careers and subordination
+* Make sure role is acquired from Career
+2006-03-07 Kevin
 * Fix mass workflow status modification (Folder_modifyWorkflowStatus and Base_callViewDialogMethod updated).
 
 2006-03-06 romain
