@@ -46,6 +46,7 @@ import PlanningBox, POSBox, FormBox, EditorField, ProxyField
 import RelationField, ImageField, MultiRelationField
 import ZPyChart
 import PreferenceTool
+import Message
 
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import StandardFields, HelperFields
@@ -180,4 +181,7 @@ def initialize( context ):
 ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
 import Selection
 allow_class(Selection)
+
+from AccessControl.SecurityInfo import allow_module
+allow_module('Products.ERP5Form.Message')
 
