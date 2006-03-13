@@ -26,6 +26,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToMixedCase
 from string import join
+from zLOG import LOG
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
@@ -100,7 +101,13 @@ DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
 class ValidationFailed(Exception):
     """Transition can not be executed because data is not in consistent state"""
-
+    def __init__(self, message_instance=None):
+        """
+        Redefine init in order to register the message class instance
+        """
+        Exception.__init__(self)
+        self.msg = message_instance
+    
 DCWorkflow.ValidationFailed = ValidationFailed
 
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
@@ -148,7 +155,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
             script(sci)  # May throw an exception.
         except ValidationFailed, validation_exc:
             before_script_success = 0
-            before_script_error_message = str(validation_exc)
+            before_script_error_message = validation_exc.msg
         except ObjectMoved, moved_exc:
             ob = moved_exc.getNewObject()
             # Re-raise after transition
@@ -160,7 +167,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     if tdef is not None: tdef_exprs = tdef.var_exprs
     if tdef_exprs is None: tdef_exprs = {}
     status = {}
-    for id, vdef in self.variables.items():
+    for id, vdef in self.variables.items():        
         if not vdef.for_status:
             continue
         expr = None
