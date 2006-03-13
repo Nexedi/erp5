@@ -628,7 +628,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         This method will look at the causality and check if the
         causality has already a causality
       """
-      causality_value_list = self.getCausalityValueList()
+      causality_value_list = [x for x in self.getCausalityValueList()
+                                if x is not self]
       initial_list = []
       if len(causality_value_list)==0:
         initial_list = [self]
