@@ -320,7 +320,9 @@ class DocumentConstructor(Method):
       if is_indexable is not None:
         o.isIndexable=is_indexable
       folder._setObject(id, o)
-      o.uid = folder.portal_catalog.newUid()
+      # if no activity tool, the object has already an uid
+      if getattr(aq_base(o),'uid',None) is None:
+        o.uid = folder.portal_catalog.newUid()
       #LOG('DocumentConstructor', 0, 'o = %r, kw = %r' % (o, kw))
       if kw: o.__of__(folder)._edit(force_update=1, **kw)
       if REQUEST is not None:
