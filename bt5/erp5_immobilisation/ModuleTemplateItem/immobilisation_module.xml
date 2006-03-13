@@ -404,9 +404,6 @@
    <name>Manage users</name>
   </permission>
   <permission>
-   <name>Manage_messages</name>
-  </permission>
-  <permission>
    <name>Modify Cookie Crumblers</name>
   </permission>
   <permission>
