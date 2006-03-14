@@ -4221,6 +4221,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if bt2_id is not None:
         if bt2_id == self.getId():
           compare_to_zodb = 1
+          installed_bt = self.getInstalledBusinessTemplate(title=self.getTitle())
         else:
           installed_bt = self.portal_templates._getOb(bt2_id)
       else:
