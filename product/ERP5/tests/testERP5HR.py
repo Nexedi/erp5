@@ -283,9 +283,9 @@ class TestHR(ERP5TypeTestCase):
     """
     portal_type = 'Organisation'
     organisation_module = self.portal.getDefaultModule(portal_type)
-    organisation = organisation_module.newContent( portal_type       = portal_type
-                                                 , immediate_reindex = 1
-                                                 )
+    organisation = organisation_module.newContent(portal_type=portal_type,
+                                                  immediate_reindex=1,
+                                                  title='A new organisation')
     sequence.edit(organisation = organisation)
 
 
@@ -627,8 +627,8 @@ class TestHR(ERP5TypeTestCase):
     person.Career_shiftDefault()
     self.assertEquals( 2,
           len(person.contentValues(filter={'portal_type':'Career'})))
-    person.setDefaultCareerSubordination(other_organisation.getRelativeUrl())
-    person.setDefaultCareerTitle(new_career_title)
+    person.setCareerSubordination(other_organisation.getRelativeUrl())
+    person.setCareerTitle(new_career_title)
     
     # Get the new and the old career, as Career_shiftDefault changes
     # objects id, this may be the only safe way ...
