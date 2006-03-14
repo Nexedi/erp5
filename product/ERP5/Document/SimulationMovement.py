@@ -472,10 +472,12 @@ class SimulationMovement(Movement):
     if d_error is None:
       d_error = 0
     delivery_ratio = self.getDeliveryRatio()
-    #LOG('SimulationMovement.isDivergent d_quantity',0,d_quantity)
-    #LOG('SimulationMovement.isDivergent quantity + d_error',0,quantity + d_error)
+    # if the delivery_ratio is None, make sure that we are
+    # divergent even if the delivery quantity is 0
     if delivery_ratio is not None:
       d_quantity *= delivery_ratio 
+      if delivery_ratio == 0 and quantity >0:
+        return 1
     if d_quantity != quantity + d_error:
       return 1
     return 0  
