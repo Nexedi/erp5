@@ -186,3 +186,17 @@ class ProxyField(ZMIField):
       if proxy_field is not None:
         result = proxy_field.get_value(id, **kw)
     return result
+
+  security.declareProtected('Access contents information', 'has_value')
+  def has_value(self, id):
+    """
+    Return true if the field defines such a value.
+    """
+    result = None
+    if id in self.widget.property_names:
+      result = ZMIField.has_value(self, id)
+    else:
+      proxy_field = self.getTemplateField()
+      if proxy_field is not None:
+        result = proxy_field.has_value(id)
+    return result
