@@ -140,12 +140,21 @@ class TestPackingListMixin(TestOrderMixin):
     """
     return 1
 
-  def stepCheckPackingListIsDivergent(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckPackingListIsDivergent(self, sequence=None, sequence_list=None, 
+                                      packing_list=None,**kw):
     """
       Test if packing list is divergent
     """
-    packing_list = sequence.get('packing_list')
-    self.assertEquals(True,packing_list.isDivergent())
+    if packing_list is None:
+      packing_list = sequence.get('packing_list')
+    self.assertEquals('diverged',packing_list.getCausalityState())
+
+  def stepCheckNewPackingListIsDivergent(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is divergent
+    """
+    packing_list = sequence.get('new_packing_list')
+    self.stepCheckPackingListIsDivergent(packing_list=packing_list,sequence=sequence)
 
   def stepCheckPackingListIsCalculating(self, sequence=None, sequence_list=None, **kw):
     """
@@ -180,9 +189,12 @@ class TestPackingListMixin(TestOrderMixin):
       Test if packing list is divergent
     """
     packing_list = sequence.get('packing_list')
+    quantity = sequence.get('line_quantity',default=self.default_quantity)
+    quantity = quantity -1
+    sequence.edit(line_quantity=quantity)
     for packing_list_line in packing_list.objectValues(
                              portal_type=self.packing_list_line_portal_type):
-      packing_list_line.edit(quantity=self.default_quantity-1)
+      packing_list_line.edit(quantity=quantity)
 
   def stepIncreasePackingListLineQuantity(self, sequence=None, sequence_list=None, **kw):
     """
@@ -218,12 +230,35 @@ class TestPackingListMixin(TestOrderMixin):
         packing_list1 = packing_list
       else:
         packing_list2 = packing_list
+    sequence.edit(new_packing_list=packing_list2)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
       self.assertEquals(self.default_quantity-1,line.getQuantity())
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
       self.assertEquals(1,line.getQuantity())
+
+  def stepCheckPackingListSplittedTwoTimes(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is divergent
+    """
+    order = sequence.get('order')
+    packing_list_list = order.getCausalityRelatedValueList(
+                               portal_type=self.packing_list_portal_type)
+    self.assertEquals(2,len(packing_list_list))
+    packing_list1 = None
+    packing_list2 = None
+    for packing_list in packing_list_list:
+      if packing_list.getUid() == sequence.get('packing_list').getUid():
+        packing_list1 = packing_list
+      else:
+        packing_list2 = packing_list
+    for line in packing_list1.objectValues(
+          portal_type= self.packing_list_line_portal_type):
+      self.assertEquals(self.default_quantity-2,line.getQuantity())
+    for line in packing_list2.objectValues(
+          portal_type= self.packing_list_line_portal_type):
+      self.assertEquals(2,line.getQuantity())
 
   def stepCheckPackingListNotSplitted(self, sequence=None, sequence_list=None, **kw):
     """
@@ -339,14 +374,23 @@ class TestPackingListMixin(TestOrderMixin):
     for simulation_line in simulation_line_list:
       simulation_line.edit(start_date=self.datetime+15)
 
-  def stepAdoptPrevision(self,sequence=None, sequence_list=None, **kw):
+  def stepAdoptPrevision(self,sequence=None, sequence_list=None, 
+                         packing_list=None,**kw):
     """
       Check if simulation movement are disconnected
     """
-    packing_list = sequence.get('packing_list')
+    if packing_list is None:
+      packing_list = sequence.get('packing_list')
     LOG('packing_list.getSimulationState()',0,packing_list.getSimulationState())
     LOG('packing_list.getCausalityState()',0,packing_list.getCausalityState())
     packing_list.portal_workflow.doActionFor(packing_list,'adopt_prevision_action')
+
+  def stepNewPackingListAdoptPrevision(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    packing_list = sequence.get('new_packing_list')
+    self.stepAdoptPrevision(sequence=sequence,packing_list=packing_list)
 
   def stepAcceptDecision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -661,6 +705,39 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
+
+  def test_11_PackingListDecreaseTwoTimesQuantityAndUpdateDelivery(self, 
+                                               quiet=0, run=run_all_test):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is divergent and then
+      split and defer the packing list
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      DecreasePackingListLineQuantity \
+                      CheckPackingListIsCalculating \
+                      SplitAndDeferPackingList \
+                      Tic \
+                      CheckPackingListIsSolved \
+                      CheckPackingListSplitted \
+                      DecreasePackingListLineQuantity \
+                      CheckPackingListIsCalculating \
+                      SplitAndDeferPackingList \
+                      Tic \
+                      CheckNewPackingListIsDivergent \
+                      NewPackingListAdoptPrevision \
+                      Tic \
+                      CheckPackingListIsSolved \
+                      CheckPackingListSplittedTwoTimes \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
 
 if __name__ == '__main__':
     framework()
