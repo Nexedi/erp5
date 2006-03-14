@@ -32,14 +32,25 @@ from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.GlobalTranslationService import getGlobalTranslationService
 from Globals import get_request
 from cPickle import dumps, loads
-from base64 import b64encode, b64decode
 
 try:
   from string import Template
 except ImportError:
   from Products.ERP5Type.patches.string import Template
 
-  
+# API of base64 has changed between python v2.3 and v2.4
+import base64
+try:
+  # python v2.4 API
+  b64encode = base64.b64encode
+  b64decode = base64.b64decode
+except AttributeError:
+  # python v2.3 API
+  b64encode = base64.encodestring
+  b64decode = base64.decodestring
+
+
+
 class Message(Persistent):
   """
   This class encapsulates message, mapping and domain for a given message
@@ -59,7 +70,7 @@ class Message(Persistent):
     Return a pickle version of the object
     """
     return b64encode(dumps(self, 2))
-   
+
   security.declarePublic('load')
   def load(self, string):
     """
