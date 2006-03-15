@@ -1,3 +1,12 @@
+2006-03-09 Kevin
+* Fix Account_getAccountingTransactionList to show right previous balance.
+* Update AccountModule_viewGeneralLedgerReport to let the General Ledger report show good start, stop and period balance.
+* Fix General Ledger Report property transalation.
+
+2006-03-08 Kevin
+* Replace getPreferredDateInputOrder() calls by getPreferredDateOrder()
+* Call Base_translateString() instead of Base_TranslateString()
+
 2006-03-07 Kevin
 * Fix setReferences script of accounting_workflow to let the script generate good IDs.
 
