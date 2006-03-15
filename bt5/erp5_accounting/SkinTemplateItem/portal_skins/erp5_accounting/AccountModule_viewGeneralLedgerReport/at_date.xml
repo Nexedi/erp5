@@ -311,7 +311,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>At Date</string> </value>
+                    <value> <string>Period Stop Date</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -485,7 +485,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredDateInputOrder</string> </value>
+            <value> <string>preferences/getPreferredDateOrder</string> </value>
         </item>
       </dictionary>
     </pickle>

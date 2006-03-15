@@ -485,7 +485,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredDateInputOrder</string> </value>
+            <value> <string>preferences/getPreferredDateOrder</string> </value>
         </item>
       </dictionary>
     </pickle>
