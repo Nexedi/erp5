@@ -12,6 +12,7 @@
 2006-03-08 JPS
 * Make sure group membership is acquired through careers and subordination
 * Make sure role is acquired from Career
+
 2006-03-07 Kevin
 * Fix mass workflow status modification (Folder_modifyWorkflowStatus and Base_callViewDialogMethod updated).
 

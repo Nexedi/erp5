@@ -72,7 +72,7 @@ if not date :\n
   return \'\'\n
 \n
 try :\n
-  order = context.getPortalObject().portal_preferences.getPreferredDateInputOrder()\n
+  order = context.getPortalObject().portal_preferences.getPreferredDateOrder()\n
 except AttributeError :\n
   order = \'ymd\'\n
 \n
@@ -93,7 +93,7 @@ if hour_minute or seconds : \n
     hour_minute_text = "%02dh%02dmn%02ds" % (date.hour(), date.minute(), date.second())\n
   else : \n
     hour_minute_text = "%02dh%02dmn" % (date.hour(), date.minute())\n
-  result = context.Base_TranslateString("${date} at ${hour_minute_text}", \n
+  result = context.Base_translateString("${date} at ${hour_minute_text}", \n
               mapping = {\'date\' : result, \'hour_minute_text\' : hour_minute_text  })\n
   \n
 \n
