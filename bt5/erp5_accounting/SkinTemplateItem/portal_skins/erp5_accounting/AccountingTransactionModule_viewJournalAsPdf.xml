@@ -69,22 +69,22 @@
         \n
         <table splitbyrow="1" repeatrows="0" repeatcols="0"  style="AttributesTable" >\n
           <tr tal:condition="python: request.get(\'from_date\', 0)">\n
-            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'From Date\')"/> </td>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_translateString(\'From Date\')"/> </td>\n
             <td colwidth="15cm"> <para style="TableStandardRightAligned" tal:content="python: here.Base_FormatDate(request.get(\'from_date\'))"/></td> </tr>\n
           <tr>\n
-            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'At Date\')"/> </td>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_translateString(\'At Date\')"/> </td>\n
             <td colwidth="15cm"> <para style="TableStandardRightAligned" tal:content="python: here.Base_FormatDate(request.get(\'at_date\'))"/></td> </tr>\n
           <tr>\n
-            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'Section\')"/> </td>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_translateString(\'Section\')"/> </td>\n
             <td colwidth="15cm"> <para style="TableStandardRightAligned" tal:content="python: here.portal_categories.restrictedTraverse(request.get(\'transaction_section_category\')).getLogicalPath()"/></td> </tr>\n
           <tr>\n
-            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'Transactions Simulation State\')"/> </td>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_translateString(\'Transactions Simulation State\')"/> </td>\n
             <td colwidth="15cm"> <tal:block tal:repeat="state python:request.get(\'transaction_simulation_state\', [])">\n
                  <para style="TableStandardRightAligned" tal:content="state"/> </tal:block> </td> </tr>\n
           <tr>\n
-            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_TranslateString(\'Journal Type\')"/> </td>\n
+            <td colwidth="5cm">  <para style="TableHeader" tal:content="python: here.Base_translateString(\'Journal Type\')"/> </td>\n
             <td colwidth="15cm"> <tal:block tal:repeat="type python:request.get(\'transaction_portal_type\', [])">\n
-                 <para style="TableStandardRightAligned" tal:content="python: here.Base_TranslateString(type)"/> </tal:block> </td> </tr>\n
+                 <para style="TableStandardRightAligned" tal:content="python: here.Base_translateString(type)"/> </tal:block> </td> </tr>\n
 \n
        </table>\n
         <spacer height="10"/>\n
