@@ -74,9 +74,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Bug Difficulty</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

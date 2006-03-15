@@ -334,6 +334,10 @@
                           <string>Reporter</string>
                         </tuple>
                         <tuple>
+                          <string>destination_person_title</string>
+                          <string>Assignee</string>
+                        </tuple>
+                        <tuple>
                           <string>start_date</string>
                           <string>Date</string>
                         </tuple>
@@ -389,6 +393,10 @@
                         <tuple>
                           <string>source_person_title</string>
                           <string>Reporter</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_person_title</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>
@@ -560,6 +568,10 @@
                         <tuple>
                           <string>source_person_title</string>
                           <string>Reporter</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_person_title</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
                           <string>start_date</string>

@@ -85,6 +85,7 @@
                     <value>
                       <list>
                         <string>my_description</string>
+                        <string>note</string>
                         <string>follow_up</string>
                       </list>
                     </value>
