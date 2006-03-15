@@ -66,21 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-html_list = []\n
-\n
-for crumb in context.WebSite_getBreadcrumbValue():\n
-  if crumb.getTitle() is None or crumb.getTitle() == \'\':\n
-    text = crumb.getId()\n
-  else:\n
-    text = crumb.getTitle()\n
-  html_list.append(\'<a href="%s">%s</a>\' % (crumb.WebSite_getUrl(), text))\n
-\n
-return \' &gt; \'.join(html_list)\n
-
-
-]]></string> </value>
+            <value> <string>if context.WebSite_getSectionValue() is not None:\n
+  return context.WebSite_getSectionValue().getTitle()\n
+return None\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -90,7 +79,13 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getBreadcrumb</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getSection</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -120,13 +115,9 @@ return \' &gt; \'.join(html_list)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>html_list</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>crumb</string>
+<string>context</string>
                             <string>None</string>
-                            <string>text</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +134,7 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getBreadcrumb</string> </value>
+            <value> <string>WebSite_getSection</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

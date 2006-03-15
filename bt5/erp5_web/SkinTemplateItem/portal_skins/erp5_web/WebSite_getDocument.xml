@@ -66,21 +66,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-html_list = []\n
+            <value> <string>portal_catalog = portal.portal_catalog\n
 \n
-for crumb in context.WebSite_getBreadcrumbValue():\n
-  if crumb.getTitle() is None or crumb.getTitle() == \'\':\n
-    text = crumb.getId()\n
-  else:\n
-    text = crumb.getTitle()\n
-  html_list.append(\'<a href="%s">%s</a>\' % (crumb.WebSite_getUrl(), text))\n
-\n
-return \' &gt; \'.join(html_list)\n
-
-
-]]></string> </value>
+# First try to get a published document\n
+matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',), validation_state=\'published\')\n
+if len(matching_document_list):\n
+  return matching_document_list[0].getObject()\n
+# Then try to get any document\n
+matching_document_list = portal_catalog(reference = \'%s\' % name, portal_type=(\'Web Page\',))\n
+if len(matching_document_list):\n
+  return matching_document_list[0].getObject()\n
+return None\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -90,11 +87,25 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getBreadcrumb</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>portal, name</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,19 +125,20 @@ return \' &gt; \'.join(html_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>html_list</string>
-                            <string>_getiter_</string>
+                            <string>portal</string>
+                            <string>name</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>crumb</string>
+                            <string>portal_catalog</string>
+                            <string>matching_document_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
                             <string>None</string>
-                            <string>text</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +155,7 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getBreadcrumb</string> </value>
+            <value> <string>WebSite_getDocument</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

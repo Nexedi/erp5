@@ -66,21 +66,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-html_list = []\n
+            <value> <string>from Products.ERP5Form.Selection import DomainSelection\n
 \n
-for crumb in context.WebSite_getBreadcrumbValue():\n
-  if crumb.getTitle() is None or crumb.getTitle() == \'\':\n
-    text = crumb.getId()\n
-  else:\n
-    text = crumb.getTitle()\n
-  html_list.append(\'<a href="%s">%s</a>\' % (crumb.WebSite_getUrl(), text))\n
+if not context.getMembershipCriterionCategoryList() and not context.getSourceList():\n
+  return []\n
 \n
-return \' &gt; \'.join(html_list)\n
-
-
-]]></string> </value>
+def content_cmp(c1, c2):\n
+  c1_value = c1.getObject()  \n
+  c2_value = c2.getObject()  \n
+  #if hasattr(c1, \'getShortTitle\') and c1.getShortTitle() == \'Overview\': return -1\n
+  #if hasattr(c2, \'getShortTitle\') and c2.getShortTitle() == \'Overview\': return 1\n
+  return cmp(c1_value.getIntIndex(), c2_value.getIntIndex())\n
+\n
+if context.getMembershipCriterionCategoryList():\n
+  domain = DomainSelection(domain_dict = {\'web_site\': context})\n
+  kw[\'selection_domain\'] = domain\n
+  kw[\'portal_type\'] = \'Web Page\'\n
+  kw[\'validation_state\'] = \'published\'\n
+  if not kw.has_key(\'sort_on\'): kw[\'sort_on\'] = \'int_index\'\n
+  brain_list = list(context.portal_catalog(**kw))\n
+else:\n
+  brain_list = []\n
+\n
+# Make a new search with local documents\n
+reference_list = map(lambda x:x.getReference(), context.getSourceValueList(portal_type="Web Page"))\n
+brain_list.extend(list(context.portal_catalog(reference= reference_list, portal_type="Web Page")))\n
+\n
+# Make sure a single reference is counted once only\n
+brain_dict = {}\n
+none_list = []\n
+for b in brain_list:\n
+  o = b.getObject()\n
+  if o is not None:\n
+    reference = o.getReference()\n
+    if reference is None:\n
+      none_list.append(b)\n
+    else:\n
+      brain_dict[reference] = b\n
+\n
+brain_list = brain_dict.values() + none_list\n
+\n
+# Sort documents\n
+brain_list.sort(content_cmp)\n
+\n
+return brain_list\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -90,11 +120,11 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getBreadcrumb</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getDocumentValueList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,13 +150,26 @@ return \' &gt; \'.join(html_list)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>html_list</string>
-                            <string>_getiter_</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Form.Selection</string>
+                            <string>DomainSelection</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>crumb</string>
+                            <string>content_cmp</string>
+                            <string>domain</string>
+                            <string>_write_</string>
+                            <string>list</string>
+                            <string>_apply_</string>
+                            <string>brain_list</string>
+                            <string>map</string>
+                            <string>reference_list</string>
+                            <string>brain_dict</string>
+                            <string>none_list</string>
+                            <string>_getiter_</string>
+                            <string>b</string>
+                            <string>o</string>
                             <string>None</string>
-                            <string>text</string>
+                            <string>reference</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +186,7 @@ return \' &gt; \'.join(html_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getBreadcrumb</string> </value>
+            <value> <string>WebSite_getDocumentValueList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
