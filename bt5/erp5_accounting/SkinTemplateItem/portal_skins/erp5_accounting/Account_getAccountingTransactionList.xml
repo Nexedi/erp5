@@ -84,7 +84,7 @@ kwd={"omit_simulation" : 1}\n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
 if kw.get(\'no_from_date\', 0) :\n
-  from_date = None \n
+  from_date = None\n
 else :\n
   from_date = kw.get(\'from_date\', preference\\\n
                         .getPreferredAccountingTransactionFromDate())\n
@@ -120,7 +120,7 @@ if mirror_section_uid is not MARKER:\n
 no_mirror_section_uid = kw.get(\'no_mirror_section_uid\', MARKER)\n
 if no_mirror_section_uid is not MARKER:\n
   kwd[\'no_mirror_section_uid\'] = 1\n
-  \n
+\n
 node_uid = kw.get(\'node_uid\', MARKER)\n
 if node_uid is not MARKER:\n
   kwd[\'node_uid\'] = node_uid\n
@@ -162,18 +162,18 @@ if from_date not in (None, MARKER) and kw.get(\'from_date_summary\', 0) :\n
           context.getPortalObject(), "temp_%s" % context.getUid())\n
     from_date_summary.setUid(\'new_000\')\n
     net_balance = (last_total_debit - last_total_credit) * precision # WARNING : See Above\n
-    from_date_summary.edit(\n
-          title = context.Base_TranslateString("Previous Balance"),\n
-          translated_portal_type = "",\n
-          translated_simulation_state_title = "",\n
-          net_balance = net_balance,\n
-          balance = net_balance,\n
-          credit = last_total_credit,\n
-          debit = last_total_debit,\n
-          current_transaction_line_path = None,\n
-          third_party = None,\n
-          date = from_date,\n
-    )\n
+    from_date_summary.edit( \\\n
+        title                             = context.Base_translateString("Previous Balance")\n
+      , translated_portal_type            = ""\n
+      , translated_simulation_state_title = ""\n
+      , net_balance                       = net_balance / precision\n
+      , balance                           = net_balance / precision\n
+      , credit                            = last_total_credit\n
+      , debit                             = last_total_debit\n
+      , current_transaction_line_path     = None\n
+      , third_party                       = None\n
+      , date                              = from_date\n
+      )\n
     new_result.append(from_date_summary)\n
 \n
 if src__:\n
