@@ -635,9 +635,12 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         initial_list = [self]
       else:
         for causality in causality_value_list:
-          tmp_causality_list = causality.getRootCausalityValueList()
-          initial_list.extend([x for x in tmp_causality_list 
-                               if x not in initial_list])
+          # The causality may be something which has not this method
+          # (e.g. item)
+          if hasattr(causality, 'getRootCausalityValueList'):
+            tmp_causality_list = causality.getRootCausalityValueList()
+            initial_list.extend([x for x in tmp_causality_list 
+                                 if x not in initial_list])
       return initial_list
 
 
