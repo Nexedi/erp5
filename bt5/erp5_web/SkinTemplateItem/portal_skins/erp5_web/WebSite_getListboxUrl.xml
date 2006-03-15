@@ -66,60 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Form.Selection import DomainSelection\n
-\n
-if not context.getMembershipCriterionCategoryList() and not context.getSourceList():\n
-  return []\n
-\n
-def content_cmp(c1, c2):\n
-  c1_value = c1.getObject()\n
-  c2_value = c2.getObject()\n
-  return cmp(c1_value.getIntIndex(), c2_value.getIntIndex())\n
-\n
-if context.getMembershipCriterionCategoryList():\n
-  domain = DomainSelection(domain_dict = {\'web_site\': context})\n
-  kw[\'selection_domain\'] = domain\n
-  kw[\'portal_type\'] = \'Web Page\'\n
-  kw.setdefault(\'validation_state\',\'published\')\n
-  if not kw.has_key(\'sort_on\'): kw[\'sort_on\'] = \'int_index\'\n
-  brain_list = list(context.portal_catalog(**kw))\n
-else:\n
-  brain_list = []\n
-\n
-# Make a new search with local documents\n
-value_list = context.getSourceValueList(portal_type="Web Page")\n
-if len(value_list):\n
-  reference_list = map(lambda x:x.getReference(), value_list)\n
-  brain_list.extend(list(context.portal_catalog(reference= reference_list, portal_type="Web Page")))\n
-\n
-# Make sure a single reference is counted once only\n
-brain_dict = {}\n
-none_list = []\n
-for b in brain_list:\n
-  o = b.getObject()\n
-  if o is not None:\n
-    reference = o.getReference()\n
-    if reference is None:\n
-      none_list.append(b)\n
-    else:\n
-      # Take the most recent version in case of conflicts\n
-      if brain_dict.has_key(reference):\n
-        if b.getVersion() > brain_dict[reference].getVersion():\n
-          brain_dict[reference] = b\n
-      else:\n
-        brain_dict[reference] = b\n
-\n
-brain_list = brain_dict.values() + none_list\n
-\n
-# Sort documents\n
-brain_list.sort(content_cmp)\n
-\n
-return brain_list\n
-
-
-]]></string> </value>
+            <value> <string>if brain is not None:\n
+  return \'%s/%s\' % (context.REQUEST[\'URL0\'], brain.getRelativeUrl())\n
+return None\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -129,11 +79,17 @@ return brain_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getDocumentValueList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getListboxUrl</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>brain=None, selection=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -153,35 +109,18 @@ return brain_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>Products.ERP5Form.Selection</string>
-                            <string>DomainSelection</string>
+                            <string>brain</string>
+                            <string>selection</string>
+                            <string>None</string>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>content_cmp</string>
-                            <string>domain</string>
-                            <string>_write_</string>
-                            <string>list</string>
-                            <string>_apply_</string>
-                            <string>brain_list</string>
-                            <string>value_list</string>
-                            <string>len</string>
-                            <string>map</string>
-                            <string>reference_list</string>
-                            <string>brain_dict</string>
-                            <string>none_list</string>
-                            <string>_getiter_</string>
-                            <string>b</string>
-                            <string>o</string>
-                            <string>None</string>
-                            <string>reference</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -193,12 +132,15 @@ return brain_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getDocumentValueList</string> </value>
+            <value> <string>WebSite_getListboxUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

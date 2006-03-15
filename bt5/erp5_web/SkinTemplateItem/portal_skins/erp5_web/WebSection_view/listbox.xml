@@ -342,8 +342,8 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>short_title</string>
+                          <string>Short Title</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
@@ -377,8 +377,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>only_published</string>
-                          <string>False</string>
+                          <string>validation_state</string>
+                          <string>%</string>
                         </tuple>
                       </list>
                     </value>
@@ -497,8 +497,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>title</string>
+                          <string>short_title</string>
+                          <string>Short Title</string>
                         </tuple>
                       </list>
                     </value>
@@ -529,23 +529,23 @@
                       <list>
                         <tuple>
                           <string>reference</string>
-                          <string>WebSite_getUrl</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>WebSite_getUrl</string>
+                          <string>short_title</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>WebSite_getUrl</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>WebSite_getUrl</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>WebSite_getUrl</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                       </list>
                     </value>

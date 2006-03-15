@@ -68,8 +68,11 @@
             <key> <string>_body</string> </key>
             <value> <string>if reference_path is None:\n
   reference_path = context\n
+section = reference_path.WebSite_getSectionValue()\n
+if section is None:\n
+  section = context.WebSite_getSite()\n
 if context.WebSite_getDocumentValue() is not None:\n
-  return "%s/%s" % (reference_path.WebSite_getSectionValue().WebSite_getUrl(),context.WebSite_getDocumentValue().getRelativeUrl())\n
+  return "%s/%s" % (section.WebSite_getUrl(),context.WebSite_getDocumentValue().getRelativeUrl())\n
 return None\n
 </string> </value>
         </item>
@@ -121,6 +124,7 @@ return None\n
                             <string>None</string>
                             <string>context</string>
                             <string>_getattr_</string>
+                            <string>section</string>
                           </tuple>
                         </value>
                     </item>
