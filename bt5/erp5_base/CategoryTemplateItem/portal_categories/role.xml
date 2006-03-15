@@ -401,7 +401,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: [\'Organisation\']</string> </value>
+            <value> <string>python: [\'Career\', \'Organisation\']</string> </value>
         </item>
         <item>
             <key> <string>acquisition_portal_type_list</string> </key>

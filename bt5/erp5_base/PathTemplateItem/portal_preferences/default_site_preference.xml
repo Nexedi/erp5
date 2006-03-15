@@ -35,6 +35,7 @@
             <value>
               <tuple>
                 <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
               </tuple>
             </value>

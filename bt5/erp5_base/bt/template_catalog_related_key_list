@@ -1,0 +1,3 @@
+source_organisation_title | category,catalog/title/z_related_source_organisation
+source_person_title | category,catalog/title/z_related_source_person
+destination_person_title | category,catalog/title/z_related_destination_person

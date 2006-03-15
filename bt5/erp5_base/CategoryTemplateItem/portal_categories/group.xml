@@ -346,7 +346,9 @@
         <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>subordination</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -365,7 +367,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: [\'Career\', \'Organisation\', \'Person\']</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -393,9 +395,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Group define the corporate group and the business unit structure. Group is acquired through careers and subordination.</string> </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
@@ -409,9 +409,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Group</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
