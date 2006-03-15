@@ -148,7 +148,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -176,7 +178,9 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -274,6 +278,44 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.portal_simulation.getInventoryAssetPrice(section_category=here.REQUEST.get(\'transaction_section_category\'), node_category="gap/"+here.REQUEST.get(\'gap\'), simulation_state=here.REQUEST.get(\'transaction_simulation_state\'), from_date=here.REQUEST.get(\'from_date\'), at_date=here.REQUEST.get(\'at_date\'))</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.REQUEST.get(\'from_date\') not in (None, \'\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.Localizer.translate(\'erp5_ui\', "Balance of the Period (${from_date} to ${at_date})", mapping={\'from_date\':here.Base_FormatDate(here.REQUEST.get(\'from_date\')-1),\'at_date\':here.Base_FormatDate(here.REQUEST.get(\'at_date\'))})</string> </value>
         </item>
       </dictionary>
     </pickle>
