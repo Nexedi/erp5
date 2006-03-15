@@ -72,8 +72,8 @@ if not context.getMembershipCriterionCategoryList() and not context.getSourceLis
   return []\n
 \n
 def content_cmp(c1, c2):\n
-  c1_value = c1.getObject()  \n
-  c2_value = c2.getObject()  \n
+  c1_value = c1.getObject()\n
+  c2_value = c2.getObject()\n
   #if hasattr(c1, \'getShortTitle\') and c1.getShortTitle() == \'Overview\': return -1\n
   #if hasattr(c2, \'getShortTitle\') and c2.getShortTitle() == \'Overview\': return 1\n
   return cmp(c1_value.getIntIndex(), c2_value.getIntIndex())\n
@@ -82,7 +82,8 @@ if context.getMembershipCriterionCategoryList():\n
   domain = DomainSelection(domain_dict = {\'web_site\': context})\n
   kw[\'selection_domain\'] = domain\n
   kw[\'portal_type\'] = \'Web Page\'\n
-  kw[\'validation_state\'] = \'published\'\n
+  if only_published is True:\n
+    kw[\'validation_state\'] = \'published\'\n
   if not kw.has_key(\'sort_on\'): kw[\'sort_on\'] = \'int_index\'\n
   brain_list = list(context.portal_catalog(**kw))\n
 else:\n
@@ -124,7 +125,7 @@ return brain_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>only_published=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,12 +145,13 @@ return brain_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>only_published</string>
                             <string>kw</string>
                             <string>Products.ERP5Form.Selection</string>
                             <string>DomainSelection</string>
@@ -158,6 +160,7 @@ return brain_list\n
                             <string>content_cmp</string>
                             <string>domain</string>
                             <string>_write_</string>
+                            <string>True</string>
                             <string>list</string>
                             <string>_apply_</string>
                             <string>brain_list</string>
@@ -181,7 +184,9 @@ return brain_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>

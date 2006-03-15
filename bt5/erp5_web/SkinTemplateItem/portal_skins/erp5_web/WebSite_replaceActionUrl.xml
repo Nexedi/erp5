@@ -70,8 +70,8 @@
   for pos in range(len(action)):\n
     if action[pos].has_key(\'url\'):\n
       #context.log(\'WebSite_replaceActionUrl\',\'before : %s\' % action[pos][\'url\'])\n
-      action[pos].update({\'url\' : action[pos][\'url\'].replace(context.absolute_url(),context.WebSite_getDocumentPhysicalPath())})\n
-      context.log(\'WebSite_replaceActionUrl\',\'after : %s\' % action[pos][\'url\'])\n
+      action[pos].update({\'url\' : action[pos][\'url\'].replace(context.absolute_url(),context.WebSite_getUrl())})\n
+      #context.log(\'WebSite_replaceActionUrl\',\'after : %s\' % action[pos][\'url\'])\n
 \n
 return action\n
 </string> </value>

@@ -375,7 +375,12 @@
                 <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>only_published</string>
+                          <string>False</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -426,7 +431,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <value> <string>WebSection_view</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -524,23 +529,23 @@
                       <list>
                         <tuple>
                           <string>reference</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getUrl</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getUrl</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getUrl</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getUrl</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getUrl</string>
                         </tuple>
                       </list>
                     </value>
