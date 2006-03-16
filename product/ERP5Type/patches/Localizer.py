@@ -21,7 +21,7 @@ try:
 except ImportError:
   from Products.ERP5Type.patches.string import Template
 
-
+from Products.ERP5Type.Message import Message
 from zLOG import LOG
 
 class LocalizerPatchError(Exception):
@@ -39,7 +39,6 @@ def Localizer_translate(self, domain, msgid, mapping=None, *args, **kw):
     """
       This translate() method use Localizer and support catalog aliases.
     """
-
     # This dict define the alias between old Translation Service catalog id
     #   and new Localizer Message Catalog.
     message_catalog_aliases = { "Default": "default"
@@ -70,9 +69,12 @@ def Localizer_translate(self, domain, msgid, mapping=None, *args, **kw):
         translated_str = translated_str.decode('utf8')
       # make sure all values in the mapping are unicode
       for k, v in mapping.items():
-        if isinstance(v, str) :
+        if isinstance(v, str):
           v = v.decode('utf8')
+        elif isinstance(v, Message):
+          v = str(v).decode('utf8')
         unicode_mapping[k] = v
+      
       translated_str = Template(translated_str).substitute(unicode_mapping)
     return translated_str
 
