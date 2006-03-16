@@ -57,7 +57,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     return ('erp5_base',)
 
   # Different variables used for this test
-  run_all_test = 1
+  run_all_test = 0
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
@@ -638,3 +638,24 @@ class TestERP5Catalog(ERP5TypeTestCase):
                        source_organisation.getUid(),
                        testMethod(src__=1, **kw) )
     
+  def test_19_SearchFolderWithNonAsciiCharacter(self, quiet=0, run=1):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Non Ascii Character'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Now we will try the same thing as previous test and look at searchFolder
+    title='S\xc3\xa9bastien'
+    person = person_module.newContent(id='5',portal_type='Person',title=title)
+    person.immediateReindexObject()
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals(['5'],folder_object_list)
+    folder_object_list = [x.getObject().getId() for x in 
+                              person_module.searchFolder(title=title)]
+    self.assertEquals(['5'],folder_object_list)
+    
+
