@@ -57,7 +57,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     return ('erp5_base',)
 
   # Different variables used for this test
-  run_all_test = 0
+  run_all_test = 1
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
@@ -638,7 +638,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
                        source_organisation.getUid(),
                        testMethod(src__=1, **kw) )
     
-  def test_19_SearchFolderWithNonAsciiCharacter(self, quiet=0, run=1):
+  def test_19_SearchFolderWithNonAsciiCharacter(self, quiet=0, run=run_all_test):
     # Test if portal_synchronizations was created
     if not run: return
     if not quiet:
