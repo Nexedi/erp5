@@ -33,6 +33,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.CMFCore.utils import getToolByName
 from Globals import get_request
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type.Message import Message
 
 import string
 
@@ -349,14 +350,6 @@ class RelationStringFieldValidator(Validator.StringValidator):
       # If the value is different, build a query
       portal_selections = getToolByName(field, 'portal_selections')
       portal_catalog = getToolByName(field, 'portal_catalog')
-      localizer = getToolByName( field
-                               , 'Localizer'
-                               , None
-                               )
-      if localizer is not None:
-        N_ = localizer.erp5_ui.gettext
-      else :
-        N_ = lambda msg, **kw: msg
       # Get the current value
       value = Validator.StringValidator.validate(self, field, key, REQUEST)
       # If the value is the same as the current field value, do nothing
@@ -419,7 +412,10 @@ class RelationStringFieldValidator(Validator.StringValidator):
       menu_item_list = [('', '')]
       new_object_menu_item_list = []
       for p in portal_type:
-        new_object_menu_item_list += [ ( N_('New %s') % (N_(p))
+        translated_p = Message(domain='erp5_ui',message=p)
+        message = Message(domain='erp5_ui',message = 'New ${portal_type}',
+                              mapping={'portal_type':translated_p})
+        new_object_menu_item_list += [ ( message
                                        , '%s%s' % (new_content_prefix,p)
                                        )
                                      ]
