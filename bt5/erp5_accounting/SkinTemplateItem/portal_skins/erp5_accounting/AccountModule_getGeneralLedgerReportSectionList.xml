@@ -109,17 +109,13 @@ if from_date:\n
 else :\n
   params[\'no_from_date\'] = 1\n
 \n
-## FIXME: issue in reporting famework in ERP5 ? \n
-from Products.ERP5Type.Cache import clearCache\n
-clearCache() # for preferences\n
-\n
 result = []\n
 portal = context.portal_url.getPortalObject()\n
 \n
 account_columns = (\n
+  (\'date\', \'Date\'),\n
   (\'specific_reference\', \'Reference\'),\n
-  (\'delivery.start_date\', \'Date\'),\n
-  (\'title\', \'Title\'),\n
+  (\'title\', \'Label\'),\n
   (\'translated_portal_type\', \'Type\'),\n
   (\'third_party\', \'Third Party\'),\n
   (\'translated_simulation_state_title\', \'State\'),\n
@@ -182,11 +178,12 @@ for c in gap_value_list :\n
                            simulation_state = transaction_simulation_state ) :\n
           third_party_params = params.copy()\n
           third_party_params[\'mirror_section_uid\'] = third_party_brain.uid\n
+          third_party_uid = third_party_brain.uid or " = NULL"\n
           title = "%s: %s (%s)" % ( c.getId(),\n
                                     account.getTitle(),\n
                                     third_party_brain.title )\n
           if len(portal.portal_simulation.getInventoryList(\n
-                    mirror_section_uid = third_party_brain.uid,\n
+                    mirror_section_uid = third_party_uid,\n
                     node_uid = account.getUid(),\n
                     **account_inventory_list_cache_params )):\n
             result.append(ReportSection(\n
@@ -201,7 +198,7 @@ for c in gap_value_list :\n
               selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
               preferences = preferences ))\n
 \n
-      elif account.getAccountTypeId() in (\'bank\', \'cash\') :\n
+      elif account.isMemberOf(\'account_type/asset/cash/bank\') :\n
         # Bank Account\n
         for bank_account_brain in account.Account_zGetDistinctPaymentList(\n
                           at_date = at_date,\n
@@ -209,15 +206,15 @@ for c in gap_value_list :\n
           bank_params = params.copy()\n
           if bank_account_brain.path is not None :\n
             bank_params[\'payment_uid\'] = bank_account_brain.uid\n
+            bank_account_uid = bank_account_brain.uid or " = NULL"\n
             title = "%s: %s (%s)" % ( c.getId(),\n
                                       account.getTitle(),\n
                                       bank_account_brain.title )\n
           else :\n
             bank_params[\'no_payment_uid\'] = 1\n
             title = "%s: %s" % ( c.getId(), account.getTitle())\n
-          \n
           if len(portal.portal_simulation.getInventoryList(\n
-                    payment_uid = bank_account_brain.uid,\n
+                    payment_uid = bank_account_uid,\n
                     node_uid = account.getUid(),\n
                     **account_inventory_list_cache_params )):\n
             result.append(ReportSection(\n
@@ -231,7 +228,6 @@ for c in gap_value_list :\n
                 listbox_display_mode = \'FlatListMode\',\n
                 selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
                 preferences = preferences ))\n
-      \n
       else :\n
         if len(portal.portal_simulation.getInventoryList(\n
                     node_uid = account.getUid(),\n
@@ -314,8 +310,6 @@ return result\n
                             <string>params</string>
                             <string>preferences</string>
                             <string>_write_</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>clearCache</string>
                             <string>result</string>
                             <string>portal</string>
                             <string>account_columns</string>
@@ -333,9 +327,11 @@ return result\n
                             <string>_apply_</string>
                             <string>third_party_brain</string>
                             <string>third_party_params</string>
+                            <string>third_party_uid</string>
                             <string>title</string>
                             <string>bank_account_brain</string>
                             <string>bank_params</string>
+                            <string>bank_account_uid</string>
                           </tuple>
                         </value>
                     </item>
