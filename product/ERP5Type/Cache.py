@@ -72,7 +72,7 @@ class CachingMethod:
   """
   # Use this global variable to store cached objects.
   cached_object_dict = {}
-  
+
   def __init__(self, callable_object, id = None, cache_duration = 180):
     """
       callable_object must be callable.
@@ -96,23 +96,30 @@ class CachingMethod:
     """
     global cache_check_time
 
-    now = time()
+    # Store the current time in the REQUEST object, and
+    # check the expiration only at the first time.
+    from Products.ERP5Type.Utils import get_request
+    request = get_request()
+    now = request.get('_erp5_cache_time', None)
+    if now is None:
+      now = time()
+      request.set('_erp5_cache_time', now)
 
-    if cache_check_time + CACHE_CHECK_TIMEOUT < now:
-      # If the time reachs the timeout, expire all old entries.
-      # XXX this can be quite slow, if many results are cached.
-      # LOG('CachingMethod', 0, 'checking all entries to expire')
-      cache_check_time = now
-      try:
-        for index in CachingMethod.cached_object_dict.keys():
-          obj = CachingMethod.cached_object_dict[index]
-          if obj.time + obj.duration < now:
-            # LOG('CachingMethod', 0, 'expire %s' % index)
-            del CachingMethod.cached_object_dict[index]
-      except KeyError:
-        # This is necessary for multi-threading, because two threads can
-        # delete the same entry at a time.
-        pass
+      if cache_check_time + CACHE_CHECK_TIMEOUT < now:
+        # If the time reachs the timeout, expire all old entries.
+        # XXX this can be quite slow, if many results are cached.
+        # LOG('CachingMethod', 0, 'checking all entries to expire')
+        cache_check_time = now
+        try:
+          for index in CachingMethod.cached_object_dict.keys():
+            obj = CachingMethod.cached_object_dict[index]
+            if obj.time + obj.duration < now:
+              # LOG('CachingMethod', 0, 'expire %s' % index)
+              del CachingMethod.cached_object_dict[index]
+        except KeyError:
+          # This is necessary for multi-threading, because two threads can
+          # delete the same entry at a time.
+          pass
 
     key_list = kwd.keys()
     key_list.sort()
@@ -150,23 +157,16 @@ def getTransactionCache(context):
   """Get the transaction cache.
   """
   try:
-    return context.REQUEST._erp5_transaction_cache
-  except AttributeError:
+    return context.REQUEST['_erp5_transaction_cache']
+  except KeyError:
     return None
-    
+
 def enableTransactionCache(context):
   """Enable the transaction cache.
   """
-  try:
-    context.REQUEST._erp5_transaction_cache = {}
-  except AttributeError:
-    pass
-  
+  context.REQUEST.set('_erp5_transaction_cache', {})
+
 def disableTransactionCache(context):
   """Disable the transaction cache.
   """
-  try:
-    del context.REQUEST._erp5_transaction_cache
-  except AttributeError:
-    pass
-    
+  context.REQUEST.set('_erp5_transaction_cache', None)
