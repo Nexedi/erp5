@@ -1037,7 +1037,7 @@ class ERP5Generator(PortalGenerator):
         'Reply to item'                : ('Manager', 'Member'),
         'Review portal content'        : ('Manager', 'Reviewer'),
         'Search ZCatalog'              : ('Manager', 'Member'),
-        'Set own password'             : ('Manager', 'Member'),
+        'Set own password'             : ('Manager',),
         'Set own properties'           : ('Manager', 'Member'),
         'Undo changes'                 : ('Manager', 'Owner'),
         'View'                         : ('Manager', 'Member', 'Owner', 'Anonymous'),
