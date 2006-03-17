@@ -38,6 +38,7 @@ class Person:
     { 'id'         : 'password'
     , 'description': ''
     , 'type'       : 'string'
+    , 'write_permission' : 'Set own password'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_name'
