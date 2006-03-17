@@ -1,3 +1,15 @@
+2006-03-17 Seb
+* changed permissions in invoice_causality_worfklow because it was impossible to add new accounting lines. I'm not very happy with this change, we should find a better solution.
+
+2006-03-17 Kevin
+* Compare date instead of datetime in accounting_workflow/scripts/validateTransaction to avoid problems when we reach accounting period limits.
+
+2006-03-16 Kevin
+* Show the portal type of lines in General Ledger Report.
+
+2006-03-15 Kevin
+* Delete Account_getDestinationSectionList and Account_getSourcePaymentList.
+
 2006-03-09 Kevin
 * Fix Account_getAccountingTransactionList to show right previous balance.
 * Update AccountModule_viewGeneralLedgerReport to let the General Ledger report show good start, stop and period balance.

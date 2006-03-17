@@ -116,7 +116,7 @@ if transaction.getStartDate() in (None, \'\') :\n
   raiseError(\'date is not Defined\')\n
 else:\n
   if not skip_period_validation :\n
-    valid_date = 0\n
+    valid_date = False\n
     # check the date is in an opened period\n
     transaction_date = DateTime( transaction.getStartDate().year(),\n
                                  transaction.getStartDate().month(),\n
@@ -130,17 +130,18 @@ else:\n
       # if the entity doesn\'t have any accounting period, we can\n
       # consider that they do not want to use accounting periods or\n
       # we do not account from their side.\n
-      valid_date = 1\n
+      valid_date = True\n
     for apd in openned_accounting_period_list:\n
       apd = apd.getObject()\n
-      if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
-        valid_date = 1\n
-    if not valid_date :\n
+      # Compare date, not datetime\n
+      if apd.getStartDate().strftime("%Y/%m/%d") <= transaction_date.strftime("%Y/%m/%d") <= apd.getStopDate().strftime("%Y/%m/%d"):\n
+        valid_date = True\n
+    if not valid_date:\n
       raiseError("Date is not in an openned Accounting Period "\n
                  "for source section")\n
     # do the same for destination section \n
     if check_destination :\n
-      valid_date = 0\n
+      valid_date = False\n
       transaction_date = DateTime( transaction.getStopDate().year(),\n
                                    transaction.getStopDate().month(),\n
                                    transaction.getStopDate().day(),\n
@@ -150,11 +151,12 @@ else:\n
                                  portal_type = "Accounting Period",\n
                                  simulation_state = "planned")\n
       if len(openned_accounting_period_list) == 0:\n
-        valid_date = 1\n
+        valid_date = True\n
       for apd in openned_accounting_period_list:\n
         apd = apd.getObject()\n
-        if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
-          valid_date = 1\n
+        # Compare date, not datetime\n
+        if apd.getStartDate().strftime("%Y/%m/%d") <= transaction_date.strftime("%Y/%m/%d") <= apd.getStopDate().strftime("%Y/%m/%d"):\n
+          valid_date = True\n
       if not valid_date :\n
         raiseError("Date is not in an openned Accounting Period "+\n
                    "for destination section")\n
@@ -239,11 +241,13 @@ else:\n
                             <string>None</string>
                             <string>destination_section</string>
                             <string>currency</string>
+                            <string>False</string>
                             <string>valid_date</string>
                             <string>DateTime</string>
                             <string>transaction_date</string>
                             <string>openned_accounting_period_list</string>
                             <string>len</string>
+                            <string>True</string>
                             <string>_getiter_</string>
                             <string>apd</string>
                           </tuple>
