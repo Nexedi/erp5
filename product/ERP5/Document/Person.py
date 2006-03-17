@@ -141,3 +141,19 @@ class Person(Entity, Node, XMLObject):
       """
       self._setLastName(value)
       self.reindexObject()
+
+    security.declareProtected('Manage users', 'setReference')
+    def setReference(self, value):
+      """
+        Set the user id. This method is defined explicitly, because:
+
+        - we want to apply a different permission
+
+        - we want to prevent duplicated user ids
+      """
+      if value:
+        user_list = self.acl_users.searchUsers(id = value, exact_match = True)
+        if len(user_list) > 0:
+          raise RuntimeError, 'user id %s already exist' % (value,)
+      self._setReference(value)
+      self.reindexObject()
