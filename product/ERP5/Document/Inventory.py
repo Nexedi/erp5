@@ -100,7 +100,7 @@ class Inventory(Delivery):
                                   )
             kwd = {'uid':self.getUid()}
             kwd['start_date'] = start_date
-            variation_list = variation_text.split('/n')
+            variation_list = variation_text.split('\n')
             for inventory in current_inventory_list:
               sub_variation_list = []
               if inventory.sub_variation_text is not None:
