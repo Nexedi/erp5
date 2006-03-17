@@ -120,15 +120,11 @@ class ERP5UserManager(BasePlugin):
                   id_list.append('%%%s%%' % id)
 
             if id_list:
-              user_objects = [user for user in self.getUserByLogin(tuple(id_list))\
-                  if user.getCareerRole() == 'internal']
-                  #XXX is this static check ok ?
-
-              for user in user_objects:
+              for user in self.getUserByLogin(tuple(id_list)):
                   info = { 'id' : user.getReference()
-                          , 'login' : user.getReference()
-                          , 'pluginid' : plugin_id
-                          }
+                         , 'login' : user.getReference()
+                         , 'pluginid' : plugin_id
+                         }
 
                   user_info.append(info)
 
