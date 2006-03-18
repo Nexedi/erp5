@@ -6,6 +6,17 @@
 
 __version__ = '0.3.0'
 
+# XXX make sure that get_request works.
+current_app = None
+import Products.ERP5Type.Utils
+import Globals
+
+def get_request():
+  return current_app.REQUEST
+
+Products.ERP5Type.Utils.get_request = get_request
+Globals = get_request
+
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
@@ -314,6 +325,8 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
     try:
       if app is None:
         app = ZopeTestCase.app()
+        global current_app
+        current_app = app
       if not hasattr(aq_base(app), portal_name):
           try:
             _start = time.time()
