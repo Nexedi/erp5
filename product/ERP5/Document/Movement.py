@@ -875,6 +875,16 @@ class Movement(XMLObject, Amount):
       return_list.extend(variation_list)
     return "\n".join(return_list)
 
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentExplanationValue')
+  def getParentExplanationValue(self):
+    """
+      This method should be removed as soon as movement groups
+      will be rewritten. It is a temp hack
+    """
+    return self.getParentValue().getExplanationValue()
+
+
   # SKU vs. CU
 #   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
 #   def getSourceStandardInventoriatedQuantity(self):
