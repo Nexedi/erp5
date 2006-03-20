@@ -170,7 +170,7 @@ class TestConstraint(ERP5TypeTestCase):
     object_title = self.object_title
     object.edit(title=None)
 
-  def stepSetObjectEmptyTitle(self, sequence=None, 
+  def stepSetObjectEmptyTitle(self, sequence=None,
                               sequence_list=None, **kw):
     """
       Set a different title value
@@ -179,7 +179,7 @@ class TestConstraint(ERP5TypeTestCase):
     object_title = self.object_title
     object.edit(title='')
 
-  def stepSetObjectIntTitle(self, sequence=None, 
+  def stepSetObjectIntTitle(self, sequence=None,
                             sequence_list=None, **kw):
     """
       Set a different title value
@@ -187,6 +187,26 @@ class TestConstraint(ERP5TypeTestCase):
     object = sequence.get('object')
     object_title = self.object_title
     object.edit(title=12345)
+  
+  def stepSetObjectBadTypedProperty(self, sequence=None,
+                            sequence_list=None, **kw):
+    """
+      Set a property with a bad type
+    """
+    object = sequence.get('object')
+    property_name = 'ean13code'
+    # make sure the property is defined on the object
+    self.failUnless(not object.hasProperty(property_name))
+    self.failUnless(object.getPropertyType(property_name) != 'int')
+    object.setProperty(property_name, 12)
+  
+  def stepSetObjectIntLocalProperty(self, sequence=None,
+                            sequence_list=None, **kw):
+    """
+      Set a local property on the object, with an int type.
+    """
+    object = sequence.get('object')
+    object.edit(local_prop = 12345)
 
   def _createGenericConstraint(self, sequence, klass_name='Constraint',
                                **kw):
@@ -217,6 +237,19 @@ class TestConstraint(ERP5TypeTestCase):
     sequence.edit(
         error_list=error_list
     )
+  
+  def stepCallFixConsistency(self, sequence=None,
+                                      sequence_list=None, **kw):
+    """
+      Call checkConsistency of a Constraint, fixing the errors.
+    """
+    object = sequence.get('object')
+    constraint = sequence.get('constraint')
+    # Check
+    error_list = constraint.checkConsistency(object, fixit=1)
+    sequence.edit(
+        error_list=error_list
+    )
 
   def stepCallRelatedCheckConsistency(self, sequence=None, 
                                       sequence_list=None, **kw):
@@ -230,7 +263,7 @@ class TestConstraint(ERP5TypeTestCase):
     sequence.edit(
         error_list=error_list
     )
-
+  
   def stepCheckIfConstraintSucceeded(self, sequence=None, 
                                      sequence_list=None, **kw):
     """
@@ -341,7 +374,7 @@ class TestConstraint(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     # Test Constraint with property defined on object
     # With '' value
-    # Has dissapointing it could be, empty string is a data,
+    # As disapointing as it could be, empty string is a data,
     # and test must succeed
     sequence_string = '\
               CreateObject \
@@ -419,8 +452,44 @@ class TestConstraint(ERP5TypeTestCase):
     # with a bad type
     sequence_string = '\
               CreateObject \
+              SetObjectBadTypedProperty \
+              CreatePropertyTypeValidity \
+              CallCheckConsistency \
+              CheckIfConstraintFailed \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Constraint with property defined on object
+    # with a bad type (title is an exception, because it converts the
+    # value ...)
+    sequence_string = '\
+              CreateObject \
               SetObjectIntTitle \
               CreatePropertyTypeValidity \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Fix consistency for property sheet properties
+    sequence_string = '\
+              CreateObject \
+              SetObjectBadTypedProperty \
+              CreatePropertyTypeValidity \
+              CallFixConsistency \
+              CheckIfConstraintFailed \
+              CallCheckConsistency \
+              CheckIfConstraintSucceeded \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test Fix consistency for local properties.
+    # By default, when calling 'edit' with keys not defined in property
+    # sheet, a local property is added on the object and this property
+    # has 'string' type. This sequence depends on this behaviour.
+    sequence_string = '\
+              CreateObject \
+              SetObjectIntLocalProperty \
+              CreatePropertyTypeValidity \
+              CallFixConsistency \
+              CheckIfConstraintFailed \
               CallCheckConsistency \
               CheckIfConstraintSucceeded \
               '
