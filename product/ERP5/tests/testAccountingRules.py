@@ -37,7 +37,6 @@ way it is used in the invoice related simulation.
 #   * test cancelling / deleting an invoice
 #   * test payment rule & payment builder
 #   * test simulation purge when Payment delivered or top level Order cancelled
-#   * test invoicing rule by connecting to order test.
 #   * test removing cells for a line 
 #
 
@@ -120,10 +119,6 @@ class TestAccountingRules(ERP5TypeTestCase):
   def afterSetUp(self) :
     self.login()
     self.createCategories()
-    # FIXME : this is a workaround for a bug in business template
-    # installation : path elements are not reindexed
-    # ... so we reindex manually here 
-    self.getPortal().portal_rules.recursiveImmediateReindexObject()
     
   def login(self):
     uf = self.getPortal().acl_users
