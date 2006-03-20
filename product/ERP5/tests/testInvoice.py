@@ -59,6 +59,7 @@ class TestInvoice(TestAccountingRulesMixin,TestPackingListMixin, ERP5TypeTestCas
 
   default_region = "europe/west/france"
   vat_gap = 'fr/pcg/4/44/445/4457/44571'
+  vat_rate = 0.196
   sale_gap = 'fr/pcg/7/70/707/7071/70712'
   customer_gap = 'fr/pcg/4/41/411'
 
@@ -200,7 +201,7 @@ class TestInvoice(TestAccountingRulesMixin,TestPackingListMixin, ERP5TypeTestCas
     receivable.setSourceValue(customer_account)
     collected_vat = cell.newContent(id='collected_vat',
             portal_type=self.sale_invoice_transaction_portal_type)
-    collected_vat.setQuantity(0.196)
+    collected_vat.setQuantity(self.vat_rate)
     collected_vat.setSourceValue(vat_account)
     
   def modifyPackingListState(self, transition_name, sequence,packing_list=None):
@@ -564,6 +565,40 @@ class TestInvoice(TestAccountingRulesMixin,TestPackingListMixin, ERP5TypeTestCas
         portal_type=self.sale_invoice_transaction_line_portal_type)))
     self.assertEquals(3,len(new_invoice.objectValues(
         portal_type=self.sale_invoice_transaction_line_portal_type)))
+    account_module = self.getAccountModule()
+    vat_account=account_module['receivable_vat']
+    sale_account=account_module['sale']
+    customer_account=account_module['customer']
+    found_dict = {}
+    for line in invoice.objectValues(
+        portal_type=self.sale_invoice_transaction_line_portal_type):
+      source_id = line.getSourceId()
+      found_dict[source_id] = line.getQuantity()
+    total_price = (self.default_quantity-1) * self.default_price
+    expected_dict = {
+      'sale' : total_price,
+      'receivable_vat' : total_price * self.vat_rate,
+      'customer' : - (total_price + total_price * self.vat_rate)
+      }
+    self.failIfDifferentSet(expected_dict.keys(),found_dict.keys())
+    for key in found_dict.keys():
+      self.assertAlmostEquals(expected_dict[key],found_dict[key],places=2)
+    found_dict = {}
+    for line in new_invoice.objectValues(
+        portal_type=self.sale_invoice_transaction_line_portal_type):
+      source_id = line.getSourceId()
+      found_dict[source_id] = line.getQuantity()
+    total_price = 1 * self.default_price
+    expected_dict = {
+      'sale' : total_price,
+      'receivable_vat' : total_price * self.vat_rate,
+      'customer' : - (total_price + total_price * self.vat_rate)
+      }
+    self.failIfDifferentSet(expected_dict.keys(),found_dict.keys())
+    for key in found_dict.keys():
+      self.assertAlmostEquals(expected_dict[key],found_dict[key],places=2)
+
+
 
   def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
                                            sequence_list=None, **kw):
