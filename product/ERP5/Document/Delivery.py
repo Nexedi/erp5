@@ -621,7 +621,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
 
     security.declareProtected( Permissions.AccessContentsInformation,
-                               'getInitialCausalityValueList')
+                               'getRootCausalityValueList')
     def getRootCausalityValueList(self):
       """
         Returns the initial causality value for this movement.
@@ -651,7 +651,27 @@ class Delivery(XMLObject, ImmobilisationDelivery):
                                'setRootCausalityValueList')
     def setRootCausalityValueList(self,value):
       """
-      This 
+      This is a hack
+      """
+      pass
+
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getParentExplanationValue')
+    def getParentExplanationValue(self):
+      """
+        This method should be removed as soon as movement groups
+        will be rewritten. It is a temp hack
+      """
+      return self
+
+    # XXX Temp hack, should be removed has soon as the structure of
+    # the order/delivery builder will be reviewed. It might
+    # be reviewed if we plan to configure movement groups in the zmi
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               'setParentExplanationValue')
+    def setParentExplanationValue(self,value):
+      """
+      This is a hack
       """
       pass
 
