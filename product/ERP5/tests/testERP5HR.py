@@ -49,9 +49,7 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 class TestHR(ERP5TypeTestCase):
   """
-    ERP5 Human Ressources related tests. Actually every HR related features are
-    in Person and Organisation module, packaged in the erp5_core business
-    template.
+    ERP5 Human Ressources related tests. 
   """
 
   # pseudo constants
@@ -289,9 +287,11 @@ class TestHR(ERP5TypeTestCase):
     sequence.edit(organisation = organisation)
 
 
-  def stepSetOrganisationCategories(self, sequence=None, sequence_list=None, **kw):
+  def stepSetOrganisationCategories(self, sequence=None,
+                                    sequence_list=None, **kw):
     """
-      Set & Check default organisation categories (function, activity, site, group...).
+      Set & Check default organisation categories 
+      (function, activity, site, group...).
     """
     organisation = sequence.get('organisation')
 
@@ -363,7 +363,8 @@ class TestHR(ERP5TypeTestCase):
     self.failIfDifferentSet(organisation.getSkillValueList(), skill_object_list)
 
 
-  def stepResetOrganisationCategories(self, sequence=None, sequence_list=None, **kw):
+  def stepResetOrganisationCategories(self, sequence=None,
+                                      sequence_list=None, **kw):
     """
       Reset default organisation categories (function, activity, site, group...).
     """
@@ -400,7 +401,8 @@ class TestHR(ERP5TypeTestCase):
 
   def stepSetOrganisationAddress(self, sequence=None, sequence_list=None, **kw):
     """
-      Set organisation address and test acquired properties and categories from the Address sub-object.
+      Set organisation address and test acquired properties and categories
+      from the Address sub-object.
     """
     organisation = sequence.get('organisation')
 
@@ -494,11 +496,12 @@ class TestHR(ERP5TypeTestCase):
     
     # Set & Check simple properties with 'Career' prefix
     person.setCareerTitle('A brand new career step')
-    person.setCareerDescription('This career step correspond to my arrival at Nexedi as employee')
+    person.setCareerDescription(
+        'This career step correspond to my arrival at Nexedi as employee')
     self.assertEquals(person.getCareerTitle()      , 'A brand new career step')
-    self.assertEquals(person.getCareerDescription(), 'This career step correspond to my arrival at Nexedi as employee')
+    self.assertEquals(person.getCareerDescription(),
+        'This career step correspond to my arrival at Nexedi as employee')
 
-    # Set & Check simple properties with no prefix (aka 'transparent' properties)
     dummy_date1 = self.datetime + 10
     dummy_date2 = self.datetime + 20
     person.setCareerStopDate(dummy_date2)
@@ -519,6 +522,9 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals(person.getCareerFunction()     , function_path)
     self.assertEquals(person.getCareerFunctionTitle(), function_title)
     self.assertEquals(person.getCareerFunctionValue(), function_object)
+    # function must be acquired on person
+    person.reindexObject(); get_transaction().commit(); self.tic()
+    self.failUnless(person in function_object.getFunctionRelatedValueList())
 
     # Set & Check role
     role_categories = self.getCategoryList(base_category='role')
@@ -529,6 +535,9 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals(person.getCareerRole()     , role_path)
     self.assertEquals(person.getCareerRoleTitle(), role_title)
     self.assertEquals(person.getCareerRoleValue(), role_object)
+    # role must be acquired on person
+    person.reindexObject(); get_transaction().commit(); self.tic()
+    self.failUnless(person in role_object.getRoleRelatedValueList())
 
     # Set & Check grade
     grade_categories = self.getCategoryList(base_category='grade')
@@ -539,16 +548,25 @@ class TestHR(ERP5TypeTestCase):
     self.assertEquals(person.getCareerGrade()     , grade_path)
     self.assertEquals(person.getCareerGradeTitle(), grade_title)
     self.assertEquals(person.getCareerGradeValue(), grade_object)
+    # grade must be acquired on person 
+    person.reindexObject(); get_transaction().commit(); self.tic()
+    self.failUnless(person in grade_object.getGradeRelatedValueList())
 
     # Set & Check salary level
-    salary_level_categories = self.getCategoryList(base_category='salary_level')
+    salary_level_categories = self.getCategoryList(
+                                base_category='salary_level')
     salary_level_path   = salary_level_categories[1]['path']
     salary_level_title  = salary_level_categories[1]['title']
-    salary_level_object = self.portal_categories.resolveCategory(salary_level_path)
+    salary_level_object = self.portal_categories.resolveCategory(
+                          salary_level_path)
     person.setCareerSalaryLevel(salary_level_path)
     self.assertEquals(person.getCareerSalaryLevel()     , salary_level_path)
     self.assertEquals(person.getCareerSalaryLevelTitle(), salary_level_title)
     self.assertEquals(person.getCareerSalaryLevelValue(), salary_level_object)
+    # salary_level must be acquired on person 
+    person.reindexObject(); get_transaction().commit(); self.tic()
+    self.failUnless(person in
+                   salary_level_object.getSalaryLevelRelatedValueList())
 
     # Set & Check skills
     skill_categories = self.getCategoryList(base_category='skill')
@@ -566,11 +584,15 @@ class TestHR(ERP5TypeTestCase):
     self.failIfDifferentSet(person.getCareerSkillList()     , skill_path_list)
     self.failIfDifferentSet(person.getCareerSkillTitleList(), skill_title_list)
     self.failIfDifferentSet(person.getCareerSkillValueList(), skill_object_list)
-    
+    # skill must be acquired on person 
+    person.reindexObject(); get_transaction().commit(); self.tic()
+    for skill_object in skill_object_list:
+      self.failUnless(person in skill_object.getSkillRelatedValueList())
 
   def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
     """
-      Check the consistency of default_career properties with person getters (= check the acquisition).
+      Check the consistency of default_career properties with person
+      getters (= check the acquisition).
     """
     person = sequence.get('person')
 
