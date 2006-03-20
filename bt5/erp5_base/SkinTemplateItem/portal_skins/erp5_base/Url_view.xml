@@ -97,7 +97,9 @@
                 <item>
                     <key>                 <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>link</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -113,11 +115,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Url View</string> </value>
+            <value> <string>Url_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>Url_view</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>rid</string> </key>
