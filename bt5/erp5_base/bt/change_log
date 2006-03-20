@@ -1,3 +1,7 @@
+2006-03-20 jerome
+* Fix acquisition in HR related base categories to acquire from default career.
+* Repair ChatAddress, they are now based on Url class.
+
 2006-03-14 Seb
 * Added related keys about person and organisation
 
