@@ -2,7 +2,6 @@ Agent | Agent Privilege
 Bank Account | Agent
 Currency Exchange Line | Currency Exchange Cell
 Currency Module | Currency
-Currency Module | ERP5Currency
 Currency | Currency Exchange Line
 Organisation Module | Organisation
 Organisation | Address
@@ -27,4 +26,5 @@ Person | Email
 Person | Fax
 Person | File
 Person | Image
+Person | Link
 Person | Telephone

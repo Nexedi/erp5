@@ -13,7 +13,6 @@
  </portal_type>
  <portal_type id="Currency Module">
   <item>Currency</item>
-  <item>ERP5Currency</item>
  </portal_type>
  <portal_type id="Organisation">
   <item>Address</item>
@@ -40,6 +39,7 @@
   <item>Email</item>
   <item>File</item>
   <item>Fax</item>
+  <item>Link</item>
   <item>Career</item>
   <item>Bank Account</item>
   <item>Image</item>
