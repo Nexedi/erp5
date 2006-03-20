@@ -464,6 +464,10 @@
                           <string>ChatAddress</string>
                           <string>ChatAddress</string>
                         </tuple>
+                        <tuple>
+                          <string>Link</string>
+                          <string>Link</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
