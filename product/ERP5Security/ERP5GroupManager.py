@@ -25,12 +25,15 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
 from Products.ERP5Type.Cache import CachingMethod
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
+from ZODB.POSException import ConflictError
 
-from pickle import dumps, loads
+import sys
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 from ERP5UserManager import SUPER_USER
+
+class ConsistencyError(Exception): pass
 
 manage_addERP5GroupManagerForm = PageTemplateFile(
     'www/ERP5Security_addERP5GroupManager', globals(), __name__='manage_addERP5GroupManagerForm' )
@@ -112,7 +115,7 @@ class ERP5GroupManager(BasePlugin):
           portal_type="Person", reference=user_name)
       if len(catalog_result) != 1: # we won't proceed with groups
         if len(catalog_result) > 1: # configuration is screwed
-          raise 'ConsistencyError', 'There is more than one Person whose \
+          raise ConsistencyError, 'There is more than one Person whose \
               login is %s : %s' % (user_name,
               repr([r.getObject() for r in catalog_result]))
         else: # no person is linked to this user login
@@ -127,7 +130,16 @@ class ERP5GroupManager(BasePlugin):
         base_category_list = tuple(base_category_list)
         method = getattr(self, method_name)
         security_category_list = security_category_dict.setdefault(base_category_list, [])
-        security_category_list.extend(method(base_category_list, user_name, person_object, ''))
+        try:
+          security_category_list.extend(
+            method(base_category_list, user_name, person_object, '')
+          )
+        except ConflictError:
+          raise
+        except:
+          LOG('ERP5GroupManager', WARNING,
+              'could not get security categories from %s' % (method_name,),
+              error = sys.exc_info())
 
       # Get group names from category values
       group_id_list_generator = getattr(self, 'ERP5Type_asSecurityGroupIdList', None)
@@ -135,15 +147,32 @@ class ERP5GroupManager(BasePlugin):
         for base_category_list, category_value_list in \
             security_category_dict.items():
           for category_dict in category_value_list:
-            security_group_list.extend(group_id_list_generator(
-                category_order=base_category_list, **category_dict))
+            try:
+              security_group_list.extend(
+                group_id_list_generator(category_order=base_category_list,
+                                        **category_dict)
+              )
+            except ConflictError:
+              raise
+            except:
+              LOG('ERP5GroupManager', WARNING,
+                  'could not get security groups from ERP5Type_asSecurityGroupIdList',
+                  error = sys.exc_info())
       else:
         group_id_generator = getattr(self, 'ERP5Type_asSecurityGroupId')
         for base_category_list, category_value_list in \
             security_category_dict.items():
           for category_dict in category_value_list:
-            security_group_list.append(group_id_generator(
-                category_order=base_category_list, **category_dict))
+            try:
+              security_group_list.append(
+                group_id_generator(category_order=base_category_list, **category_dict)
+              )
+            except ConflictError:
+              raise
+            except:
+              LOG('ERP5GroupManager', WARNING,
+                  'could not get security groups from ERP5Type_asSecurityGroupId',
+                  error = sys.exc_info())
 
       setSecurityManager(sm)
       return tuple(security_group_list)
