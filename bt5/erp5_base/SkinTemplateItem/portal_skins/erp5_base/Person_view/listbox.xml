@@ -460,6 +460,10 @@
                           <string>Fax</string>
                           <string>Fax</string>
                         </tuple>
+                        <tuple>
+                          <string>ChatAddress</string>
+                          <string>ChatAddress</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
