@@ -58,19 +58,25 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 ChatAddress</string> </value>
+            <value> <string>ERP5 Url</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Telephone object can contain a telephone number.</string> </value>
+            <value> <string>A chat address is an identifier in an Instant Messanging service.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addChatAddress</string> </value>
+            <value> <string>addUrl</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
