@@ -49,23 +49,18 @@ from DateTime import DateTime
 from zLOG import LOG
 from testPackingList import TestPackingListMixin
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from testAccountingRules import TestAccountingRulesMixin
 
-class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
+class TestInvoice(TestAccountingRulesMixin,TestPackingListMixin, ERP5TypeTestCase):
   """Test invoice are created from orders then packing lists. """
   
-  # XXX
-  def playSequence(self, sequence_string) :
-    sequence_list = SequenceList()
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
  
   RUN_ALL_TESTS = 1
 
-  sale_invoice_portal_type      = 'Sale Invoice Transaction'
-  sale_invoice_line_portal_type = 'Sale Invoice Line' 
-  sale_invoice_cell_portal_type = 'Invoice Cell'
-
   default_region = "europe/west/france"
+  vat_gap = 'fr/pcg/4/44/445/4457/44571'
+  sale_gap = 'fr/pcg/7/70/707/7071/70712'
+  customer_gap = 'fr/pcg/4/41/411'
 
   def getTitle(self):
     return "Invoices"
@@ -91,6 +86,8 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
             portal_type = 'Category',
             id = cat,
             immediate_reindex = 1 )
+        else:
+          path=path[cat]
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
       self.assertNotEquals(None,
@@ -99,7 +96,11 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
                 
   def getNeededCategoryList(self):
     """return a list of categories that should be created."""
-    return ('region/%s' % self.default_region, )
+    return ('region/%s' % self.default_region, 
+            'gap/%s' % self.vat_gap,
+            'gap/%s' % self.sale_gap,
+            'gap/%s' % self.customer_gap,
+        )
   
   def getBusinessTemplateList(self):
     """ """
@@ -121,9 +122,12 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
   
   def stepCreateCurrency(self, sequence, **kw) :
     """Create a default currency. """
-    currency = self.getCurrencyModule().newContent(
-          portal_type = 'Currency',
-          id = "EUR" )
+    currency_module = self.getCurrencyModule()
+    if len(currency_module.objectValues(id='EUR'))==0:
+      currency = self.getCurrencyModule().newContent(
+            portal_type = 'Currency',
+            id = "EUR" )
+    currency = currency_module.objectValues(id='EUR')[0]
     sequence.edit(currency = currency)
   
   def stepSetOrderPriceCurrency(self, sequence, **kw) :
@@ -139,6 +143,28 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
   
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """Create the rule for accounting. """
+
+    portal = self.getPortal()
+    account_module = self.getAccountModule()
+    if not 'receivable_vat' in account_module.objectIds():
+      vat_account = account_module.newContent(id='receivable_vat')
+      vat_account.setGap(self.vat_gap)
+      portal.portal_workflow.doActionFor(vat_account,
+          'validate_action',wf_id='account_workflow')
+    vat_account=account_module['receivable_vat']
+    if not 'sale' in account_module.objectIds():
+      sale_account = account_module.newContent(id='sale')
+      sale_account.setGap(self.sale_gap)
+      portal.portal_workflow.doActionFor(sale_account,
+          'validate_action',wf_id='account_workflow')
+    sale_account=account_module['sale']
+    if not 'customer' in account_module.objectIds():
+      customer_account = account_module.newContent(id='customer')
+      customer_account.setGap(self.customer_gap)
+      portal.portal_workflow.doActionFor(customer_account,
+          'validate_action',wf_id='account_workflow')
+    customer_account=account_module['customer']
+    
     invoice_rule = self.getPortal().portal_rules.default_invoice_transaction_rule
     invoice_rule.deleteContent([x.getId() for x in invoice_rule.objectValues()])
     region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
@@ -157,12 +183,30 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
       int_index = 1,
       string_index = 'product'
     )
+    product_line_predicate.immediateReindexObject()
+    region_predicate.immediateReindexObject()
+
     invoice_rule.updateMatrix()
-    # TODO create Accounts and cell ?
+    cell_list = invoice_rule.getCellValueList(base_id='movement')
+    self.assertEquals(len(cell_list),1)
+    cell = cell_list[0]
+    income = cell.newContent(id='income',
+            portal_type=self.sale_invoice_transaction_portal_type)
+    income.setQuantity(1.0)
+    income.setSourceValue(sale_account)
+    receivable = cell.newContent(id='receivable',
+            portal_type=self.sale_invoice_transaction_portal_type)
+    receivable.setQuantity(-1.196)
+    receivable.setSourceValue(customer_account)
+    collected_vat = cell.newContent(id='collected_vat',
+            portal_type=self.sale_invoice_transaction_portal_type)
+    collected_vat.setQuantity(0.196)
+    collected_vat.setSourceValue(vat_account)
     
-  def modifyPackingListState(self, transition_name, sequence):
+  def modifyPackingListState(self, transition_name, sequence,packing_list=None):
     """ calls the workflow for the packing list """
-    packing_list = sequence.get('packing_list')
+    if packing_list is None:
+      packing_list = sequence.get('packing_list')
     packing_list.portal_workflow.doActionFor(packing_list,
           transition_name, wf_id='packing_list_workflow')
   
@@ -172,9 +216,22 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     self.assertEquals(packing_list.getSimulationState(), 'ready')
 
+  def stepSetReadyNewPackingList(self, sequence=None, sequence_list=None, **kw):
+    """ set the Packing List as Ready. This must build the invoice. """
+    packing_list = sequence.get('new_packing_list')
+    self.modifyPackingListState('set_ready_action', sequence=sequence,
+                                packing_list=packing_list)
+    self.assertEquals(packing_list.getSimulationState(), 'ready')
+
   def stepStartPackingList(self, sequence=None, sequence_list=None, **kw):
     self.modifyPackingListState('start_action', sequence=sequence)
     packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getSimulationState(), 'started')
+    
+  def stepStartNewPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('new_packing_list')
+    self.modifyPackingListState('start_action', sequence=sequence,
+                                packing_list=packing_list)
     self.assertEquals(packing_list.getSimulationState(), 'started')
     
   def stepStopPackingList(self, sequence=None, sequence_list=None, **kw):
@@ -213,7 +270,7 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
     related_applied_rule_list = packing_list.getCausalityRelatedValueList(
                                    portal_type=self.applied_rule_portal_type)
     related_invoice_list = packing_list.getCausalityRelatedValueList(
-                                   portal_type=self.sale_invoice_portal_type)
+                                   portal_type=self.sale_invoice_transaction_portal_type)
 
     packing_list_building_state = 'started'
     packing_list_state = packing_list.getSimulationState()
@@ -472,6 +529,42 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
     self.assertEquals(sale_invoice_line.getTotalPrice(), self.total_price1)
     self.assertEquals(sale_invoice.getCausalityValue(), packing_list)
     
+  def stepCheckTwoInvoices(self,sequence=None, sequence_list=None, **kw):
+    """ checks invoice properties are well set. """
+    # New we will check that we have two invoices
+    packing_list = sequence.get('packing_list')
+    invoice_list = packing_list.getCausalityRelatedValueList(
+         portal_type=self.sale_invoice_transaction_portal_type)
+    self.assertEquals(len(invoice_list),1)
+    invoice = invoice_list[0]
+    sequence.edit(invoice=invoice)
+    new_packing_list = sequence.get('new_packing_list')
+    new_invoice_list = new_packing_list.getCausalityRelatedValueList(
+        portal_type=self.sale_invoice_transaction_portal_type)
+    self.assertEquals(len(new_invoice_list),1)
+    new_invoice = new_invoice_list[0]
+    sequence.edit(new_invoice=new_invoice)
+
+  def stepConfirmTwoInvoices(self,sequence=None, sequence_list=None, **kw):
+    """ confirme both invoices. """
+    portal = self.getPortal()
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    portal.portal_workflow.doActionFor(invoice,
+        'confirm_action',wf_id='accounting_workflow')
+    portal.portal_workflow.doActionFor(new_invoice,
+        'confirm_action',wf_id='accounting_workflow')
+
+  def stepCheckTwoInvoicesTransactionLines(self,sequence=None, sequence_list=None, **kw):
+    """ checks invoice properties are well set. """
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    import pdb;pdb.set_trace()
+    self.assertEquals(3,len(invoice.objectValues(
+        portal_type=self.sale_invoice_transaction_line_portal_type)))
+    self.assertEquals(3,len(new_invoice.objectValues(
+        portal_type=self.sale_invoice_transaction_line_portal_type)))
+
   def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
                                            sequence_list=None, **kw):
     """Rebuilds with sale_invoice_builder and checks nothing more is
@@ -480,7 +573,29 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
     accounting_module = self.getAccountingModule()
     sale_invoice_transaction_list = accounting_module.objectValues()
     self.assertEquals(len(sale_invoice_transaction_list), 1)
-    #self.getPortal().
+
+  def stepModifyInvoicesDate(self, sequence=None,
+                                           sequence_list=None, **kw):
+    """Rebuilds with sale_invoice_builder and checks nothing more is
+    created. """
+    invoice = sequence.get('invoice')
+    new_invoice = sequence.get('new_invoice')
+    invoice.edit(start_date=self.datetime,
+                 stop_date=self.datetime+1)
+    new_invoice.edit(start_date=self.datetime,
+                 stop_date=self.datetime+1)
+
+  def stepRemoveDateMovementGroupForTransactionBuilder(self, sequence=None,
+            sequence_list=None,**kw):
+    """
+    Remove DateMovementGroup
+    """
+    portal = self.getPortal()
+    builder = portal.portal_deliveries.sale_invoice_transaction_builder
+    previous_list = builder.getDeliveryCollectOrderList()
+    new_list = [x for x in previous_list if x != 'DateMovementGroup']
+    new_list.append('ParentExplanationMovementGroup')
+    builder.setDeliveryCollectOrderList(new_list)
     
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
@@ -510,6 +625,43 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
       stepCheckPackingListIsPacked
     """
       
+  # default sequence for one line of not varianted resource.
+  TWO_PACKING_LIST_DEFAULT_SEQUENCE = """
+      stepCreateSaleInvoiceTransactionRule
+      stepCreateEntities
+      stepCreateCurrency
+      stepCreateOrder
+      stepSetOrderProfile
+      stepSetOrderPriceCurrency
+      stepCreateNotVariatedResource
+      stepTic
+      stepCreateOrderLine
+      stepSetOrderLineResource
+      stepSetOrderLineDefaultValues
+      stepOrderOrder
+      stepTic
+      stepCheckDeliveryBuilding
+      stepConfirmOrder
+      stepTic
+      stepCheckOrderRule
+      stepCheckOrderSimulation
+      stepCheckDeliveryBuilding
+      DecreasePackingListLineQuantity 
+      CheckPackingListIsCalculating 
+      SplitAndDeferPackingList 
+      Tic 
+      CheckPackingListIsSolved 
+      CheckPackingListSplitted
+      stepAddPackingListContainer
+      stepAddPackingListContainerLine
+      stepSetContainerLineFullQuantity
+      stepTic
+      stepCheckPackingListIsPacked
+      stepDefineNewPackingListContainer
+      stepTic
+      stepCheckNewPackingListIsPacked
+    """
+
   def test_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
     """Checks that a Simple Invoice is created from a Packing List"""
     for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
@@ -523,6 +675,33 @@ class TestInvoice(TestPackingListMixin, ERP5TypeTestCase):
         stepTic
         stepCheckInvoiceBuilding
         stepRebuildAndCheckNothingIsCreated
+      """)
+
+  def test_TwoInvoicesFromTwoPackingList(self, quiet=0, run=1):
+    """ This test was created for the following bug:
+        - an order is created and confirmed
+        - the packing list is split
+        - the 2 packing list are delivered (at different date)
+        - 2 invoices are built, then we set the same date on both of them
+        - the accounting rules are generated and put in only one invoice !!,
+          so we have an invoice with twice the number of accounting rules
+          and an invoice with no accounting rules. both invoices are wrong
+    """
+    for base_sequence in (TestInvoice.TWO_PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      self.playSequence(
+        base_sequence +
+      """
+        stepSetReadyPackingList
+        stepSetReadyNewPackingList
+        stepTic
+        stepStartPackingList
+        stepStartNewPackingList
+        stepTic
+        stepCheckTwoInvoices
+        stepRemoveDateMovementGroupForTransactionBuilder
+        stepConfirmTwoInvoices
+        stepTic
+        stepCheckTwoInvoicesTransactionLines
       """)
 
   def DISABLEDtest_InvoiceEditPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
