@@ -1157,6 +1157,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       else:
         LOG('BusinessTemplate build', 100, 'portal type %s not found in workflow chain' %(portal_type))
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = '<workflow_chain>'
     keys = self._objects.keys()
@@ -1186,7 +1187,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # each portal type
     (default_chain, chain_dict) = getChainByType(context)
     # Set the default chain to the empty string is probably the
-    # best solution, by default it is 'default_workflow', wich is
+    # best solution, by default it is 'default_workflow', which is
     # not very usefull
     default_chain = ''
     for path in self._objects.keys():
@@ -1250,6 +1251,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       else:
         self._objects[portal_type] = [allowed_type]
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     dictio = self._objects
     xml_data = '<%s>' %(self.xml_tag,)
@@ -1456,6 +1458,16 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       xml_data += os.linesep+'</catalog_method>'
       f.write(str(xml_data))
       f.close()
+      
+  # Function to generate XML Code Manually
+  def generateXml(self, path=None):
+    obj = self._objects[path]
+    xml_data = '<key_list>'
+    obj.sort()
+    for key in obj:
+      xml_data += os.linesep+' <key>%s</key>' %(key)
+    xml_data += os.linesep+'</key_list>'
+    return xml_data
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
@@ -1807,6 +1819,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         type_role_list.append(type_role_dict)
       self._objects[relative_url] = type_role_list
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     type_role_list = self._objects[path]
     xml_data = '<type_roles>'
@@ -1964,6 +1977,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
         p._delProperty(id)
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     xml_data = ''
     prop_type, obj = self._objects[path]
@@ -2010,6 +2024,7 @@ class ModuleTemplateItem(BaseTemplateItem):
       dict['permission_list'] = module.showPermissions()
       self._objects[id] = dict
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     dict = self._objects[path]
     xml_data = '<module>'
@@ -2337,6 +2352,7 @@ class RoleTemplateItem(BaseTemplateItem):
         del roles[role]
     p.__ac_roles__ = tuple(roles.keys())
 
+  # Function to generate XML Code Manually
   def generateXml(self, path):
     obj = self._objects[path]
     xml_data = '<role_list>'
@@ -2436,6 +2452,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     catalog.sql_search_result_keys = sql_search_result_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -2538,6 +2555,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_related_keys = sql_catalog_related_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -2637,6 +2655,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     catalog.sql_search_tables = sql_search_tables
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -2737,6 +2756,7 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_keyword_search_keys = sql_keyword_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -2837,6 +2857,7 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_full_text_search_keys = sql_full_text_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -2938,6 +2959,7 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_request_keys = sql_catalog_request_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -3037,6 +3059,7 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_multivalue_keys = sql_catalog_multivalue_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -3137,6 +3160,7 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_topic_search_keys = sql_catalog_topic_search_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
     xml_data = '<key_list>'
@@ -3251,6 +3275,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
                                         {}) or {}
       self._objects[path] = (local_roles_dict, group_local_roles_dict)
 
+  # Function to generate XML Code Manually
   def generateXml(self, path=None):
     local_roles_dict, group_local_roles_dict = self._objects[path]
     local_roles_keys = local_roles_dict.keys()
@@ -4207,15 +4232,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogRequestKey' : '_catalog_request_key_item',
         'CatalogMultivalueKey' : '_catalog_multivalue_key_item',
         'CatalogTopicKey' : '_catalog_topic_key_item',
+	'CatalogMethod' : '_catalog_method_item',
         }
 
       object_id = REQUEST.object_id
       object_class = REQUEST.object_class
-      # get objects
+      
+      # Get objects
       item_name = class_name_dict[object_class]
 
       new_bt =self
-      # compare with a given business template
+      # Compare with a given business template
       compare_to_zodb = 0
       bt2_id = kw.get('compare_with', None)
       if bt2_id is not None:
@@ -4230,7 +4257,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           compare_to_zodb = 1
       if compare_to_zodb:
         bt2 = self.portal_templates.manage_clone(ob=installed_bt, id='installed_bt_for_diff')
-        # update portal types properties to get last modifications
+        # Update portal types properties to get last modifications
         bt2.getPortalTypesProperties()
         bt2.edit(description='tmp bt generated for diff')
         installed_bt = bt2
@@ -4242,68 +4269,78 @@ Business Template is a set of definitions, such as skins, portal types and categ
         installed_item.build(self)
       new_object = new_item._objects[object_id]
       installed_object = installed_item._objects[object_id]
-      # make diff
       diff_msg = ''
+      
+      # Real Zope Objects (can be exported into XML directly by Zope)
       item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item',
-                     '_skin_item', '_action_item']
-      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item',
-                     '_catalog_result_table_item',   '_catalog_keyword_key_item', '_catalog_full_text_key_item',
-                     '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item',
-                     '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item',
-                     '_portal_type_property_sheet_item', '_portal_type_roles_item',
-                     '_portal_type_base_category_item', '_local_roles_item',
-                     '_portal_type_workflow_chain_item']
-      item_list_3 = ['_document_item', '_property_sheet_item',
-          '_constraint_item', '_extension_item', '_test_item',
-          '_message_translation_item']
+                     '_skin_item', '_action_item',]
+      
+      # Not considered as objects by Zope (will be exported into XML manually)
+      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item', '_catalog_keyword_key_item', '_catalog_full_text_key_item', '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item', '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item', '_portal_type_property_sheet_item', '_portal_type_roles_item', '_portal_type_base_category_item', '_local_roles_item', '_portal_type_workflow_chain_item',]
+      
+      # Text objects (no need to export them into XML)
+      item_list_3 = ['_document_item', '_property_sheet_item', '_constraint_item', '_extension_item', '_test_item', '_message_translation_item',]
 
       if item_name in item_list_1:
-        f1 = StringIO()
-        f2 = StringIO()
-        # remove uneeded property
+        f1 = StringIO() # for XML export of New Object
+        f2 = StringIO() # For XML export of Installed Object
+        # Remove unneeded properties
         new_object = new_item.removeProperties(new_object)
         installed_object = installed_item.removeProperties(installed_object)
+	# XML Export in memory
         OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
         OFS.XMLExportImport.exportXML(installed_object._p_jar, installed_object._p_oid, f2)
         new_obj_xml = f1.getvalue()
+	f1.close()
         installed_obj_xml = f2.getvalue()
-        f1.close()
         f2.close()
         new_ob_xml_lines = new_obj_xml.splitlines()
         installed_ob_xml_lines = installed_obj_xml.splitlines()
+	# End of XML export
+	
+	# Diff between XML objects
         diff_list = list(unified_diff(installed_ob_xml_lines, new_ob_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
-          diff_msg += '\n\nObject %s diff :\n' %( object_id)
+          diff_msg += '\n\nObject %s diff :\n' % (object_id,)
           diff_msg += '\n'.join(diff_list)
         else:
           diff_msg = 'No diff'
 
       elif item_name in item_list_2:
+	# Generate XML code manually
         new_obj_xml = new_item.generateXml(path= object_id)
         installed_obj_xml = installed_item.generateXml(path= object_id)
         new_obj_xml_lines = new_obj_xml.splitlines()
         installed_obj_xml_lines = installed_obj_xml.splitlines()
+	# End of XML Code Generation
+	
+	# Diff between XML objects
         diff_list = list(unified_diff(installed_obj_xml_lines, new_obj_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
-          diff_msg += '\n\nObject %s diff :\n' %( object_id)
+          diff_msg += '\n\nObject %s diff :\n' % (object_id,)
           diff_msg += '\n'.join(diff_list)
         else:
           diff_msg = 'No diff'
 
       elif item_name in item_list_3:
+	# Diff between text objects
         new_obj_lines = new_object.splitlines()
         installed_obj_lines = installed_object.splitlines()
         diff_list = list(unified_diff(installed_obj_lines, new_obj_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
-          diff_msg += '\n\nObject %s diff :\n' %( object_id)
+          diff_msg += '\n\nObject %s diff :\n' % (object_id,)
           diff_msg += '\n'.join(diff_list)
         else:
           diff_msg = 'No diff'
+
+      else: # Added By <christophe@nexedi.com>
+	diff_msg += 'Unsupported file !'
 
       if compare_to_zodb:
         self.portal_templates.manage_delObjects(ids=['installed_bt_for_diff'])
 
       return diff_msg
+      
 
     def getPortalTypesProperties(self, **kw):
       """
