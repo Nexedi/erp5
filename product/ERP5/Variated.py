@@ -109,21 +109,35 @@ class Variated(Base):
       if omit_option_base_category == 1:
         base_category_list = [x for x in base_category_list if x not in
                               self.getPortalOptionBaseCategoryList()]
+    # Prepare 2 rendering
+    portal_categories = self.portal_categories
     for base_category in base_category_list:
       variation_category_list = self._getVariationCategoryList(
                                        base_category_list=[base_category])
-      variation_list = [self.portal_categories.resolveCategory(x) for x in \
-                        variation_category_list]
-      category_list = [x for x in variation_list \
-                       if x.getPortalType() == 'Category']
+      
+      category_list = []
+      object_list = []
+      for variation_category_path in variation_category_list:
+        try:
+          variation_category = portal_categories.resolveCategory(
+                                    variation_category_path)
+          var_cat_portal_type = variation_category.getPortalType()
+        except AttributeError:
+          variation_category_item_list.append((variation_category_path,
+                                               variation_category_path))
+        else:
+          if var_cat_portal_type != 'Category':
+            object_list.append(variation_category)
+          else:
+            category_list.append(variation_category)
+      # Render categories
       variation_category_item_list.extend(Renderer(
                              display_base_category=display_base_category,
                              display_none_category=0, base=base,
                              current_category=current_category,
                              display_id=display_id, **kw).\
                                                render(category_list))
-      object_list = [x for x in variation_list \
-                       if x.getPortalType() != 'Category']
+      # Render the others
       variation_category_item_list.extend(Renderer(
                              base_category=base_category,
                              display_base_category=display_base_category,
