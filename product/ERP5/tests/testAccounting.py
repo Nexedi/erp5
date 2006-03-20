@@ -32,7 +32,7 @@
 """
 import os, sys
 if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
+  execfile(os.path.join(sys.path[0], 'framework.py'))
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
@@ -46,6 +46,9 @@ from testPackingList import TestPackingListMixin
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from DateTime import DateTime
 
+SOURCE = 'source'
+DESTINATION = 'destination'
+RUN_ALL_TESTS = 1
 
 class TestAccounting(ERP5TypeTestCase):
   """Test Accounting. """
@@ -63,9 +66,7 @@ class TestAccounting(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
- 
-  RUN_ALL_TESTS = 1
-
+  
   account_portal_type           = 'Account'
   accounting_period_portal_type = 'Accounting Period'
   accounting_transaction_portal_type = 'Accounting Transaction'
@@ -121,9 +122,10 @@ class TestAccounting(ERP5TypeTestCase):
   
   def getBusinessTemplateList(self):
     """ """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_accounting',)
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',)
 
   def stepTic(self, **kw):
+    """Flush activity queue. """
     self.tic()
 
   def stepCreateEntities(self, sequence, **kw) :
@@ -151,7 +153,7 @@ class TestAccounting(ERP5TypeTestCase):
     sequence.edit( accounting_period = accounting_period,
                    valid_date_list = [ start_date, start_date+1, stop_date],
                    invalid_date_list = [start_date-1, stop_date+1] )
-  
+    
   def stepUseValidDates(self, sequence, **kw):
     """Puts some valid dates in sequence."""
     sequence.edit(date_list = sequence.get('valid_date_list'))
@@ -373,7 +375,6 @@ class TestAccounting(ERP5TypeTestCase):
         'currency' : 'currency_module/YEN' },
       
       # currency of source, not converted for destination -> 0
-      # FIXME: validation should be refused by accounting workflow ?
       { 'income' : -100,
         'collected_vat' : -20,
         'receivable' : 120,
@@ -498,21 +499,20 @@ class TestAccounting(ERP5TypeTestCase):
           if line.getSourceValue() == account and\
              line.getResourceValue() == currency and\
              section == line.getSourceSectionValue() :
-              calculated_balance += (
+            calculated_balance += (
                     line.getSourceDebit() - line.getSourceCredit())
           # dest.
           elif line.getDestinationValue() == account and\
-             line.getResourceValue() == currency and\
-             section == line.getDestinationSectionValue() :
-              calculated_balance += (
+            line.getResourceValue() == currency and\
+            section == line.getDestinationSectionValue() :
+            calculated_balance += (
                     line.getDestinationDebit() - line.getDestinationCredit())
       
       self.assertEquals(calculated_balance,
           self.getPortal().portal_simulation.getInventory(
             node_uid = account.getUid(),
             section_uid = section.getUid(),
-            # resource_uid = currency.getUid()   # FIXME: raises a KeyError in SQLCatalog.buildSQLQuery
-            resource = currency.getRelativeUrl()
+            resource_uid = currency.getUid(),
           ))
   
   def stepCheckAccountBalanceLocalCurrency(self, sequence, **kw) :
@@ -566,15 +566,417 @@ class TestAccounting(ERP5TypeTestCase):
         if self.start_date <= transaction.getStartDate() <= self.stop_date :
           self.assertEquals(transaction.getSimulationState(), 'delivered')
   
+  def stepCheckAcquisition(self, sequence, **kw):
+    """Checks acquisition and portal types configuration. """
+    resource_value = sequence.get('EUR')
+    source_section_title = "Source Section Title"
+    destination_section_title = "Destination Section Title"
+    source_section_value = self.getOrganisationModule().newContent(
+        portal_type = self.organisation_portal_type,
+        title = source_section_title,
+        group = "group/client",
+        price_currency = "currency_module/USD")
+    destination_section_value = self.getOrganisationModule().newContent(
+        portal_type = self.organisation_portal_type,
+        title = destination_section_title,
+        group = "group/vendor",
+        price_currency = "currency_module/EUR")
+    
+    portal = self.getPortal()
+    accounting_module = portal.accounting_module
+    self.assertNotEquals(
+          len(portal.getPortalAccountingMovementTypeList()), 0)
+    self.assertNotEquals(
+          len(portal.getPortalAccountingTransactionTypeList()), 0)
+    for accounting_portal_type in portal\
+                    .getPortalAccountingTransactionTypeList():
+      accounting_transaction = accounting_module.newContent(
+            portal_type = accounting_portal_type,
+            source_section_value = source_section_value,
+            destination_section_value = destination_section_value,
+            resource_value = resource_value )
+      self.assertEquals( accounting_transaction.getSourceSectionValue(),
+                         source_section_value )
+      self.assertEquals( accounting_transaction.getDestinationSectionValue(),
+                         destination_section_value )
+      self.assertEquals( accounting_transaction.getResourceValue(),
+                         resource_value )
+      self.assertNotEquals(
+              len(accounting_transaction.allowedContentTypes()), 0)
+      tested_line_portal_type = 0
+      for line_portal_type in portal.getPortalAccountingMovementTypeList():
+        allowed_content_types = [x.id for x in
+                            accounting_transaction.allowedContentTypes()]
+        if line_portal_type in allowed_content_types :
+          line = accounting_transaction.newContent(
+            portal_type = line_portal_type, )
+          # section and resource is acquired from parent transaction.
+          self.assertEquals( line.getDestinationSectionValue(),
+                             destination_section_value )
+          self.assertEquals( line.getDestinationSectionTitle(),
+                             destination_section_title )
+          self.assertEquals( line.getSourceSectionValue(),
+                             source_section_value )
+          self.assertEquals( line.getSourceSectionTitle(),
+                             source_section_title )
+          self.assertEquals( line.getResourceValue(),
+                             resource_value )
+          tested_line_portal_type = 1
+      self.assert_(tested_line_portal_type, ("No lines tested ... " +
+                          "getPortalAccountingMovementTypeList = %s " +
+                          "<%s>.allowedContentTypes = %s") %
+                          (portal.getPortalAccountingMovementTypeList(),
+                            accounting_transaction.getPortalType(),
+                            allowed_content_types ))
   
+  def stepCreateValidAccountingTransaction(self, sequence,
+                                          sequence_list=None, **kw) :
+    """Creates a valide accounting transaction and put it in
+    the sequence as `transaction` key. """
+    resource_value = sequence.get('EUR')
+    source_section_value = sequence.get('vendor')
+    destination_section_value = sequence.get('client')
+    start_date = DateTime(2000,01,01)
+    stop_date = DateTime(2000,02,02)
+    # get a date inside openned period, if any
+    for openned_source_section_period in\
+      source_section_value.searchFolder(
+            portal_type =  self.accounting_period_portal_type,
+            simulation_state = 'planned' ):
+      start_date = openned_source_section_period.getStartDate() + 1
+    for openned_destination_section_period in\
+      destination_section_value.searchFolder(
+            portal_type =  self.accounting_period_portal_type,
+            simulation_state = 'planned' ):
+      stop_date = openned_destination_section_period.getStartDate() + 1
 
+    transaction = self.getAccountingModule().newContent(
+      portal_type = self.accounting_transaction_portal_type,
+      start_date = start_date,
+      stop_date = stop_date,
+      resource_value = resource_value,
+      source_section_value = source_section_value,
+      destination_section_value = destination_section_value,
+      created_by_builder = 1 # XXX prevent the init script from
+                             # creating lines.
+    )
+    income = transaction.newContent(
+      portal_type = self.accounting_transaction_line_portal_type,
+      quantity = 100,
+      source_value = sequence.get('income_account'),
+      destination_value = sequence.get('expense_account'),
+    )
+    self.failUnless(income.getSource() != None)
+    self.failUnless(income.getDestination() != None)
+    
+    receivable = transaction.newContent(
+      portal_type = self.accounting_transaction_line_portal_type,
+      quantity = -100,
+      source_value = sequence.get('receivable_account'),
+      destination_value = sequence.get('payable_account'),
+    )
+    self.failUnless(receivable.getSource() != None)
+    self.failUnless(receivable.getDestination() != None)
+    
+    self.failUnless(len(transaction.checkConsistency()) == 0,
+      "Check consistency failed : %s" % transaction.checkConsistency())
+    sequence.edit(
+      transaction = transaction,
+      income = income,
+      receivable = receivable
+    )
+    
+  def stepValidateNoStartDate(self, sequence, sequence_list=None, **kw) :
+    """When no start date is defined, validation should be impossible
+    because of the source_section side."""
+    transaction = sequence.get('transaction')
+    old_date = transaction.getStartDate()
+    transaction.setStartDate(None)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    transaction.setStartDate(old_date)
+    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+    self.assertEquals(transaction.getSimulationState(), 'stopped')
 
-  ##############################################################################
-  ## Test Methods ##############################################################
-  ##############################################################################
+  def stepValidateNoStopDate(self, sequence, sequence_list=None, **kw) :
+    """When no stop date is defined, validation should be impossible
+    because of the destination_section side."""
+    transaction = sequence.get('transaction')
+    old_stop_date = transaction.getStopDate()
+    old_start_date = transaction.getStartDate()
+    transaction.setStopDate(None)
+    if transaction.getStopDate() != None :
+      transaction.setStartDate(None)
+      transaction.setStopDate(None)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    transaction.setStartDate(old_start_date)
+    transaction.setStopDate(old_stop_date)
+    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+    self.assertEquals(transaction.getSimulationState(), 'stopped')
+  
+  def stepValidateNoSection(self, sequence, sequence_list=None, **kw) :
+    """Check validation behaviour related to section & mirror_section.
+    When no source section is defined, we are in one of the following
+    cases : 
+      o if we use payable or receivable account, the validation should
+        be refused.
+      o if we do not use any payable or receivable accounts and we have
+      a destination section, validation should be ok.
+    """
+    transaction = sequence.get('transaction')
+    old_source_section = transaction.getSourceSection()
+    old_destination_section = transaction.getDestinationSection()
+    # default transaction uses payable accounts, so validating without
+    # source section is refused.
+    transaction.setSourceSection(None)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    # ... as well as validation without destination section
+    transaction.setSourceSection(old_source_section)
+    transaction.setDestinationSection(None)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    # mirror section can be set only on the line
+    for line in transaction.getMovementList() :
+      if line.getSourceValue().isMemberOf(
+              'account_type/asset/receivable') or \
+         line.getSourceValue().isMemberOf(
+              'account_type/liability/payable') :
+        line.setDestinationSection(old_destination_section)
+    try:
+      self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+      self.assertEquals(transaction.getSimulationState(), 'stopped')
+    except ValidationFailed, err :
+      self.assert_(0, "Validation failed : %s" % err.msg)
+    
+    # if we do not use any payable / receivable account, then we can
+    # validate the transaction without setting the mirror section.
+    for side in (SOURCE, DESTINATION) :
+      # get a new valid transaction
+      self.stepCreateValidAccountingTransaction(sequence)
+      transaction = sequence.get('transaction')
+      expense_account = sequence.get('expense_account')
+      for line in transaction.getMovementList() :
+        line.edit( source_value = expense_account,
+                   destination_value = expense_account )
+      if side == SOURCE :
+        transaction.setDestinationSection(None)
+      else :
+        transaction.setSourceSection(None)
+      try:
+        self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+        self.assertEquals(transaction.getSimulationState(), 'stopped')
+      except ValidationFailed, err :
+        self.assert_(0, "Validation failed : %s" % err.msg)
+        
+  def stepValidateNoCurrency(self, sequence, sequence_list=None, **kw) :
+    """Check validation behaviour related to currency.
+    """
+    transaction = sequence.get('transaction')
+    old_resource = transaction.getResource()
+    transaction.setResource(None)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    # setting a dummy relationship is not enough, resource must be a
+    # currency
+    transaction.setResource(transaction.getDestinationSection())
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    
+  def stepValidateClosedAccount(self, sequence, sequence_list=None, **kw) :
+    """Check validation behaviour related to closed accounts.
+    If an account is blocked, then it's impossible to validate a
+    transaction related to this account.
+    """
+    transaction = sequence.get('transaction')
+    account = transaction.getMovementList()[0].getSourceValue()
+    self.getWorkflowTool().doActionFor(account, 'invalidate_action')
+    self.assertEquals(account.getValidationState(), 'invalidated')
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    # reopen the account for other tests
+    account.validate()
+    self.assertEquals(account.getValidationState(), 'validated')
+    
+  def stepValidateNoAccounts(self, sequence, sequence_list=None, **kw) :
+    """Simple check that the validation is refused when we do not have
+    accounts correctly defined on lines.
+    """
+    transaction = sequence.get('transaction')
+    # no account at all is refused
+    for line in transaction.getMovementList():
+      line.setSource(None)
+      line.setDestination(None)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    
+    # only one line without account and with a quantity is also refused
+    self.stepCreateValidAccountingTransaction(sequence)
+    transaction = sequence.get('transaction')
+    transaction.getMovementList()[0].setSource(None)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    
+    # but if we have a line with 0 quantity on both sides, we can
+    # validate the transaction and delete this line.
+    self.stepCreateValidAccountingTransaction(sequence)
+    transaction = sequence.get('transaction')
+    line_count = len(transaction.getMovementList())
+    transaction.newContent(
+        portal_type = self.accounting_transaction_line_portal_type)
+    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+    self.assertEquals(transaction.getSimulationState(), 'stopped')
+    self.assertEquals(line_count, len(transaction.getMovementList()))
+    
+    # 0 quantity, but a destination asset price => do not delete the
+    # line
+    self.stepCreateValidAccountingTransaction(sequence)
+    transaction = sequence.get('transaction')
+    new_line = transaction.newContent(
+        portal_type = self.accounting_transaction_line_portal_type)
+    line_count = len(transaction.getMovementList())
+    self.failUnless(line_count != 3)
+    line_list = transaction.getMovementList()
+    line_list[0].setDestinationTotalAssetPrice(100)
+    line_list[0]._setDestination(sequence.get('expense_account'))
+    line_list[1].setDestinationTotalAssetPrice(- 50)
+    line_list[1]._setDestination(sequence.get('expense_account'))
+    line_list[2].setDestinationTotalAssetPrice(- 50)
+    line_list[2]._setDestination(sequence.get('expense_account'))
+    try:
+      self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+      self.assertEquals(transaction.getSimulationState(), 'stopped')
+    except ValidationFailed, err :
+      self.assert_(0, "Validation failed : %s" % err.msg)
+  
+  def stepValidateNotBalanced(self, sequence, sequence_list=None, **kw) :
+    """Check validation behaviour when transaction is not balanced.
+    """
+    transaction = sequence.get('transaction')
+    transaction.getMovementList()[0].setQuantity(4325)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    
+    # asset price have priority (ie. if asset price is not balanced,
+    # refuses validation even if quantity is balanced)
+    self.stepCreateValidAccountingTransaction(sequence)
+    transaction = sequence.get('transaction')
+    line_list = transaction.getMovementList()
+    line_list[0].setDestinationTotalAssetPrice(10)
+    line_list[1].setDestinationTotalAssetPrice(100)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    
+    self.stepCreateValidAccountingTransaction(sequence)
+    transaction = sequence.get('transaction')
+    line_list = transaction.getMovementList()
+    line_list[0].setSourceTotalAssetPrice(10)
+    line_list[1].setSourceTotalAssetPrice(100)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    
+    # only asset price needs to be balanced
+    self.stepCreateValidAccountingTransaction(sequence)
+    transaction = sequence.get('transaction')
+    line_list = transaction.getMovementList()
+    line_list[0].setSourceTotalAssetPrice(100)
+    line_list[0].setDestinationTotalAssetPrice(100)
+    line_list[0].setQuantity(432432)
+    line_list[1].setSourceTotalAssetPrice(-100)
+    line_list[1].setDestinationTotalAssetPrice(-100)
+    line_list[1].setQuantity(32546787)
+    try:
+      self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+      self.assertEquals(transaction.getSimulationState(), 'stopped')
+    except ValidationFailed, err :
+      self.assert_(0, "Validation failed : %s" % err.msg)
+  
+  def stepValidateNoPayment(self, sequence, sequence_list=None, **kw) :
+    """Check validation behaviour related to payment & mirror_payment.
+    If we use an account of type asset/cash/bank, we must use set a Bank
+    Account as source_payment or destination_payment.
+    This this source/destination payment must be a portal type from the
+    `payment node` portal type group. It can be defined on transaction
+    or line.
+    """
+    transaction = sequence.get('transaction')
+    # get the default and replace income account by bank
+    income_account_found = 0
+    for line in transaction.getMovementList() :
+      source_account = line.getSourceValue()
+      if source_account.isMemberOf('account_type/income') :
+        income_account_found = 1
+        line.edit( source_value = sequence.get('bank_account'),
+                   destination_value = sequence.get('bank_account') )
+    self.failUnless(income_account_found)
+    self.assertRaises(ValidationFailed,
+        self.getWorkflowTool().doActionFor,
+        transaction,
+        'stop_action')
+    
+    source_section_value = transaction.getSourceSectionValue()
+    destination_section_value = transaction.getDestinationSectionValue()
+    for ptype in self.getPortal().getPortalPaymentNodeTypeList() :
+      source_payment_value = source_section_value.newContent(
+                                  portal_type = ptype, )
+      destination_payment_value = destination_section_value.newContent(
+                                  portal_type = ptype, )
+      self.stepCreateValidAccountingTransaction(sequence)
+      transaction = sequence.get('transaction')
+      # payment node have to be set on both sides
+      transaction.setSourcePaymentValue(source_payment_value)
+      transaction.setDestinationPaymentValue(None)
+      self.assertRaises(ValidationFailed,
+          self.getWorkflowTool().doActionFor,
+          transaction,
+          'stop_action')
+      transaction.setSourcePaymentValue(None)
+      transaction.setDestinationPaymentValue(destination_payment_value)
+      self.assertRaises(ValidationFailed,
+          self.getWorkflowTool().doActionFor,
+          transaction,
+          'stop_action')
+      transaction.setSourcePaymentValue(source_payment_value)
+      transaction.setDestinationPaymentValue(destination_payment_value)
+      try:
+        self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+        self.assertEquals(transaction.getSimulationState(), 'stopped')
+      except ValidationFailed, err :
+        self.assert_(0, "Validation failed : %s" % err.msg)
+      
+
+  ############################################################################
+  ## Test Methods ############################################################
+  ############################################################################
   
   def test_MultiCurrencyInvoice(self, quiet=0, run=RUN_ALL_TESTS):
     """Basic test for multi currency accounting"""
+    if not run : return
     self.playSequence("""
       stepCreateCurrencies
       stepCreateEntities
@@ -588,6 +990,7 @@ class TestAccounting(ERP5TypeTestCase):
 
   def test_AccountingPeriod(self, quiet=0, run=RUN_ALL_TESTS):
     """Basic test for Accounting Periods"""
+    if not run : return
     self.playSequence("""
       stepCreateCurrencies
       stepCreateEntities
@@ -614,6 +1017,7 @@ class TestAccounting(ERP5TypeTestCase):
         self, quiet=0, run=RUN_ALL_TESTS):
     """Accounting Periods prevents transactions to be validated
         when there is no oppened accounting period"""
+    if not run : return
     self.playSequence("""
       stepCreateCurrencies
       stepCreateEntities
@@ -632,6 +1036,7 @@ class TestAccounting(ERP5TypeTestCase):
                                                   run=RUN_ALL_TESTS):
     """Accounting Periods refuse to close when some transactions are
       not stopped"""
+    if not run : return
     self.playSequence("""
       stepCreateCurrencies
       stepCreateEntities
@@ -649,6 +1054,7 @@ class TestAccounting(ERP5TypeTestCase):
   def test_AccountingPeriodNotStoppedTransactions(self, quiet=0,
                                                   run=RUN_ALL_TESTS):
     """Accounting Periods does not change other section transactions."""
+    if not run : return
     self.playSequence("""
       stepCreateCurrencies
       stepCreateEntities
@@ -669,16 +1075,93 @@ class TestAccounting(ERP5TypeTestCase):
   def test_MirrorAccounts(self, quiet=0, run=RUN_ALL_TESTS):
     """Tests using an account on one sides uses the mirror account
     on the other size. """
+    if not run : return
     self.playSequence("""
       stepCreateEntities
       stepCreateAccounts
       stepCreateAccountingTransactionAndCheckMirrorAccount
     """)
 
-# TODO:
-#  test transaction validation from accounting workflow.
+  def test_Acquisition(self, quiet=0, run=RUN_ALL_TESTS):
+    """Tests acquisition, categories and portal types are well
+    configured. """
+    if not run : return
+    self.playSequence("""
+      stepCreateCurrencies
+      stepCheckAcquisition
+      """)
 
- 
+  def test_AccountingTransactionValidationDate(self, quiet=0,
+                                            run=RUN_ALL_TESTS):
+    """Transaction validation and dates"""
+    if not run : return
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateAccounts
+      stepCreateValidAccountingTransaction
+      stepValidateNoStartDate
+      stepCreateValidAccountingTransaction
+      stepValidateNoStopDate""")
+
+  def test_AccountingTransactionValidationSection(self, quiet=0,
+                                             run=RUN_ALL_TESTS):
+    """Transaction validation and section"""
+    if not run : return
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateAccounts
+      stepCreateValidAccountingTransaction
+      stepValidateNoSection""")
+
+  def test_AccountingTransactionValidationCurrency(self, quiet=0,
+                                           run=RUN_ALL_TESTS):
+    """Transaction validation and currency"""
+    if not run : return
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateAccounts
+      stepCreateValidAccountingTransaction
+      stepValidateNoCurrency""")
+
+  def test_AccountingTransactionValidationAccounts(self, quiet=0,
+                                           run=RUN_ALL_TESTS):
+    """Transaction validation and accounts"""
+    if not run : return
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateAccounts
+      stepCreateValidAccountingTransaction
+      stepValidateClosedAccount
+      stepCreateValidAccountingTransaction
+      stepValidateNoAccounts""")
+
+  def test_AccountingTransactionValidationBalanced(self, quiet=0,
+                                              run=RUN_ALL_TESTS):
+    """Transaction validation and balance"""
+    if not run : return
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateAccounts
+      stepCreateValidAccountingTransaction
+      stepValidateNotBalanced""")
+
+  def test_AccountingTransactionValidationPayment(self, quiet=0,
+                                             run=RUN_ALL_TESTS):
+    """Transaction validation and payment"""
+    if not run : return
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateAccounts
+      stepCreateValidAccountingTransaction
+      stepValidateNoPayment
+    """)
+
 if __name__ == '__main__':
   framework()
 else:
