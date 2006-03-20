@@ -203,7 +203,8 @@ class Person:
                    # acquired from address
                   'region',
                    # acquired from career
-                  'group', 'subordination', 'role', 'function', 'salary_level',
+                  'group', 'subordination', 'role', 'function',
+                  'salary_level', 'grade', 'skill',
                    # needed for movements having a Person as destination / source
                   'destination_region', 'source_region',
                  )
