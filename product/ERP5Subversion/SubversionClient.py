@@ -32,6 +32,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
 
 try:
   import pysvn
@@ -126,19 +127,23 @@ try:
       value = getattr(instance._obj, self._key)
       if type(value) == type(u''):
         value = value.encode('utf-8')
-      elif isinstance(value, pysvn.Entry):
+      #elif isinstance(value, pysvn.Entry):
+      elif str(type(value)) == "<type 'entry'>":
         value = Entry(value)
-      elif isinstance(value, pysvn.Revision):
+      #elif isinstance(value, pysvn.Revision):
+      elif str(type(value)) == "<type 'revision'>":
         value = Revision(value)
       return value
 
   def initializeAccessors(klass):
     klass.security = ClassSecurityInfo()
+    klass.security.declareObjectPublic()
     for attr in klass.attribute_list:
       name = 'get' + convertToUpperCase(attr)
+      print name
       setattr(klass, name, Getter(attr))
       klass.security.declarePublic(name)
-    InitializeClass(Status)
+    InitializeClass(klass)
 
   class ObjectWrapper(Implicit):
     attribute_list = ()
@@ -147,8 +152,9 @@ try:
       self._obj = obj
   
   class Status(ObjectWrapper):
-    attribute_list = ('path', 'entry', 'is_versioned', 'is_locked', 'is_copied', 'is_switched',
-                      'prop_status', 'text_status', 'repos_prop_status', 'repos_text_status')
+    # XXX Big Hack to fix a bug
+    __allow_access_to_unprotected_subobjects__ = 1
+    attribute_list = ('path', 'entry', 'is_versioned', 'is_locked', 'is_copied', 'is_switched', 'prop_status', 'text_status', 'repos_prop_status', 'repos_text_status')
   initializeAccessors(Status)
   
   class Entry(ObjectWrapper):
@@ -202,6 +208,6 @@ try:
 except ImportError:
   from zLOG import LOG, WARNING
   LOG('SubversionTool', WARNING,
-      'could not import pysvn; until pysvn is installed properly, this tool will not function.')
+      'could not import pysvn; until pysvn is installed properly, this tool will not work.')
   def newSubversionClient(container, **kw):
     raise SubversionInstallationError, 'pysvn is not installed'

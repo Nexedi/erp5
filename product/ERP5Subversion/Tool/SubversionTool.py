@@ -44,7 +44,42 @@ try:
   from base64 import b64encode, b64decode
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
- 
+  
+class File :
+  # Constructor
+  def __init__(self, fileName) :
+    self.fileName = fileName
+
+  # return the file name
+  def getName(self) :
+    return self.fileName
+## End of File Class
+
+class Dir :
+  # Constructor
+  def __init__(self, dirName) :
+    self.dirName = dirName
+    self.subdirs = [] # list of sub directories
+
+  # return directory's short name
+  def getName(self) :
+    return self.dirName
+
+  # return a list of sub directories' names
+  def getSubDirs(self) :
+    return [d.getName() for d in self.subdirs]
+
+  # add a sub directory to the list
+  def addSubDir(self, item) :
+    self.subdirs.append(item)
+
+  # return directory in subdirs given its name
+  def getDir(self, name):
+    for d in self.subdirs:
+      if d.getName() == name:
+        return d
+## End of Dir Class
+  
 class SubversionTool(UniqueObject, Folder):
   """The SubversionTool provides a Subversion interface to ERP5.
   """
@@ -244,5 +279,53 @@ class SubversionTool(UniqueObject, Folder):
     """
     client = self._getClient()
     return client.status(self._getWorkingPath(path), **kw)
+  
+  def getModifiedTree(self, path) :
+    if path[-1]=="/" :
+      path = path[:-1]
+    
+    root = Dir(path.split('/')[-1])
+    
+    for statusObj in self.status(path) :
+      # (normal, added, modified, deleted)
+      msgStatus = statusObj.getTextStatus()
+    
+      if str(msgStatus) != "normal" :
+        relative_path = statusObj.getPath()[len(path)+1:]
+    
+        # Processing entry
+        full_path = relative_path.split('/')
+        filename = full_path[-1]
+        full_path = full_path[:-1]
+        parent = root
+        for rep in full_path :
+          if rep:
+            if rep not in parent.getSubDirs():
+              parent.addSubDir(Dir(rep))
+            parent = parent.getDir(rep)
+        parent.addSubDir(File(filename))
+    return root
+            
+  def treeToXML(self, item) :
+    return self._treeToXML(item, "", 0)
+  
+  def _treeToXML(self, item, output, ident) :
+    if isinstance(item, Dir) :
+      for i in range(ident) :
+        output += '\t'
+      output += '<item type="directory" name="%s">'%item.getName() + os.linesep
+      for it in item.subdirs:
+        ident += 1
+        output = self._treeToXML(item.getDir(it.getName()), output, ident)
+        ident -= 1
+      for i in range(ident) :
+        output += '\t'
+      output += '</item>' + os.linesep
+    else :
+      for i in range(ident) :
+        output += '\t'
+      output += '<item type="file" name="%s" />'%item.getName() + os.linesep
+
+    return output
     
 InitializeClass(SubversionTool)
