@@ -327,6 +327,31 @@ class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
     
 allow_class(RootAppliedRuleCausalityMovementGroup)
 
+# Again add a strange movement group, it was first created for building
+# Sale invoices transactions lines. We need to put accounting lines
+# in the same invoices than invoice lines.
+class ParentExplanationMovementGroup(RootMovementGroup):
+  """ Groups movement that comes from simulation movement that shares the
+  same explanation relation. For example, it groups in an Invoice
+  movements from the same Packing List. """
+  
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    explanation_value = self._getParentExplanationValue(movement)
+    self.explanation_value = explanation_value
+    self.setGroupEdit(
+      parent_explanation_value = explanation_value
+    )
+
+  def _getParentExplanationValue(self, movement):
+    """ Get the order value for a movement """
+    return movement.getParentValue().getExplanationValue()
+    
+  def test(self,movement):
+    return self._getParentExplanationValue(movement) == self.explanation_value
+    
+allow_class(ParentExplanationMovementGroup)
+
 class PathMovementGroup(RootMovementGroup):
   """ Group movements that have the same source and the same destination."""
   def __init__(self, movement, **kw):
