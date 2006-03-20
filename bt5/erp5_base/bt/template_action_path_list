@@ -30,7 +30,6 @@ Career | view
 ChatAddress | history
 ChatAddress | metadata
 ChatAddress | print
-ChatAddress | translate
 ChatAddress | view
 Credit Card | history
 Credit Card | metadata
@@ -40,7 +39,6 @@ Currency Exchange Line | history
 Currency Exchange Line | metadata
 Currency Exchange Line | print
 Currency Exchange Line | view
-Currency Module | Translate
 Currency Module | csv_export
 Currency Module | csv_import
 Currency Module | print
@@ -70,7 +68,6 @@ Image | fullsize_view
 Image | history
 Image | metadata
 Image | print
-Image | translate
 Image | view
 Link | history
 Link | metadata
@@ -81,7 +78,6 @@ Organisation Module | list_ui
 Organisation Module | print
 Organisation Module | search
 Organisation Module | sort_on
-Organisation Module | translate
 Organisation Module | view
 Organisation | coordinates
 Organisation | details
