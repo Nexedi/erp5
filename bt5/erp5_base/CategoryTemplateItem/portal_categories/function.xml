@@ -400,7 +400,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() ) + [\'Organisation\']</string> </value>
+            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() ) + [\'Organisation\', \'Career\']</string> </value>
         </item>
         <item>
             <key> <string>acquisition_portal_type_list</string> </key>
