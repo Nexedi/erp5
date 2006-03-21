@@ -301,14 +301,11 @@ class SubversionTool(UniqueObject, Folder):
     for statusObj in self.status(path) :
       # (normal, added, modified, deleted)
       msgStatus = statusObj.getTextStatus()
-      f = file('/tmp/py.log','w')
       if str(msgStatus) != "normal" :
         full_path = statusObj.getPath()
         full_path_list = full_path.split('/')[1:]
-        f.write('full_path_list = %s\n' % full_path_list)
         relative_path = full_path[len(path)+1:]
         relative_path_list = relative_path.split('/')
-        f.write('relative_path_list = %s\n' % relative_path_list)
         # Processing entry
         filename = relative_path_list[-1]
         # Needed or files will be both File & Dir objects
@@ -320,12 +317,9 @@ class SubversionTool(UniqueObject, Folder):
           i += 1
           if d :
             if d not in parent.getSubDirs():
-              f.write('d is = %s\n'% d)
-              f.write('adding subdir %s to parent %s\n'% ('/'+'/'.join(full_path_list[:i]).strip(), parent.getFullPath()))
               parent.addSubDir(Dir('/'+'/'.join(full_path_list[:i]).strip()))
             parent = parent.getDir(d)
         parent.addSubDir(File(full_path))
-        f.close()
     return root
             
   def treeToXML(self, item) :
@@ -339,7 +333,7 @@ class SubversionTool(UniqueObject, Folder):
     if isinstance(item, Dir) :
       for i in range(ident) :
         output += '\t'
-      output += '<item text="%s" id="%s" im0="folderClosed.gif" im1="folderOpen.gif" im2="folderClosed.gif">'%(item.getName(), item.getFullPath(),) + os.linesep
+      output += '<item text="%s" id="%s" im0="folder.png" im1="folder_open.png" im2="folderClosed.gif">'%(item.getName(), item.getFullPath(),) + os.linesep
       for it in item.subdirs:
         ident += 1
         output = self._treeToXML(item.getDir(it.getName()), output, ident)
@@ -350,7 +344,7 @@ class SubversionTool(UniqueObject, Folder):
     else :
       for i in range(ident) :
         output += '\t'
-      output += '<item text="%s" id="%s" im0="leaf.gif" im1="leaf.gif" im2="leaf.gif"/>'%(item.getName(), item.getFullPath(),) + os.linesep
+      output += '<item text="%s" id="%s" im0="document.png" im1="document.png" im2="document.png"/>'%(item.getName(), item.getFullPath(),) + os.linesep
 
     return output
     
