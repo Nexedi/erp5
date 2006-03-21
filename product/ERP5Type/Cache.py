@@ -153,20 +153,20 @@ def clearCache():
 # TransactionCache is a cache per transaction. The purpose of this cache is
 # to accelerate some heavy read-only operations. Note that this must not be
 # enabled when a trasaction may modify ZODB objects.
-def getTransactionCache(context):
+def getReadOnlyTransactionCache(context):
   """Get the transaction cache.
   """
   try:
-    return context.REQUEST['_erp5_transaction_cache']
+    return context.REQUEST['_erp5_read_only_transaction_cache']
   except KeyError:
     return None
 
-def enableTransactionCache(context):
+def enableReadOnlyTransactionCache(context):
   """Enable the transaction cache.
   """
-  context.REQUEST.set('_erp5_transaction_cache', {})
+  context.REQUEST.set('_erp5_read_only_transaction_cache', {})
 
-def disableTransactionCache(context):
+def disableReadOnlyTransactionCache(context):
   """Disable the transaction cache.
   """
-  context.REQUEST.set('_erp5_transaction_cache', None)
+  context.REQUEST.set('_erp5_read_only_transaction_cache', None)

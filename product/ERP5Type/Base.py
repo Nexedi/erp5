@@ -48,7 +48,7 @@ from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
-from Products.ERP5Type.Cache import CachingMethod, clearCache, getTransactionCache
+from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 
@@ -1224,7 +1224,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Returns the portal object
     """
-    cache = getTransactionCache(self)
+    cache = getReadOnlyTransactionCache(self)
     if cache is not None:
       key = 'getPortalObject'
       try:

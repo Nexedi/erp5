@@ -59,12 +59,12 @@ except ImportError:
   psyco = None
 
 try:
-  from Products.ERP5Type.Cache import enableTransactionCache, disableTransactionCache
+  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
 except ImportError:
   def doNothing(context):
     pass
-  enableTransactionCache = doNothing
-  disableTransactionCache = doNothing
+  enableReadOnlyTransactionCache = doNothing
+  disableReadOnlyTransactionCache = doNothing
   
 UID_BUFFER_SIZE = 300
 
@@ -1047,7 +1047,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     try:
       if not disable_cache:
-        enableTransactionCache(self)
+        enableReadOnlyTransactionCache(self)
       
       method_kw_dict = {}
       for method_name in method_id_list:
@@ -1135,7 +1135,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           raise
     finally:
       if not disable_cache:
-        disableTransactionCache(self)
+        disableReadOnlyTransactionCache(self)
 
   if psyco is not None: psyco.bind(catalogObjectList)
 

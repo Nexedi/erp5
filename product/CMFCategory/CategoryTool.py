@@ -37,7 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
-from Products.ERP5Type.Cache import getTransactionCache
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
@@ -199,7 +199,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         Returns a Category object from a given category url
         and optionnal base category id
       """
-      cache = getTransactionCache(self)
+      cache = getReadOnlyTransactionCache(self)
       if cache is not None:
         key = ('getCategoryValue', relative_url, base_category)
         try:
@@ -766,7 +766,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                       'getSingleCategoryAcquiredMembershipList' )
     def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
                                          spec=(), filter=None, acquired_object_dict = None, **kw ):
-      cache = getTransactionCache(self)
+      cache = getReadOnlyTransactionCache(self)
       if cache is not None:
         key = ('getSingleCategoryAcquiredMembershipList', context._p_oid, base_category, base, spec, 
                filter, str(kw))
@@ -1399,7 +1399,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           Finds an object from a relative_url
           Method is public since we use restrictedTraverse
         """
-        cache = getTransactionCache(self)
+        cache = getReadOnlyTransactionCache(self)
         if cache is not None:
           key = ('resolveCategory', relative_url)
           try:
