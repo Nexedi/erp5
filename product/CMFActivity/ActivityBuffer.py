@@ -78,12 +78,12 @@ class ActivityBuffer(TM):
         try:
             try:
                 # Try to push / delete all messages
-                for (activity, activity_tool, message) in self.flushed_activity:
+                for (activity, message) in self.flushed_activity:
                     #LOG('ActivityBuffer finishDeleteMessage', ERROR, str(message.method_id))
-                    activity.finishDeleteMessage(activity_tool, message)
-                for (activity, activity_tool, message) in self.queued_activity:
+                    activity.finishDeleteMessage(self._activity_tool, message)
+                for (activity, message) in self.queued_activity:
                     #LOG('ActivityBuffer finishQueueMessage', ERROR, str(message.method_id))
-                    activity.finishQueueMessage(activity_tool, message)
+                    activity.finishQueueMessage(self._activity_tool, message)
             except:
                 LOG('ActivityBuffer', ERROR, "exception during _finish",
                     error=sys.exc_info())
@@ -109,22 +109,22 @@ class ActivityBuffer(TM):
             return
         try:
             # Try to push / delete all messages
-            for (activity, activity_tool, message) in self.flushed_activity:
+            for (activity, message) in self.flushed_activity:
                 #LOG('ActivityBuffer prepareDeleteMessage', ERROR, str(message.method_id))
-                activity.prepareDeleteMessage(activity_tool, message)
+                activity.prepareDeleteMessage(self._activity_tool, message)
             activity_dict = {}
-            for (activity, activity_tool, message) in self.queued_activity:
-                key = (activity, activity_tool)
+            for (activity, message) in self.queued_activity:
+                key = activity
                 if key not in activity_dict:
                     activity_dict[key] = []
                 activity_dict[key].append(message)
             for key, message_list in activity_dict.items():
-                activity, activity_tool = key
+                activity = key
                 if hasattr(activity, 'prepareQueueMessageList'):
-                    activity.prepareQueueMessageList(activity_tool, message_list)
+                    activity.prepareQueueMessageList(self._activity_tool, message_list)
                 else:
                   for message in message_list:
-                      activity.prepareQueueMessage(activity_tool, message)
+                      activity.prepareQueueMessage(self._activity_tool, message)
         except:
             LOG('ActivityBuffer', ERROR, "exception during tpc_prepare",
                 error=sys.exc_info())
@@ -132,15 +132,23 @@ class ActivityBuffer(TM):
 
     def deferredQueueMessage(self, activity_tool, activity, message):
       self._register()
+      # Directly store the activity tool as an attribute. At the beginning
+      # the activity tool was stored as a part of the key in queued_activity and
+      # in flushed_activity, but this is not nice because in that case we must
+      # use hash on it, and when there is no uid on activity tool, it is
+      # impossible to generate a new uid because acquisition is not available
+      # in the dictionnary.
+      if getattr(self,'_activity_tool',None) is None:
+        self._activity_tool = activity_tool
       # Activity is called to prevent queuing some messages (useful for example
       # to prevent reindexing objects multiple times)
       if not activity.isMessageRegistered(self, activity_tool, message):
-        self.queued_activity.append((activity, activity_tool, message))
+        self.queued_activity.append((activity, message))
         # We register queued messages so that we can
         # unregister them
         activity.registerMessage(self, activity_tool, message)
 
     def deferredDeleteMessage(self, activity_tool, activity, message):
       self._register()
-      self.flushed_activity.append((activity, activity_tool, message))
+      self.flushed_activity.append((activity, message))
 
