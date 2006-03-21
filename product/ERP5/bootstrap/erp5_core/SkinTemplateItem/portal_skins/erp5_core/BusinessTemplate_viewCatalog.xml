@@ -99,7 +99,7 @@
                         <string>my_template_catalog_method_id_list</string>
                         <string>my_template_catalog_result_table_list</string>
                         <string>my_template_catalog_result_key_list</string>
-                        <string>my_template_catalog_keyword_key</string>
+                        <string>my_template_catalog_keyword_key_list</string>
                       </list>
                     </value>
                 </item>

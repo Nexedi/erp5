@@ -1,3 +1,6 @@
+2006-03-21 Seb
+* moved catalog methods here
+
 2006-03-13 Aurel
 * modify Base_getWorkflowHistoryItemList and Workflow_statusModify in order to take Message class into account
 
