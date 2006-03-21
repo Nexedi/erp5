@@ -64,8 +64,6 @@ class PropertyTypeValidity(Constraint):
       # Remove _properties
       error_message = "Instance has local _properties property"
       if fixit:
-        # XXX FIXME we have to set exception name !
-#           try:
         local_properties = object._properties
         del object._properties
         object._local_properties = []
@@ -74,8 +72,6 @@ class PropertyTypeValidity(Constraint):
           if p['id'] not in class_property_ids:
             object._local_properties.append(p)
         error_message += " (Fixed)"
-#           except:
-#             error_message += " (ERROR)"
       errors.append(self._generateError(object, error_message))
     return errors
 
@@ -108,11 +104,13 @@ class PropertyTypeValidity(Constraint):
             "Attribute %s should be of type %s but is of type %s" % \
             (property_id, property_type, str(type(value)))
         if fixit:
-          # XXX FIXME do not use except without exception name !
-#             try:
+          # try to cast to correct type
+          if wrong_type :
+            try :
+              value = self._type_dict[property_type][0](value)
+            except (KeyError, ValueError), error:
+              error_message += " (Type cast failed : %s)" % error
           object.setProperty(property_id, value)
           error_message += " (Fixed)"
-#             except:
-#               error_message += " (ERROR)"
         errors.append(self._generateError(object, error_message))
     return errors
