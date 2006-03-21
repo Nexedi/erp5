@@ -755,8 +755,9 @@ class ERP5Generator(PortalGenerator):
         LOG('setupTools, create',0,kw)
         id = str(id)
         portal = self.klass(id=id)
-        if reindex==0:
-          setattr(portal,'isIndexable',0)
+        # Make sure reindex will not be called until business templates
+        # will be installed
+        setattr(portal,'isIndexable',0)
         parent._setObject(id, portal)
         # Return the fully wrapped object.
         p = parent.this()._getOb(id)
@@ -868,9 +869,6 @@ class ERP5Generator(PortalGenerator):
         # Create default methods in Catalog XXX
         portal_catalog = getToolByName(p, 'portal_catalog')
         if not portal_catalog.getSQLCatalog('erp5_mysql') and not update:
-            # FIXME: addDefaultSQLMethods should be removed.
-            portal_catalog.addDefaultSQLMethods('erp5_mysql')
-
             # Clear Catalog
             portal_catalog.manage_catalogClear()
 
@@ -968,6 +966,7 @@ class ERP5Generator(PortalGenerator):
         skins_tool = getToolByName(p, 'portal_skins', None)
         if skins_tool is None:
           return
+        setattr(p,'isIndexable',1)
         portal_catalog = p.portal_catalog
         portal_catalog.manage_catalogClear()
         skins_tool["erp5_core"].ERP5Site_reindexAll()
