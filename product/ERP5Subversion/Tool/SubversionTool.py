@@ -39,6 +39,8 @@ from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
 from zExceptions import Unauthorized
+from OFS.Image import manage_addFile
+from cStringIO import StringIO
 
 try:
   from base64 import b64encode, b64decode
@@ -47,23 +49,29 @@ except ImportError:
   
 class File :
   # Constructor
-  def __init__(self, fullPath) :
+  def __init__(self, fullPath, msgStatus) :
     self.fullPath = fullPath
+    self.msgStatus = msgStatus
     self.fileName = fullPath.split('/')[-1]
 
   # return the file name
   def getName(self) :
     return self.fileName
   
-    # return the file path
+  # return the file path
   def getFullPath(self) :
     return self.fullPath
+  
+  # return the file's msgStatus
+  def getMsgStatus(self) :
+    return self.msgStatus
 ## End of File Class
 
 class Dir :
   # Constructor
-  def __init__(self, fullPath) :
+  def __init__(self, fullPath, msgStatus) :
     self.fullPath = fullPath
+    self.msgStatus = msgStatus
     self.dirName = fullPath.split('/')[-1]
     self.subdirs = [] # list of sub directories
 
@@ -74,6 +82,14 @@ class Dir :
   # return directory's path
   def getFullPath(self) :
     return self.fullPath
+  
+  # return directory's msgStatus
+  def getMsgStatus(self) :
+    return self.msgStatus
+  
+  # Set Directory's msgStatus
+  def setMsgStatus(self, msgStatus) :
+    self.msgStatus = msgStatus
 
   # return a list of sub directories' names
   def getSubDirs(self) :
@@ -296,7 +312,7 @@ class SubversionTool(UniqueObject, Folder):
       path = path[:-1]
     
     #root = Dir(path.split('/')[-1])
-    root = Dir(path)
+    root = Dir(path, "normal")
 
     for statusObj in self.status(path) :
       # (normal, added, modified, deleted)
@@ -317,34 +333,70 @@ class SubversionTool(UniqueObject, Folder):
           i += 1
           if d :
             if d not in parent.getSubDirs():
-              parent.addSubDir(Dir('/'+'/'.join(full_path_list[:i]).strip()))
+              parent.addSubDir(Dir('/'+'/'.join(full_path_list[:i]).strip(),
+"normal"))
             parent = parent.getDir(d)
-        parent.addSubDir(File(full_path))
+        if os.path.isdir(full_path) :
+          if filename not in parent.getSubDirs() :
+            parent.addSubDir(Dir(full_path, str(msgStatus)))
+          else :
+            tmp = parent.getDir(filename)
+            tmp.setMsgStatus(str(msgStatus))
+        else :
+          parent.addSubDir(File(full_path, str(msgStatus)))
     return root
             
   def treeToXML(self, item) :
-    output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
-    output += "<tree id='0'>" + os.linesep
-    output = self._treeToXML(item, output, 1)
-    output += "</tree>" + os.linesep
-    return output
+    output = StringIO()
+    output.write("<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep)
+    output.write("<tree id='0'>" + os.linesep)
+    output = self._treeToXML(item, output, 1, True)
+    output.write("</tree>" + os.linesep)
+    try :
+      self.getPortalObject()["portal_skins"]["erp5_svn"].manage_addFile(id="tree.xml", file=output)
+    except :
+      self.getPortalObject()["portal_skins"]["erp5_svn"]["tree.xml"].manage_upload(file=output)
+    output.close()
+
+    #return output
   
-  def _treeToXML(self, item, output, ident) :
+  def _treeToXML(self, item, output, ident, first) :
+    itemStatus = item.getMsgStatus()
+    if itemStatus == 'added' :
+      itemColor='green'
+    elif itemStatus == 'modified' :
+      itemColor='orange'
+    elif itemStatus == 'deleted' :
+      itemColor='red'
+    else :
+      itemColor='black'
     if isinstance(item, Dir) :
       for i in range(ident) :
-        output += '\t'
-      output += '<item text="%s" id="%s" im0="folder.png" im1="folder_open.png" im2="folderClosed.gif">'%(item.getName(), item.getFullPath(),) + os.linesep
+        output.write('\t')
+      if first :
+        output.write('<item open="1" text="%s" id="%s" aCol="%s" '\
+        'im0="folder.png" im1="folder_open.png" '\
+        'im2="folder.png">'%(item.getName(),
+item.getFullPath(), itemColor,) + os.linesep)
+        first=False
+      else :
+        output.write('<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
+      'im1="folder_open.png" im2="folder.png">'%(item.getName(),
+item.getFullPath(), itemColor,) + os.linesep)
       for it in item.subdirs:
         ident += 1
-        output = self._treeToXML(item.getDir(it.getName()), output, ident)
+        output = self._treeToXML(item.getDir(it.getName()), output, ident,
+first)
         ident -= 1
       for i in range(ident) :
-        output += '\t'
-      output += '</item>' + os.linesep
+        output.write('\t')
+      output.write('</item>' + os.linesep)
     else :
       for i in range(ident) :
-        output += '\t'
-      output += '<item text="%s" id="%s" im0="document.png" im1="document.png" im2="document.png"/>'%(item.getName(), item.getFullPath(),) + os.linesep
+        output.write('\t')
+      output.write('<item text="%s" id="%s" aCol="%s" im0="document.png" ' \
+                'im1="document.png" im2="document.png"/>'%(item.getName(),
+item.getFullPath(), itemColor,) + os.linesep)
 
     return output
     
