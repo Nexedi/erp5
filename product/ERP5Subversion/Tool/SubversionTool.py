@@ -47,23 +47,33 @@ except ImportError:
   
 class File :
   # Constructor
-  def __init__(self, fileName) :
-    self.fileName = fileName
+  def __init__(self, fullPath) :
+    self.fullPath = fullPath
+    self.fileName = fullPath.split('/')[-1]
 
   # return the file name
   def getName(self) :
     return self.fileName
+  
+    # return the file path
+  def getFullPath(self) :
+    return self.fullPath
 ## End of File Class
 
 class Dir :
   # Constructor
-  def __init__(self, dirName) :
-    self.dirName = dirName
+  def __init__(self, fullPath) :
+    self.fullPath = fullPath
+    self.dirName = fullPath.split('/')[-1]
     self.subdirs = [] # list of sub directories
 
   # return directory's short name
   def getName(self) :
     return self.dirName
+  
+  # return directory's path
+  def getFullPath(self) :
+    return self.fullPath
 
   # return a list of sub directories' names
   def getSubDirs(self) :
@@ -281,39 +291,55 @@ class SubversionTool(UniqueObject, Folder):
     return client.status(self._getWorkingPath(path), **kw)
   
   def getModifiedTree(self, path) :
+    # Remove trailing slash if it's present
     if path[-1]=="/" :
       path = path[:-1]
     
-    root = Dir(path.split('/')[-1])
-    
+    #root = Dir(path.split('/')[-1])
+    root = Dir(path)
+
     for statusObj in self.status(path) :
       # (normal, added, modified, deleted)
       msgStatus = statusObj.getTextStatus()
-    
+      f = file('/tmp/py.log','w')
       if str(msgStatus) != "normal" :
-        relative_path = statusObj.getPath()[len(path)+1:]
-    
+        full_path = statusObj.getPath()
+        full_path_list = full_path.split('/')[1:]
+        f.write('full_path_list = %s\n' % full_path_list)
+        relative_path = full_path[len(path)+1:]
+        relative_path_list = relative_path.split('/')
+        f.write('relative_path_list = %s\n' % relative_path_list)
         # Processing entry
-        full_path = relative_path.split('/')
-        filename = full_path[-1]
-        full_path = full_path[:-1]
+        filename = relative_path_list[-1]
+        # Needed or files will be both File & Dir objects
+        relative_path_list = relative_path_list[:-1]
         parent = root
-        for rep in full_path :
-          if rep:
-            if rep not in parent.getSubDirs():
-              parent.addSubDir(Dir(rep))
-            parent = parent.getDir(rep)
-        parent.addSubDir(File(filename))
+        i = len(path.split('/'))-1
+        
+        for d in relative_path_list :
+          i += 1
+          if d :
+            if d not in parent.getSubDirs():
+              f.write('d is = %s\n'% d)
+              f.write('adding subdir %s to parent %s\n'% ('/'+'/'.join(full_path_list[:i]).strip(), parent.getFullPath()))
+              parent.addSubDir(Dir('/'+'/'.join(full_path_list[:i]).strip()))
+            parent = parent.getDir(d)
+        parent.addSubDir(File(full_path))
+        f.close()
     return root
             
   def treeToXML(self, item) :
-    return self._treeToXML(item, "", 0)
+    output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
+    output += "<tree id='0'>" + os.linesep
+    output = self._treeToXML(item, output, 1)
+    output += "</tree>" + os.linesep
+    return output
   
   def _treeToXML(self, item, output, ident) :
     if isinstance(item, Dir) :
       for i in range(ident) :
         output += '\t'
-      output += '<item type="directory" name="%s">'%item.getName() + os.linesep
+      output += '<item text="%s" id="%s" im0="folderClosed.gif" im1="folderOpen.gif" im2="folderClosed.gif">'%(item.getName(), item.getFullPath(),) + os.linesep
       for it in item.subdirs:
         ident += 1
         output = self._treeToXML(item.getDir(it.getName()), output, ident)
@@ -324,7 +350,7 @@ class SubversionTool(UniqueObject, Folder):
     else :
       for i in range(ident) :
         output += '\t'
-      output += '<item type="file" name="%s" />'%item.getName() + os.linesep
+      output += '<item text="%s" id="%s" im0="leaf.gif" im1="leaf.gif" im2="leaf.gif"/>'%(item.getName(), item.getFullPath(),) + os.linesep
 
     return output
     
