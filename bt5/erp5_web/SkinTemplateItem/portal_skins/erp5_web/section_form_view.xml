@@ -54,7 +54,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="default_content here/WebSite_getDefaultDocument | nothing;\n
+<tal:block tal:define="default_content here/WebSite_getDefaultDocumentValue | nothing;\n
                        layout_form_id here/getApplicableLayout | nothing;\n
                        ignore_layout request/ignore_layout | nothing;\n
                        editable_mode request/editable_mode | nothing;\n
@@ -62,21 +62,16 @@
                        layout_id layout_form/pt | string:view_master;">\n
   <tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
     <tal:block metal:fill-slot="main">\n
-      <tal:block tal:condition="not: editable_mode">\n
-        <tal:block tal:condition="python:(not ignore_layout) and default_content">\n
-          <tal:block tal:define="here python:default_content;\n
-                                 form python:here.WebPage_view;\n
-                                 default_content_title python:here.getTitle()">\n
-            <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
-          </tal:block>\n
-        </tal:block>\n
-        <tal:block tal:condition="python: ignore_layout or (not default_content)">\n
-          <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
-        </tal:block>\n
+      <tal:block tal:condition="python:(not editable_mode) and (not ignore_layout) and default_content is not None">\n
+        <tal:block tal:define="global here python:default_content;\n
+                               global form python:here.WebPage_view;\n
+                               global default_content_title python:here.getTitle()"/>\n
       </tal:block>\n
-      <tal:block tal:condition="editable_mode">\n
-        <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
-      </tal:block>\n
+      <tal:block tal:replace="here/getPath"/><br/>\n
+      <tal:block tal:condition="not: editable_mode">not </tal:block>editable_mode<br/>\n
+      <tal:block tal:condition="not: ignore_layout">not </tal:block>ignore_layout<br/>\n
+      <tal:block tal:replace="default_content/getPath"/><br/>\n
+      <tal:block metal:use-macro="here/form_view/macros/form_render" />\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>

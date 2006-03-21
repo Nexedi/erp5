@@ -66,8 +66,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.WebSite_getSectionValue() is not None:\n
-  return context.WebSite_getSectionValue().getTitle()\n
+            <value> <string>section = context.WebSite_getSectionValue()\n
+if section is not None:\n
+  return section.getTitle()\n
 return None\n
 </string> </value>
         </item>
@@ -116,7 +117,8 @@ return None\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
+                            <string>section</string>
                             <string>None</string>
                           </tuple>
                         </value>

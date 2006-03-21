@@ -98,7 +98,7 @@ SearchableText</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_deferred_mysql</string> </value>
+            <value> <string>erp5_deferred_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

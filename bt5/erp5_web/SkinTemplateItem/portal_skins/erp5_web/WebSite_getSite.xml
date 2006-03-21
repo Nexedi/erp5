@@ -66,11 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>current_section = context\n
-while current_section is not None and current_section.getPortalType() != \'Web Site\':\n
-  current_section = current_section.getParent()\n
-\n
-return current_section\n
+            <value> <string>site = context.WebSite_getSiteValue()\n
+if site is not None:\n
+  return site.getTitle()\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -117,10 +116,10 @@ return current_section\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>context</string>
-                            <string>current_section</string>
-                            <string>None</string>
                             <string>_getattr_</string>
+<string>context</string>
+                            <string>site</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

@@ -85,7 +85,7 @@ new_content.setVersion(version)\n
 new_content.setLanguage(language)\n
 new_content.setTextContent(context.getTextContent())\n
 \n
-redirect_url = new_content.WebSite_getDocumentUrl()\n
+redirect_url = new_content.WebSite_getDocumentPhysicalUrl()\n
 context.log(\'WebSite_createContent\',\'redirect_url = %s\' % redirect_url)\n
 return request.RESPONSE.redirect( redirect_url )\n
 </string> </value>

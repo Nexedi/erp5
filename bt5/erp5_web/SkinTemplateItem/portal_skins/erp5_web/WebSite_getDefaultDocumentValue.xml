@@ -66,22 +66,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>path_list = []\n
-parent_portal_type = \'\'\n
+            <value> <string>"""\n
+  The purpose of this method is to get a default content for a given section.\n
+  Multiple strategies can be implemented. For example, if the default\n
+  content points to an actual document, the reference of this document\n
+  is used to search in the catalog for the latest version in the appropriate\n
+  language.\n
 \n
-for crumb in context.WebSite_getBreadcrumbValue():\n
-  portal_type = crumb.getPortalType()\n
-  if portal_type == \'Web Site\':\n
-    path_list = [context.WebSite_getSiteValue().absolute_url()]\n
-  elif portal_type == \'Web Page\' and \\\n
-       hasattr(crumb, \'default_reference\') and \\\n
-       \'Module\' not in parent_portal_type:\n
-    path_list.append(crumb.getReference())\n
-  else:\n
-    path_list.append(crumb.getId())\n
-  parent_portal_type = portal_type\n
+  This method can be customised for every Web site\n
+"""\n
 \n
-return \'/\'.join(path_list)\n
+source_value = context.getDefaultSourceValue()\n
+\n
+if source_value is not None:\n
+  return source_value \n
+\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -92,7 +92,7 @@ return \'/\'.join(path_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getUrl</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getDefaultDocumentValue</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -128,14 +128,10 @@ return \'/\'.join(path_list)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>path_list</string>
-                            <string>parent_portal_type</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>crumb</string>
-                            <string>portal_type</string>
-                            <string>hasattr</string>
+                            <string>source_value</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -152,7 +148,7 @@ return \'/\'.join(path_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getUrl</string> </value>
+            <value> <string>WebSite_getDefaultDocumentValue</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

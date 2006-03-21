@@ -66,14 +66,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>while context is not None and context.getPortalType() not in (\'Web Section\', \'Web Site\'):\n
+            <value> <string>while hasattr(context, \'getPortalType\'):\n
+  if context.getPortalType() == \'Web Section\':\n
+    return context\n
   context = context.getParent()\n
-\n
-if context is None:\n
-  return None\n
-if context.getPortalType() == \'Web Site\':\n
-  return None\n
-return context\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -120,9 +117,10 @@ return context\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>hasattr</string>
                             <string>context</string>
-                            <string>None</string>
                             <string>_getattr_</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

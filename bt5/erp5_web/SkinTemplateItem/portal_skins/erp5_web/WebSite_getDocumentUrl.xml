@@ -66,8 +66,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.WebSite_getDocumentValue() is not None:\n
-  return context.WebSite_getDocumentValue().WebSite_getUrl()\n
+            <value> <string>document = context.WebSite_getDocumentValue()\n
+if document is not None:\n
+  return document.WebSite_getUrl()\n
 return context.WebSite_getUrl()\n
 </string> </value>
         </item>
@@ -117,6 +118,7 @@ return context.WebSite_getUrl()\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>document</string>
                             <string>None</string>
                           </tuple>
                         </value>

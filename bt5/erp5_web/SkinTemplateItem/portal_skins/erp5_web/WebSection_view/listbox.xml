@@ -346,6 +346,10 @@
                           <string>Short Title</string>
                         </tuple>
                         <tuple>
+                          <string>validation_state</string>
+                          <string>Valisation State</string>
+                        </tuple>
+                        <tuple>
                           <string>portal_type</string>
                           <string>Type</string>
                         </tuple>
@@ -533,6 +537,10 @@
                         </tuple>
                         <tuple>
                           <string>short_title</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>validation_state</string>
                           <string>WebSite_getListboxUrl</string>
                         </tuple>
                         <tuple>
