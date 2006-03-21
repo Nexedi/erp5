@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005, 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -30,17 +30,10 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator import StandardFields 
 from Products.Formulator.DummyField import fields
-from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
-from Globals import get_request
 from Products.PythonScripts.Utility import allow_class
 
-import string
 from zLOG import LOG
-from Products.Formulator.Widget import ItemsWidget
 from AccessControl import ClassSecurityInfo
-from Form import BasicForm
-
 from Products.Formulator.Errors import ValidationError
 
 class ParallelListWidget(Widget.MultiListWidget):
@@ -78,143 +71,193 @@ class ParallelListWidget(Widget.MultiListWidget):
         "The method to call to hash items list."),
                                required=0)
 
-    def _generateSubForm(self, field, key, value, REQUEST):
-      item_list = filter(lambda x: x not in [ ('',''), ['',''] ], 
-                         field.get_value('items'))
-
-      value_list = value
-      if type(value_list) not in (type([]), type(())):
-        value_list = [value_list]
-
-      empty_sub_field_property_dict = {
-        'key': 'default',
-        'title': '',
-        'required': 0,
-        'field_type': 'MultiListField',
-        'item_list': [],
-        'value': [],
-        'is_right_display': 0,
-        'size': 5
+    def __init__(self):
+      """
+      Generate some subwidget used for rendering.
+      """
+      self.sub_widget = {
+        'ListField': Widget.ListWidgetInstance,
+        'MultiListField': Widget.MultiListWidgetInstance,
       }
 
-      hash_list = []
-      hash_script_id = field.get_value('hash_script_id')
-      if hash_script_id not in [None, '']:
-        here = REQUEST['here']
-        script = getattr(here, hash_script_id)
-        script_hash_list = script(
-                item_list,
-                value_list,
-                default_sub_field_property_dict=empty_sub_field_property_dict,
-                is_right_display=0)
-        hash_list.extend(script_hash_list)
-      else:
-        # No hash_script founded, generate a little hash_script 
-        # to display only a MultiListField
-        default_sub_field_property_dict = empty_sub_field_property_dict.copy()
-        default_sub_field_property_dict['item_list'] = item_list 
-        default_sub_field_property_dict['value'] = value_list
-        default_sub_field_property_dict['title'] = self.title
-        hash_list.append(default_sub_field_property_dict)
-
-      # XXX Regenerate fields each time....
-      field.sub_form = create_aggregated_list_sub_form(hash_list)
-      return hash_list
-
     def render(self, field, key, value, REQUEST):
-      hash_list = self._generateSubForm(field, key, value, REQUEST)
+      hash_list = field._generateSubForm(value, REQUEST)
       # Call render on each sub field
       sub_field_render_list = []
       for sub_field_property_dict in hash_list:
-        sub_field_render_list.append(field.render_sub_field(
-                          sub_field_property_dict['key'], 
+        sub_field_render_list.append(self.render_sub_field(
+                          field, key,
                           sub_field_property_dict['value'], REQUEST,
-                          key=key))
+                          sub_field_property_dict))
       # Aggregate all renders
-      html_string = string.join(sub_field_render_list, 
-                                field.get_value('view_separator'))
+      html_string = field.get_value('view_separator').\
+                                join(sub_field_render_list)
       return html_string
 
     def render_htmlgrid(self, field, key, value, REQUEST):
-      hash_list = self._generateSubForm(field, key, value, REQUEST)
+      hash_list = field._generateSubForm(value, REQUEST)
       # Call render on each sub field
       sub_field_render_list = []
       for sub_field_property_dict in hash_list:
-        sub_field_render_list.append((sub_field_property_dict['title'],
-                          field.render_sub_field(
-                          sub_field_property_dict['key'], 
-                          sub_field_property_dict['value'], REQUEST,
-                          key=key)))
+        sub_field_render_list.append((
+                          sub_field_property_dict['title'],
+                          self.render_sub_field(
+                            field, key,
+                            sub_field_property_dict['value'], REQUEST,
+                            sub_field_property_dict)))
       return sub_field_render_list
+
+    def render_sub_field(self, field, key, value, REQUEST,
+                        sub_field_property_dict):
+      """
+      Render dynamically a subfield
+      """
+      REQUEST.set('_v_plf_title', sub_field_property_dict['title'])
+      REQUEST.set('_v_plf_required', sub_field_property_dict['required'])
+      REQUEST.set('_v_plf_default', "")
+      REQUEST.set('_v_plf_first_item', 0)
+      REQUEST.set('_v_plf_items', sub_field_property_dict['item_list'])
+      REQUEST.set('_v_plf_size', sub_field_property_dict['size'])
+      return self.sub_widget[sub_field_property_dict['field_type']].render(
+              field,
+              field.generate_subfield_key(sub_field_property_dict['key'],
+                                          key=key),
+              sub_field_property_dict['value'],
+              REQUEST)
 
 class ParallelListValidator(Validator.MultiSelectionValidator):
 
   property_names = Validator.MultiSelectionValidator.property_names 
 
-  def validate(self, field, key, REQUEST):    
-    result_list = []
+  def __init__(self):
+    """
+    Generate some subvalidator used for rendering.
+    """
+    self.sub_validator = {
+      'ListField': Validator.SelectionValidatorInstance,
+      'MultiListField': Validator.MultiSelectionValidatorInstance,
+    }
 
-    sub_field_id_list = field.sub_form.get_field_ids()
+  def validate(self, field, key, REQUEST):    
+
+    result_list = []
+    hash_list = field._generateSubForm(None, REQUEST)
     is_sub_field_required = 0
-    for sub_field_id in sub_field_id_list:
+    for sub_field_property_dict in hash_list:
       try:
-        sub_result_list = field.validate_sub_field(sub_field_id, REQUEST,key=key)
-        if type(sub_result_list) not in (type([]), type(())):
+        sub_result_list = self.validate_sub_field(
+                                  field,
+                                  field.generate_subfield_key(
+                                      sub_field_property_dict['key'], 
+                                      validation=1, key=key),
+                                  REQUEST,
+                                  sub_field_property_dict)
+        if not isinstance(sub_result_list, (list, tuple)):
           sub_result_list = [sub_result_list]
         else:
           sub_result_list = list(sub_result_list)
         result_list.extend(sub_result_list)
       except ValidationError:
         is_sub_field_required = 1
-
-    result_list = filter( lambda x: x!='', result_list)
+    
+    result_list = [x for x in result_list if x!='']
     if result_list == []:
       if field.get_value('required'):
         self.raise_error('required_not_found', field)
     else:
       if is_sub_field_required:
         self.raise_error('required_not_found', field)
-
     return result_list
+
+  def validate_sub_field(self, field, id, REQUEST, sub_field_property_dict):
+    """
+    Validates a subfield (as part of field validation).
+    """
+    REQUEST.set('_v_plf_title', sub_field_property_dict['title'])
+    REQUEST.set('_v_plf_required', sub_field_property_dict['required'])
+    REQUEST.set('_v_plf_default', "")
+    REQUEST.set('_v_plf_items', sub_field_property_dict['item_list'])
+    REQUEST.set('_v_plf_size', sub_field_property_dict['size'])
+    return self.sub_validator[sub_field_property_dict['field_type']].validate(
+        field, id, REQUEST)
 
 ParallelListWidgetInstance = ParallelListWidget()
 ParallelListFieldValidatorInstance = ParallelListValidator()
 
 class ParallelListField(ZMIField):
-    meta_type = "ParallelListField"
+  security = ClassSecurityInfo()
+  meta_type = "ParallelListField"
 
-    widget = ParallelListWidgetInstance
-    validator = ParallelListFieldValidatorInstance 
+  widget = ParallelListWidgetInstance
+  validator = ParallelListFieldValidatorInstance 
 
-    def render_htmlgrid(self, value=None, REQUEST=None, key=None):
-      """
-      render_htmlgrid returns a list of tuple (title, html render)
-      We will use title generated by the widget.
-      """
-      key = self.generate_field_key(key=key)
-      value = self._get_default(key, value, REQUEST)
-      html = self.widget.render_htmlgrid(self, key, value, REQUEST)
-      return html
+  def render_htmlgrid(self, value=None, REQUEST=None, key=None):
+    """
+    render_htmlgrid returns a list of tuple (title, html render)
+    We will use title generated by the widget.
+    """
+    key = self.generate_field_key(key=key)
+    value = self._get_default(key, value, REQUEST)
+    html = self.widget.render_htmlgrid(self, key, value, REQUEST)
+    return html
 
-def create_aggregated_list_sub_form(hash_list):
-  """
-    Generate ParallelListField sub field.
-  """
-  sub_form = BasicForm()
-  sub_list_field_list = []
+  def _generateSubForm(self, value, REQUEST):
+    item_list = [x for x in self.get_value('items') \
+                 if x not in (('',''), ['',''])]
 
-  for sub_field_property_dict in hash_list:
-    field_class = getattr(StandardFields,
-                          sub_field_property_dict['field_type'])
-    sub_field = field_class(sub_field_property_dict['key'],
-                            title=sub_field_property_dict['key'],
-                            required=sub_field_property_dict['required'],
-                            default="",
-                            items=sub_field_property_dict['item_list'],
-                            size=sub_field_property_dict['size'])
-    sub_list_field_list.append(sub_field)
+    value_list = value
+    if not isinstance(value_list, (list, tuple)):
+      value_list = [value_list]
 
-  sub_form.add_group("sub_list")
-  sub_form.add_fields(sub_list_field_list, "sub_list")
+    empty_sub_field_property_dict = {
+      'key': 'default',
+      'title': self.get_value('title'),
+      'required': 0,
+      'field_type': 'MultiListField',
+      'item_list': [],
+      'value': [],
+      'is_right_display': 0,
+      'size': 5
+    }
 
-  return sub_form
+    hash_list = []
+    hash_script_id = self.get_value('hash_script_id')
+    if hash_script_id not in [None, '']:
+      script = getattr(self, hash_script_id)
+      script_hash_list = script(
+              item_list,
+              value_list,
+              default_sub_field_property_dict=empty_sub_field_property_dict,
+              is_right_display=0)
+      hash_list.extend(script_hash_list)
+    else:
+      # No hash_script founded, generate a little hash_script 
+      # to display only a MultiListField
+      default_sub_field_property_dict = empty_sub_field_property_dict.copy()
+      default_sub_field_property_dict.update({
+          'item_list': item_list,
+          'value': value_list,
+      })
+      hash_list.append(default_sub_field_property_dict)
+    # XXX Clean up old ParallelListField
+    try:
+      delattr(self, 'sub_form')
+    except KeyError:
+      pass
+    return hash_list
+
+  security.declareProtected('Access contents information', 'get_value')
+  def get_value(self, id, **kw):
+    """
+    Get value for id.
+    Optionally pass keyword arguments that get passed to TALES
+    expression.
+    """
+    REQUEST = kw.get('REQUEST')
+    key = '_v_plf_%s' % id
+    if (REQUEST is not None) and \
+       (REQUEST.has_key(key)):
+      result = REQUEST.get(key)
+    else:
+      result = ZMIField.get_value(self, id, **kw)
+    return result
