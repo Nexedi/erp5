@@ -180,6 +180,13 @@ class TestAccounting(ERP5TypeTestCase):
     self.assertEquals(accounting_period.getSimulationState(),
                       'confirmed')
 
+  def stepCheckAccountingPeriodRefusesClosing(self, sequence, **kw):
+    """Checks the Accounting Period refuses closing."""
+    accounting_period = sequence.get('accounting_period')
+    self.assertRaises(ValidationFailed,
+          self.getPortal().portal_workflow.doActionFor,
+          accounting_period, 'confirm_action' )
+
   def stepDeliverAccountingPeriod(self, sequence, **kw):
     """Deliver the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
@@ -853,15 +860,17 @@ class TestAccounting(ERP5TypeTestCase):
     transaction = sequence.get('transaction')
     new_line = transaction.newContent(
         portal_type = self.accounting_transaction_line_portal_type)
-    line_count = len(transaction.getMovementList())
-    self.failUnless(line_count != 3)
+    self.assertEquals(len(transaction.getMovementList()), 3)
     line_list = transaction.getMovementList()
     line_list[0].setDestinationTotalAssetPrice(100)
-    line_list[0]._setDestination(sequence.get('expense_account'))
+    line_list[0]._setCategoryMembership(
+          'destination', sequence.get('expense_account').getRelativeUrl())
     line_list[1].setDestinationTotalAssetPrice(- 50)
-    line_list[1]._setDestination(sequence.get('expense_account'))
+    line_list[1]._setCategoryMembership(
+          'destination', sequence.get('expense_account').getRelativeUrl())
     line_list[2].setDestinationTotalAssetPrice(- 50)
-    line_list[2]._setDestination(sequence.get('expense_account'))
+    line_list[2]._setCategoryMembership(
+          'destination', sequence.get('expense_account').getRelativeUrl())
     try:
       self.getWorkflowTool().doActionFor(transaction, 'stop_action')
       self.assertEquals(transaction.getSimulationState(), 'stopped')
@@ -1051,7 +1060,7 @@ class TestAccounting(ERP5TypeTestCase):
       stepCheckInvoicesAreDraft
     """)
 
-  def test_AccountingPeriodNotStoppedTransactions(self, quiet=0,
+  def test_AccountingPeriodOtherSections(self, quiet=0,
                                                   run=RUN_ALL_TESTS):
     """Accounting Periods does not change other section transactions."""
     if not run : return
