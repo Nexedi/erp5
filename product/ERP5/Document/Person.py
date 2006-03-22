@@ -38,7 +38,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 try:
   from Products import PluggableAuthService
-  from Products.ERP5Security import ERP5UserManager
+  from Products.ERP5Security.ERP5UserManager import ERP5UserManager
 except ImportError:
   PluggableAuthService = None
 
