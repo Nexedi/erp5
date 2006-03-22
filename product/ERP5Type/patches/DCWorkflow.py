@@ -107,6 +107,7 @@ class ValidationFailed(Exception):
         """
         Exception.__init__(self)
         self.msg = message_instance
+    __allow_access_to_unprotected_subobjects__ = 1
     
 DCWorkflow.ValidationFailed = ValidationFailed
 
