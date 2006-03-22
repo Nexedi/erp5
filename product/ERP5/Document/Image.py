@@ -105,6 +105,7 @@ class Image (Base, Photo):
 
   def manage_afterClone(self, item):
     Base.manage_afterClone(self, item)
+    self._checkOriginal()
     Photo.manage_afterClone(self, item)
 
   def manage_afterAdd(self, item, container):
