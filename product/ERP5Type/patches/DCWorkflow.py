@@ -105,9 +105,8 @@ class ValidationFailed(Exception):
         """
         Redefine init in order to register the message class instance
         """
-        Exception.__init__(self)
+        Exception.__init__(self, message_instance)
         self.msg = message_instance
-    __allow_access_to_unprotected_subobjects__ = 1
     
 DCWorkflow.ValidationFailed = ValidationFailed
 
