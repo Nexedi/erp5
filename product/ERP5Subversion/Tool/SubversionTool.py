@@ -49,28 +49,28 @@ except ImportError:
   
 class File :
   # Constructor
-  def __init__(self, fullPath, msgStatus) :
-    self.fullPath = fullPath
-    self.msgStatus = msgStatus
-    self.name = fullPath.split('/')[-1]
+  def __init__(self, full_path, msg_status) :
+    self.full_path = full_path
+    self.msg_status = msg_status
+    self.name = full_path.split('/')[-1]
 ## End of File Class
 
 class Dir :
   # Constructor
-  def __init__(self, fullPath, msgStatus) :
-    self.fullPath = fullPath
-    self.msgStatus = msgStatus
-    self.name = fullPath.split('/')[-1]
-    self.subDirs = [] # list of sub directories
+  def __init__(self, full_path, msg_status) :
+    self.full_path = full_path
+    self.msg_status = msg_status
+    self.name = full_path.split('/')[-1]
+    self.sub_dirs = [] # list of sub directories
 
   # return a list of sub directories' names
   def getSubDirs(self) :
-    return [d.fullPath for d in self.subDirs]
+    return [d.full_path for d in self.sub_dirs]
 
   # return directory in subdirs given its name
-  def getDir(self, fullPath):
-    for d in self.subDirs:
-      if d.fullPath == fullPath:
+  def getDir(self, full_path):
+    for d in self.sub_dirs:
+      if d.full_path == full_path:
         return d
 ## End of Dir Class
   
@@ -85,7 +85,7 @@ class SubversionTool(UniqueObject, Folder):
   login_cookie_name = 'erp5_subversion_login'
   ssl_trust_cookie_name = 'erp5_subversion_ssl_trust'
   top_working_path = os.path.join(getConfiguration().instancehome, 'svn')
-  
+  os.chdir(top_working_path)
   # Declarative Security
   security = ClassSecurityInfo()
 
@@ -127,6 +127,10 @@ class SubversionTool(UniqueObject, Folder):
     if not path.startswith(self.top_working_path):
       raise Unauthorized, 'unauthorized access to path %s' % path
     return path
+    
+  def setWorkingDirectory(self, path):
+    self.workingDirectory = path
+    os.chdir(path)
 
   def getDefaultUserName(self):
     """Return a default user name.
@@ -284,8 +288,8 @@ class SubversionTool(UniqueObject, Folder):
     somethingModified = False
     for statusObj in self.status(path) :
       # can be (normal, added, modified, deleted)
-      msgStatus = statusObj.getTextStatus()
-      if str(msgStatus) != "normal" :
+      msg_status = statusObj.getTextStatus()
+      if str(msg_status) != "normal" :
         somethingModified = True
         full_path = statusObj.getPath()
         full_path_list = full_path.split('/')[1:]
@@ -301,20 +305,20 @@ class SubversionTool(UniqueObject, Folder):
         for d in relative_path_list :
           i += 1
           if d :
-            fullPathOfd = '/'+'/'.join(full_path_list[:i]).strip()
-            if fullPathOfd not in parent.subDirs :
-              parent.subDirs.append(Dir(fullPathOfd, "normal"))
-            parent = parent.getDir(fullPathOfd)
+            full_pathOfd = '/'+'/'.join(full_path_list[:i]).strip()
+            if full_pathOfd not in parent.sub_dirs :
+              parent.sub_dirs.append(Dir(full_pathOfd, "normal"))
+            parent = parent.getDir(full_pathOfd)
         if os.path.isdir(full_path) :
-          if full_path == parent.fullPath :
-            parent.msgStatus = str(msgStatus)
-          elif full_path not in parent.subDirs :
-            parent.subDirs.append(Dir(full_path, str(msgStatus)))
+          if full_path == parent.full_path :
+            parent.msg_status = str(msg_status)
+          elif full_path not in parent.sub_dirs :
+            parent.sub_dirs.append(Dir(full_path, str(msg_status)))
           else :
             tmp = parent.getDir(full_path)
-            tmp.msgStatus = str(msgStatus)
+            tmp.msg_status = str(msg_status)
         else :
-          parent.subDirs.append(File(full_path, str(msgStatus)))
+          parent.sub_dirs.append(File(full_path, str(msg_status)))
     return somethingModified and root
             
   def treeToXML(self, item) :
@@ -332,7 +336,7 @@ class SubversionTool(UniqueObject, Folder):
     #return output
   
   def _treeToXML(self, item, output, ident, first) :
-    itemStatus = item.msgStatus
+    itemStatus = item.msg_status
     if itemStatus == 'added' :
       itemColor='green'
     elif itemStatus == 'modified' :
@@ -348,15 +352,15 @@ class SubversionTool(UniqueObject, Folder):
         output.write('<item open="1" text="%s" id="%s" aCol="%s" '\
         'im0="folder.png" im1="folder_open.png" '\
         'im2="folder.png">'%(item.name,
-item.fullPath, itemColor,) + os.linesep)
+item.full_path, itemColor,) + os.linesep)
         first=False
       else :
         output.write('<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
       'im1="folder_open.png" im2="folder.png">'%(item.name,
-item.fullPath, itemColor,) + os.linesep)
-      for it in item.subDirs:
+item.full_path, itemColor,) + os.linesep)
+      for it in item.sub_dirs:
         ident += 1
-        output = self._treeToXML(item.getDir(it.fullPath), output, ident,
+        output = self._treeToXML(item.getDir(it.full_path), output, ident,
 first)
         ident -= 1
       for i in range(ident) :
@@ -367,7 +371,7 @@ first)
         output.write('\t')
       output.write('<item text="%s" id="%s" aCol="%s" im0="document.png" ' \
                 'im1="document.png" im2="document.png"/>'%(item.name,
-item.fullPath, itemColor,) + os.linesep)
+item.full_path, itemColor,) + os.linesep)
 
     return output
     
