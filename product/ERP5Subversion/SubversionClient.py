@@ -197,6 +197,9 @@ try:
 
     def trustSSLServer(self, trust_dict):
       return self.aq_parent._trustSSLServer(trust_dict)
+    
+    def checkin(self, path, log_message, recurse):
+      return self.client.checkin(path, log_message=log_message, recurse=recurse)
 
     def status(self, path, **kw):
       # Since plain Python classes are not convenient in Zope, convert the objects.

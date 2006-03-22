@@ -52,19 +52,7 @@ class File :
   def __init__(self, fullPath, msgStatus) :
     self.fullPath = fullPath
     self.msgStatus = msgStatus
-    self.fileName = fullPath.split('/')[-1]
-
-  # return the file name
-  def getName(self) :
-    return self.fileName
-  
-  # return the file path
-  def getFullPath(self) :
-    return self.fullPath
-  
-  # return the file's msgStatus
-  def getMsgStatus(self) :
-    return self.msgStatus
+    self.name = fullPath.split('/')[-1]
 ## End of File Class
 
 class Dir :
@@ -72,37 +60,17 @@ class Dir :
   def __init__(self, fullPath, msgStatus) :
     self.fullPath = fullPath
     self.msgStatus = msgStatus
-    self.dirName = fullPath.split('/')[-1]
-    self.subdirs = [] # list of sub directories
-
-  # return directory's short name
-  def getName(self) :
-    return self.dirName
-  
-  # return directory's path
-  def getFullPath(self) :
-    return self.fullPath
-  
-  # return directory's msgStatus
-  def getMsgStatus(self) :
-    return self.msgStatus
-  
-  # Set Directory's msgStatus
-  def setMsgStatus(self, msgStatus) :
-    self.msgStatus = msgStatus
+    self.name = fullPath.split('/')[-1]
+    self.subDirs = [] # list of sub directories
 
   # return a list of sub directories' names
   def getSubDirs(self) :
-    return [d.getName() for d in self.subdirs]
-
-  # add a sub directory to the list
-  def addSubDir(self, item) :
-    self.subdirs.append(item)
+    return [d.fullPath for d in self.subDirs]
 
   # return directory in subdirs given its name
-  def getDir(self, name):
-    for d in self.subdirs:
-      if d.getName() == name:
+  def getDir(self, fullPath):
+    for d in self.subDirs:
+      if d.fullPath == fullPath:
         return d
 ## End of Dir Class
   
@@ -293,11 +261,12 @@ class SubversionTool(UniqueObject, Folder):
     return client.revert(self._getWorkingPath(path))
 
   security.declareProtected('Import/Export objects', 'checkin')
-  def checkin(self, path, log_message = None):
+  def checkin(self, path, log_message = 'None', recurse=True):
     """Commit local changes.
     """
-    client = self._getClient(log_message = log_message)
-    return client.checkin(self._getWorkingPath(path))
+    client = self._getClient()
+    #return client.checkin(self._getWorkingPath(path), log_message, recurse)
+    return client.checkin(path, log_message, recurse)
 
   security.declareProtected('Import/Export objects', 'status')
   def status(self, path, **kw):
@@ -311,13 +280,13 @@ class SubversionTool(UniqueObject, Folder):
     if path[-1]=="/" :
       path = path[:-1]
     
-    #root = Dir(path.split('/')[-1])
     root = Dir(path, "normal")
-
+    somethingModified = False
     for statusObj in self.status(path) :
-      # (normal, added, modified, deleted)
+      # can be (normal, added, modified, deleted)
       msgStatus = statusObj.getTextStatus()
       if str(msgStatus) != "normal" :
+        somethingModified = True
         full_path = statusObj.getPath()
         full_path_list = full_path.split('/')[1:]
         relative_path = full_path[len(path)+1:]
@@ -332,19 +301,21 @@ class SubversionTool(UniqueObject, Folder):
         for d in relative_path_list :
           i += 1
           if d :
-            if d not in parent.getSubDirs():
-              parent.addSubDir(Dir('/'+'/'.join(full_path_list[:i]).strip(),
-"normal"))
-            parent = parent.getDir(d)
+            fullPathOfd = '/'+'/'.join(full_path_list[:i]).strip()
+            if fullPathOfd not in parent.subDirs :
+              parent.subDirs.append(Dir(fullPathOfd, "normal"))
+            parent = parent.getDir(fullPathOfd)
         if os.path.isdir(full_path) :
-          if filename not in parent.getSubDirs() :
-            parent.addSubDir(Dir(full_path, str(msgStatus)))
+          if full_path == parent.fullPath :
+            parent.msgStatus = str(msgStatus)
+          elif full_path not in parent.subDirs :
+            parent.subDirs.append(Dir(full_path, str(msgStatus)))
           else :
-            tmp = parent.getDir(filename)
-            tmp.setMsgStatus(str(msgStatus))
+            tmp = parent.getDir(full_path)
+            tmp.msgStatus = str(msgStatus)
         else :
-          parent.addSubDir(File(full_path, str(msgStatus)))
-    return root
+          parent.subDirs.append(File(full_path, str(msgStatus)))
+    return somethingModified and root
             
   def treeToXML(self, item) :
     output = StringIO()
@@ -361,7 +332,7 @@ class SubversionTool(UniqueObject, Folder):
     #return output
   
   def _treeToXML(self, item, output, ident, first) :
-    itemStatus = item.getMsgStatus()
+    itemStatus = item.msgStatus
     if itemStatus == 'added' :
       itemColor='green'
     elif itemStatus == 'modified' :
@@ -376,16 +347,16 @@ class SubversionTool(UniqueObject, Folder):
       if first :
         output.write('<item open="1" text="%s" id="%s" aCol="%s" '\
         'im0="folder.png" im1="folder_open.png" '\
-        'im2="folder.png">'%(item.getName(),
-item.getFullPath(), itemColor,) + os.linesep)
+        'im2="folder.png">'%(item.name,
+item.fullPath, itemColor,) + os.linesep)
         first=False
       else :
         output.write('<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
-      'im1="folder_open.png" im2="folder.png">'%(item.getName(),
-item.getFullPath(), itemColor,) + os.linesep)
-      for it in item.subdirs:
+      'im1="folder_open.png" im2="folder.png">'%(item.name,
+item.fullPath, itemColor,) + os.linesep)
+      for it in item.subDirs:
         ident += 1
-        output = self._treeToXML(item.getDir(it.getName()), output, ident,
+        output = self._treeToXML(item.getDir(it.fullPath), output, ident,
 first)
         ident -= 1
       for i in range(ident) :
@@ -395,8 +366,8 @@ first)
       for i in range(ident) :
         output.write('\t')
       output.write('<item text="%s" id="%s" aCol="%s" im0="document.png" ' \
-                'im1="document.png" im2="document.png"/>'%(item.getName(),
-item.getFullPath(), itemColor,) + os.linesep)
+                'im1="document.png" im2="document.png"/>'%(item.name,
+item.fullPath, itemColor,) + os.linesep)
 
     return output
     
