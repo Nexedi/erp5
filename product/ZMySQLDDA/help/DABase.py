@@ -30,6 +30,6 @@ def manage_addZMySQLDeferredConnection(self, id, title,
 class DeferredConnection:
     """MySQL Deferred Connection Object"""
 
-    __constructor__ = manage_addZMySQLConnection
+    __constructor__ = manage_addZMySQLDeferredConnection
 
 
