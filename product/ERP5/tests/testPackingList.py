@@ -430,13 +430,24 @@ class TestPackingListMixin(TestOrderMixin):
 #      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
     self.assertEquals(len(delivery_value_list),len(resource_list))
 
-  def stepAddPackingListContainer(self,sequence=None, sequence_list=None, **kw):
+  def stepAddPackingListContainer(self,sequence=None, 
+                                  packing_list=None,sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
     """
-    packing_list = sequence.get('packing_list')
+    if packing_list is None:
+      packing_list = sequence.get('packing_list')
     container = packing_list.newContent(portal_type=self.container_type)
     sequence.edit(container=container)
+
+  def stepDefineNewPackingListContainer(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    packing_list = sequence.get('new_packing_list')
+    self.stepAddPackingListContainer(sequence=sequence,packing_list=packing_list)
+    self.stepAddPackingListContainerLine(sequence=sequence)
+    self.stepSetContainerLineFullQuantity(quantity=1,sequence=sequence)
 
   def stepAddPackingListContainerLine(self,sequence=None, sequence_list=None, **kw):
     """
@@ -455,12 +466,15 @@ class TestPackingListMixin(TestOrderMixin):
     container_line = sequence.get('container_line')
     container_line.edit(quantity=self.default_quantity-1)
 
-  def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None, **kw):
+  def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None, 
+                                       quantity=None,**kw):
     """
       Check if simulation movement are disconnected
     """
     container_line = sequence.get('container_line')
-    container_line.edit(quantity=self.default_quantity)
+    if quantity is None:
+      quantity = sequence.get('line_quantity',self.default_quantity)
+    container_line.edit(quantity=quantity)
     container_line.immediateReindexObject()
 
   def stepCheckPackingListIsNotPacked(self,sequence=None, sequence_list=None, **kw):
@@ -472,15 +486,26 @@ class TestPackingListMixin(TestOrderMixin):
     self.assertEquals(0,packing_list.isPacked())
     self.assertEquals('missing',packing_list.getContainerState())
 
-  def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None, **kw):
+  def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None, 
+                                   packing_list=None,**kw):
     """
       Check that the number of objects in containers are
       equals to the quantity of the packing list
     """
-    packing_list = sequence.get('packing_list')
+    if packing_list is None:
+      packing_list = sequence.get('packing_list')
     get_transaction().commit()
     self.assertEquals(1,packing_list.isPacked())
     self.assertEquals('packed',packing_list.getContainerState())
+
+  def stepCheckNewPackingListIsPacked(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check that the number of objects in containers are
+      equals to the quantity of the packing list
+    """
+    packing_list = sequence.get('new_packing_list')
+    self.stepCheckPackingListIsPacked(sequence=sequence,
+                                      packing_list=packing_list)
 
   def stepCommit(self, sequence=None, sequence_list=None, **kw):
     """
