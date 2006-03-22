@@ -36,6 +36,12 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import assertAttributePortalType
 from Products.ERP5Type.XMLObject import XMLObject
 
+try:
+  from Products import PluggableAuthService
+  from Products.ERP5Security import ERP5UserManager
+except ImportError:
+  PluggableAuthService = None
+
 
 
 class Person(Entity, Node, XMLObject):
@@ -149,11 +155,18 @@ class Person(Entity, Node, XMLObject):
 
         - we want to apply a different permission
 
-        - we want to prevent duplicated user ids
+        - we want to prevent duplicated user ids, but only when
+          PAS _AND_ ERP5UserManager are used
       """
       if value:
-        user_list = self.acl_users.searchUsers(id = value, exact_match = True)
-        if len(user_list) > 0:
-          raise RuntimeError, 'user id %s already exist' % (value,)
+        if PluggableAuthService is not None:
+          plugin_list = self.acl_users.plugins.listPlugins(
+              PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin)
+          for plugin_name, plugin_value in plugin_list:
+            if isinstance(plugin_value, ERP5UserManager):
+              user_list = self.acl_users.searchUsers(id = value, exact_match = True)
+              if len(user_list) > 0:
+                raise RuntimeError, 'user id %s already exist' % (value,)
+              break
       self._setReference(value)
       self.reindexObject()
