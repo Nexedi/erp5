@@ -108,12 +108,16 @@ if destination_section is not None and \\\n
 if destination_section is None and check_destination :\n
   raiseError(\'Destination Section is not Defined.\')\n
 \n
-currency = transaction.getResource()\n
+currency = transaction.getResource(portal_type = \'Currency\')\n
 if not currency :\n
   raiseError(\'Currency is not Defined.\')\n
 \n
-if transaction.getStartDate() in (None, \'\') :\n
-  raiseError(\'date is not Defined\')\n
+# XXX manually default start date to stop date\n
+if not transaction.getStartDate() and transaction.getStopDate():\n
+  transaction.setStartDate(transaction.getStopDate())\n
+\n
+if not transaction.getStartDate() :\n
+  raiseError(\'Date is not Defined\')\n
 else:\n
   if not skip_period_validation :\n
     valid_date = False\n
@@ -133,10 +137,9 @@ else:\n
       valid_date = True\n
     for apd in openned_accounting_period_list:\n
       apd = apd.getObject()\n
-      # Compare date, not datetime\n
-      if apd.getStartDate().strftime("%Y/%m/%d") <= transaction_date.strftime("%Y/%m/%d") <= apd.getStopDate().strftime("%Y/%m/%d"):\n
+      if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
         valid_date = True\n
-    if not valid_date:\n
+    if not valid_date :\n
       raiseError("Date is not in an openned Accounting Period "\n
                  "for source section")\n
     # do the same for destination section \n
@@ -154,8 +157,7 @@ else:\n
         valid_date = True\n
       for apd in openned_accounting_period_list:\n
         apd = apd.getObject()\n
-        # Compare date, not datetime\n
-        if apd.getStartDate().strftime("%Y/%m/%d") <= transaction_date.strftime("%Y/%m/%d") <= apd.getStopDate().strftime("%Y/%m/%d"):\n
+        if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
           valid_date = True\n
       if not valid_date :\n
         raiseError("Date is not in an openned Accounting Period "+\n
