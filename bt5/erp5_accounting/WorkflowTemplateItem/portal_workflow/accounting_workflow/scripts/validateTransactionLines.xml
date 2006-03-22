@@ -108,6 +108,12 @@ if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
     source_sum += source_quantity\n
     destination_sum += destination_quantity\n
 \n
+    if transaction_line.getSource(portal_type = \'Account\') is None and\\\n
+       transaction_line.getDestination(portal_type = \'Account\') is None and\\\n
+       transaction_line.getQuantity() != 0 :\n
+      raise ValidationFailed, N_(\'No Account defined for Line ${line_id}\',\n
+                        mapping = {\'line_id\': transaction_line.getId()} )\n
+\n
     for side in (SOURCE, DESTINATION) :\n
       if side == SOURCE :\n
         account = transaction_line.getSourceValue(portal_type = \'Account\')\n
@@ -249,11 +255,11 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>transaction_line</string>
                             <string>source_quantity</string>
                             <string>destination_quantity</string>
+                            <string>None</string>
                             <string>side</string>
                             <string>account</string>
                             <string>mirror_section</string>
                             <string>payment</string>
-                            <string>None</string>
                             <string>unicode</string>
                             <string>hasattr</string>
                             <string>int</string>
