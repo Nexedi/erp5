@@ -55,17 +55,8 @@ from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG, INFO
 from DateTime import DateTime
-  
-class TestAccountingRules(ERP5TypeTestCase):
-  """
-  This should test the simulation tree and builds starting from the
-  invoice.
 
-  """
-
-  RUN_ALL_TESTS = 1
-  RUN_BROKEN_TESTS = os.getenv('RUN_BROKEN_TESTS', 0)
-
+class TestAccountingRulesMixin:
   # define portal_types 
   account_module_portal_type           = "Account Module"
   accounting_module_portal_type        = "Accounting Module"
@@ -90,10 +81,7 @@ class TestAccountingRules(ERP5TypeTestCase):
   purchase_invoice_transaction_portal_type \
                       = "Purchase Invoice Transaction"
   payment_transaction_portal_type      = "Payment Transaction"
-  
-  def getTitle(self):
-    return "Accounting Rules"
- 
+
   def getBusinessTemplateList(self):
     """  Return the list of business templates. """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_accounting')
@@ -116,6 +104,21 @@ class TestAccountingRules(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  
+class TestAccountingRules(TestAccountingRulesMixin,ERP5TypeTestCase):
+  """
+  This should test the simulation tree and builds starting from the
+  invoice.
+
+  """
+
+  RUN_ALL_TESTS = 1
+  RUN_BROKEN_TESTS = os.getenv('RUN_BROKEN_TESTS', 0)
+
+  
+  def getTitle(self):
+    return "Accounting Rules"
+ 
   def afterSetUp(self) :
     self.login()
     self.createCategories()
