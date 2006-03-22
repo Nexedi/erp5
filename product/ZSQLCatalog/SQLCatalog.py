@@ -822,6 +822,18 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       Similar problems may happen with relations and acquisition of uid values (ex. order_uid)
       with the risk of graph loops
     """
+    if withCMF:
+      zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
+      site_root = getToolByName(self, 'portal_url').getPortalObject()
+    else:
+      zope_root = self.getPhysicalRoot()
+      site_root = self.aq_parent
+
+    root_indexable = int(getattr(zope_root, 'isIndexable', 1))
+    site_indexable = int(getattr(site_root, 'isIndexable', 1))
+    if not (root_indexable and site_indexable):
+      return None
+
     klass = self.__class__
     try:
       klass._reserved_uid_lock.acquire()
@@ -981,10 +993,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       site_root = self.aq_parent
 
     root_indexable = int(getattr(zope_root, 'isIndexable', 1))
-    if not root_indexable:
+    site_indexable = int(getattr(site_root, 'isIndexable', 1))
+    if not (root_indexable and site_indexable):
       return
 
     for object in object_list:
+      path = object.getPath()
       if not getattr(aq_base(object), 'uid', None):
         try:
           object.uid = self.newUid()
