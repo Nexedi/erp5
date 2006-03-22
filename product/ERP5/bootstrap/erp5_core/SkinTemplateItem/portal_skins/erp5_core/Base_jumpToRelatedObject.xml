@@ -79,8 +79,9 @@ if same_type(portal_type, \'\'):\n
 \n
 if len(related_list) == 0:\n
   url = context.absolute_url()\n
-  message = N_(\'No ${portal_type} Related.\',\n
-      mapping = { \'portal_type\': N_(portal_type[0])})\n
+  message = N_(\'No %s Related\' % portal_type[0],\n
+      default = unicode(N_(\'No ${portal_type} Related.\',\n
+      mapping = { \'portal_type\': N_(portal_type[0])}), \'utf8\'))\n
 \n
 elif len(related_list) == 1:\n
   related_object = context.restrictedTraverse(related_list[0], None)\n
@@ -186,10 +187,10 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>len</string>
                             <string>url</string>
                             <string>_getitem_</string>
+                            <string>unicode</string>
                             <string>message</string>
                             <string>None</string>
                             <string>related_object</string>
-                            <string>unicode</string>
                             <string>related_object_list</string>
                             <string>path</string>
                             <string>obj</string>
