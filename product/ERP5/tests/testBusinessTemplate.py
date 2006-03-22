@@ -1501,7 +1501,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        CheckBuiltBuildingState \
                        CheckInstalledInstallationState \
                        CheckSkinsLayers \
-                       CheckNoTrashBin \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)      
