@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Acquisition import Implicit
+
 import time
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
@@ -180,9 +181,11 @@ try:
       self.client.set_auth_cache(0)
       self.client.callback_cancel = CancelCallback(self)
       self.client.callback_get_log_message = GetLogMessageCallback(self)
-      self.client.callback_get_login = GetLoginCallback(self)
+      #self.client.callback_get_login = GetLoginCallback(self)
+      self.client.callback_get_login = self.callback_get_Login
       self.client.callback_notify = NotifyCallback(self)
-      self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(self)
+      #self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(self)
+      self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
       self.creation_time = time.time()
       self.__dict__.update(kw)
 
@@ -192,11 +195,22 @@ try:
     def getTimeout(self):
       return self.timeout
 
-    def getLogin(self, realm):
-      return self.aq_parent._getLogin(realm)
-
+    def callback_get_Login( self, realm, username, may_save ):
+        #Retrieving saved username/password
+        #raise 'realm is '+realm+' && username is '+username
+        username, password = self.login
+        if not username :
+          raise "Error: Couldn't retrieve saved username !"
+        if not password :
+          raise "Error: Couldn't retrieve saved password !"
+        return 1, username, password, True
+        
     def trustSSLServer(self, trust_dict):
       return self.aq_parent._trustSSLServer(trust_dict)
+    
+    def callback_ssl_server_trust_prompt( self, trust_data ):
+      # Always trusting
+      return True, trust_data['failures'], True
     
     def checkin(self, path, log_message, recurse):
       return self.client.checkin(path, log_message=log_message, recurse=recurse)

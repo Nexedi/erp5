@@ -148,23 +148,26 @@ class SubversionTool(UniqueObject, Folder):
     # Decode login information.
     return loads(b64decode(login))
     
-  def setLogin(self, realm, user, password):
-    """Set login information.
-    """
-    # Get existing login information. Filter out old information.
-    login_list = []
-    request = self.REQUEST
-    cookie = request.get(self.login_cookie_name)
-    if cookie:
-      for login in cookie.split(','):
-        if self._decodeLogin(login)[0] != realm:
-          login_list.append(login)
-    # Set the cookie.
-    response = request.RESPONSE
-    login_list.append(self._encodeLogin(realm, user, password))
-    value = ','.join(login_list)
-    expires = (DateTime() + 1).toZone('GMT').rfc822()
-    response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
+#   def setLogin(self, realm, user, password):
+#     """Set login information.
+#     """
+#     # Get existing login information. Filter out old information.
+#     login_list = []
+#     request = self.REQUEST
+#     cookie = request.get(self.login_cookie_name)
+#     if cookie:
+#       for login in cookie.split(','):
+#         if self._decodeLogin(login)[0] != realm:
+#           login_list.append(login)
+#     # Set the cookie.
+#     response = request.RESPONSE
+#     login_list.append(self._encodeLogin(realm, user, password))
+#     value = ','.join(login_list)
+#     expires = (DateTime() + 1).toZone('GMT').rfc822()
+#     response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
+
+  def setLogin(self, username, passwd):
+    self.login = (username, passwd)
 
   def _getLogin(self, target_realm):
     request = self.REQUEST
@@ -268,7 +271,7 @@ class SubversionTool(UniqueObject, Folder):
   def checkin(self, path, log_message = 'None', recurse=True):
     """Commit local changes.
     """
-    client = self._getClient()
+    client = self._getClient(login=self.login)
     #return client.checkin(self._getWorkingPath(path), log_message, recurse)
     return client.checkin(path, log_message, recurse)
 
