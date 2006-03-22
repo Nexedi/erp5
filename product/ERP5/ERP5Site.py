@@ -673,14 +673,8 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       """
         Return List of category values to generate security groups.
       """
-      ### Here is the filter patch waiting bug #124 to be corrected
-      category_list = self._getPortalGroupedCategoryList('assignment') or\
+      return self._getPortalGroupedCategoryList('assignment') or\
           self._getPortalConfiguration('portal_assignment_base_category_list')
-      clean_list = []
-      for cat in category_list:
-        if cat.find("_btsave") == -1:
-          clean_list.append(cat)
-      return clean_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultModuleId')
