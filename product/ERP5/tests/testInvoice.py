@@ -560,7 +560,6 @@ class TestInvoice(TestAccountingRulesMixin,TestPackingListMixin, ERP5TypeTestCas
     """ checks invoice properties are well set. """
     invoice = sequence.get('invoice')
     new_invoice = sequence.get('new_invoice')
-    import pdb;pdb.set_trace()
     self.assertEquals(3,len(invoice.objectValues(
         portal_type=self.sale_invoice_transaction_line_portal_type)))
     self.assertEquals(3,len(new_invoice.objectValues(
