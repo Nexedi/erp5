@@ -236,6 +236,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>specific_reference</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>stat</string> </key>
                                 <value>
                                   <dictionary>
@@ -298,6 +304,7 @@
 <string>section_category</string>
 <string>count</string>
 <string>transaction</string>
+<string>specific_reference</string>
                           </list>
                         </value>
                     </item>
@@ -342,7 +349,8 @@ creation_date_range_min=""\r\n
 creation_date_range_max=""\r\n
 section_category=""\r\n
 count=""\r\n
-transaction=""</string> </value>
+transaction=""\r\n
+specific_reference</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -384,40 +392,46 @@ transaction=""</string> </value>
 
 <dtml-let params="selection and selection.getParams() or selection_params">\n
 <dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**params)">\n
-\n
 <dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
 <dtml-let query="(stat) and portal_catalog.buildSQLQuery(**params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **params)">\n
 \n
-<dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
-<dtml-let section_category="not entity and section_category or \'\'">\n
-\n
-<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category or entity">\n
+<dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max or section_category or entity">\n
 \n
 SELECT\n
   <dtml-if stat>\n
     SUM(stock.total_price) AS total_price\n
   <dtml-elif count>\n
-    COUNT(DISTINCT catalog.id) AS count\n
+    COUNT(DISTINCT catalog.uid) AS count\n
   <dtml-else>\n
     DISTINCT\n
+      <dtml-if section_category>\n
+      IF(category.uid = delivery.source_section_uid,\n
+         catalog.source_reference,\n
+         catalog.destination_reference) AS specific_reference,\n
+      <dtml-else>\n
+      \'???\' AS specific_reference,\n
+      </dtml-if>\n
     <dtml-in "portal_catalog.getCatalogSearchResultKeys()"> <dtml-var sequence-item> <dtml-unless sequence-end>,</dtml-unless> </dtml-in>\n
     <dtml-if select_expression>, <dtml-var select_expression> </dtml-if>\n
   </dtml-if>\n
 \n
 FROM\n
-  <dtml-in "query[\'from_table_list\']"> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
-  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
-  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
-  <dtml-if use_movement_table>, catalog AS child\n
-                              , movement </dtml-if>\n
-  <dtml-if "stat or omit_input or omit_output">, stock </dtml-if>\n
-  <dtml-if node>, catalog AS source_account </dtml-if>\n
-  <dtml-if resource>, catalog AS currency </dtml-if>\n
-  <dtml-if entity>, catalog AS related_entity </dtml-if>\n
-  <dtml-if section_category>, category, catalog AS section_c </dtml-if>\n
+  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+    <dtml-if "table_key not in (\'delivery\', \'catalog\')">\n
+      <dtml-var table_item> AS <dtml-var table_key>,\n
+    </dtml-if>\n
+  </dtml-in>\n
+  <dtml-if selection_domain><dtml-var "selection_domain.asSqlJoinExpression()">,</dtml-if>\n
+  <dtml-if selection_report><dtml-var "selection_report.asSqlJoinExpression()">, </dtml-if>\n
+  <dtml-if use_movement_table> movement,  </dtml-if>\n
+ <dtml-if "stat or omit_input or omit_output or node">\n
+      stock, catalog as child, </dtml-if>\n
+  <dtml-if "section_category">category, </dtml-if>\n
+  delivery,\n
+  catalog\n
 \n
 WHERE\n
-  1 = 1\n
+  delivery.uid = catalog.uid\n
   <dtml-if "query[\'where_expression\']">\n
     AND <dtml-var "query[\'where_expression\']">\n
   </dtml-if>\n
@@ -427,49 +441,58 @@ WHERE\n
   <dtml-if selection_report>\n
     AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
   </dtml-if>\n
-\n
+  \n
+  <dtml-if specific_reference> AND (\n
+            catalog.source_reference LIKE <dtml-sqlvar specific_reference type="string">\n
+        OR  catalog.destination_reference LIKE <dtml-sqlvar specific_reference type="string"> )</dtml-if>\n
   <dtml-if transaction> AND catalog.uid = <dtml-var transaction> </dtml-if>\n
   <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
   <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
   <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
-  <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
-  <dtml-if use_movement_table> AND child.parent_uid = catalog.uid\n
-                               AND movement.uid = child.uid </dtml-if>\n
-  <dtml-if resource> AND currency.uid = movement.resource_uid\n
-                     AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
-  <dtml-if entity> AND ( related_entity.uid = delivery.destination_section_uid\n
-                         OR related_entity.uid = delivery.source_section_uid )\n
-                   AND related_entity.relative_url = \'<dtml-var entity>\'  </dtml-if>\n
-  <dtml-if section_category> AND ( category.uid = delivery.destination_section_uid\n
-                                OR category.uid = delivery.source_section_uid)\n
-                             AND section_c.uid = category.category_uid\n
-                             AND section_c.relative_url =\n
-                                <dtml-sqlvar section_category type="string">\n
+  <dtml-if creation_date_range_max> AND catalog.creation_date < <dtml-sqlvar "creation_date_range_max+1" type="datetime"> </dtml-if>\n
+  <dtml-if use_movement_table> AND movement.explanation_uid = catalog.uid </dtml-if>\n
+  <dtml-if resource> AND movement.resource_uid =\n
+      <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
+  <dtml-if entity> AND ( delivery.destination_section_uid =\n
+                        <dtml-var "restrictedTraverse(entity).getUid()">\n
+                         OR delivery.source_section_uid =\n
+                        <dtml-var "restrictedTraverse(entity).getUid()">\n
+                        ) </dtml-if>\n
+  <dtml-if section_category> AND (\n
+                             category.uid = delivery.destination_section_uid\n
+                          OR category.uid = delivery.source_section_uid)\n
+    AND category.category_uid = <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
   </dtml-if>\n
 \n
   -- FIXME: we want stop date when we are destination_section and start_date when\n
   --   we are source_section (one solution is to read in stock.date, but we try\n
   --   to avoid the use of stock table here)\n
-  <dtml-if from_date> AND movement.stop_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
-  <dtml-if to_date> AND movement.stop_date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>\n
-  <dtml-if at_date> AND movement.stop_date < <dtml-sqlvar at_date type="datetime"> </dtml-if>\n
+  <dtml-if from_date> AND movement.start_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
+  <dtml-if to_date> AND movement.start_date <= <dtml-sqlvar expr="to_date+1" type="datetime"> </dtml-if>\n
+  <dtml-if at_date> AND movement.start_date < <dtml-sqlvar at_date type="datetime"> </dtml-if>\n
 \n
   <dtml-if node>\n
-    AND source_account.uid = movement.source_uid\n
+    AND category.uid = stock.section_uid\n
+    AND child.uid = stock.uid\n
+    AND child.parent_uid = catalog.uid\n
     AND (\n
     <dtml-in node>\n
       <dtml-unless sequence-start>OR</dtml-unless>\n
-                    source_account.relative_url = \'<dtml-var sequence-item>\'\n
+            stock.node_uid = <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
     </dtml-in> )\n
    </dtml-if>\n
   <dtml-if stat> AND movement.is_accountable = 1\n
-                 AND category.uid = stock.section_uid\n
+    AND category.uid = stock.section_uid\n
+    AND child.uid = stock.uid\n
+    AND child.parent_uid = catalog.uid\n
   </dtml-if>\n
   <dtml-if omit_input> AND stock.total_price < 0\n
-                       AND stock.uid = child.uid  </dtml-if>\n
+                       AND stock.uid = movement.uid\n
+  </dtml-if>\n
   <dtml-if omit_output> AND stock.total_price > 0\n
-                        AND stock.uid = child.uid  </dtml-if>\n
+                        AND stock.uid = movement.uid\n
+  </dtml-if>\n
   <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
     AND ( 0 = 1\n
       <dtml-in expr="selection.getInvertModeUidList()">\n
@@ -491,9 +514,7 @@ WHERE\n
 </dtml-let>\n
 </dtml-let>\n
 </dtml-let>\n
-</dtml-let>\n
-</dtml-let>\n
-
+</dtml-let>
 
 ]]></string> </value>
         </item>
@@ -533,40 +554,46 @@ WHERE\n
 
 <dtml-let params="selection and selection.getParams() or selection_params">\n
 <dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**params)">\n
-\n
 <dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>\n
 <dtml-let query="(stat) and portal_catalog.buildSQLQuery(**params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **params)">\n
 \n
-<dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>\n
-<dtml-let section_category="not entity and section_category or \'\'">\n
-\n
-<dtml-let use_movement_table="from_date or to_date or at_date or node or resource or stat or amount or amount_range_min or amount_range_max or section_category or entity">\n
+<dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max or section_category or entity">\n
 \n
 SELECT\n
   <dtml-if stat>\n
     SUM(stock.total_price) AS total_price\n
   <dtml-elif count>\n
-    COUNT(DISTINCT catalog.id) AS count\n
+    COUNT(DISTINCT catalog.uid) AS count\n
   <dtml-else>\n
     DISTINCT\n
+      <dtml-if section_category>\n
+      IF(category.uid = delivery.source_section_uid,\n
+         catalog.source_reference,\n
+         catalog.destination_reference) AS specific_reference,\n
+      <dtml-else>\n
+      \'???\' AS specific_reference,\n
+      </dtml-if>\n
     <dtml-in "portal_catalog.getCatalogSearchResultKeys()"> <dtml-var sequence-item> <dtml-unless sequence-end>,</dtml-unless> </dtml-in>\n
     <dtml-if select_expression>, <dtml-var select_expression> </dtml-if>\n
   </dtml-if>\n
 \n
 FROM\n
-  <dtml-in "query[\'from_table_list\']"> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
-  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>\n
-  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>\n
-  <dtml-if use_movement_table>, catalog AS child\n
-                              , movement </dtml-if>\n
-  <dtml-if "stat or omit_input or omit_output">, stock </dtml-if>\n
-  <dtml-if node>, catalog AS source_account </dtml-if>\n
-  <dtml-if resource>, catalog AS currency </dtml-if>\n
-  <dtml-if entity>, catalog AS related_entity </dtml-if>\n
-  <dtml-if section_category>, category, catalog AS section_c </dtml-if>\n
+  <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+    <dtml-if "table_key not in (\'delivery\', \'catalog\')">\n
+      <dtml-var table_item> AS <dtml-var table_key>,\n
+    </dtml-if>\n
+  </dtml-in>\n
+  <dtml-if selection_domain><dtml-var "selection_domain.asSqlJoinExpression()">,</dtml-if>\n
+  <dtml-if selection_report><dtml-var "selection_report.asSqlJoinExpression()">, </dtml-if>\n
+  <dtml-if use_movement_table> movement,  </dtml-if>\n
+ <dtml-if "stat or omit_input or omit_output or node">\n
+      stock, catalog as child, </dtml-if>\n
+  <dtml-if "section_category">category, </dtml-if>\n
+  delivery,\n
+  catalog\n
 \n
 WHERE\n
-  1 = 1\n
+  delivery.uid = catalog.uid\n
   <dtml-if "query[\'where_expression\']">\n
     AND <dtml-var "query[\'where_expression\']">\n
   </dtml-if>\n
@@ -576,49 +603,58 @@ WHERE\n
   <dtml-if selection_report>\n
     AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">\n
   </dtml-if>\n
-\n
+  \n
+  <dtml-if specific_reference> AND (\n
+            catalog.source_reference LIKE <dtml-sqlvar specific_reference type="string">\n
+        OR  catalog.destination_reference LIKE <dtml-sqlvar specific_reference type="string"> )</dtml-if>\n
   <dtml-if transaction> AND catalog.uid = <dtml-var transaction> </dtml-if>\n
   <dtml-if amount> AND ABS(movement.quantity) = <dtml-sqlvar amount type="float"> </dtml-if>\n
   <dtml-if amount_range_min> AND ABS(movement.quantity) >= <dtml-sqlvar amount_range_min type="float"> </dtml-if>\n
   <dtml-if amount_range_max> AND ABS(movement.quantity) < <dtml-sqlvar amount_range_max type="float"> </dtml-if>\n
   <dtml-if creation_date_range_min> AND catalog.creation_date >= <dtml-sqlvar creation_date_range_min type="datetime"> </dtml-if>\n
-  <dtml-if creation_date_range_max> AND catalog.creation_date <= <dtml-sqlvar creation_date_range_max type="datetime"> </dtml-if>\n
-  <dtml-if use_movement_table> AND child.parent_uid = catalog.uid\n
-                               AND movement.uid = child.uid </dtml-if>\n
-  <dtml-if resource> AND currency.uid = movement.resource_uid\n
-                     AND currency.relative_url = \'<dtml-var resource>\' </dtml-if>\n
-  <dtml-if entity> AND ( related_entity.uid = delivery.destination_section_uid\n
-                         OR related_entity.uid = delivery.source_section_uid )\n
-                   AND related_entity.relative_url = \'<dtml-var entity>\'  </dtml-if>\n
-  <dtml-if section_category> AND ( category.uid = delivery.destination_section_uid\n
-                                OR category.uid = delivery.source_section_uid)\n
-                             AND section_c.uid = category.category_uid\n
-                             AND section_c.relative_url =\n
-                                <dtml-sqlvar section_category type="string">\n
+  <dtml-if creation_date_range_max> AND catalog.creation_date < <dtml-sqlvar "creation_date_range_max+1" type="datetime"> </dtml-if>\n
+  <dtml-if use_movement_table> AND movement.explanation_uid = catalog.uid </dtml-if>\n
+  <dtml-if resource> AND movement.resource_uid =\n
+      <dtml-var "restrictedTraverse(resource).getUid()"> </dtml-if>\n
+  <dtml-if entity> AND ( delivery.destination_section_uid =\n
+                        <dtml-var "restrictedTraverse(entity).getUid()">\n
+                         OR delivery.source_section_uid =\n
+                        <dtml-var "restrictedTraverse(entity).getUid()">\n
+                        ) </dtml-if>\n
+  <dtml-if section_category> AND (\n
+                             category.uid = delivery.destination_section_uid\n
+                          OR category.uid = delivery.source_section_uid)\n
+    AND category.category_uid = <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
   </dtml-if>\n
 \n
   -- FIXME: we want stop date when we are destination_section and start_date when\n
   --   we are source_section (one solution is to read in stock.date, but we try\n
   --   to avoid the use of stock table here)\n
-  <dtml-if from_date> AND movement.stop_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
-  <dtml-if to_date> AND movement.stop_date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>\n
-  <dtml-if at_date> AND movement.stop_date < <dtml-sqlvar at_date type="datetime"> </dtml-if>\n
+  <dtml-if from_date> AND movement.start_date >= <dtml-sqlvar from_date type="datetime"> </dtml-if>\n
+  <dtml-if to_date> AND movement.start_date <= <dtml-sqlvar expr="to_date+1" type="datetime"> </dtml-if>\n
+  <dtml-if at_date> AND movement.start_date < <dtml-sqlvar at_date type="datetime"> </dtml-if>\n
 \n
   <dtml-if node>\n
-    AND source_account.uid = movement.source_uid\n
+    AND category.uid = stock.section_uid\n
+    AND child.uid = stock.uid\n
+    AND child.parent_uid = catalog.uid\n
     AND (\n
     <dtml-in node>\n
       <dtml-unless sequence-start>OR</dtml-unless>\n
-                    source_account.relative_url = \'<dtml-var sequence-item>\'\n
+            stock.node_uid = <dtml-var "restrictedTraverse(_[\'sequence-item\']).getUid()">\n
     </dtml-in> )\n
    </dtml-if>\n
   <dtml-if stat> AND movement.is_accountable = 1\n
-                 AND category.uid = stock.section_uid\n
+    AND category.uid = stock.section_uid\n
+    AND child.uid = stock.uid\n
+    AND child.parent_uid = catalog.uid\n
   </dtml-if>\n
   <dtml-if omit_input> AND stock.total_price < 0\n
-                       AND stock.uid = child.uid  </dtml-if>\n
+                       AND stock.uid = movement.uid\n
+  </dtml-if>\n
   <dtml-if omit_output> AND stock.total_price > 0\n
-                        AND stock.uid = child.uid  </dtml-if>\n
+                        AND stock.uid = movement.uid\n
+  </dtml-if>\n
   <dtml-if expr="selection is not None and selection.isInvertMode() and len(selection.getInvertModeUidList()) > 0">\n
     AND ( 0 = 1\n
       <dtml-in expr="selection.getInvertModeUidList()">\n
@@ -640,9 +676,7 @@ WHERE\n
 </dtml-let>\n
 </dtml-let>\n
 </dtml-let>\n
-</dtml-let>\n
-</dtml-let>\n
-
+</dtml-let>
 
 ]]></string> </value>
                     </item>
