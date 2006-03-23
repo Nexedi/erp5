@@ -66,12 +66,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Updates attributes of an Zope document\n
-# which is in a class inheriting from ERP5 Base\n
+            <value> <string>"""Generic method called when submitting a form in dialog mode.\n
+Responsible for validating form data and redirecting to the form action.\n
 \n
+"""\n
 \n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
-from string import join\n
 from ZTUtils import make_query\n
 \n
 request=context.REQUEST\n
@@ -92,7 +92,7 @@ if dialog_method == \'Base_configureSortOn\':\n
 #  * we got an import_file, \n
 #  * we got a listbox\n
 #  * a value is None or [] or (), because this is not supported by make_query\n
-must_redirect = 0\n
+cannot_redirect = 0\n
 \n
 MARKER = []\n
 \n
@@ -108,7 +108,9 @@ try:\n
   else:\n
     form = getattr(context,dialog_id)\n
   form.validate_all_to_request(request)\n
-  kw = {\'form_id\': form_id, \'selection_name\': selection_name , \'selection_index\': None} # Missing selection_index\n
+  kw = {\'form_id\': form_id,\n
+        \'selection_name\': selection_name,\n
+        \'selection_index\': None} # Missing selection_index\n
   has_listbox = 0\n
   for f in form.get_fields():\n
     k = f.id\n
@@ -119,12 +121,12 @@ try:\n
           k = k[len(prefix):]\n
           kw[k] = v\n
           if v in (None, [], ()) or hasattr(v, \'read\') :\n
-            must_redirect = 1\n
+            cannot_redirect = 1\n
           break\n
       else:\n
         if k in (\'import_file\', \'listbox\'):\n
           if f.meta_type == \'ListBox\': has_listbox = 1\n
-          must_redirect = 1\n
+          cannot_redirect = 1\n
           kw[k] = v\n
   # Add some properties required by UI\n
   md5_object_uid_list = getattr(request,\'md5_object_uid_list\',None)\n
@@ -149,37 +151,39 @@ try:\n
   if dialog_category == "object_search" :\n
     context.portal_selections.setSelectionParamsFor(selection_name, kw)\n
 \n
-  # Redirect if possible, or call directly else\n
-  if must_redirect and dialog_category != "object_report" :\n
-    # if we want to change the portal_skin, we must redirect \n
+  # if we cannot redirect, then call the form directly.\n
+  # XXX we always redirect in report mode to make sure portal_skin\n
+  # parameter is taken into account by SkinTool.\n
+  if cannot_redirect and dialog_category != "object_report" :\n
     dialog_form = getattr(context, dialog_method, None)\n
-    for k, v in kw.items() : \n
+    for k, v in kw.items() :\n
       request.set(k, v)\n
-    context.log("Base_callDialogMethod : dialog_form", dialog_form)\n
+    # set the URL in request, so that we can immediatly call method\n
+    # that depend on it (eg. Show All). This is really related to\n
+    # current ListBox implementation which edit Selection\'s last_url\n
+    # with the content of REQUEST.URL\n
+    request.set(\'URL\', \'%s/%s\' % (context.absolute_url(), dialog_method))\n
     return dialog_form(**kw)\n
-  # else fallback to url argument passing (we remove None values, as it doesn\'t work with make_query)\n
+\n
+  # Otherwise, prepare URL to redirect, passing arguments in the URL\n
+  # (we remove None values, as it doesn\'t work with make_query, which\n
+  # pass \'None\')\n
   cleanedup_kw = {}\n
   for k, v in kw.items() :\n
-    if v is not None : \n
+    if v is not None :\n
       cleanedup_kw[k] = v\n
-  url_params_string = make_query(cleanedup_kw)\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                            , dialog_method\n
+                            , make_query(cleanedup_kw)\n
+                            )\n
+  return request.RESPONSE.redirect( redirect_url )\n
+\n
 except FormValidationError, validation_errors:\n
   # Pack errors into the request\n
   field_errors = form.ErrorFields(validation_errors)\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
 \n
-if url_params_string != \'\':\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-                            , dialog_method\n
-                            , url_params_string\n
-                            )\n
-else:\n
-  redirect_url = \'%s/%s\' % ( context.absolute_url()\n
-                            , dialog_method\n
-                            )\n
-\n
-return request.RESPONSE.redirect( redirect_url )\n
 # vim: syntax=python\n
 </string> </value>
         </item>
@@ -201,7 +205,7 @@ return request.RESPONSE.redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>cancel_url,dialog_method,selection_name,dialog_id,dialog_category=\'\',form_id=\'view\',enable_pickle=0,**kw</string> </value>
+            <value> <string>cancel_url, dialog_method, selection_name, dialog_id, dialog_category=\'\', form_id=\'view\', enable_pickle=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -238,15 +242,13 @@ return request.RESPONSE.redirect( redirect_url )\n
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
-                            <string>string</string>
-                            <string>join</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>getattr</string>
-                            <string>must_redirect</string>
+                            <string>cannot_redirect</string>
                             <string>MARKER</string>
                             <string>pickle_string</string>
                             <string>_apply_</string>
@@ -271,10 +273,9 @@ return request.RESPONSE.redirect( redirect_url )\n
                             <string>tuple</string>
                             <string>dialog_form</string>
                             <string>cleanedup_kw</string>
-                            <string>url_params_string</string>
+                            <string>redirect_url</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
-                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
