@@ -106,7 +106,6 @@
                     <value>
                       <list>
                         <string>my_priority</string>
-                        <string>my_preferred_visible_module_list</string>
                         <string>my_preferred_section_category</string>
                       </list>
                     </value>
