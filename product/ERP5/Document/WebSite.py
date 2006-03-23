@@ -73,12 +73,14 @@ class WebSite(Domain):
                       , PropertySheet.WebSite
                       )
 
-
     def _aq_dynamic(self, name):
       """
         Try to find a suitable document based on the
         web site local naming policies as defined by
         the WebSite_getDocument script """
+      # Use a non recursion variable
+      cache_key = 'web_site_aq_cache'
+      request = self.REQUEST
       # First let us call the super method
       dynamic = Domain._aq_dynamic(self, name)
       if dynamic is not None :
@@ -86,29 +88,28 @@ class WebSite(Domain):
       # Do some optimisation here for names which can not be names of documents
       if name.startswith('_') or name.startswith('portal_')\
           or name.startswith('aq_') or name.startswith('selection_') \
-          or name.startswith('sort-') or name == 'getLayout':
+          or name.startswith('sort-') or name == 'getLayout' \
+          or name == 'getListItemUrl' or name.startswith('WebSite_'):
         return None
-      # Create a non recursion variable
-      allow_lookup = Cache.getTransactionCache(self)
-      if not allow_lookup:
-        Cache.enableTransactionCache(self)
-        allow_lookup = Cache.getTransactionCache(self)
-      elif allow_lookup.has_key(name):
-        return allow_lookup[name]
+      if not request.has_key(cache_key):
+        request[cache_key] = {}
+      elif request[cache_key].has_key(name):
+        return request[cache_key][name]
       try:
         portal = self.getPortalObject()
         # Use the webmaster identity to find documents
         user = portal.acl_users.getUserById(self.getWebmaster())
-        if user is None:
-          return None
-        old_manager = getSecurityManager()
-        newSecurityManager(get_request(), user)
+        if user is not None:
+          old_manager = getSecurityManager()
+          newSecurityManager(get_request(), user)
         document = self.WebSite_getDocument(portal, name)
-        allow_lookup[name] = document
-        setSecurityManager(old_manager)
+        request[cache_key][name] = document
+        if user is not None:
+          setSecurityManager(old_manager)
       except:
         # Cleanup non recursion dict in case of exception
-        if allow_lookup.has_key(name):
-          del allow_lookup[name]
+        if request[cache_key].has_key(name):
+          del request[cache_key][name]
         raise
       return document
+
