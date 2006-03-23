@@ -32,12 +32,6 @@ class Preference :
   """
   
   _properties = (
-    { 'id'          : 'preferred_visible_module',
-      'description' : 'List of modules visible from the main page '\
-                      '(useful to filter uninteresting modules)',
-      'type'        : 'lines',
-      'preference'  : 1,
-      'mode'        : 'w' },
     { 'id'          : 'preferred_section_category',
       'description' : 'The section category for documents; '\
                          'usually something like group/nexedi.',
