@@ -350,6 +350,10 @@
                           <string>Invoice Number</string>
                         </tuple>
                         <tuple>
+                          <string>specific_reference</string>
+                          <string>Transaction Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>source_reference</string>
                           <string>Source Reference</string>
                         </tuple>
@@ -371,6 +375,10 @@
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
                           <string>Creation Date</string>
                         </tuple>
                       </list>
@@ -411,7 +419,7 @@
                           <string>Document Reference</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
+                          <string>specific_reference</string>
                           <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
@@ -609,12 +617,8 @@
                           <string>Invoice Number</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
-                          <string>Source Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_reference</string>
-                          <string>Destination Reference</string>
+                          <string>specific_reference</string>
+                          <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -720,7 +724,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'section_category\', here.portal_preferences.getPreferredAccountingTransactionSectionCategory()), (\'delivery.uid\', \'%\')]</string> </value>
+            <value> <string>python:[(\'section_category\', here.portal_preferences.getPreferredAccountingTransactionSectionCategory())]</string> </value>
         </item>
       </dictionary>
     </pickle>
