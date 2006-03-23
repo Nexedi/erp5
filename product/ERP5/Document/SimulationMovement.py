@@ -288,13 +288,6 @@ class SimulationMovement(Movement):
       result.extend(m.getMovementIndex())
     return result
 
-  security.declareProtected(Permissions.View, 'hasActivity')
-  def hasActivity(self, **kw):
-    """
-      We reindex the whole applied rule
-    """
-    return self.getRootAppliedRule().hasActivity(**kw)
-
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanation')
   def getExplanation(self):

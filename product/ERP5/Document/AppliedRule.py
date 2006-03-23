@@ -31,9 +31,9 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.PsycoWrapper import psyco
 
 from zLOG import LOG
-import psyco
 
 class AppliedRule(XMLObject):
     """
@@ -218,16 +218,6 @@ class AppliedRule(XMLObject):
       for m in self.objectValues():
         result.extend(m.getMovementIndex())
       return result
-
-    security.declareProtected(Permissions.View, 'hasActivity')
-    def hasActivity(self, **kw):
-      """
-        We reindex the whole applied rule
-      """
-      if self.isRootAppliedRule():
-        XMLObject.hasActivity(self, **kw)
-      else:
-        self.getRootAppliedRule().hasActivity(**kw) # Reindex the whole applied rule
 
     security.declareProtected(Permissions.View, 'isRootAppliedRule')
     def isRootAppliedRule(self):
