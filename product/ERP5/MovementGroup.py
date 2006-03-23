@@ -991,3 +991,11 @@ class AggregateMovementGroup(RootMovementGroup):
 
 allow_class(AggregateMovementGroup)
 
+class SplitMovementGroup(RootMovementGroup):
+  def __init__(self,movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+
+  def test(self, movement):
+    return 0
+
+allow_class(AggregateMovementGroup)
