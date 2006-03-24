@@ -225,6 +225,7 @@ class ReportSection:
       preferences = {}
     self.preferences = preferences
     self.saved_preferences = {}
+    self.saved_request_form = {}
     
   security.declarePublic('getTitle')
   def getTitle(self):
@@ -310,6 +311,9 @@ class ReportSection:
           portal_selections.setSelectionSortOrder(selection_name,
                       self.selection_sort_order, REQUEST=REQUEST)
 
+    self.saved_request_form = REQUEST.form
+    REQUEST.form = {}
+    
     portal_pref = context.getPortalObject().portal_preferences
     for pref, value in self.preferences.items() :
       self.saved_preferences[pref] = portal_pref.getProperty(pref)
@@ -366,7 +370,9 @@ class ReportSection:
           portal_selections.setSelectionSortOrder(selection_name,
                       self.saved_selections[selection_name]['sort_order'],
                       REQUEST=REQUEST)
-
+    
+    REQUEST.form = self.saved_request_form
+    
     for pref, value in self.saved_preferences.items() :
       context.getPortalObject().portal_preferences.setPreference(pref, value)
 
