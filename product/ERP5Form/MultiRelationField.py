@@ -1,6 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2004, 2006 Nexedi SARL and Contributors. 
+#                                All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
@@ -29,19 +30,22 @@
 
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
-from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Form import RelationField
-from Products.ERP5Form.RelationField import MAX_SELECT, new_content_prefix
-from Globals import get_request
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5Type.Message import Message
 from AccessControl import ClassSecurityInfo
-
-import string
+from types import StringType
 from zLOG import LOG
-#MAX_SELECT = 50 # Max. number of catalog result
-#new_content_prefix = '_newContent_'
+from Products.Formulator.DummyField import fields
+from Globals import get_request
+
+# Max. number of catalog result
+MAX_SELECT = 30
+NEW_CONTENT_PREFIX = '_newContent_'
+# Key for sub listfield
+SUB_FIELD_ID = 'relation'
+ITEM_ID = 'item'
 
 def checkSameKeys(a , b):
   """
@@ -52,199 +56,352 @@ def checkSameKeys(a , b):
   for ka in a:
     if (not ka in b) and (ka != ''):
       same = 0
-  for kb in b:
-    if (not kb in a) and (kb != ''):
-      same = 0
+      break
+  if same:
+    for kb in b:
+      if (not kb in a) and (kb != ''):
+        same = 0
+        break
   return same
 
+class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, 
+                                     Widget.TextWidget, 
+                                     Widget.ListWidget):
+  """
+  RelationStringField widget
+  Works like a string field but includes one buttons
+  - one search button which updates the field and sets a relation
+  - creates object if not there
+  """
+  local_property_names = ['update_method', 'jump_method', 'allow_jump', 
+                          'base_category', 'portal_type', 'allow_creation', 
+                          'container_getter_id', 'catalog_index',
+                          'relation_setter_id', 'columns', 'sort',
+                          'parameter_list','list_method',
+                          'first_item', 'items', 'size', 'extra_item']
 
-class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.RelationStringFieldWidget):
+  property_names = Widget.LinesTextAreaWidget.property_names + \
+                   Widget.TextWidget.property_names + \
+                   local_property_names
+    
+  # XXX Field to remove...
+  update_method = fields.StringField('update_method',
+                             title='Update Method',
+                             description=(
+      "The method to call to set the relation. Required."),
+                             default="Base_validateRelation",
+                             required=1)
+
+  jump_method = fields.StringField('jump_method',
+                             title='Jump Method',
+                             description=(
+      "The method to call to jump to the relation. Required."),
+                             default="Base_jumpToRelatedDocument",
+                             required=1)
+
+  allow_jump = fields.CheckBoxField('allow_jump',
+                             title='Allow Jump',
+                             description=(
+      "Do we allow to jump to the relation ?"),
+                             default=1,
+                             required=0)
+
+  base_category = fields.StringField('base_category',
+                             title='Base Category',
+                             description=(
+      "The method to call to set the relation. Required."),
+                             default="",
+                             required=1)
+
+  portal_type = fields.ListTextAreaField('portal_type',
+                             title='Portal Type',
+                             description=(
+      "The method to call to set the relation. Required."),
+                             default="",
+                             required=1)
+
+  allow_creation = fields.CheckBoxField('allow_creation',
+                             title='Allow Creation',
+                             description=(
+      "Do we allow to create new objects ?"),
+                             default=1,
+                             required=0)
+
+  container_getter_id = fields.StringField('container_getter_id',
+                             title='Container Getter Method',
+                             description=(
+      "The method to call to get a container object."),
+                             default="",
+                             required=0)
+
+  catalog_index = fields.StringField('catalog_index',
+                             title='Catalog Index',
+                             description=(
+      "The method to call to set the relation. Required."),
+                             default="",
+                             required=1)
+
+  # XXX Is it a good idea to keep such a field ??
+  # User can redefine setter method with a script (and so, don't use the API)
+  relation_setter_id = fields.StringField('relation_setter_id',
+                             title='Relation Update Method',
+                             description=(
+      "The method to invoke in order to update the relation"),
+                             default="",
+                             required=0)
+
+  size = fields.IntegerField('size',
+                             title='Size',
+                             description=(
+      "The display size in rows of the field. If set to 1, the "
+      "widget will be displayed as a drop down box by many browsers, "
+      "if set to something higher, a list will be shown. Required."),
+                             default=1,
+                             required=1)
+
+  columns = fields.ListTextAreaField('columns',
+                               title="Columns",
+                               description=(
+      "A list of attributes names to display."),
+                               default=[],
+                               required=0)
+
+  sort = fields.ListTextAreaField('sort',
+                               title='Default Sort',
+                               description=('The default sort keys and order'),
+                               default=[],
+                               required=0)
+
+  parameter_list = fields.ListTextAreaField('parameter_list',
+                               title="Parameter List",
+                               description=(
+      "A list of paramters used for the portal_catalog."),
+                               default=[],
+                               required=0)
+
+  list_method = fields.MethodField('list_method',
+                               title='List Method',
+                               description=('The method to use to list'
+                                            'objects'),
+                               default='',
+                               required=0)
+
+  # delete double in order to keep a usable ZMI...
+  # XXX need to keep order !
+  #property_names = dict([(i,0) for i in property_names]).keys() 
+  _v_dict = {}
+  _v_property_name_list = []
+  for property_name in property_names:
+    if not _v_dict.has_key(property_name):
+      _v_property_name_list.append(property_name)
+      _v_dict[property_name] = 1
+  property_names = _v_property_name_list
+
+  default_widget_rendering_instance = Widget.LinesTextAreaWidgetInstance
+
+  def _generateRenderValueList(self, field, key, value_list, REQUEST):
+    result_list = []
+    need_validation = 0
+    ####################################
+    # Check value
+    ####################################
+    if isinstance(value_list, StringType):
+      # Value is a string, reformat it correctly
+      value_list = value_list.split("\n")
+    # Check all relation
+    for i in range(len(value_list)):
+      ###################################
+      # Sub field
+      ###################################
+      relation_field_id = field.generate_subfield_key("%s_%s" % \
+                                                      (SUB_FIELD_ID, i),
+                                                      key=key)
+      relation_item_id = field.generate_subfield_key("%s_%s" % \
+                                                     (ITEM_ID, i),
+                                                     key=key)
+      relation_item_list = REQUEST.get(relation_item_id, None)
+      value = value_list[i]
+      if (relation_item_list is not None) and \
+         (value != ''):
+        need_validation = 1
+      if value is None : 
+        # rather than displaying nothing, display a marker when the
+        # property is not set
+        # XXX Translate ?
+        value = '??? (no value)'
+      # If we get a empty string, display nothing !
+      if value != '':
+        result_list.append((Widget.TextWidgetInstance, relation_field_id, 
+                            relation_item_list, value, i))
+    if not need_validation:
+      ###################################
+      # Main field
+      ###################################
+      result_list = [(Widget.LinesTextAreaWidgetInstance, None, [], 
+                      value_list, None)]
+    return result_list
+
+  def render(self, field, key, value, REQUEST):
     """
-        RelationStringField widget
-
-        Works like a string field but includes one buttons
-
-        - one search button which updates the field and sets a relation
-
-        - creates object if not there
-
+    Render text input field.
     """
-    property_names = Widget.LinesTextAreaWidget.property_names + \
-                     RelationField.RelationStringFieldWidget.property_names
+    html_string = ''
+    relation_field_index = REQUEST.get('_v_relation_field_index')
+    render_parameter_list = self._generateRenderValueList(
+                                            field, key, value,
+                                            REQUEST)
+    ####################################
+    # Render subfield
+    ####################################
+    html_string_list = []
+    for widget_instance, relation_field_id, relation_item_list, \
+                            value_instance, sub_index in render_parameter_list:
+      sub_html_string = widget_instance.render(field, key, 
+                                               value_instance, REQUEST)
+      if relation_item_list is not None:
+        if relation_item_list != []:
+          ####################################
+          # Render listfield
+          ####################################
+          tales_expr = field.tales.get('items', None)
+          defined_tales = 0
+          if not tales_expr:
+            defined_tales = 1
+            from Products.Formulator.TALESField import TALESMethod
+            # XXX XXX Do not write in the ZODB
+            field.tales['items'] = TALESMethod('REQUEST/relation_item_list')
 
-    # delete double in order to keep a usable ZMI...
-    #property_names = dict([(i,0) for i in property_names]).keys() # XXX need to keep order !
-    _v_dict = {}
-    _v_property_name_list = []
-    for property_name in property_names:
-      if not _v_dict.has_key(property_name):
-        _v_property_name_list.append(property_name)
-        _v_dict[property_name] = 1
-    property_names = _v_property_name_list
-
-
-    def render(self, field, key, value, REQUEST):
-        """
-          Render text input field.
-        """
-        here = REQUEST['here']
-
-        relation_field_id = 'relation_%s' % key
-        relation_item_id = 'item_%s' % key
-
-        portal_url = getToolByName(here, 'portal_url')
-        portal_url_string = portal_url()
-        portal_object = portal_url.getPortalObject()
-
-        if type(value) == type(''):
-          # Value is a string, reformat it correctly
-          value_list = string.split(value, "\r\n")
+          REQUEST['relation_item_list'] = relation_item_list
+          sub_html_string += '&nbsp;%s&nbsp;' % \
+                                Widget.ListWidgetInstance.render(
+                                field, relation_field_id, None, REQUEST)
+          REQUEST['relation_item_list'] = None
+          if defined_tales:
+            # Delete default tales on the fly
+            field.tales['items'] = None
         else:
-          value_list = value
+          ####################################
+          # Render wheel
+          ####################################
+          sub_html_string += self.render_wheel(
+                    field, value_instance, REQUEST, 
+                    relation_index=relation_field_index,
+                    sub_index=sub_index)
+      html_string_list.append(sub_html_string)  
+    ####################################
+    # Generate html
+    ####################################
+    html_string = '<br/>'.join(html_string_list)
+    ####################################
+    # Render jump
+    ####################################
+    if (value == field.get_value('default')):
+      # XXX Default rendering with value...
+      relation_html_string = self.render_relation_link(field, value, 
+                                                       REQUEST)
+      if relation_html_string != '':
+        html_string += '&nbsp;&nbsp;%s' % relation_html_string
+    ####################################
+    # Update relation field index
+    ####################################
+    REQUEST.set('_v_relation_field_index', relation_field_index + 1) 
+    return html_string
 
-        need_validation = 0
-        # Check all relation
-        for i in range( len(value_list) ):
-          relation_field_id = 'relation_%s_%s' % ( key, i )
-          relation_item_id = 'item_%s_%s' % ( key, i )
-          if REQUEST.has_key(relation_item_id) and value_list[i] != '':
-            need_validation = 1
-            break
+  def render_view(self, field, value):
+    """
+    Render read only field.
+    """
+    html_string = self.default_widget_rendering_instance.render_view(
+                                                      field, value)
+    REQUEST = get_request()
+    relation_html_string = self.render_relation_link(field, value, REQUEST)
+    if relation_html_string != '':
+      html_string += '&nbsp;&nbsp;%s' % relation_html_string
+    return html_string
 
-        html_string = ''
-        if need_validation:
-          # Check all relation
-          for i in range( len(value_list) ):
-            value = value_list[i]
-            relation_field_id = 'relation_%s_%s' % ( key, i )
-            relation_item_id = 'item_%s_%s' % ( key, i )
+  def render_wheel(self, field, value, REQUEST, relation_index=0,
+                   sub_index=None):
+    """
+    Render wheel used to display a listbox
+    """
+    here = REQUEST['here']
+    portal_url = getToolByName(here, 'portal_url')
+    portal_url_string = portal_url()
+    portal_object = portal_url.getPortalObject()
+    if sub_index is None:
+      sub_index_string = ''
+    else:
+      sub_index_string = '_%s' % sub_index
+    return '&nbsp;<input type="image" ' \
+         'src="%s/images/exec16.png" value="update..." ' \
+         'name="%s/portal_selections/viewSearchRelatedDocumentDialog%s%s' \
+         ':method"/>' % \
+           (portal_url_string, portal_object.getPath(),
+           relation_index, sub_index_string)
 
-
-            # If we get a empty string, display nothing !
-            if value == '':
-              pass
-
-            else:
-
-              html_string += Widget.TextWidget.render(self, field, key, value, REQUEST)
-
-              if REQUEST.has_key(relation_item_id):
-                relation_item_list = REQUEST.get(relation_item_id)
-
-                if relation_item_list != []:
-                  # Define default tales on the fly
-                  tales_expr = field.tales.get('items', None)
-                  defined_tales = 0
-                  if not tales_expr:
-                    defined_tales = 1
-                    from Products.Formulator.TALESField import TALESMethod
-                    field.tales['items'] = TALESMethod('REQUEST/relation_item_list')
-
-
-                  REQUEST['relation_item_list'] = relation_item_list
-                  html_string += '&nbsp;%s&nbsp;' % Widget.ListWidget.render(self,
-                                        field, relation_field_id, None, REQUEST)
-                  REQUEST['relation_item_list'] = None
-
-                  if defined_tales:
-                    # Delete default tales on the fly
-                    field.tales['items'] = None
-
-                else:
-                  html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s_%s:method"/>' \
-                    %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index, i)
-
-              html_string += '<br/>'
-
-        else:
-          clean_value_list = []
-          for v in value_list :
-            # rather than displaying nothing, display a marker when the
-            # property is not set
-            if v is None : v = '??? (no value)'
-            clean_value_list += [v]
-          # no modification made, we can display only a lines text area widget
-          html_string += Widget.LinesTextAreaWidget.render(self, field, key, clean_value_list, REQUEST)
-
-          html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method"/>' \
-              %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
-
-          if value_list not in ((), [], None, ['']) and value_list == field.get_value('default') and field.get_value('allow_jump') == 1 :
-            if REQUEST.get('selection_name') is not None:
-              html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"/></a>' \
-                % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
-            else:
-              html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"/></a>' \
-                % (field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
-
-        relation_field_index = getattr(field.aq_parent, '_v_relation_field_index', 0)
-        field.aq_parent._v_relation_field_index = relation_field_index + 1 # Increase index
-        return html_string
-
-    def render_view(self, field, value):
-        """
-          Render text field.
-        """
-        if field.get_value('allow_jump') == 0 :
-          return Widget.LinesTextAreaWidget.render_view(self, field, value)
-
-        REQUEST = get_request()
-        here = REQUEST['here']
-
-        portal_url = getToolByName(here, 'portal_url')
-        portal_url_string = portal_url()
-
-        # no modification made, we can display only a lines text area widget
-        html_string = Widget.LinesTextAreaWidget.render_view(self, field, value)
-        if value not in ((), [], None, ''):
-          if REQUEST.get('selection_name') is not None:
-            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"/></a>' \
-              % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
-          else:
-            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"/></a>' \
-              % (field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
-
-        return html_string
+  def render_relation_link(self, field, value, REQUEST):
+    """
+    Render link to the related object.
+    """
+    html_string = ''
+    here = REQUEST['here']
+    portal_url = getToolByName(here, 'portal_url')
+    portal_url_string = portal_url()
+    portal_object = portal_url.getPortalObject()
+    if (value not in ((), [], None, '')) and \
+       (field.get_value('allow_jump') == 1):
+      # Keep the selection name in the URL
+      if REQUEST.get('selection_name') is not None:
+        selection_name_html = '&selection_name=%s&selection_index=%s' % \
+              (REQUEST.get('selection_name'), REQUEST.get('selection_index'))
+      else:
+        selection_name_html = ''
+      # Generate plan link
+      html_string += '<a href="%s/%s?field_id=%s&form_id=%s%s">' \
+                       '<img src="%s/images/jump.png" />' \
+                     '</a>' % \
+                (here.absolute_url(), 
+                 field.get_value('jump_method'), 
+                 field.id, field.aq_parent.id,
+                 selection_name_html,
+                 portal_url_string)
+    return html_string
 
 class MultiRelationEditor:
     """
       A class holding all values required to update a relation
     """
-    def __init__(self, field_id, base_category, portal_type, portal_type_item, key, relation_setter_id, relation_editor_list):
-
-
+    def __init__(self, field_id, base_category, 
+                 portal_type_list, 
+                 portal_type_item, key, relation_setter_id, 
+                 relation_editor_list):
       self.field_id = field_id
       self.base_category = base_category
-      self.portal_type = portal_type
+      self.portal_type_list = portal_type_list
       self.portal_type_item = portal_type_item
       self.key = key
       self.relation_setter_id = relation_setter_id
       self.relation_editor_list = relation_editor_list
 
-
     def __call__(self, REQUEST):
       if self.relation_editor_list != None:
         value_list = []
 
-
-        for i, value, uid, display_text in self.relation_editor_list:
+        for value, uid, display_text, relation_key, item_key in \
+                               self.relation_editor_list:
           value_list.append(value)
           if uid is not None:
             # Decorate the request so that we can display
             # the select item in a popup
-            #relation_field_id = 'relation_%s_%s' % ( self.key, i )
-            #relation_item_id = 'item_%s_%s' % ( self.key, i )
-            relation_field_id = 'relation_field_%s_%s' % ( self.field_id, i )
-            relation_item_id = 'item_field_%s_%s' % ( self.field_id, i )
-
-
+            # XXX To be unified
+            relation_field_id = relation_key
+            relation_item_id = item_key
             REQUEST.set(relation_item_id, ((display_text, uid),))
+            # XXX Is it useful ?
             REQUEST.set(relation_field_id, uid)
-
         REQUEST.set(self.field_id, value_list) # XXX Dirty
       else:
         # Make sure no default value appears
-        #REQUEST.set(self.field_id[len('field_'):], None)
         REQUEST.set(self.field_id, None) # XXX Dirty
 
     def view(self):
@@ -255,276 +412,367 @@ class MultiRelationEditor:
 
         relation_uid_list = []
         relation_object_list = []
-
-        for i, value, uid, display_text in self.relation_editor_list:
+        for value, uid, display_text, relation_key, item_key in \
+                               self.relation_editor_list:
           if uid is not None:
-            if type(uid) is type('a') and uid.startswith(new_content_prefix):
+            if isinstance(uid, StringType) and \
+               uid.startswith(NEW_CONTENT_PREFIX):
               # Create a new content
-              portal_type = uid[len(new_content_prefix):]
+              portal_type = uid[len(NEW_CONTENT_PREFIX):]
               portal_module = None
               for p_item in self.portal_type_item:
                 if p_item[0] == portal_type:
-                  portal_module = o.getPortalObject().getDefaultModuleId( p_item[0] )
+                  portal_module = o.getPortalObject().getDefaultModuleId(
+                                                            p_item[0])
               if portal_module is not None:
-                portal_module_object = getattr(o.getPortalObject(), portal_module)
+                portal_module_object = getattr(o.getPortalObject(), 
+                                               portal_module)
                 kw ={}
-                #kw[self.key] = value
-                kw[self.key] = string.join( string.split(value,'%'), '' )
+                kw[self.key] = value.replace('%', '')
                 kw['portal_type'] = portal_type
                 kw['immediate_reindex'] = 1
                 new_object = portal_module_object.newContent(**kw)
                 uid = new_object.getUid()
               else:
                 raise
-          relation_uid_list.append(int(uid))
-
-          relation_object_list.append( o.portal_catalog.getObject(uid)  )
-
-        #if relation_uid_list != []:
+              
+            relation_uid_list.append(int(uid))
+            relation_object_list.append( o.portal_catalog.getObject(uid))
 
         # Edit relation
         if self.relation_setter_id:
           relation_setter = getattr(o, self.relation_setter_id)
-          relation_setter((), portal_type=self.portal_type)
-          relation_setter( relation_uid_list , portal_type=self.portal_type)
+          relation_setter((), portal_type=self.portal_type_list)
+          relation_setter(relation_uid_list,
+                          portal_type=self.portal_type_list)
         else:
           # we could call a generic method which create the setter method name
-          set_method_name = '_set'+convertToUpperCase(self.base_category)+'ValueList'
-          getattr(o, set_method_name)( relation_object_list , portal_type=self.portal_type)
-
-      else:
-        # Nothing to do
-        pass
-#        # Delete relation
-#        if self.relation_setter_id:
-#          relation_setter = getattr(o, self.relation_setter_id)
-#          relation_setter((), portal_type=self.portal_type)
-#        else:
-#          o._setValueUids(self.base_category, (), portal_type=self.portal_type)
+          set_method_name = '_set%sValueList' % \
+                       convertToUpperCase(self.base_category)
+          getattr(o, set_method_name)(relation_object_list, 
+                                      portal_type=self.portal_type_list)
 
 allow_class(MultiRelationEditor)
 
+class MultiRelationStringFieldValidator(Validator.LinesValidator):
+  """
+      Validation includes lookup of relared instances
+  """
+  message_names = Validator.LinesValidator.message_names +\
+                  ['relation_result_too_long', 'relation_result_ambiguous', 
+                   'relation_result_empty',]
 
-class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField.RelationStringFieldValidator):
+  # XXX Do we need to translate here ?
+  relation_result_too_long = "Too many documents were found."
+  relation_result_ambiguous = "Select appropriate document in the list."
+  relation_result_empty = "No such document was found."
+
+  # Relation field variable
+  editor = MultiRelationEditor
+  default_validator_instance = Validator.LinesValidatorInstance
+
+  def _generateItemUidList(self, field, key, relation_uid_list, REQUEST=None):
     """
-        Validation includes lookup of relared instances
+    Generate tuple...
     """
-    message_names = Validator.LinesValidator.message_names + \
-                     RelationField.RelationStringFieldValidator.message_names
+    result_list = []
+    for i in range(len(relation_uid_list)):
+      # Generate a Item id for each value.
+      relation_item_id = field.generate_subfield_key("%s_%s" % \
+                                                     (ITEM_ID, i),
+                                                     key=key)
+      relation_uid = relation_uid_list[i]
+      result_list.append((relation_item_id, relation_uid, None))
+    return result_list
 
-    # delete double in order to keep a usable ZMI...
-    #message_names = dict([(i,0) for i in message_names]).keys() # XXX need to keep order !
-    _v_dict = {}
-    _v_message_name_list = []
-    for message_name in message_names:
-      if not _v_dict.has_key(message_name):
-        _v_message_name_list.append(message_name)
-        _v_dict[message_name] = 1
-    message_names = _v_message_name_list
+  def _generateFieldValueList(self, field, key, 
+                              value_list, current_value_list):
+    """
+    Generate list of value, item_key
+    """
+    item_value_list = []
+    if isinstance(current_value_list, StringType):
+      current_value_list = [current_value_list]
+    # Check value list
+    if not (checkSameKeys(value_list, current_value_list)):
+      for i in range(len(value_list)):
+        value = value_list[i]
+        relation_field_id = field.generate_subfield_key("%s_%s" % \
+                                                        (SUB_FIELD_ID, i),
+                                                        key=key)
+        relation_item_id = field.generate_subfield_key("%s_%s" % \
+                                                       (ITEM_ID, i),
+                                                       key=key)
+        item_value_list.append((relation_field_id, value, relation_item_id))
+      # Make possible to delete the content of the field.
+      if item_value_list == []:
+        relation_field_id = field.generate_subfield_key("%s" % \
+                                                      SUB_FIELD_ID, key=key)
+        relation_item_key = field.generate_subfield_key(ITEM_ID, key=key)
+        item_value_list.append((relation_field_id, '', relation_item_key))
+    return item_value_list
 
-    def validate(self, field, key, REQUEST):
-      portal_type = map(lambda x:x[0],field.get_value('portal_type'))
-      portal_type_item = field.get_value('portal_type')
-      base_category = field.get_value( 'base_category')
-
-      # If the value is different, build a query
-      portal_selections = getToolByName(field, 'portal_selections')
-      portal_catalog = getToolByName(field, 'portal_catalog')
-
-      # Get the current value
-      value_list = Validator.LinesValidator.validate(self, field, key, REQUEST)
-
-#      if type(value_list) == type(''):
-#        value_list = [value_list]
-
+  def validate(self, field, key, REQUEST):
+    """
+    Validate the field.
+    """
+    raising_error_needed = 0
+    relation_editor_list = None
+    # Get some tool
+    catalog_index = field.get_value('catalog_index')
+    portal_type_list = [x[0] for x in field.get_value('portal_type')]
+    portal_catalog = getToolByName(field, 'portal_catalog')
+    ####################################
+    # Check list input
+    ####################################
+    relation_field_id = field.generate_subfield_key("%s" % \
+                                                    SUB_FIELD_ID, key=key)
+    relation_uid_list = REQUEST.get(relation_field_id, None)
+    ####################################
+    # User clicked on the wheel
+    ####################################
+    need_to_revalidate = 1
+    if relation_uid_list is not None:
+      need_to_revalidate = 0
+      relation_editor_list = []
+      for relation_item_id, relation_uid, value in \
+                  self._generateItemUidList(field, key, relation_uid_list,
+                                            REQUEST=REQUEST):
+        found = 0
+        try:
+          related_object = portal_catalog.getObject(relation_uid)
+          display_text = str(related_object.getProperty(catalog_index))
+          found = 1
+        except ValueError:
+          # Catch the error raised when the uid is a string
+          if relation_uid.startswith(NEW_CONTENT_PREFIX):
+            ##############################
+            # New content was selected, but the 
+            # form is not validated
+            ##############################
+            portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
+            translated_portal_type = Message(domain='erp5_ui',
+                                             message=portal_type)
+            message = Message(
+                    domain='erp5_ui', message='New ${portal_type}',
+                    mapping={'portal_type': translated_portal_type})
+            display_text = message
+          else:
+            display_text = 'Object has been deleted'
+        ################################
+        # Modify if user modified his value
+        ################################
+        if (found == 1) and \
+           (value != display_text):
+          relation_editor_list = None
+#             import pdb; pdb.set_trace()
+          need_to_revalidate = 1
+          REQUEST.set(relation_field_id, None)
+          break
+        if value is None:
+          value = display_text
+        # Storing display_text as value is needed in this case
+        relation_editor_list.append((value, 
+                                     relation_uid, display_text,
+                                     None, relation_item_id))
+#                                      str(relation_uid), display_text,
+    ####################################
+    # User validate the form
+    ####################################
+    if need_to_revalidate == 1:
+#     else:
+      ####################################
+      # Check the default field
+      ####################################
+      value_list = self.default_validator_instance.validate(field, 
+                                                       key, REQUEST)
       # If the value is the same as the current field value, do nothing
       current_value_list = field.get_value('default')
-      if type(current_value_list) == type(''):
-        current_value_list = [current_value_list]
-
-      catalog_index = field.get_value('catalog_index')
-      relation_setter_id = field.get_value('relation_setter_id')
-
-      relation_field_id = 'relation_%s' % ( key )
-      # we must know if user validate the form or click on the wheel button
-      relation_uid_list = REQUEST.get(relation_field_id, None)
-      relation_field_sub_id = 'relation_%s_0' % ( key )
-      if checkSameKeys( value_list, current_value_list ) and (relation_uid_list is None)  and (not REQUEST.has_key( relation_field_sub_id )):
-        # Will be interpreted by Editor as "do nothing"
-        return MultiRelationEditor(field.id, base_category, 
-                                   portal_type, portal_type_item, 
-                                   catalog_index, relation_setter_id, None)
-      else:
-
-        relation_field_id = 'relation_%s' % ( key )
-
-        # We must be able to erase the relation
-        if (value_list == ['']) and (not REQUEST.has_key( relation_field_id )):
-          display_text = 'Delete the relation'
-          return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, [])
-#          return RelationEditor(key, base_category, portal_type, None,
-#                                portal_type_item, catalog_index, value, relation_setter_id, display_text)
-                                # Will be interpreted by Base_edit as "delete relation" (with no uid and value = '')
-
-        if REQUEST.has_key( relation_field_id ):
-          # we must know if user validate the form or click on the wheel button
-          relation_uid_list = REQUEST.get(relation_field_id, None)
-          if relation_uid_list != None:
-            relation_editor_list = []
-            for i in range( len(relation_uid_list) ):
-
-              relation_item_id = 'item_%s_%s' % ( key, i )
-              relation_uid = relation_uid_list[i]
-
-              related_object = portal_catalog.getObject(relation_uid)
+      field_value_list = self._generateFieldValueList(field, key, value_list,
+                                                    current_value_list)
+      if len(field_value_list) != 0:
+        ####################################
+        # Values were changed
+        ####################################
+        relation_editor_list = []
+        for relation_field_id, value, relation_item_id in field_value_list:
+          if value == '':
+            ####################################
+            # User want to delete this line
+            ####################################
+            # Clean request if necessary
+            if REQUEST.has_key(relation_field_id):
+              for subdict_name in ['form', 'other']:
+                subdict = getattr(REQUEST, subdict_name)
+                if subdict.has_key(relation_field_id):
+                  subdict.pop(relation_field_id)
+            display_text = 'Delete the relation'
+            relation_editor_list.append((value, None, 
+                                     display_text, None, None))
+            # XXX RelationField implementation
+#         # We must be able to erase the relation
+#         display_text = 'Delete the relation'
+#         # Will be interpreted by Base_edit as "delete relation" 
+#         # (with no uid and value = '')
+#         relation_editor_list = [(value, None, 
+#                                      display_text, None, None)]
+          else:
+            relation_uid = REQUEST.get(relation_field_id, None)
+#             need_to_revalidate = 1
+            if relation_uid not in (None, ''):
+#               need_to_revalidate = 0
+#               found = 0
+              ####################################
+              # User selected in a popup menu
+              ####################################
+              if isinstance(relation_uid, (list, tuple)):
+                relation_uid = relation_uid[0]
+              try:
+                related_object = portal_catalog.getObject(relation_uid)
+              except ValueError:
+                # Catch the exception raised when the uid is a string
+                related_object = None
               if related_object is not None:
                 display_text = str(related_object.getProperty(catalog_index))
+#                 found = 1
               else:
-                display_text = 'Object has been deleted'
-              # Check
-              REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
-              # Storing display_text as value is needded in this case
-              relation_editor_list.append( (i, display_text, str(relation_uid), display_text) )
-
-            return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
-
-
-        else:
-          # User validate the form
-
-          relation_editor_list = []
-          raising_error_needed = 0
-          raising_error_value = ''
-
-          # Check all relation
-          for i in range( len(value_list) ):
-            relation_field_id = 'relation_%s_%s' % ( key, i )
-            relation_item_id = 'item_%s_%s' % ( key, i )
-
-            relation_uid = REQUEST.get(relation_field_id, None)
-
-            value = value_list[i]
-
-
-            # If we get a empty string, delete this line
-            if value == '':
-              # Clean request if necessary
-              if REQUEST.has_key( relation_field_id):
-                for subdict_name in ['form', 'other']:
-                  subdict = getattr(REQUEST, subdict_name)
-                  if subdict.has_key(relation_field_id):
-                    subdict.pop(relation_field_id)
-            else:
-              # Got a true value
-
-              if relation_uid not in (None, ''):
-                # A value has been defined by the user in  popup menu
-                if type(relation_uid) in (type([]), type(())): relation_uid = relation_uid[0]
-                try:
-                  related_object = portal_catalog.getObject(relation_uid)
-                except ValueError:
-                  # Catch the exception raised when the uid is a string
-                  related_object = None
-                if related_object is not None:
-                  display_text = str(related_object.getProperty(catalog_index))
+                ##############################
+                # New content was selected, but the 
+                # form is not validated
+                ##############################
+                if relation_uid.startswith(NEW_CONTENT_PREFIX):
+                  ##############################
+                  # New content was selected, but the 
+                  # form is not validated
+                  ##############################
+                  portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
+                  translated_portal_type = Message(domain='erp5_ui',
+                                                   message=portal_type)
+                  message = Message(
+                          domain='erp5_ui', message='New ${portal_type}',
+                          mapping={'portal_type': translated_portal_type})
+                  display_text = message
                 else:
                   display_text = 'Object has been deleted'
-                # Check
-                REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
-                relation_editor_list.append( (i, value, str(relation_uid), display_text) )
-
-              else:
-
-                kw ={}
-                kw[catalog_index] = value
-                kw['portal_type'] = portal_type
-                kw['sort_on'] = catalog_index
-                # Get the query results
-                relation_list = portal_catalog(**kw)
-                relation_uid_list = map(lambda x: x.uid, relation_list)
-                localizer = getToolByName( field
-                                         , 'Localizer'
-                                         , None
-                                         )
-                # Prepare a menu
-                if localizer is not None:
-                  N_ = localizer.erp5_ui.gettext
-                else :
-                  N_ = lambda msg, **kw: msg
-                menu_item_list = [('', '')]
-                new_object_menu_item_list = []
-                for p in portal_type:
-                  new_object_menu_item_list += [ ( N_('New %s') % (N_(p))
-                                                 , '%s%s' % (new_content_prefix,p)
-                                                 )
-                                               ]
-
-                if len(relation_list) >= MAX_SELECT:
-                  # If the length is long, raise an error
-                  # This parameter means we need listbox help
-                  REQUEST.set(relation_item_id, [])
-                  raising_error_needed = 1
-                  raising_error_value = 'relation_result_too_long'
-
-                elif len(relation_list) == 1:
-                  # If the length is 1, return uid
-                  relation_uid = relation_uid_list[0]
-                  related_object = portal_catalog.getObject(relation_uid)
-                  if related_object is not None:
-                    display_text = str(related_object.getProperty(catalog_index))
-                  else:
-                    display_text = 'Object has been deleted'
-
-                  REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
-                  relation_editor_list.append( (0, value, relation_uid, display_text) )
-
-                elif len(relation_list) == 0:
-                  # If the length is 0, raise an error
-                  if field.get_value('allow_creation') == 1 :
-                    menu_item_list += new_object_menu_item_list
-                  REQUEST.set(relation_item_id, menu_item_list)
-                  raising_error_needed = 1
-                  raising_error_value = 'relation_result_empty'
-
+#               ################################
+#               # Modify if user modified his value
+#               ################################
+#               if (found == 1) and \
+#                  (value != display_text):
+#                 REQUEST.set(relation_field_id, None)
+#                 need_to_revalidate = 1
+#               else:
+#                 # Check
+#                 REQUEST.set(relation_item_id, ((display_text, relation_uid),))
+#                 relation_editor_list.append((value, str(relation_uid), 
+#                                             display_text, relation_field_id,
+#                                             relation_item_id))
+              REQUEST.set(relation_item_id, ((display_text, relation_uid),))
+              relation_editor_list.append((value, str(relation_uid), 
+                                          display_text, relation_field_id,
+                                          relation_item_id))
+#             if need_to_revalidate == 1:
+            else:
+              ####################################
+              # User validate the form for this line
+              ####################################
+              kw ={}
+              kw[catalog_index] = value
+              kw['portal_type'] = portal_type_list
+              kw['sort_on'] = catalog_index
+              # Get the query results
+              relation_list = portal_catalog(**kw)
+              relation_uid_list = [x.uid for x in relation_list]
+              menu_item_list = []
+              if len(relation_list) >= MAX_SELECT:
+                # If the length is long, raise an error
+                # This parameter means we need listbox help
+                # XXX XXX XXX Do we need to delete it ?
+                REQUEST.set(relation_item_id, [])
+                raising_error_needed = 1
+                raising_error_value = 'relation_result_too_long'
+              elif len(relation_list) == 1:
+                # If the length is 1, return uid
+                relation_uid = relation_uid_list[0]
+                related_object = portal_catalog.getObject(relation_uid)
+                if related_object is not None:
+                  display_text = str(related_object.getProperty(catalog_index))
+                  # Modify the value, in order to let the user 
+                  # modify it later...
+                  value = display_text
                 else:
-                  # If the length is short, raise an error
-                  # len(relation_list) < MAX_SELECT:
+                  display_text = 'Object has been deleted'
+                # XXX XXX XXX
+                REQUEST.set(relation_item_id, ((display_text, 
+                                                relation_uid),))
+                relation_editor_list.append((value, relation_uid, 
+                                             display_text, None,
+                                             relation_item_id))
+#                 relation_editor_list.append((0, value, relation_uid, 
+#                                              display_text, None, None))
+              elif len(relation_list) == 0:
+                # If the length is 0, raise an error
+                if field.get_value('allow_creation') == 1 :
+                  # XXX
+                  for portal_type in portal_type_list:
+                    translated_portal_type = Message(domain='erp5_ui',
+                                                     message=portal_type)
+                    message = Message(
+                            domain='erp5_ui', message='New ${portal_type}',
+                            mapping={'portal_type': translated_portal_type})
+                    menu_item_list.append((message, 
+                                           '%s%s' % (NEW_CONTENT_PREFIX, 
+                                                     portal_type)))
+                REQUEST.set(relation_item_id, menu_item_list)
+                raising_error_needed = 1
+                raising_error_value = 'relation_result_empty'
+              else:
+                # If the length is short, raise an error
+                # len(relation_list) < MAX_SELECT:
+                menu_item_list.extend([(
+                                  x.getObject().getProperty(catalog_index),
+                                  x.uid) for x in relation_list])
+                REQUEST.set(relation_item_id, menu_item_list)
+                raising_error_needed = 1
+                raising_error_value = 'relation_result_ambiguous'
 
-                  #menu_item_list += [('-', '')]
-                  menu_item_list += map(lambda x: (x.getObject().getProperty(catalog_index), x.uid),
-                                                                                  relation_list)
-                  REQUEST.set(relation_item_id, menu_item_list)
-                  raising_error_needed = 1
-                  raising_error_value = 'relation_result_ambiguous'
-
-          # validate MultiRelation field
-          if raising_error_needed:
-            # Raise error
-            self.raise_error(raising_error_value, field)
-            return value_list
-          else:
-            # Can return editor
-            return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
+    ##################################### 
+    # Validate MultiRelation field
+    ##################################### 
+    if raising_error_needed:
+      # Raise error
+      self.raise_error(raising_error_value, field)
+      return value_list
+    else:
+      # Can return editor
+      base_category = field.get_value('base_category')
+      portal_type_item = field.get_value('portal_type')
+      relation_setter_id = field.get_value('relation_setter_id')
+      return self.editor(field.id, 
+                         base_category,
+                         portal_type_list, 
+                         portal_type_item, catalog_index, 
+                         relation_setter_id, relation_editor_list)
 
 MultiRelationStringFieldWidgetInstance = MultiRelationStringFieldWidget()
 MultiRelationStringFieldValidatorInstance = MultiRelationStringFieldValidator()
 
 class MultiRelationStringField(ZMIField):
-    meta_type = "MultiRelationStringField"
-    security = ClassSecurityInfo()
+  meta_type = "MultiRelationStringField"
+  security = ClassSecurityInfo()
 
-    widget = MultiRelationStringFieldWidgetInstance
-    validator = MultiRelationStringFieldValidatorInstance
+  widget = MultiRelationStringFieldWidgetInstance
+  validator = MultiRelationStringFieldValidatorInstance
 
-    security.declareProtected('Access contents information', 'get_value')
-    def get_value(self, id, **kw):
-      """Get value for id.
-
-      Optionally pass keyword arguments that get passed to TALES
-      expression.
-      """
-      if id in ('is_relation_field', 'is_multi_relation_field'):
-        result = 1
-      else:
-        result = ZMIField.get_value(self, id, **kw)
-      return result
+  security.declareProtected('Access contents information', 'get_value')
+  def get_value(self, id, **kw):
+    """
+    Get value for id.
+    Optionally pass keyword arguments that get passed to TALES
+    expression.
+    """
+    if id in ('is_relation_field', 'is_multi_relation_field'):
+      result = 1
+    else:
+      result = ZMIField.get_value(self, id, **kw)
+    return result

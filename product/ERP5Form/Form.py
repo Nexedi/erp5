@@ -38,7 +38,6 @@ from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from ZODB.POSException import ConflictError
-
 from Products.ERP5Type.Utils import UpperCase
 
 import psyco
@@ -111,6 +110,7 @@ def get_value(self, id, **kw):
         else:
             # get normal value
             value = self.get_orig_value(id)
+
             # For the 'default' value, we try to get a default value
             if id == 'default':
                 if (value is None or value == '' or value == [] or value == ()) \
@@ -355,7 +355,6 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
-        self._v_relation_field_index = 0 # We initialize here an index which is used to generate different method ids for every field
         if not kwargs.has_key('args'):
             kwargs['args'] = args
         form = self
@@ -370,6 +369,11 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         extra_context['form'] = self
         extra_context['container'] = container ## PROBLEM NOT TAKEN INTO ACCOUNT
         extra_context['here'] = object
+        # We initialize here an index which is used to generate 
+        # different method ids for every field
+        request = extra_context['request']
+        # XXX We must not use a counter, but a ID for each field
+        request.set('_v_relation_field_index', 0)
         return pt.pt_render(extra_context=extra_context)
 
     def _exec(self, bound_names, args, kw):
@@ -456,6 +460,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
 # More optimizations
 #psyco.bind(ERP5Field)
+# XXX Not useful, as we patch those methods in FormulatorPatch
 psyco.bind(Field.render)
 psyco.bind(Field._render_helper)
 psyco.bind(Field.get_value)

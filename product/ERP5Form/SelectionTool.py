@@ -52,6 +52,7 @@ import random
 import string
 from zLOG import LOG
 from Acquisition import Implicit, aq_base
+from Products.ERP5Type.Message import Message
 
 
 class SelectionError( Exception ):
@@ -920,7 +921,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return object
 
     # Related document searching
-    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None, 
+    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None,
                                         sub_index=None, **kw):
       """
       Returns a search related document dialog
@@ -928,8 +929,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if sub_index != None:
         REQUEST.form['sub_index'] = sub_index
-      
-      # Find the object which needs to be updated      
+      # Find the object which needs to be updated
       object_uid = REQUEST.get('object_uid', None)
       object_path = REQUEST.get('object_path', None)
       if object_uid is not None:
@@ -942,72 +942,56 @@ class SelectionTool( UniqueObject, SimpleItem ):
         if object_path is not None:
           o = self.getPortalObject().restrictedTraverse(object_path)
         if o is not None:
+          # XXX
           o.immediateReindexObject()
           object_uid = o.getUid() 
         else:
-          return "Sorrry, Error, the calling object was not catalogued. " \
-                 "Do not know how to do ?"
-
+          raise SelectionError, \
+                "Sorrry, Error, the calling object was not catalogued. " \
+                "Do not know how to do ?"
       # Find the field which was clicked on
       # Important to get from the object instead of self
       form = getattr(o, form_id) 
       field = None
-      relation_index = 0
-
-      # find the correct field
-      field_list = []
-      # XXX may be should support another parameter,
-      # like include_non_editable=0
-      for field in form.get_fields(include_disabled=0):
-        if field.get_value('editable',REQUEST=REQUEST):
-          field_list.append(field)
-
+      # Search the correct field
       relation_field_found = 0
-      for field in field_list:
-        try:
-          dumb = field.get_value('is_relation_field')
-        # XXX FIXME Exception name is not in locals.
-        # This can be related to a bad python file import
-        # I already had this kind of error with another python software, 
-        # and the only solution I found was to use ihooks to 
-        # import python files.
-        # I have to check this.
-#         except KeyError:
-        except:
-          pass
-#           relation_index += 1
-        else:
-          if index == relation_index:
-            relation_field_found = 1
-            break
+      relation_index = 0
+      # XXX may be should support another parameter,
+      for field in form.get_fields(include_disabled=0):
+        if field.get_value('editable', REQUEST=REQUEST):
+          try:
+            dumb = field.get_value('is_relation_field')
+          except:
+  #         except KeyError:
+            # XXX FIXME Exception name is not in locals.
+            # Namespace seems a bit broken...
+            LOG("SelectionTool", 0, "Exception catched with broken namespace!")
+            pass
           else:
-            relation_index += 1
-
-#         if getattr(field, 'is_relation_field', None):
-#           if index == relation_index:
-#             relation_field_found = 1
-#             break
-#           else:
-#             relation_index += 1
-
+            if index == relation_index:
+              relation_field_found = 1
+              break
+            else:
+              relation_index += 1
       if not relation_field_found:
+        # We didn't find the field...
         raise SelectionError, "SelectionTool: can not find the relation" \
                               " field %s" % index 
-      
-      field_value = REQUEST.form['field_%s' % field.id]
+      else:
+        # Field found
+        field_key = field.generate_field_key()
+        field_value = REQUEST.form[field_key]
+        # XXX Hardcoded form name
+        redirect_form_id = 'Base_viewRelatedObjectList'
+        redirect_form = getattr(o, redirect_form_id)
+        # XXX Hardcoded listbox field
+        selection_name = redirect_form.listbox.get_value('selection_name')
+        # Reset current selection
+        self.portal_selections.setSelectionFor(selection_name, None)
 
-      selection_name = 'Base_viewRelatedObjectList'
-      
-      # reselt current selection
-      self.portal_selections.setSelectionFor(selection_name, None)
 
-      # XXX portal_status_message = 
-      # "Please select one object to precise the value: 
-      # '%s' in the field: '%s'" % (field_value, field.get_orig_value('title'))
-      portal_status_message = "Please select one object."
-
-      if field.get_value('is_multi_relation_field'):
-        if sub_index is None:
+        if (field.get_value('is_multi_relation_field')) and \
+           (sub_index is None):
           # user click on the wheel, not on the validation button
           # we need to facilitate user search
 
@@ -1029,110 +1013,60 @@ class SelectionTool( UniqueObject, SimpleItem ):
           self.portal_selections.setSelectionCheckedUidsFor(
                                              selection_name, 
                                              current_uid_list)
-
-          REQUEST.form['field_%s' % field.id] = field_value
-          # XXX portal_status_message = 
-          # "Please select one or more object to define the field: 
-          # '%s'" % field.get_orig_value('title')
-          portal_status_message = "Please select one (or more) object."
-
-
-      # Save the current REQUEST form
-      # We can't put FileUpload instances because we can't pickle them
-      pickle_kw = {}
-      for key in REQUEST.form.keys():
-        if not isinstance(REQUEST.form[key],FileUpload):
-          pickle_kw[key] = REQUEST.form[key]
-
-      form_pickle, form_signature = self.getPickleAndSignature(**pickle_kw)
-      REQUEST.form_pickle = form_pickle
-      REQUEST.form_signature = form_signature
-        
-      base_category = None
-      kw = {}
-      
-      kw['object_uid'] = object_uid
-      kw['form_id'] = 'Base_viewRelatedObjectList'
-      kw['selection_name'] = 'Base_viewRelatedObjectList'
-      kw['selection_index'] = 0 # We start on the first page
-      kw['field_id'] = field.id
-      kw['portal_type'] = map(lambda x:x[0],field.get_value('portal_type'))
-      parameter_list = field.get_value('parameter_list')
-      if len(parameter_list) > 0:
-        for k,v in parameter_list:
-          kw[k] = v
-      kw['reset'] = 0
-      kw['base_category'] = field.get_value( 'base_category')
-      kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
-      kw['previous_form_id'] = form_id
+          # XXX
+#           field_value = ''
+          field_value = str(field_value).splitlines()
+          REQUEST.form[field_key] = field_value
+          portal_status_message = Message(
+                          domain='erp5_ui',
+                          message="Please select one (or more) object.")
+        else:
+          portal_status_message = Message(domain='erp5_ui',
+                                          message="Please select one object.")
 
 
-      kw[field.get_value('catalog_index')] = str(field_value).splitlines()
-      
-      """
-      # We work with strings - ie. single values
-      kw ={}
-      context.portal_selections.setSelectionParamsFor('Base_viewRelatedObjectList', kw.copy())
-      previous_uids = o.getValueUids(base_category, portal_type=portal_type)
-      relation_list = context.portal_catalog(**kw)
-      relation_uid_list = map(lambda x: x.uid, relation_list)
-      uids = []
-      """
+        # Save the current REQUEST form
+        # We can't put FileUpload instances because we can't pickle them
+        pickle_kw = {}
+        for key in REQUEST.form.keys():
+          if not isinstance(REQUEST.form[key],FileUpload):
+            pickle_kw[key] = REQUEST.form[key]
 
-      # Need to redirect, if we want listbox nextPage to work
-      kw['form_pickle'] = form_pickle
-      kw['form_signature'] = form_signature
-      kw['portal_status_message'] = portal_status_message
+        form_pickle, form_signature = self.getPickleAndSignature(**pickle_kw)
+        REQUEST.form_pickle = form_pickle
+        REQUEST.form_signature = form_signature
+          
+        base_category = None
+        kw = {}
+        kw['object_uid'] = object_uid
+        kw['form_id'] = redirect_form_id
+        kw['selection_name'] = selection_name
+        kw['selection_index'] = 0 # We start on the first page
+        kw['field_id'] = field.id
+        kw['portal_type'] = [x[0] for x in field.get_value('portal_type')]
+        parameter_list = field.get_value('parameter_list')
+        if len(parameter_list) > 0:
+          for k,v in parameter_list:
+            kw[k] = v
+        kw['reset'] = 0
+        kw['base_category'] = field.get_value( 'base_category')
+        kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
+        kw['previous_form_id'] = form_id
 
-      redirect_url = '%s/%s?%s' % ( o.absolute_url()
-                                , 'Base_viewRelatedObjectList'
-                                , make_query(kw)
-                                )
+        # XXX
+#         kw[field.get_value('catalog_index')] = str(field_value).splitlines()
+        kw[field.get_value('catalog_index')] = field_value
+        # Need to redirect, if we want listbox nextPage to work
+        kw['form_pickle'] = form_pickle
+        kw['form_signature'] = form_signature
+        kw['portal_status_message'] = portal_status_message
 
-      REQUEST[ 'RESPONSE' ].redirect( redirect_url )
+        redirect_url = '%s/%s?%s' % ( o.absolute_url()
+                                  , redirect_form_id
+                                  , make_query(kw)
+                                  )
 
-#      # Empty the selection (uid)
-#      REQUEST.form = kw # New request form
-#                  
-#      # Define new HTTP_REFERER
-#      REQUEST.HTTP_REFERER = '%s/Base_viewRelatedObjectList' % o.absolute_url() 
-#      
-#      # Return the search dialog
-#      return o.Base_viewRelatedObjectList(REQUEST=REQUEST)
-
-
-     # XXX do not use this method, use aq_dynamic (JPS)
-#    def __getattr__(self, name):
-#      dynamic_method_name = 'viewSearchRelatedDocumentDialog'
-#      if name[:len(dynamic_method_name)] == dynamic_method_name:
-#        method_count_string = name[len(dynamic_method_name):]
-#        # be sure that method name is correct
-#        try:
-#          import string
-#          method_count = string.atoi(method_count_string)
-#        except:
-#          raise AttributeError, name
-#        else:
-#          # generate dynamicaly needed forwarder methods
-#          def viewSearchRelatedDocumentDialogWrapper(self, form_id, REQUEST=None, **kw):
-#            """
-#              viewSearchRelatedDocumentDialog Wrapper
-#            """
-#            return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, **kw)
-#          
-#          setattr(self.__class__, name, viewSearchRelatedDocumentDialogWrapper)
-#
-#          klass = self.__class__
-#          if hasattr(klass, 'security'):
-#            from Products.ERP5Type import Permissions as ERP5Permissions
-#            klass.security.declareProtected(ERP5Permissions.View, name)
-#          else:
-#            # XXX security declaration always failed....
-#            LOG('WARNING ERP5Form SelectionTool, security not defined on',0,klass.__name__)
-#
-#          return getattr(self, name)
-#      else:
-#        raise AttributeError, name
+        REQUEST[ 'RESPONSE' ].redirect( redirect_url )
 
     def _aq_dynamic(self, name):
       """
@@ -1141,14 +1075,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       aq_base_name = getattr(aq_base(self), name, None)
       if aq_base_name == None:
-        dynamic_method_name = 'viewSearchRelatedDocumentDialog'
-        zope_security = '__roles__'
-        if (name[:len(dynamic_method_name)] == dynamic_method_name) and \
-           (name[-len(zope_security):] != zope_security):
+        DYNAMIC_METHOD_NAME = 'viewSearchRelatedDocumentDialog'
+        method_name_length = len(DYNAMIC_METHOD_NAME)
 
-          method_count_string_list = string.split( 
-                                       name[len(dynamic_method_name):], 
-                                       '_')
+        zope_security = '__roles__'
+        if (name[:method_name_length] == DYNAMIC_METHOD_NAME) and \
+           (name[-len(zope_security):] != zope_security):
+          method_count_string_list = name[method_name_length:].split('_')
           method_count_string = method_count_string_list[0]
           # be sure that method name is correct
           try:
@@ -1173,15 +1106,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
               """
               LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw', 
                   0, kw)
-              if sub_index == None:
-                return self.viewSearchRelatedDocumentDialog(
-                                         method_count, form_id, 
-                                         REQUEST=REQUEST, **kw)
-              else:
-                return self.viewSearchRelatedDocumentDialog(
+              return self.viewSearchRelatedDocumentDialog(
                                    method_count, form_id, 
                                    REQUEST=REQUEST, sub_index=sub_index, **kw)
-            
             setattr(self.__class__, name, 
                     viewSearchRelatedDocumentDialogWrapper)
 
