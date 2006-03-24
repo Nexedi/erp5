@@ -75,7 +75,7 @@ N_ = context.Base_translateString\n
 for p in portal.portal_preferences.searchFolder(spec=(\'ERP5 Preference\',)) :\n
   p = p.getObject()\n
   try :\n
-    if portal.portal_membership.getAuthenticatedMember().allowed(p, [\'Owner\', \'Assignor\']) :\n
+    if portal.portal_membership.getAuthenticatedMember().allowed(p, [\'Owner\', ]) :\n
       if p != pref and \\\n
          p.getPreferenceState() == \'enabled\' and \\\n
          p.getPriority() == pref.getPriority() :\n
