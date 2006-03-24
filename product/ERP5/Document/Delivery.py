@@ -265,7 +265,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         Returns 1 if all movements have a delivery or order counterpart
         in the simulation
       """
-      #LOG('Delivery.isSimulated getMovementList',0,self.getMovementList())
       for m in self.getMovementList():
         #LOG('Delivery.isSimulated m',0,m.getPhysicalPath())
         #LOG('Delivery.isSimulated m.isSimulated',0,m.isSimulated())
@@ -276,7 +275,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
             return 0
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
-
+    
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self,fast=0,**kw):
       """
@@ -557,6 +556,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         # Nothing to do if we are already simulated
         self._createAppliedRule(rule_id,force=force,**kw)
 
+
+
     def _createAppliedRule(self, rule_id,force=0,activate_kw=None,**kw):
       """
         Create a new Applied Rule is none is related, or call expand
@@ -571,21 +572,23 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       # Look up if existing applied rule
       my_applied_rule_list = self.getCausalityRelatedValueList(\
                                             portal_type='Applied Rule')
+      my_applied_rule = None
       if len(my_applied_rule_list) == 0:
         if self.isSimulated(): 
           # No need to create a DeliveryRule 
           # if we are already in the simulation process
-          return 
-        # Create a new applied order rule (portal_rules.order_rule)
-        portal_rules = getToolByName(self, 'portal_rules')
-        portal_simulation = getToolByName(self, 'portal_simulation')
-        my_applied_rule = portal_rules[rule_id].\
-                                    constructNewAppliedRule(portal_simulation)
-        # Set causality
-        my_applied_rule.setCausalityValue(self)
-        # We must make sure this rule is indexed
-        # now in order not to create another one later
-        my_applied_rule.reindexObject(activate_kw=activate_kw,**kw)
+          pass
+        else:
+          # Create a new applied order rule (portal_rules.order_rule)
+          portal_rules = getToolByName(self, 'portal_rules')
+          portal_simulation = getToolByName(self, 'portal_simulation')
+          my_applied_rule = portal_rules[rule_id].\
+                                      constructNewAppliedRule(portal_simulation)
+          # Set causality
+          my_applied_rule.setCausalityValue(self)
+          # We must make sure this rule is indexed
+          # now in order not to create another one later
+          my_applied_rule.reindexObject(activate_kw=activate_kw,**kw)
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
@@ -593,32 +596,77 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         raise "SimulationError", 'Delivery %s has more than one applied'\
                                  ' rule.' % self.getRelativeUrl()
 
+      my_applied_rule_id = None
+      expand_activate_kw = {}
+      if my_applied_rule is not None:
+        my_applied_rule_id = my_applied_rule.getId()
+        expand_activate_kw['after_path_and_method_id'] = \
+                (my_applied_rule.getPath(),\
+               ['immediateReindexObject', 'recursiveImmediateReindexObject'])
       # We are now certain we have a single applied rule
       # It is time to expand it
-      self.activate(
-        after_path_and_method_id=(
-                my_applied_rule.getPath(),
-               ['immediateReindexObject', 'recursiveImmediateReindexObject']),
-               activate_kw=activate_kw
-        ).expand(my_applied_rule.getId(),force=force,activate_kw=activate_kw,**kw)
+      self.activate( activate_kw=activate_kw,
+                     **expand_activate_kw
+        ).expand(applied_rule_id=my_applied_rule_id,force=force,
+                 activate_kw=activate_kw,**kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule_id, force=0, activate_kw=None,**kw):
+    def expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
       """
         Reexpand applied rule
+        
+        Also reexpand all rules related to movements
       """
-      my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
-      if my_applied_rule is not None:
-        my_applied_rule.expand(force=force, activate_kw=activate_kw,**kw)
-        # once expanded, the applied_rule must be reindexed
-        # because some simulation_movement may change even
-        # if there are not edited (acquisition)
-        my_applied_rule.recursiveReindexObject(activate_kw=activate_kw)
-      else:
-        LOG("ERP5 Error:", 100,
-            "Could not expand applied rule %s for delivery %s" %\
-                (applied_rule_id, self.getId()))
+      excluded_rule_path_list = []
+      if applied_rule_id is not None:
+        my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
+        if my_applied_rule is not None:
+          excluded_rule_path_list.append(my_applied_rule.getPath())
+          my_applied_rule.expand(force=force, activate_kw=activate_kw,**kw)
+          # once expanded, the applied_rule must be reindexed
+          # because some simulation_movement may change even
+          # if there are not edited (acquisition)
+          my_applied_rule.recursiveReindexObject(activate_kw=activate_kw)
+        else:
+          LOG("ERP5 Error:", 100,
+              "Could not expand applied rule %s for delivery %s" %\
+                  (applied_rule_id, self.getId()))
+      self.expandRuleRelatedToMovement(
+                  excluded_rule_path_list=excluded_rule_path_list,
+                  force=force,
+                  activate_kw=activate_kw,
+                  **kw)
 
+    security.declareProtected(Permissions.ModifyPortalContent,
+        'expandRuleRelatedToMovement')
+    def expandRuleRelatedToMovement(self,excluded_rule_path_list=None,
+                                    activate_kw=None,**kw):
+      """
+      Some delivery movement may be related to another applied rule than
+      the one related to the delivery. Delivery movements may be related
+      to many simulation movements from many different root applied rules,
+      so it is required to expand the applied rule parent to related
+      simulation movements.
+
+      exclude_rule_path : do not expand this applied rule (or children
+                          applied rule)
+      """
+      if excluded_rule_path_list is None:
+        excluded_rule_path_list = []
+      to_expand_list = []
+      # we might use a zsql method, because it can be very slow
+      for m in self.getMovementList():
+        if m.isSimulated():
+          sim_movement_list = m.getDeliveryRelatedValueList()
+          for sim_movement in sim_movement_list:
+            if sim_movement.getRootAppliedRule().getPath() \
+                not in excluded_rule_path_list:
+              parent_value = sim_movement.getParentValue()
+              if parent_value not in to_expand_list:
+                to_expand_list.append(parent_value)
+      for rule in to_expand_list:
+        rule.expand(activate_kw=activate_kw,**kw)
+        rule.recursiveReindexObject(activate_kw=activate_kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootCausalityValueList')
