@@ -65,12 +65,12 @@ class Dir :
 
   # return a list of sub directories' names
   def getSubDirs(self) :
-    return [d.full_path for d in self.sub_dirs]
+    return [d.name for d in self.sub_dirs]
 
   # return directory in subdirs given its name
-  def getDir(self, full_path):
+  def getDir(self, name):
     for d in self.sub_dirs:
-      if d.full_path == full_path:
+      if d.name == name:
         return d
 ## End of Dir Class
   
@@ -85,7 +85,7 @@ class SubversionTool(UniqueObject, Folder):
   login_cookie_name = 'erp5_subversion_login'
   ssl_trust_cookie_name = 'erp5_subversion_ssl_trust'
   top_working_path = os.path.join(getConfiguration().instancehome, 'svn')
-  os.chdir(top_working_path)
+
   # Declarative Security
   security = ClassSecurityInfo()
 
@@ -105,6 +105,8 @@ class SubversionTool(UniqueObject, Folder):
 
   # Filter content (ZMI))
   def __init__(self):
+# working_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+# svn_username = self.getPortalObject().portal_preferences.getPreference('preferred_subversion_user_name')
       return Folder.__init__(self, SubversionTool.id)
 
   # Filter content (ZMI))
@@ -148,26 +150,26 @@ class SubversionTool(UniqueObject, Folder):
     # Decode login information.
     return loads(b64decode(login))
     
-#   def setLogin(self, realm, user, password):
-#     """Set login information.
-#     """
-#     # Get existing login information. Filter out old information.
-#     login_list = []
-#     request = self.REQUEST
-#     cookie = request.get(self.login_cookie_name)
-#     if cookie:
-#       for login in cookie.split(','):
-#         if self._decodeLogin(login)[0] != realm:
-#           login_list.append(login)
-#     # Set the cookie.
-#     response = request.RESPONSE
-#     login_list.append(self._encodeLogin(realm, user, password))
-#     value = ','.join(login_list)
-#     expires = (DateTime() + 1).toZone('GMT').rfc822()
-#     response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
+  def setLogin(self, realm, user, password):
+    """Set login information.
+    """
+    # Get existing login information. Filter out old information.
+    login_list = []
+    request = self.REQUEST
+    cookie = request.get(self.login_cookie_name)
+    if cookie:
+      for login in cookie.split(','):
+        if self._decodeLogin(login)[0] != realm:
+          login_list.append(login)
+    # Set the cookie.
+    response = request.RESPONSE
+    login_list.append(self._encodeLogin(realm, user, password))
+    value = ','.join(login_list)
+    expires = (DateTime() + 1).toZone('GMT').rfc822()
+    response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
 
-  def setLogin(self, username, passwd):
-    self.login = (username, passwd)
+#   def setLogin(self, username, passwd):
+#     self.login = (username, passwd)
 
   def _getLogin(self, target_realm):
     request = self.REQUEST
@@ -289,6 +291,7 @@ class SubversionTool(UniqueObject, Folder):
     
     root = Dir(path, "normal")
     somethingModified = False
+    
     for statusObj in self.status(path) :
       # can be (normal, added, modified, deleted)
       msg_status = statusObj.getTextStatus()
@@ -309,36 +312,30 @@ class SubversionTool(UniqueObject, Folder):
           i += 1
           if d :
             full_pathOfd = '/'+'/'.join(full_path_list[:i]).strip()
-            if full_pathOfd not in parent.sub_dirs :
+            if d not in parent.getSubDirs() :
               parent.sub_dirs.append(Dir(full_pathOfd, "normal"))
-            parent = parent.getDir(full_pathOfd)
+            parent = parent.getDir(d)
         if os.path.isdir(full_path) :
           if full_path == parent.full_path :
             parent.msg_status = str(msg_status)
-          elif full_path not in parent.sub_dirs :
-            parent.sub_dirs.append(Dir(full_path, str(msg_status)))
+          elif filename not in parent.getSubDirs() :
+            parent.sub_dirs.append(Dir(filename, str(msg_status)))
           else :
-            tmp = parent.getDir(full_path)
+            tmp = parent.getDir(filename)
             tmp.msg_status = str(msg_status)
         else :
-          parent.sub_dirs.append(File(full_path, str(msg_status)))
+          parent.sub_dirs.append(File(filename, str(msg_status)))
     return somethingModified and root
             
   def treeToXML(self, item) :
-    output = StringIO()
-    output.write("<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep)
-    output.write("<tree id='0'>" + os.linesep)
+    output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
+    output += "<tree id='0'>" + os.linesep
     output = self._treeToXML(item, output, 1, True)
-    output.write("</tree>" + os.linesep)
-    try :
-      self.getPortalObject()["portal_skins"]["erp5_svn"].manage_addFile(id="tree.xml", file=output)
-    except :
-      self.getPortalObject()["portal_skins"]["erp5_svn"]["tree.xml"].manage_upload(file=output)
-    output.close()
-
-    #return output
+    output += "</tree>" + os.linesep
+    return output
   
   def _treeToXML(self, item, output, ident, first) :
+    # Choosing a color coresponding to the status
     itemStatus = item.msg_status
     if itemStatus == 'added' :
       itemColor='green'
@@ -348,34 +345,33 @@ class SubversionTool(UniqueObject, Folder):
       itemColor='red'
     else :
       itemColor='black'
+      
     if isinstance(item, Dir) :
       for i in range(ident) :
-        output.write('\t')
+        output += '\t'
       if first :
-        output.write('<item open="1" text="%s" id="%s" aCol="%s" '\
+        output += '<item open="1" text="%s" id="%s" aCol="%s" '\
         'im0="folder.png" im1="folder_open.png" '\
         'im2="folder.png">'%(item.name,
-item.full_path, itemColor,) + os.linesep)
+item.full_path, itemColor,) + os.linesep
         first=False
       else :
-        output.write('<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
+        output += '<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
       'im1="folder_open.png" im2="folder.png">'%(item.name,
-item.full_path, itemColor,) + os.linesep)
+item.full_path, itemColor,) + os.linesep
       for it in item.sub_dirs:
         ident += 1
-        output = self._treeToXML(item.getDir(it.full_path), output, ident,
+        output = self._treeToXML(item.getDir(it.name), output, ident,
 first)
         ident -= 1
       for i in range(ident) :
-        output.write('\t')
-      output.write('</item>' + os.linesep)
+        output += '\t'
+      output += '</item>' + os.linesep
     else :
       for i in range(ident) :
-        output.write('\t')
-      output.write('<item text="%s" id="%s" aCol="%s" im0="document.png" ' \
-                'im1="document.png" im2="document.png"/>'%(item.name,
-item.full_path, itemColor,) + os.linesep)
-
+        output += '\t'
+      output += '<item text="%s" id="%s" aCol="%s" im0="document.png"/>'\
+                %(item.name, item.full_path, itemColor,) + os.linesep
     return output
     
 InitializeClass(SubversionTool)

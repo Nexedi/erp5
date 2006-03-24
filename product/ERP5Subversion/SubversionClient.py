@@ -28,7 +28,7 @@
 
 from Acquisition import Implicit
 
-import time
+import time, os
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Globals import InitializeClass
@@ -181,38 +181,45 @@ try:
       self.client.set_auth_cache(0)
       self.client.callback_cancel = CancelCallback(self)
       self.client.callback_get_log_message = GetLogMessageCallback(self)
-      #self.client.callback_get_login = GetLoginCallback(self)
-      self.client.callback_get_login = self.callback_get_Login
+      self.client.callback_get_login = GetLoginCallback(self)
+      #self.client.callback_get_login = self.callback_get_Login
       self.client.callback_notify = NotifyCallback(self)
-      #self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(self)
-      self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
+      self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(self)
+      #self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
       self.creation_time = time.time()
       self.__dict__.update(kw)
 
     def getLogMessage(self):
       return self.log_message
+    
+    def _getPreferences(self):
+      self.working_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+      if not self.working_path :
+        raise "Error: Please set Subversion working path in preferences"
+      self.svn_username = self.getPortalObject().portal_preferences.getPreference('preferred_subversion_user_name')
+      os.chdir(self.working_path);
 
     def getTimeout(self):
       return self.timeout
 
-    def callback_get_Login( self, realm, username, may_save ):
-        #Retrieving saved username/password
-        #raise 'realm is '+realm+' && username is '+username
-        username, password = self.login
-        if not username :
-          raise "Error: Couldn't retrieve saved username !"
-        if not password :
-          raise "Error: Couldn't retrieve saved password !"
-        return 1, username, password, True
+#     def callback_get_Login( self, realm, username, may_save ):
+#         #Retrieving saved username/password
+#         username, password = self.login
+#         if not username :
+#           raise "Error: Couldn't retrieve saved username !"
+#         if not password :
+#           raise "Error: Couldn't retrieve saved password !"
+#         return 1, username, password, True
         
     def trustSSLServer(self, trust_dict):
       return self.aq_parent._trustSSLServer(trust_dict)
     
-    def callback_ssl_server_trust_prompt( self, trust_data ):
-      # Always trusting
-      return True, trust_data['failures'], True
+#     def callback_ssl_server_trust_prompt( self, trust_data ):
+#       # Always trusting
+#       return True, trust_data['failures'], True
     
     def checkin(self, path, log_message, recurse):
+      self._getPreferences()
       return self.client.checkin(path, log_message=log_message, recurse=recurse)
 
     def status(self, path, **kw):
