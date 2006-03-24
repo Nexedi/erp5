@@ -55,7 +55,7 @@ class TestPreferences(ERP5TypeTestCase):
     
   def afterSetUp(self):
     uf = self.getPortal().acl_users
-    uf._doAddUser('manager', '', ['Manager', 'Owner', 'Assignor'], [])
+    uf._doAddUser('manager', '', ['Manager', 'Assignor'], [])
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
     self.createPreferences()
@@ -196,7 +196,7 @@ class TestPreferences(ERP5TypeTestCase):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\n Test methods on portal_preference')
-      
+    
     portal_workflow = self.getWorkflowTool()
     pref_tool = self.getPreferenceTool()
     person1 = self.getPreferenceTool()['person1']
@@ -265,9 +265,9 @@ class TestPreferences(ERP5TypeTestCase):
     portal_preferences = self.getPreferenceTool()
     # create 2 users: user_a and user_b
     uf = self.getPortal().acl_users
-    uf._doAddUser('user_a', '', ['Manager', 'Assignor'], [])
+    uf._doAddUser('user_a', '', ['Member', ], [])
     user_a = uf.getUserById('user_a').__of__(uf)
-    uf._doAddUser('user_b', '', ['Manager', 'Assignor'], [])
+    uf._doAddUser('user_b', '', ['Member', ], [])
     user_b = uf.getUserById('user_b').__of__(uf)
     
     # log as user_a 
@@ -278,6 +278,7 @@ class TestPreferences(ERP5TypeTestCase):
         id='user_a_1', portal_type='Preference')
     user_a_2 = portal_preferences.newContent(
         id='user_a_2', portal_type='Preference')
+    get_transaction().commit(); self.tic()
 
     # enable a pref
     portal_workflow.doActionFor(
@@ -292,6 +293,7 @@ class TestPreferences(ERP5TypeTestCase):
     user_b_1 = portal_preferences.newContent(
         id='user_b_1', portal_type='Preference')
     user_b_1.setPreferredAccountingTransactionAtDate(DateTime(2002, 02, 02))
+    get_transaction().commit(); self.tic()
     
     # enable this preference
     portal_workflow.doActionFor(
@@ -315,7 +317,7 @@ class TestPreferences(ERP5TypeTestCase):
         id='manager_pref', portal_type='Preference')
     manager_pref.setPreferredAccountingTransactionAtDate(
                                 DateTime(2012, 12, 12))
-    
+    get_transaction().commit(); self.tic()
     # enable this preference
     portal_workflow.doActionFor(
        manager_pref, 'enable_action', wf_id='preference_workflow')
