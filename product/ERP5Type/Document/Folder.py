@@ -644,17 +644,19 @@ be a problem)."""
       def compareTypes(a, b): return cmp(a.title or a.id, b.title or b.id)
       type_list = CMFBTreeFolder.allowedContentTypes(self)
       type_list.sort(compareTypes)
-      return type_list
+      return ['/'.join(x.getPhysicalPath()) for x in type_list]
     
     _allowedContentTypes = CachingMethod( _allowedContentTypes,
                                           id = 'allowedContentTypes',
                                           cache_duration = 300)
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
-    portal_path = self.getPortalObject().getPhysicalPath()
-    return _allowedContentTypes( portal_type = portal_type,
-                                 user = user,
-                                 portal_path = portal_path )
+    portal = self.getPortalObject()
+    portal_path = portal.getPhysicalPath()
+    return [portal.restrictedTraverse(path) for path in
+              _allowedContentTypes( portal_type = portal_type,
+                                    user = user,
+                                    portal_path = portal_path )]
 
   # Multiple Inheritance Priority Resolution
   _setProperty = Base._setProperty
