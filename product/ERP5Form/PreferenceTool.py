@@ -38,6 +38,7 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form.Document.Preference import Preference
 from Products.ERP5Form import _dtmldir
+from Products.ERP5Form.Document.Preference import Priority
 
 from MethodObject import Method
 
@@ -169,10 +170,18 @@ class PreferenceTool(BaseTool):
     # XXX will also cause problems with Manager (too long)
     # XXX For manager, create a manager specific preference
     #                  or better solution
+    user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
+    user_is_manager = 'Manager' in user.getRolesInContext(self)
     for pref in self.searchFolder(spec=('ERP5 Preference', )) :
       pref = pref.getObject()
-      if pref.getPreferenceState() == 'enabled' :
-        prefs.append(pref)
+      if pref is not None and pref.getPreferenceState() == 'enabled' :
+        # XXX quick workaround so that manager only see user preference
+        # they actually own.
+        if user_is_manager and pref.getPriority() == Priority.USER :
+          if user.allowed(pref, ('Owner',)):
+            prefs.append(pref)
+        else :
+          prefs.append(pref)
     prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
     return prefs
     
