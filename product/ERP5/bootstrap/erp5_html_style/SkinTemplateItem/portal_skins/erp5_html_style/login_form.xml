@@ -65,96 +65,77 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-      metal:use-macro="here/main_template/macros/master">\n
-<body>\n
-<div metal:fill-slot="main" i18n:domain="ui">\n
-<div class="Desktop">\n
-<span tal:condition="python: request.get(\'came_from\', None) is not None">\n
-  <h1 class="Desktop" i18n:translate="">You don\'t have enough permissions to access this page</h1>\n
-     <span i18n:translate=""> You can log in with another user name or \n
-     </span>\n
-     <a href="javascript:history.back();" \n
-          i18n:translate="">go back.</a>\n
-  <br/>  <br/>\n
-</span>\n
-<span tal:condition="python: request.get(\'came_from\', None) is None">\n
-  <h1 class="Desktop" i18n:translate="">Log in</h1>\n
-</span>\n
+<tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
+                       ignore_layout request/ignore_layout | nothing;\n
+                       editable_mode request/editable_mode | nothing;\n
+                       layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
+                       layout_id layout_form/pt | string:main_template;"\n
+           i18n:domain="ui">\n
+<tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
+<tal:block metal:fill-slot="main">\n
+  <div class="Desktop">\n
+    <span tal:condition="python: request.get(\'came_from\', None) is not None">\n
+      <h1 class="Desktop" i18n:translate="">You don\'t have enough permissions to access this page</h1>\n
+      <span i18n:translate="">You can log in with another user name or</span>\n
+      <a href="javascript:history.back();" i18n:translate="">go back.</a>\n
+      <br/> <br/>\n
+    </span>\n
+    <span tal:condition="python: request.get(\'came_from\', None) is None">\n
+      <h1 class="Desktop" i18n:translate="">Log in</h1>\n
+    </span>\n
 <!-- <form action="" method="post"\n
-      tal:attributes="action string:${here/portal_url}/logged_in"\n
->\n
--->\n
+      tal:attributes="action string:${here/portal_url}/logged_in">-->\n
 <!-- ****** Enable the automatic redirect ***** -->\n
-<span tal:condition="exists: request/came_from">\n
-  <input type="hidden" name="came_from" value=""\n
-         tal:attributes="value request/came_from" />\n
-</span>\n
+    <span tal:condition="exists: request/came_from">\n
+      <input type="hidden" name="came_from" value=""\n
+             tal:attributes="value request/came_from" />\n
+    </span>\n
 <!-- ****** Enable the automatic redirect ***** -->\n
-\n
-<table class="FormLayout">\n
-<tr>\n
-  <td align="left" valign="top">\n
-  <strong i18n:translate="">Name</strong>\n
-  </td>\n
-  <td align="left" valign="top">\n
-  <input type="text" name="__ac_name" size="20" value=""\n
-         tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
-  <script>setFocus("__ac_name");</script>\n
-  </td>\n
-</tr>\n
-<tr>\n
-  <td align="left" valign="top">\n
-  <strong i18n:translate="">Password</strong>\n
-  </td>\n
-  <td align="left" valign="top">\n
-  <input type="password" name="__ac_password" size="20" />\n
-  </td>\n
-</tr>\n
-\n
-<tr valign="top" align="left">\n
-<td></td>\n
-<td><input type="checkbox" name="__ac_persistent" value="1" checked\n
-      id="cb_remember" />\n
-<label for="cb_remember" i18n:translate="">Remember my name.</label>\n
-</td></tr>\n
-\n
-<tr>\n
-  <td align="left" valign="top">\n
-  </td>\n
-  <td align="left" valign="top">\n
-  <input type="submit" name="submit" value=" Login "\n
-         i18n:attributes="value" />\n
-  </td>\n
-</tr>\n
-\n
-</table>\n
-\n
+    <table class="FormLayout">\n
+      <tr>\n
+        <td align="left" valign="top">\n
+          <strong i18n:translate="">Name</strong>\n
+        </td>\n
+        <td align="left" valign="top">\n
+          <input type="text" name="__ac_name" size="20" value=""\n
+                 tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
+          <script>setFocus("__ac_name");</script>\n
+        </td>\n
+      </tr>\n
+      <tr>\n
+        <td align="left" valign="top">\n
+          <strong i18n:translate="">Password</strong>\n
+        </td>\n
+        <td align="left" valign="top">\n
+          <input type="password" name="__ac_password" size="20" />\n
+        </td>\n
+      </tr>\n
+      <tr valign="top" align="left">\n
+        <td></td>\n
+        <td>\n
+          <input type="checkbox" name="__ac_persistent" value="1" checked\n
+                 id="cb_remember" />\n
+          <label for="cb_remember" i18n:translate="">Remember my name.</label>\n
+        </td>\n
+      </tr>\n
+      <tr>\n
+        <td align="left" valign="top"></td>\n
+        <td align="left" valign="top">\n
+          <input type="submit" name="submit" value=" Login "\n
+                 i18n:attributes="value" />\n
+        </td>\n
+      </tr>\n
+    </table>\n
 <!-- </form> -->\n
-\n
-<p><a href=""\n
-    tal:attributes="href string:${here/portal_url}/mail_password_form"\n
-    i18n:translate=""\n
-   >I forgot my password!</a>\n
-</p>\n
-\n
-<p i18n:translate="">Having trouble logging in? Make sure to enable cookies in\n
-    your web browser.\n
-</p>\n
-\n
-<p i18n:translate="">Don\'t forget to logout or exit your browser when you\'re\n
-  done.\n
-</p>\n
-\n
-<p i18n:translate="">Setting the \'Remember my name\' option will set a cookie\n
-  with your username, so that when you next log in, your user name will\n
-  already be filled in for you.\n
-</p>\n
-</div>\n
-</div>\n
-</body>\n
-</html>\n
+    <p><a tal:attributes="href string:${here/portal_url}/mail_password_form"\n
+    i18n:translate="">I forgot my password!</a></p>\n
+    <p i18n:translate="">Having trouble logging in? Make sure to enable cookies in your web browser.</p>\n
+    <p i18n:translate="">Don\'t forget to logout or exit your browser when you\'re done.</p>\n
+    <p i18n:translate="">Setting the \'Remember my name\' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you.</p>\n
+  </div>\n
+</tal:block>\n
+</tal:block>\n
+</tal:block>\n
 
 
 ]]></string> </value>
