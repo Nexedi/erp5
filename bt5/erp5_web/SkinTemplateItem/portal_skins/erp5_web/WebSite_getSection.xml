@@ -68,7 +68,7 @@
             <key> <string>_body</string> </key>
             <value> <string>section = context.WebSite_getSectionValue()\n
 if section is not None:\n
-  return section.getTitle()\n
+  return section.WebSite_getUrl()\n
 return None\n
 </string> </value>
         </item>

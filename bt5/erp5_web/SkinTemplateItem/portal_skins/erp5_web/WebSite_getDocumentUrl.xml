@@ -66,9 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>document = context.WebSite_getDocumentValue()\n
+            <value> <string>#XXX This script should be named WebSite_getDocument\n
+document = context.WebSite_getDocumentValue()\n
 if document is not None:\n
-  return document.WebSite_getUrl()\n
+  return \'%s/%s\' % (context.WebSite_getSection(),document.getReference())\n
 return context.WebSite_getUrl()\n
 </string> </value>
         </item>

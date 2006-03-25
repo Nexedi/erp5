@@ -219,7 +219,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Short description that will appear in the search result list.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

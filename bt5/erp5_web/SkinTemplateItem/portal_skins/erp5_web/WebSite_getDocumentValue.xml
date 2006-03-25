@@ -70,6 +70,8 @@
 if portal_type == \'Web Site\':\n
   return None\n
 if portal_type == \'Web Section\':\n
+  if context.REQUEST[\'editable_mode\']:\n
+    return context\n
   return context.getDefaultSourceValue()\n
 return context\n
 </string> </value>
@@ -122,6 +124,7 @@ return context\n
                             <string>context</string>
                             <string>portal_type</string>
                             <string>None</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

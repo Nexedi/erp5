@@ -55,16 +55,18 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="global_definition"\n
- tal:define="filtered_actions python:context.portal_actions.listFilteredActionsFor(context);\n
-             object_actions filtered_actions/object_action | nothing;\n
-             global object_actions python: context.WebSite_replaceActionUrl(object_actions);\n
-             workflow_actions filtered_actions/workflow | nothing;\n
-             global workflow_actions python: context.WebSite_replaceActionUrl(workflow_actions);\n
-             jump_actions filtered_actions/object_jump | nothing;\n
-             global jump_actions python: context.WebSite_replaceActionUrl(jump_actions);\n
-             view_actions filtered_actions/object_view | nothing;\n
-             global view_actions python: context.WebSite_replaceActionUrl(view_actions);\n
-"/>
+ tal:define="document context/WebSite_getDocumentValue">\n
+  <tal:block tal:define="filtered_actions python:document.portal_actions.listFilteredActionsFor(document);\n
+                         object_actions filtered_actions/object_action | nothing;\n
+                         global object_actions python: document.WebSite_replaceActionUrl(object_actions);\n
+                         workflow_actions filtered_actions/workflow | nothing;\n
+                         global workflow_actions python: document.WebSite_replaceActionUrl(workflow_actions);\n
+                         jump_actions filtered_actions/object_jump | nothing;\n
+                         global jump_actions python: document.WebSite_replaceActionUrl(jump_actions);\n
+                         view_actions filtered_actions/object_view | nothing;\n
+                         global view_actions python: document.WebSite_replaceActionUrl(view_actions);\n
+  "/>\n
+</tal:block>
 
 ]]></string> </value>
         </item>
