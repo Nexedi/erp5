@@ -54,35 +54,46 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<!--\n
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
+                   Thierry Faucher     <tf@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+-->\n
 <tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
-                       editable_mode request/editable_mode | nothing;\n
                        ignore_layout request/ignore_layout | nothing;\n
+                       editable_mode request/editable_mode | nothing;\n
                        global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
-                       layout_id layout_form/pt | string:view_master">\n
-<tal:block tal:condition="python: not layout_form_id or ignore_layout">\n
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
-<?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
-</tal:block>\n
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en"\n
-      xml:lang="en"\n
-      xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-      metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
+                       default_layout string:view_master;\n
+                       layout_id layout_form/pt | default_layout;">\n
+<tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
   <tal:block metal:fill-slot="main">\n
     <tal:block metal:define-macro="form_render">\n
       <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
                              dummy python: request.set(\'here\',here)"\n
                  tal:condition="python: layout_form_id and not ignore_layout">\n
         <tal:block tal:condition="not: editable_mode" tal:repeat="group python: form.get_groups()">\n
-          <div tal:attributes="class group" tal:condition="python: group.find(\'content\') >= 0">\n
-            <tal:block tal:repeat="field python:form.get_fields_in_group(group)">\n
+          <div tal:attributes="class group/lower" tal:condition="python: group.find(\'content\') >= 0">\n
+            <tal:block tal:condition="python: \'hidden\' not in group.lower()" tal:repeat="field python:form.get_fields_in_group(group)">\n
               <tal:block tal:replace="structure python: field.render(None, request)"/>\n
             </tal:block>\n
           </div>\n
         </tal:block>\n
         <tal:block tal:condition="editable_mode" tal:repeat="group python: form.get_groups()">\n
-          <div tal:attributes="class group">\n
+          <fieldset tal:condition="python: \'hidden\' not in group.lower()">\n
+            <legend tal:content="group"></legend>\n
             <table tal:condition="python: \'content\' not in group.lower() and \'bottom\' not in group.lower()">\n
               <tal:block tal:repeat="field python:form.get_fields_in_group(group)">\n
                 <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
@@ -93,7 +104,7 @@
               <tal:block tal:define="value python:request.get(field.id, None)"\n
                tal:replace="structure python:field.render(value, request)" />\n
             </tal:block>\n
-          </div>\n
+          </fieldset>\n
         </tal:block>\n
       </tal:block>\n
       <tal:block tal:condition="python: not layout_form_id or ignore_layout">\n
@@ -145,7 +156,7 @@
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</html>\n
+</tal:block>\n
 </tal:block>
 
 ]]></string> </value>
