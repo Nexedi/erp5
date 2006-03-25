@@ -84,16 +84,12 @@ if dialog_method == \'Base_edit\':\n
                                        )\n
 #Exceptions for Workflow\n
 if dialog_method == \'Workflow_statusModify\':\n
-  return context.Workflow_statusModify( form_id=form_id\n
+  value = context.Workflow_statusModify( form_id=form_id\n
                                        , dialog_id=dialog_id\n
                                        )\n
-#Exceptions for Mass Workflow Modifications\n
-if dialog_method == \'Folder_modifyWorkflowStatus\':\n
-  return context.Folder_modifyWorkflowStatus( form_id        = form_id\n
-                                            , dialog_id      = dialog_id\n
-                                            , selection_name = selection_name\n
-                                            )\n
-#Exceptions for UI configurations\n
+  if not(getattr(request, \'ignore_layout\', 0)) and context.getApplicableLayout() :\n
+    value = request.RESPONSE.redirect(context.WebSite_getDocumentPhysicalPath())\n
+  return value\n
 if dialog_method == \'Base_configureUI\':\n
   return context.Base_configureUI( form_id=form_id\n
                              , selection_name=selection_name\n

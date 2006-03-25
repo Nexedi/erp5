@@ -268,7 +268,7 @@ except FormValidationError, validation_errors:\n
 else:\n
   message = N_("Data+Updated.")\n
   if not(ignore_layout) and context.getApplicableLayout() :\n
-    redirect_url = \'%s?editable_mode=1\' % context.WebSite_getDocumentUrl()\n
+    redirect_url = \'%s?editable_mode=1\' % context.REQUEST.URL1\n
   elif not selection_index:\n
     redirect_url = \'%s/%s?portal_status_message=%s\' % ( context.absolute_url()\n
                               , form_id\n
