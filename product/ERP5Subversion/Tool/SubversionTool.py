@@ -293,9 +293,9 @@ class SubversionTool(UniqueObject, Folder):
     somethingModified = False
     
     for statusObj in self.status(path) :
-      # can be (normal, added, modified, deleted)
+      # can be (normal, added, modified, deleted, conflicted, unversioned)
       msg_status = statusObj.getTextStatus()
-      if str(msg_status) != "normal" :
+      if str(msg_status) != "normal" and str(msg_status) != "unversioned":
         somethingModified = True
         full_path = statusObj.getPath()
         full_path_list = full_path.split('/')[1:]
