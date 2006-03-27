@@ -68,7 +68,12 @@
             <key> <string>_body</string> </key>
             <value> <string>request  = context.REQUEST\n
 \n
-redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+form_id, \'portal_skin=CSV\')\n
+from ZTUtils import make_query\n
+kw = { \'portal_skin\' : \'CSV\',\n
+       \'export_only\' : export_only }\n
+\n
+redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+form_id, \n
+                             make_query(kw) )\n
 \n
 return request[ \'RESPONSE\' ].redirect( redirect_url )\n
 </string> </value>
@@ -85,7 +90,7 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\'</string> </value>
+            <value> <string>form_id=\'\', export_only=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -105,16 +110,20 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>form_id</string>
+                            <string>export_only</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
+                            <string>kw</string>
                             <string>redirect_url</string>
                             <string>_getitem_</string>
                           </tuple>
@@ -130,6 +139,7 @@ return request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <value>
               <tuple>
                 <string></string>
+                <int>1</int>
               </tuple>
             </value>
         </item>

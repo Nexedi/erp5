@@ -73,7 +73,9 @@
                 <item>
                     <key> <string>Default</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_export_only</string>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -71,11 +71,10 @@
 if object == None:\n
   object = context.newContent()\n
 \n
-  # activity doesn t support security rights yet...\n
-  for key in [\'uid\',\'id\']:\n
-    if object_property_dict.has_key(key):\n
-      object_property_dict.pop(key)\n
-\n
+# activity doesn\'t support security rights yet...\n
+for key in [\'uid\',\'id\']:\n
+  if object_property_dict.has_key(key):\n
+    object_property_dict.pop(key)\n
 \n
 object.edit(**object_property_dict)\n
 </string> </value>

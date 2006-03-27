@@ -54,8 +54,7 @@
 ><tal:block tal:define="groups python: form.get_groups(include_empty=1);\n
                  field_errors python: request.get(\'field_errors\',{});\n
                  dummy python: request.set(\'here\',here);\n
-                 listbox python:form[\'listbox\'];" ><tal:block tal:content="python: listbox.Listbox_exportCsv()" /></tal:block></tal:block>\n
-</tal:block> 
+                 listbox python:form[\'listbox\'];" ><tal:block tal:content="python: listbox.Listbox_exportCsv(export_only=request.get(\'export_only\', 1))" /></tal:block></tal:block></tal:block>
 
 ]]></string> </value>
         </item>
