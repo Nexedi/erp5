@@ -72,15 +72,15 @@ LOG = lambda msg:context.log("SaleInvoice_selectPackingListMovement", msg)\n
 kw[\'parent_specialise_portal_type\']  = \'Invoicing Rule\'\n
 kw[\'explanation_portal_type\']        = [\'Sale Order\', \'Sale Packing List\']\n
 kw[\'portal_type\']                    = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\']\n
+kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\',\'delivered\']\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 \n
 if DEBUG : \n
-  LOG("SQL used = %s"%context.SaleInvoiceTransaction_zSelectMovement(src__=1, **kw))\n
+  LOG("SQL used = %s"%context.InvoiceTransaction_zSelectMovement(src__=1, **kw))\n
 \n
 movement_list = [] \n
-for movement in context.SaleInvoiceTransaction_zSelectMovement(**kw) :\n
+for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
   movement = movement.getObject()\n
   if movement.getDeliveryValue() is None :\n
     movement_list.append(movement)\n

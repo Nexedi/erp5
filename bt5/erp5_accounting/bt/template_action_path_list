@@ -24,6 +24,7 @@ Accounting Period | view
 Accounting Rule Cell | metadata
 Accounting Rule Cell | print_pdf
 Accounting Rule Cell | view
+Accounting Rule Cell | view_destination
 Accounting Transaction Line | history
 Accounting Transaction Line | metadata
 Accounting Transaction Line | print

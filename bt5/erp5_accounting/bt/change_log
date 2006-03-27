@@ -1,3 +1,6 @@
+2006-03-27 Seb
+* make purchase invoice transaction working
+
 2006-03-17 Seb
 * changed permissions in invoice_causality_worfklow because it was impossible to add new accounting lines. I'm not very happy with this change, we should find a better solution.
 

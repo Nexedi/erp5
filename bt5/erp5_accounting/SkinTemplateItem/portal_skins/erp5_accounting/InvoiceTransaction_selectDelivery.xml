@@ -66,31 +66,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>DEBUG = 1\n
-LOG = lambda msg:context.log("SaleInvoice_selectMovement", msg)\n
+            <value> <string>#\n
+#  This method is used by the sale_invoice_transaction_builder\n
+# delivery builder to select the Sale Invoice Transaction \n
+# in which creating new Sale Invoice Transaction Lines.\n
+#\n
 \n
-kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
-kw[\'explanation_portal_type\']       = [\'Sale Order\', \'Sale Invoice Transaction\', \'Sale Packing List\']\n
-kw[\'portal_type\']                   = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\'] = [\'confirmed\']\n
+LOG = lambda msg:context.log("SaleInvoiceTransaction_selectDelivery", msg)\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+LOG("movements = %s"%movement_list)\n
 \n
-if DEBUG :\n
-  LOG("SQL used = %s"%context.InvoiceTransaction_zSelectMovement(src__=1, **kw))\n
+deliveries_keys = {}\n
+for movement in movement_list :\n
+  # in case of invoice rule (ie. starting from Invoice)\n
+  line = movement.getParent().getParent().getOrderValue()\n
 \n
-movement_list = [] \n
-for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
-  movement = movement.getObject()\n
-  if movement.getDeliveryValue() is None :\n
-    movement_list.append(movement)\n
-  else : \n
-    LOG("simulation movement %s should not have been selected !" % movement.getPath())\n
+  if line is None : \n
+    # in case of invoicing rule (ie. starting from Order)\n
+    line = movement.getParent().getParent().getDeliveryValue()\n
 \n
-if DEBUG :\n
-  LOG("selected movement_list : %s"%movement_list)\n
+  deliveries_keys[line.getExplanationValue()] = 1\n
 \n
-return movement_list\n
+LOG("deliveries = %s"%deliveries_keys.keys())\n
+return filter(lambda x : x is not None, deliveries_keys.keys())\n
 </string> </value>
         </item>
         <item>
@@ -107,11 +105,11 @@ return movement_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/SaleInvoiceTransaction_selectInvoiceMovement</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/InvoiceTransaction_selectDelivery</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>movement_list, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,23 +129,23 @@ return movement_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>DEBUG</string>
-                            <string>LOG</string>
-                            <string>_write_</string>
-                            <string>_getattr_</string>
-                            <string>_apply_</string>
-                            <string>context</string>
                             <string>movement_list</string>
+                            <string>kw</string>
+                            <string>LOG</string>
+                            <string>deliveries_keys</string>
                             <string>_getiter_</string>
                             <string>movement</string>
+                            <string>_getattr_</string>
+                            <string>line</string>
                             <string>None</string>
+                            <string>_write_</string>
+                            <string>filter</string>
                           </tuple>
                         </value>
                     </item>
@@ -164,7 +162,7 @@ return movement_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleInvoiceTransaction_selectInvoiceMovement</string> </value>
+            <value> <string>InvoiceTransaction_selectDelivery</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
