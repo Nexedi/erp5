@@ -70,20 +70,27 @@
 
 # Updates attributes of an Zope document\n
 # which is in a class inheriting from ERP5 Base\n
-portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
-\n
+from Products.ERP5Type.Message import Message\n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
+# Harcoded value, which must be taken from RelationField.py\n
+SUB_FIELD_ID = \'relation\'\n
+\n
+portal = context.getPortalObject()\n
 request=context.REQUEST\n
 o = context.portal_catalog.getObject(object_uid)\n
 \n
 if o is None:\n
-  message = N_(\'Sorrry, Error, the calling object was not catalogued. Do not know how to do ?\')\n
-  return message\n
+  message = Message(domain=\'erp5_ui\',\n
+                    message=\'Sorrry, Error, \' \\\n
+                            \'the calling object was not catalogued.\' \\\n
+                            \' Do not know how to do ?\')\n
+  raise ValidationError, message\n
 \n
 if listbox_uid is not None:\n
-  selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)\n
+  selected_uids = context.portal_selections.updateSelectionCheckedUidList(\n
+                                               selection_name,\n
+                                               listbox_uid, uids)\n
   uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 \n
 if request.has_key(\'previous_form_id\'):\n
@@ -96,17 +103,32 @@ field = form.get_field(field_id)\n
 \n
 base_category = field.get_value(\'base_category\')\n
 relation_setter_id = field.get_value(\'relation_setter_id\')\n
-if relation_setter_id: relation_setter = getattr(o, relation_setter_id)\n
-portal_type = map(lambda x:x[0],field.get_value(\'portal_type\'))\n
+if relation_setter_id: \n
+  relation_setter = getattr(o, relation_setter_id)\n
 \n
-# \n
-old_request = context.portal_selections.getObjectFromPickleAndSignature(request.form_pickle, request.form_signature)\n
+portal_type = [x[0] for x in field.get_value(\'portal_type\')]\n
 \n
+old_request = context.portal_selections.getObjectFromPickleAndSignature(\n
+                              request.form_pickle, \n
+                              request.form_signature)\n
+\n
+field_key = field.generate_field_key()\n
 if old_request.has_key(\'sub_index\'):\n
   if len(uids) > 0:\n
-    old_request[\'relation_field_%s_%s\' % (field_id, old_request[\'sub_index\'] )] = str(uids[0]) # XXX Hardwired\n
+    # XXX Hardwired\n
+    sub_field_key = field.generate_subfield_key(\n
+                                              "%s_%s" % (SUB_FIELD_ID, \n
+                                                         old_request[\'sub_index\']), \n
+                                              key=field_key)\n
+    old_request[sub_field_key] = str(uids[0])\n
+#    old_request[\'relation_field_%s_%s\' % \\\n
+#                (field_id, old_request[\'sub_index\'] )] = str(uids[0])\n
 else:\n
-  old_request[\'relation_field_%s\' % field_id] = uids # XXX Hardwired\n
+  # XXX Not very dynamic...\n
+\n
+  sub_field_key = field.generate_subfield_key(SUB_FIELD_ID, \n
+                                              key=field_key)\n
+  old_request[sub_field_key] = uids\n
 \n
 # Purge the REQUEST from relation form input\n
 static_dict = {\n
@@ -128,10 +150,12 @@ for k in request.other.keys():\n
 for k in request.form.keys():\n
   del request.form[k]\n
 \n
-request.form.update(old_request) # Create a fake request with nothing like form or ...\n
+# Create a fake request with nothing like form or ...\n
+request.form.update(old_request)\n
 \n
-\n
-return context.Base_edit(form_id, selection_index=old_request.get(\'selection_index\',0), selection_name=old_request.get(\'selection_name\', \'\'))\n
+return context.Base_edit(form_id, \n
+                         selection_index=old_request.get(\'selection_index\', 0),\n
+                         selection_name=old_request.get(\'selection_name\', \'\'))\n
 
 
 ]]></string> </value>
@@ -188,13 +212,15 @@ return context.Base_edit(form_id, selection_index=old_request.get(\'selection_in
                             <string>object_uid</string>
                             <string>listbox_uid</string>
                             <string>batch_mode</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>N_</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
+                            <string>SUB_FIELD_ID</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>request</string>
                             <string>o</string>
                             <string>None</string>
@@ -207,15 +233,19 @@ return context.Base_edit(form_id, selection_index=old_request.get(\'selection_in
                             <string>base_category</string>
                             <string>relation_setter_id</string>
                             <string>relation_setter</string>
-                            <string>map</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
                             <string>portal_type</string>
                             <string>old_request</string>
+                            <string>field_key</string>
                             <string>len</string>
+                            <string>sub_field_key</string>
                             <string>str</string>
-                            <string>_getitem_</string>
                             <string>_write_</string>
                             <string>static_dict</string>
-                            <string>_getiter_</string>
                             <string>k</string>
                           </tuple>
                         </value>
