@@ -225,6 +225,11 @@ try:
     def status(self, path, **kw):
       # Since plain Python classes are not convenient in Zope, convert the objects.
       return [Status(x) for x in self.client.status(path, **kw)]
+    
+    def diff(self, path):
+      self._getPreferences()
+      os.system('mkdir -p /tmp/tmp-svn/')
+      return self.client.diff('/tmp/tmp-svn',path)
 
   def newSubversionClient(container, **kw):
     return SubversionClient(**kw).__of__(container)

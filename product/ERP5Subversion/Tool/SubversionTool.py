@@ -260,14 +260,14 @@ class SubversionTool(UniqueObject, Folder):
     """Make a diff for a file or a directory.
     """
     client = self._getClient()
-    return client.diff(self._getWorkingPath(path))
+    return client.diff(path)
 
   security.declareProtected('Import/Export objects', 'revert')
   def revert(self, path):
     """Revert local changes in a file or a directory.
     """
     client = self._getClient()
-    return client.revert(self._getWorkingPath(path))
+    return client.revert(path)
 
   security.declareProtected('Import/Export objects', 'checkin')
   def checkin(self, path, log_message = 'None', recurse=True):
@@ -282,7 +282,7 @@ class SubversionTool(UniqueObject, Folder):
     """Get status.
     """
     client = self._getClient()
-    return client.status(self._getWorkingPath(path), **kw)
+    return client.status(path, **kw)
   
   def getModifiedTree(self, path) :
     # Remove trailing slash if it's present
@@ -324,7 +324,7 @@ class SubversionTool(UniqueObject, Folder):
             tmp = parent.getDir(filename)
             tmp.msg_status = str(msg_status)
         else :
-          parent.sub_dirs.append(File(filename, str(msg_status)))
+          parent.sub_dirs.append(File(full_path, str(msg_status)))
     return somethingModified and root
             
   def treeToXML(self, item) :
