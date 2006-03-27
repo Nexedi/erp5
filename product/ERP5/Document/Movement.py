@@ -439,7 +439,7 @@ class Movement(XMLObject, Amount):
     return self.getDeliveryValue()
   
   security.declareProtected( Permissions.AccessContentsInformation,
-                             'getInitialCausalityValueList')
+                             'getRootCausalityValueList')
   def getRootCausalityValueList(self):
     """
       Returns the initial causality value for this movement.
