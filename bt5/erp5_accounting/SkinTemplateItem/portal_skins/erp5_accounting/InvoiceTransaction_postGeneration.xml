@@ -77,7 +77,7 @@ sale_invoice = context\n
 \n
 sale_invoice.activate(\n
       after_method_id=[\'immediateReindexObject\', \'recursiveImmediateReindexObject\']\n
-   ).SaleInvoiceTransaction_postGenerationActivity(**kw)\n
+   ).InvoiceTransaction_postGenerationActivity(**kw)\n
 </string> </value>
         </item>
         <item>

@@ -108,7 +108,7 @@ if destination_section is not None and \\\n
 if destination_section is None and check_destination :\n
   raiseError(\'Destination Section is not Defined.\')\n
 \n
-currency = transaction.getResource()\n
+currency = transaction.getResource(portal_type = \'Currency\')\n
 if not currency :\n
   raiseError(\'Currency is not Defined.\')\n
 \n

@@ -68,55 +68,55 @@
             <key> <string>_body</string> </key>
             <value> <string>#\n
 #  this script is called in an activity on the Sale Invoice Transaction\n
-# after the sale_invoice_builder delivery builder has created\n
+# after the invoice_builder delivery builder has created\n
 # the new Sale Invoice Transaction\n
 #\n
 from ZODB.POSException import ConflictError \n
 \n
-sale_invoice = context\n
+invoice = context\n
 \n
 LOG = lambda msg:context.log(\n
-          "SaleInvoiceTransaction_postGenerationActivity on %s" % (sale_invoice.getPath()), msg)\n
+          "InvoiceTransaction_postGenerationActivity on %s" % (invoice.getPath()), msg)\n
 \n
 # set the causality relation \n
-sale_invoice.Delivery_setCausalityFromSimulation()\n
+invoice.Delivery_setCausalityFromSimulation()\n
 \n
-related_packing_list = sale_invoice.getDefaultCausalityValue()\n
-#LOG(\'causality %s \' %sale_invoice.getCausalityValueList())\n
+related_packing_list = invoice.getDefaultCausalityValue()\n
+#LOG(\'causality %s \' %invoice.getCausalityValueList())\n
 \n
 # get a price_currency from the packing list\n
 related_order  = related_packing_list.getDefaultCausalityValue()\n
 if related_order is not None :\n
   price_currency = related_order.getPriceCurrency()\n
-  sale_invoice.edit(\n
+  invoice.edit(\n
     resource = price_currency,\n
     price_currency = price_currency,\n
   )\n
   \n
 # copy title, if not updating a new delivery\n
-if sale_invoice.getTitle() is None :\n
-  sale_invoice.setTitle(related_packing_list.getTitle())\n
+if invoice.getTitle() is None :\n
+  invoice.setTitle(related_packing_list.getTitle())\n
 \n
 # initialize accounting_workflow to planned state\n
-if sale_invoice.getSimulationState() == \'draft\' : \n
+if invoice.getSimulationState() == \'draft\' : \n
   try :\n
     context.getPortalObject().portal_workflow.doActionFor(\n
-      sale_invoice, \'plan_action\', wf_id=\'accounting_workflow\',\n
+      invoice, \'plan_action\', wf_id=\'accounting_workflow\',\n
       comment = \'Initialized by Delivery Builder\',\n
       skip_period_validation = 1 )\n
   except (ConflictError, RuntimeError), e : raise\n
   except Exception, e :\n
-    LOG(\'Exception in plan_action\', e)\n
-  if sale_invoice.getSimulationState() == \'draft\' : \n
+    LOG(\'Exception in plan_action %s\' % e)\n
+  if invoice.getSimulationState() == \'draft\' : \n
     # call the workflow method, if the user cannot perform this operation.\n
-    sale_invoice.plan()\n
+    invoice.plan()\n
 \n
 # First set the invoice in the building state on the causality workflow\n
-sale_invoice.startBuilding()\n
+invoice.startBuilding()\n
 \n
 # Then an activity should put the causality state in diverged or solved\n
 # XXX after_method_id is not good, it should be after_group_id, but not yet implemented\n
-sale_invoice.activate(\n
+invoice.activate(\n
         after_method_id = ( \'immediateReindexObject\',\n
                             \'recursiveImmediateReindexObject\',\n
                           )).updateCausalityState()\n
@@ -164,7 +164,7 @@ sale_invoice.activate(\n
                             <string>ZODB.POSException</string>
                             <string>ConflictError</string>
                             <string>context</string>
-                            <string>sale_invoice</string>
+                            <string>invoice</string>
                             <string>LOG</string>
                             <string>_getattr_</string>
                             <string>related_packing_list</string>

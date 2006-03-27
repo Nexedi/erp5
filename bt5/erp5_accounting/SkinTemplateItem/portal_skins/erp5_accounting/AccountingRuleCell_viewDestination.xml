@@ -140,7 +140,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>AccountingTransaction_view</string> </value>
+            <value> <string>AccountingRuleCell_viewDestination</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
