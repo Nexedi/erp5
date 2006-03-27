@@ -785,7 +785,9 @@ class FakeMovement:
     """
       Return average price 
     """
-    return (self.getAddPrice() / self.getAddQuantity())
+    if self.getAddQuantity()>0:
+      return (self.getAddPrice() / self.getAddQuantity())
+    return 0.0
 
   def getAddQuantity(self):
     """
