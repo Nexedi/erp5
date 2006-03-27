@@ -70,7 +70,7 @@ class Invoice(AccountingTransaction):
         'portal_type': self.getPortalObject()\
                           .getPortalInvoiceMovementTypeList() })
       return Delivery.getTotalPrice(self, **kw)
-    
+
     security.declareProtected(
         Permissions.AccessContentsInformation, 'getTotalQuantity')
     def getTotalQuantity(self, **kw):
@@ -87,3 +87,8 @@ class Invoice(AccountingTransaction):
       raise NotImplemented
       return self.Invoice_zGetTotalNetPrice()
 
+    def manage_afterClone(self, item):
+      # Reset reference on paste
+      if self.getReference != None:
+        self.setReference(None)
+      AccountingTransaction.manage_afterClone(self, item)
