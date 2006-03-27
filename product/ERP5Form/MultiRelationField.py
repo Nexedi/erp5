@@ -46,6 +46,7 @@ NEW_CONTENT_PREFIX = '_newContent_'
 # Key for sub listfield
 SUB_FIELD_ID = 'relation'
 ITEM_ID = 'item'
+NO_VALUE = '??? (No Value)'
 
 def checkSameKeys(a , b):
   """
@@ -208,6 +209,12 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     if isinstance(value_list, StringType):
       # Value is a string, reformat it correctly
       value_list = value_list.split("\n")
+    else:
+      # We get a list
+      # rather than displaying nothing, display a marker when the
+      # property is not set
+      # XXX Translate ?
+      value_list = [(x or NO_VALUE) for x in value_list]
     # Check all relation
     for i in range(len(value_list)):
       ###################################
@@ -224,11 +231,6 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       if (relation_item_list is not None) and \
          (value != ''):
         need_validation = 1
-      if value is None : 
-        # rather than displaying nothing, display a marker when the
-        # property is not set
-        # XXX Translate ?
-        value = '??? (no value)'
       # If we get a empty string, display nothing !
       if value != '':
         result_list.append((Widget.TextWidgetInstance, relation_field_id, 
@@ -565,7 +567,6 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
         if (found == 1) and \
            (value != display_text):
           relation_editor_list = None
-#             import pdb; pdb.set_trace()
           need_to_revalidate = 1
           REQUEST.set(relation_field_id, None)
           break

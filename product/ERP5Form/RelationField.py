@@ -37,7 +37,8 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Form import MultiRelationField
 from Products.ERP5Form.MultiRelationField import MAX_SELECT, \
                                             NEW_CONTENT_PREFIX, \
-                                            SUB_FIELD_ID, ITEM_ID
+                                            SUB_FIELD_ID, ITEM_ID, \
+                                            NO_VALUE
 from types import StringType
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
@@ -56,6 +57,7 @@ class RelationStringFieldWidget(
   default_widget_rendering_instance = Widget.TextWidgetInstance
 
   def _generateRenderValueList(self, field, key, value, REQUEST):
+#     value = value or NO_VALUE
     relation_field_id = field.generate_subfield_key(SUB_FIELD_ID, key=key)
     relation_item_key = field.generate_subfield_key(ITEM_ID, key=key)
     relation_item_list = REQUEST.get(relation_item_key, [])
@@ -75,13 +77,17 @@ class RelationEditor(MultiRelationField.MultiRelationEditor):
 allow_class(RelationEditor)
 
 class RelationStringFieldValidator(
-               MultiRelationField.MultiRelationStringFieldValidator):
+               MultiRelationField.MultiRelationStringFieldValidator,
+               Validator.StringValidator):
   """
       Validation includes lookup of relared instances
   """
 
   message_names = Validator.StringValidator.message_names + \
             MultiRelationField.MultiRelationStringFieldValidator.message_names
+  property_names = Validator.StringValidator.property_names + \
+          MultiRelationField.MultiRelationStringFieldValidator.property_names
+
   # Delete double in order to keep a usable ZMI...
   # Need to keep order !
   _v_dict = {}
@@ -91,6 +97,14 @@ class RelationStringFieldValidator(
       _v_message_name_list.append(message_name)
       _v_dict[message_name] = 1
   message_names = _v_message_name_list
+
+  _v_dict = {}
+  _v_property_name_list = []
+  for property_name in property_names:
+    if not _v_dict.has_key(property_name):
+      _v_property_name_list.append(property_name)
+      _v_dict[property_name] = 1
+  property_names = _v_property_name_list
 
   # Relation field variable
   editor = RelationEditor
