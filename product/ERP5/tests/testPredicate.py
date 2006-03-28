@@ -1,0 +1,442 @@
+#############################################################################
+#
+# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+#          Jerome Perrin <jerome@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+##############################################################################
+
+"""
+  Tests Predicates
+
+"""
+
+import os, sys
+if __name__ == '__main__':
+  execfile(os.path.join(sys.path[0], 'framework.py'))
+
+# Needed in order to have a log file inside the current folder
+os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
+os.environ['EVENT_LOG_SEVERITY'] = '-300'
+
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from AccessControl.SecurityManagement import newSecurityManager
+from zLOG import LOG
+from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+
+REGION_FRANCE_PATH = 'region/europe/western_europe/france'
+REGION_GERMANY_PATH = 'region/europe/western_europe/germany'
+GROUP_STOREVER_PATH = 'group/nexedi/storever'
+GROUP_OTHER_PATH = 'group/other'
+
+RUN_ALL_TESTS = 1
+PREDICATE_FOLDER_NAME = "predicate_unit_test_folder"
+
+class TestPredicates(ERP5TypeTestCase):
+  """Test Predicates. """
+  
+  def getTitle(self):
+    return "Predicates"
+  
+  def login(self) :
+    """sets the security manager"""
+    uf = self.getPortal().acl_users
+    uf._doAddUser('alex', '', ['Member', 'Assignee', 'Assignor',
+                               'Auditor', 'Author', 'Manager'], [])
+    user = uf.getUserById('alex').__of__(uf)
+    newSecurityManager(None, user)
+  
+  def afterSetUp(self) :
+    self.createCategories()
+    self.login()
+    
+  # XXX ... this method is a copy / paste
+  def playSequence(self, sequence_string) :
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+  
+  # XXX ... this method is a copy / paste
+  def createCategories(self):
+    """Create the list of categories returned by the
+    `getNeededCategoryList` Method.
+    """
+    # create categories
+    for cat_string in self.getNeededCategoryList() :
+      base_cat = cat_string.split("/")[0]
+      path = self.getPortal().portal_categories[base_cat]
+      for cat in cat_string.split("/")[1:] :
+        if not cat in path.objectIds() :
+          path = path.newContent(
+            portal_type = 'Category',
+            id = cat,
+            immediate_reindex = 1 )
+        else :
+          path = path[cat]
+
+    # check categories have been created
+    for cat_string in self.getNeededCategoryList() :
+      self.assertNotEquals(None,
+                self.getCategoryTool().restrictedTraverse(cat_string),
+                cat_string)
+
+  def getNeededCategoryList(self):
+    """return a list of categories that should be created."""
+    return ( REGION_FRANCE_PATH, REGION_GERMANY_PATH,
+             GROUP_STOREVER_PATH, GROUP_OTHER_PATH )
+  
+  def getBusinessTemplateList(self):
+    """ """
+    return ('erp5_base', )
+  
+  def getPredicateFolder(self):
+    """Return a folder for predicates."""
+    if PREDICATE_FOLDER_NAME in self.getPortal().objectIds() :
+      predicate_folder = self.getPortal()[PREDICATE_FOLDER_NAME]
+    else :
+      predicate_folder = self.getPortal().newContent(
+                                        portal_type = 'Folder',
+                                        id = PREDICATE_FOLDER_NAME)
+    self.failUnless('Predicate' in [x.id for x in
+                    predicate_folder.allowedContentTypes()])
+    return predicate_folder
+    
+  def createPythonScript(self, method_id, script_params, script_content):
+    """Generic method to create a python script"""
+    folder = self.getPortal().portal_skins.erp5_base
+    if method_id in folder.objectIds():
+      folder.manage_delObjects([method_id])
+    
+    folder.manage_addProduct['PythonScripts']\
+                  .manage_addPythonScript(id = method_id)
+    script = folder[method_id]
+    script.ZPythonScript_edit(script_params, script_content)
+    self.getPortal().changeSkin(None)
+    
+  def stepCreatePredicateTrueScript(self, sequence=None, **kw) :
+    """Creates a script that always return true"""
+    self.createPythonScript('Predicate_true', '', """return 1""")
+    sequence.edit(test_method_id = 'Predicate_true')
+  
+  def stepCreatePredicateFalseScript(self, sequence=None, **kw) :
+    """Creates a script that always return false"""
+    self.createPythonScript('Predicate_false', '', """return 0""")
+    sequence.edit(test_method_id = 'Predicate_false')
+    
+  def createPredicate(self, **kw):
+    """Generic method to create a predicate"""
+    return self.getPredicateFolder().newContent(
+                        portal_type = 'Predicate', **kw)
+  
+  def stepCreateTestMethodIdPredicate(self, sequence=None, **kw) :
+    """Creates a predicate with a test method_id"""
+    sequence.edit(predicate = self.createPredicate(
+        test_method_id = sequence.get('test_method_id')))
+  
+  def stepCreateEmptyPredicate(self, sequence=None, **kw) :
+    """Creates an empty predicate that is supposed to be always true"""
+    sequence.edit(predicate = self.createPredicate())
+  
+  def stepCreateAlwaysFalsePredicate(self, sequence=None, **kw) :
+    """Creates a predicate that is always false (membership of an non
+       existant category)"""
+    sequence.edit(predicate = self.createPredicate(
+        membership_criterion_base_category_list = ['not_exist'],
+        membership_criterion_category_list = ['not_exist/nothing']
+      ))
+  
+  def stepCreateRegionFrancePredicate(self, sequence=None, **kw) :
+    """Creates a predicate for region france category"""
+    sequence.edit(predicate = self.createPredicate(
+        membership_criterion_base_category_list = ['region'],
+        membership_criterion_category_list = [REGION_FRANCE_PATH]
+      ))
+  
+  def stepCreateRegionFranceTestMethodIdPredicate(
+                                  self, sequence=None, **kw) :
+    """Creates an region france predicate with the last test_method_id
+    in the sequence"""
+    sequence.edit(predicate = self.createPredicate(
+        membership_criterion_base_category_list = ['region'],
+        membership_criterion_category_list = [REGION_FRANCE_PATH],
+        test_method_id = sequence.get('test_method_id')))
+  
+  
+  def stepCreateGroupStoreverPredicate(self, sequence=None, **kw) :
+    """Creates a predicate for group storever category"""
+    sequence.edit(predicate = self.createPredicate(
+        membership_criterion_base_category_list = ['group'],
+        membership_criterion_category_list = [GROUP_STOREVER_PATH]
+      ))
+  
+  def stepCreateGroupStoreverRegionFrancePredicate(
+                                      self, sequence=None, **kw) :
+    """Creates a predicate for group storever and region france
+    categories"""
+    sequence.edit(predicate = self.createPredicate(
+        membership_criterion_base_category_list = ['group', 'region'],
+        membership_criterion_category_list = [ GROUP_STOREVER_PATH,
+                                               REGION_FRANCE_PATH ]
+      ))
+  
+  def stepCreateRegionFrancePredicateTruePredicate(
+                                      self, sequence=None, **kw) :
+    """Creates a predicate for region france and Predicate_true script.
+    """
+    self.stepCreatePredicateTrueScript(sequence = sequence)
+    sequence.edit(predicate = self.createPredicate(
+        membership_criterion_base_category_list = ['region'],
+        membership_criterion_category_list = [ REGION_FRANCE_PATH ],
+        test_method_id = sequence.get('test_method_id')
+      ))
+                        
+  def stepCreateRegionFrancePredicateFalsePredicate(
+                                          self, sequence=None, **kw) :
+    """Creates a predicate for region france and Predicate_false script.
+    """
+    self.stepCreatePredicateFalseScript(sequence = sequence)
+    sequence.edit(predicate = self.createPredicate(
+        membership_criterion_base_category_list = ['region'],
+        membership_criterion_category_list = [ REGION_FRANCE_PATH ],
+        test_method_id = sequence.get('test_method_id')
+      ))
+  
+  def stepSaveFirstPredicate(self, sequence=None, **kw) :
+    """Save current predicate for later fusion."""
+    sequence.edit(first_predicate = sequence.get('predicate'))
+    
+  def stepMergePredicates(self, sequence=None, **kw) :
+    """Merge `first predicate` with current predicate."""
+    first_predicate = sequence.get('first_predicate')
+    current_predicate = sequence.get('predicate')
+    first_predicate.setPredicateCategoryList(
+        [ first_predicate.getRelativeUrl(),
+          current_predicate.getRelativeUrl() ])
+    sequence.edit(predicate = first_predicate)
+    
+  def stepCreateDocument(self, sequence=None, **kw) :
+    """Creates a document."""
+    doc = self.getOrganisationModule().newContent(
+                                      portal_type='Organisation')
+    sequence.edit(doc = doc)
+  
+  def stepSetDocumentStoreverGroupMembership(
+                                self, sequence=None, **kw) :
+    """Set group membership for the document."""
+    doc = sequence.get('doc')
+    doc.setGroup(GROUP_STOREVER_PATH.replace('group/', ''))
+  
+  def stepSetDocumentOtherGroupMembership(self, sequence=None, **kw) :
+    """Set group membership for the document."""
+    doc = sequence.get('doc')
+    doc.setGroup(GROUP_OTHER_PATH.replace('group/', ''))
+                          
+  def stepSetDocumentGermanyRegionMembership(self, sequence=None, **kw) :
+    """Set region membership for the document."""
+    doc = sequence.get('doc')
+    doc.setRegion(REGION_GERMANY_PATH.replace('region/', ''))
+  
+  def stepSetDocumentFranceRegionMembership(self, sequence=None, **kw) :
+    """Set region membership for the document."""
+    doc = sequence.get('doc')
+    doc.setRegion(REGION_FRANCE_PATH.replace('region/', ''))
+  
+  def stepAssertPredicateTrue(self, sequence=None, **kw) :
+    """Assert the predicate is true on the document."""
+    doc = sequence.get('doc')
+    predicate = sequence.get('predicate')
+    self.failUnless(predicate.test(doc))
+  
+  def stepAssertPredicateFalse(self, sequence=None, **kw) :
+    """Assert the predicate is false on the document."""
+    doc = sequence.get('doc')
+    predicate = sequence.get('predicate')
+    self.assertFalse(predicate.test(doc))
+  
+  ############################################################################
+  ## Test Methods ############################################################
+  ############################################################################
+  
+  def test_Interface(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test Predicate implements Predicate interface."""
+    if not run : return
+    from Products.ERP5Type.Interface import Predicate as IPredicate
+    from Products.ERP5Type.Document.Predicate import Predicate
+    predicate = self.createPredicate()
+    self.failUnless(IPredicate.isImplementedBy(predicate))
+    from Interface.Verify import verifyClass
+    verifyClass(IPredicate, Predicate)
+  
+  def test_CategoryMembership(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test basic category membership"""
+    if not run : return
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepSetDocumentStoreverGroupMembership
+      stepCreateRegionFrancePredicate
+      stepAssertPredicateTrue
+      stepCreateGroupStoreverPredicate
+      stepAssertPredicateTrue
+      stepCreateGroupStoreverRegionFrancePredicate
+      stepAssertPredicateTrue
+      stepSetDocumentGermanyRegionMembership
+      stepAssertPredicateFalse
+      stepCreateRegionFrancePredicate
+      stepAssertPredicateFalse
+    """)
+  
+  def test_EmptyPredicates(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test empty and always false predicates."""
+    if not run : return
+    self.playSequence("""
+      stepCreateDocument
+      stepCreateEmptyPredicate
+      stepAssertPredicateTrue
+      stepCreateAlwaysFalsePredicate
+      stepAssertPredicateFalse
+    """)
+
+  def test_TestMethodId(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test test_method_id attribute."""
+    if not run : return
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepCreateRegionFrancePredicate
+      stepAssertPredicateTrue
+      stepCreatePredicateTrueScript
+      stepCreateTestMethodIdPredicate
+      stepAssertPredicateTrue
+      stepCreateRegionFrancePredicateTruePredicate
+      stepAssertPredicateTrue
+      stepCreatePredicateFalseScript
+      stepCreateTestMethodIdPredicate
+      stepAssertPredicateFalse
+      stepCreateRegionFrancePredicateFalsePredicate
+      stepAssertPredicateFalse
+    """)
+  
+  def test_PredicateFusion(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test simple predicates fusion.
+    New predicate act as a logical AND between predicates
+    """
+    if not run : return
+    # if both predicates are true, resulting predicate is true
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepSetDocumentStoreverGroupMembership
+      stepCreateRegionFrancePredicate
+      stepSaveFirstPredicate
+      stepCreateGroupStoreverPredicate
+      stepMergePredicates
+      stepAssertPredicateTrue
+    """)
+    # if a predicate is false, resulting predicate is false
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentGermanyRegionMembership
+      stepSetDocumentStoreverGroupMembership
+      stepCreateRegionFrancePredicate
+      stepSaveFirstPredicate
+      stepCreateGroupStoreverPredicate
+      stepMergePredicates
+      stepAssertPredicateFalse
+    """)
+
+  def test_PredicateFusionAndTestMethodId(self, quiet=0, run=RUN_ALL_TESTS):
+    """Test predicates fusion and test_method_id attribute."""
+    if not run : return
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepCreateRegionFrancePredicate
+      stepSaveFirstPredicate
+      stepCreatePredicateTrueScript
+      stepCreateTestMethodIdPredicate
+      stepMergePredicates
+      stepAssertPredicateTrue
+    """)
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepCreateRegionFrancePredicate
+      stepSaveFirstPredicate
+      stepCreatePredicateFalseScript
+      stepCreateTestMethodIdPredicate
+      stepMergePredicates
+      stepAssertPredicateFalse
+    """)
+    # reverse predicate order, to make sure not only the last one is
+    # checked
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepCreatePredicateFalseScript
+      stepCreateTestMethodIdPredicate
+      stepSaveFirstPredicate
+      stepCreateRegionFrancePredicate
+      stepMergePredicates
+      stepAssertPredicateFalse
+    """)
+    # if multiple scripts are defined, they must all return true.
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepCreatePredicateFalseScript
+      stepCreateTestMethodIdPredicate
+      stepSaveFirstPredicate
+      stepCreatePredicateTrueScript
+      stepCreateTestMethodIdPredicate
+      stepMergePredicates
+      stepAssertPredicateFalse
+    """)
+    # same in reverse order
+    self.playSequence("""
+      stepCreateDocument
+      stepSetDocumentFranceRegionMembership
+      stepCreatePredicateTrueScript
+      stepCreateTestMethodIdPredicate
+      stepSaveFirstPredicate
+      stepCreatePredicateFalseScript
+      stepCreateTestMethodIdPredicate
+      stepMergePredicates
+      stepAssertPredicateFalse
+    """)
+
+# TODO :
+#  multi membership category
+#  predicate range
+#  predicate + category fusion using setPredicateCategoryList
+#  predicate matrix ?
+
+if __name__ == '__main__':
+  framework()
+else:
+  import unittest
+  def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestPredicates))
+    return suite
+
