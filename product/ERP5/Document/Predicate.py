@@ -156,16 +156,18 @@ class Predicate(Folder):
 #    LOG('predicate test', 0, 
 #        '%s after category %s ' % (result, tested_base_category.items()))
     # Test method calls
-    test_method_id = self.getTestMethodId()
-    if (test_method_id is not None) and result:
-      method = getattr(context,test_method_id)
-      result = result and method()
-#    LOG('predicate test', 0, 
-#        '%s after method %s ' % (result, test_method_id))
-    # XXX Add here additional method calls
+    test_method_id_list = self.getTestMethodIdList()
+    if test_method_id_list is not None :
+      for test_method_id in test_method_id_list :
+        if (test_method_id is not None) and result:
+          method = getattr(context,test_method_id)
+          result = result and method()
+#        LOG('predicate test', 0, 
+#            '%s after method %s ' % (result, test_method_id))
     return result
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'buildSqlQuery' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'buildSqlQuery' )
   def buildSqlQuery(self, strict_membership=0, table='category',
                           join_table='catalog', join_column='uid'):
     """
