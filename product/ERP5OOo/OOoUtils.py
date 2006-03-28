@@ -34,7 +34,10 @@ from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
-from StringIO import StringIO
+try:
+  from cStringIO import StringIO
+except ImportError:
+  from StringIO import StringIO
 from zLOG import LOG
 import imghdr
 import random
@@ -72,6 +75,7 @@ class OOoBuilder:
     else :
       self._document = StringIO(document)
     self._image_count = 0    
+    self._manifest_additions_list = []
 
   security.declarePublic('replace')
   def replace(self, filename, stream):
@@ -83,6 +87,13 @@ class OOoBuilder:
       zf = ZipFile(self._document, mode='a', compression=ZIP_DEFLATED)
     except RuntimeError:
       zf = ZipFile(self._document, mode='a')
+    try:
+	    # remove the file first if it exists
+	    fi = zf.getinfo(filename)
+	    zf.filelist.remove( fi )
+    except KeyError:
+	    # This is a new file
+	    pass
     zf.writestr(filename, stream)
     zf.close()
   
@@ -97,6 +108,16 @@ class OOoBuilder:
       zf = ZipFile(self._document, mode='r')
     return zf.read(filename)
   
+  security.declarePublic('getNameList')
+  def getNameList(self):
+    try:
+      zf = ZipFile(self._document, mode='r', compression=ZIP_DEFLATED)
+    except RuntimeError:
+      zf = ZipFile(self._document, mode='r')
+    li = zf.namelist()
+    zf.close()
+    return li
+
   security.declarePublic('getMimeType')
   def getMimeType(self):
     return self.extract('mimetype')
@@ -123,6 +144,40 @@ class OOoBuilder:
           xmlns:metal='http://xml.zope.org/namespaces/metal'
           tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
          office:version='1.0'""")
+
+    """
+    """
+
+  security.declarePublic('addFileEntry')
+  def addFileEntry(self, full_path, media_type, content=None):
+      """ Add a file entry to the manifest and possibly is content """
+      self.addManifest(full_path, media_type)
+      if content:
+          self.replace(full_path, content)
+
+  security.declarePublic('addManifest')
+  def addManifest(self, full_path, media_type):
+    """ Add a path to the manifest """
+    li = '<manifest:file-entry manifest:media-type="%s" manifest:full-path="%s"/>'%(media_type, full_path)
+    self._manifest_additions_list.append(li)
+
+  security.declarePublic('updateManifest')
+  def updateManifest(self):
+    """ Add a path to the manifest """
+    MANIFEST_FILENAME = 'META-INF/manifest.xml'
+    meta_infos = self.extract(MANIFEST_FILENAME)
+
+    # prevent some duplicates
+    for meta_line in meta_infos.split('\n'):
+        for new_meta_line in self._manifest_additions_list:
+            if meta_line.strip() == new_meta_line:
+                self._manifest_additions_list.remove(new_meta_line)
+
+    # add the new lines
+    self._manifest_additions_list.append('</manifest:manifest>')
+    meta_infos = meta_infos.replace( self._manifest_additions_list[-1], '\n'.join(self._manifest_additions_list) )
+    self.replace(MANIFEST_FILENAME, meta_infos)
+    self._manifest_additions_list = []
 
   security.declarePublic('addImage')
   def addImage(self, image, format='png'):
@@ -296,14 +351,18 @@ class OOoParser:
     # List all embedded spreadsheets
     emb_objects = self.oo_content_dom.getElementsByTagName("draw:object")
     for embedded in emb_objects:
-      document = embedded.getAttributeNS(self.ns["xlink"], "href")
-      if document:
-        try:
-          object_content = self.reader.fromString(self.oo_files[document[3:] + '/content.xml'])
-          for table in object_content.getElementsByTagName("table:table"):
-            spreadsheets.append(table)
-        except:
-          pass
+        document = embedded.getAttributeNS(self.ns["xlink"], "href")
+        if document:
+            try:
+                object_content = self.reader.fromString(self.oo_files[document[3:] + '/content.xml'])
+                tables = object_content.getElementsByTagName("table:table")
+                if tables:
+                    for table in tables:
+                        spreadsheets.append(table)
+                else: # XXX: insert the link to OLE document ?
+                    pass
+            except:
+                pass
     return spreadsheets
 
 

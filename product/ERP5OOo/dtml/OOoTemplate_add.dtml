@@ -9,7 +9,7 @@ OOo Templates allow to generate dynamic OpenOffice.org documents based
 on templates.
 </p>
 
-<form action="addOOoTemplate" method="POST">
+<form action="addOOoTemplate" enctype="multipart/form-data" method="POST">
 
 <table cellspacing="0" cellpadding="2" border="0">
   <tr>
@@ -31,6 +31,17 @@ on templates.
     </td>
     <td align="left" valign="top">
     <input type="text" name="title" size="40" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+      <div class="form-optional">
+        File
+      </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="file" name="file" size="25" value="" />
     </td>
   </tr>
 
