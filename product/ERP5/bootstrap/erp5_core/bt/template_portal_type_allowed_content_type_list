@@ -4,11 +4,11 @@ Base Category | Category
 Base Domain | Domain
 Category Tool | Base Category
 Category | Category
-Delivery Builder | Predicate Group
+Delivery Builder | Predicate
 Delivery Tool | Delivery Builder
 Domain Tool | Base Domain
 Domain | Domain
-Order Builder | Predicate Group
+Order Builder | Predicate
 Order Tool | Order Builder
 Predicate | Value Predicate
 Preference Tool | Preference

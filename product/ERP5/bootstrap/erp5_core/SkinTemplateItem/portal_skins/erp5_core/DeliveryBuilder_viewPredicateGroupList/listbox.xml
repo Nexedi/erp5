@@ -437,8 +437,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Predicate Group</string>
-                          <string>Predicate Group</string>
+                          <string>Predicate</string>
+                          <string>Predicate</string>
                         </tuple>
                       </list>
                     </value>
@@ -517,7 +517,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Predicate Groups</string> </value>
+                    <value> <string>Predicates</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

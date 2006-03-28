@@ -18,7 +18,7 @@
   <item>Base Category</item>
  </portal_type>
  <portal_type id="Delivery Builder">
-  <item>Predicate Group</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Delivery Tool">
   <item>Delivery Builder</item>
@@ -30,7 +30,7 @@
   <item>Base Domain</item>
  </portal_type>
  <portal_type id="Order Builder">
-  <item>Predicate Group</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Order Tool">
   <item>Order Builder</item>
