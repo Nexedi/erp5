@@ -120,32 +120,37 @@ class SimulationMovement(Movement):
     return self.objectValues()
   
   # Price should be acquired
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getPrice')
   def getPrice(self, context=None, REQUEST=None, **kw):
     """
     """
     return self._baseGetPrice() # Call the price method
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCausalityState')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getCausalityState')
   def getCausalityState(self):
     """
       Returns the current state in causality
     """
     return getattr(self, 'causality_state', 'solved')
 
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'setCausalityState')
   def setCausalityState(self, value):
     """
       Change causality state
     """
     self.causality_state = value
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getSimulationState')
   def getSimulationState(self, id_only=1):
     """
       Returns the current state in simulation
 
-      Inherit from order or delivery or parent (but use a conversion table to make
-      orders planned when parent is confirmed)
+      Inherit from order or delivery or parent (but use a conversion
+      table to make orders planned when parent is confirmed)
 
       XXX: movements in zero stock rule can not acquire simulation state
     """
@@ -159,11 +164,12 @@ class SimulationMovement(Movement):
       parent_state = self.aq_parent.getSimulationState()
       return parent_to_movement_simulation_state[parent_state]
     except KeyError, AttributeError:
-      LOG('ERP5 WARNING:',100, 'Could not acquire getSimulationState on %s' % self.getRelativeUrl())
+      LOG('ERP5 WARNING:',100, 'Could not acquire getSimulationState on %s'
+                                % self.getRelativeUrl())
       return None
 
-  # Acounting
-  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                            'isAccountable')
   def isAccountable(self):
     """
       Returns 1 if this needs to be accounted
@@ -173,7 +179,8 @@ class SimulationMovement(Movement):
     return (self.getDeliveryValue() is None)
 
   # Ordering / Delivering
-  security.declareProtected(Permissions.AccessContentsInformation, 'requiresOrder')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'requiresOrder')
   def requiresOrder(self):
     """
       Returns 1 if this needs to be ordered
@@ -183,7 +190,8 @@ class SimulationMovement(Movement):
     else:
       return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'requiresDelivery')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'requiresDelivery')
   def requiresDelivery(self):
     """
       Returns 1 if this needs to be accounted
@@ -246,7 +254,8 @@ class SimulationMovement(Movement):
   # isDivergent is defined in movement
 
   # Optimized Reindexing
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMovementIndex')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getMovementIndex')
   def getMovementIndex(self):
     """
       Returns a list of indexable movements
@@ -341,7 +350,8 @@ class SimulationMovement(Movement):
     return 0
 
   # Deliverability / orderability
-  security.declareProtected(Permissions.AccessContentsInformation, 'isOrderable')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isOrderable')
   def isOrderable(self):
     applied_rule = self.aq_parent
     rule = applied_rule.getSpecialiseValue()
@@ -351,7 +361,8 @@ class SimulationMovement(Movement):
 
   getOrderable = isOrderable
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDeliverable')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isDeliverable')
   def isDeliverable(self):
     applied_rule = self.aq_parent
     rule = applied_rule.getSpecialiseValue()
@@ -362,20 +373,22 @@ class SimulationMovement(Movement):
   getDeliverable = isDeliverable
 
   # Simulation Dates - acquire target dates 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStartDate')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderStartDate')
   def getOrderStartDate(self):
     order_value = self.getOrderValue()
     if order_value is not None:
       return order_value.getStartDate()
   
-  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStopDate')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getOrderStopDate')
   def getOrderStopDate(self):
     order_value = self.getOrderValue()
     if order_value is not None:
       return order_value.getStopDate()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDeliveryStartDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryStartDateList')
   def getDeliveryStartDateList(self):
     """
       Returns the stop date of related delivery(s)
@@ -386,8 +399,8 @@ class SimulationMovement(Movement):
       start_date_list.append(delivery_movement.getStartDate())
     return start_date_list
     
-  security.declareProtected(Permissions.AccessContentsInformation, 
-                            'getDeliveryStopDateList')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryStopDateList')
   def getDeliveryStopDateList(self):
     """
       Returns the stop date of related delivery(s)
@@ -398,8 +411,8 @@ class SimulationMovement(Movement):
       stop_date_list.append(delivery_movement.getStopDate())
     return stop_date_list
   
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDeliveryQuantity')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getDeliveryQuantity')
   def getDeliveryQuantity(self):
     """
       Returns the quantity of related delivery(s)
@@ -410,15 +423,17 @@ class SimulationMovement(Movement):
       quantity = delivery_movement.getQuantity()
     return quantity
     
-  security.declareProtected(Permissions.AccessContentsInformation, 'isConvergent')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'isConvergent')
   def isConvergent(self):
     """
-      Returns true if the Simulation Movement is convergent comparing to the delivery value
+      Returns true if the Simulation Movement is convergent comparing to
+      the delivery value
     """
     return not self.isDivergent()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
-                           'isDivergent')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                            'isDivergent')
   def isDivergent(self):
     """
       Returns true if the Simulation Movement is divergent comparing to
@@ -468,23 +483,26 @@ class SimulationMovement(Movement):
     # if the delivery_ratio is None, make sure that we are
     # divergent even if the delivery quantity is 0
     if delivery_ratio is not None:
-      d_quantity *= delivery_ratio 
+      d_quantity *= delivery_ratio
       if delivery_ratio == 0 and quantity >0:
         return 1
     if d_quantity != quantity + d_error:
       return 1
     return 0  
  
-  security.declareProtected(Permissions.View, 'setDefaultDeliveryProperties')
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'setDefaultDeliveryProperties')
   def setDefaultDeliveryProperties(self):
     """
-    Sets the delivery_ratio and delivery_error properties to the calculated value
+    Sets the delivery_ratio and delivery_error properties to the
+    calculated value
     """
     delivery = self.getDeliveryValue()
     if delivery is not None:
       delivery.updateSimulationDeliveryProperties(movement_list = [self])
 
-  security.declareProtected(Permissions.View, 'getCorrectedQuantity')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getCorrectedQuantity')
   def getCorrectedQuantity(self):
     """
     Returns the quantity property deducted by the possible profit_quantity
@@ -497,10 +515,12 @@ class SimulationMovement(Movement):
       return quantity
     return None
 
-  security.declareProtected(Permissions.View, 'getRootSimulationMovement')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getRootSimulationMovement')
   def getRootSimulationMovement(self):
     """
       Return the root simulation movement in the simulation tree.
+      FIXME : this method should be called getRootSimulationMovementValue
     """
     parent_applied_rule = self.getParent()
     if parent_applied_rule.getRootAppliedRule() == parent_applied_rule:
@@ -508,7 +528,8 @@ class SimulationMovement(Movement):
     else:
       return parent_applied_rule.getRootSimulationMovement()
 
-  security.declareProtected(Permissions.View, 'getRootSimulationMovementUid')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getRootSimulationMovementUid')
   def getRootSimulationMovementUid(self):
     """
       Return the uid of the root simulation movement in the simulation tree.
@@ -519,7 +540,7 @@ class SimulationMovement(Movement):
     return None
 
   security.declareProtected( Permissions.AccessContentsInformation,
-                             'getInitialCausalityValueList')
+                             'getRootCausalityValueList')
   def getRootCausalityValueList(self):
     """
       Returns the initial causality value for this movement.
