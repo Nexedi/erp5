@@ -10,7 +10,6 @@ Applied Rule | list
 Applied Rule | metadata
 Applied Rule | print
 Applied Rule | print_pdf
-Applied Rule | translate
 Applied Rule | view
 Base Category | list
 Base Category | view
@@ -52,9 +51,7 @@ Delivery Tool | view
 Document | history
 Document | metadata
 Document | print
-Document | translate
 Document | view
-Domain Tool | fast_input
 Domain Tool | list
 Domain Tool | localroles
 Domain Tool | metadata
@@ -67,7 +64,6 @@ Domain | print_pdf
 Domain | view
 Favorite | history
 Favorite | metadata
-Favorite | translate
 Favorite | view
 Folder | edit
 Folder | foldercontents
@@ -77,11 +73,9 @@ Folder | view
 Mapped Value | history
 Mapped Value | metadata
 Mapped Value | print
-Mapped Value | translate
 Mapped Value | view
 News Item | history
 News Item | metadata
-News Item | translate
 News Item | view
 Order Builder | history_view
 Order Builder | metadata
@@ -118,7 +112,6 @@ Rule Tool | syndication
 Rule Tool | view
 Simulation Movement | metadata
 Simulation Movement | print
-Simulation Movement | translate
 Simulation Movement | view
 Simulation Tool | csv_export
 Simulation Tool | view
