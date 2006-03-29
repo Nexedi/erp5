@@ -860,11 +860,14 @@ class ERP5Generator(PortalGenerator):
             addSQLConnection('cmf_activity_sql_connection', 'CMF Activity SQL Server Connection', p.cmf_activity_sql_connection_string)
         elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
           pass
-        # Create default methods in Catalog XXX
+        
         portal_catalog = getToolByName(p, 'portal_catalog')
         if not portal_catalog.getSQLCatalog('erp5_mysql') and not update:
-            # Clear Catalog
-            portal_catalog.manage_catalogClear()
+          # Add a default SQL Catalog
+          addSQLCatalog = portal_catalog.manage_addProduct['ZSQLCatalog']\
+                                          .manage_addSQLCatalog
+          addSQLCatalog('erp5_mysql', '')
+          portal_catalog.default_sql_catalog_id = 'erp5_mysql'
 
         # Add ERP5Form Tools
         addTool = p.manage_addProduct['ERP5Form'].manage_addTool
@@ -879,14 +882,12 @@ class ERP5Generator(PortalGenerator):
           addTool('ERP5 Synchronizations', None)
 
         # Add Message Catalog
-        #if 'Localizer' in p.objectIds():
-          #p._delObject('Localizer') # Why delete it, we should keep for ERP5/CPS
         if not 'Localizer' in p.objectIds():
-          #p._delObject('Localizer') # Why delete it, we should keep for ERP5/CPS
           addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
           addLocalizer('', ('en',))
         localizer = getToolByName(p, 'Localizer')
-        addMessageCatalog = localizer.manage_addProduct['Localizer'].manage_addMessageCatalog
+        addMessageCatalog = localizer.manage_addProduct['Localizer']\
+                                          .manage_addMessageCatalog
         if 'erp5_ui' not in localizer.objectIds():
           if 'default' in localizer.objectIds():
             localizer.manage_delObjects('default')
