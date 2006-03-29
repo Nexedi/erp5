@@ -46,6 +46,7 @@ import sys
 from ZODB.POSException import ConflictError
 from OFS.Traversable import NotFound
 from types import TupleType, StringType
+import re
 
 from zLOG import LOG, INFO, WARNING
 
@@ -54,6 +55,9 @@ try:
 except ImportError:
   def getTimerService(self):
     pass
+
+# minimal IP:Port regexp
+NODE_RE = re.compile('\d+\.\d+\.\d+\.\d:\d+')
 
 # Using a RAM property (not a property of an instance) allows
 # to prevent from storing a state in the ZODB (and allows to restart...)
@@ -372,24 +376,44 @@ class ActivityTool (Folder, UniqueObject):
         """ Return the distributingNode """
         return self.distributingNode
 
-    security.declarePublic('getNodeList')
+    security.declarePublic('getNodeList getNodes')
     def getNodes(self):
         """ Return all nodes """
         return self._nodes
+    getNodeList = getNodes
 
+    def _isValidNodeName(self, node_name) :
+      """Check we have been provided a good node name"""
+      return isinstance(node_name, str) and NODE_RE.match(node_name)
+      
     security.declarePublic('manage_setDistributingNode')
     def manage_setDistributingNode(self, distributingNode, REQUEST=None):
-        """ set the distributing node """
-        self.distributingNode = distributingNode
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect(
-                REQUEST.URL1 +
-                '/manageLoadBalancing?manage_tabs_message=' +
-                urllib.quote("Distributing Node successfully changed."))
-    
+        """ set the distributing node """   
+        if self._isValidNodeName(distributingNode):
+          self.distributingNode = distributingNode
+          if REQUEST is not None:
+              REQUEST.RESPONSE.redirect(
+                  REQUEST.URL1 +
+                  '/manageLoadBalancing?manage_tabs_message=' +
+                  urllib.quote("Distributing Node successfully changed."))
+        else :
+          if REQUEST is not None:
+              REQUEST.RESPONSE.redirect(
+                  REQUEST.URL1 +
+                  '/manageLoadBalancing?manage_tabs_message=' +
+                  urllib.quote("Malformed Distributing Node."))
+
     security.declarePublic('manage_addNode')
     def manage_addNode(self, node, REQUEST=None):
         """ add a node """
+        if not self._isValidNodeName(node) :
+            if REQUEST is not None:
+                REQUEST.RESPONSE.redirect(
+                    REQUEST.URL1 +
+                    '/manageLoadBalancing?manage_tabs_message=' +
+                    urllib.quote("Malformed node."))
+            return
+        
         if node in self._nodes:
             if REQUEST is not None:
                 REQUEST.RESPONSE.redirect(
