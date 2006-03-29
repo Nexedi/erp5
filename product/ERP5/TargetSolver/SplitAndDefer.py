@@ -63,13 +63,13 @@ class SplitAndDefer(CopyToTarget):
                         efficiency=movement.getEfficiency(),
                         start_date=self.start_date,
                         stop_date=self.stop_date,
-                        # XXX resource
                         order=movement.getOrder(),
                         deliverable=movement.isDeliverable(),
                         quantity=movement_quantity-new_movement_quantity,
                         source = movement.getSource(),
                         destination = movement.getDestination(),
                         source_section = movement.getSourceSection(),
+                        resource = movement.getResource(),
                         destination_section = movement.getDestinationSection(),
                         activate_kw=self.activate_kw,
                         **self.additional_parameters
