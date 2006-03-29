@@ -59,10 +59,12 @@ class Message(Persistent):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
 
-  def __init__(self, domain = None, message = '', mapping = None,):
+  def __init__(self, domain = None, message = '',
+                     mapping = None, default = None):
     self.message = message
     self.mapping = mapping
     self.domain = domain
+    self.default = default
 
   security.declarePublic('dump')
   def dump(self):
@@ -80,6 +82,7 @@ class Message(Persistent):
     self.message = o.message
     self.domain = o.domain
     self.mapping = o.mapping
+    self.default = o.default
 
   def __str__(self):
     """
@@ -97,8 +100,13 @@ class Message(Persistent):
           self.message = self.message.decode('utf8')
       return self.message
     else:
-      return translation_service.translate(self.domain, self.message, mapping=self.mapping, context=context).encode('utf8')
-
+      return translation_service.translate(self.domain,
+                                           self.message,
+                                           mapping=self.mapping,
+                                           context=context,
+                                           default=self.default
+                                        ).encode('utf8')
 
 InitializeClass(Message)
 allow_class(Message)
+
