@@ -69,7 +69,7 @@
             <value> <string>packing_list = state_change.object\n
 \n
 # Create Delivery Applied Rule (if required)\n
-packing_list.updateAppliedRule()\n
+packing_list.updateAppliedRule(\'default_invoice_rule\')\n
 # Make sure applied rule is 100% indexed\n
 # Here, applied rule must be already cleanly created                                           \n
 \n

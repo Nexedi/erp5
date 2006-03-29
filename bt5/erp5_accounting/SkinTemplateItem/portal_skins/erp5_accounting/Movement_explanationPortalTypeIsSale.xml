@@ -66,9 +66,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>explanation = context.getExplanationValue()\n
+            <value> <string>explanation_value = context.getExplanationValue()\n
 if explanation_value is not None:\n
-  if explanation_value.getPortalType()==\'Purchase Invoice\':\n
+  if explanation_value.getPortalType().startswith(\'Sale\'):\n
     return 1\n
 return 0\n
 </string> </value>
@@ -81,7 +81,7 @@ return 0\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Movement_explanationPortalTypeIsPurchaseInvoice</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/Movement_explanationPortalTypeIsSale</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -120,7 +120,6 @@ return 0\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>explanation</string>
                             <string>explanation_value</string>
                             <string>None</string>
                           </tuple>
@@ -139,7 +138,7 @@ return 0\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Movement_explanationPortalTypeIsPurchaseInvoice</string> </value>
+            <value> <string>Movement_explanationPortalTypeIsSale</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
