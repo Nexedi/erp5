@@ -39,6 +39,7 @@ class Person:
     , 'description': ''
     , 'type'       : 'string'
     , 'write_permission' : 'Set own password'
+    , 'read_permission'  : 'Manage users'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_name'

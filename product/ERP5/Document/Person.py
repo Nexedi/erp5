@@ -164,9 +164,20 @@ class Person(Entity, Node, XMLObject):
               PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin)
           for plugin_name, plugin_value in plugin_list:
             if isinstance(plugin_value, ERP5UserManager):
-              user_list = self.acl_users.searchUsers(id = value, exact_match = True)
+              user_list = self.acl_users.searchUsers(id = value,
+                                                     exact_match = True)
               if len(user_list) > 0:
                 raise RuntimeError, 'user id %s already exist' % (value,)
               break
       self._setReference(value)
       self.reindexObject()
+    
+    security.declareProtected(Permissions.SetOwnPassword, 'setPassword')
+    def setPassword(self, value) :
+      """
+        Set the password, only if the password is not empty.
+      """
+      if value is not None :
+        self._setPassword(value)
+        self.reindexObject()
+    

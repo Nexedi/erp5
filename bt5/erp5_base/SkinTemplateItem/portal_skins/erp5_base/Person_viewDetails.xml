@@ -118,6 +118,7 @@
                         <string>my_partner_count</string>
                         <string>my_reference</string>
                         <string>my_password</string>
+                        <string>password_confirm</string>
                       </list>
                     </value>
                 </item>
