@@ -1,3 +1,9 @@
+2006-03-29 jerome
+* added password confirmation on Person.
+
+2006-03-23 aurel
+* move assignment workflow to erp5_base
+
 2006-03-20 jerome
 * Fix acquisition in HR related base categories to acquire from default career.
 * Repair ChatAddress, they are now based on Url class.
