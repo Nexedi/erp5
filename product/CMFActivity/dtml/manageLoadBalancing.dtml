@@ -84,7 +84,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   <tr>
     <td align="left" colspan=2>
       <p class="form-help">
-        The following list defines the nodes the Load ist currently distributed to. Per default this list is empty
+        The following list defines the nodes the Load is currently distributed to. Per default this list is empty
         which means that every existing node will try to process all activities, which is fine, when ther is only one
         ZServer running.
         To delete a node from the list, activate the checkbox on the left of that node and click the &quot;Delete&quot; button.
@@ -164,7 +164,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <div class="form-label">
         Status:
         <dtml-if isSubscribed>
-          Subscibed
+          Subscribed
         <dtml-else>
           Not Subscribed
        </dtml-if>
