@@ -90,9 +90,15 @@ class ERP5UserManager(BasePlugin):
 
             user = user_list[0]
 
-            if pw_validate(user.getPassword(), password) and\
-                user.getCareerRole() == 'internal':
-              return login, login # use same for user_id and login
+            sm = getSecurityManager()
+            if sm.getUser() != SUPER_USER:
+              newSecurityManager(self, self.getUser(SUPER_USER))
+            try:
+              if pw_validate(user.getPassword(), password) and\
+                  user.getCareerRole() == 'internal':
+                return login, login # use same for user_id and login
+            finally:
+              setSecurityManager(sm)
 
             return None
 
