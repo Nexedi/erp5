@@ -42,7 +42,10 @@ try:
 except ImportError:
   PluggableAuthService = None
 
-
+try :
+  from AccessControl.AuthEncoding import pw_encrypt
+except ImportError:
+  pw_encrypt = lambda pw:pw
 
 class Person(Entity, Node, XMLObject):
     """
@@ -178,6 +181,6 @@ class Person(Entity, Node, XMLObject):
         Set the password, only if the password is not empty.
       """
       if value is not None :
-        self._setPassword(value)
+        self._setPassword(pw_encrypt(value))
         self.reindexObject()
     

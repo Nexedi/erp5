@@ -28,6 +28,11 @@ from Products.ERP5Type.Cache import CachingMethod
 
 from zLOG import LOG
 
+try :
+  from AccessControl.AuthEncoding import pw_validate
+except ImportError:
+  pw_validate = lambda reference, attempt: reference == attempt
+
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'
 
@@ -85,7 +90,7 @@ class ERP5UserManager(BasePlugin):
 
             user = user_list[0]
 
-            if user.getPassword() == password and\
+            if pw_validate(user.getPassword(), password) and\
                 user.getCareerRole() == 'internal':
               return login, login # use same for user_id and login
 
