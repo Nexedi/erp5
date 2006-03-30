@@ -95,6 +95,7 @@ params =  {\n
             \'section_category\' : transaction_section_category,\n
             \'simulation_state\' :  transaction_simulation_state,\n
             \'report_depth\' : 5,\n
+            \'section_portal_type_list\': [\'Organisation\']\n
           }\n
 \n
 params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n

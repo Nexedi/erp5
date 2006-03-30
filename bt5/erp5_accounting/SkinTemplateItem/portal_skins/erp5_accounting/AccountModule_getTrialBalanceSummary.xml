@@ -76,6 +76,7 @@ get_inventory_kw[\'section_category\'] = selection_params.get(\'section_category
 get_inventory_kw[\'simulation_state\'] = selection_params.get(\'transaction_simulation_state\')\n
 get_inventory_kw[\'node_category\'] = selection_params.get(\'gap_root\')\n
 get_inventory_kw[\'omit_simulation\'] = 1\n
+get_inventory_kw[\'section_portal_type_list\'] = [\'Organisation\']\n
 \n
 no_start_date = DateTime(1970, 1, 1)\n
 \n
@@ -86,7 +87,7 @@ getInventory = portal.portal_simulation.getInventoryAssetPrice\n
 list_item = newTempBase(portal, \'xxx\')\n
 list_item.setUid(\'new_000\')\n
 list_item.edit(** {\n
-    # FIXME: here we do not want to sum all movement < 0, but sum the balances \n
+    # FIXME: here we do not want to sum all movement < 0, but sum the balances\n
     # of all nodes whose which have a < 0 balance...\n
     \'total_opening_debit_balance\' : getInventory(\n
                               at_date = selection_params.get(\'from_date\', no_start_date),\n
@@ -97,7 +98,7 @@ list_item.edit(** {\n
                               at_date = selection_params.get(\'from_date\', no_start_date),\n
                               omit_input = 1,\n
                               **get_inventory_kw) or 0,\n
-                              \n
+\n
     \'total_closing_debit_balance\' : getInventory(\n
                               at_date = selection_params.get(\'at_date\'),\n
                               omit_output = 1,\n
