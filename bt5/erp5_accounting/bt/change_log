@@ -1,3 +1,9 @@
+2006-03-30 Kevin
+* Merge modifications made for Nexedi. -- Sorry to be not precise but the changelog is too big to be easy to summarize. But I will add detailed comments in the changelog of every modified file in the SVN to keep a clear understanding of my intentions.
+
+2006-03-30 Alex
+* modified InvoiceLine_asCellRange to support options
+
 2006-03-27 Seb
 * make purchase invoice transaction working
 
