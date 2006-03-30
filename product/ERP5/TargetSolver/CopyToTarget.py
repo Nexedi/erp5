@@ -28,7 +28,6 @@
 ##############################################################################
 
 from TargetSolver import TargetSolver
-from zLOG import LOG
 
 class CopyToTarget(TargetSolver):
   """
@@ -36,9 +35,9 @@ class CopyToTarget(TargetSolver):
   only acceptable for root movements. The meaning of
   this solver of other movements is far from certain.
   """
-  def solve(self, movement):
+  def _generateValueDeltaDict(self, movement):
     """
-      Adopt values as new target
+    Get interesting value
     """
     # Get interesting value
     old_quantity = movement.getQuantity()
@@ -58,33 +57,57 @@ class CopyToTarget(TargetSolver):
       start_date_delta = new_start_date - old_start_date
     if new_stop_date is not None and old_stop_date is not None:
       stop_date_delta = new_stop_date - old_stop_date
-    # Modify recursively simulation movement
-    self._recursivelySolve(movement, quantity_ratio=quantity_ratio,
-                           start_date_delta=start_date_delta, 
-                           stop_date_delta=stop_date_delta)
+    return {
+      'quantity_ratio': quantity_ratio,
+      'start_date_delta': start_date_delta,
+      'stop_date_delta': stop_date_delta,
+    }
 
-  def _recursivelySolve(self, movement, quantity_ratio=1, start_date_delta=0,
-                        stop_date_delta=0):
+  def solve(self, movement):
+    """
+    Adopt values as new target
+    """
+    value_dict = self._generateValueDeltaDict(movement)
+    # Modify recursively simulation movement
+    self._recursivelySolve(movement, **value_dict)
+
+  def _generateValueDict(self, movement, quantity_ratio=1, 
+                         start_date_delta=0, stop_date_delta=0,
+                         **value_delta_dict):
+    """
+    Generate values to save on movement.
+    """
+    value_dict = {}
+    # Modify quantity, start_date, stop_date
+    start_date = movement.getStartDate()
+    if start_date is not None:
+      value_dict['start_date'] = start_date + start_date_delta
+    stop_date = movement.getStopDate()
+    if stop_date is not None:
+      value_dict['stop_date'] = stop_date + stop_date_delta
+    value_dict['quantity'] = movement.getQuantity() * quantity_ratio
+    return value_dict
+
+  def _getParentParameters(self, movement, 
+                           **value_delta_dict):
+    """
+    Get parent movement, and its value delta dict.
+    """
+    applied_rule = movement.getParent()
+    parent_movement = applied_rule.getParent()
+    if parent_movement.getPortalType() != "Simulation Movement":
+      parent_movement = None
+    return parent_movement, value_delta_dict
+
+  def _recursivelySolve(self, movement, **value_delta_dict):
     """
     Update value of the current simulation movement, and update his parent
     movement.
     """
-    # Modify quantity, start_date, stop_date
-    start_date = movement.getStartDate()
-    if start_date is not None:
-      start_date = start_date + start_date_delta
-    stop_date = movement.getStopDate()
-    if stop_date is not None:
-      stop_date = stop_date + stop_date_delta
-    movement.edit(
-      quantity=movement.getQuantity() * quantity_ratio,
-      start_date=start_date,
-      stop_date=stop_date
-    )
-    applied_rule = movement.getParent()
-    parent_movement = applied_rule.getParent()
-    if parent_movement.getPortalType() == "Simulation Movement":
+    value_dict = self._generateValueDict(movement, **value_delta_dict)
+    movement.edit(**value_dict)
+    parent_movement, parent_value_delta_dict = \
+                self._getParentParameters(movement, **value_delta_dict)
+    if parent_movement is not None:
       # Modify the parent movement
-      self._recursivelySolve(parent_movement, quantity_ratio=quantity_ratio,
-                             start_date_delta=start_date_delta, 
-                             stop_date_delta=stop_date_delta)
+      self._recursivelySolve(parent_movement, **parent_value_delta_dict)
