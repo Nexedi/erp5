@@ -282,10 +282,8 @@ class Amount(Base, Variated):
     if resource is not None:
       variation_list = resource.getVariationPropertyList()
       for variation_property in variation_list:
-        # XXX Accessor does not return the correct value !
         property_dict[variation_property] = \
-            getattr(self, variation_property, None)
-#             self.getProperty(variation_property)
+            self.getProperty(variation_property)
     return property_dict
 
   security.declareProtected(Permissions.ModifyPortalContent,
