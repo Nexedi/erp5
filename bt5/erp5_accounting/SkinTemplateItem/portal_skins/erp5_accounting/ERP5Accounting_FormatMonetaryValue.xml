@@ -75,6 +75,9 @@ Needs reflexion / reimplementation for example for the \'precision\' \n
 parameter, which is related to the currency.\n
 """\n
 \n
+context.log( "ERP5Accounting_FormatMonetaryValue is DEPRECATED."\n
+           , \'It break naming convention and will be removed, please use Base_getRoundValue (sometimes in combination with Base_getPreferredPrecision) instead.\')\n
+\n
 # XXX copy & pasted code ...\n
 value = str(value)\n
 if \'.\' in value :\n
@@ -143,8 +146,9 @@ return formatted_value\n
                             <string>value</string>
                             <string>nbsp</string>
                             <string>precision</string>
-                            <string>str</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>str</string>
                             <string>_getiter_</string>
                             <string>integer</string>
                             <string>reminder</string>
