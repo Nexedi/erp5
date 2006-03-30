@@ -13,8 +13,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_grouping_reference</string> </value>
+            <value> <string>preferred_section</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -124,7 +130,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -144,9 +152,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -213,11 +219,11 @@
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>
-                    <value> <int>3</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -245,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_grouping_reference</string> </value>
+                    <value> <string>Section Category</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +285,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not getattr(cell, \'is_previous_balance\', False)</string> </value>
+            <value> <string>here.portal_categories.resolveCategory(here.portal_preferences.getPreferredAccountingTransactionSectionCategory()).getTitle()</string> </value>
         </item>
       </dictionary>
     </pickle>
