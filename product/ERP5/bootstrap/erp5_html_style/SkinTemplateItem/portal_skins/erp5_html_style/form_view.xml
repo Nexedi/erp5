@@ -54,6 +54,11 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
+ "DTD/xhtml1-strict.dtd">\n
+<?xml-stylesheet href="erp5.css" rel="stylesheet" type="text/css"?>\n
+\n
+<tal:block tal:replace="nothing">\n
 <!--\n
 Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
                    Thierry Faucher     <tf@nexedi.com>\n
@@ -72,6 +77,7 @@ You should have received a copy of the GNU General Public License\n
 along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
+</tal:block>\n
 <tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
                        ignore_layout request/ignore_layout | nothing;\n
                        editable_mode request/editable_mode | nothing;\n
