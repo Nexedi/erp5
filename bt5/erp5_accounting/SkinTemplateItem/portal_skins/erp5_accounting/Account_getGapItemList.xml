@@ -78,7 +78,7 @@ except KeyError :\n
   raise\n
   gap_root = context.getPortalDefaultGapRoot()\n
 \n
-def getGapItemList(gap_root, portal_path) : \n
+def getGapItemList(gap_root, portal_path): \n
   obj = context.portal_categories.resolveCategory(gap_root)\n
   return  obj.getCategoryChildItemList(base=0, display_method=display, sort_method=sort)\n
 \n
