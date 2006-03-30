@@ -34,6 +34,7 @@ from MethodObject import Method
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from zLOG import LOG
 
 try:
   import pysvn
@@ -229,7 +230,11 @@ try:
     def diff(self, path):
       self._getPreferences()
       os.system('mkdir -p /tmp/tmp-svn/')
-      return self.client.diff('/tmp/tmp-svn',path)
+      return self.client.diff(tmp_path='/tmp/tmp-svn/', url_or_path=path, recurse=False)
+    
+    def revert(self, path):
+      self._getPreferences()
+      return self.client.revert(path)
 
   def newSubversionClient(container, **kw):
     return SubversionClient(**kw).__of__(container)
