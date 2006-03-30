@@ -277,7 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_simulation.getInventoryAssetPrice(section_category=here.REQUEST.get(\'transaction_section_category\'), node_category="gap/"+here.REQUEST.get(\'gap\'), simulation_state=here.REQUEST.get(\'transaction_simulation_state\'), at_date=here.REQUEST.get(\'from_date\')-1)</string> </value>
+            <value> <string>python: here.Base_getRoundValue(value=here.portal_simulation.getInventoryAssetPrice(section_category=here.REQUEST.get(\'transaction_section_category\'), node_category="gap/"+here.REQUEST.get(\'gap\'), simulation_state=here.REQUEST.get(\'transaction_simulation_state\'), at_date=here.REQUEST.get(\'from_date\')-1, section_portal_type_list=[\'Organisation\']), precision=here.Base_getPreferredPrecision())</string> </value>
         </item>
       </dictionary>
     </pickle>
