@@ -74,7 +74,7 @@ if kw.has_key(\'hide_grouping\'):\n
 # read settings from user preference\n
 preference = context.getPortalObject().portal_preferences\n
 if kw.get(\'no_from_date\', 0) :\n
-  from_date = None \n
+  from_date = None\n
 else :\n
   from_date = preference.getPreferredAccountingTransactionFromDate()\n
 if from_date :\n
@@ -84,16 +84,16 @@ if at_date :\n
   kwd[\'at_date\'] = at_date\n
 simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
 if simulation_state :\n
-  kwd[\'transaction_simulation_state\'] = simulation_state\n
+  kwd[\'simulation_state\'] = simulation_state\n
 section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
 if section_category :\n
-  kwd[\'transaction_section_category\'] = section_category\n
+  kwd[\'section_category\'] = section_category\n
 \n
 # parameters only used in reports\n
 if kw.has_key(\'node_uid\'):\n
   kwd[\'node_uid\'] = kw[\'node_uid\']\n
-if kw.has_key(\'transaction_portal_type\'):\n
-  kwd[\'transaction_portal_type\'] = kw[\'transaction_portal_type\']\n
+if kw.has_key(\'portal_type\'):\n
+  kwd[\'portal_type\'] = kw[\'portal_type\']\n
 \n
 if kw.get(\'omit_input\') :\n
   kwd[\'omit_input\'] = 1\n
@@ -104,7 +104,6 @@ kwd[\'stat\'] = 1\n
 result = context.Entity_zGetAccountingTransactionList(**kwd)\n
 row = result[0]\n
 return float(\'%.02f\' % row.total_price or 0)\n
-# vim: syntax=python\n
 </string> </value>
         </item>
         <item>
