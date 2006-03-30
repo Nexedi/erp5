@@ -269,13 +269,16 @@ SELECT\n
   IF(stock.total_price > 0, stock.total_price, 0.0) AS debit,\n
   IF(stock.total_price < 0, - stock.total_price, 0.0) AS credit,\n
   stock.date AS date,\n
-  transaction.source_reference AS specific_reference,\n
+  IF(stock.section_uid = delivery.source_section_uid,\n
+       transaction.source_reference,\n
+       transaction.destination_reference) AS specific_reference,\n
   stock.total_price AS balance,\n
   stock.payment_uid AS payment_uid\n
 FROM\n
   catalog,\n
   catalog  AS transaction_line,\n
   catalog  AS transaction,\n
+  delivery,\n
   catalog  AS section_c,\n
   catalog  AS section_bc,\n
   category AS section_membership,\n
@@ -289,6 +292,7 @@ FROM\n
         AND stock.node_uid = <dtml-var getUid>\n
 \n
 WHERE stock.node_uid = <dtml-var getUid>\n
+  AND delivery.uid = transaction.uid\n
   AND transaction_line.uid = stock.uid\n
   AND transaction_line.portal_type <> \'Simulation Movement\'\n
   AND transaction_line.parent_uid = transaction.uid\n
@@ -316,10 +320,10 @@ WHERE stock.node_uid = <dtml-var getUid>\n
 <dtml-if omit_output>\n
   AND stock.total_price > 0\n
 </dtml-if>\n
-<dtml-if source_payment_uid>\n
-  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+<dtml-if payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar payment_uid type="int">\n
 </dtml-if>\n
-<dtml-if no_source_payment_uid>\n
+<dtml-if no_payment_uid>\n
   AND stock.payment_uid IS NULL\n
 </dtml-if>\n
 <dtml-if mirror_section_uid>\n
@@ -347,6 +351,7 @@ WHERE stock.node_uid = <dtml-var getUid>\n
   AND section_membership.category_uid =  section_c.uid\n
   AND section_membership.base_category_uid = section_bc.uid\n
   AND section_membership.uid = section.uid\n
+  AND section.portal_type = \'Organisation\'\n
 <dtml-if where_expression>\n
   AND catalog.uid = category.uid\n
   AND <dtml-var where_expression>\n
@@ -407,13 +412,16 @@ SELECT\n
   IF(stock.total_price > 0, stock.total_price, 0.0) AS debit,\n
   IF(stock.total_price < 0, - stock.total_price, 0.0) AS credit,\n
   stock.date AS date,\n
-  transaction.source_reference AS specific_reference,\n
+  IF(stock.section_uid = delivery.source_section_uid,\n
+       transaction.source_reference,\n
+       transaction.destination_reference) AS specific_reference,\n
   stock.total_price AS balance,\n
   stock.payment_uid AS payment_uid\n
 FROM\n
   catalog,\n
   catalog  AS transaction_line,\n
   catalog  AS transaction,\n
+  delivery,\n
   catalog  AS section_c,\n
   catalog  AS section_bc,\n
   category AS section_membership,\n
@@ -427,6 +435,7 @@ FROM\n
         AND stock.node_uid = <dtml-var getUid>\n
 \n
 WHERE stock.node_uid = <dtml-var getUid>\n
+  AND delivery.uid = transaction.uid\n
   AND transaction_line.uid = stock.uid\n
   AND transaction_line.portal_type <> \'Simulation Movement\'\n
   AND transaction_line.parent_uid = transaction.uid\n
@@ -454,10 +463,10 @@ WHERE stock.node_uid = <dtml-var getUid>\n
 <dtml-if omit_output>\n
   AND stock.total_price > 0\n
 </dtml-if>\n
-<dtml-if source_payment_uid>\n
-  AND stock.payment_uid = <dtml-sqlvar source_payment_uid type="int">\n
+<dtml-if payment_uid>\n
+  AND stock.payment_uid = <dtml-sqlvar payment_uid type="int">\n
 </dtml-if>\n
-<dtml-if no_source_payment_uid>\n
+<dtml-if no_payment_uid>\n
   AND stock.payment_uid IS NULL\n
 </dtml-if>\n
 <dtml-if mirror_section_uid>\n
@@ -485,6 +494,7 @@ WHERE stock.node_uid = <dtml-var getUid>\n
   AND section_membership.category_uid =  section_c.uid\n
   AND section_membership.base_category_uid = section_bc.uid\n
   AND section_membership.uid = section.uid\n
+  AND section.portal_type = \'Organisation\'\n
 <dtml-if where_expression>\n
   AND catalog.uid = category.uid\n
   AND <dtml-var where_expression>\n
