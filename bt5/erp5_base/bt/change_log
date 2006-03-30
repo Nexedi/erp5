@@ -1,3 +1,6 @@
+2006-03-30 romain
+* fix action priority on credit card.
+
 2006-03-29 jerome
 * added password confirmation on Person.
 
