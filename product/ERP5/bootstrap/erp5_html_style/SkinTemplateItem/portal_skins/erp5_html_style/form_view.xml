@@ -56,7 +56,6 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
  "DTD/xhtml1-strict.dtd">\n
-<?xml-stylesheet href="erp5.css" rel="stylesheet" type="text/css"?>\n
 \n
 <tal:block tal:replace="nothing">\n
 <!--\n
