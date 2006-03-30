@@ -681,6 +681,10 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
               kw[catalog_index] = value
               kw['portal_type'] = portal_type_list
               kw['sort_on'] = catalog_index
+              parameter_list = field.get_value('parameter_list')
+              if len(parameter_list) > 0:
+                for k,v in parameter_list:
+                  kw[k] = v
               # Get the query results
               relation_list = portal_catalog(**kw)
               relation_uid_list = [x.uid for x in relation_list]
