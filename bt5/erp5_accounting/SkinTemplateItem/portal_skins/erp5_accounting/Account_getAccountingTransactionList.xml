@@ -66,140 +66,144 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-LOG=lambda message: context.log("Account_getAccountingTransactionList", message)\n
+            <value> <string>LOG=lambda message: context.log("Account_getAccountingTransactionList", message)\n
 \n
 from Products.ERP5Type.Document import newTempAccountingTransaction\n
 \n
-# WARNINGS by Vincent (2006/01/31)\n
-# This hack do a rounding on intermediate amount values.\n
-# This prevent floating point bugs such as :\n
-#   >>> 54.99\n
-#   54.990000000000002\n
-# kev: isn\'t it better to set precision as an integer ?\n
-precision = float(10 ** context.Section_getCurrencyPrecision())\n
+precision = context.Base_getPreferredPrecision()\n
+params = {"omit_simulation": 1}\n
+pref = context.getPortalObject().portal_preferences\n
+r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
-kwd={"omit_simulation" : 1}\n
-# read settings from user preference\n
-preference = context.getPortalObject().portal_preferences\n
-if kw.get(\'no_from_date\', 0) :\n
+###\n
+# Get the \'from_date\' parameter\n
+if kw.get(\'no_from_date\', 0):\n
   from_date = None\n
-else :\n
-  from_date = kw.get(\'from_date\', preference\\\n
-                        .getPreferredAccountingTransactionFromDate())\n
+else:\n
+  from_date = kw.get( \'from_date\'\n
+                    , pref.getPreferredAccountingTransactionFromDate()\n
+                    )\n
 if from_date:\n
-    kwd[\'from_date\'] = from_date\n
-at_date = kw.get(\'at_date\', preference\\\n
-                        .getPreferredAccountingTransactionAtDate())\n
-if at_date :\n
-  kwd[\'at_date\'] = at_date\n
-simulation_state = kw.get(\'simulation_state\', preference\\\n
-                    .getPreferredAccountingTransactionSimulationStateList())\n
-if simulation_state :\n
-  kwd[\'transaction_simulation_state\'] = simulation_state\n
-section_category = preference\\\n
-                    .getPreferredAccountingTransactionSectionCategory()\n
-if section_category :\n
-  kwd[\'transaction_section_category\'] = section_category\n
-  kwd[\'section_category\'] = section_category\n
+  params[\'from_date\'] = from_date\n
 \n
+###\n
+# Get the \'simulation_state\' parameter\n
+simulation_state = kw.get( \'simulation_state\'\n
+                         , pref.getPreferredAccountingTransactionSimulationStateList()\n
+                         )\n
+if simulation_state:\n
+  params[\'transaction_simulation_state\'] = simulation_state\n
+\n
+###\n
+# Get the \'section_category\' parameter\n
+section_category = pref.getPreferredAccountingTransactionSectionCategory()\n
+if section_category:\n
+  params[\'transaction_section_category\'] = section_category\n
+\n
+###\n
+# Get payment and mirror related parameters\n
 # Special filtering for GL\n
 #  XXX this script could also be used for entity / bank account ?\n
 MARKER = []\n
-payment_uid = kw.get(\'payment_uid\', MARKER)\n
-if payment_uid is not MARKER:\n
-  kwd[\'payment_uid\'] = payment_uid\n
-no_payment_uid = kw.get(\'no_payment_uid\', MARKER)\n
-if no_payment_uid is not MARKER:\n
-  kwd[\'no_payment_uid\'] = 1\n
-\n
-mirror_section_uid = kw.get(\'mirror_section_uid\', MARKER)\n
-if mirror_section_uid is not MARKER:\n
-  kwd[\'mirror_section_uid\'] = mirror_section_uid\n
+no_payment_uid        = kw.get(\'no_source_uid\',         MARKER)\n
 no_mirror_section_uid = kw.get(\'no_mirror_section_uid\', MARKER)\n
-if no_mirror_section_uid is not MARKER:\n
-  kwd[\'no_mirror_section_uid\'] = 1\n
+payment_uid           = kw.get(\'source_uid\',            MARKER)\n
+mirror_section_uid    = kw.get(\'mirror_section_uid\',    MARKER)\n
+if no_payment_uid        is not MARKER: params[\'no_payment_uid\']        = 1\n
+if no_mirror_section_uid is not MARKER: params[\'no_mirror_section_uid\'] = 1\n
+if payment_uid           is not MARKER: params[\'payment_uid\']           = payment_uid\n
+if mirror_section_uid    is not MARKER: params[\'mirror_section_uid\']    = mirror_section_uid\n
 \n
-node_uid = kw.get(\'node_uid\', MARKER)\n
-if node_uid is not MARKER:\n
-  kwd[\'node_uid\'] = node_uid\n
-  kwd[\'getUid\'] = node_uid # Account_zGetAccountingTransactionList compat\n
-\n
-# TODO: optimize this part\n
-# ie evaluate only the displayed lines\n
-\n
+# Initialize the final line list and the net balance\n
 new_result = []\n
-#LOG(\'kwd %s\' % kwd)\n
-#LOG(\'SQL:\\n%s\'%context.Account_zGetAccountingTransactionList(src__=1, **kwd))\n
-result = context.Account_zGetAccountingTransactionList(**kwd)\n
-\n
 net_balance = 0.0\n
 \n
-if from_date not in (None, MARKER) and kw.get(\'from_date_summary\', 0) :\n
-  get_inventory_kw = {}\n
-  get_inventory_kw[\'omit_simulation\'] = 1\n
-  get_inventory_kw[\'section_category\'] = section_category\n
-  get_inventory_kw[\'node_uid\'] = kw.get(\'node_uid\', context.getUid())\n
-  if simulation_state :\n
-    get_inventory_kw[\'simulation_state\'] = simulation_state\n
-  if mirror_section_uid is not MARKER :\n
-    get_inventory_kw[\'mirror_section_uid\'] = mirror_section_uid\n
-  if payment_uid is not MARKER :\n
-    get_inventory_kw[\'payment_uid\'] = payment_uid\n
+### Add a previous balance line\n
+if from_date not in (None, MARKER) and kw.get(\'from_date_summary\', 0):\n
 \n
-  getInventoryAssetPrice = context.getPortalObject()\\\n
-                                .portal_simulation.getInventoryAssetPrice\n
-  last_total_debit = getInventoryAssetPrice(omit_output=1,\n
-                                to_date=from_date, **get_inventory_kw)\n
-  last_total_credit = getInventoryAssetPrice(omit_input=1,\n
-                                to_date=from_date, **get_inventory_kw)\n
-  if last_total_credit != 0 :\n
-    last_total_credit = - last_total_credit\n
+  ## Normal use of inventory stuff\n
+  get_inventory_kw = { \'omit_simulation\'         : 1\n
+                     , \'section_category\'        : section_category\n
+                     , \'node_uid\'                : kw.get(\'node_uid\', context.getUid())\n
+                     , \'to_date\'                 : from_date\n
+                     , \'section_portal_type_list\': [\'Organisation\']\n
+                     }\n
+  if simulation_state                : get_inventory_kw[\'simulation_state\']   = simulation_state\n
+  if payment_uid is not MARKER       : get_inventory_kw[\'payment_uid\']        = payment_uid\n
+  if mirror_section_uid is not MARKER: get_inventory_kw[\'mirror_section_uid\'] = mirror_section_uid\n
 \n
-  if last_total_debit != 0 or last_total_credit  != 0 :\n
-    from_date_summary = newTempAccountingTransaction(\n
-          context.getPortalObject(), "temp_%s" % context.getUid())\n
+  getInventoryAssetPrice = context.getPortalObject().portal_simulation.getInventoryAssetPrice\n
+  previous_total_debit   = r_(getInventoryAssetPrice(omit_output = 1, **get_inventory_kw))\n
+  previous_total_credit  = r_(getInventoryAssetPrice(omit_input  = 1, **get_inventory_kw))\n
+\n
+  if previous_total_credit != 0 :\n
+    previous_total_credit = - previous_total_credit\n
+\n
+  # Add a new line at the top of the listbox called "Previous Balance"\n
+  if previous_total_credit != 0 or previous_total_debit!= 0:\n
+    net_balance = r_(previous_total_debit - previous_total_credit)\n
+    from_date_summary = newTempAccountingTransaction( context.getPortalObject()\n
+                                                    , "temp_%s" % context.getUid()\n
+                                                    )\n
     from_date_summary.setUid(\'new_000\')\n
-    net_balance = (last_total_debit - last_total_credit) * precision # WARNING : See Above\n
     from_date_summary.edit( \\\n
         title                             = context.Base_translateString("Previous Balance")\n
+      , date                              = from_date - 1\n
       , translated_portal_type            = ""\n
       , translated_simulation_state_title = ""\n
-      , net_balance                       = net_balance / precision\n
-      , balance                           = net_balance / precision\n
-      , credit                            = last_total_credit\n
-      , debit                             = last_total_debit\n
+      , net_balance                       = net_balance\n
+      , balance                           = net_balance\n
+      , credit                            = previous_total_credit\n
+      , debit                             = previous_total_debit\n
       , current_transaction_line_path     = None\n
       , third_party                       = None\n
-      , date                              = from_date\n
       )\n
     new_result.append(from_date_summary)\n
+\n
+\n
+###\n
+# Get the \'at_date\' parameter\n
+at_date = kw.get( \'at_date\'\n
+                , pref.getPreferredAccountingTransactionAtDate()\n
+                )\n
+if at_date:\n
+  params[\'at_date\'] = at_date\n
+\n
+###\n
+# Get the node UID\n
+node_uid = kw.get(\'node_uid\', MARKER)\n
+if node_uid is not MARKER:\n
+  params[\'node_uid\'] = node_uid\n
+  params[\'getUid\']   = node_uid # Account_zGetAccountingTransactionList compat\n
+\n
+###\n
+# Get the list of lines\n
+# TODO: optimize this part by giving necessary parameters to only get the displayed lines\n
+# LOG(\'kwd %s\' % kwd)\n
+# LOG(\'SQL:\\n%s\'%context.Account_zGetAccountingTransactionList(src__=1, **params))\n
+result = context.Account_zGetAccountingTransactionList(**params)\n
 \n
 if src__:\n
   return result\n
 \n
 for l in result:\n
   o = l.getObject()\n
-  net_balance += (l.balance or 0.0) * precision # WARNING : See above\n
+  net_balance = r_(net_balance) + r_(l.balance)\n
   if o is not None:\n
-    c = o.asContext( net_balance = net_balance / precision, # WARNING : See above\n
-                     balance = l.balance,\n
-                     credit = l.credit,\n
-                     debit = l.debit,\n
-                     date = l.date,\n
-                     current_transaction_line_path =\n
-                              l.current_transaction_line_path,\n
-                     third_party = l.third_party,\n
-                     payment = l.payment_uid,\n
-                     specific_reference = l.specific_reference,\n
-                  )\n
+    c = o.asContext( net_balance                   = r_(net_balance)\n
+                   , balance                       = r_(l.balance)\n
+                   , credit                        = r_(l.credit)\n
+                   , debit                         = r_(l.debit)\n
+                   , date                          = l.date\n
+                   , current_transaction_line_path = l.current_transaction_line_path\n
+                   , third_party                   = l.third_party\n
+                   , payment                       = l.payment_uid\n
+                   , specific_reference            = l.specific_reference\n
+                   )\n
     new_result.append(c)\n
 \n
 return new_result\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -250,33 +254,33 @@ return new_result\n
                             <string>LOG</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempAccountingTransaction</string>
-                            <string>float</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>precision</string>
-                            <string>kwd</string>
-                            <string>preference</string>
+                            <string>params</string>
+                            <string>pref</string>
+                            <string>r_</string>
                             <string>None</string>
                             <string>from_date</string>
                             <string>_write_</string>
-                            <string>at_date</string>
                             <string>simulation_state</string>
                             <string>section_category</string>
                             <string>MARKER</string>
-                            <string>payment_uid</string>
                             <string>no_payment_uid</string>
-                            <string>mirror_section_uid</string>
                             <string>no_mirror_section_uid</string>
-                            <string>node_uid</string>
+                            <string>payment_uid</string>
+                            <string>mirror_section_uid</string>
                             <string>new_result</string>
-                            <string>_apply_</string>
-                            <string>result</string>
                             <string>net_balance</string>
                             <string>get_inventory_kw</string>
                             <string>getInventoryAssetPrice</string>
-                            <string>last_total_debit</string>
-                            <string>last_total_credit</string>
+                            <string>_apply_</string>
+                            <string>previous_total_debit</string>
+                            <string>previous_total_credit</string>
                             <string>from_date_summary</string>
+                            <string>at_date</string>
+                            <string>node_uid</string>
+                            <string>result</string>
                             <string>_getiter_</string>
                             <string>l</string>
                             <string>o</string>
