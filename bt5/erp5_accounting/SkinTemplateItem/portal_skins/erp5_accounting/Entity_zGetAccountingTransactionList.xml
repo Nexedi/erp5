@@ -93,6 +93,17 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>portal_type</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>query</string> </key>
                                 <value>
                                   <dictionary/>
@@ -110,6 +121,23 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>section_category</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>stat</string> </key>
                                 <value>
                                   <dictionary/>
@@ -119,34 +147,6 @@
                                 <key> <string>to_date</string> </key>
                                 <value>
                                   <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>transaction_portal_type</string> </key>
-                                <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>type</string> </key>
-                                        <value> <string>list</string> </value>
-                                    </item>
-                                  </dictionary>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>transaction_section_category</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>transaction_simulation_state</string> </key>
-                                <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>type</string> </key>
-                                        <value> <string>list</string> </value>
-                                    </item>
-                                  </dictionary>
                                 </value>
                             </item>
                           </dictionary>
@@ -164,9 +164,9 @@
 <string>from_date</string>
 <string>at_date</string>
 <string>to_date</string>
-<string>transaction_simulation_state</string>
-<string>transaction_section_category</string>
-<string>transaction_portal_type</string>
+<string>simulation_state</string>
+<string>section_category</string>
+<string>portal_type</string>
 <string>node_uid</string>
 <string>hide_grouping</string>
                             <string>resource_uid</string>
@@ -201,9 +201,9 @@ resource_uid:list\r\n
 from_date\r\n
 at_date\r\n
 to_date\r\n
-transaction_simulation_state:list\r\n
-transaction_section_category\r\n
-transaction_portal_type:list\r\n
+simulation_state:list\r\n
+section_category\r\n
+portal_type:list\r\n
 node_uid:list\r\n
 hide_grouping=""\r\n
 resource_uid=""\r\n
@@ -304,9 +304,9 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
     expr="getPortalObject().portal_categories.account_type.liability.payable.getUid()">\n
   )\n
   AND node_category.category_strict_membership = 1\n
-<dtml-if transaction_portal_type>\n
+<dtml-if portal_type>\n
   AND (\n
-  <dtml-in transaction_portal_type>\n
+  <dtml-in portal_type>\n
     catalog.portal_type = <dtml-sqlvar sequence-item type="string">\n
               <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
@@ -345,17 +345,17 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   AND stock.total_price < 0\n
 </dtml-if>\n
   AND stock.total_price != 0\n
-<dtml-if transaction_simulation_state>\n
+<dtml-if simulation_state>\n
   AND (\n
-  <dtml-in transaction_simulation_state>\n
+  <dtml-in simulation_state>\n
     catalog.simulation_state = <dtml-sqlvar sequence-item type="string">\n
         <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
-<dtml-if transaction_section_category>\n
+<dtml-if section_category>\n
   AND section_category.category_uid =\n
-     <dtml-var expr="portal_categories.resolveCategory(transaction_section_category).getUid()">\n
+     <dtml-var expr="portal_categories.resolveCategory(section_category).getUid()">\n
 <dtml-else>\n
   AND section_category.category_strict_membership = 1\n
 </dtml-if>\n
@@ -370,8 +370,7 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   GROUP BY catalog.uid, stock.node_uid\n
 </dtml-unless>\n
   ORDER BY stock.date, child.uid\n
-</dtml-if>\n
-
+</dtml-if>
 
 ]]></string> </value>
         </item>
@@ -466,9 +465,9 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
     expr="getPortalObject().portal_categories.account_type.liability.payable.getUid()">\n
   )\n
   AND node_category.category_strict_membership = 1\n
-<dtml-if transaction_portal_type>\n
+<dtml-if portal_type>\n
   AND (\n
-  <dtml-in transaction_portal_type>\n
+  <dtml-in portal_type>\n
     catalog.portal_type = <dtml-sqlvar sequence-item type="string">\n
               <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
@@ -507,17 +506,17 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   AND stock.total_price < 0\n
 </dtml-if>\n
   AND stock.total_price != 0\n
-<dtml-if transaction_simulation_state>\n
+<dtml-if simulation_state>\n
   AND (\n
-  <dtml-in transaction_simulation_state>\n
+  <dtml-in simulation_state>\n
     catalog.simulation_state = <dtml-sqlvar sequence-item type="string">\n
         <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
   )\n
 </dtml-if>\n
-<dtml-if transaction_section_category>\n
+<dtml-if section_category>\n
   AND section_category.category_uid =\n
-     <dtml-var expr="portal_categories.resolveCategory(transaction_section_category).getUid()">\n
+     <dtml-var expr="portal_categories.resolveCategory(section_category).getUid()">\n
 <dtml-else>\n
   AND section_category.category_strict_membership = 1\n
 </dtml-if>\n
@@ -532,8 +531,7 @@ WHERE stock.mirror_section_uid = <dtml-var getUid>\n
   GROUP BY catalog.uid, stock.node_uid\n
 </dtml-unless>\n
   ORDER BY stock.date, child.uid\n
-</dtml-if>\n
-
+</dtml-if>
 
 ]]></string> </value>
                     </item>
