@@ -864,10 +864,12 @@ class ERP5Generator(PortalGenerator):
         portal_catalog = getToolByName(p, 'portal_catalog')
         if not portal_catalog.getSQLCatalog('erp5_mysql') and not update:
           # Add a default SQL Catalog
-          addSQLCatalog = portal_catalog.manage_addProduct['ZSQLCatalog']\
-                                          .manage_addSQLCatalog
-          addSQLCatalog('erp5_mysql', '')
-          portal_catalog.default_sql_catalog_id = 'erp5_mysql'
+          #addSQLCatalog = portal_catalog.manage_addProduct['ZSQLCatalog']\
+          #                                .manage_addSQLCatalog
+          #addSQLCatalog('erp5_mysql', '')
+          #portal_catalog.default_sql_catalog_id = 'erp5_mysql'
+          portal_catalog.addDefaultSQLMethods()
+          portal_catalog.manage_catalogClear()
 
         # Add ERP5Form Tools
         addTool = p.manage_addProduct['ERP5Form'].manage_addTool
