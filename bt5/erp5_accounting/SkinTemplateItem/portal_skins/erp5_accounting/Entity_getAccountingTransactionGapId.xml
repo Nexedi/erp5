@@ -66,9 +66,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>account_uid = brain.account_uid\n
-account = context.portal_catalog.getObject(account_uid)\n
-return account.Account_getGapId()\n
+            <value> <string>if None not in (brain, selection):\n
+  try:\n
+    account_uid = brain.account_uid\n
+  except AttributeError:\n
+    account_uid = None\n
+  if account_uid != None:\n
+    account = context.portal_catalog.getObject(account_uid)\n
+    if account != None:\n
+      return account.Account_getGapId()\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -111,8 +118,10 @@ return account.Account_getGapId()\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>account_uid</string>
+                            <string>AttributeError</string>
                             <string>context</string>
                             <string>account</string>
                           </tuple>
