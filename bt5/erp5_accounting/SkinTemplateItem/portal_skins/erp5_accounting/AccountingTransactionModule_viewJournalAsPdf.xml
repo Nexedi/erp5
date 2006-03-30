@@ -55,8 +55,11 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <?xml version="1.0" encoding="latin1"?>\n
-<document filename="journal.pdf" tal:define="portal here/portal_url/getPortalObject;\n
-                                             transaction_list here/AccountingTransactionModule_getJournalAccountingTransactionList">\n
+<document\n
+  filename="journal.pdf"\n
+  tal:define="portal           here/portal_url/getPortalObject;\n
+              transaction_list here/AccountingTransactionModule_getJournalAccountingTransactionList;\n
+              precision        here/Base_getPreferredPrecision">\n
     <title>Journal</title>\n
     <author>ERP5</author>\n
     <subject>Journal</subject>\n
@@ -120,8 +123,8 @@
                         </tal:block>\n
                         <td colwidth="modified"\n
                             tal:attributes="colwidth python: line[\'debtor\'] and \'12cm\' or \'10cm\' ;" tal:content="python:line[\'account_name\']"/>\n
-                        <td colwidth="2.5cm" tal:content="python:line[\'debtor\'] and here.ERP5Accounting_FormatMonetaryValue(line[\'amount\']) or \' \' "/>\n
-                        <td colwidth="2.5cm" tal:content="python:line[\'debtor\'] and \' \' or here.ERP5Accounting_FormatMonetaryValue(line[\'amount\']) "/>\n
+                        <td colwidth="2.5cm" tal:content="python:line[\'debtor\'] and        here.Base_getRoundValue(line[\'amount\'], precision) or \' \' "/>\n
+                        <td colwidth="2.5cm" tal:content="python:line[\'debtor\'] and \' \' or here.Base_getRoundValue(line[\'amount\'], precision) "/>\n
                     </tr>\n
                 </table>\n
             </tal:block>\n
@@ -157,8 +160,8 @@
                     <td colwidth="1.5cm"/>\n
                     <td colwidth="2cm"/>\n
                     <td colwidth="10cm" > Total </td>\n
-                    <td colwidth="2.5cm" tal:content="python:  here.ERP5Accounting_FormatMonetaryValue(transaction_list[-1][\'journal_total_debit\']) "/>\n
-                    <td colwidth="2.5cm" tal:content="python:  here.ERP5Accounting_FormatMonetaryValue(transaction_list[-1][\'journal_total_credit\']) "/>\n
+                    <td colwidth="2.5cm" tal:content="python: here.Base_getRoundValue(transaction_list[-1][\'journal_total_debit\' ], precision) "/>\n
+                    <td colwidth="2.5cm" tal:content="python: here.Base_getRoundValue(transaction_list[-1][\'journal_total_credit\'], precision) "/>\n
                 </tr>\n
             </table>\n
         </tal:block>\n
