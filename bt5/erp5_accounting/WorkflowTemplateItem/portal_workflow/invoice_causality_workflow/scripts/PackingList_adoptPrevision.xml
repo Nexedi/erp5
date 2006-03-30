@@ -75,14 +75,15 @@ packing_list.updateAppliedRule(\'default_invoice_rule\')\n
 \n
 \n
 \n
-packing_list_portal_type = packing_list.getPortalType()\n
-if packing_list_portal_type == \'Sale Packing List\':\n
-  delivery_builder = packing_list.portal_deliveries.sale_packing_list_builder\n
-elif packing_list_portal_type == \'Purchase Packing List\':\n
-  delivery_builder = packing_list.portal_deliveries.purchase_packing_list_builder\n
+if packing_list.getPortalType()==\'Purchase Invoice Transaction\':\n
+  builder_list = (\'purchase_invoice_builder\',\'purchase_invoice_transaction_builder\') \n
+elif packing_list.getPortalType()==\'Sale Invoice Transaction\':\n
+  builder_list = (\'sale_invoice_builder\',\'sale_invoice_transaction_builder\')\n
 \n
 packing_list_relative_url = packing_list.getRelativeUrl()\n
-delivery_builder.updateFromSimulation(packing_list_relative_url)\n
+for builder in builder_list:\n
+  delivery_builder = packing_list.portal_deliveries[builder]\n
+  delivery_builder.updateFromSimulation(packing_list_relative_url)\n
 \n
 # Automatic workflow\n
 packing_list.activate().updateCausalityState()\n
@@ -135,9 +136,12 @@ packing_list.activate().updateCausalityState()\n
                             <string>state_change</string>
                             <string>_getattr_</string>
                             <string>packing_list</string>
-                            <string>packing_list_portal_type</string>
-                            <string>delivery_builder</string>
+                            <string>builder_list</string>
                             <string>packing_list_relative_url</string>
+                            <string>_getiter_</string>
+                            <string>builder</string>
+                            <string>_getitem_</string>
+                            <string>delivery_builder</string>
                           </tuple>
                         </value>
                     </item>
