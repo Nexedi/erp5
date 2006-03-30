@@ -66,7 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return - context.Account_statSourceBalance(selection, omit_output=1, **kw) or 0.00\n
+            <value> <string>return - context.Account_statSourceBalance(omit_output=1, **kw) or 0.0\n
 </string> </value>
         </item>
         <item>
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -115,13 +115,12 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection</string>
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
