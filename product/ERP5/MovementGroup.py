@@ -39,6 +39,7 @@ from Products.PythonScripts.Utility import allow_class
 
 class MovementRejected(Exception) : pass
 class FakeMovementError(Exception) : pass
+class MovementGroupError(Exception) : pass
 
 class RootMovementGroup:
 
@@ -115,6 +116,12 @@ class RootMovementGroup:
       Store properties for the futur created object 
     """
     self._property_dict = kw
+
+  def updateGroupEdit(self, **kw):
+    """
+      Update properties for the futur created object 
+    """
+    self._property_dict.update(kw)
 
   def getGroupEditDict(self):
     """
@@ -1001,3 +1008,44 @@ class SplitMovementGroup(RootMovementGroup):
     return 0
 
 allow_class(AggregateMovementGroup)
+
+class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
+  """ 
+  Groups movement that comes from simulation movement that shares the
+  same Production Applied Rule. 
+  """
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    explanation_relative_url = self._getExplanationRelativeUrl(movement)
+    self.explanation = explanation_relative_url
+    explanation_value = movement.getPortalObject().restrictedTraverse(
+                                                    explanation_relative_url)
+    self.setGroupEdit(causality_value=explanation_value)
+
+  def _getExplanationRelativeUrl(self, movement):
+    """ Get the order value for a movement """
+    transformation_applied_rule = movement.getParent()
+    transformation_rule = transformation_applied_rule.getSpecialiseValue()
+    if transformation_rule.getPortalType() != 'Transformation Rule':
+      raise MovementGroupError, 'movement! %s' % movement.getPath()
+    # XXX Dirty hardcoded 
+    production_movement = transformation_applied_rule.pr
+    production_packing_list = production_movement.getExplanationValue()
+    return production_packing_list.getRelativeUrl()
+    
+  def test(self,movement):
+    return self._getExplanationRelativeUrl(movement) == self.explanation
+
+allow_class(TransformationAppliedRuleCausalityMovementGroup)
+
+class ParentExplanationCausalityMovementGroup(ParentExplanationMovementGroup):
+  """
+  Like ParentExplanationMovementGroup, and set the causality.
+  """
+  def __init__(self, movement, **kw):
+    ParentExplanationMovementGroup.__init__(self, movement=movement, **kw)
+    self.updateGroupEdit(
+        causality_value = self.explanation_value
+    )
+
+allow_class(ParentExplanationCausalityMovementGroup)
