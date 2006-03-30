@@ -145,20 +145,20 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>node_uid</string>
-                            <string>query</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
-                            <string>resource_uid</string>
-                            <string>from_date</string>
-                            <string>to_date</string>
-                            <string>at_date</string>
-                            <string>transaction_simulation_state</string>
-                            <string>transaction_section_category</string>
-                            <string>payment_uid</string>
-                            <string>no_payment_uid</string>
-                            <string>mirror_section_uid</string>
-                            <string>no_mirror_section_uid</string>
+<string>node_uid</string>
+<string>query</string>
+<string>omit_input</string>
+<string>omit_output</string>
+<string>resource_uid</string>
+<string>from_date</string>
+<string>to_date</string>
+<string>at_date</string>
+<string>transaction_simulation_state</string>
+<string>transaction_section_category</string>
+<string>payment_uid</string>
+<string>no_payment_uid</string>
+<string>mirror_section_uid</string>
+<string>no_mirror_section_uid</string>
                           </list>
                         </value>
                     </item>
@@ -235,8 +235,8 @@ no_mirror_section_uid</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
-  SUM(stock.quantity) AS quantity,\n
-  SUM(stock.total_price) AS total_price\n
+  SUM(ROUND(stock.quantity,2)) AS quantity,\n
+  SUM(ROUND(stock.total_price,2)) AS total_price\n
 FROM\n
   movement,\n
   stock,\n
@@ -304,6 +304,7 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND section_membership.category_uid =  section_c.uid\n
   AND section_membership.base_category_uid = section_bc.uid\n
   AND section_membership.uid = section.uid\n
+  AND section.portal_type = \'Organisation\'\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
 AND <dtml-var query>\n
@@ -347,8 +348,8 @@ AND <dtml-var query>\n
                         <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
-  SUM(stock.quantity) AS quantity,\n
-  SUM(stock.total_price) AS total_price\n
+  SUM(ROUND(stock.quantity,2)) AS quantity,\n
+  SUM(ROUND(stock.total_price,2)) AS total_price\n
 FROM\n
   movement,\n
   stock,\n
@@ -416,6 +417,7 @@ WHERE stock.node_uid = <dtml-var node_uid>\n
   AND section_membership.category_uid =  section_c.uid\n
   AND section_membership.base_category_uid = section_bc.uid\n
   AND section_membership.uid = section.uid\n
+  AND section.portal_type = \'Organisation\'\n
 <dtml-if query>\n
   AND category.uid = stock.section_uid\n
 AND <dtml-var query>\n
