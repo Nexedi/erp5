@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+AUTO_UPDATE = False\n
+STATE_LIST = [ \'confirmed\'\n
+             , \'delivered\'\n
+             , \'stopped\'\n
+             ]\n
+\n
+print """<html>\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>\n
+<style>\n
+body, h1, h2 {\n
+  font-size: 70%;\n
+}\n
+</style>\n
+</head>\n
+<body>\n
+<h1>Accounting Transaction Reference Number Checking</h1>"""\n
+\n
+for transaction in context.accounting_module.objectValues():\n
+  state = transaction.getSimulationState()\n
+  pt    = transaction.getPortalType()\n
+  if state in STATE_LIST:\n
+    bad_reference         = False\n
+    reference             = None\n
+    source_reference      = None\n
+    destination_reference = None\n
+    if pt == \'Sale Invoice Transaction\':\n
+      reference = transaction.getReference()\n
+      if reference in (None, \'\'):\n
+        bad_reference = True\n
+    else:\n
+      source_reference      = transaction.getSourceReference()\n
+      destination_reference = transaction.getDestinationReference()\n
+      if source_reference in (None, \'\'):\n
+        bad_reference = True\n
+      if destination_reference in (None, \'\'):\n
+        bad_reference = True\n
+\n
+    if bad_reference:\n
+      print "<br/>"\n
+      print "<h2><a href=\'%s\'>%s - %s</a> [%s]</h2>" % ( transaction.absolute_url()\n
+                                                       , transaction.getTitle()\n
+                                                       , transaction.getStartDate()\n
+                                                       , transaction.getSimulationState()\n
+                                                       )\n
+      print "<font color=\'#f00\'>Bad Reference !</font><br/>"\n
+      print "portal type: %s<br/>" % (pt)\n
+      print "reference: %s<br/>" % (repr(reference))\n
+      print "source reference: %s<br/>" % (repr(source_reference))\n
+      print "destination reference: %s<br/>" % (repr(destination_reference))\n
+      \n
+    if AUTO_UPDATE == True:\n
+      if bad_reference and pt==\'Pay Sheet Transaction\':\n
+        # Get sections.\n
+        source_section = transaction.getSourceSection()\n
+        destination_section = transaction.getDestinationSection()\n
+        # Invoice Reference is automatically filled only for Sale Invoice Transaction.\n
+        if transaction.getPortalType() == \'Sale Invoice Transaction\':\n
+          if transaction.getReference() in (None, \'\'):\n
+            invoice_id_group = (\'accounting\', \'invoice\', source_section)\n
+            invoice_reference = transaction.generateNewId(id_group = invoice_id_group)\n
+            transaction.setReference(invoice_reference)\n
+        # Generate new values for Source Reference and Destination Reference.\n
+        if transaction.getSourceReference() in (None, \'\'):\n
+          source_id_group = (\'accounting\', \'section\', source_section)\n
+          source_reference = transaction.generateNewId(id_group = source_id_group)\n
+          transaction.setSourceReference(source_reference)\n
+        if transaction.getDestinationReference() in (None, \'\'):\n
+          destination_id_group = (\'accounting\', \'section\', destination_section)\n
+          destination_reference = transaction.generateNewId(id_group = destination_id_group)\n
+          transaction.setDestinationReference(destination_reference)\n
+\n
+print "</body></html>"\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting/AccountingModule_checkTransactionReference</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>False</string>
+                            <string>AUTO_UPDATE</string>
+                            <string>STATE_LIST</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+<string>context</string>
+                            <string>transaction</string>
+                            <string>state</string>
+                            <string>pt</string>
+                            <string>bad_reference</string>
+                            <string>None</string>
+                            <string>reference</string>
+                            <string>source_reference</string>
+                            <string>destination_reference</string>
+                            <string>True</string>
+                            <string>repr</string>
+                            <string>source_section</string>
+                            <string>destination_section</string>
+                            <string>invoice_id_group</string>
+                            <string>invoice_reference</string>
+                            <string>source_id_group</string>
+                            <string>destination_id_group</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>AccountingModule_checkTransactionReference</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
