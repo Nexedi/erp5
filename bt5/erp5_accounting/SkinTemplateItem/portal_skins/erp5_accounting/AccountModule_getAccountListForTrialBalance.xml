@@ -160,13 +160,11 @@ def getDefaultColumnValues(node_uid=0, **kw):\n
   # Use custom SQL query to get Bank Account Balance (because standard getInventory doesn\'t work)\n
   if kw.has_key(\'bank_account_alt\') and kw[\'bank_account_alt\']:\n
     # Adapt parameters for the custom zSQLMethod\n
-    new_kw = { \'transaction_simulation_state\': get_inventory_kw[\'simulation_state\']\n
-             , \'getParentUid\'                : organisation_list[0].getUid()\n
+    new_kw = { \'getParentUid\'                : organisation_list[0].getUid()\n
              , \'getUid\'                      : get_inventory_kw[\'payment_uid\']\n
              , \'stat\'                        : 1\n
              }\n
     del get_inventory_kw[\'node_uid\']\n
-    del get_inventory_kw[\'simulation_state\']\n
     get_inventory_kw.update(new_kw)\n
 \n
     # Helpfull method to get the balance\n
