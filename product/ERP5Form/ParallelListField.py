@@ -36,7 +36,8 @@ from zLOG import LOG
 from AccessControl import ClassSecurityInfo
 from Products.Formulator.Errors import ValidationError
 
-class ParallelListWidget(Widget.MultiListWidget):
+class ParallelListWidget(Widget.MultiListWidget,
+                         Widget.ListWidget):
     """
       Make the MultilistField more usable for the user.
 
@@ -63,6 +64,7 @@ class ParallelListWidget(Widget.MultiListWidget):
     """
 
     property_names = Widget.MultiListWidget.property_names + \
+                     Widget.ListWidget.property_names + \
       ['hash_script_id']
 
     hash_script_id = fields.StringField('hash_script_id',
@@ -70,6 +72,17 @@ class ParallelListWidget(Widget.MultiListWidget):
                                description=(
         "The method to call to hash items list."),
                                required=0)
+
+    # delete double in order to keep a usable ZMI...
+    # XXX need to keep order !
+    #property_names = dict([(i,0) for i in property_names]).keys()
+    _v_dict = {}
+    _v_property_name_list = []
+    for property_name in property_names:
+      if not _v_dict.has_key(property_name):
+        _v_property_name_list.append(property_name)
+        _v_dict[property_name] = 1
+    property_names = _v_property_name_list
 
     def __init__(self):
       """

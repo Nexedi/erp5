@@ -564,6 +564,35 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
 
 MultiItemsWidget.render_items = MultiItemsWidget_render_items
 
+from Products.Formulator.Widget import MultiListWidget
+
+def MultiListWidget_render(self, field, key, value, REQUEST):
+  rendered_items = self.render_items(field, key, value, REQUEST)
+  return render_element(
+          'select',
+          name=key,
+          multiple=None,
+          css_class=field.get_value('css_class', REQUEST=REQUEST),
+          size=field.get_value('size', REQUEST=REQUEST),
+          contents=string.join(rendered_items, "\n"),
+          extra=field.get_value('extra', REQUEST=REQUEST))
+
+MultiListWidget.render = MultiListWidget_render
+
+from Products.Formulator.Widget import ListWidget
+
+def ListWidget_render(self, field, key, value, REQUEST):
+  rendered_items = self.render_items(field, key, value, REQUEST)
+  return render_element(
+          'select',
+          name=key,
+          css_class=field.get_value('css_class', REQUEST=REQUEST),
+          size=field.get_value('size', REQUEST=REQUEST),
+          contents=string.join(rendered_items, "\n"),
+          extra=field.get_value('extra', REQUEST=REQUEST))
+
+ListWidget.render = ListWidget_render
+
 # JPS - Subfield handling with listbox requires extension
 from Products.Formulator.StandardFields import DateTimeField
 
