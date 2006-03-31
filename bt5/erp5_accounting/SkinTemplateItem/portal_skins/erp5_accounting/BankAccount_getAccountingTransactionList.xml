@@ -66,59 +66,114 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kwd = {}\n
+            <value> <string encoding="cdata"><![CDATA[
+
+src__ = 0\n
+if kw.has_key(\'src__\'): src__ = kw[\'src__\']\n
+precision = context.Base_getPreferredPrecision()\n
+r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
 # read settings from user preference\n
-preference = context.getPortalObject().portal_preferences\n
-from_date = preference.getPreferredAccountingTransactionFromDate()\n
-if from_date :\n
-  kwd[\'from_date\'] = from_date\n
-at_date = preference.getPreferredAccountingTransactionAtDate()\n
-if at_date :\n
-  kwd[\'at_date\'] = at_date\n
+preference       = context.getPortalObject().portal_preferences\n
 simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
-if simulation_state :\n
-  kwd[\'transaction_simulation_state\'] = simulation_state\n
 section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
-if section_category :\n
-  kwd[\'transaction_section_category\'] = section_category\n
+from_date        = preference.getPreferredAccountingTransactionFromDate()\n
+at_date          = preference.getPreferredAccountingTransactionAtDate()\n
 \n
-# parameters only used in reports\n
-if kw.has_key(\'node_uid\'):\n
-  kwd[\'node_uid\'] = kw[\'node_uid\']\n
-if kw.has_key(\'transaction_portal_type\'):\n
-  kwd[\'transaction_portal_type\'] = kw[\'transaction_portal_type\']\n
+# Build the common inventory dict\n
+params = {}\n
 \n
-result = context.BankAccount_zGetAccountingTransactionList(**kwd)\n
-new_result = []\n
+if kw.get(\'no_from_date\', 0): from_date = None\n
 \n
+if simulation_state: params[\'simulation_state\'] = simulation_state\n
+if section_category: params[\'section_category\'] = section_category\n
+\n
+if kw.has_key(\'node_uid\')   : params[\'node_uid\']    = kw[\'node_uid\']\n
+if kw.has_key(\'portal_type\'): params[\'portal_type\'] = kw[\'portal_type\']\n
+\n
+# Create the related accouting line list\n
+new_result  = []\n
 net_balance = 0.0\n
+\n
+# Create a new parameter list to get the previous balance\n
+get_inventory_kw = params.copy()\n
+get_inventory_kw.update({ \'omit_simulation\'         : 1\n
+                        , \'to_date\'                 : from_date\n
+                        , \'section_portal_type_list\': [\'Organisation\']\n
+                        , \'stat\'                    : 1\n
+                        })\n
+\n
+# Get previous debit and credit\n
+previous_total_debit  = context.BankAccount_zGetAccountingTransactionList(omit_output=1, **get_inventory_kw)\n
+previous_total_credit = context.BankAccount_zGetAccountingTransactionList(omit_input =1, **get_inventory_kw)\n
+previous_total_debit  = r_(previous_total_debit[0].quantity)\n
+previous_total_credit = r_(previous_total_credit[0].quantity)\n
+# Get Absolute value of debit and credit\n
+if previous_total_debit  < 0: previous_total_debit  = - previous_total_debit\n
+if previous_total_credit < 0: previous_total_credit = - previous_total_credit\n
+\n
+# Show the previous balance if not empty\n
+if previous_total_credit != 0 or previous_total_debit != 0:\n
+  from Products.ERP5Type.Document import newTempAccountingTransaction\n
+\n
+  net_balance = r_(previous_total_debit - previous_total_credit)\n
+  previous_balance = newTempAccountingTransaction( context.getPortalObject()\n
+                                                 , "temp_%s" % context.getUid()\n
+                                                 )\n
+  previous_balance.setUid(\'new_000\')\n
+\n
+  previous_balance.edit( \\\n
+      title                   = context.Base_translateString("Previous Balance")\n
+    , date                    = from_date - 1\n
+    , portal_type             = ""\n
+    , simulation_state_title  = ""\n
+    , debit                   = previous_total_debit\n
+    , credit                  = previous_total_credit\n
+    , balance                 = net_balance\n
+    , net_balance             = net_balance\n
+    , is_previous_balance     = True\n
+    )\n
+  new_result.append(previous_balance)\n
+\n
+\n
+# Show / Hide grouping if needed\n
+if kw.has_key(\'hide_grouping\'): params[\'hide_grouping\'] = kw[\'hide_grouping\']\n
+\n
 # FIXME:\n
-# using listbox current page number * number of line per listbox page, you can call a \n
+# using listbox current page number * number of line per listbox page, you can call a\n
 # ZSQL Method to initialize net_balance and calculate this only for this page.\n
 #\n
 # But this is just temporary because some day, erp5_accounting will be rewritten using\n
 # only portal_catalog and getInventory. The Iventory API should provide a way to implement\n
-# such a net_balance column (in one instruction, so that we do not need to write a wrapping \n
+# such a net_balance column (in one instruction, so that we do not need to write a wrapping\n
 # list method like this one)\n
-# \n
+result = context.BankAccount_zGetAccountingTransactionList( from_date = from_date\n
+                                                          , at_date   = at_date\n
+                                                          , src__     = src__\n
+                                                          , **params\n
+                                                          )\n
+if src__:\n
+  return result\n
+\n
+# Add related accounting lines one by one in order to calculate intermediate balance\n
 for l in result:\n
   o = l.getObject()\n
   net_balance += l.balance or 0.0\n
   if o is not None:\n
-    c = o.asContext(  net_balance = net_balance,\n
-                      balance=l.balance,\n
-                      credit=l.credit,\n
-                      debit=l.debit,\n
-                      section_title=l.section_title,\n
-                      specific_reference=l.specific_reference,\n
-                      date=l.date,\n
+    c = o.asContext( net_balance        = net_balance\n
+                   , balance            = l.balance\n
+                   , credit             = l.credit\n
+                   , debit              = l.debit\n
+                   , date               = l.date\n
+                   , section_title      = l.section_title\n
+                   , specific_reference = l.specific_reference\n
                    )\n
     new_result.append(c)\n
 \n
 return new_result\n
-# vim: syntax=python\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -165,24 +220,34 @@ return new_result\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>kwd</string>
+                            <string>src__</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>precision</string>
+                            <string>r_</string>
                             <string>preference</string>
-                            <string>from_date</string>
-                            <string>_write_</string>
-                            <string>at_date</string>
                             <string>simulation_state</string>
                             <string>section_category</string>
-                            <string>_getitem_</string>
-                            <string>_apply_</string>
-                            <string>result</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>params</string>
+                            <string>None</string>
+                            <string>_write_</string>
                             <string>new_result</string>
                             <string>net_balance</string>
+                            <string>get_inventory_kw</string>
+                            <string>_apply_</string>
+                            <string>previous_total_debit</string>
+                            <string>previous_total_credit</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempAccountingTransaction</string>
+                            <string>previous_balance</string>
+                            <string>True</string>
+                            <string>result</string>
                             <string>_getiter_</string>
                             <string>l</string>
                             <string>o</string>
-                            <string>None</string>
                             <string>c</string>
                           </tuple>
                         </value>
