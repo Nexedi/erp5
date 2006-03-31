@@ -35,6 +35,7 @@ Accounting Transaction Module | cancel_transactions
 Accounting Transaction Module | close_accounting_period
 Accounting Transaction Module | close_transactions
 Accounting Transaction Module | confirm_transactions
+Accounting Transaction Module | create_closing_transaction
 Accounting Transaction Module | csv_export
 Accounting Transaction Module | fiscal_report
 Accounting Transaction Module | general_ledger_report
