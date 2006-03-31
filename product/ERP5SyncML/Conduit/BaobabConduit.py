@@ -41,6 +41,28 @@ from zLOG import LOG
 
 
 class BaobabConduit(ERP5Conduit):
+  """
+  A conduit is in charge to read data from a particular structure,
+  and then to save this data in another structure.
+
+  In baobab, the data is read from some sql tables and it will stored
+  with ERP5 objects. The difficult parts are :
+  - for one sql table we have several kind of objects in ERP5
+  - for each properties that comes from sql, we have one ore more
+    properties in ERP5
+
+  Most importants method defined here are : 
+  - constructContent : it is used when a new set of data comes from
+                       the sql table, then constructContent must decide
+                       wich kind of object must be created in ERP5
+  - editDocument : after constructContent, editDocument is called with
+                   all properties that comes from the set of data from
+                   sql. Each property must be converted to ERP5 property.
+
+  If you need to handle a new property, the most important thing to know
+  is what will be the property used in ERP5. Then you have to enter a
+  new dictionary in the property_map variable.
+  """
 
   global property_map
 
@@ -49,81 +71,80 @@ class BaobabConduit(ERP5Conduit):
 
 
   ### This data structure associate a xml property to an ERP5 object property in certain conditions
-  property_map = \
-    [ { 'xml_property' : 'nom'
-      , 'erp5_property': 'first_name'
-      , 'conditions'   : {'erp5_portal_type':'Person'}
-      }
-    , { 'xml_property' : 'nom'
-      , 'erp5_property': 'title'
-      , 'conditions'   : {'erp5_portal_type':'Organisation'}
-      }
-    , { 'xml_property' : 'adresse'
+  property_map = {
+    # For example, in the sql export, we use for the first name of a person the 
+    # property 'nom', in ERP5 we use the property first_name
+    'nom':[{
+        , 'erp5_property': 'first_name'
+        , 'conditions'   : {'erp5_portal_type':'Person'}
+        }
+      , { 'xml_property' : 'nom'
+        , 'erp5_property': 'title'
+        , 'conditions'   : {'erp5_portal_type':'Organisation'}
+        }],
+    # For example, in the sql export, we use for the name of an organisation the 
+    # property 'nom', in ERP5 we use the property title
+    'adresse': [{
       , 'erp5_property': 'default_address_street_address'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
-      }
-    , { 'xml_property' : 'zone_residence'
+      }],
+    'zone_residence': [{
       , 'erp5_property': 'default_address_region'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
-      }
-    , { 'xml_property' : 'titre'
+      }],
+    'titre': [{
       , 'erp5_property': 'prefix'
       , 'conditions'   : {'erp5_portal_type':'Person'}
-      }
-    , { 'xml_property' : 'telephone'
+      }],
+    'telephone': [{
       , 'erp5_property': 'default_telephone_number'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
-      }
-    , { 'xml_property' : 'telex'
+      }],
+    'telex': [{
       , 'erp5_property': 'default_fax_number'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
-      }
-    , { 'xml_property' : 'prenom'
+      }],
+    'prenom': [{
       , 'erp5_property': 'last_name'
       , 'conditions'   : {'erp5_portal_type':'Person'}
-      }
-    , { 'xml_property' : 'date_naissance'
+      }],
+    'date_naissance': [{
       , 'erp5_property': 'birthday'
       , 'conditions'   : {'erp5_portal_type':'Person'}
-      }
-    , { 'xml_property' : 'code_bic'
+      }],
+    'code_bic': [{
       , 'erp5_property': 'bic_code'
       , 'conditions'   : {'erp5_portal_type':'Organisation'}
-      }
-
-    , { 'xml_property' : 'intitule'
+      }],
+    'intitule': [{
       , 'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Bank Account'}
-      }
-
-    , { 'xml_property' : 'montant_maxi'
+      }],
+    'montant_maxi': [{
       , 'erp5_property': 'operation_upper_limit'
       , 'conditions'   : {'erp5_portal_type':'Agent Privilege'}
-      }
-    , { 'xml_property' : 'description'
+      }],
+    'description': [{
       , 'erp5_property': 'description'
       , 'conditions'   : {'erp5_portal_type':'Agent Privilege'}
-      }
-
-    , { 'xml_property' : 'inventory_title'
+      }],
+    'inventory_title': [{
       , 'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Cash Inventory Group'}
-      }
-
-    , { 'xml_property' : 'title'
+      }],
+    'title': [{
       , 'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory'}
-      }
-
-    , { 'xml_property' : 'amount'
+      }],
+    'amount': [{
       , 'erp5_property': 'inventory'
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory Line'}
-      }
-    ]
+      }],
+    }
 
 
 
@@ -134,7 +155,9 @@ class BaobabConduit(ERP5Conduit):
   security.declarePrivate('buildConditions')
   def buildConditions(self, object):
     """
-      Build a condition dictionnary
+      Build a condition dictionnary based on the portal type.
+      For example it will returns :
+      {'erp5_portal_type':'Agent Privilege'}
     """
     dict = {}
     dict['erp5_portal_type'] = object.getPortalType()
@@ -144,16 +167,19 @@ class BaobabConduit(ERP5Conduit):
   def findPropertyMapItem(self, xml_property_name, conditions):
     """
       Find the property_map item that match conditions
+      It will returns for example :
+     { 'xml_property' : 'nom'
+      , 'erp5_property': 'first_name'
+      , 'conditions'   : {'erp5_portal_type':'Person'} }
     """
-    for item in property_map:
-      if item['xml_property'] == xml_property_name:
-        c = item['conditions']
-        if type(c) == type([]):
-          if conditions in c:
-            return item
-        else:
-          if conditions == c:
-            return item
+    for item in property_map[xml_property_name]:
+      c = item['conditions']
+      if type(c) == type([]):
+        if conditions in c:
+          return item
+      else:
+        if conditions == c:
+          return item
     return None
 
 
@@ -163,13 +189,17 @@ class BaobabConduit(ERP5Conduit):
     """
       This is a redefinition of the original ERP5Conduit.constructContent function to
       create Baobab objects.
+
+      This method is in charge to create a new object.
     """
+    # Register some path in some variables
     erp5_site_path             = object.absolute_url(relative=1)
     person_module_object       = object.person_module
     organisation_module_object = object.organisation_module
 
     # Modules below are not always required
     #   (it depends of the nature of objects you want to synchronize)
+    # So if a module to not exist, we set the value to None
     try:    cash_inventory_module = object.cash_inventory_module
     except AttributeError: cash_inventory_module = None
     try:    bank_account_inventory_module = object.bank_account_inventory_module
@@ -183,13 +213,21 @@ class BaobabConduit(ERP5Conduit):
     # Given parameter is the special encoded portal type that represent the path to
     #   the wanted destination.
     def findObjectFromSpecialPortalType(special_portal_type):
+      # The first part or portal type, for example "Mandataire"
       source_portal_type = special_portal_type.split('_')[0]
+      # The place where we should build, 
+      # [1:] is used to takes the full list except the first element
+      # [::-1] is used in order to reverse the order
+      # construction_location will be for example 40/Z000900001
+      # (person with id 40 and account with id Z000900001
       construction_location = '/'.join(special_portal_type.split('_')[1:][::-1])
       parent_object = None
       for search_folder in ('person_module', 'organisation_module'):
+        # full path : /person_module/40/Z000900001
         path = '/' + search_folder + '/' + construction_location
         parent_object_path = erp5_site_path + path
         try:
+          # Get the object with the path
           parent_object = object.restrictedTraverse(parent_object_path)
         except ConflictError:
           raise
@@ -215,12 +253,13 @@ class BaobabConduit(ERP5Conduit):
 
     ### handle client objects
     if portal_type.startswith('Client'):
+      # This is a person object
       if portal_type[-3:] == 'PER':
         subobject = person_module_object.newContent( portal_type = 'Person'
                                                    , id          = object_id
                                                    )
         subobject.setCareerRole('client')
-      else:
+      else: # This is an organisation object
         subobject = organisation_module_object.newContent( portal_type = 'Organisation'
                                                          , id          = object_id
                                                          )
@@ -252,6 +291,7 @@ class BaobabConduit(ERP5Conduit):
 
     ### handle agent objects
     elif portal_type.startswith('Mandataire'):
+      # Get the person or organisation thanks to the portal_type
       dest = findObjectFromSpecialPortalType(portal_type)
       if dest == None: return None
       subobject = dest.newContent( portal_type = 'Agent'
@@ -267,6 +307,7 @@ class BaobabConduit(ERP5Conduit):
 
     ### handle privilege objects
     elif portal_type.startswith('Pouvoir'):
+      # Get the person or organisation thanks to the portal_type
       dest = findObjectFromSpecialPortalType(portal_type)
       if dest == None: return None
       subobject = dest.newContent( portal_type = 'Agent Privilege'
@@ -358,11 +399,6 @@ class BaobabConduit(ERP5Conduit):
 
     if object == None: return
 
-    """
-      Write here the code that require to combine more than one property from
-      the **kw dictionnary in order to put the right value in object attributes.
-    """
-
     ### Cash Inventory objects needs two properties to generate the vault path
     if object.getPortalType() == 'Cash Inventory Group':
       vault_path = self.getVaultPathFromCodification( object         = object
@@ -372,7 +408,9 @@ class BaobabConduit(ERP5Conduit):
       object.setDestination(vault_path)
 
     ### Cash Inventory Detail objects needs all properties to create and update the cell matrix
+    # This part is only usefull for cash inventory, it is not used for most portal types
     if object.getPortalType() == 'Cash Inventory':
+      # Make sure all variables will be defined
       quantity      = None
       cell_id       = None
       resource_type = None
@@ -399,6 +437,8 @@ class BaobabConduit(ERP5Conduit):
       line_currency_cash = None
       currency_cash_list = object.currency_cash_module.contentValues(filter={'portal_type': currency_portal_type})
       for currency_cash in currency_cash_list:
+        # Check the price_currency_id and the base price to make sure
+        # we have the right currency
         if base_price    not in (None, '')                    and \
            currency_name not in (None, '')                    and \
            currency_cash.getBasePrice()       == base_price   and \
@@ -412,10 +452,13 @@ class BaobabConduit(ERP5Conduit):
            , "Currency '%s %s' not found for the Cash Inventory Detail !" % (base_price, currency_name)
            )
         return None
-      # search for lines
+      # We are looking for an existing line
       inventory_lines = object.contentValues(filter={'portal_type': 'Cash Inventory Line'})
       new_line = None
       for line in inventory_lines:
+        # getResourceValue returns the currency_cash, so if it is
+        # equivalent to the currency_cash we have found, then we can
+        # update the line
         if line.getResourceValue() == line_currency_cash:
           new_line = line
           break
@@ -426,6 +469,7 @@ class BaobabConduit(ERP5Conduit):
         new_line.setPrice(line_currency_cash.getBasePrice())
       # get matrix variation values
       category_list = []
+      # This is the 3 variation axes of the matrix
       base_cat_map = { 'variation'  : 'variation'
                      , 'letter_code': 'emission_letter'
                      , 'status_code': 'cash_status'
@@ -446,6 +490,7 @@ class BaobabConduit(ERP5Conduit):
             category = kw[base_key]
         else:
           category = 'not_defined'
+        # We must have at least a category for each axis
         category_list.append(base_cat_map[base_key] + '/' + category)
       # update the matrix with this cell
       self.updateCashInventoryMatrix( line               = new_line
@@ -455,7 +500,9 @@ class BaobabConduit(ERP5Conduit):
                                     )
 
     ### Bank Account Inventory Line objects needs two properties to get the right bank account object
+    # This part is only usefull for bank account inventory line, it is not used for most portal types
     if object.getPortalType() == 'Bank Account Inventory Line':
+      # Make sure variables will be defined
       currency_id         = None
       bank_account_number = None
       for k,v in kw.items():
@@ -463,22 +510,25 @@ class BaobabConduit(ERP5Conduit):
         if k == 'account_number': bank_account_number = v
       # try to find the bank account
       if bank_account_number != None:
-        customer_list = object.person_module.contentValues(filter={'portal_type': 'Person'}) + \
-                        object.organisation_module.contentValues(filter={'portal_type': 'Organisation'})
         bank_account_object = None
-        for customer in customer_list:
-          for bank_account in customer.contentValues(filter={'portal_type': 'Bank Account'}):
-            if bank_account.getBankAccountNumber() == bank_account_number:
-              # found !
-              bank_account_object = bank_account
-              break
-          if bank_account_object != None:
-            break
+        # We use here the catalog in order to find very quickly
+        # all bank with a particular reference, so most of the time
+        # we should get only 1 bank account
+        bank_account_list = [x.getObject() for x in object.portal_catalog(
+                               portal_type=('Bank Account'),
+                               reference='%%%s%%' % bank_account_number)]
+        # Make sure we have found the right bank account
+        for bank_account in bank_account_list:
+           if bank_account.getBankAccountNumber() == bank_account_number:
+             bank_account_object = bank_account
+             break
         if bank_account_object != None:
+          # Se the right account on the inventory line
           object.setDestinationValue(bank_account_object)
           if currency_id != None:
             # verify or add the currency
             current_currency_id = bank_account_object.getPriceCurrencyId()
+            # Make sure that the bank account will have a currency defined
             if current_currency_id in (None, ''):
               bank_account_object.setPriceCurrency('currency_module/' + currency_id)
             elif current_currency_id != currency_id:
@@ -486,6 +536,11 @@ class BaobabConduit(ERP5Conduit):
                  , 200
                  , 'found bank account has not the same currency as expected'
                  )
+        else:
+            LOG( 'BaobabConduit inconsistency:'
+               , 200
+               , 'no bank account found'
+               )
 
 
     """
@@ -504,14 +559,19 @@ class BaobabConduit(ERP5Conduit):
 
       ### There is a translation rule, so call the right setProperty() method
       if map_item != None:
+        # The method id can be for example 'setTitle'
         method_id = "set" + convertToUpperCase(map_item['erp5_property'])
         LOG( 'BaobabConduit:'
            , 0
            , "try to call object method %s on %s" % (repr(method_id), repr(object))
            )
         if v not in ('', None):
+           # We look if the method exist
           if hasattr(object, method_id):
+            # get the method itself
             method = getattr(object, method_id)
+            # This call the method, this exactly the same thing
+            # as calling directly : object.setTitle(v) 
             method(v)
           else:
             LOG( 'BaobabConduit:'
@@ -521,6 +581,13 @@ class BaobabConduit(ERP5Conduit):
 
       ### No translation rule found, try to find a hard-coded translation method in the conduit
       else:
+        # The method is generated with the type of the document and with the
+        # name of the property. If the type of the document is 'Client' and the
+        # property is nature_economique, then it will try to find a method
+        # defined in this conduit 'editClientNatureEconomique'. This is very
+        # usefull if we must do some particular conversion or some calculation
+        # before editing an object. This is used when there is no simple
+        # equivalent between sql table and ERP5.
         method_id = "edit%s%s" % (kw['type'].replace(' ', ''), convertToUpperCase(k))
         LOG( 'BaobabConduit:'
            , 0
@@ -528,7 +595,10 @@ class BaobabConduit(ERP5Conduit):
            )
         if v not in ('', None):
           if hasattr(self, method_id):
+            # get the method itself
             method = getattr(self, method_id)
+            # This call the method, this exactly the same thing
+            # as calling directly : self.editClientNatureEconomique(object,v) 
             method(object, v)
           else:
             LOG( 'BaobabConduit:'
@@ -589,6 +659,10 @@ class BaobabConduit(ERP5Conduit):
          )
 
   def editClientSituationMatrimoniale(self, document, value):
+    """
+    Here we can convert data from sql to data in ERP5 thanks
+    to a simple dictionnary: the id_table.
+    """
     if document.getPortalType() == 'Person':
       id_table = { 'VEU' : 'widowed'
                  , 'DIV' : 'divorced'
@@ -607,19 +681,24 @@ class BaobabConduit(ERP5Conduit):
   ### BankAccount-related-properties functions
 
   def editCompteDevise(self, document, value):
+    # Convert compte_devise to price_currency
     document.setPriceCurrency('currency_module/' + value)
 
   def editCompteDateOuverture(self, document, value):
+    # Convert date_ouverture to start_date and stop_date
     if document.getStopDate() in ('', None):
       document.setStopDate(str(datetime.datetime.max))
     document.setStartDate(value)
 
   def editCompteDateFermeture(self, document, value):
+    # Convert date_firemeture to start_date and stop_date
     if document.getStartDate() in ('', None):
       document.setStartDate(str(datetime.datetime.min))
     document.setStopDate(value)
 
   def editCompteNumero(self, document, value):
+    # Here we have several properties in ERP5 for only
+    # one property in sql, so we need this particular method.
     document.setBankCode(value[0])
     document.setBranch(value[1:3])
     document.setBankAccountNumber(value)
@@ -629,6 +708,7 @@ class BaobabConduit(ERP5Conduit):
   ### Agent-related-properties functions
 
   def editMandataireNom(self, document, value):
+    # Convert mandataire_nom to first_name
     old_value = document.getAgentValue().getFirstName()
     new_value = value
     if old_value != new_value:
@@ -639,6 +719,7 @@ class BaobabConduit(ERP5Conduit):
       document.getAgentValue().setFirstName(new_value)
 
   def editMandatairePrenom(self, document, value):
+    # Convert mandataire_prenom to last_name
     old_value = document.getAgentValue().getLastName()
     new_value = value
     if old_value != new_value:
@@ -649,6 +730,7 @@ class BaobabConduit(ERP5Conduit):
       document.getAgentValue().setLastName(new_value)
 
   def editMandataireService(self, document, value):
+    # Convert mandataire_service to an assignment
     assignment = document.getAgentValue().newContent( portal_type = 'Assignment'
                                                     , id          = 'service'
                                                     )
@@ -656,10 +738,12 @@ class BaobabConduit(ERP5Conduit):
     return
 
   def editMandataireFonction(self, document, value):
+    # Convert mandataire_function to a career grade
     document.getAgentValue().setCareerGrade(value)
     return
 
   def editMandataireTelephone(self, document, value):
+    # Convert mandataire_telephone to default_telephone_number
     old_value = document.getAgentValue().getDefaultTelephoneNumber()
     new_value = value
     if old_value != new_value:
@@ -670,6 +754,7 @@ class BaobabConduit(ERP5Conduit):
       document.getAgentValue().setDefaultTelephoneNumber(new_value)
 
   def editMandataireDateCreation(self, document, value):
+    # Convert mandataire_date_creation to stop_date and start_date
     if document.getStopDate() in ('', None):
       document.setStopDate(str(datetime.datetime.max))
     document.setStartDate(value)
@@ -679,6 +764,7 @@ class BaobabConduit(ERP5Conduit):
   ### AgentPrivilege-related-properties functions
 
   def editPouvoirCategorie(self, document, value):
+    # Convert pouvoir_categorie to agent_privilege property
     id_table = { 'COM' : 'clearing'
                , 'CIR' : 'circularization'
                , 'REM' : 'cash_out'
@@ -690,11 +776,13 @@ class BaobabConduit(ERP5Conduit):
     document.setAgentPrivilege(id_table[value])
 
   def editPouvoirDateDebut(self, document, value):
+    # Convert pouvoir_date_debut to start_date and stop_date properties
     if document.getStopDate() in ('', None):
       document.setStopDate(str(datetime.datetime.max))
     document.setStartDate(value)
 
   def editPouvoirDateFin(self, document, value):
+    # Convert pouvoir_date_fin to start_date and stop_date properties
     if document.getStartDate() in ('', None):
       document.setStartDate(str(datetime.datetime.min))
     document.setStopDate(value)
@@ -704,6 +792,7 @@ class BaobabConduit(ERP5Conduit):
   ### CashInventory-related-properties functions
 
   def editCashInventoryInventoryDate(self, document, value):
+    # Convert cash_inventory_inventory_date to stop_date property
     if value in ('', None):
       date = str(datetime.datetime.max)
     else:
@@ -716,13 +805,26 @@ class BaobabConduit(ERP5Conduit):
     document.setStopDate(date)
 
   def getVaultPathFromCodification( self, object, agency_code=None, inventory_code=None, vault_code=None, currency_id=None):
+    """
+    This method get many parameters and try to find a category
+    corresponding with parameters.
+
+    For example if agency_code=A00, this function will returns
+    site/aaa/bbb/ccc
+    """
     if agency_code in (None, ''):
       return None
     category_tool = object.portal_categories
     # Get the site path to agency
     agency_path = None
     site_base_object = category_tool.resolveCategory('site')
-    for site_item in site_base_object.getCategoryChildLogicalPathItemList(base=1)[1:]:
+    # XXX Warning, we should use the catalog in order to retrieve this
+    # first level. It will go faster. But we need the codification in
+    # the catalog table
+
+    # Parse the category tree in order to find the category corresponding
+    # to the agency
+    for site_item in site_base_object.getCategoryChildItemList(base=1)[1:]:
       site_path = site_item[1]
       site_object = category_tool.resolveCategory(site_path)
       if site_object.getPortalType() == 'Category':
@@ -735,7 +837,9 @@ class BaobabConduit(ERP5Conduit):
     # Get the site path corresponding to the inventory type
     inventory_path = None
     agency_site_object = site_object
-    for agency_sub_item in agency_site_object.getCategoryChildLogicalPathItemList(base=1)[1:]:
+    # Parse the category tree (from the level of the agency) in order to 
+    # find the category corresponding to the inventory
+    for agency_sub_item in agency_site_object.getCategoryChildItemList(base=1)[1:]:
       agency_sub_item_path   = agency_sub_item[1]
       agency_sub_item_object = category_tool.resolveCategory(agency_sub_item_path)
       agency_sub_item_vault  = agency_sub_item_object.getVaultType()
@@ -751,7 +855,9 @@ class BaobabConduit(ERP5Conduit):
     # Get the site path corresponding to the vault code
     vault_path = None
     vault_site_object = agency_sub_item_object
-    for vault_sub_item in vault_site_object.getCategoryChildLogicalPathItemList(base=1)[1:]:
+    # Parse the category tree (from the level of the inventory) in order to 
+    # find the category corresponding to the vault
+    for vault_sub_item in vault_site_object.getCategoryChildtemList(base=1)[1:]:
       vault_sub_item_path   = vault_sub_item[1]
       vault_sub_item_object = category_tool.resolveCategory(vault_sub_item_path)
       vault_sub_item_code   = vault_sub_item_object.getCodification()
@@ -765,7 +871,9 @@ class BaobabConduit(ERP5Conduit):
     currency_title  = currency_object.getTitle()
     currency_vault_path = None
     vault_object = vault_sub_item_object
-    for currency_vault_item in vault_object.getCategoryChildLogicalPathItemList(base=1)[1:]:
+    # Parse the category tree (from the level of the vault) in order to 
+    # find the category corresponding to the currency
+    for currency_vault_item in vault_object.getCategoryChildItemList(base=1)[1:]:
       currency_vault_item_path   = currency_vault_item[1]
       currency_vault_item_object = category_tool.resolveCategory(currency_vault_item_path)
       currency_vault_item_title  = currency_vault_item_object.getTitle()
@@ -840,12 +948,14 @@ class BaobabConduit(ERP5Conduit):
   ### BankAccountInventory-related-properties functions
 
   def editBankAccountInventoryAgencyCode(self, document, value):
+    # Convert bank_account_inventory_agency_code to a destination
     agency_path = self.getVaultPathFromCodification( object      = document
                                                    , agency_code = value
                                                    )
     document.setDestination(agency_path)
 
   def editBankAccountInventoryDate(self, document, value):
+    # Convert bank_account_inventory_date to stop_date property
     if value in ('', None):
       date = str(datetime.datetime.max)
     else:
