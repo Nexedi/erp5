@@ -78,7 +78,7 @@ class BaobabConduit(ERP5Conduit):
         , 'erp5_property': 'first_name'
         , 'conditions'   : {'erp5_portal_type':'Person'}
         }
-      , { 'xml_property' : 'nom'
+      , { 
         , 'erp5_property': 'title'
         , 'conditions'   : {'erp5_portal_type':'Organisation'}
         }],
