@@ -53,3 +53,8 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
+
+from AccessControl.SecurityInfo import allow_module
+
+allow_module('Products.ERP5Subversin.SubversionClient')
+
