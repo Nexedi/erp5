@@ -56,5 +56,6 @@ def initialize( context ):
 
 from AccessControl.SecurityInfo import allow_module
 
-allow_module('Products.ERP5Subversin.SubversionClient')
+allow_module('Products.ERP5Subversion.SubversionClient')
+
 

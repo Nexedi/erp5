@@ -38,6 +38,7 @@ from zLOG import LOG
 
 try:
   import pysvn
+  
 
   class SubversionError(Exception):
     """The base exception class for the Subversion interface.
@@ -114,8 +115,9 @@ try:
     def __call__(self, trust_dict):
       trust, permanent = self.client.trustSSLServer(trust_dict)
       if not trust:
-        raise SubversionSSLTrustError(trust_dict)
-        #return False, 0, False
+        #raise SubversionSSLTrustError(trust_dict)
+        self.client.setException(SubversionSSLTrustError(trust_dict))
+        return False, 0, False
       # XXX SSL server certificate failure bits are not defined in pysvn.
       # 0x8 means that the CA is unknown.
       return True, 0x8, permanent
@@ -177,15 +179,16 @@ try:
     log_message = None
     timeout = 60 * 5
     
-    def __init__(self, **kw):
+    def __init__(self, container, **kw):
       self.client = pysvn.Client()
       self.client.set_auth_cache(0)
-      self.client.callback_cancel = CancelCallback(self)
-      self.client.callback_get_log_message = GetLogMessageCallback(self)
-      self.client.callback_get_login = GetLoginCallback(self)
+      obj = self.__of__(container)
+      self.client.callback_cancel = CancelCallback(obj)
+      self.client.callback_get_log_message = GetLogMessageCallback(obj)
+      self.client.callback_get_login = GetLoginCallback(obj)
       #self.client.callback_get_login = self.callback_get_Login
-      self.client.callback_notify = NotifyCallback(self)
-      self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(self)
+      self.client.callback_notify = NotifyCallback(obj)
+      self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(obj)
       #self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
       self.creation_time = time.time()
       self.__dict__.update(kw)
@@ -218,10 +221,19 @@ try:
 #     def callback_ssl_server_trust_prompt( self, trust_data ):
 #       # Always trusting
 #       return True, trust_data['failures'], True
+
+    def setException(self, exc):
+      self.exception = exc
+
+    def getException(self):
+      return self.exception
     
     def checkin(self, path, log_message, recurse):
       self._getPreferences()
-      return self.client.checkin(path, log_message=log_message, recurse=recurse)
+      try:
+        return self.client.checkin(path, log_message=log_message, recurse=recurse)
+      except pysvn.ClientError:
+        raise self.getException()
 
     def status(self, path, **kw):
       # Since plain Python classes are not convenient in Zope, convert the objects.
@@ -237,7 +249,7 @@ try:
       return self.client.revert(path)
 
   def newSubversionClient(container, **kw):
-    return SubversionClient(**kw).__of__(container)
+    return SubversionClient(container, **kw).__of__(container)
     
 except ImportError:
   from zLOG import LOG, WARNING

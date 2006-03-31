@@ -81,36 +81,36 @@ class DiffFile:
   # - old_revision
   # - new_revision
 
-  def __init__(this, raw_diff):
-    this.header = raw_diff.split('@@')[0][:-1]
+  def __init__(self, raw_diff):
+    self.header = raw_diff.split('@@')[0][:-1]
     # Getting file path in header
-    this.path = this.header.split('====')[0][:-1].strip()
+    self.path = self.header.split('====')[0][:-1].strip()
     # Getting revisions in header
-    for line in this.header.split('\n'):
+    for line in self.header.split('\n'):
       if line.startswith('--- '):
         tmp = re.search('\\([\w\s]+\\)$', line)
-        this.old_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
+        self.old_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
       if line.startswith('+++ '):
         tmp = re.search('\\([\w\s]+\\)$', line)
-        this.new_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
+        self.new_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
     # Splitting the body from the header
-    this.body = '\n'.join(raw_diff.strip().split('\n')[4:])
+    self.body = '\n'.join(raw_diff.strip().split('\n')[4:])
     # Now splitting modifications
-    this.children = []
+    self.children = []
     first = True
     tmp = []
-    for line in this.body.split('\n'):
+    for line in self.body.split('\n'):
       if line:
         if line.startswith('@@') and not first:
-          this.children.append(CodeBlock('\n'.join(tmp)))
+          self.children.append(CodeBlock('\n'.join(tmp)))
           tmp = [line,]
         else:
           first = False
           tmp.append(line)
-    this.children.append(CodeBlock('\n'.join(tmp)))
+    self.children.append(CodeBlock('\n'.join(tmp)))
     
 
-  def _escape(this, data):
+  def _escape(self, data):
     """
       Escape &, <, and > in a string of data.
       This is a copy of the xml.sax.saxutils.escape function.
@@ -122,7 +122,7 @@ class DiffFile:
       data = data.replace("<", "&lt;")
       return data
     
-  def toHTML(this):
+  def toHTML(self):
     # Adding header of the table
     html = '''<font color='black'><b>%s</b><br>
     <hr><br>
@@ -131,9 +131,9 @@ class DiffFile:
     <tr height="18px">
       <td style="background-color: grey"><b><center>%s</center></b></td>
       <td style="background-color: grey"><b><center>%s</center></b></td>
-    </tr>'''%(this.path, this.old_revision, this.new_revision)
+    </tr>'''%(self.path, self.old_revision, self.new_revision)
     First = True
-    for child in this.children:
+    for child in self.children:
       # Adding line number of the modification
       if First:
         html += '''<tr height="18px"><td style="background-color: grey">&nbsp;</td><td style="background-color: grey">&nbsp;</td></tr>    <tr>
@@ -164,7 +164,7 @@ class DiffFile:
         html += '''    <tr height="18px">
       <td style="background-color: %s">%s</td>
       <td style="background-color: %s">%s</td>
-    </tr>'''%(old_line_tuple[1], this._escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], this._escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
+    </tr>'''%(old_line_tuple[1], self._escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], self._escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
     html += '''  </tbody>
 </table></font><br><br>'''
     return html
@@ -181,70 +181,70 @@ class CodeBlock:
   # - getNewCodeList() : return code after modif
   # Note: the code returned is a list of tuples (code line, background color)
 
-  def __init__(this, raw_diff):
+  def __init__(self, raw_diff):
     # Splitting body and header
-    this.body = '\n'.join(raw_diff.split('\n')[1:])
-    this.header = raw_diff.split('\n')[0]
+    self.body = '\n'.join(raw_diff.split('\n')[1:])
+    self.header = raw_diff.split('\n')[0]
     # Getting modifications lines
-    tmp = re.search('^@@ -\d+', this.header)
-    this.old_line = tmp.string[tmp.start():tmp.end()][4:]
-    tmp = re.search('\+\d+,', this.header)
-    this.new_line = tmp.string[tmp.start():tmp.end()][1:-1]
+    tmp = re.search('^@@ -\d+', self.header)
+    self.old_line = tmp.string[tmp.start():tmp.end()][4:]
+    tmp = re.search('\+\d+,', self.header)
+    self.new_line = tmp.string[tmp.start():tmp.end()][1:-1]
     # Splitting modifications in SubCodeBlocks
     in_modif = False
-    this.children = []
+    self.children = []
     tmp=[]
-    for line in this.body.split('\n'):
+    for line in self.body.split('\n'):
       if line:
         if (line.startswith('+') or line.startswith('-')):
           if in_modif:
             tmp.append(line)
           else:
-            this.children.append(SubCodeBlock('\n'.join(tmp)))
+            self.children.append(SubCodeBlock('\n'.join(tmp)))
             tmp = [line,]
             in_modif = True
         else:
             if in_modif:
-              this.children.append(SubCodeBlock('\n'.join(tmp)))
+              self.children.append(SubCodeBlock('\n'.join(tmp)))
               tmp = [line,]
               in_modif = False
             else:
               tmp.append(line)
-    this.children.append(SubCodeBlock('\n'.join(tmp)))
+    self.children.append(SubCodeBlock('\n'.join(tmp)))
     
   # Return code before modification
-  def getOldCodeList(this):
+  def getOldCodeList(self):
     tmp = []
-    for child in this.children:
+    for child in self.children:
       tmp.extend(child.getOldCodeList())
     return tmp
     
   # Return code after modification
-  def getNewCodeList(this):
+  def getNewCodeList(self):
     tmp = []
-    for child in this.children:
+    for child in self.children:
       tmp.extend(child.getNewCodeList())
     return tmp
     
 # a SubCodeBlock contain 0 or 1 modification (not more)
 class SubCodeBlock:
-  def __init__(this, code):
-    this.body=code
-    this.modification=this._getModif()
+  def __init__(self, code):
+    self.body=code
+    self.modification=self._getModif()
     # Choosing background color
-    if this.modification == 'none':
-      this.color = 'white'
-    elif this.modification == 'change':
-      this.color = 'rgb(253, 228, 6);'#light orange
-    elif this.modification == 'deletion':
-      this.color = 'rgb(253, 117, 74);'#light red
+    if self.modification == 'none':
+      self.color = 'white'
+    elif self.modification == 'change':
+      self.color = 'rgb(253, 228, 6);'#light orange
+    elif self.modification == 'deletion':
+      self.color = 'rgb(253, 117, 74);'#light red
     else:
-      this.color = 'rgb(83, 253, 74);'#light green
+      self.color = 'rgb(83, 253, 74);'#light green
     
-  def _getModif(this):
+  def _getModif(self):
     nb_plus = 0
     nb_minus = 0
-    for line in this.body.split('\n'):
+    for line in self.body.split('\n'):
       if line.startswith("-"):
         nb_minus-=1
       elif line.startswith("+"):
@@ -258,36 +258,36 @@ class SubCodeBlock:
     return 'change'
       
   # Return code before modification
-  def getOldCodeList(this):
-    if this.modification=='none':
-      return [(x, 'white') for x in this.body.split('\n')]
-    elif this.modification=='change':
-      return [this._getOldCodeList(x) for x in this.body.split('\n') if this._getOldCodeList(x)[0]]
+  def getOldCodeList(self):
+    if self.modification=='none':
+      return [(x, 'white') for x in self.body.split('\n')]
+    elif self.modification=='change':
+      return [self._getOldCodeList(x) for x in self.body.split('\n') if self._getOldCodeList(x)[0]]
     else: # deletion or addition
-      return [this._getOldCodeList(x) for x in this.body.split('\n')]
+      return [self._getOldCodeList(x) for x in self.body.split('\n')]
   
-  def _getOldCodeList(this, line):
+  def _getOldCodeList(self, line):
     if line.startswith('+'):
-      return (None, this.color)
+      return (None, self.color)
     if line.startswith('-'):
-      return (' '+line[1:], this.color)
-    return (line, this.color)
+      return (' '+line[1:], self.color)
+    return (line, self.color)
   
   # Return code after modification
-  def getNewCodeList(this):
-    if this.modification=='none':
-      return [(x, 'white') for x in this.body.split('\n')]
-    elif this.modification=='change':
-      return [this._getNewCodeList(x) for x in this.body.split('\n') if this._getNewCodeList(x)[0]]
+  def getNewCodeList(self):
+    if self.modification=='none':
+      return [(x, 'white') for x in self.body.split('\n')]
+    elif self.modification=='change':
+      return [self._getNewCodeList(x) for x in self.body.split('\n') if self._getNewCodeList(x)[0]]
     else: # deletion or addition
-      return [this._getNewCodeList(x) for x in this.body.split('\n')]
+      return [self._getNewCodeList(x) for x in self.body.split('\n')]
   
-  def _getNewCodeList(this, line):
+  def _getNewCodeList(self, line):
     if line.startswith('-'):
-      return (None, this.color)
+      return (None, self.color)
     if line.startswith('+'):
-      return (' '+line[1:], this.color)
-    return (line, this.color)
+      return (' '+line[1:], self.color)
+    return (line, self.color)
   
 class SubversionTool(UniqueObject, Folder):
   """The SubversionTool provides a Subversion interface to ERP5.
