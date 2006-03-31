@@ -85,7 +85,7 @@ reversal = accounting_module.newContent (\n
                                                          \'source_reference\' : context.getSourceReference()}),\n
   resource = context.getResource(), \n
   reference = context.getReference(),\n
-  bypass_init_script = 1\n
+  created_by_builder = 1\n
 )\n
 \n
 for line in context.objectValues(portal_type = context.getPortalAccountingMovementTypeList()) : \n
