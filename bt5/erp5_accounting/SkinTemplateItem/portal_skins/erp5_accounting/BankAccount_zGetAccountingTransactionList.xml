@@ -105,6 +105,17 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>simulation_state</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>stat</string> </key>
                                 <value>
                                   <dictionary/>
@@ -114,17 +125,6 @@
                                 <key> <string>to_date</string> </key>
                                 <value>
                                   <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>transaction_simulation_state</string> </key>
-                                <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>type</string> </key>
-                                        <value> <string>list</string> </value>
-                                    </item>
-                                  </dictionary>
                                 </value>
                             </item>
                           </dictionary>
@@ -143,7 +143,7 @@
 <string>from_date</string>
 <string>at_date</string>
 <string>to_date</string>
-<string>transaction_simulation_state</string>
+<string>simulation_state</string>
 <string>node_uid</string>
 <string>stat</string>
                           </list>
@@ -177,7 +177,7 @@ resource_uid:list\r\n
 from_date\r\n
 at_date\r\n
 to_date\r\n
-transaction_simulation_state:list\r\n
+simulation_state:list\r\n
 node_uid:list\r\n
 stat</string> </value>
         </item>
@@ -291,9 +291,9 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
 <dtml-if omit_output>\n
   AND stock.quantity < 0\n
 </dtml-if>\n
-<dtml-if transaction_simulation_state>\n
+<dtml-if simulation_state>\n
   AND (\n
-  <dtml-in transaction_simulation_state>\n
+  <dtml-in simulation_state>\n
     catalog.simulation_state = <dtml-sqlvar sequence-item type="string">\n
         <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n
@@ -418,9 +418,9 @@ WHERE stock.section_uid = <dtml-var getParentUid>\n
 <dtml-if omit_output>\n
   AND stock.quantity < 0\n
 </dtml-if>\n
-<dtml-if transaction_simulation_state>\n
+<dtml-if simulation_state>\n
   AND (\n
-  <dtml-in transaction_simulation_state>\n
+  <dtml-in simulation_state>\n
     catalog.simulation_state = <dtml-sqlvar sequence-item type="string">\n
         <dtml-unless sequence-end> OR </dtml-unless>\n
   </dtml-in>\n

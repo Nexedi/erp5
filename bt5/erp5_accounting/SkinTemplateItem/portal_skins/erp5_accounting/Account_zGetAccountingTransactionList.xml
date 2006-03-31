@@ -106,6 +106,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>section_category</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>selection</string> </key>
                                 <value>
                                   <dictionary/>
@@ -124,19 +130,7 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>to_date</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>transaction_section_category</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>transaction_simulation_state</string> </key>
+                                <key> <string>simulation_state</string> </key>
                                 <value>
                                   <dictionary>
                                     <item>
@@ -144,6 +138,12 @@
                                         <value> <string>list</string> </value>
                                     </item>
                                   </dictionary>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>to_date</string> </key>
+                                <value>
+                                  <dictionary/>
                                 </value>
                             </item>
                             <item>
@@ -170,8 +170,8 @@
 <string>from_date</string>
 <string>to_date</string>
 <string>at_date</string>
-<string>transaction_simulation_state</string>
-<string>transaction_section_category</string>
+<string>simulation_state</string>
+<string>section_category</string>
 <string>payment_uid</string>
 <string>no_payment_uid</string>
 <string>mirror_section_uid</string>
@@ -215,8 +215,8 @@ resource_uid:list\r\n
 from_date\r\n
 to_date\r\n
 at_date\r\n
-transaction_simulation_state:list\r\n
-transaction_section_category\r\n
+simulation_state:list\r\n
+section_category\r\n
 payment_uid\r\n
 no_payment_uid\r\n
 mirror_section_uid\r\n
@@ -332,9 +332,9 @@ WHERE stock.node_uid = <dtml-var getUid>\n
 <dtml-if no_mirror_section_uid>\n
   AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
-<dtml-if transaction_simulation_state>\n
+<dtml-if simulation_state>\n
   AND (\n
-  <dtml-in transaction_simulation_state>\n
+  <dtml-in simulation_state>\n
     transaction.simulation_state = <dtml-sqlvar sequence-item type="string">\n
             <dtml-if sequence-end><dtml-else> OR </dtml-if>\n
   </dtml-in>\n
@@ -344,9 +344,9 @@ WHERE stock.node_uid = <dtml-var getUid>\n
   AND transaction.simulation_state != \'draft\' \n
 </dtml-if>\n
   AND section.uid = stock.section_uid\n
-<dtml-if transaction_section_category>\n
+<dtml-if section_category>\n
   AND section_c.relative_url = <dtml-sqlvar\n
-          transaction_section_category type="string">\n
+          section_category type="string">\n
 </dtml-if>\n
   AND section_membership.category_uid =  section_c.uid\n
   AND section_membership.base_category_uid = section_bc.uid\n
@@ -475,9 +475,9 @@ WHERE stock.node_uid = <dtml-var getUid>\n
 <dtml-if no_mirror_section_uid>\n
   AND stock.mirror_section_uid IS NULL\n
 </dtml-if>\n
-<dtml-if transaction_simulation_state>\n
+<dtml-if simulation_state>\n
   AND (\n
-  <dtml-in transaction_simulation_state>\n
+  <dtml-in simulation_state>\n
     transaction.simulation_state = <dtml-sqlvar sequence-item type="string">\n
             <dtml-if sequence-end><dtml-else> OR </dtml-if>\n
   </dtml-in>\n
@@ -487,9 +487,9 @@ WHERE stock.node_uid = <dtml-var getUid>\n
   AND transaction.simulation_state != \'draft\' \n
 </dtml-if>\n
   AND section.uid = stock.section_uid\n
-<dtml-if transaction_section_category>\n
+<dtml-if section_category>\n
   AND section_c.relative_url = <dtml-sqlvar\n
-          transaction_section_category type="string">\n
+          section_category type="string">\n
 </dtml-if>\n
   AND section_membership.category_uid =  section_c.uid\n
   AND section_membership.base_category_uid = section_bc.uid\n
