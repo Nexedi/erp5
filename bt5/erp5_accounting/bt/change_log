@@ -1,3 +1,12 @@
+2006-03-31 Kevin
+* Add "Create Closing Transaction" action on Accounting Transaction Module.
+* Add missing parameter list on AccountingTransactionModule_createClosingTransaction.
+* Render AccountingTransactionModule_viewCreateClosingTransactionDialog as dialog.
+* Update AccountingTransaction_createReversalTransaction to use created_by_builder instead of bypass_init_script.
+* Use kw as the unique entry parameter in Entity_getAccountingTransactionList.
+* Remove suffix "transaction_" of query parameters to prepare the full migration of accouting stuff to getInventory API.
+* Show Previous Balance in Account and Bank Account transaction list view.
+
 2006-03-30 Kevin
 * Merge modifications made for Nexedi. -- Sorry to be not precise but the changelog is too big to be easy to summarize. But I will add detailed comments in the changelog of every modified file in the SVN to keep a clear understanding of my intentions.
 
