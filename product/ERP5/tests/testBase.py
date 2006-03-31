@@ -1,6 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
+# All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -57,10 +58,16 @@ from Products.ERP5Type.Tool.ClassTool import _aq_reset
 
 class TestBase(ERP5TypeTestCase):
 
-  run_all_test = 1
+  run_all_test = 0
   object_portal_type = "Organisation"
   not_defined_property_id = "azerty_qwerty"
   not_defined_property_value = "qwerty_azerty"
+
+  temp_class = "Amount"
+  defined_property_id = "title"
+  defined_property_value = "a_wonderful_title"
+  not_related_to_temp_object_property_id = "int_index"
+  not_related_to_temp_object_property_value = "a_great_index"
 
   def getTitle(self):
     return "Base"
@@ -647,6 +654,113 @@ class TestBase(ERP5TypeTestCase):
               SetObjectNotDefinedProperty \
               CheckNotDefinedPropertySaved \
               CheckGetNotDefinedProperty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepCreateTempClass(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a temp object_instance which will be tested.
+    """
+    portal = self.getPortal()
+    from Products.ERP5Type.Document import newTempAmount
+    tmp_object = newTempAmount(portal, "another_wonderful_id")
+    sequence.edit(
+        object_instance=tmp_object,
+        current_title='',
+        current_group_value=None
+    )
+
+  def stepCheckTempClassPortalType(self, sequence=None, 
+                                   sequence_list=None, **kw):
+    """
+    Check the portal type of the object_instance.
+    Check that the portal type does not exist.
+    """
+    object_instance = sequence.get('object_instance')
+    object_instance.getPortalType()
+    self.assertEquals(self.temp_class,
+                      object_instance.getPortalType())
+    self.assertFalse(self.temp_class in \
+                       object_instance.portal_types.listContentTypes())
+
+  def stepSetObjectDefinedProperty(self, sequence=None, 
+                                      sequence_list=None, **kw):
+    """
+    Set a defined property on the object_instance.
+    """
+    object_instance = sequence.get('object_instance')
+    object_instance.setProperty(self.defined_property_id,
+                       self.defined_property_value)
+
+  def stepCheckDefinedPropertySaved(self, sequence=None, 
+                                       sequence_list=None, **kw):
+    """
+    Check if a defined property is stored on the object_instance.
+    """
+    object_instance = sequence.get('object_instance')
+    self.assertEquals(self.defined_property_value,
+                      getattr(object_instance, self.defined_property_id))
+
+  def stepCheckGetDefinedProperty(self, sequence=None, 
+                                     sequence_list=None, **kw):
+    """
+    Check getProperty with a defined property.
+    """
+    object_instance = sequence.get('object_instance')
+    self.assertEquals(self.defined_property_value,
+                    object_instance.getProperty(self.defined_property_id))
+
+  def stepSetObjectNotRelatedProperty(self, sequence=None, 
+                                      sequence_list=None, **kw):
+    """
+    Set a defined property on the object_instance.
+    """
+    object_instance = sequence.get('object_instance')
+    object_instance.setProperty(
+                       self.not_related_to_temp_object_property_id,
+                       self.not_related_to_temp_object_property_value)
+
+  def stepCheckNotRelatedPropertySaved(self, sequence=None, 
+                                       sequence_list=None, **kw):
+    """
+    Check if a defined property is stored on the object_instance.
+    """
+    object_instance = sequence.get('object_instance')
+    self.assertEquals(self.not_related_to_temp_object_property_value,
+                      getattr(object_instance, 
+                              self.not_related_to_temp_object_property_id))
+
+  def stepCheckGetNotRelatedProperty(self, sequence=None, 
+                                  sequence_list=None, **kw):
+    """
+    Check getProperty with a defined property.
+    """
+    object_instance = sequence.get('object_instance')
+    self.assertEquals(self.not_related_to_temp_object_property_value,
+                    object_instance.getProperty(
+                         self.not_related_to_temp_object_property_id))
+
+  def test_06_getPropertyOnTempClass(self, quiet=0, run=1):
+    """
+    Test if set/getProperty work in temp object without 
+    a portal type with the same name.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test on temp tempAmount.
+    sequence_string = '\
+              CreateTempClass \
+              CheckTempClassPortalType \
+              SetObjectDefinedProperty \
+              CheckDefinedPropertySaved \
+              CheckGetDefinedProperty \
+              SetObjectNotDefinedProperty \
+              CheckNotDefinedPropertySaved \
+              CheckGetNotDefinedProperty \
+              SetObjectNotRelatedProperty \
+              CheckNotRelatedPropertySaved \
+              CheckGetNotRelatedProperty \
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
