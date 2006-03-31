@@ -40,7 +40,8 @@ import smtplib
 
 from zLOG import LOG
 
-# TODO: support "from"/"to" field header QP decoding
+# TODO: support "from"/"to" field header QP decoding exemple:
+# =?iso-8859-15?q?K=E9vin=20De?= <kevin.de@machin.com>
 
 # Support mail decoding in both python v2.3 and v2.4.
 # See http://www.freesoft.org/CIE/RFC/1521/5.htm for 'content-transfer-encoding' explaination.
@@ -54,7 +55,6 @@ try:
     , 'base32'          : base64.b32decode
     , 'base16'          : base64.b16decode
 #    , 'quoted-printable': None
-#    , 'uuencode'        : None
     # "8bit", "7bit", and "binary" values all mean that NO encoding has been performed
     , '8bit'            : None
     , '7bit'            : None
@@ -66,7 +66,6 @@ except AttributeError:
   supported_decoding = {
       'base64'          : base64.decodestring
     , 'quoted-printable': binascii.a2b_qp
-#    , 'uuencode'        : None
     # "8bit", "7bit", and "binary" values all mean that NO encoding has been performed
     , '8bit'            : None
     , '7bit'            : None
@@ -98,34 +97,25 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
                     , PropertySheet.MailMessage
                     )
 
-  def __init__(self, *args, **kw):
-    XMLObject.__init__(self, *args, **kw)
-    # Save attachments in a special variable
-    attachments = kw.get('attachments', {})
-    if kw.has_key('attachments'):
-      del kw['attachments']
-    self.attachments = attachments
-    # Clean up the the message data that came from the portal_mailin tool.
-    self.cleanMessage(**kw)
+####### TODO: support attachments !!!!
+#   def __init__(self, *args, **kw):
+#     XMLObject.__init__(self, *args, **kw)
+#     # Save attachments in a special variable
+#     attachments = kw.get('attachments', {})
+#     if kw.has_key('attachments'):
+#       del kw['attachments']
+#     self.attachments = attachments
 
   def _edit(self, *args, **kw):
     XMLObject._edit(self, *args, **kw)
-    # Input body is already clean because it came from ERP5 GUI
-    self.cleanMessage(clean_body=True, **kw)
+    self.cleanMessage()
 
-  def cleanMessage(self, clean_body=False, **kw):
+  def cleanMessage(self):
     """
       Clean up the the message data to have UTF-8 encoded body and a clean header.
     """
-    # Get a decoded body in UTF-8
-    if clean_body == True:
-      # Assume that the inputted charset is always UTF-8 and decoded
-      new_body = kw['body']
-    else:
-      # Autodetect the charset encoding via header and get a clean body
-      new_body = self.getBody()
     # Update the body to the clean one
-    self.body = new_body
+    self.body = self.getBody()
     # Update the charset and the encoding since the body is known has 'cleaned'
     header = self.getHeader()
     if header != None:
