@@ -58,7 +58,7 @@ from Products.ERP5Type.Tool.ClassTool import _aq_reset
 
 class TestBase(ERP5TypeTestCase):
 
-  run_all_test = 0
+  run_all_test = 1
   object_portal_type = "Organisation"
   not_defined_property_id = "azerty_qwerty"
   not_defined_property_value = "qwerty_azerty"
@@ -741,7 +741,7 @@ class TestBase(ERP5TypeTestCase):
                     object_instance.getProperty(
                          self.not_related_to_temp_object_property_id))
 
-  def test_06_getPropertyOnTempClass(self, quiet=0, run=1):
+  def test_06_getPropertyOnTempClass(self, quiet=0, run=run_all_test):
     """
     Test if set/getProperty work in temp object without 
     a portal type with the same name.
