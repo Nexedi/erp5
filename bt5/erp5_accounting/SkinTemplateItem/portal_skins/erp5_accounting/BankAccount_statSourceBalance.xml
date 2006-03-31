@@ -97,7 +97,7 @@ if not simulation_state:\n
                            , pref.getPreferredAccountingTransactionSimulationStateList()\n
                            )\n
 if simulation_state:\n
-  params[\'transaction_simulation_state\'] = simulation_state\n
+  params[\'simulation_state\'] = simulation_state\n
 \n
 ###\n
 # Get the \'section_category\' parameter\n
@@ -110,32 +110,18 @@ if not section_category:\n
                            , pref.getPreferredAccountingTransactionSectionCategory()\n
                            )\n
 if section_category:\n
-  params[\'transaction_section_category\'] = section_category\n
+  params[\'section_category\'] = section_category\n
 \n
 ###\n
 # Parameters only used in reports\n
-if kw.has_key(\'node_uid\')               : params[\'node_uid\']                = kw[\'node_uid\']\n
-if kw.has_key(\'transaction_portal_type\'): params[\'transaction_portal_type\'] = kw[\'transaction_portal_type\']\n
+if kw.has_key(\'node_uid\'): params[\'node_uid\'] = kw[\'node_uid\']\n
 \n
 ###\n
 # Get omit parameters\n
 if kw.get(\'omit_input\') : params[\'omit_input\']  = 1\n
 if kw.get(\'omit_output\'): params[\'omit_output\'] = 1\n
 \n
-params[\'stat\']            = 1\n
-params[\'omit_simulation\'] = 1\n
-\n
-###\n
-# Get payment and mirror related parameters\n
-MARKER = []\n
-no_payment_uid        = kw.get(\'no_payment_uid\',        MARKER)\n
-no_mirror_section_uid = kw.get(\'no_mirror_section_uid\', MARKER)\n
-payment_uid           = kw.get(\'payment_uid\',           MARKER)\n
-mirror_section_uid    = kw.get(\'mirror_section_uid\',    MARKER)\n
-if no_payment_uid        is not MARKER: params[\'no_payment_uid\']        = 1\n
-if no_mirror_section_uid is not MARKER: params[\'no_mirror_section_uid\'] = 1\n
-if payment_uid           is not MARKER: params[\'payment_uid\']           = payment_uid\n
-if mirror_section_uid    is not MARKER: params[\'mirror_section_uid\']    = mirror_section_uid\n
+params[\'stat\'] = 1\n
 \n
 if kw.has_key(\'getUid\')      : params[\'getUid\']       = kw[\'getUid\']\n
 if kw.has_key(\'getParentUid\'): params[\'getParentUid\'] = kw[\'getParentUid\']\n
@@ -208,11 +194,6 @@ return context.Base_getRoundValue(row.quantity or 0.0, precision)\n
                             <string>simulation_state</string>
                             <string>section_category</string>
                             <string>_getitem_</string>
-                            <string>MARKER</string>
-                            <string>no_payment_uid</string>
-                            <string>no_mirror_section_uid</string>
-                            <string>payment_uid</string>
-                            <string>mirror_section_uid</string>
                             <string>_apply_</string>
                             <string>result</string>
                             <string>row</string>
