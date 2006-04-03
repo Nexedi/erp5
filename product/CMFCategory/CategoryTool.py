@@ -906,7 +906,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           # We implement here special keywords
           if my_base_category == 'parent':
             parent = context.aq_parent
-            if parent is self.getPortalObject():
+            if not hasattr(aq_base(parent), 'portal_type'):
               my_acquisition_object_list = []
             else:
               #LOG("Parent Object List ",0,str(parent.getRelativeUrl()))
