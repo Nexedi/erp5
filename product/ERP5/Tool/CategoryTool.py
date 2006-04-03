@@ -103,8 +103,8 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
               my_base_category = base_category
             bo = getattr(self, my_base_category, None)
             if bo is not None:
-              bo_uid = bo.getUid()
-              uid_dict[(o.getUid(), bo_uid, 1)] = 1 # Strict membership
+              bo_uid = int(bo.getUid())
+              uid_dict[(int(o.uid), bo_uid, 1)] = 1 # Strict membership
               if o.meta_type == 'ERP5 Category' or o.meta_type == 'ERP5 Base Category' or \
                 o.meta_type == 'CMF Category' or o.meta_type == 'CMF Base Category':
                 # This goes up in the category tree
@@ -113,7 +113,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
                 if not strict:
                   while o.meta_type == 'ERP5 Category' or o.meta_type == 'CMF Category':
                     o = o.aq_parent
-                    uid_dict[(o.getUid(), bo_uid, 0)] = 1 # Non strict
+                    uid_dict[(int(o.uid), bo_uid, 0)] = 1 # Non strict
         except (TypeError, KeyError):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
       return uid_dict.keys()

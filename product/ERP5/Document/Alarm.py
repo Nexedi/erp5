@@ -34,7 +34,6 @@ from Products.ERP5.Document.Periodicity import Periodicity
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
-from Products.PageTemplates.Expressions import getEngine
 from DateTime import DateTime
 
 from zLOG import LOG
@@ -82,17 +81,6 @@ class Alarm(Periodicity, XMLObject):
       """
       return self.hasActivity()
 
-    def callActiveSenseMethod(self, tales_expression):
-      """
-      This resolves the active_sense_method, and calls it
-      """
-      context = {  'here' : self.aq_parent,
-                'context' : self.aq_parent,
-                'request' : None }
-
-      compiled_tales = getEngine().compile(tales_expression)
-      return getEngine().getContext(context).evaluate(compiled_tales) 
-
     security.declareProtected(Permissions.ModifyPortalContent, 'activeSense')
     def activeSense(self):
       """
@@ -111,10 +99,8 @@ class Alarm(Periodicity, XMLObject):
       self.reindexObject()
       method_id = self.getActiveSenseMethodId()
       if method_id is not None:
-        return self.activate().callActiveSenseMethod(method_id)
-#        method = getattr(self.activate(),method_id)
-#        return method()
-        s
+        method = getattr(self.activate(),method_id)
+        return method()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'sense')
     def sense(self):

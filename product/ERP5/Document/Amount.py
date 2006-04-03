@@ -306,12 +306,7 @@ class Amount(Base, Variated):
         raise KeyError, "Can not set the property variation '%s'" % \
                         property_id
       else:
-        try:
-          self.setProperty(property_id, property_value)
-        except KeyError:
-          LOG("Amount", 200, "Can not set %s with value %s on %s" % \
-                    (property_id, property_value, self.getRelativeUrl()))
-          raise
+        self.setProperty(property_id, property_value)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                  'getQuantityUnitRangeItemList')

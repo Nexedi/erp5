@@ -454,8 +454,6 @@ class SimulationMovement(Movement):
        self.getResource()           != delivery.getResource() or \
        self.getVariationCategoryList() != delivery.getVariationCategoryList()\
                                                                        or \
-       #self.getAggregateValueList() != delivery.getAggregateValueList()\
-                                                                       or \
        self.getAggregateList() != delivery.getAggregateList() or \
        self.getStartDate()          != delivery.getStartDate() or \
        self.getStopDate()           != delivery.getStopDate():
