@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Form import ZMIForm
+from zLOG import LOG, WARNING
 
 from urllib import quote
 from Products.ERP5Type import PropertySheet
@@ -183,8 +184,8 @@ class ReportSection:
   rendered in a single document.
   To create a report section, you have to define which object will be
   the context of the form, the id of the form, and dictionnaries to
-  override the values of the selection parameters and preference in the
-  constructor of the ReportSection.
+  override the values of the selection parameters in the constructor of
+  the ReportSection.
   """
   meta_type = "ReportSection"
   security = ClassSecurityInfo()
@@ -221,11 +222,10 @@ class ReportSection:
     self.saved_selections = {}
     self.selection_report_path = selection_report_path
     self.selection_report_list = selection_report_list
-    if preferences == None :
-      preferences = {}
-    self.preferences = preferences
-    self.saved_preferences = {}
     self.saved_request_form = {}
+    if preferences is not None :
+      LOG('ERP5Report', WARNING,
+       'using preferences in report is deprecated, please use selection only')
     
   security.declarePublic('getTitle')
   def getTitle(self):
@@ -314,11 +314,6 @@ class ReportSection:
     self.saved_request_form = REQUEST.form
     REQUEST.form = {}
     
-    portal_pref = context.getPortalObject().portal_preferences
-    for pref, value in self.preferences.items() :
-      self.saved_preferences[pref] = portal_pref.getProperty(pref)
-      portal_pref.setPreference(pref, value)
-    
   security.declarePublic('popReport')
   def popReport(self, context):
     REQUEST = get_request()
@@ -372,9 +367,6 @@ class ReportSection:
                       REQUEST=REQUEST)
     
     REQUEST.form = self.saved_request_form
-    
-    for pref, value in self.saved_preferences.items() :
-      context.getPortalObject().portal_preferences.setPreference(pref, value)
 
 InitializeClass(ReportSection)
 allow_class(ReportSection)
