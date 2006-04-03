@@ -1007,7 +1007,7 @@ class SplitMovementGroup(RootMovementGroup):
   def test(self, movement):
     return 0
 
-allow_class(AggregateMovementGroup)
+allow_class(SplitMovementGroup)
 
 class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
   """ 
