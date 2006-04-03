@@ -54,6 +54,7 @@ from zLOG import LOG
 from Acquisition import Implicit, aq_base
 from Products.ERP5Type.Message import Message
 
+PREVIOUS_REQUEST_COOKIE_NAME = "previous_request"
 
 class SelectionError( Exception ):
     pass
@@ -920,6 +921,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         object = {}
       return object
 
+    
+
     # Related document searching
     def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None,
                                         sub_index=None, **kw):
@@ -1013,8 +1016,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
           self.portal_selections.setSelectionCheckedUidsFor(
                                              selection_name, 
                                              current_uid_list)
-          # XXX
-#           field_value = ''
           field_value = str(field_value).splitlines()
           REQUEST.form[field_key] = field_value
           portal_status_message = Message(
@@ -1031,11 +1032,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
         for key in REQUEST.form.keys():
           if not isinstance(REQUEST.form[key],FileUpload):
             pickle_kw[key] = REQUEST.form[key]
+#         self.setCookieInfo(REQUEST, 'GreatCookieNameXXX', **pickle_kw)
+        self.setCookieInfo(REQUEST, PREVIOUS_REQUEST_COOKIE_NAME, **pickle_kw)
 
-        form_pickle, form_signature = self.getPickleAndSignature(**pickle_kw)
-        REQUEST.form_pickle = form_pickle
-        REQUEST.form_signature = form_signature
-          
         base_category = None
         kw = {}
         kw['object_uid'] = object_uid
@@ -1052,20 +1051,14 @@ class SelectionTool( UniqueObject, SimpleItem ):
         kw['base_category'] = field.get_value( 'base_category')
         kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
         kw['previous_form_id'] = form_id
-
-        # XXX
-#         kw[field.get_value('catalog_index')] = str(field_value).splitlines()
         kw[field.get_value('catalog_index')] = field_value
-        # Need to redirect, if we want listbox nextPage to work
-        kw['form_pickle'] = form_pickle
-        kw['form_signature'] = form_signature
         kw['portal_status_message'] = portal_status_message
 
+        # Need to redirect, if we want listbox nextPage to work
         redirect_url = '%s/%s?%s' % ( o.absolute_url()
                                   , redirect_form_id
                                   , make_query(kw)
                                   )
-
         REQUEST[ 'RESPONSE' ].redirect( redirect_url )
 
     def _aq_dynamic(self, name):
