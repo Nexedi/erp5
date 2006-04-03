@@ -54,7 +54,7 @@ except AttributeError:
   from base64 import b64decode
 global supported_decoding
 supported_decoding = {
-    'base64'          : base64.b64decode
+    'base64'          : b64decode
   , 'quoted-printable': binascii.a2b_qp
   # "8bit", "7bit", and "binary" values all mean that NO encoding has been performed
   , '8bit'            : None
