@@ -82,9 +82,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_source_decision_destination_reference</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

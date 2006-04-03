@@ -89,7 +89,7 @@ if len(trade_condition_list ) == 0 :\n
                , \'portal_status_message=\'+ N_(\'No Trade Condition.\'))\n
 elif len(trade_condition_list ) > 1 :\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id\n
-               , \'portal_status_message=\' + N(\'Too many Trade Conditions.\'))\n
+               , \'portal_status_message=\' + N_(\'Too many Trade Conditions.\'))\n
 else :\n
   trade_condition=trade_condition_list[0].getObject()\n
 \n
@@ -201,7 +201,7 @@ else :\n
               destination_decision_source_reference )\n
 \n
   redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
-               \'portal_status_message=\'+N(\'Order updated.\'))\n
+               \'portal_status_message=\'+N_(\'Order updated.\'))\n
 \n
 if batch_mode:\n
   return None\n
@@ -265,7 +265,6 @@ else:\n
                             <string>trade_condition_portal_type</string>
                             <string>len</string>
                             <string>redirect_url</string>
-                            <string>N</string>
                             <string>_getitem_</string>
                             <string>trade_condition</string>
                             <string>categories</string>

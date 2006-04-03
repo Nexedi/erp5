@@ -17,7 +17,6 @@ Delivery Cell | view
 Delivery Rule | list
 Delivery Rule | metadata
 Delivery Rule | print
-Delivery Rule | translate
 Delivery Rule | view
 Discount | history
 Discount | metadata
@@ -59,7 +58,6 @@ Inventory | view
 Order Rule | list
 Order Rule | metadata
 Order Rule | print
-Order Rule | translate
 Order Rule | view
 Organisation | jump_to_purchase_order
 Organisation | jump_to_purchase_packing_list
@@ -68,7 +66,6 @@ Organisation | jump_to_sale_packing_list
 Payment Condition | history
 Payment Condition | metadata
 Payment Condition | print
-Payment Condition | translate
 Payment Condition | view
 Person | jump_to_purchase_order
 Person | jump_to_purchase_packing_list
@@ -179,13 +176,11 @@ Returned Sale Packing List Module | sort_on
 Returned Sale Packing List Module | view
 Returned Sale Packing List Module | workflow_report
 Returned Sale Packing List | choose_solve_actions
-Returned Sale Packing List | container_fast_input
 Returned Sale Packing List | history
 Returned Sale Packing List | jump_related_sale_invoice
 Returned Sale Packing List | metadata
 Returned Sale Packing List | print
 Returned Sale Packing List | view
-Returned Sale Packing List | view_container_list
 Sale Order Line | history
 Sale Order Line | metadata
 Sale Order Line | price_view
@@ -278,7 +273,6 @@ Sale Trade Condition | view_profile
 Supply Cell | list
 Supply Cell | metadata
 Supply Cell | print
-Supply Cell | translate
 Supply Cell | view
 Supply Line | additional_price
 Supply Line | base_price
