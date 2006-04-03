@@ -77,10 +77,15 @@ class Item(XMLObject, Amount, ImmobilisableItem):
                       , PropertySheet.Reference
                       )
 
-    security.declareProtected(Permissions.ModifyPortalContent,'generateNewId')
-    def generateNewId(self, id_group='item_id_group', default=None, method=None):
-      """
-      We want a different id for all Item
-      """
-      return XMLObject.generateNewId(self, id_group=id_group, default=default, method=method)
+    if 0:
+      # The following code is disabled. The original intention was to generate
+      # an unique reference for each item. We now use reference instead of id,
+      # so this is not applicable any longer. We need something different for
+      # reference.
+      security.declareProtected(Permissions.ModifyPortalContent,'generateNewId')
+      def generateNewId(self, id_group='item_id_group', default=None, method=None):
+        """
+        We want a different id for all Item
+        """
+        return XMLObject.generateNewId(self, id_group=id_group, default=default, method=method)
 
