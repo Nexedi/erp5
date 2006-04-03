@@ -59,9 +59,13 @@ try:
   class SubversionLoginError(SubversionError):
     """Raised when an authentication is required.
     """
+    # Declarative Security
+    security = ClassSecurityInfo()
+    
     def __init__(self, realm = None):
       self._realm = realm
   
+    security.declarePublic('getRealm')
     def getRealm(self):
       return self._realm
       
@@ -105,7 +109,7 @@ try:
   class GetLoginCallback(Callback):
     def __call__(self, realm, username, may_save):
       user, password = self.client.getLogin(realm)
-      if user is None:
+      if not username or not password:
         self.client.setException(SubversionLoginError(realm))
         #raise SubversionLoginError(realm)
         return False, '', '', False
@@ -197,9 +201,13 @@ try:
       #self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
       self.creation_time = time.time()
       self.__dict__.update(kw)
+      self.exception = None
 
     def getLogMessage(self):
       return self.log_message
+    
+    def getLogin(self, realm):
+      return self.aq_parent._getLogin(realm)
     
     def _getPreferences(self):
       self.working_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
@@ -237,8 +245,12 @@ try:
       self._getPreferences()
       try:
         return self.client.checkin(path, log_message=log_message, recurse=recurse)
-      except pysvn.ClientError:
-        raise self.getException()
+      except pysvn.ClientError, error:
+        excep = self.getException()
+        if excep:
+          raise excep
+        else:
+          raise error
 
     def status(self, path, **kw):
       # Since plain Python classes are not convenient in Zope, convert the objects.
@@ -258,6 +270,8 @@ try:
     
   InitializeClass(SubversionSSLTrustError)
   allow_class(SubversionSSLTrustError)
+  InitializeClass(SubversionLoginError)
+  allow_class(SubversionLoginError)
   
 except ImportError:
   from zLOG import LOG, WARNING

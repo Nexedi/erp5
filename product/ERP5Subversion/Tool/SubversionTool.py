@@ -386,9 +386,6 @@ class SubversionTool(UniqueObject, Folder):
     expires = (DateTime() + 1).toZone('GMT').rfc822()
     response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
 
-#   def setLogin(self, username, passwd):
-#     self.login = (username, passwd)
-
   def _getLogin(self, target_realm):
     request = self.REQUEST
     cookie = request.get(self.login_cookie_name)
