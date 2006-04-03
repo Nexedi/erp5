@@ -45,32 +45,22 @@ from zLOG import LOG
 
 # Support mail decoding in both python v2.3 and v2.4.
 # See http://www.freesoft.org/CIE/RFC/1521/5.htm for 'content-transfer-encoding' explaination.
-import base64
-global supported_decoding
-supported_decoding = {}
+import binascii
 try:
-  # python v2.4 API
-  supported_decoding = {
-      'base64'          : base64.b64decode
-    , 'base32'          : base64.b32decode
-    , 'base16'          : base64.b16decode
-#    , 'quoted-printable': None
-    # "8bit", "7bit", and "binary" values all mean that NO encoding has been performed
-    , '8bit'            : None
-    , '7bit'            : None
-    , 'binary'          : None
-    }
-except AttributeError:
   # python v2.3 API
-  import binascii
-  supported_decoding = {
-      'base64'          : base64.decodestring
-    , 'quoted-printable': binascii.a2b_qp
-    # "8bit", "7bit", and "binary" values all mean that NO encoding has been performed
-    , '8bit'            : None
-    , '7bit'            : None
-    , 'binary'          : None
-    }
+  from base64 import decodestring as b64decode
+except AttributeError:
+  # python v2.4 API
+  from base64 import b64decode
+global supported_decoding
+supported_decoding = {
+    'base64'          : base64.b64decode
+  , 'quoted-printable': binascii.a2b_qp
+  # "8bit", "7bit", and "binary" values all mean that NO encoding has been performed
+  , '8bit'            : None
+  , '7bit'            : None
+  , 'binary'          : None
+  }
 
 
 class MailMessage(XMLObject, Event, CMFMailInMessage):
