@@ -1395,6 +1395,9 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
+    self._check_catalog(context)
+
+  def _check_catalog(self, context):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1471,6 +1474,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
+    self._check_catalog(context)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:

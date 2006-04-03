@@ -182,7 +182,7 @@ class Person:
     , 'storage_id'          : 'default_career'
     , 'description'         : 'The default career hold some properties of a Person.'
     , 'type'                : 'content'
-    , 'portal_type'         : ( 'Career', )
+    , 'portal_type'         : 'Career'
     , 'acquired_property_id': ( 'start_date', 'stop_date', 'title', 'description'
                               , 'subordination', 'subordination_title', 'subordination_value'
                               , 'subordination_uid_list', 'subordination_uid'
@@ -193,7 +193,6 @@ class Person:
                               , 'role', 'role_id', 'role_title', 'role_value'
                               , 'function', 'function_id', 'function_title', 'function_value'
                               )
-    , 'deprecated'          : 1
     , 'mode'                : 'w'
     },
   )
