@@ -100,12 +100,16 @@ class Message(Persistent):
           self.message = self.message.decode('utf8')
       return self.message
     else:
-      return translation_service.translate(self.domain,
-                                           self.message,
-                                           mapping=self.mapping,
-                                           context=context,
-                                           default=self.default
-                                        ).encode('utf8')
+      translated_message = translation_service.translate(
+                                             self.domain,
+                                             self.message,
+                                             mapping=self.mapping,
+                                             context=context,
+                                             default=self.default)
+      if translated_message is not None:
+        return translated_message.encode('utf8')
+      else:
+        return self.message
 
 InitializeClass(Message)
 allow_class(Message)
