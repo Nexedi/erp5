@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from zLOG import LOG, WARNING, INFO
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re
+import os, re, commands
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
@@ -124,26 +124,28 @@ class DiffFile:
     
   def toHTML(self):
     # Adding header of the table
-    html = '''<font color='black'><b>%s</b><br>
-    <hr><br>
+    html = '''
     <table style="text-align: left; width: 100%%;" border="0" cellpadding="0" cellspacing="0">
   <tbody>
     <tr height="18px">
       <td style="background-color: grey"><b><center>%s</center></b></td>
+      <td style="background-color: black;" width="2"></td>
       <td style="background-color: grey"><b><center>%s</center></b></td>
-    </tr>'''%(self.path, self.old_revision, self.new_revision)
+    </tr>'''%(self.old_revision, self.new_revision)
     First = True
     for child in self.children:
       # Adding line number of the modification
       if First:
-        html += '''<tr height="18px"><td style="background-color: grey">&nbsp;</td><td style="background-color: grey">&nbsp;</td></tr>    <tr>
+        html += '''<tr height="18px"><td style="background-color: grey">&nbsp;</td><td style="background-color: black;" width="2"></td><td style="background-color: grey">&nbsp;</td></tr>    <tr height="18px">
         <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
+        <td style="background-color: black;" width="2"></td>
         <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
       </tr>'''%(child.old_line, child.new_line)
         First = False
       else:
-        html += '''<tr height="18px"><td style="background-color: white">&nbsp;</td><td style="background-color: white">&nbsp;</td></tr>    <tr>
+        html += '''<tr height="18px"><td style="background-color: white">&nbsp;</td><td style="background-color: black;" width="2"></td><td style="background-color: white">&nbsp;</td></tr>    <tr height="18px">
         <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
+        <td style="background-color: black;" width="2"></td>
         <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
       </tr>'''%(child.old_line, child.new_line) 
       # Adding diff of the modification
@@ -163,6 +165,7 @@ class DiffFile:
         i+=1
         html += '''    <tr height="18px">
       <td style="background-color: %s">%s</td>
+      <td style="background-color: black;" width="2"></td>
       <td style="background-color: %s">%s</td>
     </tr>'''%(old_line_tuple[1], self._escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], self._escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
     html += '''  </tbody>
@@ -405,12 +408,29 @@ class SubversionTool(UniqueObject, Folder):
 
   def _decodeSSLTrust(self, trust):
     # Decode login information.
-    trust_item_list, permanent = loads(b64decode(login))
+    trust_item_list, permanent = loads(b64decode(trust))
     return dict(trust_item_list), permanent
   
   def diffHTML(self, file_path):
     raw_diff = self.diff(file_path)
     return DiffFile(raw_diff).toHTML()
+  
+  # Display a file content in HTML
+  def fileHTML(self, file_path):
+#     file = open(file_path, 'r')
+#     text = file.read()
+#     file.close()
+#     # Escaping
+#     text = text.replace("&", "&amp;")
+#     text = text.replace(">", "&gt;")
+#     text = text.replace("<", "&lt;")
+#     # Adding HTML stuff
+#     text = text.replace('\n', '<br>')
+#     text = text.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+#     text = text.replace('  ', '&nbsp;&nbsp;')
+    text = commands.getoutput('enscript -B --color --highlight=html --language=html -o - %s'%file_path)
+    text = '\n'.join(text.split('\n')[10:-4])
+    return text
     
   security.declareProtected(Permissions.ManagePortal, 'acceptSSLServer')
   def acceptSSLServer(self, trust_dict, permanent=False):
@@ -421,13 +441,16 @@ class SubversionTool(UniqueObject, Folder):
     request = self.REQUEST
     cookie = request.get(self.ssl_trust_cookie_name)
     if cookie:
-      trust.append(cookie)
+      trust_list.append(cookie)
     # Set the cookie.
     response = request.RESPONSE
     trust_list.append(self._encodeSSLTrust(trust_dict, permanent))
     value = ','.join(trust_list)
     expires = (DateTime() + 1).toZone('GMT').rfc822()
     response.setCookie(self.ssl_trust_cookie_name, value, path = '/', expires = expires)
+    
+  def acceptSSLPerm(self, trust_dict):
+    self.acceptSSLServer(self, trust_dict, True)
 
   def _trustSSLServer(self, target_trust_dict):
     request = self.REQUEST

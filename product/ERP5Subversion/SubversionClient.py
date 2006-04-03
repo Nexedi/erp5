@@ -34,6 +34,7 @@ from MethodObject import Method
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.PythonScripts.Utility import allow_class
 from zLOG import LOG
 
 try:
@@ -67,12 +68,15 @@ try:
   class SubversionSSLTrustError(SubversionError):
     """Raised when a SSL certificate is not trusted.
     """
+    # Declarative Security
+    security = ClassSecurityInfo()
+    
     def __init__(self, trust_dict = None):
       self._trust_dict = trust_dict
-  
+      
+    security.declarePublic('getTrustDict')
     def getTrustDict(self):
       return self._trust_dict
-      
   
   class Callback:
     """The base class for callback functions.
@@ -102,8 +106,9 @@ try:
     def __call__(self, realm, username, may_save):
       user, password = self.client.getLogin(realm)
       if user is None:
-        raise SubversionLoginError(realm)
-        #return False, '', '', False
+        self.client.setException(SubversionLoginError(realm))
+        #raise SubversionLoginError(realm)
+        return False, '', '', False
       return True, user, password, False
   
   class NotifyCallback(Callback):
@@ -251,6 +256,9 @@ try:
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)
     
+  InitializeClass(SubversionSSLTrustError)
+  allow_class(SubversionSSLTrustError)
+  
 except ImportError:
   from zLOG import LOG, WARNING
   LOG('SubversionTool', WARNING,
