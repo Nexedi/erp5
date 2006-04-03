@@ -37,9 +37,13 @@ from Globals import InitializeClass, PersistentMapping, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 
-from zLOG import LOG, PROBLEM
+from zLOG import LOG, PROBLEM, WARNING
 
-import types, popen2, os
+import types
+import popen2
+import os
+import urllib
+import cStringIO
 from tempfile import mktemp
 
 try:
@@ -236,6 +240,9 @@ class CalculatedValues :
 
 allow_class(CalculatedValues)
 
+class EmptyERP5PdfForm(Exception):
+  """Error thrown when you try to display an empty Pdf. """
+allow_class(EmptyERP5PdfForm)
 
 class PDFForm(File):
   """
@@ -249,10 +256,14 @@ class PDFForm(File):
   security = ClassSecurityInfo()
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem
-                    )
-
+  _properties = File._properties + (
+      {'id' : 'download_url', 'type' : 'lines', 'mode' : 'w' },
+      {'id' : 'business_template_include_content',
+              'type' : 'boolean', 'mode' : 'w' },
+  )
+  download_url = ()
+  business_template_include_content = 1
+  
   # Constructors
   constructors =   (manage_addPDFForm, addPDFForm)
 
@@ -261,6 +272,7 @@ class PDFForm(File):
         {'label':'Display Cell Names', 'action':'showCellNames'},
         {'label':'Test PDF generation', 'action':'generatePDF'},
         {'label':'View original', 'action':'viewOriginal'},
+        {'label':'Download PDF content from URL', 'action':'downloadPdfContent'},
       ) +
       filter(lambda option:option['label'] != "View", File.manage_options)
   )
@@ -351,6 +363,41 @@ class PDFForm(File):
     return RESPONSE
   manage_FTPput = PUT
 
+  security.declareProtected(Permissions.View, 'hasPdfContent')
+  def hasPdfContent(self) :
+    """Return true if there is an enclosed PDF in this PDF Form."""
+    return self.data is not None and len(self.data) > 0
+
+  security.declareProtected(Permissions.ManagePortal, 'downloadPDFContent')
+  def downloadPdfContent(self, REQUEST=None) :
+    """Download the pdf content from one of `download_url` URL """
+    for url in self.getProperty('download_url') :
+      try :
+        response = urllib.urlopen(url)
+      except IOError, e :
+        LOG("PDFForm", WARNING, "Unable to download from %s" % url, e)
+        continue
+      if response.headers.getheader('Content-Type') != 'application/pdf':
+        LOG("PDFForm", WARNING, "%s is not application/pdf" % url)
+        continue
+      self.manage_upload(cStringIO.StringIO(response.read()))
+      self.content_type = 'application/pdf'
+      if REQUEST is not None :
+        return REQUEST.RESPONSE.redirect(
+              "%s/manage_main?manage_tabs_message=Content+Downloaded"
+              % self.absolute_url())
+      return
+    raise ValueError, "Unable to download from any url from the "\
+                      "`download_url` property."
+    
+  security.declareProtected(Permissions.ManagePortal,
+                           'deletePdfContent')
+  def deletePdfContent(self) :
+    """Reset the pdf content. """
+    assert self.getProperty('download_url'), "Download URL must be set"\
+        " to delete content from PDF Form '%s'" % self.getId()
+    self.data = None
+
   security.declareProtected(Permissions.View, 'viewOriginal')
   def viewOriginal(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ publish original pdf """
@@ -397,6 +444,8 @@ class PDFForm(File):
   security.declareProtected(Permissions.View, 'generatePDF')
   def generatePDF(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ generates the PDF with form filled in """
+    if not self.hasPdfContent() :
+      raise EmptyERP5PdfForm, 'Pdf content must be downloaded first'
     values = self.calculateCellValues(REQUEST, *args, **kwargs)
     context = { 'here' : self.aq_parent,
                 'context' : self.aq_parent,

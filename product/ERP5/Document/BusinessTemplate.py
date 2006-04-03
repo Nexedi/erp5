@@ -369,6 +369,9 @@ class BaseTemplateItem(Implicit, Persistent):
     if getattr(obj, 'meta_type', None) == 'Script (Python)':
       if hasattr(aq_base(obj), '_code'):
         obj._code = None
+    elif getattr(obj, 'meta_type', None) == 'ERP5 PDF Form' :
+      if not obj.getProperty('business_template_include_content', 1) :
+        obj.deletePdfContent()
     return obj
 
 class ObjectTemplateItem(BaseTemplateItem):
