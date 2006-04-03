@@ -73,6 +73,10 @@
 from Products.ERP5Type.Message import Message\n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 \n
+# XXX Hardcoded value\n
+# from Products.ERP5Form.SelectionTool import PREVIOUS_REQUEST_COOKIE_NAME\n
+PREVIOUS_REQUEST_COOKIE_NAME = "previous_request" \n
+\n
 # Harcoded value, which must be taken from RelationField.py\n
 SUB_FIELD_ID = \'relation\'\n
 \n
@@ -108,9 +112,14 @@ if relation_setter_id: \n
 \n
 portal_type = [x[0] for x in field.get_value(\'portal_type\')]\n
 \n
-old_request = context.portal_selections.getObjectFromPickleAndSignature(\n
-                              request.form_pickle, \n
-                              request.form_signature)\n
+# old_request = context.portal_selections.getObjectFromPickleAndSignature(\n
+#                               request.form_pickle, \n
+#                               request.form_signature)\n
+\n
+old_request = context.portal_selections.getCookieInfo(\n
+                                request,\n
+                                PREVIOUS_REQUEST_COOKIE_NAME)\n
+#                                 \'GreatCookieNameXXX\')\n
 \n
 field_key = field.generate_field_key()\n
 if old_request.has_key(\'sub_index\'):\n
@@ -217,6 +226,7 @@ return context.Base_edit(form_id, \n
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
+                            <string>PREVIOUS_REQUEST_COOKIE_NAME</string>
                             <string>SUB_FIELD_ID</string>
                             <string>_getattr_</string>
                             <string>context</string>

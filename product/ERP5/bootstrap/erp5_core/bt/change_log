@@ -1,3 +1,25 @@
+2006-04-03 Romain
+* Modify Base_editRelation, in order to reduce URL lenght.
+
+2006-03-31 Kevin
+* Add section_portal_type_list parameter to Resource_zGetInventory. This addition is here to help us break acquisition of 'group' property from Person to Organisation. The latter behaviour break accounting calculations.
+
+2006-03-27 Kevin
+* Recreate "parent" Base Category to make the indexing of this category working.
+
+2006-03-27 romain
+* Fix Base_editRelation.
+
+2006-03-23 aurel
+* move assignment workflow to erp5_base
+
+2006-03-23 jerome
+* Remove preferred visible modules.
+
+2006-03-22 Kevin
+* Get dynamiccaly the list of translated simulation state in AccountingPreferences_view.
+* Change title of my_preferred_accounting_transaction_gap for consistency.
+
 2006-03-21 Seb
 * moved catalog methods here
 
