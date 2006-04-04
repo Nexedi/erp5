@@ -397,14 +397,6 @@ class Category(Folder):
       """
       return context.isMemberOf(self.getCategoryName())
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'asPythonExpression' )
-    def asPythonExpression(self, strict_membership=0):
-      """
-        A Predicate can be rendered as a python expression. This
-        is the preferred approach within Zope.
-      """
-      return "context.isMemberOf('%s')" % self.getCategoryRelativeUrl(base = 1)
-
     security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
     def asSqlExpression(self, strict_membership=0, table='category', base_category = None):
       """

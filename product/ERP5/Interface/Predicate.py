@@ -51,13 +51,6 @@ class Predicate(Interface):
     """
     pass
 
-  def asPythonExpression():
-    """
-      A Predicate can be rendered as a python expression. This
-      is the preferred approach within Zope.
-    """
-    pass
-
   def asSqlExpression():
     """
       A Predicate can be rendered as an sql expression. This
