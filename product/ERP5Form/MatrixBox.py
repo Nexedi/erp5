@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,36 +27,28 @@
 #
 ##############################################################################
 
-import string
 from AccessControl import ClassSecurityInfo
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
-from Products.Formulator.Form import BasicForm
-from Products.Formulator.MethodField import BoundMethod
-from Selection import Selection
-from DateTime import DateTime
-from Products.ERP5Type.Utils import getPath
-
-from zLOG import LOG
-
 
 class MatrixBoxWidget(Widget.Widget):
     """
     An UI widget which displays a matrix
 
     A MatrixBoxWidget should be called 'matrixbox', if you don't do so, then
-    you may have some errors, or some strange problems, you have been Warned !!!!
+    you may have some errors, 
+    or some strange problems, you have been Warned !!!!
 
     Don't forget that you can use tales expressions for every field, so this
-    is really usefull if you want to use fonctions instead of predefined variables.
+    is really usefull if you want to use fonctions 
+    instead of predefined variables.
 
     A function is provided to
 
     - access a cell
 
     - modify a cell
-
 
     """
     property_names = Widget.Widget.property_names +\
@@ -76,34 +69,51 @@ class MatrixBoxWidget(Widget.Widget):
     columns = fields.ListTextAreaField('columns',
                                  title="Columns",
                                  description=(
-      """This defines columnes of the matrixbox. This should be a list of couples, 
-      couple[0] is the variation, and couple[1] is the name displayed to the user.
-      For example (('color/bleu','bleu'),('color/red','red')), Required"""),
+      """This defines columnes of the matrixbox. 
+      This should be a list of couples, 
+      couple[0] is the variation, and couple[1] is the name displayed 
+      to the user.
+      For example (('color/bleu','bleu'),('color/red','red')),
+      Deprecated"""),
                                  default=[],
                                  required=0)
 
     lines = fields.ListTextAreaField('lines',
                                  title="Lines",
                                  description=(
-      """This defines lines of the matrixbox. This should be a list of couples, 
-      couple[0] is the variation, and couple[1] is the name displayed to the user.
-      For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')), Required"""),
+      """This defines lines of the matrixbox. This should be a list of couples,
+      couple[0] is the variation, and couple[1] is the name displayed 
+      to the user.
+      For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')), 
+      Deprecated"""),
                                  default=[],
                                  required=0)
 
     tabs = fields.ListTextAreaField('tabs',
                                  title="Tabs",
                                  description=(
-      """This defines tabs. You can use it with the same way as Lines and Columns,
-      This is used only if you have more than 2 kinds of variations. Required"""),
+      """This defines tabs. You can use it with the same way as Lines 
+      and Columns,
+      This is used only if you have more than 2 kinds of variations. 
+      Deprecated"""),
                                  default=[],
                                  required=0)
 
+    # XXX ListTextAreaField ?
+    cell_range = fields.ListTextAreaField('cell_range',
+                                           title="Cell Range",
+                                           description=(
+                """
+                This defines the range of the matrix.
+                """),
+                                           default=[],
+                                           required=0)
     getter_method = fields.StringField('getter_method',
                                  title='Getter method',
                                  description=("""
         You can specify a specific method in order to retrieve the context.
-        This field can be empty, if so the MatrixBox will use the default context."""),
+        This field can be empty, if so the MatrixBox will use the default 
+        context."""),
 
                                  default='',
                                  required=0)
@@ -112,7 +122,8 @@ class MatrixBoxWidget(Widget.Widget):
                                  title='New Cell method',
                                  description=("""
         You can specify a specific method in order to create cells.
-        This field can be empty, if so the MatrixBox will use the default method :
+        This field can be empty, if so the MatrixBox will use the default 
+        method :
         newCell."""),
 
                                  default='',
@@ -121,7 +132,8 @@ class MatrixBoxWidget(Widget.Widget):
     editable_attributes = fields.ListTextAreaField('editable_attributes',
                                  title="Editable Properties",
                                  description=(
-        """A list of attributes which are set by hidden fields called matrixbox_attribute_name. This is used
+        """A list of attributes which are set by hidden fields called 
+        matrixbox_attribute_name. This is used
         when we want to specify a value calculated for each cell"""),
                                  default=[],
                                  required=0)
@@ -129,7 +141,8 @@ class MatrixBoxWidget(Widget.Widget):
     global_attributes = fields.ListTextAreaField('global_attributes',
                                  title="Global Properties",
                                  description=(
-        """An optional list of globals attributes which are set by hidden fields and which are applied to each cell. 
+        """An optional list of globals attributes which are set by hidden 
+        fields and which are applied to each cell. 
         This is used if we want to set the same value for every cell"""),
                                  default=[],
                                  required=0)
@@ -137,7 +150,8 @@ class MatrixBoxWidget(Widget.Widget):
     cell_base_id = fields.StringField('cell_base_id',
                                  title='Base id for cells',
                                  description=("""
-        The Base id for cells : this is the name used to store cells, we usually,
+        The Base id for cells : this is the name used to store cells, 
+        we usually,
         use names like : 'mouvement','path', ...."""),
                                  default='cell',
                                  required=0)
@@ -145,7 +159,8 @@ class MatrixBoxWidget(Widget.Widget):
     cell_portal_type = fields.StringField('cell_portal_type',
                                  title='Portal Type for cells',
                                  description=("""
-        The Portal Type for cells : This is the portal type used to construct a new cell."""),
+        The Portal Type for cells : This is the portal type used to 
+        construct a new cell."""),
                                  default='Mapped Value',
                                  required=0)
 
@@ -154,7 +169,6 @@ class MatrixBoxWidget(Widget.Widget):
                                   description=(
         "The cell range should be updated upon edit."),
                                   default=0)
-
 
     def render(self, field, key, value, REQUEST, render_format='html'):
         """
@@ -179,14 +193,16 @@ class MatrixBoxWidget(Widget.Widget):
         editable_attributes = field.get_value('editable_attributes')
 
         # This is required when we have no tabs
-        if len(tabs) == 0: tabs = [(None,None)]
+        if len(tabs) == 0: 
+          tabs = [(None,None)]
         # This is required when we have no columns
-        if len(columns) == 0: columns = [(None,None)]
+        if len(columns) == 0: 
+          columns = [(None,None)]
 
-        column_ids = map(lambda x: x[0], columns)
-        line_ids = map(lambda x: x[0], lines)
-        tab_ids = map(lambda x: x[0], tabs)
-        editable_attribute_ids = map(lambda x: x[0], editable_attributes)
+        column_ids = [x[0] for x in columns]
+        line_ids = [x[0] for x in lines]
+        tab_ids = [x[0] for x in tabs]
+        editable_attribute_ids = [x[0] for x in editable_attributes]
 
         # THIS MUST BE REMOVED - WHY IS THIS BAD ?
         # IT IS BAD BECAUSE TAB_IDS DO NOT DEFINE A RANGE....
@@ -203,7 +219,8 @@ class MatrixBoxWidget(Widget.Widget):
         # Create one table per tab
         for tab in tabs:
           tab_id = tab[0]
-          if type(tab_id) is not type(()) and type(tab_id) is not type([]) and tab_id is not None:
+          if (tab_id is not None) and \
+             (not isinstance(tab_id, (list, tuple))):
             tab_id = [tab_id]
             
           if render_format == 'list': 
@@ -273,7 +290,8 @@ class MatrixBoxWidget(Widget.Widget):
               #if column_id is None and tab_id is None:
               #  kw = []
               column_id = c[0]
-              if type(column_id) is not type(()) and type(column_id) is not type([]) and column_id is not None:
+              if (column_id is not None) and \
+                 (not isinstance(column_id, (list, tuple))):
                 column_id = [column_id]
               if column_id is None:
                 kw = [l[0]]
@@ -368,16 +386,18 @@ class MatrixBoxValidator(Validator.Validator):
         # This is required when we have no columns
         if len(columns) == 0: columns = [(None,None)]
 
-        column_ids = map(lambda x: x[0], columns)
-        line_ids = map(lambda x: x[0], lines)
-        tab_ids = map(lambda x: x[0], tabs)
-        editable_attribute_ids = map(lambda x: x[0], editable_attributes)
+        # XXX Copy/Paste from render...
+        column_ids = [x[0] for x in columns]
+        line_ids = [x[0] for x in lines]
+        tab_ids = [x[0] for x in tabs]
+        editable_attribute_ids = [x[0] for x in editable_attributes]
 
         k = 0
         result = {}
         # Create one table per tab
         for tab_id in tab_ids:
-          if type(tab_id) is not type(()) and type(tab_id) is not type([]) and tab_id is not None:
+          if (tab_id is not None) and \
+             (not isinstance(tab_id, (list, tuple))):
             tab_id = [tab_id]
 
           i = 0
@@ -434,8 +454,10 @@ class MatrixBox(ZMIField):
 
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
-      if id == 'default' and kw.get('render_format') in ('list', ):
-        return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=kw.get('render_format'))
+      if id=='default' and kw.get('render_format') in ('list', ):
+        return self.widget.render(self, self.generate_field_key(), None, 
+                                  kw.get('REQUEST'), 
+                                  render_format=kw.get('render_format'))
       else:
         return ZMIField.get_value(self, id, **kw)
 
@@ -443,5 +465,3 @@ class MatrixBox(ZMIField):
 import psyco
 psyco.bind(MatrixBoxWidget.render)
 psyco.bind(MatrixBoxValidator.validate)
-
-
