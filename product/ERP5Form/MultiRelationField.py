@@ -564,12 +564,13 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
         ################################
         # Modify if user modified his value
         ################################
-        if (found == 1) and \
-           (value != display_text):
-          relation_editor_list = None
-          need_to_revalidate = 1
-          REQUEST.set(relation_field_id, None)
-          break
+        # XXX Does not work when user select a value in a ListField
+#         if (found == 1) and \
+#            (value != display_text):
+#           relation_editor_list = None
+#           need_to_revalidate = 1
+#           REQUEST.set(relation_field_id, None)
+#           break
         if value is None:
           value = display_text
         # Storing display_text as value is needed in this case
