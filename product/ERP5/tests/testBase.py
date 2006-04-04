@@ -765,6 +765,43 @@ class TestBase(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCheckEditMethod(self, sequence=None, 
+                          sequence_list=None, **kw):
+    """
+    Check if edit method works.
+    """
+    object_instance = sequence.get('object_instance')
+    old_edit_method = sequence.get('edit_method')
+    edit_method = object_instance.edit
+    if old_edit_method is None:
+      sequence.edit(edit_method=edit_method)
+    else:
+      self.assertEquals(old_edit_method, edit_method)
+
+  def stepSetEditProperty(self, sequence=None, 
+                          sequence_list=None, **kw):
+    """
+    Check if edit method works.
+    """
+    object_instance = sequence.get('object_instance')
+    object_instance.setProperty('edit', "now this object is 'read only !!!'")
+
+  def test_07_setEditProperty(self, quiet=0, run=run_all_test):
+    """
+    Test if setProperty erase existing accessors/methods.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test on temp tempAmount.
+    sequence_string = '\
+              CreateObject \
+              CheckEditMethod \
+              SetEditProperty \
+              CheckEditMethod \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 if __name__ == '__main__':
     framework()
 else:
