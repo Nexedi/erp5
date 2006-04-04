@@ -59,11 +59,13 @@ class Message(Persistent):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
 
-  def __init__(self, domain = None, message = '',
-                     mapping = None, default = None):
+  def __init__(self, domain=None, message='',
+               mapping=None, default=None):
     self.message = message
     self.mapping = mapping
     self.domain = domain
+    if default is None:
+      default = message
     self.default = default
 
   security.declarePublic('dump')
@@ -93,8 +95,8 @@ class Message(Persistent):
     if self.domain is None or translation_service is None :
       # Map the translated string with given parameters
       if type(self.mapping) is type({}):
-        if isinstance(translated_str, unicode) :
-          translated_str = self.message.encode('utf8')
+        if isinstance(self.message, unicode) :
+          self.message = self.message.encode('utf8')
         self.message = Template(self.message).substitute(mapping)
         if not isinstance(self.message, unicode):
           self.message = self.message.decode('utf8')
