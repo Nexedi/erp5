@@ -97,7 +97,7 @@ class ExtFolder( XMLObject ):
       repository = os.path.join(*ExtFile._repository)
       return os.path.sep.join((instance_home, repository, self.getPath()))
 
-    security.declareProtected('Manage portal', 'PUT_factory')
+    security.declareProtected('Manage portal', 'generateRpmHeaderList')
     def generateRpmHeaderList(self):
       """Run genhdlist on the directory behind this object.
       """
@@ -105,7 +105,7 @@ class ExtFolder( XMLObject ):
       if status != 0:
         raise RuntimeError, "failed in executing genhdlist"
 
-    security.declareProtected('Manage portal', 'PUT_factory')
+    security.declareProtected('Manage portal', 'generateBt5HeaderList')
     def generateBt5HeaderList(self):
       """Run genbt5list on the directory behind this object.
       """
