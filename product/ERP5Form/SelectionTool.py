@@ -1032,7 +1032,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
         for key in REQUEST.form.keys():
           if not isinstance(REQUEST.form[key],FileUpload):
             pickle_kw[key] = REQUEST.form[key]
-#         self.setCookieInfo(REQUEST, 'GreatCookieNameXXX', **pickle_kw)
         self.setCookieInfo(REQUEST, PREVIOUS_REQUEST_COOKIE_NAME, **pickle_kw)
 
         base_category = None
