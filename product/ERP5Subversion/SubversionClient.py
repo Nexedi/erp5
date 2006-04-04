@@ -265,6 +265,14 @@ try:
       self._getPreferences()
       return self.client.revert(path)
 
+    def add(self, path):
+      self._getPreferences()
+      return self.client.add(path)
+
+    def remove(self, path):
+      self._getPreferences()
+      return self.client.remove(path)
+
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)
     
