@@ -37,7 +37,7 @@ class Predicate(Interface):
     A Predicate allows to make a statement about a document.
     A statement can be related to:
 
-    - the attributes of the document (ex. prix >= 3.0)
+    - the attributes of the document (ex. price >= 3.0)
 
     - the categories of the document (ex. )
 
@@ -45,20 +45,20 @@ class Predicate(Interface):
     implemented by subclasses.
   """
 
-  def test(self, context):
+  def test(context):
     """
       A Predicate can be tested on a given context
     """
     pass
 
-  def asPythonExpression(self):
+  def asPythonExpression():
     """
       A Predicate can be rendered as a python expression. This
       is the preferred approach within Zope.
     """
     pass
 
-  def asSqlExpression(self):
+  def asSqlExpression():
     """
       A Predicate can be rendered as an sql expression. This
       can be useful to create reporting trees based on the

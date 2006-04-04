@@ -37,73 +37,73 @@ class Entity(Interface):
         Common Interface for Entity objects
     """
 
-    def getDefaultAddress(self):
+    def getDefaultAddress():
         """
           Returns the default address as a text string
         """
         pass
 
-    def getDefaultAddressStreetAddress(self):
+    def getDefaultAddressStreetAddress():
         """
           Returns the default address street as a text string
         """
         pass
 
-    def getDefaultAddressCity(self):
+    def getDefaultAddressCity():
         """
           Returns the default address city as a text string
         """
         pass
 
-    def getDefaultAddressRegion(self):
+    def getDefaultAddressRegion():
         """
           Returns the default address region as a text string
         """
         pass
 
-    def getDefaultAddressZipCode(self):
+    def getDefaultAddressZipCode():
         """
           Returns the default address zip code as a text string
         """
         pass
 
-    def getDefaultTelephone(self):
+    def getDefaultTelephone():
         """
           Returns the default telephone as a text string
         """
         pass
 
-    def getDefaultFax(self):
+    def getDefaultFax():
         """
           Returns the default fax as a text string
         """
         pass
 
-    def getDefaultEmail(self):
+    def getDefaultEmail():
         """
           Returns the default email as a text string
         """
         pass
 
-    def setDefaultAddress(self, coordinate):
+    def setDefaultAddress(coordinate):
         """
           Updates the default address from a standard text string
         """
         pass
 
-    def setDefaultTelephone(self, coordinate):
+    def setDefaultTelephone(coordinate):
         """
           Updates the default telephone from a standard text string
         """
         pass
 
-    def setDefaultFax(self, coordinate):
+    def setDefaultFax(coordinate):
         """
           Updates the default fax from a standard text string
         """
         pass
 
-    def setDefaultEmail(self, coordinate):
+    def setDefaultEmail(coordinate):
         """
           Updates the default email from a standard text string
         """

@@ -37,19 +37,19 @@ class Coordinate(Interface):
         Common Interface for all Coordinate objects
     """
 
-    def asText(self):
+    def asText():
         """
             returns the coordinate as a text string
         """
         pass
 
-    def fromText(self,coordinate_text):
+    def fromText(coordinate_text):
         """
              modifies the coordinate according to the input text
         """
         pass
 
-    def standardTextFormat(self):
+    def standardTextFormat():
         """
              returns a string which defines the standard
              string format for that coordinate

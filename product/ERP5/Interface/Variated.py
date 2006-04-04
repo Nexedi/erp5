@@ -44,7 +44,7 @@ class Variated(Interface):
     # into VariationValue instances.
 
     # Discrete Variation accessors
-    def getVariationCategoryList(self):
+    def getVariationCategoryList():
         """
             returns a list or relative URLs which defines
             a discrete variation (ie. a list of category
@@ -52,7 +52,7 @@ class Variated(Interface):
         """
         pass
 
-    def _setVariationCategoryList(self,node_list):
+    def _setVariationCategoryList(node_list):
         """
             modifies the discrete variation of an
             variated instance by providing a list
@@ -60,7 +60,7 @@ class Variated(Interface):
         """
         pass
 
-    def setVariationCategoryList(self,node_list):
+    def setVariationCategoryList(node_list):
         """
             modifies the discrete variation of an
             variated instance by providing a list
@@ -70,7 +70,7 @@ class Variated(Interface):
         """
         pass
 
-    def getVariationBaseCategoryList(self,node_list):
+    def getVariationBaseCategoryList(node_list):
         """
             returns a list of base category ids
             which are used to define discrete variations
@@ -78,7 +78,7 @@ class Variated(Interface):
         """
         pass
 
-    def _setVariationBaseCategoryList(self,node_list):
+    def _setVariationBaseCategoryList(node_list):
         """
             modifies the list of base category ids
             which are used to define discrete variations
@@ -86,7 +86,7 @@ class Variated(Interface):
         """
         pass
 
-    def setVariationBaseCategoryList(self,node_list):
+    def setVariationBaseCategoryList(node_list):
         """
             modifies the list of base category ids
             which are used to define discrete variations
@@ -95,17 +95,17 @@ class Variated(Interface):
         pass
 
     # General Variation accessors
-    def getVariationValue(self):
+    def getVariationValue():
         """
         """
         pass
 
-    def _setVariationValue(self,value):
+    def _setVariationValue(value):
         """
         """
         pass
 
-    def setVariationValue(self,value):
+    def setVariationValue(value):
         """
         """
         pass
@@ -118,30 +118,30 @@ class Variated(Interface):
 
     # Discrete Variation Range accessors
 
-    def getVariationRangeCategoryList(self, base_category_list = (), base=1):
+    def getVariationRangeCategoryList(base_category_list=(), base=1):
         """
             returns a list of categories which are acceptable
             as discrete variation values
         """
         pass
 
-    def getVariationRangeCategoryItemList(self, base_category_list = (),
-                              display_id='getTitle', base=1,  current_category=None):
+    def getVariationRangeCategoryItemList(base_category_list=(),
+                              display_id='getTitle', base=1, current_category=None):
         """
             returns a list of (category.id, category.display_id()) which are acceptable
             as discrete variation values
         """
         pass
 
-    def getVariationRangeBaseCategoryList(self, base_category_list = (), base=1):
+    def getVariationRangeBaseCategoryList(base_category_list=(), base=1):
         """
             returns a list of base categories which are acceptable
             as discrete variation values
         """
         pass
 
-    def getVariationRangeBaseCategoryItemList(self, base_category_list = (),
-                              display_id='getTitle', base=1,  current_category=None):
+    def getVariationRangeBaseCategoryItemList(base_category_list=(),
+                              display_id='getTitle', base=1, current_category=None):
         """
             returns a list of base category items which are acceptable
             as discrete variation values
