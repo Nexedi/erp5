@@ -35,6 +35,7 @@ from Products.ERP5.Document.Entity import Entity
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import assertAttributePortalType
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Cache import clearCache
 
 try:
   from Products import PluggableAuthService
@@ -174,6 +175,8 @@ class Person(Entity, Node, XMLObject):
               break
       self._setReference(value)
       self.reindexObject()
+      # invalid the cache for ERP5Security      
+      clearCache()
     
     security.declareProtected(Permissions.SetOwnPassword, 'setPassword')
     def setPassword(self, value) :
