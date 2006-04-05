@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">O/INCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+""" display value in the cell according to (french) fiscality rules """\n
+context.log(cell_name, cell_value)\n
+\n
+if same_type(cell_value, 0) or same_type(cell_value, 0.0) : \n
+  number = cell_value\n
+  if number == 0 : \n
+    return ""\n
+\n
+  negative = number < 0\n
+  amount = str(abs(number))\n
+  indexes = range(len(amount))\n
+  indexes.reverse()\n
+  string = \'\'\n
+  count = 0\n
+  for i in indexes :\n
+    if not count % 3 :\n
+      string = \' \' + string\n
+    string = amount[i] + string\n
+    count += 1\n
+  if negative :\n
+    string = "(%s)"%string.strip()\n
+  return string\n
+else :\n
+  return cell_value\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_formatCell</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>cell_value, cell_name</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>cell_value</string>
+                            <string>cell_name</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>same_type</string>
+                            <string>number</string>
+                            <string>negative</string>
+                            <string>str</string>
+                            <string>abs</string>
+                            <string>amount</string>
+                            <string>range</string>
+                            <string>len</string>
+                            <string>indexes</string>
+                            <string>string</string>
+                            <string>count</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>FiscalReportCell_formatCell</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

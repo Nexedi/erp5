@@ -1,0 +1,20 @@
+2006-04-03 Kevin
+* Add FiscalReport_getFiscalReportItemList to get a dynamic list of fiscal report.
+
+2006-03-21 Kevin
+* Add gap/fr/pcg/1/16/168/1688/16880/168800 category.
+* Add gap/fr/pcg/1/10/106/1061/10610/106100 category.
+* Add gap/fr/pcg/7/75/758 category.
+
+2006-03-16 Kevin
+* Add gap/fr/pcg/6/61/615 category.
+* Increase version number.
+
+2006-01-02 jerome
+* Use inventory API.
+
+2005-12-28 jerome
+* Renamed gap/france in gap/fr.
+
+2005-06-27 Jerome
+* Initial version.
