@@ -1937,7 +1937,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               if column is not None:
                 if column[0] == column[1]:
                   alias = extended_columns[n][2]
-                  value = getattr(count_results[0],alias,'')
+                  if len(count_results):
+                    value = getattr(count_results[0],alias,'')
                 else:
                   value = getattr(here, column[1])
                   #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
