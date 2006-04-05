@@ -471,21 +471,21 @@ class SubversionTool(UniqueObject, Folder):
     """Update a working copy.
     """
     client = self._getClient()
-    return client.update(self._getWorkingPath(path))
+    return client.update(path)
 
   security.declareProtected('Import/Export objects', 'add')
   def add(self, path):
     """Add a file or a directory.
     """
     client = self._getClient()
-    return client.add(self._getWorkingPath(path))
+    return client.add(path)
 
   security.declareProtected('Import/Export objects', 'remove')
   def remove(self, path):
     """Remove a file or a directory.
     """
     client = self._getClient()
-    return client.remove(self._getWorkingPath(path))
+    return client.remove(path)
 
   security.declareProtected('Import/Export objects', 'move')
   def move(self, src, dest):
@@ -565,7 +565,45 @@ class SubversionTool(UniqueObject, Folder):
         else :
           parent.sub_dirs.append(File(full_path, str(msg_status)))
     return somethingModified and root
-            
+  
+  def extractBT(self, bt, path):
+    bt.export(path=path, local=1)
+    svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    if not self.working_path :
+      raise "Error: Please set Subversion working path in preferences"
+    if svn_path[-1]!='/':
+      svn_path+='/'
+    svn_path += bt.getTitle()+'/'
+    if path[-1]!='/':
+      path+='/'
+    # update working copy from repository
+    self.update(svn_path)
+    # svn del deleted files
+    self.deleteOldFiles(svn_path, path)
+    # add new files and copy
+    self.addNewFiles(svn_path, path)
+  
+  # svn del files that have been removed in new dir
+  def deleteOldFiles(self, old_dir, new_dir):
+    # detect removed files
+    output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, new_dir)).replace(': ', '/')
+    files_list = output.split('\n')
+    # svn del
+    for file in files_list:
+      if file:
+        self.remove(file) 
+  
+  def addNewFiles(self, old_dir, new_dir):
+    # detect created files
+    output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, old_dir)).replace(': ', '/')
+    files_list = output.split('\n')
+    # Copy files
+    os.system('cp -af %s %s'%(path, svn_path))
+    # svn add
+    for file in files_list:
+      if file:
+        self.add(file.replace(new_dir, old_dir))
+  
   def treeToXML(self, item) :
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
     output += "<tree id='0'>" + os.linesep

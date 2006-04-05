@@ -272,6 +272,10 @@ try:
     def remove(self, path):
       self._getPreferences()
       return self.client.remove(path)
+    
+    def update(self, path):
+      self._getPreferences()
+      return self.client.update(path)
 
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)
