@@ -73,10 +73,14 @@ r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
 # Read settings from user preference\n
 preference       = context.getPortalObject().portal_preferences\n
-simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\n
-section_category = preference.getPreferredAccountingTransactionSectionCategory()\n
-from_date        = preference.getPreferredAccountingTransactionFromDate()\n
-at_date          = preference.getPreferredAccountingTransactionAtDate()\n
+simulation_state = kw.get(\'simulation_state\', \n
+                      preference.getPreferredAccountingTransactionSimulationStateList())\n
+section_category = kw.get(\'section_category\', \n
+                      preference.getPreferredAccountingTransactionSectionCategory())\n
+from_date        = kw.get(\'from_date\',\n
+                      preference.getPreferredAccountingTransactionFromDate())\n
+at_date          = kw.get(\'at_date\',\n
+                      preference.getPreferredAccountingTransactionAtDate())\n
 \n
 # Build the common inventory dict\n
 params = {}\n
