@@ -151,8 +151,6 @@ class DiffFile:
       # Adding diff of the modification
       old_code_list = child.getOldCodeList()
       new_code_list = child.getNewCodeList()
-      if len(old_code_list)!=len(new_code_list):
-        raise '%s != %s for file %s'%(len(old_code_list), len(new_code_list), self.path)
       i=0
       for old_line_tuple in old_code_list:
         new_line_tuple = new_code_list[i]
@@ -284,12 +282,12 @@ class SubCodeBlock:
       old_code = [(x, 'white') for x in self.body.split('\n')]
     elif self.modification=='change':
       old_code = [self._getOldCodeList(x) for x in self.body.split('\n') if self._getOldCodeList(x)[0]]
+      # we want old_code_list and new_code_list to have the same length
+      if(self.old_code_length < self.new_code_length):
+        filling = [(None, self.color)]*(self.new_code_length-self.old_code_length)
+        old_code.extend(filling)
     else: # deletion or addition
       old_code = [self._getOldCodeList(x) for x in self.body.split('\n')]
-    # we want old_code_list and new_code_list to have the same length
-    if(self.old_code_length < self.new_code_length):
-      filling = [(None, self.color)]*(self.new_code_length-self.old_code_length)
-      old_code.extend(filling)
     return old_code
   
   def _getOldCodeList(self, line):
@@ -305,12 +303,12 @@ class SubCodeBlock:
       new_code = [(x, 'white') for x in self.body.split('\n')]
     elif self.modification=='change':
       new_code = [self._getNewCodeList(x) for x in self.body.split('\n') if self._getNewCodeList(x)[0]]
+      # we want old_code_list and new_code_list to have the same length
+      if(self.new_code_length < self.old_code_length):
+        filling = [(None, self.color)]*(self.old_code_length-self.new_code_length)
+        new_code.extend(filling)
     else: # deletion or addition
       new_code = [self._getNewCodeList(x) for x in self.body.split('\n')]
-    # we want old_code_list and new_code_list to have the same length
-    if(self.new_code_length < self.old_code_length):
-      filling = [(None, self.color)]*(self.old_code_length-self.new_code_length)
-      new_code.extend(filling)
     return new_code
   
   def _getNewCodeList(self, line):
