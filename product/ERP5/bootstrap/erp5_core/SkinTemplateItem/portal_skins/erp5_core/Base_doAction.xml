@@ -103,10 +103,16 @@ elif doAction0 == \'add\':\n
                                    container=context,\n
                                    id=str(new_id))\n
   message = N_("Object+Created.")\n
-  redirect_url = \'%s/%s?portal_status_message=%s\' % ( \n
-                            new_content.absolute_url()  \n
-                            , \'view\'\n
-                            , message)\n
+  if not(ignore_layout) and context.getApplicableLayout():\n
+    redirect_url = \'%s/%s?portal_status_message=%s&editable_mode=1\' % (\n
+                              new_content.WebSite_getDocumentPhysicalPath()\n
+                              , \'view\'\n
+                              , message)\n
+  else:\n
+    redirect_url = \'%s/%s?portal_status_message=%s\' % ( \n
+                              new_content.absolute_url()  \n
+                              , \'view\'\n
+                              , message)\n
   return request.RESPONSE.redirect( redirect_url )\n
 # Otherwise, check if this is an automatic menu (template)\n
 elif doAction0 == \'template\':\n
@@ -152,7 +158,7 @@ return getattr(context,form_id)(request)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>action_select=None, form_id=\'\', selection_index=\'\', selection_name=\'\', uids=None, listbox_uid=None, md5_object_uid_list=None, is_list=0</string> </value>
+            <value> <string>action_select=None, form_id=\'\', selection_index=\'\', selection_name=\'\', uids=None, listbox_uid=None, md5_object_uid_list=None, is_list=0, ignore_layout=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -172,7 +178,7 @@ return getattr(context,form_id)(request)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -186,6 +192,7 @@ return getattr(context,form_id)(request)\n
                             <string>listbox_uid</string>
                             <string>md5_object_uid_list</string>
                             <string>is_list</string>
+                            <string>ignore_layout</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -229,6 +236,7 @@ return getattr(context,form_id)(request)\n
                 <none/>
                 <none/>
                 <int>0</int>
+                <none/>
               </tuple>
             </value>
         </item>
