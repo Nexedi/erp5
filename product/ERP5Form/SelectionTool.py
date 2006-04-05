@@ -54,8 +54,6 @@ from zLOG import LOG
 from Acquisition import Implicit, aq_base
 from Products.ERP5Type.Message import Message
 
-PREVIOUS_REQUEST_COOKIE_NAME = "previous_request"
-
 class SelectionError( Exception ):
     pass
 
@@ -921,8 +919,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
         object = {}
       return object
 
-    
-
     # Related document searching
     def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None,
                                         sub_index=None, **kw):
@@ -1032,7 +1028,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         for key in REQUEST.form.keys():
           if not isinstance(REQUEST.form[key],FileUpload):
             pickle_kw[key] = REQUEST.form[key]
-        self.setCookieInfo(REQUEST, PREVIOUS_REQUEST_COOKIE_NAME, **pickle_kw)
+        form_pickle, form_signature = self.getPickleAndSignature(**pickle_kw)
 
         base_category = None
         kw = {}
@@ -1052,13 +1048,15 @@ class SelectionTool( UniqueObject, SimpleItem ):
         kw['previous_form_id'] = form_id
         kw[field.get_value('catalog_index')] = field_value
         kw['portal_status_message'] = portal_status_message
+        kw['form_pickle'] = form_pickle   
+        kw['form_signature'] = form_signature
 
-        # Need to redirect, if we want listbox nextPage to work
-        redirect_url = '%s/%s?%s' % ( o.absolute_url()
-                                  , redirect_form_id
-                                  , make_query(kw)
-                                  )
-        REQUEST[ 'RESPONSE' ].redirect( redirect_url )
+         # Empty the selection (uid)
+        REQUEST.form = kw # New request form
+        # Define new HTTP_REFERER
+        REQUEST.HTTP_REFERER = '%s/Base_viewRelatedObjectList' % o.absolute_url()
+        # Return the search dialog
+        return getattr(o, redirect_form_id)(REQUEST=REQUEST)
 
     def _aq_dynamic(self, name):
       """
