@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -76,7 +76,10 @@ for crumb in context.WebSite_getBreadcrumbValue():\n
   elif portal_type == \'Web Page\' and \\\n
        hasattr(crumb, \'default_reference\') and \\\n
        \'Module\' not in parent_portal_type:\n
-    path_list.append(crumb.getReference())\n
+    ref = crumb.getReference()\n
+    if ref is None:\n
+      ref = crumb.getId()\n
+    path_list.append(ref)\n
   else:\n
     path_list.append(crumb.getId())\n
   parent_portal_type = portal_type\n
@@ -92,7 +95,7 @@ return \'/\'.join(path_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getUrl</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getUrl</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -136,6 +139,8 @@ return \'/\'.join(path_list)\n
                             <string>crumb</string>
                             <string>portal_type</string>
                             <string>hasattr</string>
+                            <string>ref</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

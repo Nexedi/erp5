@@ -63,7 +63,7 @@
                        layout_id layout_form/pt | default_layout;">\n
   <tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
     <tal:block metal:fill-slot="main">\n
-      <tal:block tal:condition="python:(not editable_mode) and (not ignore_layout) and default_content is not None">\n
+      <tal:block tal:condition="python:(not editable_mode) and (not ignore_layout) and (default_content is not None)">\n
         <tal:block tal:define="global here python:default_content;\n
                                global form python:here.WebPage_view;\n
                                global default_content_title python:here.getTitle()"/>\n

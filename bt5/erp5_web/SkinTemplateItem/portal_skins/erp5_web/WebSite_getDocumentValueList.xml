@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -76,7 +76,13 @@ if not context.getMembershipCriterionCategoryList() and not context.getSourceLis
 def content_cmp(c1, c2):\n
   c1_value = c1.getObject()\n
   c2_value = c2.getObject()\n
-  return cmp(c1_value.getIntIndex(), c2_value.getIntIndex())\n
+  c1_index = c1_value.getIntIndex()\n
+  c2_index = c2_value.getIntIndex()\n
+  if c1_index != \'\' or c2_index != \'\':\n
+    return cmp(c1_index, c2_index)\n
+  c1_time = c1_value.portal_workflow.getInfoFor(ob = c1_value, name = \'time\')\n
+  c2_time = c2_value.portal_workflow.getInfoFor(ob = c2_value, name = \'time\')\n
+  return cmp(c1_time, c2_time)\n
 \n
 if context.getMembershipCriterionCategoryList():\n
   domain = DomainSelection(domain_dict = {\'web_site\': context})\n
@@ -129,7 +135,7 @@ return brain_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getDocumentValueList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getDocumentValueList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

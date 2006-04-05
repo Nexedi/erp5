@@ -510,15 +510,15 @@
                       <list>
                         <tuple>
                           <string>title_or_id</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>WebSite_getDocumentUrl</string>
+                          <string>WebSite_getListboxUrl</string>
                         </tuple>
                       </list>
                     </value>

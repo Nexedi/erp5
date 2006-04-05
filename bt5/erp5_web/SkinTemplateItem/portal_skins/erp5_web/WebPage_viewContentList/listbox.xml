@@ -512,7 +512,28 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

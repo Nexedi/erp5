@@ -66,11 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>while hasattr(context, \'getPortalType\'):\n
-  if context.getPortalType() == \'Web Site\':\n
-    return context\n
-  context = context.getParent()\n
-return None\n
+            <value> <string>return \' %s\' % context.WebSite_getDocumentValue()\n
 </string> </value>
         </item>
         <item>
@@ -81,13 +77,7 @@ return None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getSiteValue</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getDocumentValueAsText</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -117,10 +107,8 @@ return None\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>hasattr</string>
-                            <string>context</string>
                             <string>_getattr_</string>
-                            <string>None</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,7 +125,7 @@ return None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getSiteValue</string> </value>
+            <value> <string>WebSite_getDocumentValueAsText</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -66,11 +66,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>while hasattr(context, \'getPortalType\'):\n
-  if context.getPortalType() == \'Web Site\':\n
-    return context\n
-  context = context.getParent()\n
-return None\n
+            <value> <string>current_section = context\n
+if current_section.getPortalType() == \'Web Section\':\n
+  previous_section = current_section\n
+else:\n
+  previous_section = None\n
+while current_section is not None and current_section.getPortalType() != \'Web Site\':\n
+  if current_section.getPortalType() == \'Web Section\':\n
+    previous_section = current_section\n
+  current_section = current_section.getParent()\n
+\n
+section_list = current_section.objectValues(portal_type = \'Web Section\', sort_on=\'int_index\')\n
+return filter(lambda x: x.isVisible(), section_list)\n
 </string> </value>
         </item>
         <item>
@@ -81,13 +88,7 @@ return None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getSiteValue</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getMainSectionList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -117,10 +118,13 @@ return None\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>hasattr</string>
                             <string>context</string>
+                            <string>current_section</string>
                             <string>_getattr_</string>
+                            <string>previous_section</string>
                             <string>None</string>
+                            <string>section_list</string>
+                            <string>filter</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,7 +141,7 @@ return None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_getSiteValue</string> </value>
+            <value> <string>WebSite_getMainSectionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

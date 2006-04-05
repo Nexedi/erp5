@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -68,7 +68,7 @@
             <key> <string>_body</string> </key>
             <value> <string>section = context.WebSite_getSectionValue()\n
 if section is not None:\n
-  return section.WebSite_getUrl()\n
+  return section.getTitle()\n
 return None\n
 </string> </value>
         </item>
@@ -80,7 +80,7 @@ return None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getSection</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getSection</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

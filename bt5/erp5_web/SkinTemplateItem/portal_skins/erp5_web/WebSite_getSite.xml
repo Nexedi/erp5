@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -68,7 +68,7 @@
             <key> <string>_body</string> </key>
             <value> <string>site = context.WebSite_getSiteValue()\n
 if site is not None:\n
-  return site.getTitle()\n
+  return site.WebSite_getUrl()\n
 return None\n
 </string> </value>
         </item>
@@ -80,7 +80,7 @@ return None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getSite</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getSite</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -117,7 +117,7 @@ return None\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>site</string>
                             <string>None</string>
                           </tuple>

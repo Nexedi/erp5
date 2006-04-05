@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -75,11 +75,10 @@
 \n
   This method can be customised for every Web site\n
 """\n
+source_value = context.WebSite_getDocumentValueList()\n
 \n
-source_value = context.getDefaultSourceValue()\n
-\n
-if source_value is not None:\n
-  return source_value \n
+if source_value is not None and source_value != []:\n
+  return source_value[0].getObject()\n
 \n
 return None\n
 </string> </value>
@@ -92,7 +91,7 @@ return None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_getDefaultDocumentValue</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_web/WebSite_getDefaultDocumentValue</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -132,6 +131,7 @@ return None\n
                             <string>context</string>
                             <string>source_value</string>
                             <string>None</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
