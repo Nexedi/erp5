@@ -69,8 +69,6 @@
             <value> <string>url = None\n
 if brain is not None:\n
   o = brain.getObject()\n
-  context.log(\'WebSite_getListboxUrl\',\'context : %s\' % context.vincent_context())\n
-  context.log(\'WebSite_getListboxUrl\',\'brain : %s\' % brain.vincent_context())\n
   url = \'%s/%s\' % (context.REQUEST[\'URL1\'], o.getRelativeUrl())\n
   if context.REQUEST.has_key(\'editable_mode\') and context.REQUEST[\'editable_mode\']:\n
     url = \'%s/view?editable_mode=%s\' % (url, context.REQUEST[\'editable_mode\'])\n
@@ -127,8 +125,8 @@ return url\n
                             <string>url</string>
                             <string>_getattr_</string>
                             <string>o</string>
-                            <string>context</string>
                             <string>_getitem_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
