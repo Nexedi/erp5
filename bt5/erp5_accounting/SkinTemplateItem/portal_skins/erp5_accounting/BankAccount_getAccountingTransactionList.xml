@@ -66,9 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-src__ = 0\n
+            <value> <string>src__ = 0\n
 if kw.has_key(\'src__\'): src__ = kw[\'src__\']\n
 precision = context.Base_getPreferredPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
@@ -95,63 +93,62 @@ if kw.has_key(\'portal_type\'): params[\'portal_type\'] = kw[\'portal_type\']\n
 new_result  = []\n
 net_balance = 0.0\n
 \n
-# Create a new parameter list to get the previous balance\n
-get_inventory_kw = params.copy()\n
-get_inventory_kw.update({ \'omit_simulation\'         : 1\n
-                        , \'to_date\'                 : from_date\n
-                        , \'section_portal_type_list\': [\'Organisation\']\n
-                        , \'stat\'                    : 1\n
-                        })\n
+if from_date is not None :\n
+  # Create a new parameter list to get the previous balance\n
+  get_inventory_kw = params.copy()\n
+  get_inventory_kw.update({ \'omit_simulation\'         : 1\n
+                          , \'to_date\'                 : from_date\n
+                          , \'mirror_section_uid\'      : context.getUid()\n
+                          , \'section_portal_type_list\': [\'Organisation\']\n
+                          })\n
+  getInventory = context.getPortalObject()\\\n
+                    .portal_simulation.getInventoryAssetPrice\n
+  # Get previous debit and credit\n
+  previous_total_debit  = r_(getInventoryAssetPrice(omit_output=1,\n
+                                                    **get_inventory_kw))\n
+  previous_total_credit = r_(getInventoryAssetPrice(omit_input =1,\n
+                                                    **get_inventory_kw))\n
+  if previous_total_credit != 0 :\n
+    previous_total_credit = - previous_total_credit\n
 \n
-# Get previous debit and credit\n
-previous_total_debit  = context.BankAccount_zGetAccountingTransactionList(omit_output=1, **get_inventory_kw)\n
-previous_total_credit = context.BankAccount_zGetAccountingTransactionList(omit_input =1, **get_inventory_kw)\n
-previous_total_debit  = r_(previous_total_debit[0].quantity)\n
-previous_total_credit = r_(previous_total_credit[0].quantity)\n
-# Get Absolute value of debit and credit\n
-if previous_total_debit  < 0: previous_total_debit  = - previous_total_debit\n
-if previous_total_credit < 0: previous_total_credit = - previous_total_credit\n
+  # Show the previous balance if not empty\n
+  if previous_total_credit != 0 or previous_total_debit != 0:\n
+    from Products.ERP5Type.Document import newTempAccountingTransaction\n
 \n
-# Show the previous balance if not empty\n
-if previous_total_credit != 0 or previous_total_debit != 0:\n
-  from Products.ERP5Type.Document import newTempAccountingTransaction\n
+    net_balance = r_(previous_total_debit - previous_total_credit)\n
+    previous_balance = newTempAccountingTransaction( context.getPortalObject()\n
+                                                   , "temp_%s" % context.getUid()\n
+                                                   )\n
+    previous_balance.setUid(\'new_000\')\n
 \n
-  net_balance = r_(previous_total_debit - previous_total_credit)\n
-  previous_balance = newTempAccountingTransaction( context.getPortalObject()\n
-                                                 , "temp_%s" % context.getUid()\n
-                                                 )\n
-  previous_balance.setUid(\'new_000\')\n
-\n
-  previous_balance.edit( \\\n
-      title                   = context.Base_translateString("Previous Balance")\n
-    , date                    = from_date - 1\n
-    , portal_type             = ""\n
-    , simulation_state_title  = ""\n
-    , debit                   = previous_total_debit\n
-    , credit                  = previous_total_credit\n
-    , balance                 = net_balance\n
-    , net_balance             = net_balance\n
-    , is_previous_balance     = True\n
-    )\n
-  new_result.append(previous_balance)\n
+    previous_balance.edit( \\\n
+        parent_title = context.Base_translateString("Previous Balance")\n
+      , section_title                     = ""\n
+      , date                              = from_date - 1\n
+      , portal_type                       = ""\n
+      , account_uid                       = None\n
+      , parent_reference                  = None\n
+      , parent_specific_reference         = None\n
+      , translated_simulation_state_title = None\n
+      , debit                             = previous_total_debit\n
+      , credit                            = previous_total_credit\n
+      , grouping_reference                = None\n
+      , balance                           = net_balance\n
+      , net_balance                       = net_balance\n
+      , is_previous_balance               = True\n
+      )\n
+    new_result.append(previous_balance)\n
 \n
 \n
 # Show / Hide grouping if needed\n
 if kw.has_key(\'hide_grouping\'): params[\'hide_grouping\'] = kw[\'hide_grouping\']\n
 \n
-# FIXME:\n
-# using listbox current page number * number of line per listbox page, you can call a\n
-# ZSQL Method to initialize net_balance and calculate this only for this page.\n
-#\n
-# But this is just temporary because some day, erp5_accounting will be rewritten using\n
-# only portal_catalog and getInventory. The Iventory API should provide a way to implement\n
-# such a net_balance column (in one instruction, so that we do not need to write a wrapping\n
-# list method like this one)\n
-result = context.BankAccount_zGetAccountingTransactionList( from_date = from_date\n
-                                                          , at_date   = at_date\n
-                                                          , src__     = src__\n
-                                                          , **params\n
-                                                          )\n
+# FIXME: same problem as in BankAccount_getAccountingTransactionList\n
+result = context.Entity_zGetAccountingTransactionList( from_date = from_date\n
+                                                     , at_date   = at_date\n
+                                                     , src__     = src__\n
+                                                     , **params\n
+                                                     )\n
 if src__:\n
   return result\n
 \n
@@ -160,20 +157,24 @@ for l in result:\n
   o = l.getObject()\n
   net_balance += l.balance or 0.0\n
   if o is not None:\n
-    c = o.asContext( net_balance        = net_balance\n
-                   , balance            = l.balance\n
-                   , credit             = l.credit\n
-                   , debit              = l.debit\n
-                   , date               = l.date\n
-                   , section_title      = l.section_title\n
-                   , specific_reference = l.specific_reference\n
+    c = o.asContext( net_balance                       = net_balance\n
+                   , balance                           = l.balance\n
+                   , credit                            = l.credit\n
+                   , debit                             = l.debit\n
+                   , date                              = l.date\n
+                   , section_title                     = l.section_title\n
+                   , parent_reference                  = l.parent_reference\n
+                   , parent_specific_reference         = l.parent_specific_reference\n
+                   , translated_simulation_state_title = o.getTranslatedSimulationStateTitle()\n
+                   # FIXME: overriding \'portal_type\' in asContext is clearly a bad idea, as many methods are storred on the portal type\n
+                   # (hence the translated_simulation_state_title hack) -j\xc3\xa9rome\n
+                   , portal_type                       = l.portal_type\n
+                   , account_uid                       = l.account_uid\n
                    )\n
     new_result.append(c)\n
 \n
 return new_result\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -237,7 +238,9 @@ return new_result\n
                             <string>new_result</string>
                             <string>net_balance</string>
                             <string>get_inventory_kw</string>
+                            <string>getInventory</string>
                             <string>_apply_</string>
+                            <string>getInventoryAssetPrice</string>
                             <string>previous_total_debit</string>
                             <string>previous_total_credit</string>
                             <string>Products.ERP5Type.Document</string>
