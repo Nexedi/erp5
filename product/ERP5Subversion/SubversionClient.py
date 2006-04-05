@@ -35,7 +35,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.PythonScripts.Utility import allow_class
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 try:
   import pysvn
@@ -122,11 +122,13 @@ try:
   
   class SSLServerTrustPromptCallback(Callback):
     def __call__(self, trust_dict):
+      LOG('SubversionTool', WARNING, 'SSL Trust.')
       trust, permanent = self.client.trustSSLServer(trust_dict)
       if not trust:
-        #raise SubversionSSLTrustError(trust_dict)
+        LOG('SubversionTool', WARNING, 'No Trust.')
         self.client.setException(SubversionSSLTrustError(trust_dict))
         return False, 0, False
+      LOG('SubversionTool', WARNING, 'Has Trust.')
       # XXX SSL server certificate failure bits are not defined in pysvn.
       # 0x8 means that the CA is unknown.
       return True, 0x8, permanent
@@ -195,10 +197,8 @@ try:
       self.client.callback_cancel = CancelCallback(obj)
       self.client.callback_get_log_message = GetLogMessageCallback(obj)
       self.client.callback_get_login = GetLoginCallback(obj)
-      #self.client.callback_get_login = self.callback_get_Login
       self.client.callback_notify = NotifyCallback(obj)
       self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(obj)
-      #self.client.callback_ssl_server_trust_prompt = self.callback_ssl_server_trust_prompt
       self.creation_time = time.time()
       self.__dict__.update(kw)
       self.exception = None
@@ -218,22 +218,9 @@ try:
 
     def getTimeout(self):
       return self.timeout
-
-#     def callback_get_Login( self, realm, username, may_save ):
-#         #Retrieving saved username/password
-#         username, password = self.login
-#         if not username :
-#           raise "Error: Couldn't retrieve saved username !"
-#         if not password :
-#           raise "Error: Couldn't retrieve saved password !"
-#         return 1, username, password, True
         
     def trustSSLServer(self, trust_dict):
       return self.aq_parent._trustSSLServer(trust_dict)
-    
-#     def callback_ssl_server_trust_prompt( self, trust_data ):
-#       # Always trusting
-#       return True, trust_data['failures'], True
 
     def setException(self, exc):
       self.exception = exc
@@ -252,6 +239,17 @@ try:
         else:
           raise error
 
+    def update(self, path):
+      self._getPreferences()
+      try:
+        return self.client.update(path)
+      except pysvn.ClientError, error:
+        excep = self.getException()
+        if excep:
+          raise excep
+        else:
+          raise error
+        
     def status(self, path, **kw):
       # Since plain Python classes are not convenient in Zope, convert the objects.
       return [Status(x) for x in self.client.status(path, **kw)]
@@ -267,15 +265,11 @@ try:
 
     def add(self, path):
       self._getPreferences()
-      return self.client.add(path)
+      return self.client.add(path=path, force=True)
 
     def remove(self, path):
       self._getPreferences()
-      return self.client.remove(path)
-    
-    def update(self, path):
-      self._getPreferences()
-      return self.client.update(path)
+      return self.client.remove(path=path, force=True)
 
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)
@@ -286,7 +280,6 @@ try:
   allow_class(SubversionLoginError)
   
 except ImportError:
-  from zLOG import LOG, WARNING
   LOG('SubversionTool', WARNING,
       'could not import pysvn; until pysvn is installed properly, this tool will not work.')
   def newSubversionClient(container, **kw):

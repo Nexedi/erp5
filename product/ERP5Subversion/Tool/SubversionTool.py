@@ -151,6 +151,8 @@ class DiffFile:
       # Adding diff of the modification
       old_code_list = child.getOldCodeList()
       new_code_list = child.getNewCodeList()
+      if len(old_code_list)!=len(new_code_list):
+        raise '%s != %s for file %s'%(len(old_code_list), len(new_code_list), self.path)
       i=0
       for old_line_tuple in old_code_list:
         new_line_tuple = new_code_list[i]
@@ -232,8 +234,10 @@ class CodeBlock:
 # a SubCodeBlock contain 0 or 1 modification (not more)
 class SubCodeBlock:
   def __init__(self, code):
-    self.body=code
-    self.modification=self._getModif()
+    self.body = code
+    self.modification = self._getModif()
+    self.old_code_length = self._getOldCodeLength()
+    self.new_code_length = self._getNewCodeLength()
     # Choosing background color
     if self.modification == 'none':
       self.color = 'white'
@@ -260,14 +264,33 @@ class SubCodeBlock:
       return 'none'
     return 'change'
       
+  def _getOldCodeLength(self):
+    nb_lines = 0
+    for line in self.body.split('\n'):
+      if not line.startswith("+"):
+        nb_lines+=1
+    return nb_lines
+      
+  def _getNewCodeLength(self):
+    nb_lines = 0
+    for line in self.body.split('\n'):
+      if not line.startswith("-"):
+        nb_lines+=1
+    return nb_lines
+  
   # Return code before modification
   def getOldCodeList(self):
     if self.modification=='none':
-      return [(x, 'white') for x in self.body.split('\n')]
+      old_code = [(x, 'white') for x in self.body.split('\n')]
     elif self.modification=='change':
-      return [self._getOldCodeList(x) for x in self.body.split('\n') if self._getOldCodeList(x)[0]]
+      old_code = [self._getOldCodeList(x) for x in self.body.split('\n') if self._getOldCodeList(x)[0]]
     else: # deletion or addition
-      return [self._getOldCodeList(x) for x in self.body.split('\n')]
+      old_code = [self._getOldCodeList(x) for x in self.body.split('\n')]
+    # we want old_code_list and new_code_list to have the same length
+    if(self.old_code_length < self.new_code_length):
+      filling = [(None, self.color)]*(self.new_code_length-self.old_code_length)
+      old_code.extend(filling)
+    return old_code
   
   def _getOldCodeList(self, line):
     if line.startswith('+'):
@@ -279,11 +302,16 @@ class SubCodeBlock:
   # Return code after modification
   def getNewCodeList(self):
     if self.modification=='none':
-      return [(x, 'white') for x in self.body.split('\n')]
+      new_code = [(x, 'white') for x in self.body.split('\n')]
     elif self.modification=='change':
-      return [self._getNewCodeList(x) for x in self.body.split('\n') if self._getNewCodeList(x)[0]]
+      new_code = [self._getNewCodeList(x) for x in self.body.split('\n') if self._getNewCodeList(x)[0]]
     else: # deletion or addition
-      return [self._getNewCodeList(x) for x in self.body.split('\n')]
+      new_code = [self._getNewCodeList(x) for x in self.body.split('\n')]
+    # we want old_code_list and new_code_list to have the same length
+    if(self.new_code_length < self.old_code_length):
+      filling = [(None, self.color)]*(self.old_code_length-self.new_code_length)
+      new_code.extend(filling)
+    return new_code
   
   def _getNewCodeList(self, line):
     if line.startswith('-'):
@@ -323,8 +351,6 @@ class SubversionTool(UniqueObject, Folder):
 
   # Filter content (ZMI))
   def __init__(self):
-# working_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
-# svn_username = self.getPortalObject().portal_preferences.getPreference('preferred_subversion_user_name')
       return Folder.__init__(self, SubversionTool.id)
 
   # Filter content (ZMI))
@@ -567,9 +593,10 @@ class SubversionTool(UniqueObject, Folder):
     return somethingModified and root
   
   def extractBT(self, bt, path):
+    os.system('rm -rf %s'%path)
     bt.export(path=path, local=1)
     svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
-    if not self.working_path :
+    if not svn_path :
       raise "Error: Please set Subversion working path in preferences"
     if svn_path[-1]!='/':
       svn_path+='/'
@@ -582,27 +609,38 @@ class SubversionTool(UniqueObject, Folder):
     self.deleteOldFiles(svn_path, path)
     # add new files and copy
     self.addNewFiles(svn_path, path)
+    # Clean up
+    os.system('rm -rf %s'%path)
   
   # svn del files that have been removed in new dir
   def deleteOldFiles(self, old_dir, new_dir):
     # detect removed files
-    output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, new_dir)).replace(': ', '/')
+    output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, old_dir)).replace(': ', '/')
     files_list = output.split('\n')
     # svn del
     for file in files_list:
       if file:
-        self.remove(file) 
+        try:
+          LOG('SubversionTool', WARNING, 'svn del %s'%file)
+          self.remove(file) 
+        except:
+          pass
   
   def addNewFiles(self, old_dir, new_dir):
     # detect created files
     output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, old_dir)).replace(': ', '/')
     files_list = output.split('\n')
     # Copy files
-    os.system('cp -af %s %s'%(path, svn_path))
+    LOG('SubversionTool', WARNING, 'copy %s to %s'%(new_dir, old_dir))
+    os.system('cp -af %s/* %s'%(new_dir, old_dir))
     # svn add
     for file in files_list:
       if file:
-        self.add(file.replace(new_dir, old_dir))
+        try:
+          LOG('SubversionTool', WARNING, 'svn add %s'%file.replace(new_dir, old_dir))
+          self.add(file.replace(new_dir, old_dir))
+        except:
+          pass
   
   def treeToXML(self, item) :
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
