@@ -27,14 +27,6 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToMixedCase
 from string import join
 from zLOG import LOG
-from Acquisition import Explicit
-
-class ERP5StateChangeInfo(Explicit, StateChangeInfo):
-   """Override StateChangeInfo to make an acquisition wrapper, so that
-      zope can obtain the context. This is important to make proxy roles effective
-      in workflow scripts.
-   """
-   pass
 
 def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
@@ -156,9 +148,8 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     if tdef is not None and tdef.script_name:
         script = self.scripts[tdef.script_name]
         # Pass lots of info to the script in a single parameter.
-        sci = ERP5StateChangeInfo(
+        sci = StateChangeInfo(
             ob, self, former_status, tdef, old_sdef, new_sdef, kwargs)
-        sci = sci.__of__(self)
         try:
             #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
             script(sci)  # May throw an exception.
@@ -238,9 +229,8 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         else:
           script = self.scripts[tdef.after_script_name]
           # Pass lots of info to the script in a single parameter.
-          sci = ERP5StateChangeInfo(
+          sci = StateChangeInfo(
               ob, self, status, tdef, old_sdef, new_sdef, kwargs)
-          sci = sci.__of__(self)
           script(sci)  # May throw an exception.
 
     # Return the new state object.
