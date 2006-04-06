@@ -234,8 +234,6 @@ class SubCodeBlock:
   def __init__(self, code):
     self.body = code
     self.modification = self._getModif()
-    self.old_code_length = self._getOldCodeLength()
-    self.new_code_length = self._getNewCodeLength()
     # Choosing background color
     if self.modification == 'none':
       self.color = 'white'
@@ -261,31 +259,11 @@ class SubCodeBlock:
     if (nb_plus==0 and nb_minus==0):
       return 'none'
     return 'change'
-      
-  def _getOldCodeLength(self):
-    nb_lines = 0
-    for line in self.body.split('\n'):
-      if not line.startswith("+"):
-        nb_lines+=1
-    return nb_lines
-      
-  def _getNewCodeLength(self):
-    nb_lines = 0
-    for line in self.body.split('\n'):
-      if not line.startswith("-"):
-        nb_lines+=1
-    return nb_lines
   
   # Return code before modification
   def getOldCodeList(self):
     if self.modification=='none':
       old_code = [(x, 'white') for x in self.body.split('\n')]
-    elif self.modification=='change':
-      old_code = [self._getOldCodeList(x) for x in self.body.split('\n') if self._getOldCodeList(x)[0]]
-      # we want old_code_list and new_code_list to have the same length
-      if(self.old_code_length < self.new_code_length):
-        filling = [(None, self.color)]*(self.new_code_length-self.old_code_length)
-        old_code.extend(filling)
     else: # deletion or addition
       old_code = [self._getOldCodeList(x) for x in self.body.split('\n')]
     return old_code
@@ -301,12 +279,6 @@ class SubCodeBlock:
   def getNewCodeList(self):
     if self.modification=='none':
       new_code = [(x, 'white') for x in self.body.split('\n')]
-    elif self.modification=='change':
-      new_code = [self._getNewCodeList(x) for x in self.body.split('\n') if self._getNewCodeList(x)[0]]
-      # we want old_code_list and new_code_list to have the same length
-      if(self.new_code_length < self.old_code_length):
-        filling = [(None, self.color)]*(self.old_code_length-self.new_code_length)
-        new_code.extend(filling)
     else: # deletion or addition
       new_code = [self._getNewCodeList(x) for x in self.body.split('\n')]
     return new_code
