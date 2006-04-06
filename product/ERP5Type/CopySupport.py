@@ -208,6 +208,22 @@ class CopyContainer:
     portal_catalog = getToolByName(self, 'portal_catalog')
     self_base.uid = portal_catalog.newUid()
 
+    # Give the Owner local role to the current user, zope only does this if no
+    # local role has been defined on the object, which breaks ERP5Security
+    if hasattr(self_base, '__ac_local_roles__'):
+      user=getSecurityManager().getUser()
+      if user is not None:
+        userid=user.getId()
+        if userid is not None:
+          #remove previous owners
+          dict = self.__ac_local_roles__
+          for key, value in dict.items():
+            if 'Owner' in value:
+              value.remove('Owner')
+          #add new owner
+          l=dict.setdefault(userid, [])
+          l.append('Owner')
+
     # Clear the transaction references
     # THIS IS NOT GENERIC ENOUGH - PROPERTY SHEET EXTENSION REQUIRED
     if getattr(self_base, 'default_source_reference', None):
