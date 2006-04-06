@@ -98,7 +98,8 @@
                         <string>my_template_site_property_id_list</string>
                         <string>my_template_document_id_list</string>
                         <string>my_template_property_sheet_id_list</string>
-                        <string>my_template_local_roles_list</string>
+                        <string>my_template_extension_list</string>
+                        <string>my_template_update_tool</string>
                         <string>my_template_update_business_template_workflow</string>
                       </list>
                     </value>
@@ -112,7 +113,7 @@
                         <string>my_template_message_translation_list</string>
                         <string>my_template_constraint_id_list</string>
                         <string>my_template_portal_type_roles_list</string>
-                        <string>my_template_update_tool</string>
+                        <string>my_template_local_roles_list</string>
                       </list>
                     </value>
                 </item>
