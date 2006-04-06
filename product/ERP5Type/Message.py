@@ -90,9 +90,11 @@ class Message(Persistent):
     """
     Return the translated message
     """
-    context = get_request()['PARENTS'][0]
-    translation_service = getGlobalTranslationService()
-    if self.domain is None or translation_service is None :
+    request = get_request()
+    if request is not None:
+      context = request['PARENTS'][0]
+      translation_service = getGlobalTranslationService()
+    if self.domain is None or request is None or translation_service is None :
       # Map the translated string with given parameters
       if type(self.mapping) is type({}):
         if isinstance(self.message, unicode) :
@@ -115,4 +117,3 @@ class Message(Persistent):
 
 InitializeClass(Message)
 allow_class(Message)
-
