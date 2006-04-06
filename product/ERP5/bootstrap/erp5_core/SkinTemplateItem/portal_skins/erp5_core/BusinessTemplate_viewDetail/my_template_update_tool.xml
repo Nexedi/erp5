@@ -120,9 +120,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -196,25 +194,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.getTemplateUpdateTool()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getTitle() != \'erp5_core\'</string> </value>
         </item>
       </dictionary>
     </pickle>
