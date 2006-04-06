@@ -42,6 +42,7 @@ from App.config import getConfiguration
 from zExceptions import Unauthorized
 from OFS.Image import manage_addFile
 from cStringIO import StringIO
+from tempfile import mktemp
 
 try:
   from base64 import b64encode, b64decode
@@ -83,6 +84,11 @@ class DiffFile:
   # - new_revision
 
   def __init__(self, raw_diff):
+    if '@@' not in raw_diff:
+      self.binary=True
+      return
+    else:
+      self.binary=False
     self.header = raw_diff.split('@@')[0][:-1]
     # Getting file path in header
     self.path = self.header.split('====')[0][:-1].strip()
@@ -124,6 +130,9 @@ class DiffFile:
     
   def toHTML(self):
     # Adding header of the table
+    if self.binary:
+      return '<b>Binary File!</b><br><br><br>'
+    
     html = '''
     <table style="text-align: left; width: 100%%;" border="0" cellpadding="0" cellspacing="0">
   <tbody>
@@ -577,8 +586,9 @@ class SubversionTool(UniqueObject, Folder):
           parent.sub_dirs.append(File(full_path, str(msg_status)))
     return somethingModified and root
   
-  def extractBT(self, bt, path):
-    os.system('rm -rf %s'%path)
+  def extractBT(self, bt):
+    path = mktemp()
+    #os.system('rm -rf %s'%path)
     bt.export(path=path, local=1)
     svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path :

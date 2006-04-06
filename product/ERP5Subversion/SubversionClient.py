@@ -37,6 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.PythonScripts.Utility import allow_class
 from zLOG import LOG, WARNING
+from tempfile import mktemp
 
 try:
   import pysvn
@@ -257,8 +258,11 @@ try:
     
     def diff(self, path):
       self._getPreferences()
-      os.system('mkdir -p /tmp/tmp-svn/')
-      return self.client.diff(tmp_path='/tmp/tmp-svn/', url_or_path=path, recurse=False)
+      tmp = mktemp()
+      os.system('mkdir -p %s'%tmp)
+      diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False)
+      os.system('rm -rf %s'%tmp)
+      return diff
     
     def revert(self, path):
       self._getPreferences()
