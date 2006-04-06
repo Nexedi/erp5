@@ -1897,11 +1897,12 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           if action == 'nothing':
             continue
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
-      obj = p.unrestrictedTraverse(path)
-      setattr(obj, '_roles', []) # reset roles before applying
-      type_roles_list = self._objects[roles_path] or []
-      for type_role_property_dict in type_roles_list:
-        obj._roles.append(RoleInformation(**type_role_property_dict))
+      obj = p.unrestrictedTraverse(path, None)
+      if obj is not None:
+        setattr(obj, '_roles', []) # reset roles before applying
+        type_roles_list = self._objects[roles_path] or []
+        for type_role_property_dict in type_roles_list:
+          obj._roles.append(RoleInformation(**type_role_property_dict))
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
