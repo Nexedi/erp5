@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Yoshinori Okuji <yo@nexedi.com>
+#                    Christophe Dumez <christophe@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -115,7 +116,6 @@ class DiffFile:
       Escape &, <, and > in a string of data.
       This is a copy of the xml.sax.saxutils.escape function.
     """
-    # must do ampersand first
     if data:
       #data = data.replace("&", "&amp;")
       data = data.replace(">", "&gt;")
@@ -132,44 +132,31 @@ class DiffFile:
       <td style="background-color: black;" width="2"></td>
       <td style="background-color: grey"><b><center>%s</center></b></td>
     </tr>'''%(self.old_revision, self.new_revision)
-    First = True
+    header_color = 'grey'
     for child in self.children:
       # Adding line number of the modification
-      if First:
-        html += '''<tr height="18px"><td style="background-color: grey">&nbsp;</td><td style="background-color: black;" width="2"></td><td style="background-color: grey">&nbsp;</td></tr>    <tr height="18px">
-        <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
-        <td style="background-color: black;" width="2"></td>
-        <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
-      </tr>'''%(child.old_line, child.new_line)
-        First = False
-      else:
-        html += '''<tr height="18px"><td style="background-color: white">&nbsp;</td><td style="background-color: black;" width="2"></td><td style="background-color: white">&nbsp;</td></tr>    <tr height="18px">
-        <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
-        <td style="background-color: black;" width="2"></td>
-        <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
-      </tr>'''%(child.old_line, child.new_line) 
+      html += '''<tr height="18px"><td style="background-color: %s">&nbsp;</td><td style="background-color: black;" width="2"></td><td style="background-color: %s">&nbsp;</td></tr>    <tr height="18px">
+      <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
+      <td style="background-color: black;" width="2"></td>
+      <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
+      </tr>'''%(header_color, header_color, child.old_line, child.new_line)
+      header_color = 'white'
       # Adding diff of the modification
       old_code_list = child.getOldCodeList()
       new_code_list = child.getNewCodeList()
       i=0
       for old_line_tuple in old_code_list:
         new_line_tuple = new_code_list[i]
-        if new_line_tuple[0]:
-          new_line = new_line_tuple[0]
-        else:
-          new_line = ' '
-        if old_line_tuple[0]:
-          old_line = old_line_tuple[0]
-        else:
-          old_line = ' '
+        new_line = new_line_tuple[0] or ' '
+        old_line = old_line_tuple[0] or ' '
         i+=1
         html += '''    <tr height="18px">
-      <td style="background-color: %s">%s</td>
-      <td style="background-color: black;" width="2"></td>
-      <td style="background-color: %s">%s</td>
-    </tr>'''%(old_line_tuple[1], self._escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], self._escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
+        <td style="background-color: %s">%s</td>
+        <td style="background-color: black;" width="2"></td>
+        <td style="background-color: %s">%s</td>
+        </tr>'''%(old_line_tuple[1], self._escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], self._escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
     html += '''  </tbody>
-</table></font><br><br>'''
+</table><br><br>'''
     return html
       
 
@@ -234,6 +221,8 @@ class SubCodeBlock:
   def __init__(self, code):
     self.body = code
     self.modification = self._getModif()
+    self.old_code_length = self._getOldCodeLength()
+    self.new_code_length = self._getNewCodeLength()
     # Choosing background color
     if self.modification == 'none':
       self.color = 'white'
@@ -241,7 +230,7 @@ class SubCodeBlock:
       self.color = 'rgb(253, 228, 6);'#light orange
     elif self.modification == 'deletion':
       self.color = 'rgb(253, 117, 74);'#light red
-    else:
+    else: # addition
       self.color = 'rgb(83, 253, 74);'#light green
     
   def _getModif(self):
@@ -252,18 +241,38 @@ class SubCodeBlock:
         nb_minus-=1
       elif line.startswith("+"):
         nb_plus+=1
-    if (nb_plus!=0 and nb_minus==0):
-      return 'addition'
-    if (nb_plus==0 and nb_minus!=0):
-      return 'deletion'
     if (nb_plus==0 and nb_minus==0):
       return 'none'
+    if (nb_minus==0):
+      return 'addition'
+    if (nb_plus==0):
+      return 'deletion'
     return 'change'
+      
+  def _getOldCodeLength(self):
+    nb_lines = 0
+    for line in self.body.split('\n'):
+      if not line.startswith("+"):
+        nb_lines+=1
+    return nb_lines
+      
+  def _getNewCodeLength(self):
+    nb_lines = 0
+    for line in self.body.split('\n'):
+      if not line.startswith("-"):
+        nb_lines+=1
+    return nb_lines
   
   # Return code before modification
   def getOldCodeList(self):
     if self.modification=='none':
       old_code = [(x, 'white') for x in self.body.split('\n')]
+    elif self.modification=='change':
+      old_code = [self._getOldCodeList(x) for x in self.body.split('\n') if self._getOldCodeList(x)[0]]
+      # we want old_code_list and new_code_list to have the same length
+      if(self.old_code_length < self.new_code_length):
+        filling = [(None, self.color)]*(self.new_code_length-self.old_code_length)
+        old_code.extend(filling)
     else: # deletion or addition
       old_code = [self._getOldCodeList(x) for x in self.body.split('\n')]
     return old_code
@@ -279,6 +288,12 @@ class SubCodeBlock:
   def getNewCodeList(self):
     if self.modification=='none':
       new_code = [(x, 'white') for x in self.body.split('\n')]
+    elif self.modification=='change':
+      new_code = [self._getNewCodeList(x) for x in self.body.split('\n') if self._getNewCodeList(x)[0]]
+      # we want old_code_list and new_code_list to have the same length
+      if(self.new_code_length < self.old_code_length):
+        filling = [(None, self.color)]*(self.old_code_length-self.new_code_length)
+        new_code.extend(filling)
     else: # deletion or addition
       new_code = [self._getNewCodeList(x) for x in self.body.split('\n')]
     return new_code
