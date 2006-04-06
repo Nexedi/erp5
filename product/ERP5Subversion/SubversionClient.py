@@ -113,7 +113,6 @@ try:
       user, password = self.client.getLogin(realm)
       if not username or not password:
         self.client.setException(SubversionLoginError(realm))
-        #raise SubversionLoginError(realm)
         return False, '', '', False
       return True, user, password, False
   
@@ -124,13 +123,10 @@ try:
   
   class SSLServerTrustPromptCallback(Callback):
     def __call__(self, trust_dict):
-      LOG('SubversionTool', WARNING, 'SSL Trust.')
       trust, permanent = self.client.trustSSLServer(trust_dict)
       if not trust:
-        LOG('SubversionTool', WARNING, 'No Trust.')
         self.client.setException(SubversionSSLTrustError(trust_dict))
         return False, 0, False
-      LOG('SubversionTool', WARNING, 'Has Trust.')
       # XXX SSL server certificate failure bits are not defined in pysvn.
       # 0x8 means that the CA is unknown.
       return True, 0x8, permanent

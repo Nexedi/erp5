@@ -187,8 +187,8 @@ class CodeBlock:
     # Getting modifications lines
     tmp = re.search('^@@ -\d+', self.header)
     self.old_line = tmp.string[tmp.start():tmp.end()][4:]
-    tmp = re.search('\+\d+,', self.header)
-    self.new_line = tmp.string[tmp.start():tmp.end()][1:-1]
+    tmp = re.search('\+\d+', self.header)
+    self.new_line = tmp.string[tmp.start():tmp.end()][1:]
     # Splitting modifications in SubCodeBlocks
     in_modif = False
     self.children = []
@@ -598,8 +598,6 @@ class SubversionTool(UniqueObject, Folder):
     svn_path += bt.getTitle()+'/'
     if path[-1]!='/':
       path+='/'
-    # update working copy from repository
-    self.update(svn_path)
     # svn del deleted files
     self.deleteOldFiles(svn_path, path)
     # add new files and copy
