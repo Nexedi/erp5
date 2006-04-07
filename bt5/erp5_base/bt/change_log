@@ -1,3 +1,6 @@
+2006-04-07 aurel, jerome
+* Set security on assignment workflow (Assignor role is now required to open an assignment)
+
 2006-03-30 romain
 * fix action priority on credit card.
 
