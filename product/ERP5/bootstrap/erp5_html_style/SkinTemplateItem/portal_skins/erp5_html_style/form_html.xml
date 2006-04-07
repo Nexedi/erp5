@@ -118,7 +118,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
          tal:attributes="href python: here.portal_url() + \'/\' + \'erp5_html.css\'" />\n
 \n
     <!-- taking \'planning_box\' in charge if exists -->\n
-    <tal:block tal:condition="exists: python:form.get_field(\'planning_box\')" tal:on-error="nothing">\n
+    <tal:block tal:condition="python:form.has_field(\'planning_box\')">\n
        <tal:block tal:define="planning_box1 python:form.get_field(\'planning_box\');dummy python:request.set(\'here\',here)" >\n
           <style tal:content="structure python: planning_box1.render_css(None,REQUEST=request)"/>\n
        </tal:block>\n
