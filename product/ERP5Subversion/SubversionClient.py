@@ -263,6 +263,10 @@ try:
     def revert(self, path):
       self._getPreferences()
       return self.client.revert(path)
+    
+    def log(self, path):
+      self._getPreferences()
+      return self.client.log(path)
 
     def add(self, path):
       self._getPreferences()
@@ -271,6 +275,10 @@ try:
     def info(self, path):
       self._getPreferences()
       return self.client.info(path=path)
+
+    def ls(self, path):
+      self._getPreferences()
+      return self.client.ls(url_or_path=path, recurse=False)
 
     def cleanup(self, path):
       self._getPreferences()

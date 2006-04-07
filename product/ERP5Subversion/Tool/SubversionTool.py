@@ -511,6 +511,22 @@ class SubversionTool(UniqueObject, Folder):
     client = self._getClient()
     return client.info(working_copy)
   
+  security.declareProtected('Import/Export objects', 'log')
+  def log(self, path):
+    """return log of a file or dir
+    """
+    client = self._getClient()
+    return client.log(path)
+  
+  def logHTML(self, path):
+    log_list=self.log(path)
+    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s</a> File History</b><hr><br>"%(path, path)
+    for rev_dict in log_list:
+      html+="<center><table border=1 width=60%%><tr><td style='background-color: rgb(204, 204, 255);'><b>Revision:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Author:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Date:</b> %s</td></tr>"%(rev_dict['revision'].number,rev_dict['author'], time.ctime(rev_dict['date']))
+      html+="<tr><td style='background-color: white;' colspan='3'><i>"+'<br>'.join(rev_dict['message'].split('\n'))+'</i></td></tr></table></center>'
+      html+='<br><br>'
+    return html
+  
   security.declareProtected('Import/Export objects', 'cleanup')
   def cleanup(self):
     """remove svn locks in working copy
@@ -524,7 +540,7 @@ class SubversionTool(UniqueObject, Folder):
   security.declareProtected('Import/Export objects', 'infoHTML')
   def infoHTML(self):
     entry=self.info()
-    html='''<center><h1>Respository Informations</h1></center><br>
+    html='''<center><h1>Working Copy Informations</h1></center><br>
     <center><table width='60%%' border='1'>
     <tr height="18px"><td><b>Repository URL</b></td><td>%s</td></tr>
     <tr height="18px"><td><b>Repository UUID</b></td><td>%s</td></tr>
@@ -550,6 +566,30 @@ class SubversionTool(UniqueObject, Folder):
     """
     client = self._getClient()
     return client.move(src, dest)
+
+  security.declareProtected('Import/Export objects', 'ls')
+  def ls(self, path):
+    """Display infos about a file.
+    """
+    client = self._getClient()
+    return client.ls(path)
+  
+  security.declareProtected('Import/Export objects', 'lsHTML')
+  def lsHTML(self, path):
+    """Display infos about a file.
+    """
+    infos_list = self.ls(path)
+    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s</a></b><hr><br>"%(path,path)
+    for infos_dict in infos_list:
+      html+='''<table width=60%% border=1>
+      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Name</b></td><td style='background-color: white;'>%s</td></tr>
+      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Size</b></td><td style='background-color: white;'>%.1f kb</td></tr>
+      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Type</b></td><td style='background-color: white;'>%s</td></tr>
+      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Last Change Revision</b></td><td style='background-color: white;'>%s</td></tr>
+      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Last Change Author</b></td><td style='background-color: white;'>%s</td></tr>
+      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Last Change Date</b></td><td style='background-color: white;'>%s</td></tr>
+      </table>'''%(path.split('/')[-1], infos_dict['size']/1024., infos_dict['kind'],infos_dict['created_rev'].number, infos_dict['last_author'],time.ctime(infos_dict['time']))
+    return html
 
   security.declareProtected('Import/Export objects', 'diff')
   def diff(self, path):
