@@ -253,10 +253,8 @@ class ParallelListField(ZMIField):
       })
       hash_list.append(default_sub_field_property_dict)
     # XXX Clean up old ParallelListField
-    try:
-      delattr(self, 'sub_form')
-    except KeyError:
-      pass
+    if hasattr(self, 'sub_form'):
+       delattr(self, 'sub_form')
     return hash_list
 
   security.declareProtected('Access contents information', 'get_value')
