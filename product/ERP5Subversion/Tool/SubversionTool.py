@@ -379,6 +379,28 @@ class SubversionTool(UniqueObject, Folder):
       name = self.portal_membership.getAuthenticatedMember().getUserName()
     return name
     
+  
+  # path is the path in svn working copy
+  def editPath(self, bt, path):
+    """Return path to edit file
+    """
+    if os.path.isdir(path):
+      return '#'
+    svn_path = bt.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    if not svn_path:
+      raise 'Error: Please set working copy path in Subversion preferences !'
+    if svn_path[-1] != '/':
+      svn_path += '/'
+    svn_path = svn_path + bt.getTitle() + '/'
+    edit_path = path.replace(svn_path, '')
+    edit_path = '/'.join(edit_path.split('/')[1:])
+    tmp = re.search('\\.[\w]+$', edit_path)
+    if tmp:
+      extension = tmp.string[tmp.start():tmp.end()].strip()
+      edit_path = edit_path.replace(extension, '')
+    edit_path = bt.REQUEST["BASE2"] + '/' + edit_path + '/manage_main'
+    return edit_path
+    
   def _encodeLogin(self, realm, user, password):
     # Encode login information.
     return b64encode(dumps((realm, user, password)))
@@ -433,7 +455,7 @@ class SubversionTool(UniqueObject, Folder):
     return DiffFile(raw_diff).toHTML()
   
   # Display a file content in HTML
-  def fileHTML(self, file_path):
+  def fileHTML(self, bt, file_path):
 #     file = open(file_path, 'r')
 #     text = file.read()
 #     file.close()
@@ -445,8 +467,9 @@ class SubversionTool(UniqueObject, Folder):
 #     text = text.replace('\n', '<br>')
 #     text = text.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
 #     text = text.replace('  ', '&nbsp;&nbsp;')
+    head = "<b>"+file_path+"</b>  <a href='"+self.editPath(bt, file_path)+"'><img src='imgs/edit.png' border='0'></a><hr>"
     text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%file_path)
-    text = '\n'.join(text.split('\n')[10:-4])
+    text = head + '\n'.join(text.split('\n')[10:-4])
     return text
     
   security.declareProtected(Permissions.ManagePortal, 'acceptSSLServer')
@@ -518,9 +541,9 @@ class SubversionTool(UniqueObject, Folder):
     client = self._getClient()
     return client.log(path)
   
-  def logHTML(self, path):
+  def logHTML(self, bt, path):
     log_list=self.log(path)
-    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s</a> File History</b><hr><br>"%(path, path)
+    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s File History</a></b>  <a href='%s'><img src='imgs/edit.png' border='0'></a><hr><br>"%(path, path, self.editPath(bt, path))
     for rev_dict in log_list:
       html+="<center><table border=1 width=60%%><tr><td style='background-color: rgb(204, 204, 255);'><b>Revision:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Author:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Date:</b> %s</td></tr>"%(rev_dict['revision'].number,rev_dict['author'], time.ctime(rev_dict['date']))
       html+="<tr><td style='background-color: white;' colspan='3'><i>"+'<br>'.join(rev_dict['message'].split('\n'))+'</i></td></tr></table></center>'
@@ -575,11 +598,11 @@ class SubversionTool(UniqueObject, Folder):
     return client.ls(path)
   
   security.declareProtected('Import/Export objects', 'lsHTML')
-  def lsHTML(self, path):
+  def lsHTML(self, bt, path):
     """Display infos about a file.
     """
     infos_list = self.ls(path)
-    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s</a></b><hr><br>"%(path,path)
+    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s</a></b>  <a href='%s'><img src='imgs/edit.png' border='0'></a><hr><br>"%(path,path, self.editPath(bt, path))
     for infos_dict in infos_list:
       html+='''<table width=60%% border=1>
       <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Name</b></td><td style='background-color: white;'>%s</td></tr>
