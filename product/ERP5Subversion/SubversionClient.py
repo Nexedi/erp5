@@ -208,11 +208,11 @@ try:
       return self.aq_parent._getLogin(realm)
     
     def _getPreferences(self):
-      self.working_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
-      if not self.working_path :
+      working_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+      if not working_path :
         raise "Error: Please set Subversion working path in preferences"
-      self.svn_username = self.getPortalObject().portal_preferences.getPreference('preferred_subversion_user_name')
-      os.chdir(self.working_path);
+      #self.svn_username = self.getPortalObject().portal_preferences.getPreference('preferred_subversion_user_name')
+      os.chdir(working_path);
 
     def getTimeout(self):
       return self.timeout
@@ -267,6 +267,14 @@ try:
     def add(self, path):
       self._getPreferences()
       return self.client.add(path=path, force=True)
+
+    def info(self, path):
+      self._getPreferences()
+      return self.client.info(path=path)
+
+    def cleanup(self, path):
+      self._getPreferences()
+      return self.client.cleanup(path=path)
 
     def remove(self, path):
       self._getPreferences()

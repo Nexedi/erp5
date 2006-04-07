@@ -33,9 +33,8 @@ from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
-from zLOG import LOG, WARNING, INFO
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, commands
+import os, re, commands, time
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
@@ -404,6 +403,7 @@ class SubversionTool(UniqueObject, Folder):
     login_list.append(self._encodeLogin(realm, user, password))
     value = ','.join(login_list)
     expires = (DateTime() + 1).toZone('GMT').rfc822()
+    request.set(self.login_cookie_name, value)
     response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
 
   def _getLogin(self, target_realm):
@@ -445,7 +445,7 @@ class SubversionTool(UniqueObject, Folder):
 #     text = text.replace('\n', '<br>')
 #     text = text.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
 #     text = text.replace('  ', '&nbsp;&nbsp;')
-    text = commands.getoutput('enscript -B --color --highlight=html --language=html -o - %s'%file_path)
+    text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%file_path)
     text = '\n'.join(text.split('\n')[10:-4])
     return text
     
@@ -464,6 +464,7 @@ class SubversionTool(UniqueObject, Folder):
     trust_list.append(self._encodeSSLTrust(trust_dict, permanent))
     value = ','.join(trust_list)
     expires = (DateTime() + 1).toZone('GMT').rfc822()
+    request.set(self.ssl_trust_cookie_name, value)
     response.setCookie(self.ssl_trust_cookie_name, value, path = '/', expires = expires)
     
   def acceptSSLPerm(self, trust_dict):
@@ -499,6 +500,42 @@ class SubversionTool(UniqueObject, Folder):
     """
     client = self._getClient()
     return client.add(path)
+
+  security.declareProtected('Import/Export objects', 'info')
+  def info(self):
+    """return info of working copy
+    """
+    working_copy = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    if not working_copy :
+      raise 'Please set Working copy path in preferences'
+    client = self._getClient()
+    return client.info(working_copy)
+  
+  security.declareProtected('Import/Export objects', 'cleanup')
+  def cleanup(self):
+    """remove svn locks in working copy
+    """
+    working_copy = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    if not working_copy :
+      raise 'Please set Working copy path in preferences'
+    client = self._getClient()
+    return client.cleanup(working_copy)
+
+  security.declareProtected('Import/Export objects', 'infoHTML')
+  def infoHTML(self):
+    entry=self.info()
+    html='''<center><h1>Respository Informations</h1></center><br>
+    <center><table width='60%%' border='1'>
+    <tr height="18px"><td><b>Repository URL</b></td><td>%s</td></tr>
+    <tr height="18px"><td><b>Repository UUID</b></td><td>%s</td></tr>
+    <tr height="18px"><td><b>Revision</b></td><td>%s</td></tr>
+    <tr height="18px"><td><b>Node Type</b></td><td>%s</td></tr>
+    <tr height="18px"><td><b>Last Commit Author</b></td><td>%s</td></tr>
+    <tr height="18px"><td><b>Last Commit Revision</b></td><td>%s</td></tr>
+    <tr height="18px"><td><b>Last Commit Time</b></td><td>%s</td></tr>
+    </table></center>'''%(entry.url, entry.uuid, entry.revision.number, entry.kind, entry.commit_author, entry.commit_revision.number, time.ctime(entry.commit_time),)
+    return html
+    
 
   security.declareProtected('Import/Export objects', 'remove')
   def remove(self, path):
@@ -614,7 +651,6 @@ class SubversionTool(UniqueObject, Folder):
     for file in files_list:
       if file:
         try:
-          LOG('SubversionTool', WARNING, 'svn del %s'%file)
           self.remove(file) 
         except:
           pass
@@ -624,13 +660,11 @@ class SubversionTool(UniqueObject, Folder):
     output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, old_dir)).replace(': ', '/')
     files_list = output.split('\n')
     # Copy files
-    LOG('SubversionTool', WARNING, 'copy %s to %s'%(new_dir, old_dir))
     os.system('cp -af %s/* %s'%(new_dir, old_dir))
     # svn add
     for file in files_list:
       if file:
         try:
-          LOG('SubversionTool', WARNING, 'svn add %s'%file.replace(new_dir, old_dir))
           self.add(file.replace(new_dir, old_dir))
         except:
           pass
