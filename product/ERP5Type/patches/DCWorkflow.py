@@ -167,7 +167,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     if tdef is not None: tdef_exprs = tdef.var_exprs
     if tdef_exprs is None: tdef_exprs = {}
     status = {}
-    for id, vdef in self.variables.items():        
+    for id, vdef in self.variables.items():
         if not vdef.for_status:
             continue
         expr = None
@@ -309,7 +309,72 @@ class ERP5TransitionDefinition (TransitionDefinition):
 
 def getAvailableScriptIds(self):
   return self.getWorkflow().scripts.keys() + \
-           [k for k in self.getWorkflow().transitions.keys() if \
-             self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD]
+   [k for k in self.getWorkflow().transitions.keys() if \
+   self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD]
 
 TransitionDefinition.getAvailableScriptIds = getAvailableScriptIds
+
+# Add a workflow factory for ERP5 style workflow, because some variables
+# are needed for History tab.
+from Products.CMFCore.WorkflowTool import addWorkflowFactory
+from Products.ERP5Type import Permissions
+
+def setupERP5Workflow(wf):
+  """Sets up an DC Workflow with defaults variables needed by ERP5.
+  """
+  wf.setProperties(title='ERP5 default workflow')
+  for s in ('draft',):
+    wf.states.addState(s)
+  for v in ('action', 'actor', 'comment', 'history', 'time',
+            'error_message'):
+    wf.variables.addVariable(v)
+  for perm in (Permissions.AccessContentsInformation,
+               Permissions.View,
+               Permissions.ModifyPortalContent ):
+    wf.addManagedPermission(perm)
+
+  wf.states.setInitialState('draft')
+  # set by default the state variable to simulation_state.
+  # anyway, a default workflow needs to be configured.
+  wf.variables.setStateVar('simulation_state')
+
+  vdef = wf.variables['action']
+  vdef.setProperties(description='The last transition',
+                     default_expr='transition/getId|nothing',
+                     for_status=1, update_always=1)
+
+  vdef = wf.variables['actor']
+  vdef.setProperties(description='The name of the user who performed '
+                     'the last transition',
+                     default_expr='user/getUserName',
+                      for_status=1, update_always=1)
+
+  vdef = wf.variables['comment']
+  vdef.setProperties(description='Comments about the last transition',
+               default_expr="python:state_change.kwargs.get('comment', '')",
+               for_status=1, update_always=1)
+
+  vdef = wf.variables['history']
+  vdef.setProperties(description='Provides access to workflow history',
+                     default_expr="state_change/getHistory")
+
+  vdef = wf.variables['time']
+  vdef.setProperties(description='Time of the last transition',
+                     default_expr="state_change/getDateTime",
+                     for_status=1, update_always=1)
+  
+  vdef = wf.variables['error_message']
+  vdef.setProperties(description='Error message if validation failed',
+                     for_status=1, update_always=1)
+
+def createERP5Workflow(id):
+  """Creates an ERP5 Workflow """
+  ob = DCWorkflowDefinition(id)
+  setupERP5Workflow(ob)
+  return ob
+
+addWorkflowFactory(createERP5Workflow,
+                   id='erp5_workflow',
+                   title='ERP5-style empty workflow')
+
+
