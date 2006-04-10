@@ -29,7 +29,7 @@
 
 from Acquisition import Implicit
 
-import time, os
+import time, os, time
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Globals import InitializeClass
@@ -278,7 +278,19 @@ try:
 
     def ls(self, path):
       self._getPreferences()
-      return self.client.ls(url_or_path=path, recurse=False)
+      try:
+        dict_list = self.client.ls(url_or_path=path, recurse=False)
+      except pysvn.ClientError, error:
+        excep = self.getException()
+        if excep:
+          raise excep
+        else:
+          raise error
+       #Modify the list to make it more usable in zope
+      for dict in dict_list:
+        dict['created_rev']=dict['created_rev'].number
+        dict['time']=time.ctime(dict['time'])
+      return dict_list
 
     def cleanup(self, path):
       self._getPreferences()

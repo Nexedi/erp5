@@ -543,9 +543,15 @@ class SubversionTool(UniqueObject, Folder):
   
   def logHTML(self, bt, path):
     log_list=self.log(path)
-    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s File History</a></b>  <a href='%s'><img src='imgs/edit.png' border='0'></a><hr><br>"%(path, path, self.editPath(bt, path))
+    html='''<script>
+      function checkControl(){
+        alert("checked")
+      }
+    </script>
+    '''
+    html+="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s File History</a></b>  <a href='%s'><img src='imgs/edit.png' border='0'></a><hr><br>"%(path, path, self.editPath(bt, path))
     for rev_dict in log_list:
-      html+="<center><table border=1 width=60%%><tr><td style='background-color: rgb(204, 204, 255);'><b>Revision:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Author:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Date:</b> %s</td></tr>"%(rev_dict['revision'].number,rev_dict['author'], time.ctime(rev_dict['date']))
+      html+="<center><table border=1 width=60%%><tr><td rowspan='2'><input name='check%s' value='%s' type='checkbox'></td><td style='background-color: rgb(204, 204, 255);'><b>Revision:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Author:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Date:</b> %s</td></tr>"%(rev_dict['revision'].number,rev_dict['revision'].number, rev_dict['revision'].number,rev_dict['author'], time.ctime(rev_dict['date']))
       html+="<tr><td style='background-color: white;' colspan='3'><i>"+'<br>'.join(rev_dict['message'].split('\n'))+'</i></td></tr></table></center>'
       html+='<br><br>'
     return html
@@ -596,23 +602,6 @@ class SubversionTool(UniqueObject, Folder):
     """
     client = self._getClient()
     return client.ls(path)
-  
-  security.declareProtected('Import/Export objects', 'lsHTML')
-  def lsHTML(self, bt, path):
-    """Display infos about a file.
-    """
-    infos_list = self.ls(path)
-    html="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s</a></b>  <a href='%s'><img src='imgs/edit.png' border='0'></a><hr><br>"%(path,path, self.editPath(bt, path))
-    for infos_dict in infos_list:
-      html+='''<table width=60%% border=1>
-      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Name</b></td><td style='background-color: white;'>%s</td></tr>
-      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Size</b></td><td style='background-color: white;'>%.1f kb</td></tr>
-      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Type</b></td><td style='background-color: white;'>%s</td></tr>
-      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Last Change Revision</b></td><td style='background-color: white;'>%s</td></tr>
-      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Last Change Author</b></td><td style='background-color: white;'>%s</td></tr>
-      <tr height="18px"><td style='background-color: rgb(204, 204, 255);'><b>Last Change Date</b></td><td style='background-color: white;'>%s</td></tr>
-      </table>'''%(path.split('/')[-1], infos_dict['size']/1024., infos_dict['kind'],infos_dict['created_rev'].number, infos_dict['last_author'],time.ctime(infos_dict['time']))
-    return html
 
   security.declareProtected('Import/Export objects', 'diff')
   def diff(self, path):
