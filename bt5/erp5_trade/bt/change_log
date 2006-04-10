@@ -1,3 +1,9 @@
+2006-03-09 Seb
+* Fix parameters in DeliverBuilder_selectConfirmedDeliveryList
+
+2006-03-09 Romain
+* Fix history action in Purchase/Sale Supply Cell.
+
 2006-03-08 Romain
 * Added Sale Supply Line/Cell, Purchase Supply Line/Cell.
 * Use proxy field for Supply.
