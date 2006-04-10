@@ -69,7 +69,8 @@
                        ignore_layout request/ignore_layout | nothing;\n
                        editable_mode request/editable_mode | nothing;\n
                        layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
-                       layout_id layout_form/pt | string:main_template;"\n
+                       default_layout string:main_template;\n
+                       layout_id layout_form/pt | default_layout;"\n
            i18n:domain="ui">\n
 <tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
 <tal:block metal:fill-slot="main">\n

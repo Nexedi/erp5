@@ -72,7 +72,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                        editable_mode request/editable_mode | nothing;\n
                        global ignore_layout request/ignore_layout | nothing;\n
                        global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
-                       layout_id layout_form/pt | string:list_master">\n
+                       default_layout string:list_master;\n
+                       layout_id layout_form/pt | default_layout;">\n
 <tal:block tal:condition="python: not layout_form_id or ignore_layout">\n
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n

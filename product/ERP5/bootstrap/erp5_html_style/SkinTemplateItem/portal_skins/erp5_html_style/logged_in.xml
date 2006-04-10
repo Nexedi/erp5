@@ -50,30 +50,24 @@
 
 <tal:block tal:condition="here/portal_skins/updateSkinCookie | nothing"\n
            tal:define="dummy here/setupCurrentSkin" />\n
-\n
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-      xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-      metal:use-macro="here/main_template/macros/master">\n
-<body>\n
-\n
-<div metal:fill-slot="main" i18n:domain="ui">\n
-\n
+<tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
+                       ignore_layout request/ignore_layout | nothing;\n
+                       editable_mode request/editable_mode | nothing;\n
+                       global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
+                       default_layout string:main_template;\n
+                       layout_id layout_form/pt | default_layout;">\n
+<tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
+  <tal:block metal:fill-slot="main">\n
  <div tal:define="p_props here/portal_properties;\n
                   p_url here/portal_url;\n
                   mtool here/portal_membership;\n
                   isAnon mtool/isAnonymousUser|nothing;\n
                   member mtool/getAuthenticatedMember;\n
                   now here/ZopeTime;\n
-                  never string:2000/01/01;\n
-                 "\n
- >\n
-\n
+                  never string:2000/01/01;">\n
   <div tal:condition="isAnon">\n
-\n
    <span tal:define="dummy python:request[\'RESPONSE\'].expireCookie(\'__ac\'\n
-                                                                  , path=\'/\')"\n
-   />\n
-\n
+                                                                  , path=\'/\')"/>\n
    <h1 class="DesktopTitle" i18n:translate="">Login failure</h1>\n
 \n
    <p class="Desktop" i18n:translate="">You are not currently logged in. Your\n
@@ -171,11 +165,9 @@
   </div><!-- not isAnon -->\n
 \n
  </div><!-- define p_props -->\n
-\n
-</div><!-- metal:fill-slot="main" -->\n
-\n
-</body>\n
-</html>
+  </tal:block>\n
+</tal:block>\n
+</tal:block>
 
 ]]></string> </value>
         </item>
