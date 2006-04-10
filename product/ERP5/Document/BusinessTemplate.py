@@ -1137,6 +1137,11 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
+    # we can either specify nothing, +, - or = before the chain
+    # this is used to know how to manage the chain
+    # if nothing or +, chain is added to the existing one
+    # if - chain is removed from the exisiting one
+    # if = chain replaced the existing one
     p = context.getPortalObject()
     (default_chain, chain_dict) = getChainByType(context)
     for key in self._archive.keys():
@@ -1145,16 +1150,20 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         portal_type = wflist[0]
         workflow = wflist[1]
       else:
+        # portal type with no workflow defined
         portal_type = wflist[0][:-2]
         workflow = ''
       if chain_dict.has_key('chain_%s' % portal_type):
-        if workflow not in chain_dict['chain_%s' % portal_type]:
+        if workflow[0] in ['+', '-', '=']:
+          workflow_name = workflow[1:]
+        else:
+          workflow_name = workflow
+        if workflow_name not in chain_dict['chain_%s' % portal_type]:
           raise NotFound, 'workflow %s not found in chain for portal_type %s'\
-        % (workflow, portal_type)
+                % (workflow, portal_type)
         if self._objects.has_key(portal_type):
-          workflow_list = self._objects[portal_type]
-          workflow_list.append(workflow)
-          self._objects[portal_type] = workflow_list
+          # other workflow id already defined for this portal type
+          self._objects[portal_type].append(workflow)
         else:
           self._objects[portal_type] = [workflow,]
       else:
@@ -1204,12 +1213,26 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
           old_chain_dict = chain_dict['chain_%s' % portal_type]
           # XXX we don't use the chain (Default) in erp5 so don't keep it
           if old_chain_dict != '(Default)' and old_chain_dict != '':
-            # unique workflow chains
             old_chain_workflow_id_set = {}
+            # get existent workflow id list
             for wf_id in old_chain_dict.split(', '):
               old_chain_workflow_id_set[wf_id] = 1
+            # get new workflow id list
             for wf_id in self._objects[path].split(', '):
-              old_chain_workflow_id_set[wf_id] = 1
+              if wf_id[0] == '-':
+                # remove wf id if already present
+                if old_chain_workflow_id_set.has_key(wf_id[1:]):
+                  old_chain_workflow_id_set.pop(wf_id[1:])
+              elif wf_id[0] == '=':
+                # replace existing chain by this one
+                old_chain_workflow_id_set = {}
+                old_chain_workflow_id_set[wf_id[1:]] = 1
+              # then either '+' or nothing, add wf id to the list
+              elif wf_id[0] == '+':
+                old_chain_workflow_id_set[wf_id[1:]] = 1
+              else:
+                old_chain_workflow_id_set[wf_id] = 1
+            # create the new chain
             chain_dict['chain_%s' % portal_type] = ', '.join(
                                               old_chain_workflow_id_set.keys())
           else:
