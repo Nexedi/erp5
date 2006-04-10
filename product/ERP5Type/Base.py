@@ -1123,7 +1123,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return "%s.parent_uid = %s" % (table, self.getUid())
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParentUid' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentUid' )
   def getParentUid(self):
     """
       Returns the UID of the parent of the current object. Used
@@ -1140,28 +1141,32 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         raise DeferredCatalogError('Could neither access parent uid nor generate it', self)
     return uid
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParentTitleOrId' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentTitleOrId' )
   def getParentTitleOrId(self):
     """
       Returns the title or the id of the parent
     """
-    return self.getParent().getTitleOrId()
+    return self.aq_parent.getTitleOrId()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParentId' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentId' )
   def getParentId(self):
     """
-      Returns the title or the id of the parent
+      Returns the id of the parent
     """
-    return self.getParent().getId()
+    return self.aq_parent.getId()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParentTitle' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentTitle' )
   def getParentTitle(self):
     """
-      Returns the title or the id of the parent
+      Returns the title or of the parent
     """
-    return self.getParent().getTitle()
+    return self.aq_parent.getTitle()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParentValue' )
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getParentValue' )
   def getParentValue(self):
     """
       Returns the parent of the current object.
