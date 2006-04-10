@@ -266,8 +266,20 @@ try:
     
     def log(self, path):
       self._getPreferences()
-      return self.client.log(path)
-
+      try:
+        log_list = self.client.log(path)
+      except pysvn.ClientError, error:
+        excep = self.getException()
+        if excep:
+          raise excep
+        else:
+          raise error
+      # Edit list to make it more usable in zope
+      for rev_dict in log_list:
+        rev_dict['revision'] = rev_dict['revision'].number
+        rev_dict['date'] = time.ctime(rev_dict['date'])
+      return log_list
+        
     def add(self, path):
       self._getPreferences()
       return self.client.add(path=path, force=True)

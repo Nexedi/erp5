@@ -541,21 +541,6 @@ class SubversionTool(UniqueObject, Folder):
     client = self._getClient()
     return client.log(path)
   
-  def logHTML(self, bt, path):
-    log_list=self.log(path)
-    html='''<script>
-      function checkControl(){
-        alert("checked")
-      }
-    </script>
-    '''
-    html+="<br><b><a href='BusinessTemplate_viewSvnShowFile?file=%s'>%s File History</a></b>  <a href='%s'><img src='imgs/edit.png' border='0'></a><hr><br>"%(path, path, self.editPath(bt, path))
-    for rev_dict in log_list:
-      html+="<center><table border=1 width=60%%><tr><td rowspan='2'><input name='check%s' value='%s' type='checkbox'></td><td style='background-color: rgb(204, 204, 255);'><b>Revision:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Author:</b> %s </td><td style='background-color: rgb(204, 204, 255);'> <b>Date:</b> %s</td></tr>"%(rev_dict['revision'].number,rev_dict['revision'].number, rev_dict['revision'].number,rev_dict['author'], time.ctime(rev_dict['date']))
-      html+="<tr><td style='background-color: white;' colspan='3'><i>"+'<br>'.join(rev_dict['message'].split('\n'))+'</i></td></tr></table></center>'
-      html+='<br><br>'
-    return html
-  
   security.declareProtected('Import/Export objects', 'cleanup')
   def cleanup(self):
     """remove svn locks in working copy
