@@ -69,11 +69,13 @@ class OOoBuilder:
   security.declarePrivate('__init__')
   def __init__(self, document):
     if hasattr(document, 'data') :
-      self._document = StringIO(document.data)
+      self._document = StringIO()
+      self._document.write(document.data)
     elif hasattr(document, 'read') :
       self._document = document
     else :
-      self._document = StringIO(document)
+      self._document = StringIO()
+      self._document.write(document)
     self._image_count = 0    
     self._manifest_additions_list = []
 
