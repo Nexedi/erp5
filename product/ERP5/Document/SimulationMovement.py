@@ -222,7 +222,7 @@ class SimulationMovement(Movement):
     # we know that invoicing rule acts like this, and that it comes after
     # invoice or invoicing_rule, so we if we come from invoince rule or 
     # invoicing rule, we always expand regardless of the causality state.
-    if ((self.getParent().getSpecialiseId() not in 
+    if ((self.getParentValue().getSpecialiseId() not in 
          ('default_invoicing_rule', 'default_invoice_rule')
          and self.getCausalityState() == 'expanded' ) or \
          len(self.objectIds()) != 0):
@@ -336,7 +336,7 @@ class SimulationMovement(Movement):
       while explanation_value.getPortalType() not in \
               self.getPortalDeliveryTypeList() and \
           explanation_value != self.getPortalObject():
-            explanation_value = explanation_value.getParent()
+            explanation_value = explanation_value.getParentValue()
       if explanation_value != self.getPortalObject():
         return explanation_value
 
@@ -523,7 +523,7 @@ class SimulationMovement(Movement):
       Return the root simulation movement in the simulation tree.
       FIXME : this method should be called getRootSimulationMovementValue
     """
-    parent_applied_rule = self.getParent()
+    parent_applied_rule = self.getParentValue()
     if parent_applied_rule.getRootAppliedRule() == parent_applied_rule:
       return self
     else:

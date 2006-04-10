@@ -60,7 +60,7 @@ class TransformationSourcingCopyToTarget(CopyToTarget):
     """
     Get parent movement, and its value delta dict.
     """
-    applied_rule = movement.getParent()
+    applied_rule = movement.getParentValue()
     rule = applied_rule.getSpecialiseValue()
     if rule.getPortalType() != "Transformation Sourcing Rule":
       value_delta_dict.pop('aggregate_list', None)

@@ -104,12 +104,12 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
     production_order_movement = movement.getRootSimulationMovement().\
                                                    getOrderValue()
     # XXX Acquisition can be use instead
-    parent_uid = production_order_movement.getParent().getUid()
+    parent_uid = production_order_movement.getParentUid()
     explanation_uid = production_order_movement.getExplanationUid()
     if parent_uid == explanation_uid:
       production_order_line = production_order_movement
     else:
-      production_order_line = production_order_movement.getParent()
+      production_order_line = production_order_movement.getParentValue()
     script = production_order_line._getTypeBasedMethod('_getTransformation') 
     if script is not None:
       transformation = script()
@@ -165,7 +165,7 @@ class TransformationSourcingRule(Rule):
          (movement.getSourceValue() is None):
            result = 0
       else:
-        supply_chain = self.getSupplyChain(movement.getParent())
+        supply_chain = self.getSupplyChain(movement.getParentValue())
         parent_supply_link = self.getCurrentSupplyLink(movement)
         if not supply_chain.test(parent_supply_link, movement):
           result = 0
@@ -191,9 +191,9 @@ class TransformationSourcingRule(Rule):
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
-      parent_movement = applied_rule.getParent()
+      parent_movement = applied_rule.getParentValue()
       # Calculate the previous supply link
-      supply_chain = self.getSupplyChain(parent_movement.getParent())
+      supply_chain = self.getSupplyChain(parent_movement.getParentValue())
       parent_supply_link = self.getCurrentSupplyLink(parent_movement)
       previous_supply_link_list = supply_chain.\
                      getPreviousPackingListSupplyLinkList(

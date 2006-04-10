@@ -214,7 +214,7 @@ class ImmobilisableItem(XMLObject, Amount):
          organisation.getFinancialYearStopDate() is None:
         if category is None: return None
         if category.getPortalType() != "Base Category":
-          return self._getFirstIndependantOrganisation(category.getParent())
+          return self._getFirstIndependantOrganisation(category.getParentValue())
         else:
           return None
       return organisation

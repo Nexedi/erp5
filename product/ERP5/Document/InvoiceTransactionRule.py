@@ -137,7 +137,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
                 resource = invoice.getPriceCurrency()
             if resource is None :
               # search the resource on parents simulation movement's deliveries
-              simulation_movement = applied_rule.getParent()
+              simulation_movement = applied_rule.getParentValue()
               portal_simulation = self.getPortalObject().portal_simulation
               while resource is None and \
                           simulation_movement != portal_simulation :
@@ -145,7 +145,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
                 if hasattr(delivery, 'getPriceCurrency') and \
                       delivery.getPriceCurrency() is not None :
                   resource = delivery.getPriceCurrency()
-                if simulation_movement.getParent().getParent() \
+                if simulation_movement.getParentValue().getParentValue() \
                                           == portal_simulation :
                   # we are on the first simulation movement, we'll try
                   # to get the resource from it's order price currency.
@@ -154,7 +154,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
                       order.getPriceCurrency() is not None :
                     resource = order.getPriceCurrency()
                 simulation_movement = simulation_movement\
-                                            .getParent().getParent()
+                                            .getParentValue().getParentValue()
                 
             if resource is None :
               # last resort : get the resource from the rule

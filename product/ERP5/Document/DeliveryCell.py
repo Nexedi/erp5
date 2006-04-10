@@ -160,13 +160,15 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       # Call a script on the context
       if 'price' in self.getMappedValuePropertyList([]):
         if getattr(aq_base(self), 'price', None) is not None:
-          return getattr(self, 'price') # default returns a price defined by the mapped value
+          # default returns a price defined by the mapped value
+          return getattr(self, 'price')
         else:
-          return self.aq_parent.getProperty('price') # Price is acquired
+          return self.getParentValue().getProperty('price') # Price is acquired
       else:
         return None
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getQuantity' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getQuantity' )
     def getQuantity(self):
       """
         Returns the quantity if defined on the cell
@@ -177,10 +179,10 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
         if getattr(aq_base(self), 'quantity', None) is not None:
           return getattr(self, 'quantity')
         else:
-          return self.aq_parent.getProperty('quantity')
+          return self.getParentValue().getProperty('quantity')
       else:
-        return self.getParent().getQuantity() # We have acquisition here which me should mimic
-        # return None
+        # We have acquisition here which me should mimic
+        return self.getParentValue().getQuantity()
 
     def _setItemIdList(self, value):
       """
@@ -191,7 +193,8 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       given_item_id_list = value
       item_object_list = []
       for item in given_item_id_list :
-        item_result_list = self.portal_catalog(id = item, portal_type="Piece Tissu")
+        item_result_list = self.portal_catalog(id = item,
+              portal_type="Piece Tissu")
         if len(item_result_list) == 1 :
           try :
             object = item_result_list[0].getObject()
@@ -230,36 +233,35 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
 
         self.setTargetQuantity(quantity)
 
-#     security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
-#     def applyTargetSolver(self, solver):
-#       for my_simulation_movement in self.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
-#         self.portal_simulation.applyTargetSolver(my_simulation_movement, solver)
-
     # Required for indexing
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInventoriatedQuantity')
     def getInventoriatedQuantity(self):
       """
       """
       return Movement.getInventoriatedQuantity(self)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getStartDate')
     def getStartDate(self):
       """
       """
       return self._baseGetStartDate()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                             'getStopDate')
     def getStopDate(self):
       """
       """
       return self._baseGetStopDate()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRootDeliveryValue')
     def getRootDeliveryValue(self):
       """
       Returns the root delivery responsible of this cell
       """
-      return self.getParent().getRootDeliveryValue()
+      return self.getParentValue().getRootDeliveryValue()
 
     # Simulation Consistency Check
     def getSimulationQuantity(self):
@@ -277,16 +279,20 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
           return result[0].quantity
         return None
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
-    def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               'notifyAfterUpdateRelatedContent' )
+    def notifyAfterUpdateRelatedContent(self, previous_category_url,
+                                              new_category_url):
       """
         Membership Crirerions and Category List are same in DeliveryCell
         Must update it (or change implementation to remove data duplication)
       """
       update_method = self.portal_categories.updateRelatedCategory
       predicate_value = self.getPredicateValueList()
-      new_predicate_value = map(lambda c: update_method(c, previous_category_url, new_category_url), predicate_value)
-      self._setPredicateValueList(new_predicate_value) # No reindex needed since uid stable
+      new_predicate_value = map(lambda c: update_method(c,
+              previous_category_url, new_category_url), predicate_value)
+      self._setPredicateValueList(new_predicate_value)
+      # No reindex needed since uid stable
 
     # XXX FIXME: option variation are today not well implemented
     # This little hack is needed to make the matrixbox working
@@ -309,14 +315,16 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
       if kw.has_key('item_id_list'):
         self._setItemIdList(kw['item_id_list'])
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateSimulationDeliveryProperties')
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'updateSimulationDeliveryProperties')
     def updateSimulationDeliveryProperties(self, movement_list = None):
       """
-      Set properties delivery_ratio and delivery_error for each simulation movement
-      in movement_list (all movements by default), according to this delivery calculated quantity
+      Set properties delivery_ratio and delivery_error for each
+      simulation movement in movement_list (all movements by default),
+      according to this delivery calculated quantity
       """
-      parent = self.getParent()
+      parent = self.getParentValue()
       if parent is not None:
-        parent = parent.getParent()
+        parent = parent.getParentValue()
         if parent is not None:
           parent.updateSimulationDeliveryProperties(movement_list, self)

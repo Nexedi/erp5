@@ -64,7 +64,7 @@ class InvoicingRule(Rule):
       """
         Tests if the rule (still) applies
       """
-      parent = movement.getParent()
+      parent = movement.getParentValue()
       result = 0
       if (parent.getPortalType() == 'Applied Rule') and \
          (parent.getSpecialiseId() in ('default_order_rule',
@@ -78,9 +78,10 @@ class InvoicingRule(Rule):
       """
       delivery_line_type = 'Simulation Movement'
       # Source that movement from the next node / stock
-      my_context_movement = applied_rule.getParent()
+      my_context_movement = applied_rule.getParentValue()
 
-      # Do not invoice within the same entity or whenever entities are not all defined
+      # Do not invoice within the same entity or whenever entities are
+      # not all defined
       # It is OK to invoice within different entities of the same company
       # if we wish to get some internal analytical accounting
       # but that requires some processing to produce a balance sheet

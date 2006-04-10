@@ -84,7 +84,7 @@ class TransformationRule(Rule):
          # We only produced what is asked on the Production Order
            result = 0
       else:
-        supply_chain = self.getSupplyChain(movement.getParent())
+        supply_chain = self.getSupplyChain(movement.getParentValue())
         parent_supply_link = self.getCurrentSupplyLink(movement)
         current_tranfo_link_list = supply_chain.\
                        getPreviousProductionSupplyLinkList(parent_supply_link)
@@ -107,13 +107,13 @@ class TransformationRule(Rule):
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
-      parent_movement = applied_rule.getParent()
+      parent_movement = applied_rule.getParentValue()
       # Get production node and production section
       production = parent_movement.getSource()
       production_section = parent_movement.getSourceSection()
       # Get the current supply link used to calculate consumed resource
       # The current supply link is calculated from the parent AppliedRule.
-      supply_chain = self.getSupplyChain(parent_movement.getParent())
+      supply_chain = self.getSupplyChain(parent_movement.getParentValue())
       parent_supply_link = self.getCurrentSupplyLink(parent_movement)
       current_supply_link_list = supply_chain.\
                      getPreviousProductionSupplyLinkList(parent_supply_link)
@@ -126,12 +126,12 @@ class TransformationRule(Rule):
       else:
         current_supply_link = current_supply_link_list[0]
         # Generate produced movement
-        movement_dict = self._expandProducedResource(applied_rule, 
+        movement_dict = self._expandProducedResource(applied_rule,
                                                      production,
                                                      production_section,
                                                      current_supply_link)
         # Generate consumed movement
-        consumed_mvt_dict = self._expandConsumedResource(applied_rule, 
+        consumed_mvt_dict = self._expandConsumedResource(applied_rule,
                                                          production,
                                                          production_section,
                                                          current_supply_link)
@@ -148,7 +148,7 @@ class TransformationRule(Rule):
         Create a movement for the resource produced by the transformation.
         Only one produced movement can be created.
       """
-      parent_movement = applied_rule.getParent()
+      parent_movement = applied_rule.getParentValue()
       stop_date = parent_movement.getStartDate()
       produced_movement_dict = {
         'pr': {
@@ -183,8 +183,8 @@ class TransformationRule(Rule):
       # Store each value in a dictionnary before created them.
       # { movement_id: {property_name: property_value,} ,}
       consumed_movement_dict = {}
-      parent_movement = applied_rule.getParent()
-      supply_chain = self.getSupplyChain(parent_movement.getParent())
+      parent_movement = applied_rule.getParentValue()
+      supply_chain = self.getSupplyChain(parent_movement.getParentValue())
       # Consumed previous variation
       previous_variation_dict = self._expandConsumedPreviousVariation(
                                                         applied_rule, 
@@ -211,7 +211,7 @@ class TransformationRule(Rule):
       """
       id_count = 1
       consumed_movement_dict = {}
-      parent_movement = applied_rule.getParent()
+      parent_movement = applied_rule.getParentValue()
       # Calculate the variation category list of parent movement
       base_category_list = parent_movement.getVariationBaseCategoryList()
       if "industrial_phase" in base_category_list:
@@ -257,7 +257,7 @@ class TransformationRule(Rule):
       """
         Create a movement for each resource consumed by the transformation,
       """
-      parent_movement = applied_rule.getParent()
+      parent_movement = applied_rule.getParentValue()
       # Calculate the context for getAggregatedAmountList
       base_category_list = parent_movement.getVariationBaseCategoryList()
       if "industrial_phase" in base_category_list:

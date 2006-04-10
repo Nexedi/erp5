@@ -719,7 +719,7 @@ be a problem)."""
         object.immediateReindexObject()
     if delete:
       if len(from_object.portal_categories.getRelatedValueList(from_object))==0:
-        parent = from_object.getParent()
+        parent = from_object.getParentValue()
         parent.manage_delObjects(from_object.getId())
     return corrected_list
 

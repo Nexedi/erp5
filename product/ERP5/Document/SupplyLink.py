@@ -122,7 +122,7 @@ class SupplyLink(Path, XMLObject):
       ind_phase_list = movement.getIndustrialPhaseValueList()
       if ind_phase_list != []:
         # Is this SupplyLink in the route to the previous production node ?
-        supply_chain = self.getParent()
+        supply_chain = self.getParentValue()
         previous_ind_phase_list =\
               supply_chain.getPreviousProductionIndustrialPhaseList(self)
         for ind_phase in ind_phase_list:
@@ -139,24 +139,24 @@ class SupplyLink(Path, XMLObject):
         else:
           # Check if raw material is create by a production link or a packing
           # list link.
-          supply_chain = self.getParent()
+          supply_chain = self.getParentValue()
           next_industrial_phase_list = \
               supply_chain.getNextProductionIndustrialPhaseList(self)
           ind_phase_id_list = [x.getId() for x in next_industrial_phase_list]
 
           # Get the transformation to use
-          applied_rule = movement.getParent()
+          applied_rule = movement.getParentValue()
           rule = applied_rule.getSpecialiseValue()
           transformation = rule.getTransformation(movement)
           # Call getAggregatedAmountList
           amount_list = transformation.getAggregatedAmountList(
-                       movement.getParent().getParent(),
+                       movement.getParentValue().getParentValue(),
                        ind_phase_id_list=ind_phase_id_list)
           resource_list = [x.getResourceValue() for x in amount_list]
           current_resource = movement.getResourceValue()
           if current_resource not in resource_list:
             # We can delivered this resource
-            supply_chain = self.getParent()
+            supply_chain = self.getParentValue()
             previous_ind_phase_list =\
                   supply_chain.getPreviousProductionIndustrialPhaseList(self)
             if len(previous_ind_phase_list) == 0:

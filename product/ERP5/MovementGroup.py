@@ -279,12 +279,12 @@ class CausalityMovementGroup(RootMovementGroup):
 
   def _getExplanationRelativeUrl(self, movement):
     """ Get the order value for a movement """
-    if hasattr(movement, 'getParent'):
+    if hasattr(movement, 'getParentValue'):
       # This is a simulation movement
-      if movement.getParent() != movement.getRootAppliedRule() :
+      if movement.getParentValue() != movement.getRootAppliedRule() :
         # get the explanation of parent movement if we have not been
         # created by the root applied rule.
-        movement = movement.getParent().getParent()
+        movement = movement.getParentValue().getParentValue()
       explanation_value = movement.getExplanationValue()
       if explanation_value is None:
         raise ValueError, 'No explanation for movement %s' % movement.getPath()
@@ -1024,7 +1024,7 @@ class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
 
   def _getExplanationRelativeUrl(self, movement):
     """ Get the order value for a movement """
-    transformation_applied_rule = movement.getParent()
+    transformation_applied_rule = movement.getParentValue()
     transformation_rule = transformation_applied_rule.getSpecialiseValue()
     if transformation_rule.getPortalType() != 'Transformation Rule':
       raise MovementGroupError, 'movement! %s' % movement.getPath()

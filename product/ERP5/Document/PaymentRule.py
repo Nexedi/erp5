@@ -67,7 +67,7 @@ class PaymentRule(Rule):
         Tests if the rule (still) applies
       """
       if 'receivable' in movement.getId() : ### TODO: expand 'payable' too
-        parent = movement.getParent()
+        parent = movement.getParentValue()
         if parent.getPortalType()=='Applied Rule' \
 	    and parent.getSpecialiseId()=='default_invoice_transaction_rule':
           #LOG('PaymentRule.test :', 0, repr(( 'applies with', movement, parent )))
@@ -86,7 +86,7 @@ class PaymentRule(Rule):
       """
       payment_line_type = 'Simulation Movement'
 
-      my_parent_movement = applied_rule.getParent()
+      my_parent_movement = applied_rule.getParentValue()
 
       if my_parent_movement.getQuantity() is not None:
         bank_id = 'bank'

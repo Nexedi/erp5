@@ -93,8 +93,8 @@ class CopyToTarget(TargetSolver):
     """
     Get parent movement, and its value delta dict.
     """
-    applied_rule = movement.getParent()
-    parent_movement = applied_rule.getParent()
+    applied_rule = movement.getParentValue()
+    parent_movement = applied_rule.getParentValue()
     if parent_movement.getPortalType() != "Simulation Movement":
       parent_movement = None
     return parent_movement, value_delta_dict

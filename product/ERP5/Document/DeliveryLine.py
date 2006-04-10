@@ -78,15 +78,15 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated, ImmobilisationMovem
     updateRelatedContent = XMLMatrix.updateRelatedContent
 
     # Explicit acquisition of aq_dynamic generated method
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getSimulationState')
     def getSimulationState(self):
       """
         Explicitly acquire simulation_state from parent
       """
-      if hasattr(self.getParent(),'getSimulationState'):
-        return self.getParent().getSimulationState()
-      return None
+      method = getattr(self.getParentValue(),'getSimulationState', None)
+      if method is not None:
+        return method()
     
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
@@ -383,19 +383,22 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated, ImmobilisationMovem
       result = self.DeliveryLine_zGetRelatedDestinationSection(uid=self.getUid())
       return map(lambda x: x.destination_section, result)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRootDeliveryValue')
     def getRootDeliveryValue(self):
       """
       Returns the root delivery responsible of this line
       """
-      return self.getParent().getRootDeliveryValue()
+      return self.getParentValue().getRootDeliveryValue()
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateSimulationDeliveryProperties')
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'updateSimulationDeliveryProperties')
     def updateSimulationDeliveryProperties(self, movement_list = None):
       """
-      Set properties delivery_ratio and delivery_error for each simulation movement
-      in movement_list (all movements by default), according to this delivery calculated quantity
+      Set properties delivery_ratio and delivery_error for each
+      simulation movement in movement_list (all movements by default),
+      according to this delivery calculated quantity
       """
-      parent = self.getParent()
+      parent = self.getParentValue()
       if parent is not None:
         parent.updateSimulationDeliveryProperties(movement_list, self)
