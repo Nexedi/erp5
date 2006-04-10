@@ -73,16 +73,6 @@ class AppliedRule(XMLObject):
       """ show the content in the left pane of the ZMI """
       return self.objectValues()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCausalityState')
-    def getCausalityState(self, id_only=1):
-      """
-        Returns the current state in causality
-      """
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('causality_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only)
-
-
     security.declareProtected(Permissions.AccessContentsInformation, 'test')
     def test(self):
       """
@@ -124,7 +114,7 @@ class AppliedRule(XMLObject):
       if rule is not None:
         if self.isRootAppliedRule():
           # We should capture here a list of url/uids of deliveires to update
-          rule._v_notify_dict = {}    
+          rule._v_notify_dict = {}
         rule.expand(self,**kw)
         # XXX This part must be done with a interaction workflow is needed.
 #       if self.isRootAppliedRule():
@@ -219,31 +209,35 @@ class AppliedRule(XMLObject):
         result.extend(m.getMovementIndex())
       return result
 
-    security.declareProtected(Permissions.View, 'isRootAppliedRule')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isRootAppliedRule')
     def isRootAppliedRule(self):
       """
         Returns 1 is this is a root applied rule
       """
-      if self.getParent().getMetaType() == "ERP5 Simulation Tool":
-        return 1
-      else:
-        return 0
+      return self.getParentValue().getMetaType() == "ERP5 Simulation Tool"
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRootAppliedRule')
     def getRootAppliedRule(self):
-      # Return the root applied rule -- useful if some reindexing is needed from inside
-      if self.getParent().getMetaType() == "ERP5 Simulation Tool":
+      """Return the root applied rule.
+      useful if some reindexing is needed from inside
+      """
+      if self.getParentValue().getMetaType() == "ERP5 Simulation Tool":
         return self
-      else:
-        return self.getParent().getRootAppliedRule()
+      return self.getParentValue().getRootAppliedRule()
 
     # Psyco optimizations
     psyco.bind(getMovementIndex)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'notifySimulationChange')
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'notifySimulationChange')
     def notifySimulationChange(self, notify_dict):
       for delivery_url in notify_dict.keys():
         delivery_value = self.getPortalObject().restrictedTraverse(delivery_url)
         if delivery_value is None:
-          LOG("ERP5 WARNING", 0, 'Unable to access object %s to notify simulation change' % delivery_url)
+          LOG("ERP5 WARNING", 0,
+              'Unable to access object %s to notify simulation change' %
+               delivery_url)
         else:
           delivery_value.notifySimulationChange()
