@@ -76,6 +76,8 @@ resource = context.getResourceValue()\n
 if resource is not None:\n
   not_option_base_category_list = resource.getVariationBaseCategoryList(\n
                                                  omit_option_base_category=1)\n
+else :\n
+  not_option_base_category_list = ()\n
 \n
 for item in item_list:\n
   # Get value of the item\n
