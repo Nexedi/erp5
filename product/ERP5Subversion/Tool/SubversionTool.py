@@ -42,6 +42,7 @@ from zExceptions import Unauthorized
 from OFS.Image import manage_addFile
 from cStringIO import StringIO
 from tempfile import mktemp
+from zLOG import LOG
 
 try:
   from base64 import b64encode, b64decode
@@ -678,17 +679,15 @@ class SubversionTool(UniqueObject, Folder):
   
   def addNewFiles(self, old_dir, new_dir):
     # detect created files
-    output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, old_dir)).replace(': ', '/')
+    output = commands.getoutput('LC_ALL=C diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, new_dir)).replace(': ', '/')
     files_list = output.split('\n')
     # Copy files
     os.system('cp -af %s/* %s'%(new_dir, old_dir))
     # svn add
     for file in files_list:
       if file:
-        try:
+          LOG("addNew", 0, 'adding '+ str(file))
           self.add(file.replace(new_dir, old_dir))
-        except:
-          pass
   
   def treeToXML(self, item) :
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
