@@ -274,8 +274,22 @@ try:
 
     def info(self, path):
       self._getPreferences()
-      return self.client.info(path=path)
-
+      try:
+        entry = self.client.info(path=path)
+      except pysvn.ClientError, error:
+        excep = self.getException()
+        if excep:
+          raise excep
+        else:
+          raise error
+      # transform entry to dict to make it more usable in zope
+      members_tuple=('url', 'uuid', 'revision', 'kind', 'commit_author', 'commit_revision', 'commit_time',)
+      entry_dict = dict([(member,getattr(entry,member)) for member in members_tuple])
+      entry_dict['revision'] = entry_dict['revision'].number
+      entry_dict['commit_revision'] = entry_dict['commit_revision'].number
+      entry_dict['commit_time'] = time.ctime(entry_dict['commit_time'])
+      return entry_dict
+      
     def ls(self, path):
       self._getPreferences()
       try:

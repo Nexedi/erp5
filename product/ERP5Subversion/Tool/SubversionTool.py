@@ -566,22 +566,6 @@ class SubversionTool(UniqueObject, Folder):
     client = self._getClient()
     return client.cleanup(working_copy)
 
-  security.declareProtected('Import/Export objects', 'infoHTML')
-  def infoHTML(self):
-    entry=self.info()
-    html='''<center><h1>Working Copy Informations</h1></center><br>
-    <center><table width='60%%' border='1'>
-    <tr height="18px"><td><b>Repository URL</b></td><td>%s</td></tr>
-    <tr height="18px"><td><b>Repository UUID</b></td><td>%s</td></tr>
-    <tr height="18px"><td><b>Revision</b></td><td>%s</td></tr>
-    <tr height="18px"><td><b>Node Type</b></td><td>%s</td></tr>
-    <tr height="18px"><td><b>Last Commit Author</b></td><td>%s</td></tr>
-    <tr height="18px"><td><b>Last Commit Revision</b></td><td>%s</td></tr>
-    <tr height="18px"><td><b>Last Commit Time</b></td><td>%s</td></tr>
-    </table></center>'''%(entry.url, entry.uuid, entry.revision.number, entry.kind, entry.commit_author, entry.commit_revision.number, time.ctime(entry.commit_time),)
-    return html
-    
-
   security.declareProtected('Import/Export objects', 'remove')
   def remove(self, path):
     """Remove a file or a directory.
