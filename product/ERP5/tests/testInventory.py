@@ -29,8 +29,6 @@
 # XXX test 1 :
 #   - stepTestGetInventoryWithSelectionReport is not launched yet,
 #       since it tests a behavior which does not exist yet
-#   - TestGetInventoryList : uses InventoryBrain.py in /usr/lib/zope/Extensions, which is not up to date
-#       => To update in RPMs
 # XXX test 2 :
 #   - There is an issue about inventory in inventory module :
 #       if a movement which is older than the inventory is modified by quantity,
@@ -499,9 +497,6 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
               mapped_value_property_list = ['quantity'],
               )
     sequence.edit(packing_list_list = packing_list_list)
-    mvt = self.getPortal().portal_simulation.newContent(portal_type='Simulation Movement')
-    mvt.edit(delivery_value_list = delivery_line_list)
-    
     
   def stepCreateTestingCategories(self, sequence=None, sequence_list=None, **kw):
     """
