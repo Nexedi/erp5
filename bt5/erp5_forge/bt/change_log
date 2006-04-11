@@ -1,3 +1,6 @@
+2006-04-10 chris
+* added Subversion Tool integration
+
 2006-01-27
 * display "difficulty" column in bug tracker
 * correct title of "status" column in "more collumns" and "searchable"
