@@ -70,15 +70,22 @@
 
 from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
-#return context.REQUEST\n
 if "changelog" in context.REQUEST.keys():\n
   changelog=context.REQUEST["changelog"]\n
 else:\n
   changelog=None\n
 \n
 to_commit = files.split(\',\')\n
+svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
+if not svn_path :\n
+  raise "Error: Please set Subversion working path in preferences"\n
+if svn_path[-1]!=\'/\':\n
+  svn_path+=\'/\'\n
 \n
 if to_commit != \'none\' :\n
+    for relative_path in to_commit:\n
+      relative_path = svn_path+relative_path\n
+\n
     try:\n
       if not changelog :\n
         return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_viewSvnChangelog?cancel_url=\'+context.absolute_url() + \'/\' + \'BusinessTemplate_viewSvnStatus?checked=\'+checked.replace(\'%20\',\'%2520\').replace(\' \',\'%20\')+\'&files=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
@@ -148,6 +155,9 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>changelog</string>
                             <string>None</string>
                             <string>to_commit</string>
+                            <string>svn_path</string>
+                            <string>_getiter_</string>
+                            <string>relative_path</string>
                             <string>False</string>
                             <string>error</string>
                             <string>error1</string>
