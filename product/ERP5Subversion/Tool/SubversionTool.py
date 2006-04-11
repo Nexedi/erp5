@@ -672,10 +672,7 @@ class SubversionTool(UniqueObject, Folder):
     # svn del
     for file in files_list:
       if file:
-        try:
-          self.remove(file) 
-        except:
-          pass
+        self.remove(file) 
   
   def addNewFiles(self, old_dir, new_dir):
     # detect created files
