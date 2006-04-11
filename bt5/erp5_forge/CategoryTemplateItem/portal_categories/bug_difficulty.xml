@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value>                 <string>bug_difficulty</string> </value>
+            <value> <string>bug_difficulty</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>

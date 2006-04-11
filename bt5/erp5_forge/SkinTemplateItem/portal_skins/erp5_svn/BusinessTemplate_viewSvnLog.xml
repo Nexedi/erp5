@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
+ "DTD/xhtml1-strict.dtd">\n
+<?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
+\n
+<tal:block metal:use-macro="here/view_master/macros/master">\n
+<tal:block metal:fill-slot="main">\n
+\n
+<tal:block tal:define="path context/file;\n
+                       log_list context/log_list">\n
+<font color=\'black\'>\n
+<br><a tal:attributes="href python:\'BusinessTemplate_viewSvnShowFile?file=\'+str(path)"><b tal:content="python:str(path)+\' File History\'"></b></a>\n
+<a tal:attributes="href context/edit_path"><img src=\'imgs/edit.png\' border=\'0\'></a><hr><br>\n
+<script>\n
+  function checkControl(){\n
+    alert("checked")\n
+  }\n
+</script>\n
+\n
+<tal:block tal:repeat="rev_dict log_list">\n
+<center><table border=1 width=60%%>\n
+  <tr> <!-- <td rowspan=\'2\'><input name=\'check%s\' value=\'%s\' type=\'checkbox\'></td> -->\n
+    <td style=\'background-color: rgb(204, 204, 255);\'><b>Revision:</b> <span tal:content="python:rev_dict[\'revision\']">revision</span></td>\n
+    <td style=\'background-color: rgb(204, 204, 255);\'> <b>Author:</b> <span tal:content="python:rev_dict[\'author\']">author</span></td>\n
+    <td style=\'background-color: rgb(204, 204, 255);\'> <b>Date:</b> <span tal:content="python:rev_dict[\'date\']">date</span></td>\n
+  </tr>\n
+  <tr>\n
+    <td style=\'background-color: white;\' colspan=\'3\'><i tal:content="structure python:\'<br>\'.join(rev_dict[\'message\'].split(\'\\n\'))">changelog</i></td>\n
+  </tr>\n
+</table></center>\n
+<br>\n
+</tal:block>\n
+</font>\n
+<br><br>\n
+<center><button onclick="history.back()" value="back" name="back" type="button">Back</button>\n
+</center>\n
+</tal:block>\n
+</tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_viewSvnLog</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

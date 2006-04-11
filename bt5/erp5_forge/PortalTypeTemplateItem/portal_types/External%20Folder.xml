@@ -63,7 +63,7 @@
         <item>
             <key> <string>description</string> </key>
             <value> <string>ExtFolder stores sub-objects as ExtFile or ExtImage.\n
-    </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

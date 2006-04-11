@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
+ "DTD/xhtml1-strict.dtd">\n
+<?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
+\n
+<tal:block metal:use-macro="here/view_master/macros/master">\n
+<tal:block metal:fill-slot="main">\n
+<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">\n
+\n
+<script  src="js/dhtmlXCommon.js"></script>\n
+<script  src="js/dhtmlXTree.js"></script>\t\n
+<div id="menudiv" style="position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
+<table width=82 cellspacing=1 cellpadding=0 bgcolor=lightgray>\n
+  <tr><td>\n
+    <table width=80 cellspacing=0 cellpadding=0>\n
+      <tr>\n
+        <td id="item1" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=ls()><center>Infos</center></td>\n
+      </tr>\n
+      <tr>\n
+        <td id="item2" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=viewDiff(1)><center>Diff</center></td>\n
+      </tr>\n
+      <tr>\n
+        <td id="item3" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=log()>  <center>History</center></td>\n
+      </tr>\n
+      <tr>\n
+        <td id="item4" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=commit(1)>  <center>Commit</center></td>\n
+      </tr>\n
+      <tr>\n
+        <td id="item5" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=revert(1)>  <center>Revert</center></td>\n
+      </tr>\n
+    </table>\n
+  </td></tr>\n
+</table>\n
+</div>\n
+\n
+<tal:js replace="structure \n
+here/createJSStatus">javascript here</tal:js>\n
+\n
+<font color=\'black\'><h1><center>Subversion</center></h1></font><br>\n
+<button onclick="expandCollapse()" value="expand" name="Expand / Collapse" type="button">Expand / Collapse</button>\n
+<center><table width="100%" height="300">\n
+\t<tr>\n
+\t\t<td height="300">\n
+                <DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:40%;left:35%;">\n
+\t\t\t<TABLE BGCOLOR="#000000" BORDER=1 BORDERCOLOR="#000000" CELLPADDING=0 CELLSPACING=0 HEIGHT=200 WIDTH=300>\n
+\t\t\t\t<TR>\n
+\t\t\t\t\t<TD WIDTH="100%" HEIGHT="100%" BGCOLOR="#CCCCCC" ALIGN="CENTER" VALIGN="MIDDLE">\n
+\t\t\t\t\t\t<FONT FACE="Helvetica,Verdana,Arial" SIZE=3 COLOR="#000066"><B><center>Checking for changes.</center><br> <center>Please wait...</center></B></FONT> \n
+\t\t\t\t\t\t&nbsp; &nbsp; <BR> \n
+\t\t\t\t\t\t<!-- <IMG SRC="imgs/wait.gif" BORDER=1 WIDTH=75 HEIGHT=15><BR> -->\n
+\t\t\t\t\t</TD>\n
+\t\t\t\t</TR>\n
+\t\t\t</TABLE>\n
+\t\t</DIV>\n
+\t\t<div \n
+\t\t\tid="treebox1" \n
+\t\t\tstyle="width:98%; height:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:auto;">\n
+\t\t</div>\n
+\t\t</td>\n
+                <td style="vertical-align: top; text-align: left;"  width="10%" height="300">\n
+                <table><tr><td><b><u><font color=\'black\' size="1">Note:</font></u></b></td></tr>\n
+                <tr><td>  </td></tr>\n
+                <tr><td><font color="green" size="1">Added File</font></td></tr>\n
+                <tr><td><font color="orange" size="1">Modified File</font></td></tr>\n
+                <tr><td><font color="red" size="1">Deleted File</font></td></tr></table>\n
+                <br><br>\n
+                <table>\n
+                <tr><td><b><u><font color=\'black\' size="1">Working Copy</font></u></b></td></tr>\n
+                <tr><td><b><u><font color=\'black\' size="1">Actions:</font></u></b></td></tr>\n
+                <tr><td>  </td></tr>\n
+                <tr><td><button onclick="update()" value="update" name="Update All" type="button">Update</button></td></tr>\n
+                <tr><td><button onclick="infos()" value="infos" name="Repository Infos" type="button">Infos</button></td></tr>\n
+                <tr><td><button onclick="cleanup()" value="cleanup" name="Clean Repository Locks" type="button">Clean up</button></td></tr></table>\n
+                </td>\n
+\t</tr>\n
+</table>\n
+<button onclick="viewDiff()" value="diff" name="View Diff" type="button">View Diff</button>\n
+<button onclick="commit()" value="commit" name="commit Changes" type="button">Commit Changes</button>\n
+<button onclick="revert()" value="revert" name="revert Changes" type="button">Revert Changes</button>\n
+</center>\n
+<script>\n
+        if(upLevel) {\n
+          var splash = document.getElementById("splashScreen");\n
+        } else if(ns4) {\n
+          var splash = document.splashScreen;\n
+        } else if(ie4) {\n
+          var splash = document.all.splashScreen;\n
+        }\n
+\n
+        function hideObject() {\n
+\t  if (ns4) {\n
+\t    splash.visibility = "hide";\n
+\t  }\n
+\t  if (ie4 || upLevel) {\n
+\t    splash.style.visibility = "hidden";\n
+          }\n
+          checkBoxes();\n
+\t}\n
+        doOnLoad()\n
+</script>\n
+</tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_viewSvnStatus</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
