@@ -697,6 +697,12 @@ class SubversionTool(UniqueObject, Folder):
     return output
   
   def _treeToXML(self, item, output, ident, first) :
+    # svn path
+    svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    if not svn_path :
+      raise "Error: Please set Subversion working path in preferences"
+    if svn_path[-1] != '/':
+      svn_path += '/'
     # Choosing a color coresponding to the status
     itemStatus = item.msg_status
     if itemStatus == 'added' :
@@ -715,12 +721,12 @@ class SubversionTool(UniqueObject, Folder):
         output += '<item open="1" text="%s" id="%s" aCol="%s" '\
         'im0="folder.png" im1="folder_open.png" '\
         'im2="folder.png">'%(item.name,
-item.full_path, itemColor,) + os.linesep
+item.full_path.replace(svn_path, ''), itemColor,) + os.linesep
         first=False
       else :
         output += '<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
       'im1="folder_open.png" im2="folder.png">'%(item.name,
-item.full_path, itemColor,) + os.linesep
+item.full_path.replace(svn_path, ''), itemColor,) + os.linesep
       for it in item.sub_dirs:
         ident += 1
         output = self._treeToXML(item.getDir(it.name), output, ident,
@@ -733,7 +739,7 @@ first)
       for i in range(ident) :
         output += '\t'
       output += '<item text="%s" id="%s" aCol="%s" im0="document.png"/>'\
-                %(item.name, item.full_path, itemColor,) + os.linesep
+                %(item.name, item.full_path.replace(svn_path, ''), itemColor,) + os.linesep
     return output
     
 InitializeClass(SubversionTool)
