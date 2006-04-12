@@ -99,8 +99,7 @@ if \'changelog\' not in context.REQUEST.keys() :\n
 \n
 try:\n
   if commit_non_recurs != \'none\' and commit_non_recurs != \'\':\n
-    for relative_path in commit_non_recurs:\n
-      relative_path = svn_path+relative_path\n
+    commit_non_recurs = [svn_path + relative_path for relative_path in commit_non_recurs]\n
     context.getPortalObject()["portal_subversion"].checkin(path=commit_non_recurs, recurse=False, log_message=changelog)\n
   if commit_recurs != \'none\' and commit_recurs != \'\':\n
     for relative_path in commit_recurs:\n
@@ -171,6 +170,8 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>commit_non_recurs</string>
                             <string>commit_recurs</string>
                             <string>svn_path</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
                             <string>relative_path</string>
                             <string>False</string>
