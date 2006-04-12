@@ -381,19 +381,30 @@ class SubversionTool(UniqueObject, Folder):
     
   
   # path is the path in svn working copy
+  # return edit_path in zodb to edit it
+  # return '#' if no zodb path is found
   def editPath(self, bt, path):
     """Return path to edit file
     """
-    if os.path.isdir(path):
+    if 'bt' in path.split('/'):
+      # not in zodb
       return '#'
     svn_path = bt.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path:
       raise 'Error: Please set working copy path in Subversion preferences !'
     if svn_path[-1] != '/':
       svn_path += '/'
-    svn_path = svn_path + bt.getTitle() + '/'
+    svn_path = svn_path + bt.getTitle()
     edit_path = path.replace(svn_path, '')
+    if edit_path.strip() == '':
+      # not in zodb 
+      return '#'
+    if edit_path[0] == '/':
+      edit_path = edit_path[1:]
     edit_path = '/'.join(edit_path.split('/')[1:])
+    if edit_path.strip() == '':
+      # not in zodb 
+      return '#'
     tmp = re.search('\\.[\w]+$', edit_path)
     if tmp:
       extension = tmp.string[tmp.start():tmp.end()].strip()
@@ -459,7 +470,7 @@ class SubversionTool(UniqueObject, Folder):
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
         text = "<b>"+file_path+"</b><hr>"
-        text = file_path +" is a folder!"
+        text += file_path +" is a folder!"
       else:
         head = "<b>"+file_path+"</b>  <a href='"+self.editPath(bt, file_path)+"'><img src='imgs/edit.png' border='0'></a><hr>"
         text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%file_path)
@@ -478,7 +489,7 @@ class SubversionTool(UniqueObject, Folder):
         text = head + '\n'.join(text.split('\n')[10:-4])
       else : # does not exist
         text = "<b>"+file_path+"</b><hr>"
-        text = file_path +" does not exist!"
+        text += file_path +" does not exist!"
       return text
       
   security.declareProtected(Permissions.ManagePortal, 'acceptSSLServer')
