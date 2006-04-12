@@ -83,7 +83,7 @@ except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
   return context.asContext(caller=\'ls\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
-return context.asContext(infos_list=infos_list, file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
+return context.asContext(infos_dict=infos_list[0], file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
 </string> </value>
         </item>
         <item>

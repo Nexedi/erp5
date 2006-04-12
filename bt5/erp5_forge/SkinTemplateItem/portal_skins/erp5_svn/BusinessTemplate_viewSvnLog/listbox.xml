@@ -464,7 +464,24 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>revision</string>
+                          <string>Revision</string>
+                        </tuple>
+                        <tuple>
+                          <string>author</string>
+                          <string>Author</string>
+                        </tuple>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>message</string>
+                          <string>Changelog</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

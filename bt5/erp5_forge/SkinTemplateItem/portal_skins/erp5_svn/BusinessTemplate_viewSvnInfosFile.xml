@@ -56,11 +56,11 @@
 <tal:block metal:fill-slot="main">\n
 \n
 <tal:block tal:define="path context/file;\n
-                       infos_list context/infos_list">\n
+                       infos_dict context/infos_dict">\n
 <font color=\'black\'>\n
 <br><a tal:attributes="href python:\'BusinessTemplate_viewSvnShowFile?file=\'+str(path)"><b tal:content="path"></b></a>\n
 <a tal:attributes="href context/edit_path"><img src=\'imgs/edit.png\' border=\'0\'></a><hr><br>\n
-      <table width=60%% border=1 tal:repeat="infos_dict infos_list">\n
+      <table width=60%% border=1>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Name</b></td><td style=\'background-color: white;\' tal:content="python:path.split(\'/\')[-1]">filename</td></tr>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Size</b></td><td style=\'background-color: white;\' tal:content="python:infos_dict[\'size\']/1024.">filesize</td></tr>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Type</b></td><td style=\'background-color: white;\' tal:content="python:infos_dict[\'kind\']">filekind</td></tr>\n
