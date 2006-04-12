@@ -42,7 +42,6 @@ from zExceptions import Unauthorized
 from OFS.Image import manage_addFile
 from cStringIO import StringIO
 from tempfile import mktemp
-from zLOG import LOG
 
 try:
   from base64 import b64encode, b64decode
@@ -425,7 +424,7 @@ class SubversionTool(UniqueObject, Folder):
     response = request.RESPONSE
     login_list.append(self._encodeLogin(realm, user, password))
     value = ','.join(login_list)
-    expires = (DateTime() + 1).toZone('GMT').rfc822()
+    expires = (DateTime() + 7).toZone('GMT').rfc822()
     request.set(self.login_cookie_name, value)
     response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
 
@@ -487,7 +486,7 @@ class SubversionTool(UniqueObject, Folder):
     response = request.RESPONSE
     trust_list.append(self._encodeSSLTrust(trust_dict, permanent))
     value = ','.join(trust_list)
-    expires = (DateTime() + 1).toZone('GMT').rfc822()
+    expires = (DateTime() + 7).toZone('GMT').rfc822()
     request.set(self.ssl_trust_cookie_name, value)
     response.setCookie(self.ssl_trust_cookie_name, value, path = '/', expires = expires)
     
@@ -592,7 +591,6 @@ class SubversionTool(UniqueObject, Folder):
     """Commit local changes.
     """
     client = self._getClient(login=self.login)
-    #return client.checkin(self._getWorkingPath(path), log_message, recurse)
     return client.checkin(path, log_message, recurse)
 
   security.declareProtected('Import/Export objects', 'status')
@@ -683,7 +681,6 @@ class SubversionTool(UniqueObject, Folder):
     # svn add
     for file in files_list:
       if file:
-          LOG("addNew", 0, 'adding '+ str(file))
           self.add(file.replace(new_dir, old_dir))
   
   def treeToXML(self, item) :
