@@ -262,7 +262,6 @@ try:
     
     def revert(self, path):
       self._getPreferences()
-      raise str(path)
       return self.client.revert(path)
     
     def log(self, path):
