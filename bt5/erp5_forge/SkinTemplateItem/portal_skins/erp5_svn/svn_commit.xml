@@ -67,7 +67,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
-context.log("svn_commit", "blah")\n
+\n
 if "changelog" in context.REQUEST.keys() and context.REQUEST["changelog"]!=\'\':\n
   changelog=context.REQUEST["changelog"]\n
 else:\n
@@ -81,7 +81,7 @@ else:\n
     if modified != \'\' and modified != \'none\':\n
       commit_non_recurs = modified\n
 \n
-if commit_non_recurs != \'\' and commit_non_recurs!=\'none\':\n
+if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
   commit_non_recurs = commit_non_recurs.split(\',\')\n
 if removed != \'\' and removed != \'none\':\n
   commit_recurs = removed.split(\',\')\n

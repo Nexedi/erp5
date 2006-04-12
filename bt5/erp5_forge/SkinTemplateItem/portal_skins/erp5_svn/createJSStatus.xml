@@ -359,7 +359,7 @@ document.onmousemove = getMouse;\n
         function log(){\n
           //hide popup\n
           document.getElementById(\'menudiv\').style.display = "none";\n
-          open(\'%s/svn_log?file=\'+tree.getSelectedItemId(), \'_self\');\n
+          open(\'%s/BusinessTemplate_viewSvnLog?file=\'+tree.getSelectedItemId(), \'_self\');\n
         }\n
 \n
         function ls(){\n
