@@ -3,19 +3,19 @@
 PARAMS=1
 
 # Where we can find the RPM directory
-# and where we want to store the source code from cvs
-CVS_PATH="/home/$USER/cvs"
+# and where we want to store the source code from svn
+SVN_PATH="/home/$USER/svn"
 RPM_PATH="/home/$USER/rpm"
-REPOSIT="cvs.erp5.org"
+REPOSIT="https://svn.erp5.org/repos/public/erp5/trunk/products"
 
-# TODO: The spec repository should be moved from /ERP5/spec to /spec/Mandriva in the CVS
+# TODO: The spec repository should be moved from /ERP5/spec to /spec/Mandriva in the SVN repository
 SPEC_REPOSITORY="ERP5/spec"
 
 
 # Those variables are used to build the change log
 PACKAGER="Kevin Deldycke"
 EMAIL="kevin@nexedi.com"
-LOG_MSG="New build from the CVS"
+LOG_MSG="- New build from the SVN repository"
 
 
 if [ $# -lt "$PARAMS" ]
@@ -29,7 +29,7 @@ fi
 while test $# -gt 0; do
 
   ####################
-  # Build the archive from the cvs files
+  # Build the archive from the svn files
   ####################
 
   NAME=$1
@@ -37,19 +37,19 @@ while test $# -gt 0; do
   echo Starting Building $NAME
 
   # Retrieve the version in the source code as anonymous user to be sure we get published code only
-  cd $CVS_PATH && cvs -d:pserver:anonymous@$REPOSIT:/cvsroot checkout $NAME && cd -
-  VERSION=`awk '{print $2}' $CVS_PATH/$NAME/VERSION.txt`
+  cd $SVN_PATH && svn checkout $REPOSIT/$NAME && cd -
+  VERSION=`awk '{print $2}' $SVN_PATH/$NAME/VERSION.txt`
   echo Building --$NAME-- Version --$VERSION--
-  rm -rf $CVS_PATH/$NAME-$VERSION/
-  mkdir -p $CVS_PATH/$NAME-$VERSION
-  cp -a $CVS_PATH/$NAME $CVS_PATH/$NAME-$VERSION
-  # Remove CVS extra files
-  find $CVS_PATH/$NAME-$VERSION/* -name "CVS" | xargs rm -rf
+  rm -rf $SVN_PATH/$NAME-$VERSION/
+  mkdir -p $SVN_PATH/$NAME-$VERSION
+  cp -a $SVN_PATH/$NAME $SVN_PATH/$NAME-$VERSION
+  # Remove SVN extra files
+  find $SVN_PATH/$NAME-$VERSION/* -name ".svn" | xargs rm -rf
 
   # Create the archive
-  cd $CVS_PATH/$NAME-$VERSION && tar jcvf $NAME-$VERSION.tar.bz2 $NAME && cd -
-  mv -f $CVS_PATH/$NAME-$VERSION/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
-  rm -rf $CVS_PATH/$NAME-$VERSION
+  cd $SVN_PATH/$NAME-$VERSION && tar jcvf $NAME-$VERSION.tar.bz2 $NAME && cd -
+  mv -f $SVN_PATH/$NAME-$VERSION/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
+  rm -rf $SVN_PATH/$NAME-$VERSION
 
   TMP_SPEC="/tmp/$NAME-$VERSION-tmp.spec"
   rm -f $TMP_SPEC
@@ -57,41 +57,43 @@ while test $# -gt 0; do
 
 
   ####################
-  # Get data from the previous spec file commited in the CVS
+  # Get data from the previous spec file commited in the SVN repository
   ####################
 
-  # Now we will regenerate a spec file skeleton based on the one stored in the CVS.
+  # Now we will regenerate a spec file skeleton based on the one stored in the SVN.
   # This spec file need to be modified by hand to get
-  cd $CVS_PATH && cvs -d:pserver:anonymous@$REPOSIT:/cvsroot checkout $SPEC_REPOSITORY/$NAME.spec
-  CVS_SPEC_FILE="$CVS_PATH/$SPEC_REPOSITORY/$NAME.spec"
+  cd $SVN_PATH
+  rm -rf $NAME.spec
+  wget --no-check-certificate $REPOSIT/$SPEC_REPOSITORY/$NAME.spec
+  SVN_SPEC_FILE="$NAME.spec"
 
   # Get summary and required packages
-  SUMMARY=`grep "^Summary*" $CVS_SPEC_FILE`
-  REQUIRES=`grep "^Requires*" $CVS_SPEC_FILE`
+  SUMMARY=`grep "^Summary*" $SVN_SPEC_FILE`
+  REQUIRES=`grep "^Requires*" $SVN_SPEC_FILE`
 
   # Get the description and changelog from the previous spec file
-  L_SECTIONS=`grep -hn "#----------------------------------------------------------------------" $CVS_SPEC_FILE | sed -e "s/:/ /g" | awk '{print $1}'`
+  L_SECTIONS=`grep -hn "#----------------------------------------------------------------------" $SVN_SPEC_FILE | sed -e "s/:/ /g" | awk '{print $1}'`
   L_DESC_START=`echo $L_SECTIONS | awk '{print $1}'`
   L_DESC_STOP=` echo $L_SECTIONS | awk '{print $2}'`
   L_CHANGELOG=` echo $L_SECTIONS | awk '{print $3}'`
   L_CORE_START=$L_DESC_STOP
   L_CORE_STOP=$L_CHANGELOG
-  L_TOTAL=`wc -l $CVS_SPEC_FILE | awk '{print $1}'`
+  L_TOTAL=`wc -l $SVN_SPEC_FILE | awk '{print $1}'`
   DESC_HEAD=`expr $L_DESC_STOP - 1`
   DESC_TAIL=`expr $L_DESC_STOP - $L_DESC_START - 2`
   CORE_HEAD=`expr $L_CORE_STOP - 1`
   CORE_TAIL=`expr $L_CORE_STOP - $L_CORE_START - 1`
   CLOG_TAIL=`expr $L_TOTAL - $L_CHANGELOG - 1`
 
-  DESCRIPTION=`head -n $DESC_HEAD $CVS_SPEC_FILE | tail -n $DESC_TAIL`
-  SPEC_CORE=`head -n $CORE_HEAD $CVS_SPEC_FILE | tail -n $CORE_TAIL`
-  CHANGELOG=`tail -n $CLOG_TAIL $CVS_SPEC_FILE`
+  DESCRIPTION=`head -n $DESC_HEAD $SVN_SPEC_FILE | tail -n $DESC_TAIL`
+  SPEC_CORE=`head -n $CORE_HEAD $SVN_SPEC_FILE | tail -n $CORE_TAIL`
+  CHANGELOG=`tail -n $CLOG_TAIL $SVN_SPEC_FILE`
 
   TODAY=`env LC_TIME=en date +"%a %b %d %Y"`
 
   # Increase the rpm release number if needed
-  PREVIOUS_VERSION=`grep "^%define version*" $CVS_SPEC_FILE | awk '{print $3}'`
-  PREVIOUS_REL=`grep "^%define release*" $CVS_SPEC_FILE | awk '{print $3}'`
+  PREVIOUS_VERSION=`grep "^%define version*" $SVN_SPEC_FILE | awk '{print $3}'`
+  PREVIOUS_REL=`grep "^%define release*" $SVN_SPEC_FILE | awk '{print $3}'`
   if test "x$VERSION" = "x$PREVIOUS_VERSION"; then
     RELEASE=`expr $PREVIOUS_REL + 1`
   else
@@ -134,7 +136,7 @@ $SPEC_CORE
 #----------------------------------------------------------------------
 %changelog
 * $TODAY $PACKAGER <$EMAIL> $VERSION-$MKREL
-- $LOG_MSG
+$LOG_MSG
 
 $CHANGELOG" >> $TMP_SPEC
 
@@ -145,7 +147,7 @@ $CHANGELOG" >> $TMP_SPEC
   #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
 
   echo "-------------"
-  echo "Please commit the new $NAME.spec file in the Nexedi repository (http://$REPOSIT)"
+  echo "Please commit the new $NAME.spec file in the Nexedi repository ($REPOSIT)"
   echo "-------------"
 
 done
