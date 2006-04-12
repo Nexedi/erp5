@@ -456,22 +456,31 @@ class SubversionTool(UniqueObject, Folder):
   
   # Display a file content in HTML
   def fileHTML(self, bt, file_path):
-#     file = open(file_path, 'r')
-#     text = file.read()
-#     file.close()
-#     # Escaping
-#     text = text.replace("&", "&amp;")
-#     text = text.replace(">", "&gt;")
-#     text = text.replace("<", "&lt;")
-#     # Adding HTML stuff
-#     text = text.replace('\n', '<br>')
-#     text = text.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
-#     text = text.replace('  ', '&nbsp;&nbsp;')
-    head = "<b>"+file_path+"</b>  <a href='"+self.editPath(bt, file_path)+"'><img src='imgs/edit.png' border='0'></a><hr>"
-    text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%file_path)
-    text = head + '\n'.join(text.split('\n')[10:-4])
-    return text
-    
+    if os.path.exists(file_path):
+      if os.path.isdir(file_path):
+        text = "<b>"+file_path+"</b><hr>"
+        text = file_path +" is a folder!"
+      else:
+        head = "<b>"+file_path+"</b>  <a href='"+self.editPath(bt, file_path)+"'><img src='imgs/edit.png' border='0'></a><hr>"
+        text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%file_path)
+        text = head + '\n'.join(text.split('\n')[10:-4])
+      return text
+    else:
+      # see if tmp file is here (svn deleted file)
+      if file_path[-1]=='/':
+        file_path=file_path[:-1]
+      filename = file_path.split('/')[-1]
+      tmp_path = '/'.join(file_path.split('/')[:-1])
+      tmp_path = tmp_path+'/.svn/text-base/'+filename+'.svn-base'
+      if os.path.exists(tmp_path):
+        head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
+        text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%tmp_path)
+        text = head + '\n'.join(text.split('\n')[10:-4])
+      else : # does not exist
+        text = "<b>"+file_path+"</b><hr>"
+        text = file_path +" does not exist!"
+      return text
+      
   security.declareProtected(Permissions.ManagePortal, 'acceptSSLServer')
   def acceptSSLServer(self, trust_dict, permanent=False):
     """Accept a SSL server.
