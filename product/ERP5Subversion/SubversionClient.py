@@ -36,7 +36,6 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.PythonScripts.Utility import allow_class
-from zLOG import LOG, WARNING
 from tempfile import mktemp
 
 try:
@@ -269,6 +268,8 @@ try:
       try:
         log_list = self.client.log(path)
       except pysvn.ClientError, error:
+        if 'path not found' in error.args[0]:
+          return
         excep = self.getException()
         if excep:
           raise excep
@@ -307,6 +308,8 @@ try:
       try:
         dict_list = self.client.ls(url_or_path=path, recurse=False)
       except pysvn.ClientError, error:
+        if 'non-existent' in error.args[0]:
+          return
         excep = self.getException()
         if excep:
           raise excep
@@ -335,6 +338,7 @@ try:
   allow_class(SubversionLoginError)
   
 except ImportError:
+  from zLOG import LOG, WARNING
   LOG('SubversionTool', WARNING,
       'could not import pysvn; until pysvn is installed properly, this tool will not work.')
   def newSubversionClient(container, **kw):
