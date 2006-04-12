@@ -229,7 +229,7 @@ try:
     def checkin(self, path, log_message, recurse):
       self._getPreferences()
       try:
-        return self.client.checkin(path, log_message=log_message, recurse=recurse)
+        return self.client.checkin(path, log_message=log_message or 'none', recurse=recurse)
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
@@ -262,6 +262,7 @@ try:
     
     def revert(self, path):
       self._getPreferences()
+      raise str(path)
       return self.client.revert(path)
     
     def log(self, path):

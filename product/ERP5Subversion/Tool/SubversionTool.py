@@ -607,7 +607,7 @@ class SubversionTool(UniqueObject, Folder):
     return client.revert(path)
 
   security.declareProtected('Import/Export objects', 'checkin')
-  def checkin(self, path, log_message = 'None', recurse=True):
+  def checkin(self, path, log_message=None, recurse=True):
     """Commit local changes.
     """
     client = self._getClient(login=self.login)
