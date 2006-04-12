@@ -74,8 +74,11 @@
                     <key>                 <string>4</string> </key>
                     <value>
                       <list>
-                        <string>my_files</string>
                         <string>my_changelog</string>
+                        <string>my_realm_hidden</string>
+                        <string>my_added</string>
+                        <string>my_modified</string>
+                        <string>my_removed</string>
                       </list>
                     </value>
                 </item>
@@ -86,7 +89,6 @@
                         <string>my_realm</string>
                         <string>my_user</string>
                         <string>my_password</string>
-                        <string>my_realm_hidden</string>
                         <string>my_caller</string>
                       </list>
                     </value>

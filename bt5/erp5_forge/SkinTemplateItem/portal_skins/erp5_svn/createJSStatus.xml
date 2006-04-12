@@ -125,54 +125,66 @@ print \'\'\'<script>var tree = null;\n
             is_expanded=false;\n
           }\n
         }\n
-\n
-function getget(name) {\n
-  var q = document.location.search;\n
-  var i = q.indexOf(name + \'=\');\n
-\n
-  if (i == -1) {\n
-    return false;\n
-  }\n
-\n
-  var r = q.substr(i + name.length + 1, q.length - i - name.length - 1);\n
-\n
-  i = r.indexOf(\'&\');\n
-\n
-  if (i != -1) {\n
-    r = r.substr(0, i);\n
-  }\n
-\n
-  return r.replace(/\\+/g, \' \');\n
-}\n
-\n
         \n
-        function commit(popup){\n
+        function commit(popup, form){\n
+          nbModified=0;\n
+          nbAdded=0;\n
+          nbRemoved=0;\n
+          FilesRemovedArray=[]\n
+          FilesAddedArray=[]\n
+          FilesModifiedArray=[]\n
           if(popup == 1){\n
             //hide popup\n
             document.getElementById(\'menudiv\').style.display = "none";\n
-            filesToCommit = tree.getSelectedItemId();\n
-            partialToCommit = tree.getAllParentId(filesToCommit);\n
-            sub=tree.getAllSubItems(filesToCommit);\n
-            if(sub!=\'\'){\n
-              filesToCommit = filesToCommit+\',\'+sub;\n
+            filesCheckedArray = [tree.getSelectedItemId()];\n
+            filesCheckedArray=filesCheckedArray.concat(tree.getAllSubItems(filesCheckedArray[0]).split(\',\'));\n
+          }else{\n
+            filesCheckedArray=tree.getAllChecked().split(\',\');\n
+          }\n
+          for(i=0;i<filesCheckedArray.length; ++i){\n
+            if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
+              FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
+            }else{\n
+              if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
+                FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
+              }else\n
+              if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
+                FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
+              }\n
+            }\n
+          }\n
+          partialToCommit=tree.getAllPartiallyChecked();\n
+          if(nbModified!=0){\n
+            filesModified=FilesModifiedArray.join(\',\');\n
+            if(partialToCommit!=\'\'){\n
+              filesModified=filesModified+\',\'+partialToCommit\n
             }\n
           }else{\n
-            filesToCommit=tree.getAllChecked();\n
-            partialToCommit=tree.getAllPartiallyChecked();\n
-          }\n
-          if (filesToCommit == \'\') {\n
-            alert("Nothing to commit !");\n
-          } else {\n
-            if(partialToCommit == \'\') {\n
-              to_commit=filesToCommit\n
-            }else{\n
-              to_commit=partialToCommit+\',\'+filesToCommit\n
+            filesModified=\'none\'\n
+            if(partialToCommit!=\'\'){\n
+              filesModified=partialToCommit\n
             }\n
-            //Commit Files\n
-            open(\'%s/svn_commit?files=\'+escape(to_commit)+\'&checked=\'+escape(tree.getAllChecked()), \'_self\');\n
+          }\n
+          form.modified.value=filesModified;\n
+          if(nbAdded!=0){\n
+            filesAdded=FilesAddedArray.join(\',\');\n
+          }else{\n
+            filesAdded=\'none\'\n
+          }\n
+          form.added.value=filesAdded;\n
+          if(nbRemoved!=0){\n
+            filesRemoved=FilesRemovedArray.join(\',\');\n
+          }else{\n
+            filesRemoved=\'none\'\n
+          }\n
+          form.removed.value=filesRemoved;\n
+          if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
+            alert(\'Nothing to commit !\');\n
+          } else {\n
+            submitAction(form,\'%s/svn_commit\');\n
           }\n
         }\n
-        \n
+\n
          function clickHandler(item_id){\n
           if (tree.isItemChecked(item_id) == 0) {\n
             tree.setCheck(item_id, 1);\n
@@ -181,7 +193,7 @@ function getget(name) {\n
           }\n
          }\n
 \n
-        function viewDiff(popup){\n
+        function viewDiff(popup, form){\n
           nbModified=0;\n
           nbAdded=0;\n
           nbRemoved=0;\n
@@ -213,21 +225,23 @@ function getget(name) {\n
           }else{\n
             filesModified=\'none\'\n
           }\n
+          form.modified.value=filesModified;\n
           if(nbAdded!=0){\n
             filesAdded=FilesAddedArray.join(\',\');\n
           }else{\n
             filesAdded=\'none\'\n
           }\n
+          form.added.value=filesAdded;\n
           if(nbRemoved!=0){\n
             filesRemoved=FilesRemovedArray.join(\',\');\n
           }else{\n
             filesRemoved=\'none\'\n
           }\n
-          \n
+          form.removed.value=filesRemoved;\n
           if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
             alert(\'Nothing to diff !\');\n
           } else {\n
-            open(\'%s/BusinessTemplate_viewSvnDiff?modified=\'+escape(filesModified)+\'&added=\'+escape(filesAdded)+\'&removed=\'+escape(filesRemoved), \'_self\');\n
+            submitAction(form,\'%s/BusinessTemplate_viewSvnDiff\');\n
           }\n
         }\n
 \n
@@ -306,7 +320,7 @@ document.onmousedown  = mouseSelect;\n
 document.onmousemove = getMouse;\n
 //document.oncontextmenu  = ItemSelMenu;\n
 \n
-        function revert(popup){\n
+        function revert(popup,form){\n
           if(popup==1){\n
             //hide popup\n
             document.getElementById(\'menudiv\').style.display = "none";\n
@@ -322,8 +336,10 @@ document.onmousemove = getMouse;\n
             alert("Nothing to revert !");\n
           } else {\n
             if(confirm(\'Are you sure you want to revert changes?\')){\n
+              form.files.value=to_revert;\n
+              submitAction(form,\'%s/svn_revert\');\n
               //Revert changes\n
-              open(\'%s/svn_revert?files=\'+escape(to_revert), \'_self\');\n
+              //open(\'/svn_revert?files=\'+escape(to_revert), \'_self\');\n
             }\n
           }\n
         }\n

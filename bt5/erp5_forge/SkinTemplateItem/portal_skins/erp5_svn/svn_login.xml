@@ -69,7 +69,9 @@
             <value> <string>svn_user = context.REQUEST["user"]\n
 svn_password = context.REQUEST["password"]\n
 svn_realm = context.REQUEST["realm_hidden"]\n
-files = context.REQUEST["files"]\n
+added = context.REQUEST["added"]\n
+modified = context.REQUEST["modified"]\n
+removed = context.REQUEST["removed"]\n
 caller = context.REQUEST["caller"]\n
 changelog = context.REQUEST["changelog"]\n
 \n
@@ -78,7 +80,7 @@ context.getPortalObject()["portal_subversion"].setLogin(svn_realm, svn_user, svn
 if caller == \'update\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_update\')\n
 elif caller == \'commit\':\n
-  return context.asContext(changelog=changelog).svn_commit(files=files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+  return context.asContext(changelog=changelog).svn_commit(added=added,removed=removed,modified=modified)\n
 elif caller == \'ls\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_ls?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
 elif caller == \'log\':\n
@@ -133,9 +135,12 @@ else:\n
                             <string>svn_user</string>
                             <string>svn_password</string>
                             <string>svn_realm</string>
-                            <string>files</string>
+                            <string>added</string>
+                            <string>modified</string>
+                            <string>removed</string>
                             <string>caller</string>
                             <string>changelog</string>
+                            <string>files</string>
                           </tuple>
                         </value>
                     </item>

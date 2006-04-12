@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_files</string> </value>
+            <value> <string>my_removed</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/files</string> </value>
+            <value> <string>here/REQUEST/files</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -98,6 +98,9 @@
                         <string>my_finger_print_hidden</string>
                         <string>my_issuer_dname_hidden</string>
                         <string>my_caller</string>
+                        <string>my_added</string>
+                        <string>my_modified</string>
+                        <string>my_removed</string>
                       </list>
                     </value>
                 </item>

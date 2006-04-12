@@ -75,7 +75,6 @@
                     <value>
                       <list>
                         <string>my_changelog</string>
-                        <string>my_checked</string>
                       </list>
                     </value>
                 </item>
@@ -83,7 +82,10 @@
                     <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>my_files</string>
+                        <string>my_checked</string>
+                        <string>my_modified</string>
+                        <string>my_added</string>
+                        <string>my_removed</string>
                       </list>
                     </value>
                 </item>

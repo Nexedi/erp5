@@ -58,24 +58,31 @@
 \n
 <script  src="js/dhtmlXCommon.js"></script>\n
 <script  src="js/dhtmlXTree.js"></script>\t\n
+<!-- Form Hidden : Selected files -->\n
+<input type=\'hidden\' name=\'removed\' value=\'\'>\n
+<input type=\'hidden\' name=\'added\' value=\'\'>\n
+<input type=\'hidden\' name=\'modified\' value=\'\'>\n
+<input type=\'hidden\' name=\'files\' value=\'\'>\n
+<!-- <input type=\'hidden\' name=\'checked\' value=\'\'> -->\n
+<!-- End Hidden -->\n
 <div id="menudiv" style="position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
 <table width=82 cellspacing=1 cellpadding=0 bgcolor=lightgray>\n
   <tr><td>\n
     <table width=80 cellspacing=0 cellpadding=0>\n
       <tr>\n
-        <td id="item1" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=ls()><center>Infos</center></td>\n
+        <td id="item1" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'ls()\'><center>Infos</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item2" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=viewDiff(1)><center>Diff</center></td>\n
+        <td id="item2" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'viewDiff(1,document.main_form)\'><center>Diff</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item3" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=log()>  <center>History</center></td>\n
+        <td id="item3" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'log()\'>  <center>History</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item4" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=commit(1)>  <center>Commit</center></td>\n
+        <td id="item4" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'commit(1,document.main_form)\'>  <center>Commit</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item5" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=revert(1)>  <center>Revert</center></td>\n
+        <td id="item5" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'revert(1,document.main_form)\'>  <center>Revert</center></td>\n
       </tr>\n
     </table>\n
   </td></tr>\n
@@ -123,9 +130,9 @@ here/createJSStatus">javascript here</tal:js>\n
                 </td>\n
 \t</tr>\n
 </table>\n
-<button onclick="viewDiff()" value="diff" name="View Diff" type="button">View Diff</button>\n
-<button onclick="commit()" value="commit" name="commit Changes" type="button">Commit Changes</button>\n
-<button onclick="revert()" value="revert" name="revert Changes" type="button">Revert Changes</button>\n
+<button onclick="viewDiff(0,this.form)" value="diff" name="View Diff" type="button">View Diff</button>\n
+<button onclick="commit(0,this.form)" value="commit" name="commit Changes" type="button">Commit Changes</button>\n
+<button onclick="revert(0,this.form)" value="revert" name="revert Changes" type="button">Revert Changes</button>\n
 </center>\n
 <script>\n
         if(upLevel) {\n
