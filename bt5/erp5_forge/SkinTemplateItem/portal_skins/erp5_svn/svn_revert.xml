@@ -66,7 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>to_revert = files.split(\',\')\n
+            <value> <string>if files != \'none\' and files !=\'\':\n
+  to_revert = files.split(\',\')\n
+else:\n
+  to_revert = files\n
 \n
 svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
 if not svn_path :\n
