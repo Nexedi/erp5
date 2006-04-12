@@ -82,8 +82,10 @@ except SubversionSSLTrustError, error:\n
 except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
   return context.asContext(caller=\'ls\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
-\n
-return context.asContext(infos_dict=infos_list[0], file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
+if infos_list:\n
+  return context.asContext(infos_dict=infos_list[0], file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
+else:\n
+  return context.asContext(infos_dict=False, file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
 </string> </value>
         </item>
         <item>
@@ -135,6 +137,7 @@ return context.asContext(infos_dict=infos_list[0], file=file, edit_path=context.
                             <string>infos_list</string>
                             <string>error</string>
                             <string>error1</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
