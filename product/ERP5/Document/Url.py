@@ -27,69 +27,133 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
-
 from Products.ERP5.Document.Coordinate import Coordinate
+from cStringIO import StringIO
+from MimeWriter import MimeWriter
+from base64 import encode
+from mimetools import choose_boundary
+from mimetypes import guess_type
+
 
 class Url(Coordinate, Base):
-    """
-        A Url is allows to represent in a standard way coordinates
-        such as web sites, emails, ftp sites, etc.
-    """
+  """
+  A Url is allows to represent in a standard way coordinates
+  such as web sites, emails, ftp sites, etc.
+  """
 
-    meta_type = 'ERP5 Url'
-    portal_type = 'Url'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  meta_type = 'ERP5 Url'
+  portal_type = 'Url'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
                       , PropertySheet.Url
                       )
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'asText')
-    def asText(self):
-      return self.url_string
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asText')
+  def asText(self):
+    return self.url_string
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
-    def fromText(self, text):
-      self.url_string = text
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  def fromText(self, text):
+    self.url_string = text
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'standardTextFormat')
-    def standardTextFormat(self):
-      """
-        Returns the standard text formats for urls
-      """
-      return ("http://www.erp5.org","mailto:info@erp5.org")
-
-    def send(self, from_url=None, to_url=None, msg=None, subject=None):
-        """
-        This method was previously named 'SendMail'
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'standardTextFormat')
+  def standardTextFormat(self):
+    """
+    Returns the standard text formats for urls
+    """
+    return ("http://www.erp5.org","mailto:info@erp5.org")
 
 
-        Send An Email
-        """
-        # If no URL is specified, use ourselves
-        if from_url == None:
-          from_url = self.getUrlString()
-        if to_url == None:
-          to_url = self.getUrlString()
-        if to_url.find('@')>=0: # We will send an email
-          if msg is not None and subject is not None:
-            header = "From: %s\n" % from_url
-            header += "To: %s\n" % to_url
-            header += "Subject: %s\n" % subject
-            header += "\n"
-            msg = header + msg
-            self.getPortalObject().MailHost.send( msg )
+  def send(self, from_url=None, to_url=None, msg=None, subject=None,  attachment_list=None):
+    """
+    This method was previously named 'SendMail' and is used to send email
+    attachment_list is a list of dictionnary wich has keys :
+     - name : name of the attachment,
+     - content: data of the attachment
+     - mime_type: mime-type corresponding to the attachment     
+    """
+    # get the mailhost object
+    try:
+      mailhost=self.getPortalObject().MailHost
+    except:
+      raise AttributeError, "Cannot find a Mail Host object"
+    else:
+      if from_url is None:
+        from_url = self.getUrlString(None)
+      if to_url is None:
+        to_url = self.getUrlString(None)
+      if from_url is None or to_url is None:
+        raise AttributeError, "No mail defined"
+      
+      # Create multi-part MIME message.
+      message = StringIO()
+      writer = MimeWriter(message)
+      writer.addheader('From', from_url)
+      writer.addheader('To', to_url)
+      writer.addheader('Subject', subject)
+      writer.addheader('MimeVersion', '1.0')
+      # Don't forget to flush the headers for Communicator
+      writer.flushheaders()
+      # Generate a unique section boundary:
+      outer_boundary = choose_boundary()
 
+      # Start the main message body. Write a brief message
+      # for non-MIME-capable readers:
+      dummy_file=writer.startmultipartbody("mixed",outer_boundary)
+      dummy_file.write("If you can read this, your mailreader\n")
+      dummy_file.write("can not handle multi-part messages!\n")
+
+      submsg = writer.nextpart()
+      submsg.addheader("Content-Transfer-Encoding", "7bit")
+      FirstPartFile=submsg.startbody("text/plain", [("charset","US-ASCII")])
+      FirstPartFile.write(msg)
+
+      if attachment_list!=None:
+        for attachment in attachment_list:
+          if attachment.has_key('name'):
+            attachment_name = attachment['name']
+          else:
+            attachment_name = ''
+          # try to guess the mime type
+          if not attachment.has_key('mime_type'):
+            type, encoding = guess_type( attachment_name )
+            if type != None:
+              attachment['mime_type'] = type
+            else:
+              attachment['mime_type'] = 'application/octet-stream'
+          # attach it
+          submsg = writer.nextpart()
+          if attachment['mime_type'] == 'text/plain':
+            attachment_file = StringIO(attachment['content'] )
+            submsg.addheader("Content-Transfer-Encoding", "7bit")
+            submsg.addheader("Content-Disposition", "attachment;\nfilename="+attachment_name)
+            submsg.flushheaders()
+
+            f = submsg.startbody(attachment['mime_type'] , [("name", attachment_name)])
+            f.write(attachment_file.getvalue())
+          else:
+            #  encode non-plaintext attachment in base64
+            attachment_file = StringIO(attachment['content'] )
+            submsg.addheader("Content-Transfer-Encoding", "base64")
+            submsg.flushheaders()
+
+            f = submsg.startbody(attachment['mime_type'] , [("name", attachment_name)])
+            encode(attachment_file, f)
+      # close the writer
+      writer.lastpart()
+      # send mail to user
+      mailhost.send(message.getvalue(), to_url, from_url)
+      return None
