@@ -48,6 +48,28 @@ try:
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
   
+def removeAll(entry):
+  '''
+    Remove all files and directories under 'entry'.
+    XXX: This is defined here, because os.removedirs() is buggy.
+  '''
+  try:
+    if os.path.isdir(entry) and not os.path.islink(entry):
+      pwd = os.getcwd()
+      os.chmod(entry, 0755)
+      os.chdir(entry)
+      for e in os.listdir(os.curdir):
+        removeAll(e)
+      os.chdir(pwd)
+      os.rmdir(entry)
+    else:
+      if not os.path.islink(entry):
+        os.chmod(entry, 0644)
+      os.remove(entry)
+  except OSError:
+    pass
+
+  
 class File :
   # Constructor
   def __init__(self, full_path, msg_status) :
@@ -665,7 +687,6 @@ class SubversionTool(UniqueObject, Folder):
   
   def extractBT(self, bt):
     path = mktemp()
-    #os.system('rm -rf %s'%path)
     bt.export(path=path, local=1)
     svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path :
@@ -680,7 +701,7 @@ class SubversionTool(UniqueObject, Folder):
     # add new files and copy
     self.addNewFiles(svn_path, path)
     # Clean up
-    os.system('rm -rf %s'%path)
+    removeAll(path)
   
   # svn del files that have been removed in new dir
   def deleteOldFiles(self, old_dir, new_dir):
