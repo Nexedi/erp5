@@ -700,5 +700,13 @@ class TestERP5Catalog(ERP5TypeTestCase):
     organisation_list = [x.getObject() for x in 
                          module.searchFolder(group_description='a')]
     self.assertEquals(organisation_list,[organisation])
+    # Try to get the organisation with the group description 'c'
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(group_description='c')]
+    self.assertEquals(organisation_list,[])
+    # Try to get the organisation with the default group description 'c'
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(default_group_description='c')]
+    self.assertEquals(organisation_list,[])
 
 

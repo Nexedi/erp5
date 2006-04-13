@@ -529,39 +529,50 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declarePrivate('getDynamicRelatedKeyList')
     def getDynamicRelatedKeyList(self, sql_catalog_id=None,**kw):
       """
-      Return the list of related keys.
+      Return the list of dynamic related keys.
       This method will try to automatically generate new related key
       by looking at the category tree.
+
+      For exemple it will generate:
+      destination_title | category,catalog/title/z_related_destination
+      default_destination_title | category,catalog/title/z_related_destination
       """
       if len(kw)>0:
         # import pdb;pdb.set_trace()
         pass
       related_key_list = []
       base_cat_id_list = self.portal_categories.getBaseCategoryList()
+      default_string = 'default_'
       for key in kw.keys():
+        prefix = ''
+        if key.startswith(default_string):
+          key = key[len(default_string):]
+          prefix = default_string
         splitted_key = key.split('_')
+        # look from the end of the key from the beginning if we
+        # can find 'title', or 'portal_type'...
         for i in range(1,len(splitted_key))[::-1]:
           expected_base_cat_id = '_'.join(splitted_key[0:i])
           if expected_base_cat_id!='parent' and \
              expected_base_cat_id in base_cat_id_list:
             # We have found a base_category
             end_key = '_'.join(splitted_key[i:])
-            if end_key in ('title','uid','description','id'):
-              related_key_list.append('%s | category,catalog/%s/z_related_%s' %
-                                          (key,end_key,expected_base_cat_id))
+            # accept only some catalog columns
+            if end_key in ('title','uid','description','id','portal_type'):
+              related_key_list.append('%s%s | category,catalog/%s/z_related_%s' %
+                                        (prefix,key,end_key,expected_base_cat_id))
 
       return related_key_list
 
     def _aq_dynamic(self, name):
       """
       Automatic related key generation.
-      Will generate z_related_destination if possible
+      Will generate z_related_[base_category_id] if possible
       """
       aq_base_name = getattr(aq_base(self), name, None)
       if aq_base_name == None:
         DYNAMIC_METHOD_NAME = 'z_related_'
         method_name_length = len(DYNAMIC_METHOD_NAME)
-
         zope_security = '__roles__'
         if (name.startswith(DYNAMIC_METHOD_NAME) and \
           (not name.endswith(zope_security))):
