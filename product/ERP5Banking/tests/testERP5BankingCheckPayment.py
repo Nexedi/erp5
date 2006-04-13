@@ -29,17 +29,14 @@
 
 # import requested python module
 import os
-import AccessControl
 from zLOG import LOG
-from Testing import ZopeTestCase
 from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -51,56 +48,17 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
 
-
-class TestERP5BankingCheckPayment(ERP5TypeTestCase):
+class TestERP5BankingCheckPayment(TestERP5BankingMixin, ERP5TypeTestCase):
   """
-    This class is a unit test to check the module of Check Payment
-
-    Here are the following step that will be done in the test :
+  Unit test class for the check payment module
+  """
   
-    - before the test, we need to create some movements that will put resources in the source
-
-    - create a cash classification
-    - check it has been created correctly
-    - check source and destination (current == future)
-    - check roles (who is author, assignor, assignee, ...)
-
-    - create a "Note Line" (billetage)
-    - check it has been created correctly
-    - check the total amount
-
-    - create a second Line
-    - check it has been created correctly
-    - check the total amount
-
-    - create an invalid Line (quantity > available at source)
-    - check that the system behaves correctly
-
-    - pass "confirm_action" transition
-    - check that we can't pass the transition as another user (depending on roles)
-    - check that the new state is confirmed
-    - check that the source has been debited correctly (current < future)
-
-    - log in as "Controleur" (assignee)
-    - check amount, lines, ...
-
-    - pass "deliver_action" transition
-    - check that we can't pass the transition as another user
-    - check that the new state is delivered
-    - check that the destination has been credited correctly (current == future)
-  """
-
   login = PortalTestCase.login
 
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-
-
-  ##################################
-  ##  ZopeTestCase Skeleton
-  ##################################
 
   def getTitle(self):
     """
@@ -116,51 +74,21 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
       the unit test framework in order to know which business templates
       need to be installed to run the test on.
     """
-    return ('erp5_trade', 'erp5_banking_core', 'erp5_banking_inventory', 'erp5_banking_check_payment')
-
-
-  def enableLightInstall(self):
-    """
-      Return if we should do a light install (1) or not (0)
-      Light install variable is used at installation of categories in business template
-      to know if we wrap the category or not, if 1 we don't use and installation is faster
-    """
-    return 1 # here we want a light install for a faster installation
-
-
-  def enableActivityTool(self):
-    """
-      Return if we should create (1) or not (0) an activity tool
-      This variable is used at the creation of the site to know if we use
-      the activity tool or not
-    """
-    return 1 # here we want to use the activity tool
+    return ('erp5_base',
+            'erp5_banking_core',
+            'erp5_banking_inventory',
+            'erp5_banking_check')
 
 
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
     """
-    # Set some variables : 
-    # the erp5 site
-    self.portal = self.getPortal()
+    self.initDefaultVariable()
     # the check payment module
     self.check_payment_module = self.getCheckPaymentModule()
     # the checkbook module
     self.checkbook_module = self.getCheckbookModule()
-    # the cash inventory module
-    self.cash_inventory_module = self.getCashInventoryModule()
-    # the person module
-    self.person_module = self.getPersonModule()
-    # the organisation module
-    self.organisation_module = self.getOrganisationModule()
-    # the category tool
-    self.category_tool = self.getCategoryTool()
-    # the workflow tool
-    self.workflow_tool = self.getWorkflowTool()
-
-    # Let us know which user folder is used (PAS or NuxUserGroup)
-    self.checkUserFolderType()
 
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
     self.createManagerAndLogin()
@@ -169,375 +97,72 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
     # variation list is the list of years for banknotes and coins
     self.variation_list = ('variation/1992', 'variation/2003')
 
-    # quantity of banknotes of 10000 :
-    self.quantity_10000 = {}
-    # 2 banknotes of 10000 for the year 1992
-    self.quantity_10000[self.variation_list[0]] = 2
-    # 3 banknotes of 10000 for the year of 2003
-    self.quantity_10000[self.variation_list[1]] = 3
+    self.createFunctionGroupSiteCategory()
+    self.createBanknotesAndCoins()
 
-    # quantity of coin of 200
-    self.quantity_200 = {}
-    # 5 coins of 200 for the year 1992
-    self.quantity_200[self.variation_list[0]] = 5
-    # 7 coins of 200 for the year 2003
-    self.quantity_200[self.variation_list[1]] = 7
+    # Before the test, we need to input the inventory
+    inventory_dict_line_1 = {'id' : 'inventory_line_1',
+                             'resource': self.billet_10000,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/k', 'cash_status/to_sort') + self.variation_list,
+                             'quantity': self.quantity_10000}
+    
+    inventory_dict_line_2 = {'id' : 'inventory_line_2',
+                             'resource': self.billet_200,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/k', 'cash_status/to_sort') + self.variation_list,
+                             'quantity': self.quantity_200}
 
-    # quantity of banknotes of 5000
-    self.quantity_5000 = {}
-    # 11 banknotes of 5000 for hte year 1992
-    self.quantity_5000[self.variation_list[0]] = 11
-    # 13 banknotes of 5000 for the year 2003
-    self.quantity_5000[self.variation_list[1]] = 13
+    inventory_dict_line_3 = {'id' : 'inventory_line_3',
+                             'resource': self.billet_5000,
+                             'variation_id': ('emission_letter', 'cash_status', 'variation'),
+                             'variation_value': ('emission_letter/k', 'cash_status/to_sort') + self.variation_list,
+                             'quantity': self.quantity_5000}
+    
+    line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
 
+    self.createCashInventory(source=None, destination=self.encaisse_billets_et_monnaies, currency=self.currency_1,
+                             line_list=line_list)
 
-    # Create Categories (vaults)
+    # create a person and a bank account
+    self.person_1 = self.createPerson(id='person_1',
+                                      first_name='toto',
+                                      last_name='titi')
+    self.bank_account_1 = self.createBankAccount(person=self.person_1,
+                                                 account_id='bank_account_1',
+                                                 currency=self.currency_1,
+                                                 amount=100000) 
 
-    # as local roles are defined in portal types as real categories, we will need to reproduce (or import) the real category tree
-    # get the base category function
-    self.function_base_category = getattr(self.category_tool, 'function')
-    # add category banking in function which will hold all functions neccessary in a bank (at least for this unit test)
-    self.banking = self.function_base_category.newContent(id='banking', portal_type='Category', codification='BNK')
-    # add function categories
-    self.caissier_principal = self.banking.newContent(id='caissier_principal', portal_type='Category', codification='CCP')
-    self.caissier_particulier = self.banking.newContent(id='caissier_particulier', portal_type='Category', codification='CGU')
-    self.comptable = self.banking.newContent(id='comptable', portal_type='Category', codification='FXF')
-    self.chef_section = self.banking.newContent(id='chef_section', portal_type='Category', codification='FXS')
-    self.void_function = self.banking.newContent(id='void_function', portal_type='Category', codification='VOID')
-    self.chef_comptable = self.banking.newContent(id='chef_comptable', portal_type='Category', codification='CCB')
-    self.gestionnaire_caisse_courante = self.banking.newContent(id='gestionnaire_caisse_courante', portal_type='Category', codification='CCO')
+    # create a check
+    self.checkbook_1 = self.createCheckbook(id= 'checkbook_1',
+                                            vault=self.paris,
+                                            bank_account=self.bank_account_1,
+                                            min=50,
+                                            max=100,                                            
+                                            )
 
-    # get the base category group
-    self.group_base_category = getattr(self.category_tool, 'group')
-    # add the group baobab in the group category
-    self.baobab = self.group_base_category.newContent(id='baobab', portal_type='Category', codification='BAOBAB')
-
-    # get the base category site
-    self.site_base_category = getattr(self.category_tool, 'site')
-    # add the category testsite in the category site which hold vaults situated in the bank
-    self.testsite = self.site_base_category.newContent(id='site', portal_type='Category', codification='TEST')
-#     self.siegesite = self.testsite.newContent(id='siege', portal_type='Category', codification='SIEGE')
-    self.siegesite = self.site_base_category.newContent(id='siege', portal_type='Category', codification='SIEGE')
-    self.agencesite = self.site_base_category.newContent(id='agence', portal_type='Category', codification='AGENCE')
-    self.principalesite = self.agencesite.newContent(id='principale', portal_type='Category', codification='PRINCIPALE')
-    self.dakar = self.principalesite.newContent(id='dakar', portal_type='Category', codification='K00')
-    self.auxisite = self.agencesite.newContent(id='auxiliaire', portal_type='Category', codification='AUXILIAIRE')
-        
-    self.encaisse_billets_et_monnaies = self.testsite.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='C1')
-    self.encaisse_externe = self.testsite.newContent(id='encaisse_des_externes', portal_type='Category', codification='C1')
-    self.encaisse_ventilation = self.testsite.newContent(id='encaisse_des_billets_recus_pour_ventilation', portal_type='Category', codification='C1')
-    self.caisse_abidjan = self.encaisse_ventilation.newContent(id='abidjan', portal_type='Category', codification='C1')
-
-    # get the base category cash_status
-    self.cash_status_base_category = getattr(self.category_tool, 'cash_status')
-    # add the category valid in cash_status which define status of banknotes and coin
-    self.cash_status_valid = self.cash_status_base_category.newContent(id='valid', portal_type='Category')
-    self.cash_status_valid = self.cash_status_base_category.newContent(id='to_sort', portal_type='Category')
-
-    # get the base category emission letter
-    self.emission_letter_base_category = getattr(self.category_tool, 'emission_letter')
-    # add the category k in emission letter that will be used fo banknotes and coins
-    self.emission_letter_k = self.emission_letter_base_category.newContent(id='k', portal_type='Category')
-    self.emission_letter_b = self.emission_letter_base_category.newContent(id='b', portal_type='Category')
-    self.emission_letter_d = self.emission_letter_base_category.newContent(id='d', portal_type='Category')
-
-    # get the base category variation which hold the year of banknotes and coins
-    self.variation_base_category = getattr(self.category_tool, 'variation')
-    # add the category 1992 in variation
-    self.variation_1992 = self.variation_base_category.newContent(id='1992', portal_type='Category')
-    # add the category 2003 in varitation
-    self.variation_2003 = self.variation_base_category.newContent(id='2003', portal_type='Category')
-
-    # get the base category quantity_unit
-    self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
-    # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
-    self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
-
+    self.check_1 = self.createCheck(id='check_1',
+                                    reference='50',
+                                    checkbook=self.checkbook_1)
+    
+    # open counter date and counter
+    self.openCounterDate()
+    self.openCounter(site=self.testsite)
+    
+    # now we need to create a user as Manager to do the test
+    # in order to have an assigment defined which is used to do transition
     # Create an Organisation that will be used for users assignment
+    self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
-        function='banking', group='baobab',  site='site')
-
-    # Create some users who will get different roles on the cash classification.
-    #
-    # Dictionnary data scheme:
-    #     'user_login': [['Global Role'], 'organisation', 'function', 'group', 'site']
-    #
+                          function='banking', group='baobab',  site='testsite')
+    # define the user
     user_dict = {
-        'user_1' : [[], self.organisation, 'banking/comptable', 'baobab', 'site']
-      , 'user_2' : [[], self.organisation, 'banking/caissier_particulier' , 'baobab', 'site']
-      , 'user_3' : [[], self.organisation, 'banking/void_function'     , 'baobab', 'site']
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
-
-    # We must assign local roles to check_payment_module, checkbook_module and person_module manually, as they are
-    #   not packed in Business Templates yet.
-    # The local roles must be the one for gestionnaire_caisse_courante
-    if self.PAS_installed:
-      # in case of use of PAS
-      self.check_payment_module.manage_addLocalRoles('FXF_BAOBAB_TEST', ('Author',))
-      self.person_module.manage_addLocalRoles('FXF_BAOBAB_TEST', ('Assignor',))
-      self.checkbook_module.manage_addLocalRoles('FXF_BAOBAB_TEST', ('Auditor',))
-      self.check_payment_module.manage_addLocalRoles('CGU_BAOBAB_TEST', ('DestinationAssignor',))
-    else:
-      # in case of NuxUserGroup
-      self.check_payment_module.manage_addLocalGroupRoles('FXF_BAOBAB_TEST', ('Author',))
-      self.person_module.manage_addLocalGroupRoles('FXF_BAOBAB_TEST', ('Assignor',))
-      self.checkbook_module.manage_addLocalGroupRoles('FXF_BAOBAB_TEST', ('Auditor',))
-      self.check_payment_module.manage_addLocalGroupRoles('CGU_BAOBAB_TEST', ('DestinationAssignor',))
-
-    # get the currency module
-    self.currency_module = self.getCurrencyModule()
-    # create the currency document for Fran CFA inside the currency module
-    self.currency_1 = self .currency_module.newContent(id='EUR', title='Euros', reference='EUR')
-
-    # Create Resources (Banknotes & Coins)
-    # get the currency cash module
-    self.currency_cash_module = self.getCurrencyCashModule()
-    # create document for banknote of 10000 euros from years 1992 and 2003
-    self.billet_10000 = self.currency_cash_module.newContent(id='billet_10000', portal_type='Banknote', base_price=10000, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
-    # create document for banknote of 500 euros from years 1992 and 2003
-    self.billet_5000 = self.currency_cash_module.newContent(id='billet_5000', portal_type='Banknote', base_price=5000, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
-    # create docuemnt for coin of 200 euros from years 1992 and 2003
-    self.billet_200 = self.currency_cash_module.newContent(id='billet_200', portal_type='Banknote', base_price=200, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
-
-    # Before the test, we need to input the inventory
-    self.cash_inventory_group = self.cash_inventory_module.newContent(id='inventory_group_1', portal_type='Cash Inventory Group',
-            source=None, destination_value=self.encaisse_billets_et_monnaies)
-    self.cash_inventory = self.cash_inventory_group.newContent(id='inventory_1', portal_type='Cash Inventory',
-                                                               price_currency_value=self.currency_1)
-    # add a line for banknotes of 10000 with emission letter k, status valid and from years 1992 and 2003 with the quantity defined
-    # before in quantity_10000 (2 for 1992 and 3 for 2003)
-    self.addCashLineToDelivery(self.cash_inventory, 'delivery_init_1', 'Cash Inventory Line', self.billet_10000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/to_sort') + self.variation_list,
-            self.quantity_10000)
-    # add a line for coins of 200 with emission letter k, status valid and from years 1992 and 2003 with the quantity defined
-    # before in quantity_200 (5 for 1992 and 7 for 2003)
-    self.addCashLineToDelivery(self.cash_inventory, 'delivery_init_2', 'Cash Inventory Line', self.billet_200,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/to_sort') + self.variation_list,
-            self.quantity_200)
-    self.addCashLineToDelivery(self.cash_inventory, 'delivery_init_3', 'Cash Inventory Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/to_sort') + self.variation_list,
-            self.quantity_5000)
-
-    # create a person and a bank account
-    self.person_1 = self.person_module.newContent(id = 'person_1', portal_type = 'Person',
-                                                  first_name = 'toto', last_name = 'titi')
-    self.bank_account_1 = self.person_1.newContent(id = 'bank_account_1', portal_type = 'Bank Account',
-                                                   price_currency_value = self.currency_1)
-    # validate this bank account for payment
-    self.bank_account_1.validate()
-
-    # create a check
-    self.checkbook_1 = self.checkbook_module.newContent(id = 'checkbook_1', portal_type = 'Checkbook',
-                                                        destination_value = self.dakar,
-                                                        destination_payment_value = self.bank_account_1,
-                                                        reference_range_min = '50',
-                                                        reference_range_max = '100',
-                                                        start_date = DateTime())
-    self.check_1 = self.checkbook_1.newContent(id = 'check_1', portal_type = 'Check',
-                                               quantity = 20000, reference='50') # XXX what is this quantity???
-
-    # logout from manager
     self.logout()
-    # Finally, login as user_1
-    self.login('user_1')
-
-
-  def checkUserFolderType(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Check the type of user folder to let the test working with both NuxUserGroup and PAS.
-    """
-    self.user_folder = self.getUserFolder()
-    self.PAS_installed = 0
-    if self.user_folder.meta_type == 'Pluggable Auth Service':
-      # we use PAS
-      self.PAS_installed = 1
-
-
-  def assignPASRolesToUser(self, user_name, role_list, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Assign a list of roles to one user with PAS.
-    """
-    for role in role_list:
-      if role not in self.user_folder.zodb_roles.listRoleIds():
-        self.user_folder.zodb_roles.addRole(role)
-      self.user_folder.zodb_roles.assignRoleToPrincipal(role, user_name)
-
-
-  def createManagerAndLogin(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create a simple user in user_folder with manager rights.
-      This user will be used to initialize data in the method afterSetup
-    """
-    self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
-
-
-  def createERP5Users(self, user_dict, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create all ERP5 users needed for the test.
-      ERP5 user = Person object + Assignment object in erp5 person_module.
-    """
-    for user_login, user_data in user_dict.items():
-      user_roles = user_data[0]
-      # Create the Person.
-      person = self.person_module.newContent(id=user_login,
-          portal_type='Person', reference=user_login, career_role="internal")
-      # Create the Assignment.
-      assignment = person.newContent( portal_type       = 'Assignment'
-                                    , destination_value = user_data[1]
-                                    , function          = user_data[2]
-                                    , group             = user_data[3]
-                                    , site              = user_data[4]
-                                    )
-      if self.PAS_installed and len(user_roles) > 0:
-        # In the case of PAS, if we want global roles on user, we have to do it manually.
-        self.assignPASRolesToUser(user_login, user_roles)
-      elif not self.PAS_installed:
-        # The user_folder counterpart of the erp5 user must be
-        #   created manually in the case of NuxUserGroup.
-        self.user_folder.userFolderAddUser( name     = user_login
-                                          , password = ''
-                                          , roles    = user_roles
-                                          , domains  = []
-                                          )
-      # User assignment to security groups is also required, but is taken care of
-      #   by the assignment workflow when NuxUserGroup is used and
-      #   by ERP5Security PAS plugins in the context of PAS use.
-      assignment.open()
-      
-    if self.PAS_installed:
-      # reindexing is required for the security to work
-      get_transaction().commit()
-      self.tic()
-
-
-  ##################################
-  ##  Usefull methods
-  ##################################
-
-  def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
-          variation_base_category_list, variation_category_list, resource_quantity_dict):
-    """
-    Add a cash line to a delivery
-    This will add an Internal Packing List Line to a Internal Packing List
-    """
-    base_id = 'movement'
-    line_kwd = {'base_id':base_id}
-    # create the cash line
-    line = delivery_object.newContent( id                  = line_id
-                                     , portal_type         = line_portal_type
-                                     , resource_value      = resource_object # banknote or coin
-                                     , quantity_unit_value = self.unit
-                                     )
-    # set base category list on line
-    line.setVariationBaseCategoryList(variation_base_category_list)
-    # set category list line
-    line.setVariationCategoryList(variation_category_list)
-    line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
-    cell_range_key_list = line.getCellRangeKeyList(base_id=base_id)
-    if cell_range_key_list <> [[None, None]] :
-      for k in cell_range_key_list:
-        category_list = [item for item in k if item is not None]
-        c = line.newCell(*k, **line_kwd)
-        mapped_value_list = ['price', 'quantity']
-        c.edit( membership_criterion_category_list = category_list
-              , mapped_value_property_list         = mapped_value_list
-              , category_list                      = category_list
-              , force_update                       = 1
-              )
-    # set quantity on cell to define quantity of bank notes / coins
-    for variation in self.variation_list:
-      cell = line.getCell('emission_letter/k', variation, 'cash_status/to_sort')
-      if cell is not None:
-        cell.setQuantity(resource_quantity_dict[variation])
-    for variation in self.variation_list:
-      cell = line.getCell('emission_letter/b', variation, 'cash_status/to_sort')
-      if cell is not None:
-        cell.setQuantity(resource_quantity_dict[variation])
-
-  def getUserFolder(self):
-    """
-    Return the user folder
-    """
-    return getattr(self.getPortal(), 'acl_users', None)
-
-  def getPersonModule(self):
-    """
-    Return the person module
-    """
-    return getattr(self.getPortal(), 'person_module', None)
-  
-  def getOrganisationModule(self):
-    """
-    Return the organisation module
-    """
-    return getattr(self.getPortal(), 'organisation_module', None)
-  
-  def getCurrencyCashModule(self):
-    """
-    Return the Currency Cash Module
-    """
-    return getattr(self.getPortal(), 'currency_cash_module', None)
-  
-  def getCashInventoryModule(self):
-    """
-    Return the Cash Inventory Module
-    """
-    return getattr(self.getPortal(), 'cash_inventory_module', None)
-  
-  def getCheckPaymentModule(self):
-    """
-    Return the Check Payment Module
-    """
-    return getattr(self.getPortal(), 'check_payment_module', None)
-  
-  def getCheckbookModule(self):
-    """
-    Return the Checkbook Module
-    """
-    return getattr(self.getPortal(), 'checkbook_module', None)
-  
-  def getCurrencyModule(self):
-    """
-    Return the Currency Module
-    """
-    return getattr(self.getPortal(), 'currency_module', None)
-  
-  def getCategoryTool(self):
-    """
-    Return the Category Tool
-    """
-    return getattr(self.getPortal(), 'portal_categories', None)
-  
-  def getWorkflowTool(self):
-    """
-    Return the Worklfow Tool
-    """
-    return getattr(self.getPortal(), 'portal_workflow', None)
-  
-  def getSimulationTool(self):
-    """
-    Return the Simulation Tool
-    """
-    return getattr(self.getPortal(), 'portal_simulation', None)
-
-
-
-  ##################################
-  ##  Basic steps
-  ##################################
-
-  def stepTic(self, **kwd):
-    """
-    The is used to simulate the zope_tic_loop script
-    Each time this method is called, it simulates a call to tic
-    which invoke activities in the Activity Tool
-    """
-    # execute transaction
-    get_transaction().commit()
-    self.tic()
+    self.login('super_user')
 
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
@@ -546,37 +171,7 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
     that were added by the business template and that we rely
     on are really here.
     """
-    # check that Categories were created
-    self.assertEqual(self.encaisse_billets_et_monnaies.getPortalType(), 'Category')
-
-    # check that Resources were created
-    # check portal type of billet_10000
-    self.assertEqual(self.billet_10000.getPortalType(), 'Banknote')
-    # check value of billet_10000
-    self.assertEqual(self.billet_10000.getBasePrice(), 10000)
-    # check currency value  of billet_10000
-    self.assertEqual(self.billet_10000.getPriceCurrency(), 'currency_module/EUR')
-    # check years  of billet_10000
-    self.assertEqual(self.billet_10000.getVariationList(), ['1992', '2003'])
-
-    # check portal type of billet_5000
-    self.assertEqual(self.billet_5000.getPortalType(), 'Banknote')
-    # check value of billet_5000
-    self.assertEqual(self.billet_5000.getBasePrice(), 5000)
-    # check currency value  of billet_5000
-    self.assertEqual(self.billet_5000.getPriceCurrency(), 'currency_module/EUR')
-    # check years  of billet_5000
-    self.assertEqual(self.billet_5000.getVariationList(), ['1992', '2003'])
-    
-    # check portal type of billet_200
-    self.assertEqual(self.billet_200.getPortalType(), 'Banknote')
-    # check value of billet_200
-    self.assertEqual(self.billet_200.getBasePrice(), 200)
-    # check currency value  of billet_200
-    self.assertEqual(self.billet_200.getPriceCurrency(), 'currency_module/EUR')
-    # check years  of billet_200
-    self.assertEqual(self.billet_200.getVariationList(), ['1992', '2003'])
-
+    self.checkResourceCreated()
     # check that Check Payment Module was created
     self.assertEqual(self.check_payment_module.getPortalType(), 'Check Payment Module')
     # check check payment module is empty
@@ -597,6 +192,9 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
     # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    # check the inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
 
 
   def stepCreateCheckPayment(self, sequence=None, sequence_list=None, **kwd):
@@ -605,14 +203,18 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
     """
     self.check_payment = self.check_payment_module.newContent(id = 'check_payment', portal_type = 'Check Payment',
                                          destination_payment_value = self.bank_account_1,
-                                         aggregate_value = self.check_1,
-                                         source_value = self.encaisse_billets_et_monnaies,
-                                         start_date = DateTime(),
+                                         # aggregate_value = self.check_1,
+                                         resource_value = self.currency_1,
+                                         aggregate_free_text = "50",
+                                         # source_value = self.encaisse_billets_et_monnaies,
+                                         start_date = DateTime().Date(),
                                          source_total_asset_price = 20000.0)
+    # call set source to go into the interaction workflow to update local roles
+    self.check_payment._setSource(self.encaisse_billets_et_monnaies.getRelativeUrl())
     self.assertNotEqual(self.check_payment, None)
     self.assertEqual(self.check_payment.getTotalPrice(), 0.0)
     self.assertEqual(self.check_payment.getDestinationPayment(), self.bank_account_1.getRelativeUrl())
-    self.assertEqual(self.check_payment.getAggregate(), self.check_1.getRelativeUrl())
+    self.assertEqual(self.check_payment.getAggregateFreeText(), self.check_1.getReference())
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(), 20000.0)
     self.assertEqual(self.check_payment.getSource(), self.encaisse_billets_et_monnaies.getRelativeUrl())
 
@@ -629,25 +231,42 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
     Check the consistency of the check payment
 
     FIXME: check if the transition fails when a category or property is invalid.
-    FIXME: check if the transition fails when a bad user tries.
     """
-    self.assertNotEqual(self.check_payment.getAggregateValue(), None)
-
     self.workflow_tool.doActionFor(self.check_payment, 'plan_action', wf_id='check_payment_workflow')
+    self.assertNotEqual(self.check_payment.getAggregateValue(), None)
     self.assertEqual(self.check_payment.getSimulationState(), 'planned')
+
 
   def stepSendToCounter(self, sequence=None, sequence_list=None, **kwd):
     """
     Send the check payment to the counter
 
     FIXME: check if the transition fails when a category or property is invalid.
-    FIXME: check if the transition fails when a bad user tries.
     """
     self.workflow_tool.doActionFor(self.check_payment, 'confirm_action', wf_id='check_payment_workflow')
     self.assertEqual(self.check_payment.getSimulationState(), 'confirmed')
 
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(),
                      - self.check_payment.getTotalPrice(portal_type = 'Banking Operation Line'))
+
+  def stepCheckConfirmedInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the inventoryinb state confirmed
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    # check we have 12 coin of 200 in encaisse_billets_et_monnaies
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    # check the inventory of the bank account, must be planned to be decrease by 20000
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 100000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
+    
 
   def stepInputCashDetails(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -670,24 +289,31 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
     Pay the check payment
 
     FIXME: check if the transition fails when a category or property is invalid.
-    FIXME: check if the transition fails when a bad user tries.
     """
-    self.logout()
-    self.login('user_2')
-
     self.assertEqual(self.check_payment.getSourceTotalAssetPrice(),
                      self.check_payment.getTotalPrice(portal_type = 'Cash Delivery Cell'))
-    try:
-      self.workflow_tool.doActionFor(self.check_payment, 'deliver_action', wf_id='check_payment_workflow')
-    except:
-      import pdb
-      pdb.set_trace()
-
+    self.workflow_tool.doActionFor(self.check_payment, 'deliver_action', wf_id='check_payment_workflow')
     self.assertEqual(self.check_payment.getSimulationState(), 'delivered')
 
-  ##################################
-  ##  Tests
-  ##################################
+
+  def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check the initial inventory before any operations
+    """
+    self.simulation_tool = self.getSimulationTool()
+    # check we have 5 banknotes of 10000 in encaisse_billets_et_monnaies
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 4.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 4.0)
+    # check we have 12 coin of 200 in encaisse_billets_et_monnaies
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
+    # check we have 24 banknotes of 200 in encaisse_billets_et_monnaies
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_billets_et_monnaies.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 22.0)
+    # check the final inventory of the bank account
+    self.assertEqual(self.simulation_tool.getCurrentInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
+    self.assertEqual(self.simulation_tool.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 80000)
+
 
   def test_01_ERP5BankingCheckPayment(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -700,8 +326,10 @@ class TestERP5BankingCheckPayment(ERP5TypeTestCase):
                       'CreateCheckPayment Tic ' \
                       'CheckConsistency Tic ' \
                       'SendToCounter Tic ' \
+                      'CheckConfirmedInventory ' \
                       'InputCashDetails Tic ' \
-                      'Pay Tic '
+                      'Pay Tic ' \
+                      'CheckFinalInventory '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)

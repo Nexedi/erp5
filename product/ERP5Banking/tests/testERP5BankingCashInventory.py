@@ -29,17 +29,11 @@
 
 # import requested python module
 import os
-import AccessControl
-from zLOG import LOG
-from Testing import ZopeTestCase
-from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -52,42 +46,14 @@ if __name__ == '__main__':
 
 
 
-class TestERP5BankingInventory(ERP5TypeTestCase):
+class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Cash Transfer
 
     Here are the following step that will be done in the test :
-  
-    - before the test, we need to create some movements that will put resources in the source
 
-    - create a cash transfer
-    - check it has been created correctly
-    - check source and destination (current == future)
-    - check roles (who is author, assignor, assignee, ...)
-
-    - create a "Note Line" (billetage)
-    - check it has been created correctly
-    - check the total amount
-
-    - create a second Line
-    - check it has been created correctly
-    - check the total amount
-
-    - create an invalid Line (quantity > available at source)
-    - check that the system behaves correctly
-
-    - pass "confirm_action" transition
-    - check that we can't pass the transition as another user (depending on roles)
-    - check that the new state is confirmed
-    - check that the source has been debited correctly (current < future)
-
-    - log in as "Controleur" (assignee)
-    - check amount, lines, ...
-
-    - pass "deliver_action" transition
-    - check that we can't pass the transition as another user
-    - check that the new state is delivered
-    - check that the destination has been credited correctly (current == future)
+    XXX to be completed
+    
   """
 
   login = PortalTestCase.login
@@ -96,11 +62,6 @@ class TestERP5BankingInventory(ERP5TypeTestCase):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-
-
-  ##################################
-  ##  ZopeTestCase Skeleton
-  ##################################
 
   def getTitle(self):
     """
@@ -116,360 +77,26 @@ class TestERP5BankingInventory(ERP5TypeTestCase):
       the unit test framework in order to know which business templates
       need to be installed to run the test on.
     """
-    return ( 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
-           , 'erp5_banking_inventory' # erp5_banking_cash contains all method for cash transfer
-           )
-
-
-  def enableLightInstall(self):
-    """
-      Return if we should do a light install (1) or not (0)
-      Light install variable is used at installation of categories in business template
-      to know if we wrap the category or not, if 1 we don't use and installation is faster
-    """
-    return 1 # here we want a light install for a faster installation
-
-
-  def enableActivityTool(self):
-    """
-      Return if we should create (1) or not (0) an activity tool
-      This variable is used at the creation of the site to know if we use
-      the activity tool or not
-    """
-    return 1 # here we want to use the activity tool
+    return ('erp5_base',
+            'erp5_banking_core',
+            'erp5_banking_inventory'
+            )
 
 
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
     """
-    # Set some variables : 
-    # the erp5 site
-    self.portal = self.getPortal()
+    # Set some variables :
+    self.initDefaultVariable()
     # the cash inventory module
     self.cash_inventory_module = self.getCashInventoryModule()
-    # the person module
-    self.person_folder = self.getPersonModule()
-    # the organisation module
-    self.organisation_folder = self.getOrganisationModule()
-    # the category tool
-    self.category_tool = self.getCategoryTool()
 
-    # Let us know which user folder is used (PAS or NuxUserGroup)
-    self.checkUserFolderType()
-
-    # Create a user and login as manager to populate the erp5 portal with objects for tests.
     self.createManagerAndLogin()
-
-    # Define static values (only use prime numbers to prevent confusions like 2 * 6 == 3 * 4)
-    # variation list is the list of years for banknotes and coins
-    self.variation_list = ('variation/1992', 'variation/2003')
-
-    # quantity of banknotes of 10000 :
-    self.quantity_10000 = {}
-    # 2 banknotes of 10000 for the year 1992
-    self.quantity_10000[self.variation_list[0]] = 2
-    # 3 banknotes of 10000 for the year of 2003
-    self.quantity_10000[self.variation_list[1]] = 3
-
-    # quantity of coin of 200
-    self.quantity_200 = {}
-    # 5 coins of 200 for the year 1992
-    self.quantity_200[self.variation_list[0]] = 5
-    # 7 coins of 200 for the year 2003
-    self.quantity_200[self.variation_list[1]] = 7
-
-    # quantity of banknotes of 5000
-    self.quantity_5000 = {}
-    # 11 banknotes of 5000 for hte year 1992
-    self.quantity_5000[self.variation_list[0]] = 11
-    # 13 banknotes of 5000 for the year 2003
-    self.quantity_5000[self.variation_list[1]] = 13
-
-
-    # Create Categories (vaults)
-
-    # as local roles are defined in portal types as real categories, we will need to reproduce (or import) the real category tree
-    # get the base category function
-    self.function_base_category = getattr(self.category_tool, 'function')
-    # add category banking in function which will hold all functions neccessary in a bank (at least for this unit test)
-    self.banking = self.function_base_category.newContent(id='banking', portal_type='Category', codification='BNK')
-    # add category caisier_principal in function banking
-    self.caissier_principal = self.banking.newContent(id='caissier_principal', portal_type='Category', codification='CCP')
-    # add category controleur_caisse in function banking
-    self.controleur_caisse = self.banking.newContent(id='controleur_caisse', portal_type='Category', codification='CCT')
-    # add category void_function in function banking
-    self.void_function = self.banking.newContent(id='void_function', portal_type='Category', codification='VOID')
-    # add category gestionnaire_caisse_courante in function banking
-    self.gestionnaire_caisse_courante = self.banking.newContent(id='gestionnaire_caisse_courante', portal_type='Category', codification='CCO')
-    # add category gestionnaire_caveau in function banking
-    self.gestionnaire_caveau = self.banking.newContent(id='gestionnaire_caveau', portal_type='Category', codification='CCV')
-    # add category caissier_particulier in function banking
-    self.caissier_particulier = self.banking.newContent(id='caissier_particulier', portal_type='Category', codification='CGU')
-
-    # get the base category group
-    self.group_base_category = getattr(self.category_tool, 'group')
-    # add the group baobab in the group category
-    self.baobab = self.group_base_category.newContent(id='baobab', portal_type='Category', codification='BAOBAB')
-
-    # get the base category site
-    self.site_base_category = getattr(self.category_tool, 'site')
-    # add the category testsite in the category site which hold vaults situated in the bank
-    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category', codification='TEST')
-    # add vault caisse_1 in testsite
-    self.caisse_1 = self.testsite.newContent(id='caisse_1', portal_type='Category', codification='C1')
-    # add vault caisse_2 in testsite
-    self.caisse_2 = self.testsite.newContent(id='caisse_2', portal_type='Category', codification='C2')
-
-    # get the base category cash_status
-    self.cash_status_base_category = getattr(self.category_tool, 'cash_status')
-    # add the category valid in cash_status which define status of banknotes and coin
-    self.cash_status_valid = self.cash_status_base_category.newContent(id='valid', portal_type='Category')
-
-    # get the base category emission letter
-    self.emission_letter_base_category = getattr(self.category_tool, 'emission_letter')
-    # add the category k in emission letter that will be used fo banknotes and coins
-    self.emission_letter_k = self.emission_letter_base_category.newContent(id='k', portal_type='Category')
-
-    # get the base category variation which hold the year of banknotes and coins
-    self.variation_base_category = getattr(self.category_tool, 'variation')
-    # add the category 1992 in variation
-    self.variation_1992 = self.variation_base_category.newContent(id='1992', portal_type='Category')
-    # add the category 2003 in varitation
-    self.variation_2003 = self.variation_base_category.newContent(id='2003', portal_type='Category')
-
-    # get the base category quantity_unit
-    self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
-    # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
-    self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
-
-    # Create an Organisation that will be used for users assignment
-    self.organisation = self.organisation_folder.newContent(id='baobab_org', portal_type='Organisation',
-        function='banking', group='baobab',  site='testsite')
-
-    # Create some users who will get different roles on the cash transfer.
-    #
-    # Dictionnary data scheme:
-    #     'user_login': [['Global Role'], 'organisation', 'function', 'group', 'site']
-    #
-    user_dict = {
-        'user_1' : [[], self.organisation, 'banking/gestionnaire_caisse_courante', 'baobab', 'testsite']
-      , 'user_2' : [[], self.organisation, 'banking/controleur_caisse' , 'baobab', 'testsite']
-      , 'user_3' : [[], self.organisation, 'banking/void_function'     , 'baobab', 'testsite']
-      }
-    # call method to create this user
-    self.createERP5Users(user_dict)
-
-    # We must assign local roles to cash_inventory_module manually, as they are
-    #   not packed in Business Templates yet.
-    # The local roles must be the one for gestionnaire_caisse_courante
-    if self.PAS_installed:
-      # in case of use of PAS
-      self.cash_inventory_module.manage_addLocalRoles('CCO_BAOBAB_TEST', ('Author',))
-    else:
-      # in case of NuxUserGroup
-      self.cash_inventory_module.manage_addLocalGroupRoles('CCO_BAOBAB_TEST', ('Author',))
-
-    # get the currency module
-    self.currency_module = self.getCurrencyModule()
-    # create the currency document for euro inside the currency module
-    self.currency_1 = self .currency_module.newContent(id='EUR', title='Euro')
-
-    # Create Resources (Banknotes & Coins)
-    # get the currency cash module
-    self.currency_cash_module = self.getCurrencyCashModule()
-    # create document for banknote of 10000 euros from years 1992 and 2003
-    self.billet_10000 = self.currency_cash_module.newContent(id='billet_10000', portal_type='Banknote', base_price=10000, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
-    # create document for banknote of 500 euros from years 1992 and 2003
-    self.billet_5000 = self.currency_cash_module.newContent(id='billet_5000', portal_type='Banknote', base_price=5000, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
-    # create docuemnt for coin of 200 euros from years 1992 and 2003
-    self.piece_200 = self.currency_cash_module.newContent(id='piece_200', portal_type='Coin', base_price=200, price_currency_value=self.currency_1, variation_list=('1992', '2003'), quantity_unit_value=self.unit)
-
-    # logout from manager
-    self.logout()
-    # Finally, login as user_1
-    self.login('user_1')
-
-
-  def checkUserFolderType(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Check the type of user folder to let the test working with both NuxUserGroup and PAS.
-    """
-    self.user_folder = self.getUserFolder()
-    self.PAS_installed = 0
-    if self.user_folder.meta_type == 'Pluggable Auth Service':
-      # we use PAS
-      self.PAS_installed = 1
-
-
-  def assignPASRolesToUser(self, user_name, role_list, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Assign a list of roles to one user with PAS.
-    """
-    for role in role_list:
-      if role not in self.user_folder.zodb_roles.listRoleIds():
-        self.user_folder.zodb_roles.addRole(role)
-      self.user_folder.zodb_roles.assignRoleToPrincipal(role, user_name)
-
-
-  def createManagerAndLogin(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create a simple user in user_folder with manager rights.
-      This user will be used to initialize data in the method afterSetup
-    """
-    self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
-
-
-  def createERP5Users(self, user_dict, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create all ERP5 users needed for the test.
-      ERP5 user = Person object + Assignment object in erp5 person_module.
-    """
-    for user_login, user_data in user_dict.items():
-      user_roles = user_data[0]
-      # Create the Person.
-      person = self.person_folder.newContent(id=user_login,
-          portal_type='Person', reference=user_login, career_role="internal")
-      # Create the Assignment.
-      assignment = person.newContent( portal_type       = 'Assignment'
-                                    , destination_value = user_data[1]
-                                    , function          = user_data[2]
-                                    , group             = user_data[3]
-                                    , site              = user_data[4]
-                                    )
-      if self.PAS_installed and len(user_roles) > 0:
-        # In the case of PAS, if we want global roles on user, we have to do it manually.
-        self.assignPASRolesToUser(user_login, user_roles)
-      elif not self.PAS_installed:
-        # The user_folder counterpart of the erp5 user must be
-        #   created manually in the case of NuxUserGroup.
-        self.user_folder.userFolderAddUser( name     = user_login
-                                          , password = ''
-                                          , roles    = user_roles
-                                          , domains  = []
-                                          )
-      # User assignment to security groups is also required, but is taken care of
-      #   by the assignment workflow when NuxUserGroup is used and
-      #   by ERP5Security PAS plugins in the context of PAS use.
-      assignment.open()
-      
-    if self.PAS_installed:
-      # reindexing is required for the security to work
-      get_transaction().commit()
-      self.tic()
-
-
-  ##################################
-  ##  Usefull methods
-  ##################################
-
-  def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
-          variation_base_category_list, variation_category_list, resource_quantity_dict):
-    """
-    Add a cash line to a delivery
-    This will add an Internal Packing List Line to a Internal Packing List
-    """
-    base_id = 'movement'
-    line_kwd = {'base_id':base_id}
-    # create the cash line
-    line = delivery_object.newContent( id                  = line_id
-                                     , portal_type         = line_portal_type
-                                     , resource_value      = resource_object # banknote or coin
-                                     , quantity_unit_value = self.unit
-                                     )
-    # set base category list on line
-    line.setVariationBaseCategoryList(variation_base_category_list)
-    # set category list line
-    line.setVariationCategoryList(variation_category_list)
-    line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
-    cell_range_key_list = line.getCellRangeKeyList(base_id=base_id)
-    if cell_range_key_list <> [[None, None]] :
-      for k in cell_range_key_list:
-        category_list = filter(lambda k_item: k_item is not None, k)
-        c = line.newCell(*k, **line_kwd)
-        mapped_value_list = ['price', 'quantity']
-        c.edit( membership_criterion_category_list = category_list
-              , mapped_value_property_list         = mapped_value_list
-              , category_list                      = category_list
-              , force_update                       = 1
-              )
-    # set quantity on cell to define quantity of bank notes / coins
-    for variation in self.variation_list:
-      cell = line.getCell('emission_letter/k', variation, 'cash_status/valid')
-      cell.setQuantity(resource_quantity_dict[variation])
-
-
-  def getUserFolder(self):
-    """
-    Return the user folder
-    """
-    return getattr(self.getPortal(), 'acl_users', None)
-
-  def getPersonModule(self):
-    """
-    Return the person module
-    """
-    return getattr(self.getPortal(), 'person_module', None)
+    self.createFunctionGroupSiteCategory()
+    self.createBanknotesAndCoins()
+    # do everything as manager, as no roles are defined for inventory
   
-  def getOrganisationModule(self):
-    """
-    Return the organisation module
-    """
-    return getattr(self.getPortal(), 'organisation_module', None)
-  
-  def getCurrencyCashModule(self):
-    """
-    Return the Currency Cash Module
-    """
-    return getattr(self.getPortal(), 'currency_cash_module', None)
-  
-  def getCashInventoryModule(self):
-    """
-    Return the Cash Transer Module
-    """
-    return getattr(self.getPortal(), 'cash_inventory_module', None)  
-  
-  def getCurrencyModule(self):
-    """
-    Return the Currency Module
-    """
-    return getattr(self.getPortal(), 'currency_module', None)
-  
-  def getCategoryTool(self):
-    """
-    Return the Category Tool
-    """
-    return getattr(self.getPortal(), 'portal_categories', None)
-  
-  def getWorkflowTool(self):
-    """
-    Return the Worklfow Tool
-    """
-    return getattr(self.getPortal(), 'portal_workflow', None)
-  
-  def getSimulationTool(self):
-    """
-    Return the Simulation Tool
-    """
-    return getattr(self.getPortal(), 'portal_simulation', None)
-
-
-
-  ##################################
-  ##  Basic steps
-  ##################################
-
-  def stepTic(self, **kwd):
-    """
-    The is used to simulate the zope_tic_loop script
-    Each time this method is called, it simulates a call to tic
-    which invoke activities in the Activity Tool
-    """
-    # execute transaction
-    get_transaction().commit()
-    self.tic()
-
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
