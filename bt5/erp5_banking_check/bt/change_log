@@ -1,0 +1,14 @@
+2006-04-12 aurel
+* move some skins
+
+2006-04-11 aurel
+* add check deposit objects
+
+2006-04-10 aurel
+* add manager proxy roles to script in wf for check payment
+
+2006-04-06 aurel
+* update wf script to take counter date into account
+
+2006-04-05 aurel
+* Initial build.

@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Check Deposit</type>
+  <workflow>check_deposit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Check Payment</type>
+  <workflow>edit_workflow, check_payment_workflow</workflow>
+ </chain>
+</workflow_chain>

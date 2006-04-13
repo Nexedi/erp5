@@ -1,0 +1,15 @@
+<allowed_content_type_list>
+ <portal_type id="Check Deposit">
+  <item>Check Operation Line</item>
+ </portal_type>
+ <portal_type id="Check Deposit Module">
+  <item>Check Deposit</item>
+ </portal_type>
+ <portal_type id="Check Payment">
+  <item>Cash Delivery Line</item>
+  <item>Banking Operation Line</item>
+ </portal_type>
+ <portal_type id="Check Payment Module">
+  <item>Check Payment</item>
+ </portal_type>
+</allowed_content_type_list>
