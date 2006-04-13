@@ -6,6 +6,9 @@ Bug | metadata
 Bug | print
 Bug | view
 Business Template | commit
+Business Template | svn_cleanup_locks
+Business Template | update_svn_wc
+Business Template | view_svn_repos_infos
 External Folder | history
 External Folder | metadata
 External Folder | print

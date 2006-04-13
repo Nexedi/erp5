@@ -120,13 +120,6 @@ here/createJSStatus">javascript here</tal:js>\n
                 <tr><td><font color="orange" size="1">Modified File</font></td></tr>\n
                 <tr><td><font color="red" size="1">Deleted File</font></td></tr></table>\n
                 <br><br>\n
-                <table>\n
-                <tr><td><b><u><font color=\'black\' size="1">Working Copy</font></u></b></td></tr>\n
-                <tr><td><b><u><font color=\'black\' size="1">Actions:</font></u></b></td></tr>\n
-                <tr><td>  </td></tr>\n
-                <tr><td><button onclick="update()" value="update" name="Update All" type="button">Update</button></td></tr>\n
-                <tr><td><button onclick="infos()" value="infos" name="Repository Infos" type="button">Infos</button></td></tr>\n
-                <tr><td><button onclick="cleanup()" value="cleanup" name="Clean Repository Locks" type="button">Clean up</button></td></tr></table>\n
                 </td>\n
 \t</tr>\n
 </table>\n
