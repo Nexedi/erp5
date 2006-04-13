@@ -34,7 +34,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, commands, time
+import os, re, commands, time, exceptions
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
@@ -42,12 +42,16 @@ from zExceptions import Unauthorized
 from OFS.Image import manage_addFile
 from cStringIO import StringIO
 from tempfile import mktemp
+from shutil import copy2
 
 try:
   from base64 import b64encode, b64decode
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
-  
+
+class Error(exceptions.EnvironmentError):
+    pass
+
 def removeAll(entry):
   '''
     Remove all files and directories under 'entry'.
@@ -68,6 +72,41 @@ def removeAll(entry):
       os.remove(entry)
   except OSError:
     pass
+      
+def copytree(src, dst, symlinks=False):
+    """Recursively copy a directory tree using copy2().
+
+    The destination directory must not already exist.
+    If exception(s) occur, an Error is raised with a list of reasons.
+
+    If the optional symlinks flag is true, symbolic links in the
+    source tree result in symbolic links in the destination tree; if
+    it is false, the contents of the files pointed to by symbolic
+    links are copied.
+
+    XXX Consider this example code rather than the ultimate tool.
+
+    """
+    if not os.path.exists(dst):
+      os.mkdir(dst)
+    names = os.listdir(src)
+    errors = []
+    for name in names:
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        try:
+            if symlinks and os.path.islink(srcname):
+                linkto = os.readlink(srcname)
+                os.symlink(linkto, dstname)
+            elif os.path.isdir(srcname):
+                copytree(srcname, dstname, symlinks)
+            else:
+                copy2(srcname, dstname)
+            # XXX What about devices, sockets etc.?
+        except (IOError, os.error), why:
+            errors.append((srcname, dstname, why))
+    if errors:
+        raise Error, errors
 
   
 class File :
@@ -691,38 +730,61 @@ class SubversionTool(UniqueObject, Folder):
     svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path :
       raise "Error: Please set Subversion working path in preferences"
-    if svn_path[-1]!='/':
-      svn_path+='/'
-    svn_path += bt.getTitle()+'/'
-    if path[-1]!='/':
-      path+='/'
+    svn_path=os.path.join(svn_path,bt.getTitle())+'/'
+    path+='/'
     # svn del deleted files
-    self.deleteOldFiles(svn_path, path)
+    self.deleteOldFiles(svn_path, path, bt)
     # add new files and copy
-    self.addNewFiles(svn_path, path)
+    self.addNewFiles(svn_path, path, bt)
     # Clean up
     removeAll(path)
+
+  # return a set with dirs & files present in the directory
+  def getSetForDir(self, directory):
+    dir_set = set()
+    for root, dirs, files in os.walk(directory):
+      # don't visit SVN directories
+      if '.svn' in dirs:
+        dirs.remove('.svn')
+      # get Directories
+      for name in dirs:
+        f = os.path.join(root, name)
+        dir_set.add(f.replace(directory,''))
+      # get Files
+      for name in files: 
+        f = os.path.join(root, name)
+        dir_set.add(f.replace(directory,''))
+    return dir_set
   
+  # return files/dirs present in new_dir but not in old_dir
+  # return a set of relative paths
+  def getNewFiles(self, old_dir, new_dir):
+    if old_dir[-1] != '/':
+      old_dir += '/'
+    if new_dir[-1] != '/':
+      new_dir += '/'
+    old_set = self.getSetForDir(old_dir)
+    new_set = self.getSetForDir(new_dir)
+    return new_set.difference(old_set)
+
   # svn del files that have been removed in new dir
-  def deleteOldFiles(self, old_dir, new_dir):
+  def deleteOldFiles(self, old_dir, new_dir, bt):
     # detect removed files
-    output = commands.getoutput('export LC_ALL=c;diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, old_dir)).replace(': ', '/')
-    files_list = output.split('\n')
+    files_set = self.getNewFiles(new_dir, old_dir)
     # svn del
-    for file in files_list:
-      if file:
-        self.remove(file) 
+    for file in files_set:
+        self.remove(os.path.join(old_dir, file)) 
   
-  def addNewFiles(self, old_dir, new_dir):
+  # copy files and add new files
+  def addNewFiles(self, old_dir, new_dir, bt):
     # detect created files
-    output = commands.getoutput('LC_ALL=C diff -rq %s %s --exclude .svn | grep "Only in " | grep -v "svn-commit." | grep %s | cut -d" " -f3,4'%(new_dir, old_dir, new_dir)).replace(': ', '/')
-    files_list = output.split('\n')
+    files_set = self.getNewFiles(old_dir, new_dir)
     # Copy files
-    os.system('cp -af %s/* %s'%(new_dir, old_dir))
+    #os.system('cp -af %s/* %s'%(new_dir, old_dir))
+    copytree(new_dir, old_dir)
     # svn add
-    for file in files_list:
-      if file:
-          self.add(file.replace(new_dir, old_dir))
+    for file in files_set:
+          self.add(os.path.join(old_dir, file))
   
   def treeToXML(self, item) :
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
