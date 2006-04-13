@@ -78,15 +78,15 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_destination_payment</string> </value>
+            <value> <string>z_related_default_site</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.uid = catalog.uid\n
- AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
- AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination_payment.getUid()">
+<dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
+AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.site.getUid()">\n
+AND <dtml-var table_0>.uid = catalog.uid
 
 ]]></string> </value>
         </item>
@@ -124,9 +124,9 @@ table_1</string> </value>
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-var table_0>.uid = catalog.uid\n
- AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
- AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.destination_payment.getUid()">
+<dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
+AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.site.getUid()">\n
+AND <dtml-var table_0>.uid = catalog.uid
 
 ]]></string> </value>
                     </item>

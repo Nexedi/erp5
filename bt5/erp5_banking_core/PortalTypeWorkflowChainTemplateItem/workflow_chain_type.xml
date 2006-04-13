@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Category</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Check</type>
+  <workflow>edit_workflow, check_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Counter</type>
+  <workflow>counter_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Counter Date</type>
+  <workflow>edit_workflow, counter_date_workflow</workflow>
+ </chain>
+</workflow_chain>

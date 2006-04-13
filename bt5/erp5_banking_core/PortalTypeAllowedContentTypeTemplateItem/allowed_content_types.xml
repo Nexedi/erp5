@@ -1,0 +1,30 @@
+<allowed_content_type_list>
+ <portal_type id="Account Module">
+  <item>Account</item>
+ </portal_type>
+ <portal_type id="Cash Delivery Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Checkbook">
+  <item>Check</item>
+ </portal_type>
+ <portal_type id="Checkbook Module">
+  <item>Checkbook</item>
+ </portal_type>
+ <portal_type id="Counter">
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Counter Date Module">
+  <item>Counter Date</item>
+ </portal_type>
+ <portal_type id="Counter Module">
+  <item>Counter</item>
+ </portal_type>
+ <portal_type id="Currency Cash Module">
+  <item>Banknote</item>
+  <item>Coin</item>
+ </portal_type>
+ <portal_type id="Foreign Check Module">
+  <item>Foreign Check</item>
+ </portal_type>
+</allowed_content_type_list>

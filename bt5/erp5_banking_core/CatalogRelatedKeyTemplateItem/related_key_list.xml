@@ -1,0 +1,10 @@
+<key_list>
+ <key>destination_payment_id | category,catalog/id/z_related_destination_payment</key>
+ <key>destination_payment_title | category,catalog/title/z_related_destination_payment</key>
+ <key>destination_payment_uid | category,catalog/uid/z_related_destination_payment</key>
+ <key>destination_uid | category,catalog/uid/z_related_default_destination</key>
+ <key>site_id | category,catalog/id/z_related_default_site</key>
+ <key>site_uid | category,catalog/uid/z_related_default_site</key>
+ <key>source_uid | category,catalog/uid/z_related_default_source</key>
+ <key>translated_simulation_state_title | translation/translated_message/z_related_translated_simulation_state_title</key>
+</key_list>

@@ -43,8 +43,61 @@
             </value>
         </item>
         <item>
+            <key> <string>acquisition_append_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>specialise</string>
+                <string>delivery</string>
+                <string>order</string>
+                <string>parent</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_copy_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_mask_value</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: []</string> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_sync_value</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>fallback_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>variation</string> </value>
+        </item>
+        <item>
+            <key> <string>id_group</string> </key>
+            <value> <string>None</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
@@ -52,12 +105,20 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -101,6 +162,27 @@
     </pickle>
     <pickle>
       <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>

@@ -33,6 +33,12 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>getAggregateUidList</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getDestinationSectionUid</string> </key>
                                 <value>
                                   <dictionary/>
@@ -52,12 +58,6 @@
                             </item>
                             <item>
                                 <key> <string>getStopDate</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
-                                <key> <string>getTrackedItemUidList</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -94,7 +94,7 @@
 <string>getDestinationSectionUid</string>
 <string>getResourceUid</string>
 <string>getVariationText</string>
-<string>getTrackedItemUidList</string>
+<string>getAggregateUidList</string>
                           </list>
                         </value>
                     </item>
@@ -118,7 +118,7 @@ getDestinationUid\r\n
 getDestinationSectionUid\r\n
 getResourceUid\r\n
 getVariationText\r\n
-getTrackedItemUidList</string> </value>
+getAggregateUidList</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -170,7 +170,7 @@ WHERE\n
 \n
 <dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and getTrackedItemUidList[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item]">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
@@ -179,7 +179,7 @@ INSERT INTO\n
   item\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n
-      <dtml-in "getTrackedItemUidList[loop_item]">\n
+      <dtml-in "getAggregateUidList[loop_item]">\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n
@@ -246,7 +246,7 @@ WHERE\n
 \n
 <dtml-let movement_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isMovement[loop_item] and getTrackedItemUidList[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item]">\n
       <dtml-call expr="movement_list.append(loop_item)">\n
     </dtml-if>\n
   </dtml-in>\n
@@ -255,7 +255,7 @@ INSERT INTO\n
   item\n
 VALUES\n
     <dtml-in prefix="loop" expr="movement_list">\n
-      <dtml-in "getTrackedItemUidList[loop_item]">\n
+      <dtml-in "getAggregateUidList[loop_item]">\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,\n

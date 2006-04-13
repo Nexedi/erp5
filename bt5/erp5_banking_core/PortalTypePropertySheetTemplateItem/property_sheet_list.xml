@@ -1,0 +1,34 @@
+<property_sheet_list>
+ <portal_type id="Banking Operation Line">
+  <item>Task</item>
+  <item>Amount</item>
+  <item>Price</item>
+  <item>Arrow</item>
+ </portal_type>
+ <portal_type id="Cash Delivery Cell">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Cash Delivery Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Category">
+  <item>BaobabCategory</item>
+ </portal_type>
+ <portal_type id="Check">
+  <item>Task</item>
+  <item>Arrow</item>
+ </portal_type>
+ <portal_type id="Checkbook">
+  <item>VariationRange</item>
+  <item>Task</item>
+  <item>Arrow</item>
+  <item>Checkbook</item>
+ </portal_type>
+ <portal_type id="Counter Date">
+  <item>Task</item>
+ </portal_type>
+ <portal_type id="Foreign Check">
+  <item>Arrow</item>
+  <item>Task</item>
+ </portal_type>
+</property_sheet_list>
