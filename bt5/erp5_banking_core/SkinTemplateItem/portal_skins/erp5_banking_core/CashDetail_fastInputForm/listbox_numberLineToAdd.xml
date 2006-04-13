@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_numberLineToAdd</string> </value>
         </item>
@@ -296,7 +302,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Lignes \xc3\xa0 ajouter</string> </value>
+                    <value> <string>Lines To Add</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

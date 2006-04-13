@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -71,9 +71,9 @@
 emission_letter_dict = {}\n
 user_site_list = []\n
 if site == None :\n
- user_site_list = context.Baobab_getUserAssignedSiteList()\n
+  user_site_list = context.Baobab_getUserAssignedSiteList()\n
 else :\n
- user_site_list.append(site)\n
+  user_site_list.append(site)\n
 \n
 if len(user_site_list) > 0:\n
  for a in user_site_list:\n
@@ -90,26 +90,9 @@ return emission_letter_dict.keys()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAwAAAAUAAAA
-QwAAAHMPAQAAaAAAfQEAZwAAfQIAfAAAdAMAagIAbxYAAXQEAHQFAGQBAIMCAIMAAH0CAG4UAAF0
-BAB8AgBkAgCDAgB8AACDAQABdAYAfAIAgwEAZAMAagQAb6YAAXijAHQHAHwCAIMBAERdkQB9CAB0
-BAB8CABkBACDAgBkBQCDAQAMbw4AAWQGAHwIABd9CABuAQABdAQAdAQAdAQAdAUAZAcAgwIAZAgA
-gwIAfAgAgwEAZAkAgwIAgwAAfQkAfAkAZAoAdAMAZgIAagcAbykAAWQLAHQKAHwBAIMBAHQEAHQL
-AHwJAGQDAIMCAGQMAIMCAIMAADxxYgABcWIAV24BAAF0BAB8AQBkDQCDAgCDAABTZAAAUygOAAAA
-TnMeAAAAQmFvYmFiX2dldFVzZXJBc3NpZ25lZFNpdGVMaXN0cwYAAABhcHBlbmRpAAAAAHMKAAAA
-c3RhcnRzd2l0aHMEAAAAc2l0ZXMFAAAAc2l0ZS9zEQAAAHBvcnRhbF9jYXRlZ29yaWVzcxAAAABn
-ZXRDYXRlZ29yeVZhbHVlcw8AAABnZXRDb2RpZmljYXRpb25zAAAAAGkBAAAAcwUAAABsb3dlcnME
-AAAAa2V5cygMAAAAcxQAAABlbWlzc2lvbl9sZXR0ZXJfZGljdHMOAAAAdXNlcl9zaXRlX2xpc3Rz
-BAAAAHNpdGVzBAAAAE5vbmVzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMDAAAAbGVucwkAAABf
-Z2V0aXRlcl9zAQAAAGFzEQAAAHNpdGVfY29kaWZpY2F0aW9ucwcAAABfd3JpdGVfcwkAAABfZ2V0
-aXRlbV8oDAAAAHMEAAAAc2l0ZXMUAAAAZW1pc3Npb25fbGV0dGVyX2RpY3RzDgAAAHVzZXJfc2l0
-ZV9saXN0cwQAAABOb25lcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAwAAAGxlbnMJAAAAX2dl
-dGl0ZXJfcwEAAABhcxEAAABzaXRlX2NvZGlmaWNhdGlvbnMHAAAAX3dyaXRlX3MJAAAAX2dldGl0
-ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcyAAAABCYW9iYWJfZ2V0VXNlckVtaXNz
-aW9uTGV0dGVyTGlzdAEAAABzGgAAAAYBBgENARkCEAITAQ0ABgEXAQ4BKgETATECKAIAAABzBAAA
-AE5vbmVzIAAAAEJhb2JhYl9nZXRVc2VyRW1pc3Npb25MZXR0ZXJMaXN0KAIAAABzBAAAAE5vbmVz
-IAAAAEJhb2JhYl9nZXRVc2VyRW1pc3Npb25MZXR0ZXJMaXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0
-IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

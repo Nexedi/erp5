@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -71,18 +71,19 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAUAAAAEAAAA
-TwAAAHMaAAAAdAAAdAEAZAEAgwIAZAIAfAAAgwABU2QAAFMoAwAAAE5zDwAAAGdldE1vdmVtZW50
-TGlzdHMLAAAAcG9ydGFsX3R5cGUoAwAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwsAAABw
-b3J0YWxfdHlwZSgFAAAAcwsAAABwb3J0YWxfdHlwZXMEAAAAYXJndnMCAAAAa3dzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMYAAAARGVsaXZl
-cnlfZ2V0TW92ZW1lbnRMaXN0AQAAAHMAAAAAKAIAAABzBAAAAE5vbmVzGAAAAERlbGl2ZXJ5X2dl
-dE1vdmVtZW50TGlzdCgCAAAAcwQAAABOb25lcxgAAABEZWxpdmVyeV9nZXRNb3ZlbWVudExpc3Qo
-AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Delivery_getMovementList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

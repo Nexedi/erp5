@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -84,7 +90,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -97,10 +105,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_resource_title</string>
                         <string>my_destination</string>
-                        <string>my_check_number_range_start</string>
-                        <string>my_start_date</string>
+                        <string>my_resource</string>
+                        <string>my_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -108,10 +115,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_checkbook_type</string>
-                        <string>my_destination_section</string>
-                        <string>my_check_number_range_stop</string>
-                        <string>my_description</string>
+                        <string>my_destination_payment_reference</string>
+                        <string>my_reference_range_min</string>
+                        <string>my_reference_range_max</string>
+                        <string>my_start_date</string>
                       </list>
                     </value>
                 </item>

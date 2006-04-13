@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -75,20 +75,9 @@ return totalPrice\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAoAAAAKAAAA
-SwAAAHOGAAAAZwAABGkAAH0DAHQCAHQDAHQEAGQBAIMCAGQCAGQDAIMAAYMBAERdKAB9BwB8AwB0
-AwB0AwB8BwBkBACDAgCDAABkBQCDAgCDAACDAQABcSYAfgMAfQgAZAYAfQkAeB4AdAIAfAgAgwEA
-RF0QAH0HAHwJAHwHADd9CQBxagBXfAkAU2QAAFMoBwAAAE5zDAAAAHNlYXJjaEZvbGRlcnMLAAAA
-cG9ydGFsX3R5cGVzDgAAAENvbnRhaW5lciBMaW5lcwkAAABnZXRPYmplY3RzDQAAAGdldFRvdGFs
-UHJpY2VpAAAAACgIAAAAcwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zCQAA
-AF9nZXRhdHRyX3MHAAAAY29udGV4dHMBAAAAeHMTAAAAbGluZVRvdGFsUHJpY2VfbGlzdHMKAAAA
-dG90YWxQcmljZSgKAAAAcwcAAABsaXN0Ym94cwIAAABrd3MGAAAAYXBwZW5kcwgAAAAkYXBwZW5k
-MHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzEwAAAGxpbmVU
-b3RhbFByaWNlX2xpc3RzCgAAAHRvdGFsUHJpY2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhv
-bilzIAAAAENvbnRhaW5lcl9nZXRDb250YWluZWVUb3RhbFByaWNlAQAAAHMMAAAAJgAxAQYBDQAG
-AQ4BKAIAAABzBAAAAE5vbmVzIAAAAENvbnRhaW5lcl9nZXRDb250YWluZWVUb3RhbFByaWNlKAIA
-AABzBAAAAE5vbmVzIAAAAENvbnRhaW5lcl9nZXRDb250YWluZWVUb3RhbFByaWNlKAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

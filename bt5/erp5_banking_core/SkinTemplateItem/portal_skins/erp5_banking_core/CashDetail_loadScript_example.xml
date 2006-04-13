@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -95,25 +95,9 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAALAAAAQwAA
-AHPOAAAAaAAABGQBAGQCAAM8BGQDAGQEAAM8BGQFAHQAAAM8BGQGAGQHAGcBAAM8BGQIAHQAAAM8
-fQEAaAAABGQBAGQCAAM8BGQDAHQCAHQDAGQJAIMCAIMAAAM8BGQGAHQAAAM8BGQIAHQAAAM8BGQF
-AHQAAAM8BGQKAHQAAAM8BGQLAHQEAAM8BGQMAGQNAAM8fQEAdAIAdAMAZA4AgwIAZA8AdAAAZBAA
-fAEAZBEAdAIAdAIAdAMAZBIAgwIAgwAAZBMAgwIAgwAAgwADU2QAAFMoFAAAAE5zDwAAAGxpbmVf
-cG9ydGFsVHlwZXMSAAAAQ2FzaCBNb3ZlbWVudCBMaW5lcxIAAABvcGVyYXRpb25fY3VycmVuY3lz
-AwAAAEVVUnMOAAAAdmFyaWF0aW9uX2xpc3RzDwAAAGNhc2hTdGF0dXNfbGlzdHMLAAAAbm90X2Rl
-ZmluZWRzEwAAAGVtaXNzaW9uTGV0dGVyX2xpc3RzIwAAAEJhb2JhYl9nZXRQb3J0YWxSZWZlcmVu
-Y2VDdXJyZW5jeUlEcxcAAABjdXJyZW5jeUNhc2hfcG9ydGFsVHlwZXMOAAAAdXBkYXRlUG9zc2li
-bGVzCgAAAGNvbHVtbkJhc2VzCQAAAHZhcmlhdGlvbnMaAAAAQ2FzaERldGFpbF9mYXN0SW5wdXRV
-cGRhdGVzBwAAAGxpc3Rib3hzFAAAAGNhc2hEZXRhaWxfcGFyYW1ldGVycwsAAABkZXN0aW5hdGlv
-bnMJAAAAZ2V0T2JqZWN0cwwAAABhYnNvbHV0ZV91cmwoBQAAAHMEAAAATm9uZXMhAAAAQ2FzaE1v
-dmVtZW50X2Nhc2hEZXRhaWxfcGFyYW1ldGVycwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBAAA
-AFRydWUoBQAAAHMEAAAATm9uZXMhAAAAQ2FzaE1vdmVtZW50X2Nhc2hEZXRhaWxfcGFyYW1ldGVy
-cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzBAAAAFRydWUoAAAAACgAAAAAcw8AAABTY3JpcHQg
-KFB5dGhvbilzHQAAAENhc2hEZXRhaWxfbG9hZFNjcmlwdF9leGFtcGxlAQAAAHMaAAAAGQIJAQwB
-CAMTARIBCQEJAQkBCQERCRUBDAEoAQAAAHMdAAAAQ2FzaERldGFpbF9sb2FkU2NyaXB0X2V4YW1w
-bGUoAQAAAHMdAAAAQ2FzaERldGFpbF9sb2FkU2NyaXB0X2V4YW1wbGUoAAAAACgAAAAAcw8AAABT
-Y3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

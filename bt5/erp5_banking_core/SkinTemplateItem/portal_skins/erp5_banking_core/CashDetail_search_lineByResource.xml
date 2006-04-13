@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -82,26 +82,19 @@ else:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAgAAAAwAAAALAAAA
-QwAAAHPBAAAAdAAAdAEAZAEAgwIAZAIAfAEAgwABfQQAdAQAfAQAgwEAZAMAagIAbwgAAXQFAFNu
-AQABZwAABGkGAH0IAHQIAHwEAIMBAERdRQB9CgB0AAB0AAB8CgBkBACDAgCDAABkBQCDAgCDAAB8
-AABqAgBvGgABfAgAdAAAfAoAZAQAgwIAgwAAgwEAAXFHAAFxRwB+CAB9BAB0BAB8BACDAQBkAwBq
-AgBvCAABdAUAU24OAAF0CwB8BABkAwCDAgBTZAAAUygGAAAATnMMAAAAc2VhcmNoRm9sZGVycwsA
-AABwb3J0YWxfdHlwZWkAAAAAcwkAAABnZXRPYmplY3RzDQAAAGdldFJlc291cmNlSWQoDAAAAHMJ
-AAAAX2dldGF0dHJfcwcAAABjb250ZXh0cxAAAABwb3J0YWxfdHlwZV9uYW1lcw8AAABzb3VyY2Vs
-aW5lX2xpc3RzAwAAAGxlbnMEAAAATm9uZXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dl
-dGl0ZXJfcwEAAAB4cwoAAAByZXNvdXJjZUlkcwkAAABfZ2V0aXRlbV8oDAAAAHMKAAAAcmVzb3Vy
-Y2VJZHMQAAAAcG9ydGFsX3R5cGVfbmFtZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw8AAABz
-b3VyY2VsaW5lX2xpc3RzAwAAAGxlbnMEAAAATm9uZXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJ
-AAAAX2dldGl0ZXJfcwEAAAB4cwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5
-dGhvbilzIAAAAENhc2hEZXRhaWxfc2VhcmNoX2xpbmVCeVJlc291cmNlAQAAAHMSAAAAAAEYAxMB
-CAIUAAYASAETAQgCKAIAAABzBAAAAE5vbmVzIAAAAENhc2hEZXRhaWxfc2VhcmNoX2xpbmVCeVJl
-c291cmNlKAIAAABzBAAAAE5vbmVzIAAAAENhc2hEZXRhaWxfc2VhcmNoX2xpbmVCeVJlc291cmNl
-KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_search_lineByResource</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

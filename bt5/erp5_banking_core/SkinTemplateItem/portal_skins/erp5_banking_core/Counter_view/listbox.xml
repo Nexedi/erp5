@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -335,7 +341,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>Contact</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Contact Type</string>
                         </tuple>
                         <tuple>
                           <string>asText</string>
@@ -378,7 +388,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
@@ -410,7 +420,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
@@ -452,6 +462,10 @@
                           <string>Telephone</string>
                           <string>Telephone</string>
                         </tuple>
+                        <tuple>
+                          <string>Fax</string>
+                          <string>Fax</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -485,12 +499,17 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>contact_list</string> </value>
+                    <value> <string>contact_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

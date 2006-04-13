@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -66,7 +66,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>price = context.CurrencyExchange_getExchangeRateList()[1] * context.getBasePrice()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+rate_list = context.CurrencyExchange_getExchangeRateList()\n
+rate = None\n
+if len(rate_list) > 0:\n
+ rate = rate_list[1]\n
+if rate is None:\n
+  return None\n
+\n
+base_price = context.getBasePrice()\n
+if base_price is None:\n
+  return None\n
+\n
+price = rate * base_price\n
 \n
 commission_ratio = context.getDiscountRatio()\n
 commission_price = context.getDiscount()\n
@@ -85,28 +98,15 @@ if commission_price is not None:\n
 quantity = price + commission_value\n
 context.setQuantity(quantity)\n
 return quantity\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAOAAAAQwAA
-AHMeAQAAdAAAdAEAdAIAZAEAgwIAgwAAZAIAgwIAdAEAdAIAZAMAgwIAgwAAFH0DAHQBAHQCAGQE
-AIMCAIMAAH0EAHQBAHQCAGQFAIMCAIMAAH0FAHwEAHQGAGoJAG8kAAF8BABkBgBqAwBvFwABfAUA
-dAYAagkAbwoAAXwFAGQGAGoDAG8IAAF0BgBTbgEAAXwEAHQGAGoIAHAKAAF8BABkBgBqAgBvFwAB
-fAUAdAYAaggAcAoAAXwFAGQGAGoCAG8IAAF0BgBTbgEAAXwEAHQGAGoJAG8OAAF8BAB8AwAUfQcA
-bgEAAXwFAHQGAGoJAG8KAAF8BQB9BwBuAQABfAMAfAcAF30IAHQBAHQCAGQHAIMCAHwIAIMBAAF8
-CABTZAAAUygIAAAATnMkAAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRFeGNoYW5nZVJhdGVMaXN0aQEA
-AABzDAAAAGdldEJhc2VQcmljZXMQAAAAZ2V0RGlzY291bnRSYXRpb3MLAAAAZ2V0RGlzY291bnRp
-AAAAAHMLAAAAc2V0UXVhbnRpdHkoCQAAAHMJAAAAX2dldGl0ZW1fcwkAAABfZ2V0YXR0cl9zBwAA
-AGNvbnRleHRzBQAAAHByaWNlcxAAAABjb21taXNzaW9uX3JhdGlvcxAAAABjb21taXNzaW9uX3By
-aWNlcwQAAABOb25lcxAAAABjb21taXNzaW9uX3ZhbHVlcwgAAABxdWFudGl0eSgJAAAAcwkAAABf
-Z2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAcHJpY2VzEAAAAGNvbW1pc3Np
-b25fcmF0aW9zEAAAAGNvbW1pc3Npb25fcHJpY2VzBAAAAE5vbmVzEAAAAGNvbW1pc3Npb25fdmFs
-dWVzCAAAAHF1YW50aXR5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcx4AAABDYXNoVG9D
-dXJyZW5jeVNhbGVfZ2V0UXVhbnRpdHkBAAAAcxoAAAArAhIBEgE0AQgBNAEIAg0BDgINAQoDDQEQ
-ASgBAAAAcx4AAABDYXNoVG9DdXJyZW5jeVNhbGVfZ2V0UXVhbnRpdHkoAQAAAHMeAAAAQ2FzaFRv
-Q3VycmVuY3lTYWxlX2dldFF1YW50aXR5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgA
-AAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -146,13 +146,17 @@ AAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>rate_list</string>
+                            <string>None</string>
+                            <string>rate</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>base_price</string>
                             <string>price</string>
                             <string>commission_ratio</string>
                             <string>commission_price</string>
-                            <string>None</string>
                             <string>commission_value</string>
                             <string>quantity</string>
                           </tuple>

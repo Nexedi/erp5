@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -69,7 +69,7 @@
             <value> <string>reference_currency = context.Baobab_getPortalReferenceCurrencyID()\n
 \n
 currency_list = [(\'%s - %s\' % (x.getId(), x.getTitle()), x.getRelativeUrl())\n
-  for x in context.currency.objectValues()\n
+  for x in context.currency_module.objectValues()\n
   if x.getId() != reference_currency]\n
 \n
 currency_list.insert(0, (\'\',\'\'))\n
@@ -79,22 +79,15 @@ return currency_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAMAAAAQwAA
-AHPJAAAAdAAAdAEAZAEAgwIAgwAAfQIAZwAABGkDAH0EAHQFAHQAAHQAAHQBAGQCAIMCAGQDAIMC
-AIMAAIMBAERdYQB9BgB0AAB8BgBkBACDAgCDAAB8AgBqAwBvQgABfAQAZAUAdAAAfAYAZAQAgwIA
-gwAAdAAAfAYAZAYAgwIAgwAAZgIAFnQAAHwGAGQHAIMCAIMAAGYCAIMBAAFxOwABcTsAfgQAfQcA
-dAAAfAcAZAgAgwIAZAkAZAoAZAoAZgIAgwIAAXwHAFNkAABTKAsAAABOcyMAAABCYW9iYWJfZ2V0
-UG9ydGFsUmVmZXJlbmNlQ3VycmVuY3lJRHMIAAAAY3VycmVuY3lzDAAAAG9iamVjdFZhbHVlc3MF
-AAAAZ2V0SWRzBwAAACVzIC0gJXNzCAAAAGdldFRpdGxlcw4AAABnZXRSZWxhdGl2ZVVybHMGAAAA
-aW5zZXJ0aQAAAABzAAAAACgIAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzEgAAAHJlZmVy
-ZW5jZV9jdXJyZW5jeXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwEAAAB4
-cw0AAABjdXJyZW5jeV9saXN0KAgAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMSAAAAcmVm
-ZXJlbmNlX2N1cnJlbmN5cwYAAABhcHBlbmRzCAAAACRhcHBlbmQwcwkAAABfZ2V0aXRlcl9zAQAA
-AHhzDQAAAGN1cnJlbmN5X2xpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzJwAAAEN1
-cnJlbmN5RXhjaGFuZ2VfZ2V0Rm9yZWlnbkN1cnJlbmN5TGlzdAEAAABzDAAAABICEwEWAAYBZwIZ
-AigBAAAAcycAAABDdXJyZW5jeUV4Y2hhbmdlX2dldEZvcmVpZ25DdXJyZW5jeUxpc3QoAQAAAHMn
-AAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRGb3JlaWduQ3VycmVuY3lMaXN0KAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
@@ -162,12 +155,33 @@ U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Move This to erp5_core ?</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -67,26 +67,29 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
-context.setStartDate(DateTime())\n
+\n
+context.edit(start_date = DateTime(), variation_base_category_list = [\'check_amount\'])\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAEAAAAQwAA
-AHMnAAAAZAEAawAAbAAAfQAAAXQBAHQCAGQCAIMCAHwAAIMAAIMBAAFkAABTKAMAAABOKAEAAABz
-CAAAAERhdGVUaW1lcwwAAABzZXRTdGFydERhdGUoAwAAAHMIAAAARGF0ZVRpbWVzCQAAAF9nZXRh
-dHRyX3MHAAAAY29udGV4dCgDAAAAcwgAAABEYXRlVGltZXMJAAAAX2dldGF0dHJfcwcAAABjb250
-ZXh0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcw4AAABDaGVja2Jvb2tfaW5pdAEAAABz
-AgAAABABKAEAAABzDgAAAENoZWNrYm9va19pbml0KAEAAABzDgAAAENoZWNrYm9va19pbml0KAAA
-AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Checkbook_init</string> </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,6 +115,7 @@ AAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>

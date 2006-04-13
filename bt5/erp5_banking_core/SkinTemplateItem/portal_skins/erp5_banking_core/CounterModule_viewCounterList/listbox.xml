@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -316,60 +322,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Title</string>
-                          <string>Name</string>
-                        </tuple>
-                        <tuple>
-                          <string>getRole</string>
-                          <string>Role</string>
-                        </tuple>
-                        <tuple>
-                          <string>getGroup</string>
-                          <string>Group</string>
-                        </tuple>
-                        <tuple>
-                          <string>getActivity</string>
-                          <string>Activity</string>
-                        </tuple>
-                        <tuple>
-                          <string>getFunction</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>getDefaultEmailText</string>
-                          <string>Email</string>
-                        </tuple>
-                        <tuple>
-                          <string>getDefaultTelephoneText</string>
-                          <string>Phone</string>
-                        </tuple>
-                        <tuple>
-                          <string>getDefaultFaxText</string>
-                          <string>Fax</string>
-                        </tuple>
-                        <tuple>
-                          <string>getDefaultAddressText</string>
-                          <string>Address</string>
-                        </tuple>
-                        <tuple>
-                          <string>getDefaultRegion</string>
-                          <string>Region</string>
-                        </tuple>
-                        <tuple>
-                          <string>Description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -387,42 +340,28 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
                           <string>Title</string>
-                          <string>Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>site</string>
+                          <string>Site</string>
                         </tuple>
                         <tuple>
                           <string>getDefaultTelephoneText</string>
                           <string>Phone</string>
                         </tuple>
                         <tuple>
-                          <string>getDefaultRegion</string>
-                          <string>Region</string>
-                        </tuple>
-                        <tuple>
-                          <string>getRole</string>
-                          <string>Role</string>
-                        </tuple>
-                        <tuple>
-                          <string>getGroup</string>
-                          <string>Group</string>
-                        </tuple>
-                        <tuple>
-                          <string>getActivity</string>
-                          <string>Activity</string>
-                        </tuple>
-                        <tuple>
-                          <string>getFunction</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>Description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>validation_state</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -446,28 +385,7 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>portal_categories/activity</string>
-                          <string>Activity</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_categories/function</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_categories/role</string>
-                          <string>Role</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_categories/region</string>
-                          <string>Region</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_categories/group</string>
-                          <string>Group</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -516,7 +434,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>list</string> </value>
+                    <value> <string>CounterModule_viewCounterList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_cookie</string> </key>
@@ -525,7 +443,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -575,17 +493,12 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>counter_selection</string> </value>
+                    <value> <string>counter_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -638,7 +551,26 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
+            <value> <string>countFolder</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

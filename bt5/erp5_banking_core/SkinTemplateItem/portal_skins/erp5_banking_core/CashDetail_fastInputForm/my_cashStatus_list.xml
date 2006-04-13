@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_cashStatus_list</string> </value>
         </item>
@@ -275,7 +281,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>.</string> </value>
+                    <value> <string>Cash Status</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -283,7 +289,11 @@
                 </item>
                 <item>
                     <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

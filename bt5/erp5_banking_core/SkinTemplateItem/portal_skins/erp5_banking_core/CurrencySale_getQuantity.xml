@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -88,24 +88,9 @@ return quantity\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAAOAAAAQwAA
-AHMeAQAAdAAAdAEAdAIAZAEAgwIAgwAAZAIAgwIAdAEAdAIAZAMAgwIAgwAAFH0DAHQBAHQCAGQE
-AIMCAIMAAH0EAHQBAHQCAGQFAIMCAIMAAH0FAHwEAHQGAGoJAG8kAAF8BABkBgBqAwBvFwABfAUA
-dAYAagkAbwoAAXwFAGQGAGoDAG8IAAF0BgBTbgEAAXwEAHQGAGoIAHAKAAF8BABkBgBqAgBvFwAB
-fAUAdAYAaggAcAoAAXwFAGQGAGoCAG8IAAF0BgBTbgEAAXwEAHQGAGoJAG8OAAF8BAB8AwAUfQcA
-bgEAAXwFAHQGAGoJAG8KAAF8BQB9BwBuAQABfAMAfAcAF30IAHQBAHQCAGQHAIMCAHwIAIMBAAF8
-CABTZAAAUygIAAAATnMkAAAAQ3VycmVuY3lFeGNoYW5nZV9nZXRFeGNoYW5nZVJhdGVMaXN0aQEA
-AABzDAAAAGdldEJhc2VQcmljZXMQAAAAZ2V0RGlzY291bnRSYXRpb3MLAAAAZ2V0RGlzY291bnRp
-AAAAAHMLAAAAc2V0UXVhbnRpdHkoCQAAAHMJAAAAX2dldGl0ZW1fcwkAAABfZ2V0YXR0cl9zBwAA
-AGNvbnRleHRzBQAAAHByaWNlcxAAAABjb21taXNzaW9uX3JhdGlvcxAAAABjb21taXNzaW9uX3By
-aWNlcwQAAABOb25lcxAAAABjb21taXNzaW9uX3ZhbHVlcwgAAABxdWFudGl0eSgJAAAAcwkAAABf
-Z2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMFAAAAcHJpY2VzEAAAAGNvbW1pc3Np
-b25fcmF0aW9zEAAAAGNvbW1pc3Npb25fcHJpY2VzBAAAAE5vbmVzEAAAAGNvbW1pc3Npb25fdmFs
-dWVzCAAAAHF1YW50aXR5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxgAAABDdXJyZW5j
-eVNhbGVfZ2V0UXVhbnRpdHkBAAAAcxoAAAArAhIBEgE0AQgBNAEIAg0BDgINAQoCDQEQASgBAAAA
-cxgAAABDdXJyZW5jeVNhbGVfZ2V0UXVhbnRpdHkoAQAAAHMYAAAAQ3VycmVuY3lTYWxlX2dldFF1
-YW50aXR5KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAA
-AA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

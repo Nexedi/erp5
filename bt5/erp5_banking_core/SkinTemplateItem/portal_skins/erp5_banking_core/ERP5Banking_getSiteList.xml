@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -72,15 +72,9 @@ return sourceline_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAMAAAAGAAAAQwAA
-AHMyAAAAdAAAdAAAdAAAdAEAZAEAgwIAZAIAgwIAZAMAgwIAZAQAZAUAgwABfQIAfAIAU2QAAFMo
-BgAAAE5zEQAAAHBvcnRhbF9jYXRlZ29yaWVzcwQAAABzaXRlcyMAAABnZXRDYXRlZ29yeUNoaWxk
-TG9naWNhbFBhdGhJdGVtTGlzdHMEAAAAYmFzZWkBAAAAKAMAAABzCQAAAF9nZXRhdHRyX3MHAAAA
-Y29udGV4dHMPAAAAc291cmNlbGluZV9saXN0KAMAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4
-dHMPAAAAc291cmNlbGluZV9saXN0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxcAAABF
-UlA1QmFua2luZ19nZXRTaXRlTGlzdAEAAABzAgAAACoBKAEAAABzFwAAAEVSUDVCYW5raW5nX2dl
-dFNpdGVMaXN0KAEAAABzFwAAAEVSUDVCYW5raW5nX2dldFNpdGVMaXN0KAAAAAAoAAAAAHMPAAAA
-U2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

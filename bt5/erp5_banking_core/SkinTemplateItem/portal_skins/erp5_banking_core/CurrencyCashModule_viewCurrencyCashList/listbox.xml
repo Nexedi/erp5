@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -314,7 +320,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
+                          <string>translated_title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -351,7 +357,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
+                          <string>translated_title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
@@ -392,11 +398,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>portal_categories/variation</string>
+                          <string>variation</string>
                           <string>Variations</string>
                         </tuple>
                         <tuple>
-                          <string>portal_categories/price_currency</string>
+                          <string>price_currency</string>
                           <string>Currency</string>
                         </tuple>
                       </list>
@@ -502,7 +508,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
+                          <string>translated_title</string>
                           <string>Title</string>
                         </tuple>
                       </list>
@@ -526,7 +532,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>Banknotes and Coins</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

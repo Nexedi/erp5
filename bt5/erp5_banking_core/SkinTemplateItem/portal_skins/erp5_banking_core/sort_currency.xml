@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -101,30 +101,19 @@ return listCurrency\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAMAAAAEAAAAQwAA
-AHMkAAAAZAEAhAAAfQEAdAEAfAAAZAIAgwIAfAEAgwEAAXwAAFNkAABTKAMAAABOYwIAAAAGAAAA
-FwAAAEMAAABzeAEAAHQAAHwAAGQBAIMCAIMAAGQCAGQDAGYCAGoGAG8QAAF8AAB9AwB8AQB9BABu
-JQABdAAAfAMAZAQAgwIAgwAAfQMAdAAAfAQAZAQAgwIAgwAAfQQAdAAAfAMAZAEAgwIAgwAAdAAA
-fAQAZAEAgwIAgwAAagIAb9YAAXQAAHwDAGQFAIMCAIMAAHQAAHwEAGQFAIMCAIMAAGoEAG8JAAFk
-BgALU3F0AQF0AAB8AwBkBQCDAgCDAAB0AAB8BABkBQCDAgCDAABqAABvCAABZAYAU3F0AQF0BQB0
-AAB8AwBkBwCDAgCDAACDAQB0BQB0AAB8BABkBwCDAgCDAACDAQBqAABvCAABZAYAU3F0AQF0BQB0
-AAB8AwBkBwCDAgCDAACDAQB0BQB0AAB8BABkBwCDAgCDAACDAQBqBABvCQABZAYAC1NxdAEBZAgA
-U24nAAF0AAB8AwBkAQCDAgCDAABkAwBqAgBvCQABZAYAC1NuBQABZAYAU2QAAFMoCQAAAE5zDQAA
-AGdldFBvcnRhbFR5cGVzBAAAAENvaW5zCAAAAEJhbmtub3RlcxAAAABnZXRSZXNvdXJjZVZhbHVl
-cwgAAABnZXRQcmljZWkBAAAAcwwAAABnZXRWYXJpYXRpb25pAAAAACgGAAAAcwkAAABfZ2V0YXR0
-cl9zCAAAAGFfU291cmNlcwEAAABhcwgAAABiX1NvdXJjZXMBAAAAYnMDAAAAaW50KAYAAABzCAAA
-AGFfU291cmNlcwgAAABiX1NvdXJjZXMJAAAAX2dldGF0dHJfcwEAAABhcwEAAABicwMAAABpbnQo
-AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAAHNvcnRMaW5lAQAAAHMkAAAAAAEfAQYB
-CgISARIBJQElAQkBJQEIAjEBCAExAQkCCAEZAQkCcwQAAABzb3J0KAMAAABzCAAAAHNvcnRMaW5l
-cwkAAABfZ2V0YXR0cl9zDAAAAGxpc3RDdXJyZW5jeSgDAAAAcwwAAABsaXN0Q3VycmVuY3lzCAAA
-AHNvcnRMaW5lcwkAAABfZ2V0YXR0cl8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzDQAA
-AHNvcnRfY3VycmVuY3kBAAAAcwQAAAAMGRABKAEAAABzDQAAAHNvcnRfY3VycmVuY3koAQAAAHMN
-AAAAc29ydF9jdXJyZW5jeSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVs
-ZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/sort_currency</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

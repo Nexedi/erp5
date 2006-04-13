@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -76,15 +76,9 @@ return bank_account.searchFolder()\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAUAAAAHAAAASwAA
-AHNBAAAAdAAAdAEAZAEAgwIAgwAAfQMAfAMAZAIAdAMAZgIAagYAbwgAAWcAAFNuAQABdAAAfAMA
-ZAMAgwIAgwAAU2QAAFMoBAAAAE5zGgAAAGdldERlc3RpbmF0aW9uUGF5bWVudFZhbHVlcwAAAABz
-DAAAAHNlYXJjaEZvbGRlcigEAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzDAAAAGJhbmtf
-YWNjb3VudHMEAAAATm9uZSgFAAAAcwIAAABrd3MJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwwA
-AABiYW5rX2FjY291bnRzBAAAAE5vbmUoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzGgAA
-AEJhb2JhYl9nZXRSZWxhdGVkQWdlbnRMaXN0AQAAAHMGAAAAEgITAQgCKAEAAABzGgAAAEJhb2Jh
-Yl9nZXRSZWxhdGVkQWdlbnRMaXN0KAEAAABzGgAAAEJhb2JhYl9nZXRSZWxhdGVkQWdlbnRMaXN0
-KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -94,26 +94,19 @@ return output_string\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGQBAGQCAIQBAFoAAGQAAFMoAwAAAE5zAQAAACBjAgAAAAsA
-AAASAAAAQwAAAHMdAQAAdAAAfAAAgwEAfQMAfAMAfQQAZAEAfQUAdAUAfAMAZAIAgwIAZAMAgwEA
-ZAQAagUAb0QAAXQGAHQFAHwDAGQFAIMCAGQDAIMBAGQEAIMCAH0EAGQDAHQGAHQFAHwDAGQFAIMC
-AGQDAIMBAGQGAIMCABd9BQBuAQABdAcAfAQAgwEAfQkAfAQAfQMAfAkAZAcAagQAb3QAAWQBAH0D
-AHwJAGQHABZwBAABZAcAfQoAdAYAfAQAZAQAfAoAhQIAgwIAfQMAeEUAfAoAfAkAZAcAGGoBAG8v
-AAF8AwB8AQB0BgB8BAB8CgB8CgBkBwAXhQIAgwIAFzd9AwB8CgBkBwA3fQoAccYAAVduAQABfAMA
-fAUAF30DAHwDAFNkAABTKAgAAABOcwAAAABzBAAAAGZpbmRzAQAAAC5pAAAAAHMFAAAAc3BsaXRp
-AQAAAGkDAAAAKAsAAABzAwAAAHN0cnMFAAAAdmFsdWVzDQAAAG91dHB1dF9zdHJpbmdzCgAAAGlu
-dF9zdHJpbmdzCgAAAGVuZF9zdHJpbmdzCQAAAF9nZXRhdHRyX3MJAAAAX2dldGl0ZW1fcwMAAABs
-ZW5zBwAAAGludF9sZW5zAQAAAGlzAwAAAHNlcCgLAAAAcwUAAAB2YWx1ZXMDAAAAc2VwcwMAAABz
-dHJzDQAAAG91dHB1dF9zdHJpbmdzCgAAAGludF9zdHJpbmdzCgAAAGVuZF9zdHJpbmdzCQAAAF9n
-ZXRhdHRyX3MJAAAAX2dldGl0ZW1fcwMAAABsZW5zBwAAAGludF9sZW5zAQAAAGkoAAAAACgAAAAA
-cw8AAABTY3JpcHQgKFB5dGhvbilzEAAAAEludGVnZXJfdG9TdHJpbmcBAAAAcyIAAAAMAQYBBgIc
-AR4BJgIMAQYBDQEGAREBFQEDABEBIQETAgoBKAEAAABzEAAAAEludGVnZXJfdG9TdHJpbmcoAQAA
-AHMQAAAASW50ZWdlcl90b1N0cmluZygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAA
-PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/erp5/portal_skins/erp5_banking_core/Integer_toString</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -166,7 +159,7 @@ PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
+                <string> </string>
               </tuple>
             </value>
         </item>

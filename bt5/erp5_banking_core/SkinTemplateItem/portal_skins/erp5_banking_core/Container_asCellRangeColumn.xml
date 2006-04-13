@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -73,23 +73,19 @@ return resource_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAcAAAALAAAAQwAA
-AHONAAAAdAAAdAEAZAEAgwIAZAIAZAMAZAQAZgIAgwABfQIAZwAABGkDAH0EAHQFAHwCAIMBAERd
-SgB9BgB8BAB0AAB0AAB8BgBkBQCDAgCDAABkBgCDAgCDAABkBwB0AAB0AAB8BgBkBQCDAgCDAABk
-CACDAgCDAAAXZwIAgwEAAXEyAH4EAH0CAHwCAFNkAABTKAkAAABOcw4AAABwb3J0YWxfY2F0YWxv
-Z3MLAAAAcG9ydGFsX3R5cGVzCAAAAEJhbmtub3RlcwQAAABDb2lucwkAAABnZXRPYmplY3RzCAAA
-AGdldFRpdGxlcwkAAAByZXNvdXJjZS9zBQAAAGdldElkKAcAAABzCQAAAF9nZXRhdHRyX3MHAAAA
-Y29udGV4dHMNAAAAcmVzb3VyY2VfbGlzdHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dl
-dGl0ZXJfcwEAAAB4KAcAAABzCQAAAF9nZXRhdHRyX3MHAAAAY29udGV4dHMNAAAAcmVzb3VyY2Vf
-bGlzdHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJfcwEAAAB4KAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcxkAAABDb250YWluZXJfYXNDZWxsUmFuZ2VUYWJzAQAAAHMG
-AAAAHgEUAFMBKAEAAABzGQAAAENvbnRhaW5lcl9hc0NlbGxSYW5nZVRhYnMoAQAAAHMZAAAAQ29u
-dGFpbmVyX2FzQ2VsbFJhbmdlVGFicygAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAA
-PG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Container_asCellRangeColumn</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

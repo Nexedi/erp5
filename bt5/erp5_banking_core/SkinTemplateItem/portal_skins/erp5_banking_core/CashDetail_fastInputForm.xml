@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>CashDetail_fastInputSave</string> </value>
         </item>
@@ -55,7 +61,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -167,7 +173,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Enregister</string> </value>
+            <value> <string>Save</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

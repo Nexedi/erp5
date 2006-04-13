@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -77,26 +77,19 @@ else:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAsAAAAOAAAA
-QwAAAHOjAAAAZwAABGkAAH0CAHQCAHQDAHQEAGQBAIMCAGQCAGgAAARkAwBkBABkBQBmAgADPIMA
-AYMBAERdOQB9BgB0AwB0AwB8BgBkBgCDAgCDAABkBwCDAgCDAAB8AABqAgBvDgABfAIAfAYAgwEA
-AXE1AAFxNQB+AgB9BwB0CAB8BwCDAQBkCABqAgBvCAABdAkAU24OAAF0CgB8BwBkCACDAgBTZAAA
-UygJAAAATnMNAAAAY29udGVudFZhbHVlc3MGAAAAZmlsdGVycwsAAABwb3J0YWxfdHlwZXMSAAAA
-Q2hlY2sgUGF5bWVudCBMaW5lcxIAAABNb25leSBEZXBvc2l0IExpbmVzEAAAAGdldFJlc291cmNl
-VmFsdWVzCAAAAGdldFRpdGxlaQAAAAAoCwAAAHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAA
-X2dldGl0ZXJfcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzDQAAAHJlc291cmNlVGl0
-bGVzDwAAAHNvdXJjZWxpbmVfbGlzdHMDAAAAbGVucwQAAABOb25lcwkAAABfZ2V0aXRlbV8oCwAA
-AHMNAAAAcmVzb3VyY2VUaXRsZXMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMJAAAAX2dldGl0ZXJf
-cwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzAQAAAHhzDwAAAHNvdXJjZWxpbmVfbGlzdHMDAAAA
-bGVucwQAAABOb25lcwkAAABfZ2V0aXRlbV8oAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilz
-FAAAAHNlYXJjaExpbmVCeVJlc291cmNlAQAAAHMKAAAANQAGATwCEwEIAigCAAAAcwQAAABOb25l
-cxQAAABzZWFyY2hMaW5lQnlSZXNvdXJjZSgCAAAAcwQAAABOb25lcxQAAABzZWFyY2hMaW5lQnlS
-ZXNvdXJjZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAA
-AAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/searchLineByResource</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -80,23 +80,19 @@ return site_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAgAAAAIAAAAQwAA
-AHNzAAAAdAAAdAEAZAEAgwIAgwAAfQIAZwAAfQMAeFAAdAQAfAIAgwEARF1CAH0FAHQAAHwFAGQC
-AIMCAIMAAH0GAHwGAGQDAHQHAGYCAGoHAG8XAAF0AAB8AwBkBACDAgB8BgCDAQABcSUAAXElAFd8
-AwBTZAAAUygFAAAATnMcAAAAQmFvYmFiX2dldFVzZXJBc3NpZ25tZW50TGlzdHMHAAAAZ2V0U2l0
-ZXMAAAAAcwYAAABhcHBlbmQoCAAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cxUAAAB2YWxp
-ZF9hc3NpZ25tZW50X2xpc3RzCQAAAHNpdGVfbGlzdHMJAAAAX2dldGl0ZXJfcwEAAABhcwgAAABu
-ZXdfc2l0ZXMEAAAATm9uZSgIAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNvbnRleHRzFQAAAHZhbGlk
-X2Fzc2lnbm1lbnRfbGlzdHMJAAAAc2l0ZV9saXN0cwkAAABfZ2V0aXRlcl9zAQAAAGFzCAAAAG5l
-d19zaXRlcwQAAABOb25lKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcx4AAABCYW9iYWJf
-Z2V0VXNlckFzc2lnbmVkU2l0ZUxpc3QBAAAAcxAAAAAAAhICBgENAAYBEgEWARgBKAEAAABzHgAA
-AEJhb2JhYl9nZXRVc2VyQXNzaWduZWRTaXRlTGlzdCgBAAAAcx4AAABCYW9iYWJfZ2V0VXNlckFz
-c2lnbmVkU2l0ZUxpc3QoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
-AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getUserAssignedSiteList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

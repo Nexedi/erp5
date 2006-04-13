@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -81,27 +81,19 @@ return return_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAAkAAAALAAAAQwAA
-AHPoAAAAdAAAdAEAdAEAdAEAdAIAZAEAgwIAZAIAgwIAZAMAgwIAgwAAZAQAZAAAhQIAgwIAfQMA
-ZAUAZAYAZwIAZwEAfQQAZAQAfQUAeEoAdAYAfAMAgwEARF08AH0HAHQBAHwEAGQHAIMCAGQCAHQI
-AHwFAIMBABd0AAB8BwBkCACDAgBnAgCDAQABfAUAZAQAN30FAHFVAFd0AQB8BABkBwCDAgBkCQBk
-CgBnAgCDAQABdAEAfAQAZAcAgwIAZAsAZAwAZwIAgwEAAXQBAHwEAGQHAIMCAGQNAGQMAGcCAIMB
-AAF8BABTZAAAUygOAAAATnMRAAAAcG9ydGFsX2NhdGVnb3JpZXNzCQAAAHZhcmlhdGlvbnMdAAAA
-Z2V0Q2F0ZWdvcnlDaGlsZFRpdGxlSXRlbUxpc3RpAQAAAHMSAAAAZGlzcGxheWVkX3Jlc291cmNl
-cwcAAABDb3VwdXJlcwYAAABhcHBlbmRpAAAAAHMFAAAAcHJpY2VzBwAAAE1vbnRhbnRzCAAAAHJl
-c291cmNlcwAAAABzCwAAAElkX3Jlc291cmNlKAkAAABzCQAAAF9nZXRpdGVtX3MJAAAAX2dldGF0
-dHJfcwcAAABjb250ZXh0cw4AAAB2YXJpYXRpb25fbGlzdHMLAAAAcmV0dXJuX2xpc3RzBwAAAGNv
-dW50ZXJzCQAAAF9nZXRpdGVyX3MBAAAAeHMDAAAAc3RyKAkAAABzCQAAAF9nZXRpdGVtX3MJAAAA
-X2dldGF0dHJfcwcAAABjb250ZXh0cw4AAAB2YXJpYXRpb25fbGlzdHMLAAAAcmV0dXJuX2xpc3Rz
-BwAAAGNvdW50ZXJzCQAAAF9nZXRpdGVyX3MBAAAAeHMDAAAAc3RyKAAAAAAoAAAAAHMPAAAAU2Ny
-aXB0IChQeXRob24pcxoAAABnZXRWYXJpYXRpb25Gb3JNYXRyaXhJbnB1dAEAAABzFAAAADMBDwEG
-AQ0ACQEpAhEBGQEZARYBKAEAAABzGgAAAGdldFZhcmlhdGlvbkZvck1hdHJpeElucHV0KAEAAABz
-GgAAAGdldFZhcmlhdGlvbkZvck1hdHJpeElucHV0KAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRo
-b24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/getVariationForMatrixInput</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

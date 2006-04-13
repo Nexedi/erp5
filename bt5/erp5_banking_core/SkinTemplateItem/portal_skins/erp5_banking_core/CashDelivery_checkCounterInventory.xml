@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">bfINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that the amount of resources at `source` is greater or equal\n
+# than the amount of movement of type `portal_type` in this movement\n
+\n
+# returns 2 : no resource, 1 : insufficient balance, 0 : ok\n
+\n
+# XXX this should be handled by a portal method.\n
+currency_cash_portal_type_list = [\'Banknote\', \'Coin\']\n
+\n
+inventory_dict = {}\n
+requested_dict = {}\n
+\n
+# test all movement\n
+tmp_list = context.contentValues(filter={\'portal_type\': portal_type})\n
+context.log(\'tmp_list\', str((tmp_list, portal_type, context)))\n
+line_list = []\n
+for l in tmp_list :\n
+  # The source can be different for every line (due to getBaobabSource approach)\n
+  source_counter = source or l.getBaobabSource()\n
+  # test if resource is a currency_cash\n
+  try:    \n
+    if (l.getResourceValue().getPortalType() in currency_cash_portal_type_list) \\\n
+           and (l.getBaobabSource() == source_counter) :\n
+      line_list.append(l)\n
+  except (AttributeError, KeyError):    \n
+    pass\n
+\n
+if len(line_list) == 0 :\n
+  # no resource\n
+  return 2\n
+\n
+for line in line_list :\n
+  line_resource = line.getResource()\n
+  # The source can be different for every line (due to getBaobabSource approach)\n
+  source_counter = source or line.getBaobabSource()\n
+  if line.hasCellContent() :\n
+    for cell in line.objectValues() :\n
+      variation_text = cell.getVariationText()\n
+      #context.log(\'check cell : \', str((source_counter, line_resource, variation_text)))\n
+      inventory_value = context.portal_simulation.getFutureInventory(node=source_counter, resource = line_resource,\n
+          variation_text = variation_text)\n
+      #context.log(\'cell quantity\', cell.getQuantity())\n
+      #context.log(\'inventory value\', inventory_value)\n
+      if inventory_value - cell.getQuantity() < 0:\n
+        return 1\n
+\n
+  else :\n
+    inventory_value = context.portal_simulation.getFutureInventory(section=source_counter, resource=line_resource)\n
+    if inventory_value - line.getQuantity() < 0 :\n
+      return 1\n
+\n
+return 0\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDelivery_checkCounterInventory</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>source=None,  portal_type=None, debug=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>source</string>
+                            <string>portal_type</string>
+                            <string>debug</string>
+                            <string>currency_cash_portal_type_list</string>
+                            <string>inventory_dict</string>
+                            <string>requested_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>tmp_list</string>
+                            <string>str</string>
+                            <string>line_list</string>
+                            <string>_getiter_</string>
+                            <string>l</string>
+                            <string>source_counter</string>
+                            <string>AttributeError</string>
+                            <string>KeyError</string>
+                            <string>len</string>
+                            <string>line</string>
+                            <string>line_resource</string>
+                            <string>cell</string>
+                            <string>variation_text</string>
+                            <string>inventory_value</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDelivery_checkCounterInventory</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

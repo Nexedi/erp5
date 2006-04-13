@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -69,13 +69,15 @@
             <value> <string encoding="cdata"><![CDATA[
 
 # get the current logged user site\n
-user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
+login = context.portal_membership.getAuthenticatedMember().getUserName()\n
+persons = context.acl_users.erp5_users.getUserByLogin(login)\n
 \n
-### KEV HACK: support old and new person module id\n
-try:\n
-  person = context.person[user_id]\n
-except:\n
-  person = context.person_module[user_id]\n
+if len(persons) == 0:\n
+  context.log(\'Baobab_getUserAssignementList\', \'Person %s not found\' %(login))\n
+  return []\n
+else:\n
+  #person = persons[0].getObject()\n
+  person = persons[0]\n
 \n
 assignment_list = person.contentValues(filter={\'portal_type\': \'Assignment\'})\n
 \n
@@ -85,10 +87,11 @@ if len(assignment_list) == 0:\n
 valid_assignment_list = []\n
 \n
 for a in assignment_list:\n
-  stop  = a.getStopDate()\n
-  start = a.getStartDate()\n
-  if (stop > DateTime() or stop == None) and (start < DateTime() or start == None):\n
-    valid_assignment_list.append(a)\n
+  if a.getValidationState() == \'open\':\n
+    stop  = a.getStopDate()\n
+    start = a.getStartDate()\n
+    if (stop > DateTime() or stop == None) and (start < DateTime() or start == None): \n
+      valid_assignment_list.append(a)\n
 \n
 return valid_assignment_list\n
 
@@ -97,31 +100,25 @@ return valid_assignment_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAAAAAA4AAAATAAAAQwAA
-AHM7AQAAdAAAdAAAdAAAdAEAZAEAgwIAZAIAgwIAgwAAZAMAgwIAgwAAfQIAeRwAdAMAdAAAdAEA
-ZAQAgwIAfAIAgwIAfQQAV24fAAEBAXQDAHQAAHQBAGQFAIMCAHwCAIMCAH0EAG4BAFh0AAB8BABk
-BgCDAgBkBwBoAAAEZAgAZAkAAzyDAAF9BQB0BgB8BQCDAQBkCgBqAgBvCAABZwAAU24BAAFnAAB9
-BwB4iQB0CAB8BQCDAQBEXXsAfQkAdAAAfAkAZAsAgwIAgwAAfQoAdAAAfAkAZAwAgwIAgwAAfQsA
-fAoAdAwAgwAAagQAcAoAAXwKAHQNAGoCAG8aAAF8CwB0DACDAABqAABwCgABfAsAdA0AagIAbxcA
-AXQAAHwHAGQNAIMCAHwJAIMBAAFxtAABcbQAV3wHAFNkAABTKA4AAABOcxEAAABwb3J0YWxfbWVt
-YmVyc2hpcHMWAAAAZ2V0QXV0aGVudGljYXRlZE1lbWJlcnMLAAAAZ2V0VXNlck5hbWVzBgAAAHBl
-cnNvbnMNAAAAcGVyc29uX21vZHVsZXMNAAAAY29udGVudFZhbHVlc3MGAAAAZmlsdGVycwsAAABw
-b3J0YWxfdHlwZXMKAAAAQXNzaWdubWVudGkAAAAAcwsAAABnZXRTdG9wRGF0ZXMMAAAAZ2V0U3Rh
-cnREYXRlcwYAAABhcHBlbmQoDgAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cwcAAAB1c2Vy
-X2lkcwkAAABfZ2V0aXRlbV9zBgAAAHBlcnNvbnMPAAAAYXNzaWdubWVudF9saXN0cwMAAABsZW5z
-FQAAAHZhbGlkX2Fzc2lnbm1lbnRfbGlzdHMJAAAAX2dldGl0ZXJfcwEAAABhcwQAAABzdG9wcwUA
-AABzdGFydHMIAAAARGF0ZVRpbWVzBAAAAE5vbmUoDgAAAHMJAAAAX2dldGF0dHJfcwcAAABjb250
-ZXh0cwcAAAB1c2VyX2lkcwkAAABfZ2V0aXRlbV9zBgAAAHBlcnNvbnMPAAAAYXNzaWdubWVudF9s
-aXN0cwMAAABsZW5zFQAAAHZhbGlkX2Fzc2lnbm1lbnRfbGlzdHMJAAAAX2dldGl0ZXJfcwEAAABh
-cwQAAABzdG9wcwUAAABzdGFydHMIAAAARGF0ZVRpbWVzBAAAAE5vbmUoAAAAACgAAAAAcw8AAABT
-Y3JpcHQgKFB5dGhvbilzHAAAAEJhb2JhYl9nZXRVc2VyQXNzaWdubWVudExpc3QBAAAAcx4AAAAA
-AScDAwEfAhwCIQITAQgCBgINAAYBEgESAT0BGAIoAQAAAHMcAAAAQmFvYmFiX2dldFVzZXJBc3Np
-Z25tZW50TGlzdCgBAAAAcxwAAABCYW9iYWJfZ2V0VXNlckFzc2lnbm1lbnRMaXN0KAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getUserAssignmentList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -161,11 +158,12 @@ AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>user_id</string>
+                            <string>login</string>
+                            <string>persons</string>
+                            <string>len</string>
                             <string>_getitem_</string>
                             <string>person</string>
                             <string>assignment_list</string>
-                            <string>len</string>
                             <string>valid_assignment_list</string>
                             <string>_getiter_</string>
                             <string>a</string>
@@ -195,6 +193,27 @@ AHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -1,0 +1,457 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">bfINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+cell_base_id = \'movement\'\n
+\n
+variation_list      = kw[\'variation_list\']\n
+emissionLetter_list = kw[\'emissionLetter_list\']\n
+cashStatus_list     = kw[\'cashStatus_list\']\n
+operationCurrency   = kw[\'operation_currency\']\n
+line_portal_type    = kw[\'line_portalType\']\n
+\n
+otherParameter_list = kw[\'otherParameter\']\n
+operationCurrency   = otherParameter_list[0]\n
+line_portal_type    = otherParameter_list[1]\n
+updatePossible      = otherParameter_list[2]\n
+columnBase          = otherParameter_list[3]\n
+useInventory        = int(otherParameter_list[4])\n
+\n
+if columnBase == \'emissionLetter\':\n
+  numberOfColumn = len(emissionLetter_list)\n
+elif columnBase == \'cashStatus\':\n
+  numberOfColumn = len(cashStatus_list)\n
+else:\n
+  numberOfColumn = len(variation_list)\n
+\n
+#if (updatePossible==\'False\') or (not context.CashDetail_isListboxValide(listbox=listbox,columnBase=columnBase,numberOfColumn=numberOfColumn, variation_list=variation_list, operationCurrency=operationCurrency)):\n
+#  context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
+#  return context.asContext(context=None,portal_type=context.getPortalType(), **kw).CashDetail_fastInputForm(**kw)\n
+\n
+# list of all variation in the portal category\n
+catalog_variation_list = [x for x in context.portal_categories.variation.getCategoryChildTitleItemList()[1:]\n
+                            if x[1] in variation_list]\n
+\n
+base_list=(\'emission_letter\', \'cash_status\', \'variation\')\n
+default_variation_category_list = [\'emission_letter/\'+x  for x in emissionLetter_list]\n
+default_variation_category_list = default_variation_category_list + [\'cash_status/\'+x  for x in cashStatus_list]\n
+\n
+counter_line=0\n
+\n
+#containerLines_toDelete = []\n
+lines_toDelete = []\n
+# List of elements on the input listbox\n
+\n
+previous_resourceId = None\n
+line_created = False\n
+\n
+listbox_line_count = len(listbox)\n
+if listbox_line_count > 0:\n
+   listbox_line_count_plus_1 = listbox_line_count+1\n
+else:\n
+   listbox_line_count_plus_1 = listbox_line_count\n
+\n
+last_row = False\n
+\n
+#for listbox_line in listbox :    # Element of ListBox\n
+test = []\n
+create_line = False\n
+for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
+\n
+  if i_listbox >= listbox_line_count:\n
+    last_row = True\n
+  else:\n
+    listbox_line = listbox[i_listbox]\n
+\n
+  if last_row or (previous_resourceId is None) or not (previous_resourceId == listbox_line[\'resourceId\']):\n
+\n
+     if create_line :\n
+        counter_line += 1\n
+        # context.log(\'create new line\', line_category_list)\n
+        new_line = context.newContent(portal_type=line_portal_type)             # New line creation        \n
+        new_line.setResourceValue(resource_object)                              # Set line resource by object found\n
+        new_line.setVariationBaseCategoryList(base_list)\n
+        new_line.setVariationCategoryList(line_category_list)\n
+\n
+        new_line.updateCellRange(script_id=\'CashDetail_asCellRange\', base_id = cell_base_id)\n
+\n
+        kwd = {\'base_id\': cell_base_id}\n
+        cell_range_key_list = new_line.getCellRangeKeyList(base_id = cell_base_id)\n
+\n
+\n
+        if cell_range_key_list <> [[None, None]] :\n
+           i = 0\n
+           context.log(\'cell range key list\', cell_range_key_list)\n
+           for k in cell_range_key_list:\n
+               category_list = filter(lambda k_item: k_item is not None, k)\n
+               context.log(\'category list\', category_list)\n
+               c = new_line.newCell(*k, **kwd)\n
+               mapped_value_list = [\'price\',]\n
+               if useInventory == 1:\n
+                 mapped_value_list.append(\'inventory\')\n
+               else:\n
+                 mapped_value_list.append(\'quantity\')\n
+               c.edit( mapped_value_property_list    = mapped_value_list\n
+                      ,force_update                  = 1\n
+                      ,membership_criterion_category_list = category_list\n
+                      ,category_list = category_list\n
+                     )\n
+\n
+        context.log(\'cell category list\', cell_category_list)\n
+        for cell_category in cell_category_list :\n
+            variante_list = [cell_category[\'emission_letter\'], cell_category[\'variation\'], cell_category[\'cash_status\']]\n
+            cell = new_line.getCell(base_id = cell_base_id , *variante_list )\n
+            if cell is None :\n
+               raise \'ERROR\', repr((test,cell_category[\'quantity\'], cell , new_line.getCellKeyList(base_id=\'movement\'), variante_list ))\n
+            if useInventory == 1:\n
+               oldQuantity = cell.getProperty(\'inventory\') or 0\n
+               cell.edit( inventory      = cell_category[\'quantity\'] + oldQuantity\n
+                        , price          = new_line.getResourceValue().getBasePrice()\n
+                        , reindex_object = 1\n
+                        )\n
+            else:\n
+               oldQuantity = cell.getProperty(\'quantity\') or 0\n
+               cell.edit( quantity       = cell_category[\'quantity\'] + oldQuantity\n
+                        , price          = new_line.getResourceValue().getBasePrice()\n
+                        , reindex_object = 1\n
+                        )\n
+\n
+     if last_row:\n
+        break\n
+     create_line = False\n
+     line_category_list = []\n
+     cell_category_list = []\n
+\n
+     old_line = context.CashDetail_search_lineByResource(listbox_line[\'resourceId\'],line_portal_type)   # Search if current object contain line with the gived portal type\n
+     if old_line is not None:                # Line found, delete it\n
+        context.manage_delObjects(old_line.getId())\n
+\n
+\n
+     previous_resourceId = listbox_line[\'resourceId\']\n
+     resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'),id = listbox_line[\'resourceId\'])\n
+     resource_object = resource_list[0].getObject()\n
+\n
+  if columnBase == \'cashStatus\':\n
+     if len(emissionLetter_list ) > 1 :\n
+        cell_emissionLetter = \'emission_letter/\' + listbox_line[\'emissionLetter\']\n
+     else :\n
+        cell_emissionLetter = \'emission_letter/\' + emissionLetter_list[0]\n
+     if len(variation_list ) > 1 :\n
+        cell_variation = \'variation/\'+listbox_line[\'variation\']\n
+     else :\n
+        cell_variation = \'variation/\'+variation_list[0]\n
+     axis_list_dict = {\'column\':cashStatus_list,\'line1\': emissionLetter_list ,\'line2\': variation_list}\n
+     axis_dict      = {\'column\':\'cash_status\',\'line1\': \'emission_letter\' ,\'line2\': \'variation\'}\n
+     base_line_category_list = (cell_variation,cell_emissionLetter)\n
+  elif columnBase == \'emissionLetter\':\n
+     if len(cashStatus_list ) > 1 :\n
+        cell_cashStatus = \'cash_status/\'+listbox_line[\'cashStatus\']\n
+     else :\n
+        cell_cashStatus = \'cash_status/\'+cashStatus_list[0]\n
+     if len(variation_list ) > 1 :\n
+        cell_variation = \'variation/\'+listbox_line[\'variation\']\n
+     else :\n
+        cell_variation = \'variation/\'+variation_list[0]\n
+     axis_list_dict = {\'column\':emissionLetter_list ,\'line1\':cashStatus_list ,\'line2\': variation_list}\n
+     axis_dict      = {\'column\':\'emission_letter\',\'line1\':\'cash_status\'  ,\'line2\': \'variation\'}\n
+     base_line_category_list = (cell_variation,cell_cashStatus)\n
+  else:\n
+     if len(emissionLetter_list ) > 1 :\n
+         cell_emissionLetter = \'emission_letter/\' +listbox_line[\'emissionLetter\']\n
+     else :\n
+        cell_emissionLetter = \'emission_letter/\' +emissionLetter_list[0]\n
+     if len(cashStatus_list ) > 1 :\n
+        cell_cashStatus = \'cash_status/\'+listbox_line[\'cashStatus\']\n
+     else :\n
+        cell_cashStatus = \'cash_status/\'+cashStatus_list[0]\n
+     axis_list_dict = {\'column\':variation_list,\'line1\': emissionLetter_list ,\'line2\': cashStatus_list}\n
+     axis_dict      = {\'column\':\'variation\',\'line1\': \'emission_letter\' ,\'line2\':\'cash_status\' }\n
+     base_line_category_list = (cell_cashStatus,cell_emissionLetter)\n
+  categoy_list_created = False\n
+  counter = 0\n
+  for col in axis_list_dict[\'column\']:\n
+      counter += 1\n
+      cell_quantity = int(listbox_line[\'column\'+str(counter)] or 0)\n
+      if cell_quantity <> 0 :                                          # input quantity in the listbox\n
+         if columnBase == \'cashStatus\':\n
+            cell_cashStatus = \'cash_status/\'+col\n
+         elif columnBase == \'emissionLetter\':\n
+            cell_emissionLetter = \'emission_letter/\' +col\n
+         else:\n
+            cell_variation = \'variation/\'+col\n
+            # check that the variation selected exist for the resource object\n
+            if col not in resource_object.getVariationList():\n
+              raise "Input Error", "%s doesn\'t  exist for %s" %(resource_object.getTitle(), col)\n
+                          \n
+         cell_category_list += [{\'emission_letter\':cell_emissionLetter  ,\'variation\':cell_variation, \'cash_status\':cell_cashStatus, \'quantity\':cell_quantity}]\n
+\n
+         create_line = True\n
+         if not categoy_list_created:\n
+            for base_line_category in base_line_category_list:\n
+              if base_line_category not in line_category_list:\n
+                line_category_list.append(base_line_category)\n
+            categoy_list_created = True\n
+         column_category = axis_dict[\'column\']+\'/\'+col\n
+         if column_category not in line_category_list:\n
+           line_category_list.append(column_category)\n
+\n
+\n
+request  = context.REQUEST\n
+redirect_url = \'%s/view?%s\' % ( context.absolute_url()\n
+                                , \'portal_status_message=\'+context.Localizer.translate("ui", "${nb}+lines+created...", mapping = { \'nb\' : str(counter_line)})\n
+                                )\n
+request[ \'RESPONSE\' ].redirect( redirect_url )\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_fastInputSave_backup</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>cell_base_id</string>
+                            <string>_getitem_</string>
+                            <string>variation_list</string>
+                            <string>emissionLetter_list</string>
+                            <string>cashStatus_list</string>
+                            <string>operationCurrency</string>
+                            <string>line_portal_type</string>
+                            <string>otherParameter_list</string>
+                            <string>updatePossible</string>
+                            <string>columnBase</string>
+                            <string>int</string>
+                            <string>useInventory</string>
+                            <string>len</string>
+                            <string>numberOfColumn</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>catalog_variation_list</string>
+                            <string>base_list</string>
+                            <string>default_variation_category_list</string>
+                            <string>counter_line</string>
+                            <string>lines_toDelete</string>
+                            <string>None</string>
+                            <string>previous_resourceId</string>
+                            <string>False</string>
+                            <string>line_created</string>
+                            <string>listbox_line_count</string>
+                            <string>listbox_line_count_plus_1</string>
+                            <string>last_row</string>
+                            <string>test</string>
+                            <string>create_line</string>
+                            <string>range</string>
+                            <string>i_listbox</string>
+                            <string>True</string>
+                            <string>listbox_line</string>
+                            <string>new_line</string>
+                            <string>resource_object</string>
+                            <string>line_category_list</string>
+                            <string>kwd</string>
+                            <string>cell_range_key_list</string>
+                            <string>i</string>
+                            <string>k</string>
+                            <string>filter</string>
+                            <string>category_list</string>
+                            <string>_apply_</string>
+                            <string>c</string>
+                            <string>mapped_value_list</string>
+                            <string>cell_category_list</string>
+                            <string>cell_category</string>
+                            <string>variante_list</string>
+                            <string>cell</string>
+                            <string>repr</string>
+                            <string>oldQuantity</string>
+                            <string>old_line</string>
+                            <string>resource_list</string>
+                            <string>cell_emissionLetter</string>
+                            <string>cell_variation</string>
+                            <string>axis_list_dict</string>
+                            <string>axis_dict</string>
+                            <string>base_line_category_list</string>
+                            <string>cell_cashStatus</string>
+                            <string>categoy_list_created</string>
+                            <string>counter</string>
+                            <string>col</string>
+                            <string>str</string>
+                            <string>cell_quantity</string>
+                            <string>base_line_category</string>
+                            <string>column_category</string>
+                            <string>request</string>
+                            <string>redirect_url</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>CashDetail_fastInputSave_backup</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

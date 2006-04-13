@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -74,6 +74,8 @@ if base_category != None and base_category in context.getVariationBaseCategoryLi
   for category_item in context.getVariationCategoryItemList():\n
     category = category_item[1]\n
     title    = category_item[0]\n
+    if same_type(title, \'\'):\n
+      title = context.Localizer.erp5_ui.gettext(title)\n
     if category.startswith(base_category + \'/\'):\n
       variation_list.append((category, title))\n
   return variation_list   \n
@@ -89,35 +91,19 @@ return cash_line_list\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAABAAAAEAAAABzFgAAAGUAAGQBAGQCAGQDAIQDAFoBAGQAAFMoBAAAAE5zCAAAAG1v
-dmVtZW50aQAAAABjAwAAABIAAAANAAAAQwAAAHNVAQAAfAAAdAEAagMAbxYAAXwAAHQCAHQDAGQB
-AIMCAIMAAGoGAG+GAAFnAAB9BgB4dQB0BQB0AgB0AwBkAgCDAgCDAACDAQBEXVsAfQgAdAcAfAgA
-ZAMAgwIAfQoAdAcAfAgAZAQAgwIAfQsAdAIAfAoAZAUAgwIAfAAAZAYAF4MBAG8dAAF0AgB8BgBk
-BwCDAgB8CgB8CwBmAgCDAQABcUUAAXFFAFd8BgBTbgEAAWQIAGYBAGQJAGYBAGQKAGYBAGYDAH0M
-AHQCAHQDAGQLAIMCAIMAAH0NAGcAAH0OAHhuAHQFAHwMAIMBAERdYAB9AAB0AgB8DgBkBwCDAgBn
-AAAEaQ0AfRAAdAUAdAIAdAMAZAwAgwIAfAAAgwEAgwEARF0hAH0RAHwRAHwNAGoGAG8OAAF8EAB8
-EQCDAQABcR4BAXEeAX4QAIMBAAFx6QBXfA4AU2QAAFMoDQAAAE5zHAAAAGdldFZhcmlhdGlvbkJh
-c2VDYXRlZ29yeUxpc3RzHAAAAGdldFZhcmlhdGlvbkNhdGVnb3J5SXRlbUxpc3RpAQAAAGkAAAAA
-cwoAAABzdGFydHN3aXRocwEAAAAvcwYAAABhcHBlbmRzDwAAAGVtaXNzaW9uX2xldHRlcnMJAAAA
-dmFyaWF0aW9ucwsAAABjYXNoX3N0YXR1c3MYAAAAZ2V0VmFyaWF0aW9uQ2F0ZWdvcnlMaXN0cxsA
-AABPcmRlckxpbmVfZ2V0TWF0cml4SXRlbUxpc3QoEAAAAHMNAAAAYmFzZV9jYXRlZ29yeXMEAAAA
-Tm9uZXMJAAAAX2dldGF0dHJfcwcAAABjb250ZXh0cw4AAAB2YXJpYXRpb25fbGlzdHMJAAAAX2dl
-dGl0ZXJfcw0AAABjYXRlZ29yeV9pdGVtcwkAAABfZ2V0aXRlbV9zCAAAAGNhdGVnb3J5cwUAAAB0
-aXRsZXMSAAAAYmFzZV9jYXRlZ29yeV9saXN0cxcAAAB2YXJpYXRpb25fY2F0ZWdvcnlfbGlzdHMO
-AAAAY2FzaF9saW5lX2xpc3RzBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzAQAAAHgoEgAAAHMNAAAA
-YmFzZV9jYXRlZ29yeXMHAAAAYmFzZV9pZHMJAAAAbWF0cml4Ym94cwQAAABOb25lcwkAAABfZ2V0
-YXR0cl9zBwAAAGNvbnRleHRzDgAAAHZhcmlhdGlvbl9saXN0cwkAAABfZ2V0aXRlcl9zDQAAAGNh
-dGVnb3J5X2l0ZW1zCQAAAF9nZXRpdGVtX3MIAAAAY2F0ZWdvcnlzBQAAAHRpdGxlcxIAAABiYXNl
-X2NhdGVnb3J5X2xpc3RzFwAAAHZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cw4AAABjYXNoX2xpbmVf
-bGlzdHMGAAAAYXBwZW5kcwgAAAAkYXBwZW5kMHMBAAAAeCgAAAAAKAAAAABzDwAAAFNjcmlwdCAo
-UHl0aG9uKXMWAAAAQ2FzaERldGFpbF9hc0NlbGxSYW5nZQEAAABzJAAAAAADJgEGARkABgEPARIB
-GgEeAQgCGAESAQYBDQAJASwABgApAigCAAAAcwQAAABOb25lcxYAAABDYXNoRGV0YWlsX2FzQ2Vs
-bFJhbmdlKAIAAABzBAAAAE5vbmVzFgAAAENhc2hEZXRhaWxfYXNDZWxsUmFuZ2UoAAAAACgAAAAA
-cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_asCellRange</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -159,6 +145,7 @@ cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                             <string>_getitem_</string>
                             <string>category</string>
                             <string>title</string>
+                            <string>same_type</string>
                             <string>base_category_list</string>
                             <string>variation_category_list</string>
                             <string>cash_line_list</string>

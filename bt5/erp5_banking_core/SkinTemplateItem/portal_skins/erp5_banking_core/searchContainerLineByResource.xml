@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -81,29 +81,19 @@ else:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAgAAAEAAAABzEAAAAGUAAGQBAIQBAFoBAGQAAFMoAgAAAE5jAQAAAAwAAAANAAAA
-QwAAAHMMAQAAdAAAdAEAZAEAgwIAZAIAZAMAgwABfQMAdAMAfAMAgwEAZAQAagIAbwgAAXQEAFNu
-AQABdAAAdAEAZAUAgwIAZAIAZAYAZAcAZgIAZAgAfAAAgwACfQYAdAAAdAAAdAcAfAYAZAQAgwIA
-ZAkAgwIAgwAAZAoAgwIAgwAAfQYAZwAABGkIAH0JAHQKAHwDAIMBAERdRQB9CwB0AAB0AAB8CwBk
-CQCDAgCDAABkCwCDAgCDAAB8BgBqAgBvGgABfAkAdAAAfAsAZAkAgwIAgwAAgwEAAXGSAAFxkgB+
-CQB9AwB0AwB8AwCDAQBkBABqAgBvCAABdAQAU24OAAF0BwB8AwBkBACDAgBTZAAAUygMAAAATnMM
-AAAAc2VhcmNoRm9sZGVycwsAAABwb3J0YWxfdHlwZXMOAAAAQ29udGFpbmVyIExpbmVpAAAAAHMO
-AAAAcG9ydGFsX2NhdGFsb2dzCAAAAEJhbmtub3RlcwQAAABDb2lucwIAAABpZHMJAAAAZ2V0T2Jq
-ZWN0cwUAAABnZXRJZHMNAAAAZ2V0UmVzb3VyY2VJZCgMAAAAcwkAAABfZ2V0YXR0cl9zBwAAAGNv
-bnRleHRzDwAAAHNvdXJjZWxpbmVfbGlzdHMDAAAAbGVucwQAAABOb25lcwoAAAByZXNvdXJjZUlk
-cw0AAAByZXNvdXJjZV9saXN0cwkAAABfZ2V0aXRlbV9zBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBz
-CQAAAF9nZXRpdGVyX3MBAAAAeCgMAAAAcwoAAAByZXNvdXJjZUlkcwkAAABfZ2V0YXR0cl9zBwAA
-AGNvbnRleHRzDwAAAHNvdXJjZWxpbmVfbGlzdHMDAAAAbGVucwQAAABOb25lcw0AAAByZXNvdXJj
-ZV9saXN0cwkAAABfZ2V0aXRlbV9zBgAAAGFwcGVuZHMIAAAAJGFwcGVuZDBzCQAAAF9nZXRpdGVy
-X3MBAAAAeCgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMdAAAAc2VhcmNoQ29udGFpbmVy
-TGluZUJ5UmVzb3VyY2UBAAAAcxQAAAAYARMBCAIkAScBFAAGAEgBEwEIAigCAAAAcwQAAABOb25l
-cx0AAABzZWFyY2hDb250YWluZXJMaW5lQnlSZXNvdXJjZSgCAAAAcwQAAABOb25lcx0AAABzZWFy
-Y2hDb250YWluZXJMaW5lQnlSZXNvdXJjZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMI
-AAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/searchContainerLineByResource</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
