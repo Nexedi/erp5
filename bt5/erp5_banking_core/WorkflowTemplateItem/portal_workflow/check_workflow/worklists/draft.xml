@@ -19,18 +19,24 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>drafts \xc3\xa0 valider (%(count)s)</string> </value>
+            <value> <string>Drafts To Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=draft&portal_type=Check Payment&reset=1
+Base_viewSearchResultList?simulation_state=draft&portal_type=Check&reset=1
 
 ]]></string> </value>
         </item>

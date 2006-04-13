@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -82,25 +82,19 @@ bank_account.setBankAccountNumber(bank_account_id)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAYAAAAJAAAAQwAA
-AHO4AAAAdAAAfAAAZAEAgwIAfQIAdAAAfAIAZAIAgwIAgwAAfQMAdAAAfAMAZAMAgwIAZAQAZAUA
-gwIAfQQAfAMAfAQAagMAbx0AAXwEAH0DAHQAAHwCAGQGAIMCAHwDAIMBAAFuAQABdAAAfAIAZAcA
-gwIAdAUAfAMAZAgAgwIAgwEAAXQAAHwCAGQJAIMCAHQFAHwDAGQKAGQLAIUCAIMCAIMBAAF0AAB8
-AgBkDACDAgB8AwCDAQABZAAAUygNAAAATnMGAAAAb2JqZWN0cwUAAABnZXRJZHMHAAAAcmVwbGFj
-ZXMBAAAAIHMAAAAAcwUAAABzZXRJZHMLAAAAc2V0QmFua0NvZGVpAAAAAHMJAAAAc2V0QnJhbmNo
-aQEAAABpAwAAAHMUAAAAc2V0QmFua0FjY291bnROdW1iZXIoBgAAAHMJAAAAX2dldGF0dHJfcwwA
-AABzdGF0ZV9jaGFuZ2VzDAAAAGJhbmtfYWNjb3VudHMPAAAAYmFua19hY2NvdW50X2lkcxUAAABj
-bGVhbl9iYW5rX2FjY291bnRfaWRzCQAAAF9nZXRpdGVtXygGAAAAcwwAAABzdGF0ZV9jaGFuZ2Vz
-CQAAAF9nZXRhdHRyX3MMAAAAYmFua19hY2NvdW50cw8AAABiYW5rX2FjY291bnRfaWRzFQAAAGNs
-ZWFuX2JhbmtfYWNjb3VudF9pZHMJAAAAX2dldGl0ZW1fKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
-eXRob24pcxgAAAB1cGRhdGVCYW5rQWNjb3VudE51bWJlcnMBAAAAcxAAAAAPAhIBGAINAQkBFwIc
-ASIBKAEAAABzGAAAAHVwZGF0ZUJhbmtBY2NvdW50TnVtYmVycygBAAAAcxgAAAB1cGRhdGVCYW5r
-QWNjb3VudE51bWJlcnMoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
-AQAAAHMAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_workflow/bank_account_edit_workflow/scripts/updateBankAccountNumbers</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

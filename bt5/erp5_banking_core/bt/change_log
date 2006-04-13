@@ -1,3 +1,41 @@
+2006-04-13 aurel
+* include bank_account
+
+2006-04-10 aurel
+* include check operation line
+
+2006-04-10 aurel
+* include aggregate base category
+
+2006-04-06 aurel
+* include counter date
+
+2006-04-05 aurel
+* add manager proxy role to the script to generate account event line
+* add SQL method to drop table for accounting event in skins
+* add some related key and catalog method
+
+2006-04-05 aurel
+* include script and external method for security
+
+2006-04-04 aurel
+* implement accounting date and counter
+* implement accounting event creation
+
+2006-02-14 yo
+* Allow Auditor to see checks.
+
+2006-02-13 yo
+* Checkbook_init must accept arguments.
+
+2006-02-11 yo
+* Remove site properties, since they are not necessary any longer.
+* Remove local documents and property sheets, since they are now stored in ERP5Banking.
+
+2006-02-11 yo
+* Remove Category and Delivery Cell.
+* Add Banking Operation Line.
+
 2006-01-09 aurel
 * Update z_catalog_stock_list
 * Remove base category function, group, site which are in erp5_core

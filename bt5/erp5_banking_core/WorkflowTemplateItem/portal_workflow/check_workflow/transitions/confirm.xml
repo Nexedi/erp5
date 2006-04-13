@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
@@ -32,16 +38,16 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>sendMessage</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Issue a check.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -58,36 +64,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Issue Check</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>2</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>Assignor</string>
-                <string>Assignee</string>
-              </tuple>
-            </value>
         </item>
       </dictionary>
     </pickle>

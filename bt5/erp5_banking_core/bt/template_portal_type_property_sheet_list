@@ -1,0 +1,16 @@
+Banking Operation Line | Amount
+Banking Operation Line | Arrow
+Banking Operation Line | Price
+Banking Operation Line | Task
+Cash Delivery Cell | CashDeliveryLine
+Cash Delivery Line | CashDeliveryLine
+Category | BaobabCategory
+Check | Arrow
+Check | Task
+Checkbook | Arrow
+Checkbook | Checkbook
+Checkbook | Task
+Checkbook | VariationRange
+Counter Date | Task
+Foreign Check | Arrow
+Foreign Check | Task

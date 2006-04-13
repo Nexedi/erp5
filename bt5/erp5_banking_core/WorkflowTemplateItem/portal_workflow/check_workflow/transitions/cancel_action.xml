@@ -19,12 +19,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>actbox_category</string> </key>
             <value> <string>workflow</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Annuler</string> </value>
+            <value> <string>Stop Check</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -36,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Stop a check.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -58,7 +64,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cancel</string> </value>
+            <value> <string>Stop Check</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

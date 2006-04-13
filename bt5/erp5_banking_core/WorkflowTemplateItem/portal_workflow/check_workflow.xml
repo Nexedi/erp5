@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>check_workflow</string> </value>
         </item>
@@ -41,11 +47,7 @@
         <item>
             <key> <string>permissions</string> </key>
             <value>
-              <tuple>
-                <string>View</string>
-                <string>Access contents information</string>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

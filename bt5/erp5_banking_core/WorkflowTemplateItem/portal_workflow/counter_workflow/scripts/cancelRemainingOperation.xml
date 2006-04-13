@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">bfINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># check that every operation assigned to the counter are delivered\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
+transaction = state_change.object\n
+site = transaction.getSourceValue()\n
+while True:\n
+  if not hasattr(site, \'getVaultTypeList\'):\n
+    msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
+    raise ValidationFailed, (msg,)\n
+  if \'site\' in site.getVaultTypeList():\n
+    break\n
+  site = site.getParentValue()\n
+\n
+# get the current counter date\n
+kwd = {\'portal_type\' : \'Accounting Date\', \'simulation_state\' : \'open\', \'site_uid\' : site.getUid()}\n
+date_list = [x.getObject() for x in context.portal_catalog(**kwd)]\n
+current_date = None\n
+if len(date_list) == 0:\n
+  msg = Message(domain = \'ui\', message = \'No Accounting Date found for this counter\')\n
+  raise ValidationFailed, (msg,)\n
+else:\n
+  current_date = date_list[0].getStartDate()\n
+\n
+site_uid = transaction.getSiteUid()\n
+# get all operations related to this counter\n
+# as source\n
+kwd_source = {\'source_uid\' : site_uid, \'delivery.start_date\' : current_date, \'simulation_state\' : \'confirmed\'}\n
+# as destination\n
+kwd_destination = {\'destination_uid\' : site_uid, \'delivery.start_date\' : current_date, \'simulation_state\' : \'confirmed\'}\n
+operation_list = list(context.portal_catalog(**kwd_source)) + list(context.portal_catalog(**kwd_destination))\n
+operation_list_object = [x.getObject() for x in operation_list]\n
+context.log(\'counter_workflow, cancelRemainingOperation\', \'operation list = %s\' %(operation_list_object,))\n
+\n
+for operation in operation_list_object:\n
+  context.log(\'cancelling operations\', operation.getRelativeUrl())\n
+  operation.reject()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_workflow/counter_workflow/scripts/cancelRemainingOperation</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change, *args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>_getattr_</string>
+                            <string>transaction</string>
+                            <string>site</string>
+                            <string>True</string>
+                            <string>hasattr</string>
+                            <string>msg</string>
+                            <string>kwd</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>date_list</string>
+                            <string>None</string>
+                            <string>current_date</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>site_uid</string>
+                            <string>kwd_source</string>
+                            <string>kwd_destination</string>
+                            <string>list</string>
+                            <string>operation_list</string>
+                            <string>operation_list_object</string>
+                            <string>operation</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>cancelRemainingOperation</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

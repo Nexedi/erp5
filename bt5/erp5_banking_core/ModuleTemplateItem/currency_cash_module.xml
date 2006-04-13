@@ -3,6 +3,11 @@
  <permission_list>
   <permission>
    <name>Access Transient Objects</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission>
@@ -11,7 +16,13 @@
   </permission>
   <permission>
    <name>Access contents information</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Author</role>
    <role>Manager</role>
+   <role>Member</role>
   </permission>
   <permission>
    <name>Access future portal content</name>
@@ -23,6 +34,11 @@
   </permission>
   <permission>
    <name>Access session data</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission>
@@ -38,6 +54,10 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add CMF Action Icons Tools</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Add CMF Active Processs</name>
    <role>Manager</role>
   </permission>
@@ -46,7 +66,15 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add CMF Calendar Tools</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Add CMF Core Tools</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add CMF Default Tools</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -54,7 +82,15 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add CMF Setup Tools</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Add CMF Sites</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add CMF Unique Id Tools</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -62,15 +98,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add CMFCalendar Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Add CMFCategory Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Add CMFDefault Tools</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -78,7 +106,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add CMFWiki Comment</name>
+   <name>Add Configured CMF Sites</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -106,7 +134,12 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add ERP5 OOo Templates</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Add ERP5 PDF Forms</name>
+   <role>Manager</role>
   </permission>
   <permission>
    <name>Add ERP5 PDF Templates</name>
@@ -209,6 +242,14 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add Plugin Registrys</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add Portal ZSyncer Tools</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Add Python Scripts</name>
    <role>Manager</role>
   </permission>
@@ -277,11 +318,17 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add ZSyncers</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Add Zope Tutorials</name>
    <role>Manager</role>
   </permission>
   <permission>
    <name>Add portal content</name>
+   <role>Assignor</role>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission>
@@ -290,6 +337,8 @@
   </permission>
   <permission>
    <name>Add portal folders</name>
+   <role>Assignor</role>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission>
@@ -302,10 +351,6 @@
   </permission>
   <permission>
    <name>Change Browser Id Manager</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Change CMFWiki Regulations</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -393,6 +438,10 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Change local roles</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Change permissions</name>
    <role>Manager</role>
   </permission>
@@ -413,10 +462,6 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Create CMFWiki Page</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Create Transient Objects</name>
    <role>Manager</role>
   </permission>
@@ -430,14 +475,11 @@
   </permission>
   <permission>
    <name>Delete objects</name>
+   <role>Assignor</role>
    <role>Manager</role>
   </permission>
   <permission>
    <name>Download ExtFile/ExtImage</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Edit CMFWiki Page</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -462,6 +504,11 @@
   </permission>
   <permission>
    <name>List folder contents</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission>
@@ -486,6 +533,10 @@
   </permission>
   <permission>
    <name>Manage Access Rules</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Manage Groups</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -517,10 +568,6 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Manage extensions</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Manage languages</name>
    <role>Manager</role>
   </permission>
@@ -541,19 +588,12 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Manage_messages</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Modify Cookie Crumblers</name>
    <role>Manager</role>
   </permission>
   <permission>
    <name>Modify portal content</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Move CMFWiki Page</name>
+   <role>Assignor</role>
    <role>Manager</role>
   </permission>
   <permission>
@@ -593,6 +633,10 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Search for principals</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Set own password</name>
    <role>Manager</role>
   </permission>
@@ -625,15 +669,30 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Use external editor</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Use mailhost services</name>
    <role>Manager</role>
   </permission>
   <permission>
    <name>View</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Author</role>
    <role>Manager</role>
+   <role>Member</role>
   </permission>
   <permission>
    <name>View History</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission>
@@ -654,6 +713,18 @@
   </permission>
   <permission>
    <name>WebDAV access</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>ZSyncer: Use ZSyncer</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>ZopeProfiler: manage</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>ZopeProfiler: view</name>
    <role>Manager</role>
   </permission>
  </permission_list>

@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -27,14 +33,8 @@
             <value> <string>confirmed</string> </value>
         </item>
         <item>
-            <key> <string>permission_roles</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Assigned to cash counter</string> </value>
+            <value> <string>Issued (Check)</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -44,67 +44,13 @@
                 <string>cancel_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
-                <string>order</string>
-                <string>order_action</string>
-                <string>reject</string>
-                <string>reject_action</string>
               </tuple>
             </value>
         </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>type_list</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>Access contents information</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>DestinationAssignee</string>
-                        <string>DestinationAssignor</string>
-                        <string>Manager</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Modify portal content</string> </key>
-                    <value>
-                      <tuple>
-                        <string>DestinationAssignee</string>
-                        <string>DestinationAssignor</string>
-                        <string>Manager</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>View</string> </key>
-                    <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>DestinationAssignee</string>
-                        <string>DestinationAssignor</string>
-                        <string>Manager</string>
-                      </tuple>
-                    </value>
-                </item>
-              </dictionary>
+              <tuple/>
             </value>
         </item>
       </dictionary>

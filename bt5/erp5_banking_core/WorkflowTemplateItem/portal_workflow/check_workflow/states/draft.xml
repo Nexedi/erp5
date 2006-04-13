@@ -19,6 +19,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Documents in draft state should never be accounted and should only be visible by their ownner</string> </value>
         </item>
@@ -47,6 +53,12 @@
               </tuple>
             </value>
         </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
@@ -69,31 +81,25 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Manager</string>
-                        <string>Owner</string>
-                        <string>OwnerAssignor</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Manager</string>
-                        <string>Owner</string>
-                        <string>OwnerAssignor</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple>
+                      <list>
                         <string>Manager</string>
-                        <string>Owner</string>
-                        <string>OwnerAssignor</string>
-                      </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

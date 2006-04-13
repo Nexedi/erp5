@@ -1,0 +1,74 @@
+Account Module | account_statement_report
+Account Module | bank_accounts_report
+Account Module | csv_export
+Account Module | fiscal_report
+Account Module | general_ledger_report
+Account Module | journal_report
+Account Module | jump_active_accounting_pref
+Account Module | list_ui
+Account Module | print
+Account Module | search
+Account Module | sort_on
+Account Module | third_parties_report
+Account Module | trial_balance_report
+Account Module | view
+Account | history
+Account | jump_active_accounting_pref
+Account | metadata
+Account | print
+Account | transaction_list
+Account | view
+Banking Operation Line | history
+Banking Operation Line | metadata
+Banking Operation Line | print
+Banking Operation Line | view
+Banknote | translate
+Banknote | view
+Cash Delivery Cell | metadata
+Cash Delivery Cell | view
+Cash Delivery Line | metadata
+Cash Delivery Line | print
+Cash Delivery Line | view
+Check Operation Line | agents
+Check Operation Line | metadata
+Check Operation Line | print
+Check Operation Line | view
+Check | history
+Check | metadata
+Check | print
+Check | view
+Checkbook Module | list_ui
+Checkbook Module | sort_on
+Checkbook Module | view
+Checkbook | create_check_list
+Checkbook | history
+Checkbook | metadata
+Checkbook | print
+Checkbook | view
+Coin | view
+Counter Date Module | list_ui
+Counter Date Module | sort_on
+Counter Date Module | view
+Counter Date | history
+Counter Date | metadata
+Counter Date | view
+Counter Module | list_ui
+Counter Module | sort_on
+Counter Module | vault_report
+Counter Module | view
+Counter | history
+Counter | metadata
+Counter | view
+Currency Cash Module | list
+Currency Cash Module | list_sort_on
+Currency Cash Module | list_ui
+Currency Cash Module | view
+Foreign Check Module | list
+Foreign Check Module | localroles
+Foreign Check Module | metadata
+Foreign Check Module | syndication
+Foreign Check Module | view
+Foreign Check | metadata
+Foreign Check | print
+Foreign Check | translate
+Foreign Check | view
