@@ -86,7 +86,7 @@ return \'\'\'<script>\n
   function doCommit(){\n
     if(confirm(\'Are you sure you want to commit?\')){\n
       //Commit Files\n
-      open(\'%s/svn_commit?files=\'+escape(\\\'%s\\\'), \'_self\');\n
+      open(\'%s/BusinessTemplate_doSvnCommit?files=\'+escape(\\\'%s\\\'), \'_self\');\n
     }\n
   }\n
 \n
