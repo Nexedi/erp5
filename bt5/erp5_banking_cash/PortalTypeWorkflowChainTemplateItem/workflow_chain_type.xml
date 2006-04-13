@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Cash Classification</type>
+  <workflow>cash_classification_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Cash Transfer</type>
+  <workflow>edit_workflow, cash_transfer_workflow</workflow>
+ </chain>
+</workflow_chain>

@@ -1,0 +1,28 @@
+Cash Classification Module | list_ui
+Cash Classification Module | sort_on
+Cash Classification Module | view
+Cash Classification | external
+Cash Classification | fastinputIn
+Cash Classification | fastinputOut
+Cash Classification | history
+Cash Classification | list
+Cash Classification | metadata
+Cash Classification | print
+Cash Classification | source
+Cash Classification | view
+Cash Transfer Module | list_ui
+Cash Transfer Module | sort_on
+Cash Transfer Module | view
+Cash Transfer | fastinput
+Cash Transfer | history
+Cash Transfer | metadata
+Cash Transfer | print
+Cash Transfer | view
+Incoming Cash Classification Line | list
+Incoming Cash Classification Line | metadata
+Incoming Cash Classification Line | print
+Incoming Cash Classification Line | view
+Outgoing Cash Classification Line | list
+Outgoing Cash Classification Line | metadata
+Outgoing Cash Classification Line | print
+Outgoing Cash Classification Line | view

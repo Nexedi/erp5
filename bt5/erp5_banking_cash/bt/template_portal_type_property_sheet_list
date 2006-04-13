@@ -1,0 +1,5 @@
+Cash Classification | Price
+Cash Transfer | Amount
+Cash Transfer | Price
+Incoming Cash Classification Line | CashDeliveryLine
+Outgoing Cash Classification Line | CashDeliveryLine
