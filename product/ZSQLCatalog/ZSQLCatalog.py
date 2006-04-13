@@ -580,6 +580,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       return catalog.newUid()
 
+  def getDynamicRelatedKeyList(self, sql_catalog_id=None,**kw):
+    """
+    Return the list of dynamic related keys.
+    """
+    return []
+
   def wrapObject(self, object, **kw):
     """
       Return a wrapped object for reindexing.

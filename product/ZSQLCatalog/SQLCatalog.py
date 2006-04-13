@@ -1337,6 +1337,16 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       value = sql_quote(str(value))
     return value
 
+  def getSqlCatalogRelatedKeyList(self, **kw):
+    """
+    Return the list of related keys.
+    This method can be overidden in order to implement 
+    dynamic generation of some related keys.
+    """
+    dynamic_list = self.getDynamicRelatedKeyList(**kw)
+    full_list = list(dynamic_list) + list(self.sql_catalog_related_keys)
+    return full_list
+
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1,**kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
@@ -1361,7 +1371,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     # Define related maps
     # each tuple has the form (key, 'table1,table2,table3/column/where_expression')
-    related_tuples = self.sql_catalog_related_keys
+    related_tuples = self.getSqlCatalogRelatedKeyList(**kw)
     #LOG('related_tuples', 0, str(related_tuples))
     related_keys = []
     related_method = {}
