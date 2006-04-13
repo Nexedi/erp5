@@ -43,6 +43,7 @@ from AccessControl.PermissionRole import rolesForPermissionOn
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.CMFCore.Expression import Expression
 from Products.PageTemplates.Expressions import getEngine
+from MethodObject import Method
 
 import os, time, urllib
 from zLOG import LOG
@@ -119,6 +120,20 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             del allowed['Owner']
         #LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         return list(allowed.keys())
+
+class RelatedBaseCategory(Method):
+
+    def __init__(self, id):
+      self._id = id
+
+    def __call__(self, instance, table_0, table_1, query_table='catalog',**kw):
+      base_category_uid = instance.portal_categories._getOb(self._id).getUid()
+      expression_list = []
+      append = expression_list.append
+      append('%s.uid = %s.category_uid' % (table_1,table_0))
+      append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
+      append('AND %s.uid = %s.uid' % (table_0,query_table))
+      return ' '.join(expression_list)
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     """
@@ -511,7 +526,61 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       property_dict['membership_criterion_category_list'] = object.getMembershipCriterionCategoryList()
       return property_dict
 
+    security.declarePrivate('getDynamicRelatedKeyList')
+    def getDynamicRelatedKeyList(self, sql_catalog_id=None,**kw):
+      """
+      Return the list of related keys.
+      This method will try to automatically generate new related key
+      by looking at the category tree.
+      """
+      if len(kw)>0:
+        # import pdb;pdb.set_trace()
+        pass
+      related_key_list = []
+      base_cat_id_list = self.portal_categories.getBaseCategoryList()
+      for key in kw.keys():
+        splitted_key = key.split('_')
+        for i in range(1,len(splitted_key))[::-1]:
+          expected_base_cat_id = '_'.join(splitted_key[0:i])
+          if expected_base_cat_id!='parent' and \
+             expected_base_cat_id in base_cat_id_list:
+            # We have found a base_category
+            end_key = '_'.join(splitted_key[i:])
+            if end_key in ('title','uid','description','id'):
+              related_key_list.append('%s | category,catalog/%s/z_related_%s' %
+                                          (key,end_key,expected_base_cat_id))
 
+      return related_key_list
+
+    def _aq_dynamic(self, name):
+      """
+      Automatic related key generation.
+      Will generate z_related_destination if possible
+      """
+      aq_base_name = getattr(aq_base(self), name, None)
+      if aq_base_name == None:
+        DYNAMIC_METHOD_NAME = 'z_related_'
+        method_name_length = len(DYNAMIC_METHOD_NAME)
+
+        zope_security = '__roles__'
+        if (name.startswith(DYNAMIC_METHOD_NAME) and \
+          (not name.endswith(zope_security))):
+          base_category_id = name[len(DYNAMIC_METHOD_NAME):]
+          method = RelatedBaseCategory(base_category_id)
+          setattr(self.__class__, name, 
+                  method)
+          klass = aq_base(self).__class__
+          if hasattr(klass, 'security'):
+            from Products.ERP5Type import Permissions as ERP5Permissions
+            klass.security.declareProtected(ERP5Permissions.View, name)
+          else:
+            # XXX security declaration always failed....
+            LOG('WARNING ERP5Form SelectionTool, security not defined on',
+                0, klass.__name__)
+          return getattr(self, name)
+        else:
+          return aq_base_name
+      return aq_base_name
 
 
 

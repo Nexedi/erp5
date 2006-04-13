@@ -658,4 +658,47 @@ class TestERP5Catalog(ERP5TypeTestCase):
                               person_module.searchFolder(title=title)]
     self.assertEquals(['5'],folder_object_list)
     
+  def test_20_SearchFolderWithDynamicRelatedKey(self, quiet=0, run=run_all_test):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Dynamic Related Key'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    # Create some objects
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    portal_category.group.manage_delObjects([x for x in
+        portal_category.group.objectIds()])
+    group_nexedi_category = portal_category.group\
+                                .newContent( id = 'nexedi', title='Nexedi',
+                                             description='a')
+    group_nexedi_category2 = portal_category.group\
+                                .newContent( id = 'storever', title='Storever',
+                                             description='b')
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',)
+    organisation.setGroup('nexedi')
+    self.assertEquals(organisation.getGroupValue(), group_nexedi_category)
+    organisation2 = module.newContent(portal_type='Organisation',)
+    organisation2.setGroup('storever')
+    self.assertEquals(organisation2.getGroupValue(), group_nexedi_category2)
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+
+    # Try to get the organisation with the group title Nexedi
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(group_title='Nexedi')]
+    self.assertEquals(organisation_list,[organisation])
+    # Try to get the organisation with the group id nexedi
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(group_id='storever')]
+    self.assertEquals(organisation_list,[organisation2])
+    # Try to get the organisation with the group description 'a'
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(group_description='a')]
+    self.assertEquals(organisation_list,[organisation])
+
 
