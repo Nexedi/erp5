@@ -96,7 +96,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_update</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnUpdate</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -151,7 +151,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_update</string> </value>
+            <value> <string>BusinessTemplate_doSvnUpdate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -66,39 +66,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
-from Products.ERP5Type.Document import newTempBase\n
-svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
-if not svn_path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if svn_path[-1]!=\'/\':\n
-  svn_path+=\'/\'\n
-file = svn_path + file\n
-try:\n
-  log_list = context.getPortalObject()["portal_subversion"].log(file)\n
-except SubversionSSLTrustError, error:\n
-  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\').BusinessTemplate_viewSvnSSLTrust()\n
-except SubversionLoginError, error1 :\n
-  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'log\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
+            <value> <string>added = context.REQUEST["added"]\n
+modified = context.REQUEST["modified"]\n
+removed = context.REQUEST["removed"]\n
+caller = context.REQUEST["caller"]\n
+changelog = context.REQUEST["changelog"]\n
 \n
-if not log_list:\n
-  return []\n
+dict_keys=(\'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\',)\n
+trust_dict={}\n
+for key in dict_keys:\n
+  trust_dict[key]=context.REQUEST[key+\'_hidden\']\n
 \n
-object_list = []\n
-for my_dict in log_list:\n
-  my_dict[\'message\']=\'<br>\'.join(my_dict[\'message\'].split(\'\\n\'))\n
-  temp_object = newTempBase(folder=context.getPortalObject(), id=\'1234\')\n
-  temp_object.edit(**my_dict)\n
-  object_list.append(temp_object)\n
+context.getPortalObject()["portal_subversion"].acceptSSLServer(trust_dict, True)\n
 \n
-return object_list\n
-
-
-]]></string> </value>
+if caller == \'update\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_update\')\n
+elif caller == \'commit\':\n
+  return context.asContext(changelog=changelog).BusinessTemplate_doSvnCommit(added=added,removed=removed,modified=modified)\n
+elif caller == \'ls\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLs?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+elif caller == \'log\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+elif caller == \'info\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnInfo\')\n
+else:\n
+  return \'Error: Caller \'+ caller + \'is unknown\'\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -108,11 +101,11 @@ return object_list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_log</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnSslTrust</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file,**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -132,32 +125,27 @@ return object_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>file</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Subversion.SubversionClient</string>
-                            <string>SubversionSSLTrustError</string>
-                            <string>SubversionLoginError</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>svn_path</string>
-                            <string>_getitem_</string>
-                            <string>log_list</string>
-                            <string>error</string>
-                            <string>error1</string>
-                            <string>object_list</string>
+                            <string>added</string>
+                            <string>modified</string>
+                            <string>removed</string>
+                            <string>caller</string>
+                            <string>changelog</string>
+                            <string>dict_keys</string>
+                            <string>trust_dict</string>
                             <string>_getiter_</string>
-                            <string>my_dict</string>
+                            <string>key</string>
                             <string>_write_</string>
-                            <string>temp_object</string>
-                            <string>_apply_</string>
+                            <string>True</string>
+                            <string>files</string>
                           </tuple>
                         </value>
                     </item>
@@ -174,7 +162,7 @@ return object_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_log</string> </value>
+            <value> <string>BusinessTemplate_doSvnSslTrust</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

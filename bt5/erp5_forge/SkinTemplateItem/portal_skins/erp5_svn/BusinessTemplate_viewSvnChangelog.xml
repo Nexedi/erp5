@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>svn_commit</string> </value>
+            <value> <string>BusinessTemplate_doSvnCommit</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>

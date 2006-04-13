@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>svn_ssl_trust</string> </value>
+            <value> <string>BusinessTemplate_doSvnSslTrust</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>

@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>svn_login</string> </value>
+            <value> <string>BusinessTemplate_doSvnLogin</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>

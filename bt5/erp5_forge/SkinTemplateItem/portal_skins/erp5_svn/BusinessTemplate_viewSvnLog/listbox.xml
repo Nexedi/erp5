@@ -561,7 +561,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>svn_log</string> </value>
+            <value> <string>BusinessTemplate_doSvnLog</string> </value>
         </item>
       </dictionary>
     </pickle>

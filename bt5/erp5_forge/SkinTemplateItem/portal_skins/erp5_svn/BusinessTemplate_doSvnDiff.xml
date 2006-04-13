@@ -66,60 +66,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
-\n
-if "changelog" in context.REQUEST.keys() and context.REQUEST["changelog"].strip()!=\'\':\n
-  changelog=context.REQUEST["changelog"]\n
-else:\n
-  changelog=None\n
-\n
-commit_non_recurs = added\n
-if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
-  if modified != \'\' and modified != \'none\':\n
-    commit_non_recurs = commit_non_recurs+\',\'+modified  \n
-else:\n
-    if modified != \'\' and modified != \'none\':\n
-      commit_non_recurs = modified\n
-\n
-if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
-  commit_non_recurs = commit_non_recurs.split(\',\')\n
-if removed != \'\' and removed != \'none\':\n
-  commit_recurs = removed.split(\',\')\n
-else:\n
-  commit_recurs = removed\n
-\n
+            <value> <string encoding="cdata"><![CDATA[
+
 svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
 if not svn_path :\n
   raise "Error: Please set Subversion working path in preferences"\n
 if svn_path[-1]!=\'/\':\n
   svn_path+=\'/\'\n
 \n
-if \'changelog\' not in context.REQUEST.keys() :\n
-  context.REQUEST.set(\'portal_status_message\', \'Please set a changelog message...\')\n
-  return context.asContext(added=added, modified=modified, removed=removed ,checked=checked).BusinessTemplate_viewSvnChangelog()\n
+#params modified,added,removed\n
+modified=context.REQUEST["modified"]\n
+added=context.REQUEST["added"]\n
+removed=context.REQUEST["removed"]\n
 \n
-if not changelog :\n
-  context.REQUEST.set(\'portal_status_message\', "Error: Changelog Message can\'t be empty!")\n
-  return context.asContext(added=added, modified=modified, removed=removed ,checked=checked).BusinessTemplate_viewSvnChangelog()\n
+print "<br><font color=\'black\'>"\n
+tab_Modified=modified.split(\',\')\n
+tab_Added=added.split(\',\')\n
+tab_Removed=removed.split(\',\')\n
 \n
-try:\n
-  if commit_non_recurs != \'none\' and commit_non_recurs != \'\':\n
-    commit_non_recurs = [svn_path + relative_path for relative_path in commit_non_recurs]\n
-    context.getPortalObject()["portal_subversion"].checkin(path=commit_non_recurs, recurse=False, log_message=changelog)\n
-  if commit_recurs != \'none\' and commit_recurs != \'\':\n
-    for relative_path in commit_recurs:\n
-      relative_path = svn_path+relative_path\n
-    context.getPortalObject()["portal_subversion"].checkin(path=commit_recurs, recurse=True, log_message=changelog)\n
-except SubversionSSLTrustError, error:\n
-  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(added=added, modified=modified, removed=removed, trust_dict = error.getTrustDict(), caller=\'commit\', changelog=changelog).BusinessTemplate_viewSvnSSLTrust()\n
-except SubversionLoginError, error1 :\n
-  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(added=added, modified=modified, removed=removed, caller=\'commit\', realm = error1.getRealm(), changelog=changelog, username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
+if modified != \'none\':\n
+  for f in tab_Modified:\n
+    f = svn_path+f    \n
+    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
+    print \'<hr></font></b>\'\n
+    print context.getPortalObject()["portal_subversion"].diffHTML(f)\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Files commited successfully!\')\n
-return context.BusinessTemplate_viewSvnStatus()\n
-</string> </value>
+if added != \'none\':\n
+  for f in tab_Added:\n
+    f = svn_path+f\n
+    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
+    print \'<hr></font></b>\'\n
+    print "<font color=\'green\'>File Added</font><br><br>"\n
+\n
+if removed != \'none\':\n
+  for f in tab_Removed:\n
+    f = svn_path+f\n
+    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
+    print \'<hr></font></b>\'\n
+    print "<font color=\'red\'>File Removed</font><br><br>"\n
+\n
+print \'\'\'</font><center><button onclick="history.back()" value="Back" name="Back" type="button">Back</button>\n
+<button onclick="doCommit()" value="commit" name="commit Changes" type="button">Commit Changes</button></center>\'\'\'\n
+return printed\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -129,11 +120,11 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_commit</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnDiff</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>added,modified,removed,checked=\'\',**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -153,36 +144,26 @@ return context.BusinessTemplate_viewSvnStatus()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>added</string>
-                            <string>modified</string>
-                            <string>removed</string>
-                            <string>checked</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Subversion.SubversionClient</string>
-                            <string>SubversionSSLTrustError</string>
-                            <string>SubversionLoginError</string>
+                            <string>_print_</string>
+                            <string>_print</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getitem_</string>
-                            <string>changelog</string>
-                            <string>None</string>
-                            <string>commit_non_recurs</string>
-                            <string>commit_recurs</string>
                             <string>svn_path</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>_getitem_</string>
+                            <string>modified</string>
+                            <string>added</string>
+                            <string>removed</string>
+                            <string>tab_Modified</string>
+                            <string>tab_Added</string>
+                            <string>tab_Removed</string>
                             <string>_getiter_</string>
-                            <string>relative_path</string>
-                            <string>False</string>
-                            <string>True</string>
-                            <string>error</string>
-                            <string>error1</string>
+                            <string>f</string>
                           </tuple>
                         </value>
                     </item>
@@ -194,14 +175,12 @@ return context.BusinessTemplate_viewSvnStatus()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_commit</string> </value>
+            <value> <string>BusinessTemplate_doSvnDiff</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

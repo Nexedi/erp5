@@ -66,22 +66,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if files != \'none\' and files !=\'\':\n
-  to_revert = files.split(\',\')\n
-else:\n
-  to_revert = files\n
+            <value> <string>context.getPortalObject()["portal_subversion"].cleanup()\n
 \n
-svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
-if not svn_path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if svn_path[-1]!=\'/\':\n
-  svn_path+=\'/\'\n
-\n
-if to_revert != \'none\' :\n
-  to_revert = [svn_path + relative_path for relative_path in to_revert]\n
-  context.getPortalObject()["portal_subversion"].revert(path=to_revert)\n
-\n
-context.REQUEST.set(\'portal_status_message\', \'Changes reverted successfully!\')\n
+context.REQUEST.set(\'portal_status_message\', \'Subversion locks removed successfully!\')\n
 return context.BusinessTemplate_viewSvnStatus()\n
 </string> </value>
         </item>
@@ -93,11 +80,11 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_revert</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnCleanup</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>files</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -117,22 +104,15 @@ return context.BusinessTemplate_viewSvnStatus()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>files</string>
                             <string>_getattr_</string>
-                            <string>to_revert</string>
-                            <string>context</string>
-                            <string>svn_path</string>
                             <string>_getitem_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>relative_path</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -149,7 +129,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_revert</string> </value>
+            <value> <string>BusinessTemplate_doSvnCleanup</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

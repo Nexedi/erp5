@@ -66,31 +66,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>added = context.REQUEST["added"]\n
-modified = context.REQUEST["modified"]\n
-removed = context.REQUEST["removed"]\n
-caller = context.REQUEST["caller"]\n
-changelog = context.REQUEST["changelog"]\n
+            <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
+if not svn_path :\n
+  raise "Error: Please set Subversion working path in preferences"\n
+if svn_path[-1]!=\'/\':\n
+  svn_path+=\'/\'\n
+file = svn_path + file\n
 \n
-dict_keys=(\'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\',)\n
-trust_dict={}\n
-for key in dict_keys:\n
-  trust_dict[key]=context.REQUEST[key+\'_hidden\']\n
-\n
-context.getPortalObject()["portal_subversion"].acceptSSLServer(trust_dict, True)\n
-\n
-if caller == \'update\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_update\')\n
-elif caller == \'commit\':\n
-  return context.asContext(changelog=changelog).svn_commit(added=added,removed=removed,modified=modified)\n
-elif caller == \'ls\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_ls?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
-elif caller == \'log\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_log?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
-elif caller == \'info\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_info\')\n
+try:\n
+  infos_list = context.getPortalObject()["portal_subversion"].ls(file)\n
+except SubversionSSLTrustError, error:\n
+  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
+  return context.asContext(trust_dict = error.getTrustDict(), caller=\'ls\').BusinessTemplate_viewSvnSSLTrust()\n
+except SubversionLoginError, error1 :\n
+  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
+  return context.asContext(caller=\'ls\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
+if infos_list:\n
+  return context.asContext(infos_dict=infos_list[0], file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
 else:\n
-  return \'Error: Caller \'+ caller + \'is unknown\'\n
+  return context.asContext(infos_dict=False, file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
 </string> </value>
         </item>
         <item>
@@ -101,11 +96,11 @@ else:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_ssl_trust</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnLs</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>file</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,27 +120,24 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getitem_</string>
+                            <string>file</string>
+                            <string>Products.ERP5Subversion.SubversionClient</string>
+                            <string>SubversionSSLTrustError</string>
+                            <string>SubversionLoginError</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>added</string>
-                            <string>modified</string>
-                            <string>removed</string>
-                            <string>caller</string>
-                            <string>changelog</string>
-                            <string>dict_keys</string>
-                            <string>trust_dict</string>
-                            <string>_getiter_</string>
-                            <string>key</string>
-                            <string>_write_</string>
-                            <string>True</string>
-                            <string>files</string>
+                            <string>svn_path</string>
+                            <string>_getitem_</string>
+                            <string>infos_list</string>
+                            <string>error</string>
+                            <string>error1</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -162,7 +154,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_ssl_trust</string> </value>
+            <value> <string>BusinessTemplate_doSvnLs</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

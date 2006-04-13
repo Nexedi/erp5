@@ -181,7 +181,7 @@ print \'\'\'<script>var tree = null;\n
           if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
             alert(\'Nothing to commit !\');\n
           } else {\n
-            submitAction(form,\'%s/svn_commit\');\n
+            submitAction(form,\'%s/BusinessTemplate_doSvnCommit\');\n
           }\n
         }\n
 \n
@@ -337,23 +337,21 @@ document.onmousemove = getMouse;\n
           } else {\n
             if(confirm(\'Are you sure you want to revert changes?\')){\n
               form.files.value=to_revert;\n
-              submitAction(form,\'%s/svn_revert\');\n
-              //Revert changes\n
-              //open(\'/svn_revert?files=\'+escape(to_revert), \'_self\');\n
+              submitAction(form,\'%s/BusinessTemplate_doSvnRevert\');\n
             }\n
           }\n
         }\n
 \n
         function update(){\n
-          open(\'%s/svn_update\', \'_self\');\n
+          open(\'%s/BusinessTemplate_doSvnUpdate\', \'_self\');\n
         }\n
 \n
         function infos(){\n
-          open(\'%s/svn_info\', \'_self\');\n
+          open(\'%s/BusinessTemplate_doSvnInfo\', \'_self\');\n
         }\n
 \n
         function cleanup(){\n
-          open(\'%s/svn_cleanup\', \'_self\');\n
+          open(\'%s/BusinessTemplate_doSvnCleanup\', \'_self\');\n
         }\n
 \n
         function log(){\n
@@ -365,7 +363,7 @@ document.onmousemove = getMouse;\n
         function ls(){\n
           //hide popup\n
           document.getElementById(\'menudiv\').style.display = "none";\n
-          open(\'%s/svn_ls?file=\'+tree.getSelectedItemId(), \'_self\');\n
+          open(\'%s/BusinessTemplate_doSvnLs?file=\'+tree.getSelectedItemId(), \'_self\');\n
         }\n
 \n
 \'\'\'% (context.getId(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url())\n
@@ -395,7 +393,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/createJSStatus</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doCreateJavaScriptStatus</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -449,7 +447,7 @@ return printed\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>createJSStatus</string> </value>
+            <value> <string>BusinessTemplate_doCreateJavaScriptStatus</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -66,29 +66,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>svn_user = context.REQUEST["user"]\n
-svn_password = context.REQUEST["password"]\n
-svn_realm = context.REQUEST["realm_hidden"]\n
-added = context.REQUEST["added"]\n
-modified = context.REQUEST["modified"]\n
-removed = context.REQUEST["removed"]\n
-caller = context.REQUEST["caller"]\n
-changelog = context.REQUEST["changelog"]\n
+            <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
-context.getPortalObject()["portal_subversion"].setLogin(svn_realm, svn_user, svn_password)\n
+try:\n
+  entry_dict = context.getPortalObject()["portal_subversion"].info()\n
+except SubversionSSLTrustError, error:\n
+  context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
+  return context.asContext(trust_dict = error.getTrustDict(), caller=\'info\').BusinessTemplate_viewSvnSSLTrust()\n
+except SubversionLoginError, error1 :\n
+  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
+  return context.asContext(caller=\'info\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
-if caller == \'update\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_update\')\n
-elif caller == \'commit\':\n
-  return context.asContext(changelog=changelog).svn_commit(added=added,removed=removed,modified=modified)\n
-elif caller == \'ls\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_ls?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
-elif caller == \'log\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_log?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
-elif caller == \'info\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_info\')\n
-else:\n
-  return \'Error: Caller \'+caller+\' is unknown\'\n
+return context.asContext(entry_dict=entry_dict).BusinessTemplate_viewSvnInfos()\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +88,7 @@ else:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_login</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnInfo</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -129,18 +118,15 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getitem_</string>
+                            <string>Products.ERP5Subversion.SubversionClient</string>
+                            <string>SubversionSSLTrustError</string>
+                            <string>SubversionLoginError</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
-                            <string>svn_user</string>
-                            <string>svn_password</string>
-                            <string>svn_realm</string>
-                            <string>added</string>
-                            <string>modified</string>
-                            <string>removed</string>
-                            <string>caller</string>
-                            <string>changelog</string>
-                            <string>files</string>
+                            <string>entry_dict</string>
+                            <string>error</string>
+                            <string>error1</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,7 +143,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_login</string> </value>
+            <value> <string>BusinessTemplate_doSvnInfo</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

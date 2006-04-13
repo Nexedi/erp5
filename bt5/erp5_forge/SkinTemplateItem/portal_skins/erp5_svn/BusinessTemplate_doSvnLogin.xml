@@ -66,10 +66,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject()["portal_subversion"].cleanup()\n
+            <value> <string>svn_user = context.REQUEST["user"]\n
+svn_password = context.REQUEST["password"]\n
+svn_realm = context.REQUEST["realm_hidden"]\n
+added = context.REQUEST["added"]\n
+modified = context.REQUEST["modified"]\n
+removed = context.REQUEST["removed"]\n
+caller = context.REQUEST["caller"]\n
+changelog = context.REQUEST["changelog"]\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Subversion locks removed successfully!\')\n
-return context.BusinessTemplate_viewSvnStatus()\n
+context.getPortalObject()["portal_subversion"].setLogin(svn_realm, svn_user, svn_password)\n
+\n
+if caller == \'update\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_update\')\n
+elif caller == \'commit\':\n
+  return context.asContext(changelog=changelog).BusinessTemplate_doSvnCommit(added=added,removed=removed,modified=modified)\n
+elif caller == \'ls\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLs?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+elif caller == \'log\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+elif caller == \'info\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnInfo\')\n
+else:\n
+  return \'Error: Caller \'+caller+\' is unknown\'\n
 </string> </value>
         </item>
         <item>
@@ -80,7 +99,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_cleanup</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnLogin</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -110,9 +129,18 @@ return context.BusinessTemplate_viewSvnStatus()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>_getattr_</string>
                             <string>context</string>
+                            <string>svn_user</string>
+                            <string>svn_password</string>
+                            <string>svn_realm</string>
+                            <string>added</string>
+                            <string>modified</string>
+                            <string>removed</string>
+                            <string>caller</string>
+                            <string>changelog</string>
+                            <string>files</string>
                           </tuple>
                         </value>
                     </item>
@@ -129,7 +157,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_cleanup</string> </value>
+            <value> <string>BusinessTemplate_doSvnLogin</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -90,7 +90,7 @@
 </div>\n
 \n
 <tal:js replace="structure \n
-here/createJSStatus">javascript here</tal:js>\n
+here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js>\n
 \n
 <font color=\'black\'><h1><center>Subversion</center></h1></font><br>\n
 <button onclick="expandCollapse()" value="expand" name="Expand / Collapse" type="button">Expand / Collapse</button>\n

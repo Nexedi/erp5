@@ -55,9 +55,9 @@
 <tal:block metal:use-macro="here/view_master/macros/master">\n
 <tal:block metal:fill-slot="main">\n
 <tal:js replace="structure \n
-here/createJSDiff">JavaScript here</tal:js>\n
+here/BusinessTemplate_doCreateJavaScriptDiff">JavaScript here</tal:js>\n
 <tal:py replace="structure \n
-here/svn_diff">diff here</tal:py>\n
+here/BusinessTemplate_doSvnDiff">diff here</tal:py>\n
 </tal:block>\n
 </tal:block>\n
 

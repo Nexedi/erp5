@@ -85,7 +85,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/svn_update</string> </value>
+            <value> <string>string:${object_url}/BusinessTemplate_doSvnUpdate</string> </value>
         </item>
       </dictionary>
     </pickle>

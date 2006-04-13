@@ -66,19 +66,39 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
-\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+from Products.ERP5Type.Document import newTempBase\n
+svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
+if not svn_path :\n
+  raise "Error: Please set Subversion working path in preferences"\n
+if svn_path[-1]!=\'/\':\n
+  svn_path+=\'/\'\n
+file = svn_path + file\n
 try:\n
-  entry_dict = context.getPortalObject()["portal_subversion"].info()\n
+  log_list = context.getPortalObject()["portal_subversion"].log(file)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(trust_dict = error.getTrustDict(), caller=\'info\').BusinessTemplate_viewSvnSSLTrust()\n
+  return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\').BusinessTemplate_viewSvnSSLTrust()\n
 except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'info\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(caller=\'log\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
-return context.asContext(entry_dict=entry_dict).BusinessTemplate_viewSvnInfos()\n
-</string> </value>
+if not log_list:\n
+  return []\n
+\n
+object_list = []\n
+for my_dict in log_list:\n
+  my_dict[\'message\']=\'<br>\'.join(my_dict[\'message\'].split(\'\\n\'))\n
+  temp_object = newTempBase(folder=context.getPortalObject(), id=\'1234\')\n
+  temp_object.edit(**my_dict)\n
+  object_list.append(temp_object)\n
+\n
+return object_list\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -88,11 +108,11 @@ return context.asContext(entry_dict=entry_dict).BusinessTemplate_viewSvnInfos()\
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/svn_info</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnLog</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>file,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,21 +132,32 @@ return context.asContext(entry_dict=entry_dict).BusinessTemplate_viewSvnInfos()\
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>file</string>
+                            <string>kw</string>
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
                             <string>SubversionLoginError</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
                             <string>context</string>
-                            <string>entry_dict</string>
+                            <string>svn_path</string>
+                            <string>_getitem_</string>
+                            <string>log_list</string>
                             <string>error</string>
                             <string>error1</string>
+                            <string>object_list</string>
+                            <string>_getiter_</string>
+                            <string>my_dict</string>
+                            <string>_write_</string>
+                            <string>temp_object</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -143,7 +174,7 @@ return context.asContext(entry_dict=entry_dict).BusinessTemplate_viewSvnInfos()\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svn_info</string> </value>
+            <value> <string>BusinessTemplate_doSvnLog</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
