@@ -1,5 +1,12 @@
+2006-04-13 Seb
+* Removed many related keys because they are automatically generated now
+
+2006-04-10 Kevin
+* Add validateEntity script on validation_workflow to set the region property as required in the 'validated' state.
+* Replace the latter mechanism with constraint on Entity.
+
 2006-04-05 aurel
-* add field for extensions in business template and make use of field for update of workflow and tool usable by any business template
+* Add field for extensions in business template and make use of field for update of workflow and tool usable by any business template.
 
 2006-04-05 Romain
 * Modify Base_editRelation, in order to remove cookie.
