@@ -133,16 +133,16 @@
            <td> </td>\n
            <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'total_employee_share\']" tal:condition="python: paysheet_details[\'total_employee_share\'] not in (\'\', None)"> </tal:block></td>\n
          </tr>\n
-         <tr tal:attributes="stylecmd boldstyle">\n
-           <td>Salaire Net</td>\n
-           <td> </td>\n
-           <td> </td>\n
-           <td> </td>\n
-           <td> </td>\n
-           <td> </td>\n
-           <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'net_salary\']" tal:condition="python: paysheet_details[\'net_salary\'] not in (\'\', None)"> </tal:block></td>\n
-         </tr>\n
     \n
+         <tr tal:attributes="stylecmd boldstyle">\n
+           <td>Salaire Net Imposable</td>\n
+           <td> </td>\n
+           <td> </td>\n
+           <td> </td>\n
+           <td> </td>\n
+           <td> </td>\n
+           <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'taxable_net_salary\']" tal:condition="python: paysheet_details[\'taxable_net_salary\'] not in (\'\', None)"> </tal:block></td>\n
+         </tr>\n
          <tal:block repeat="category paysheet_categories">\n
            <tal:block define="paysheet_lines python: paysheet_categories[category][\'lines\']">\n
              <tal:block repeat="line paysheet_lines">\n
@@ -159,13 +159,13 @@
            </tal:block>\n
          </tal:block>\n
          <tr tal:attributes="stylecmd boldstyle">\n
-           <td>Salaire Net Imposable</td>\n
+           <td>Salaire Net</td>\n
            <td> </td>\n
            <td> </td>\n
            <td> </td>\n
            <td> </td>\n
            <td> </td>\n
-           <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'taxable_net_salary\']" tal:condition="python: paysheet_details[\'taxable_net_salary\'] not in (\'\', None)"> </tal:block></td>\n
+           <td> <tal:block replace="python: \'%.2f\' % paysheet_details[\'net_salary\']" tal:condition="python: paysheet_details[\'net_salary\'] not in (\'\', None)"> </tal:block></td>\n
          </tr>\n
        </table>\n
 \n
