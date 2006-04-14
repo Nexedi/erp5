@@ -1201,17 +1201,17 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
    </td>
    <td nowrap valign="middle" align="center">
-    <select name="list_start" title="%s" size="1"
+    <select id="listbox_page_selection" name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
 """ % (translate('erp5_ui', 'Change Page'), REQUEST.URL1))
         else:
           pages_list_append("""\
    <td nowrap valign="middle" align="center">
-    <input type="image" src="%s/images/1leftarrowv.png"
+    <input id="listbox_previous_page" type="image" src="%s/images/1leftarrowv.png"
       title="%s" name="portal_selections/previousPage:method" border="0" />
    </td>
    <td nowrap valign="middle" align="center">
-    <select name="list_start" title="%s" size="1"
+    <select id="listbox_page_selection" name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
 """ % (portal_url_string, translate('erp5_ui', 'Previous Page'),
        translate('erp5_ui', 'Change Page'), REQUEST.URL1))
@@ -1243,7 +1243,7 @@ class ListBoxWidget(Widget.Widget):
     </select>
    </td>
    <td nowrap valign="middle" align="center">
-    <input type="image" src="%s/images/1rightarrowv.png"
+    <input id="listbox_next_page" type="image" src="%s/images/1rightarrowv.png"
       title="%s" name="portal_selections/nextPage:method" border="0" />
    </td>
 """ % (portal_url_string, translate('erp5_ui', 'Next Page')))
@@ -1287,7 +1287,7 @@ class ListBoxWidget(Widget.Widget):
       alt="spacer"/>
    </td>
   </tr>
-  <tr>
+  <tr id="listbox_title_line">
    <td class="Left" width="17">
     <img src="%(portal_url_string)s/images/spacer.png" width="5" height="5" border="0"
         alt="spacer"/>
@@ -1296,23 +1296,24 @@ class ListBoxWidget(Widget.Widget):
 """ % format_dict)
         if len(report_root_list) or len(domain_root_list):
           header_list_append("""
-    <input type="image" src="%(portal_url_string)s/images/text_block.png" id="flat_list"
+    <input type="image" src="%(portal_url_string)s/images/text_block.png" id="listbox_flat_list_mode"
        title="%(flat_list_title)s" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
 """ % format_dict)
         if len(report_root_list):
           header_list_append("""
-    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="report_list"
+    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="listbox_report_tree_mode"
        title="%(report_tree_title)s" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
 """ % format_dict)
         if len(domain_root_list):
           header_list_append("""
-        <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="domain_list"
+        <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="listbox_domain_tree_mode"
        title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/">
 """ % format_dict)
         header_list_append("""
        </td>
-   <td width="100%%" valign="middle">&nbsp; <a href="%(list_action)s">%(field_title)s</a>:
-        %(record_number)s - %(item_number)s
+   <td width="100%%" valign="middle">&nbsp; <a id="listbox_title" href="%(list_action)s">%(field_title)s</a>:
+        <span id="listbox_record_number">%(record_number)s</span>
+        - <span id="listbox_item_number">%(item_number)s</span>
    </td>
    %(pages)s
   </tr>
@@ -1368,16 +1369,17 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         , 'uncheck_all_title': translate('erp5_ui', 'Uncheck All')
                         }
           list_header_list_append("""\
-<tr>%(report_popup)s
-   <td class="Data" width="50" align="center" valign="middle">
-    <input type="image" name="portal_selections/checkAll:method" value="1"
+<tr id="listbox_label_line">%(report_popup)s
+  <td class="Data" width="50" align="center" valign="middle">
+    <input id="listbox_check_all" type="image" name="portal_selections/checkAll:method" value="1"
       src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title="%(check_all_title)s" />
-    <input type="image" name="portal_selections/uncheckAll:method" value="1"
+    <input id="listbox_uncheck_all" type="image" name="portal_selections/uncheckAll:method" value="1"
       src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title="%(uncheck_all_title)s" />
+  </td>
 """ % format_dict)
         else:
           list_header_list_append("""\
-<tr>%s
+<tr id="listbox_label_line">%s
 """ % report_popup)
 
         # csort is a list of couples
@@ -1433,15 +1435,15 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           if select:
             list_search_append("""\
-  <tr >
+  <tr id="listbox_search_line">
    %s
    <td class="Data" width="50" align="center" valign="middle">
-     <input type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="Base_doSelect:method" />
+     <input id="listbox_select" type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="Base_doSelect:method" />
    </td>
 """ % (report_search,portal_url_string,translate('erp5_ui', 'Action'))) # XXX Action? Is this word appropriate here?
           else:
             list_search_append("""\
-  <tr >
+  <tr id="listbox_search_line">
   %s
 """ % report_search)
 
@@ -1549,7 +1551,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             else:
               td_css = 'DataB'
 
-            list_body_append('<tr class="%s">' % td_css)
+            list_body_append('<tr id="listbox_data_line_%d" class="%s">' % (i - start, td_css))
             o = object_list[i - current_section_base_index + index_shift] # FASTER PERFORMANCE
             real_o = None
 
@@ -1918,7 +1920,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           selection.edit( params = kw )
           count_results = selection(method = stat_method,
                           context=here, REQUEST=REQUEST)
-          list_body_append('<tr>')
+          list_body_append('<tr id="listbox_stat_line">')
 
 
           if report_tree:
