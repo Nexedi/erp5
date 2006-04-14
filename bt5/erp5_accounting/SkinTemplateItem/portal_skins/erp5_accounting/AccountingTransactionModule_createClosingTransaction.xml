@@ -100,12 +100,12 @@ for account in portal.portal_categories.account_type.income\\\n
                portal.portal_categories.account_type.expense\\\n
             .getAccountTypeRelatedValueList(portal_type = \'Account\'):\n
 \n
-  quantity = getInventory( node_uid                 = account.getUid()\n
-                         , omit_simulation          = 1\n
-                         , simulation_state         = [\'stopped\', \'delivered\']\n
-                         , section_uid              = section_uid\n
-                         , at_date                  = at_date\n
-                         , section_portal_type_list = [\'Organisation\']\n
+  quantity = getInventory( node_uid         = account.getUid()\n
+                         , omit_simulation  = 1\n
+                         , simulation_state = [\'stopped\', \'delivered\']\n
+                         , section_uid      = section_uid\n
+                         , at_date          = at_date\n
+                         , where_expression = " section.portal_type = \'Organisation\' "\n
                          )\n
   quantity = quantity or 0.0\n
   total_quantity += context.Base_getRoundValue(quantity, precision)\n
