@@ -104,7 +104,7 @@
                       <list>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
-                        <string>my_target_stop_date</string>
+                        <string>my_payment_condition_payment_date</string>
                         <string>my_gross_salary</string>
                         <string>my_resource</string>
                         <string>my_translated_simulation_state_title</string>
