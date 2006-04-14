@@ -93,7 +93,7 @@ if kw.get(\'omit_input\') :\n
 if kw.get(\'omit_output\') :\n
   kwd[\'omit_output\'] = 1\n
 \n
-kwd[\'section_portal_type_list\'] = [\'Organisation\']\n
+kwd[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
 \n
 return context.portal_simulation.getInventoryAssetPrice( node_uid        = context.getUid()\n
                                                        , omit_simulation = 1\n
