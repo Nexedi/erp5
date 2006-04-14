@@ -222,7 +222,7 @@
             tal:content="python: \'P\xc3\xa9riode : du %s au %s\' % (start_date, here.getStopDate())"\n
             tal:on-error="string:"/>\n
           <infostring z=\'\' color=\'(0.0,0.0,0.0)\' align=\'left\' y=\'21.47566432cm\' x=\'12.327cm\' font=\'Helvetica\' size=\'8\'\n
-            tal:content="python: \'Date de paiement : %s\' % here.getTargetStopDate()"\n
+            tal:content="python: \'Date de paiement : %s\' % here.getPaymentConditionPaymentDate()"\n
             tal:on-error="string:"/>\n
         </tal:block>\n
         <line y2=\'1.506cm\' linewidth=\'1\' z=\'\' x2=\'19.075cm\' stroke=\'(0.6,0.6,0.6)\' y1=\'1.506cm\' x1=\'1.905cm\'/>\n
