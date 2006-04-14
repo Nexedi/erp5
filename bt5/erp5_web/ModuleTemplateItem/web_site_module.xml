@@ -119,6 +119,9 @@
    <name>Add ERP5Form Tools</name>
   </permission>
   <permission>
+   <name>Add ERP5Subversion Tools</name>
+  </permission>
+  <permission>
    <name>Add ERP5SyncML Tools</name>
   </permission>
   <permission>
@@ -210,6 +213,9 @@
   </permission>
   <permission>
    <name>Add Z MySQL Database Connections</name>
+  </permission>
+  <permission>
+   <name>Add Z MySQL Database Deferred Connections</name>
   </permission>
   <permission>
    <name>Add ZCatalogs</name>
@@ -336,6 +342,15 @@
   </permission>
   <permission>
    <name>Delete objects</name>
+  </permission>
+  <permission>
+   <name>DocFinder: add instance</name>
+  </permission>
+  <permission>
+   <name>DocFinder: document object</name>
+  </permission>
+  <permission>
+   <name>DocFinder: show code</name>
   </permission>
   <permission>
    <name>Download ExtFile/ExtImage</name>
@@ -486,6 +501,9 @@
   </permission>
   <permission>
    <name>View ZMailMessage</name>
+  </permission>
+  <permission>
+   <name>View documentation</name>
   </permission>
   <permission>
    <name>View management screens</name>

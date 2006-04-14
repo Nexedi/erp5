@@ -97,12 +97,6 @@ return context.REQUEST.RESPONSE.redirect(\'%s/%s\' % (directory.WebSite_getUrl()
             <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_clone</string> </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
@@ -131,7 +125,7 @@ return context.REQUEST.RESPONSE.redirect(\'%s/%s\' % (directory.WebSite_getUrl()
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>context</string>
                             <string>directory</string>
                             <string>clipboard</string>
                             <string>paste_result</string>
