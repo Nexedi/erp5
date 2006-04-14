@@ -75,7 +75,7 @@ STATE_LIST = [ \'confirmed\'\n
              , \'planned\'\n
              , \'stopped\'\n
              #, \'draft\'\n
-             ]\n
+]\n
 AUTO_UPDATE = False\n
 \n
 \n

@@ -75,7 +75,7 @@ STATE_LIST = [ \'confirmed\'\n
              #, \'planned\'\n
              , \'stopped\'\n
              #, \'draft\'\n
-             ]\n
+]\n
 AUTO = False\n
 \n
 print """<html>\n

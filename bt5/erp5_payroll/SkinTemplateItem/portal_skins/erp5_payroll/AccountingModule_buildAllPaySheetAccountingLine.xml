@@ -146,7 +146,7 @@ return printed\n
                             <string>_print</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>pay_sheet</string>
                             <string>_getitem_</string>
                             <string>str</string>
