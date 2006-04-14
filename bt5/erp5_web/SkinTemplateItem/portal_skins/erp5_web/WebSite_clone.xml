@@ -66,29 +66,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_type = context.getPortalType()\n
-if portal_type not in (\'Web Page\', \'Web Section\'):\n
-  context.log(\'WebSite_createContent\', \'Unable to clone type %s. Nothing done.\' % type_name)\n
-  return\n
+            <value> <string encoding="cdata"><![CDATA[
+
+directory = context.getParent()\n
+clipboard = directory.manage_copyObjects(ids=[context.getId()])\n
+paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
+dest = directory[paste_result[0][\'new_id\']]\n
 \n
-request = context.REQUEST\n
+#Bad idea because it would paste & setid in the same transaction.\n
+#if id is not None:\n
+#  directory.manage_renameObject(id=dest.getId(),new_id=id)\n
 \n
-module = context.getDefaultModule(portal_type=portal_type)\n
-new_id = module.generateNewId()\n
-new_content = module.newContent(portal_type=portal_type,\n
-                                container=module,\n
-                                id=str(new_id))\n
-new_content.setCategories(context.getCategories())\n
-new_content.setReference(reference)\n
-new_content.setShortTitle(short_title)\n
-new_content.setVersion(version)\n
-new_content.setLanguage(language)\n
-new_content.setTextContent(context.getTextContent())\n
+for (key, val) in context.REQUEST.form.items():\n
+  if key != \'id\' and dest.hasProperty(key):\n
+    dest.setProperty(key, val)\n
 \n
-redirect_url = new_content.WebSite_getDocumentPhysicalUrl()\n
-context.log(\'WebSite_createContent\',\'redirect_url = %s\' % redirect_url)\n
-return request.RESPONSE.redirect( redirect_url )\n
-</string> </value>
+return context.REQUEST.RESPONSE.redirect(\'%s/%s\' % (directory.WebSite_getUrl(), dest.getId()))\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -98,7 +94,7 @@ return request.RESPONSE.redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_createContent</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_web/WebSite_clone</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -108,7 +104,7 @@ return request.RESPONSE.redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>parent_url=\'\', reference=\'\', version=\'\', language=\'\', short_title=\'\'</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,27 +124,22 @@ return request.RESPONSE.redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>parent_url</string>
-                            <string>reference</string>
-                            <string>version</string>
-                            <string>language</string>
-                            <string>short_title</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_type</string>
-                            <string>type_name</string>
-                            <string>request</string>
-                            <string>module</string>
-                            <string>new_id</string>
-                            <string>str</string>
-                            <string>new_content</string>
-                            <string>redirect_url</string>
+                            <string>directory</string>
+                            <string>clipboard</string>
+                            <string>paste_result</string>
+                            <string>_getitem_</string>
+                            <string>dest</string>
+                            <string>_getiter_</string>
+                            <string>key</string>
+                            <string>val</string>
                           </tuple>
                         </value>
                     </item>
@@ -160,18 +151,12 @@ return request.RESPONSE.redirect( redirect_url )\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <string></string>
-                <string></string>
-                <string></string>
-                <string></string>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_createContent</string> </value>
+            <value> <string>WebSite_clone</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
