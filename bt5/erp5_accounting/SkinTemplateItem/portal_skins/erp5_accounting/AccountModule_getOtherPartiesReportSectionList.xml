@@ -69,8 +69,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-Client & vendors accounts.\n
-\n
+  Client & vendors accounts.\n
 """\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
@@ -90,13 +89,13 @@ if role_filter_list == [\'\'] :\n
 result = []\n
 \n
 params =  {\n
-            \'at_date\'   : at_date,\n
-            \'transaction_section_category\' : transaction_section_category,\n
-            \'section_category\' : transaction_section_category,\n
-            \'simulation_state\' :  transaction_simulation_state,\n
-            \'report_depth\' : 5,\n
-            \'section_portal_type_list\': [\'Organisation\']\n
-          }\n
+    \'at_date\'                     : at_date\n
+  , \'transaction_section_category\': transaction_section_category\n
+  , \'section_category\'            : transaction_section_category\n
+  , \'simulation_state\'            : transaction_simulation_state\n
+  , \'report_depth\'                : 5\n
+  , \'where_expression\'            : " section.portal_type = \'Organisation\' "\n
+}\n
 \n
 params[\'hide_grouping\'] = request[\'omit_grouped_references\']\n
 if from_date:\n
