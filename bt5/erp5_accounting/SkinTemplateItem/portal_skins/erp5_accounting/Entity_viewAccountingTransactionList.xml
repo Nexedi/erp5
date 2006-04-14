@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>Base_edit</string> </value>
         </item>
@@ -101,6 +107,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>entity</string>
                         <string>preferred_from_date</string>
                         <string>preferred_at_date</string>
                       </list>
