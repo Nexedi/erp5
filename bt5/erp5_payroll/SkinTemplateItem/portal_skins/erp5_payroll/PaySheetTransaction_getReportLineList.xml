@@ -167,10 +167,6 @@ return report_lines\n
             <value> <string>PaySheetTransaction_getReportLineList</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>NO LONGER MAINTAIN</string> </value>
-        </item>
-        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
