@@ -53,12 +53,6 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getUid</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>mirror_section_uid</string> </key>
                                 <value>
                                   <dictionary/>
@@ -72,6 +66,12 @@
                             </item>
                             <item>
                                 <key> <string>no_payment_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>node_uid</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -162,7 +162,7 @@
 <string>selection</string>
 <string>selection_domain</string>
 <string>selection_report</string>
-<string>getUid</string>
+<string>node_uid</string>
 <string>where_expression</string>
 <string>omit_input</string>
 <string>omit_output</string>
@@ -207,7 +207,7 @@
             <value> <string>selection\r\n
 selection_domain\r\n
 selection_report\r\n
-getUid\r\n
+node_uid\r\n
 where_expression\r\n
 omit_input\r\n
 omit_output\r\n
@@ -260,7 +260,7 @@ no_mirror_section_uid</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-if getUid>\n
+<dtml-if node_uid>\n
 SELECT\n
   DISTINCT transaction.uid, transaction.path,\n
   transaction_line.path as current_transaction_line_path,\n
@@ -289,9 +289,9 @@ FROM\n
   stock\n
   LEFT JOIN catalog AS mirror_section\n
       ON mirror_section.uid = stock.mirror_section_uid\n
-        AND stock.node_uid = <dtml-var getUid>\n
+        AND stock.node_uid = <dtml-var node_uid>\n
 \n
-WHERE stock.node_uid = <dtml-var getUid>\n
+WHERE stock.node_uid = <dtml-var node_uid>\n
   AND delivery.uid = transaction.uid\n
   AND transaction_line.uid = stock.uid\n
   AND transaction_line.portal_type <> \'Simulation Movement\'\n
@@ -403,7 +403,7 @@ ORDER BY\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-if getUid>\n
+<dtml-if node_uid>\n
 SELECT\n
   DISTINCT transaction.uid, transaction.path,\n
   transaction_line.path as current_transaction_line_path,\n
@@ -432,9 +432,9 @@ FROM\n
   stock\n
   LEFT JOIN catalog AS mirror_section\n
       ON mirror_section.uid = stock.mirror_section_uid\n
-        AND stock.node_uid = <dtml-var getUid>\n
+        AND stock.node_uid = <dtml-var node_uid>\n
 \n
-WHERE stock.node_uid = <dtml-var getUid>\n
+WHERE stock.node_uid = <dtml-var node_uid>\n
   AND delivery.uid = transaction.uid\n
   AND transaction_line.uid = stock.uid\n
   AND transaction_line.portal_type <> \'Simulation Movement\'\n
