@@ -137,7 +137,7 @@ else:\n
       valid_date = True\n
     for apd in openned_accounting_period_list:\n
       apd = apd.getObject()\n
-      if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
+      if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
     if not valid_date :\n
       raiseError("Date is not in an openned Accounting Period "\n
@@ -157,7 +157,7 @@ else:\n
         valid_date = True\n
       for apd in openned_accounting_period_list:\n
         apd = apd.getObject()\n
-        if apd.getStartDate() <= transaction_date <= apd.getStopDate():\n
+        if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
           valid_date = True\n
       if not valid_date :\n
         raiseError("Date is not in an openned Accounting Period "+\n
