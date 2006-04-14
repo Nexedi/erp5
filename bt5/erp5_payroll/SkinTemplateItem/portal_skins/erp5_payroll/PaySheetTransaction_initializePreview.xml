@@ -79,86 +79,93 @@ l = []\n
 default_values = context.PaySheetTransaction_preCalculation()\n
 \n
 # function to create a new preview line\n
-def createPreviewLine   ( new_id                = None\n
-                        , new_title             = None\n
-                        , new_base              = None\n
-                        , new_base_name         = None\n
-                        , new_employee_rate     = None\n
-                        , new_employer_rate     = None\n
-                        , new_service_url       = None\n
-                        , new_organisation_url  = None\n
-                        , new_salary_range_cat  = None\n
-                        , new_tax_cat           = None\n
-                        ):\n
-    \n
-    global portal_object, num, l\n
-    num += 1\n
-    int_len = 3\n
-    o = newTempBase(portal_object, new_id)\n
-    o.setUid(\'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
-    o.edit(uid=\'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
-    o.edit  ( id                    = new_id\n
-            , title                 = new_title\n
-            , base                  = new_base\n
-            , base_name             = new_base_name\n
-            , employee_share_rate   = new_employee_rate\n
-            , employer_share_rate   = new_employer_rate\n
-            , service_url           = new_service_url\n
-            , organisation_url      = new_organisation_url\n
-            , salary_range_cat      = new_salary_range_cat\n
-            , tax_cat               = new_tax_cat\n
-            )\n
-    l.append(o)\n
+def createPreviewLine( new_id               = None\n
+                     , new_title            = None\n
+                     , new_base             = None\n
+                     , new_base_name        = None\n
+                     , new_employee_rate    = None\n
+                     , new_employer_rate    = None\n
+                     , new_service_url      = None\n
+                     , new_organisation_url = None\n
+                     , new_salary_range_cat = None\n
+                     , new_tax_cat          = None\n
+                     ):\n
+\n
+  global portal_object, num, l\n
+  num += 1\n
+  int_len = 3\n
+  o = newTempBase(portal_object, new_id)\n
+  o.setUid(  \'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
+  o.edit(uid=\'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
+  o.edit( id                  = new_id\n
+        , title               = new_title\n
+        , base                = new_base\n
+        , base_name           = new_base_name\n
+        , employee_share_rate = new_employee_rate\n
+        , employer_share_rate = new_employer_rate\n
+        , service_url         = new_service_url\n
+        , organisation_url    = new_organisation_url\n
+        , salary_range_cat    = new_salary_range_cat\n
+        , tax_cat             = new_tax_cat\n
+        )\n
+  l.append(o)\n
 \n
 # get all services related to pay sheet transaction\n
 paysheet_services = []\n
 erp5site = context.portal_url.getPortalObject()\n
+\n
 # during 06/2005 service module has been renamed service_module\n
 # both names are supported\n
-if hasattr(erp5site, \'service_module\') : \n
+if hasattr(erp5site, \'service_module\') :\n
   service_module = erp5site.service_module\n
-else : \n
+else :\n
   service_module = erp5site.service\n
+\n
 for service in service_module.objectValues():\n
-    base_cat = service.getVariationRangeBaseCategoryList()\n
-    # a service is related to paysheet transaction if it has \'tax_category\' et \'salary_range\' as base category\n
-    if \'tax_category\' in base_cat and \'salary_range\' in base_cat and service.getId() != \'labour\':\n
-        paysheet_services.append(service)\n
+  base_cat = service.getVariationBaseCategoryList()\n
+  # A service is related to paysheet transaction if it has\n
+  #   \'tax_category\' and \'salary_range\' as base category.\n
+  if \'tax_category\' in base_cat and \'salary_range\' in base_cat and service.getId() != \'labour\':\n
+    paysheet_services.append(service)\n
 \n
 # Sort the service list by id\n
 paysheet_services.sort(lambda x, y: cmp(x.getId(), y.getId()))\n
 \n
 # generate all lines for the preview form\n
 for serv in paysheet_services:\n
-    cat_list = serv.getCategoryList()\n
-    # store all categories of the service into lists\n
-    tax_cat     = []\n
-    range_cat   = []\n
-    for cat in cat_list:\n
-        if str(cat).find(\'tax_category\') != -1:\n
-            tax_cat.append(cat)\n
-        if str(cat).find(\'salary_range\') != -1:\n
-            range_cat.append(cat)\n
-    # create a line for every salary_range of the service\n
-    for base in range_cat:\n
-        name = serv.getId() + \'/\' + context.portal_categories.resolveCategory(base).getId()\n
-        # a preview line is composed of a base calculation, an employee share rate and an employer share rate\n
-        if default_values.has_key(name):\n
-            new_base            = default_values[name][\'base\']\n
-            new_employee_rate   = default_values[name][\'employee_rate\']\n
-            new_employer_rate   = default_values[name][\'employer_rate\']\n
+  cat_list = serv.getCategoryList()\n
+  # store all categories of the service into lists\n
+  tax_cat     = []\n
+  range_cat   = []\n
+  for cat in cat_list:\n
+    if str(cat).find(\'tax_category\') != -1:\n
+      tax_cat.append(cat)\n
+    if str(cat).find(\'salary_range\') != -1:\n
+      range_cat.append(cat)\n
+  # create a line for every salary_range of the service\n
+  for base in range_cat:\n
+    mycategory=context.portal_categories.resolveCategory(base)\n
+    if mycategory is None:\n
+      context.log("PaySheetTransaction_initializePreview","WARNING : category not found : %s" % base)\n
+    else:\n
+      name = serv.getId() + \'/\' + mycategory.getId()\n
+      # a preview line is composed of a base calculation, an employee share rate and an employer share rate\n
+      if default_values.has_key(name):\n
+        new_base          = default_values[name][\'base\']\n
+        new_employee_rate = default_values[name][\'employee_rate\']\n
+        new_employer_rate = default_values[name][\'employer_rate\']\n
         # create a preview line for every salary_range value of the service\n
-        createPreviewLine   ( new_id                = serv.getId()\n
-                            , new_title             = serv.getTitleOrId()\n
-                            , new_base              = new_base\n
-                            , new_base_name         = context.portal_categories.resolveCategory(base).getTitleOrId()\n
-                            , new_employee_rate     = new_employee_rate\n
-                            , new_employer_rate     = new_employer_rate\n
-                            , new_service_url       = serv.getRelativeUrl()\n
-                            , new_organisation_url  = serv.getSource()\n
-                            , new_salary_range_cat  = base\n
-                            , new_tax_cat           = tax_cat\n
-                            )\n
+        createPreviewLine( new_id                = serv.getId()\n
+                          , new_title             = serv.getTitleOrId()\n
+                          , new_base              = new_base\n
+                          , new_base_name         = context.portal_categories.resolveCategory(base).getTitleOrId()\n
+                          , new_employee_rate     = new_employee_rate\n
+                          , new_employer_rate     = new_employer_rate\n
+                          , new_service_url       = serv.getRelativeUrl()\n
+                          , new_organisation_url  = serv.getSource()\n
+                          , new_salary_range_cat  = base\n
+                          , new_tax_cat           = tax_cat\n
+                          )\n
 \n
 # return the list of preview lines\n
 return l\n
@@ -238,6 +245,7 @@ return l\n
                             <string>cat</string>
                             <string>str</string>
                             <string>base</string>
+                            <string>mycategory</string>
                             <string>name</string>
                             <string>_getitem_</string>
                             <string>new_base</string>
