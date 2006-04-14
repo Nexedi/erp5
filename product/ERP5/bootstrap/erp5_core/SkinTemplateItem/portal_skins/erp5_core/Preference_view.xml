@@ -107,6 +107,7 @@
                       <list>
                         <string>my_priority</string>
                         <string>my_preferred_section_category</string>
+                        <string>my_preferred_date_order</string>
                       </list>
                     </value>
                 </item>
