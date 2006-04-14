@@ -52,8 +52,15 @@
  "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
 \n
-<tal:block metal:use-macro="here/view_master/macros/master">\n
+<tal:block tal:define="layout_form_id here/getApplicableLayout |  nothing;\n
+                       editable_mode request/editable_mode | nothing;\n
+                       global ignore_layout request/ignore_layout | nothing;\n
+                       global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
+                       default_layout string:view_master;\n
+                       layout_id layout_form/pt | default_layout;">\n
+<tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
 <tal:block metal:fill-slot="main">\n
+\n
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">\n
 \n
 <script  src="js/dhtmlXCommon.js"></script>\n
@@ -147,6 +154,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js>\n
 \t}\n
         doOnLoad()\n
 </script>\n
+</tal:block>\n
 </tal:block>\n
 </tal:block>
 
