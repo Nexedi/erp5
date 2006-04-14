@@ -281,7 +281,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: "<b><a href=\'BusinessTemplate_viewSvnShowFile?file="+str(here.REQUEST[\'file\'])+"\'>"+str(here.REQUEST[\'file\'])+"</a></b>&nbsp;&nbsp;<a href=\'"+here.getPortalObject()["portal_subversion"].editPath(here, here.REQUEST[\'file\'])+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"
+python: "<b><a href=\'BusinessTemplate_viewSvnShowFile?file="+here.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')+\'/\'+str(here.REQUEST[\'file\'])+"\'>"+here.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')+\'/\'+str(here.REQUEST[\'file\'])+"</a></b>&nbsp;&nbsp;<a href=\'"+here.getPortalObject()["portal_subversion"].editPath(here, here.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')+\'/\'+str(here.REQUEST[\'file\']))+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"
 
 ]]></string> </value>
         </item>
