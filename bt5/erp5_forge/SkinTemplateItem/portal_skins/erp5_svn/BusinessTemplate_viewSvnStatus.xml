@@ -70,7 +70,6 @@
 <input type=\'hidden\' name=\'added\' value=\'\'>\n
 <input type=\'hidden\' name=\'modified\' value=\'\'>\n
 <input type=\'hidden\' name=\'files\' value=\'\'>\n
-<!-- <input type=\'hidden\' name=\'checked\' value=\'\'> -->\n
 <!-- End Hidden -->\n
 <div id="menudiv" style="position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
 <table width=82 cellspacing=1 cellpadding=0 bgcolor=lightgray>\n
@@ -121,7 +120,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js>\n
 \t\t</div>\n
 \t\t</td>\n
                 <td style="vertical-align: top; text-align: left;"  width="10%" height="300">\n
-                <table><tr><td><b><u><font color=\'black\' size="1">Note:</font></u></b></td></tr>\n
+                <table><tr><td><b><u><font color=\'black\' size="1">Caption:</font></u></b></td></tr>\n
                 <tr><td>  </td></tr>\n
                 <tr><td><font color="green" size="1">Added File</font></td></tr>\n
                 <tr><td><font color="orange" size="1">Modified File</font></td></tr>\n

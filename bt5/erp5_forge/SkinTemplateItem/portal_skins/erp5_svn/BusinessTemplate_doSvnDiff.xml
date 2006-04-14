@@ -105,8 +105,7 @@ if removed != \'none\':\n
     print \'<hr></font></b>\'\n
     print "<font color=\'red\'>File Removed</font><br><br>"\n
 \n
-print \'\'\'</font><center><button onclick="history.back()" value="Back" name="Back" type="button">Back</button>\n
-<button onclick="doCommit()" value="commit" name="commit Changes" type="button">Commit Changes</button></center>\'\'\'\n
+print \'</font>\'\n
 return printed\n
 
 
