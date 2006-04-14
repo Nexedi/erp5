@@ -54,6 +54,11 @@
 \n
 <tal:block metal:use-macro="here/view_master/macros/master">\n
 <tal:block metal:fill-slot="main">\n
+<!-- Form Hidden : Selected files -->\n
+<input type=\'hidden\' name=\'removed\' value=\'\'>\n
+<input type=\'hidden\' name=\'added\' value=\'\'>\n
+<input type=\'hidden\' name=\'modified\' value=\'\'>\n
+<!-- End Hidden -->\n
 <tal:js replace="structure \n
 here/BusinessTemplate_doCreateJavaScriptDiff">JavaScript here</tal:js>\n
 <tal:py replace="structure \n
