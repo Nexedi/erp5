@@ -1,3 +1,6 @@
+2006-04-14 aurel
+* add field on Preference_view for preferred date order
+
 2006-04-13 Seb
 * Removed many related keys because they are automatically generated now
 
