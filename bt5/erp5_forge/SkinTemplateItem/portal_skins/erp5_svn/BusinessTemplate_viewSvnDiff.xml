@@ -55,16 +55,16 @@
 <tal:block metal:use-macro="here/view_master/macros/master">\n
 <tal:block metal:fill-slot="main">\n
 <!-- Form Hidden : Selected files -->\n
-<input type=\'hidden\' name=\'removed\' value=\'\'>\n
-<input type=\'hidden\' name=\'added\' value=\'\'>\n
-<input type=\'hidden\' name=\'modified\' value=\'\'>\n
+<input type=\'hidden\' name=\'removed\' tal:attributes="value python:context.REQUEST[\'removed\']">\n
+<input type=\'hidden\' name=\'added\' tal:attributes="value python:context.REQUEST[\'added\']">\n
+<input type=\'hidden\' name=\'modified\' tal:attributes="value python:context.REQUEST[\'modified\']">\n
 <!-- End Hidden -->\n
 <tal:js replace="structure \n
 here/BusinessTemplate_doCreateJavaScriptDiff">JavaScript here</tal:js>\n
 <tal:py replace="structure \n
 here/BusinessTemplate_doSvnDiff">diff here</tal:py>\n
 <center><button onclick="history.back()" value="Back" name="Back" type="button">Back</button>\n
-<button onclick="doCommit()" value="commit" name="commit Changes" type="button">Commit Changes</button></center>\n
+<button onclick="doCommit(this.form)" value="commit" name="commit Changes" type="button">Commit Changes</button></center>\n
 </tal:block>\n
 </tal:block>\n
 

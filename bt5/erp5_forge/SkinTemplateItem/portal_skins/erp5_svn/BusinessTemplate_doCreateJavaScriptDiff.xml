@@ -68,32 +68,19 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-modified=context.REQUEST["modified"]\n
-filesToCommit=[]\n
-if(modified!=\'none\'):\n
-  filesToCommit+=modified.split(\',\')\n
-added=context.REQUEST["added"]\n
-if(added!=\'none\'):\n
-  filesToCommit+=added.split(\',\')\n
-removed=context.REQUEST["removed"]\n
-if(removed!=\'none\'):\n
-  filesToCommit+=removed.split(\',\')\n
-\n
-filesToCommit=\',\'.join(filesToCommit)\n
-\n
 return \'\'\'<script>\n
 \n
-  function doCommit(){\n
+  function doCommit(form){\n
     if(confirm(\'Are you sure you want to commit?\')){\n
       //Commit Files\n
-      open(\'%s/BusinessTemplate_doSvnCommit?files=\'+escape(\\\'%s\\\'), \'_self\');\n
+      submitAction(form,\'%s/BusinessTemplate_doSvnCommit\');\n
     }\n
   }\n
 \n
   function goBack(){\n
-    open(\'%s/BusinessTemplate_viewSvnStatus?files=\'+escape(\\\'%s\\\'), \'_self\');\n
+    open(\'%s/BusinessTemplate_viewSvnStatus\', \'_self\');\n
   }  \n
-</script>\'\'\'% (context.absolute_url(), filesToCommit, context.absolute_url(), filesToCommit)\n
+</script>\'\'\'% (context.absolute_url(), context.absolute_url())\n
 
 
 ]]></string> </value>
@@ -142,13 +129,8 @@ return \'\'\'<script>\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>modified</string>
-                            <string>filesToCommit</string>
-                            <string>added</string>
-                            <string>removed</string>
                           </tuple>
                         </value>
                     </item>
