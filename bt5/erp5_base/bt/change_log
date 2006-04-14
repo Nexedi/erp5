@@ -1,3 +1,6 @@
+2006-04-14 aurel
+* remove default preferences as it is already present in erp5_core
+
 2006-04-07 aurel, jerome
 * Set security on assignment workflow (Assignor role is now required to open an assignment)
 
