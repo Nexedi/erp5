@@ -834,10 +834,13 @@ class ERP5Generator(PortalGenerator):
           addTool('ERP5 Delivery Tool', None)
         if not p.hasObject('portal_orders'):
           addTool('ERP5 Order Tool', None)
-          
-        addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
-        if not p.hasObject('portal_subversion'):
-          addTool('ERP5 Subversion Tool', None)
+        
+        try:
+          addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
+          if not p.hasObject('portal_subversion'):
+            addTool('ERP5 Subversion Tool', None)
+        except AttributeError:
+          pass
           
         # Add ERP5Type Tools
         addTool = p.manage_addProduct['ERP5Type'].manage_addTool
