@@ -68,34 +68,35 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-""" Round debit & credit in a generated accounting transaction """\n
+"""\n
+  This script no longer round debit & credit but only check consistency in a generated\n
+    accounting transaction, because now we want rouding problems fixed.\n
+"""\n
 \n
-precision = int(context.Section_getCurrencyPrecision(mapping_id=\'source_section\'))\n
+precision = context.Base_getPreferredPrecision()\n
+r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
-debit_list = []\n
-credit_list = []\n
-line = None\n
-total_quantity = 0\n
+line           = None\n
+net_balance    = 0.0\n
+debit_balance  = 0.0\n
+credit_balance = 0.0\n
 \n
-for line in context.getMovementList(portal_type =\n
-                    context.getPortalAccountingMovementTypeList()) :\n
-  if line.getSourceDebit() > 0 :\n
-    # line.setSourceDebit((line.getSourceDebit() * precision) / int(precision))\n
-    line.setSourceDebit( float((\'%.\'+str(precision)+\'f\') % (line.getSourceDebit())) )\n
-    total_quantity += line.getQuantity()\n
-  else :\n
-    # line.setSourceCredit((line.getSourceCredit() * precision) / int(precision))\n
-    line.setSourceCredit( float((\'%.\'+str(precision)+\'f\') % (line.getSourceCredit())) )\n
-    total_quantity += line.getQuantity()\n
+for line in context.getMovementList(portal_type=context.getPortalAccountingMovementTypeList()):\n
+  line_quantity = r_(line.getQuantity())\n
+  line.setQuantity(line_quantity)  \n
+  if line.getSourceDebit() > 0:\n
+    line.setSourceDebit(r_(line.getSourceDebit()))\n
+    debit_balance = r_(debit_balance + r_(line_quantity))\n
+  else:\n
+    line.setSourceCredit(r_(line.getSourceCredit()))\n
+    credit_balance = r_(credit_balance + r_(line_quantity))\n
+  net_balance = r_(net_balance + r_(line_quantity))\n
 \n
-if abs(total_quantity) > 2:\n
-  # if the difference is important, then it\'s probably a misconfiguration in the rule\n
-  # so we have to raise an errror.\n
-  raise ValueError, \'debit != credit for %s => %s\' % (\n
-        context.getPath(), total_quantity)\n
-\n
-if line is not None :\n
-  line.setQuantity(line.getQuantity() - total_quantity)\n
+# Check if the debit is equal to the credit\n
+if abs(net_balance) > 0 or \\\n
+   abs(credit_balance + debit_balance) > 0:\n
+#  raise ValueError, "Debit differ to Credit (%s != %s => diff: %s) for %s " % (debit_balance, credit_balance, net_balance, context.getPath())\n
+  context.log(\'ValueError\', "Debit differ to Credit (%s != %s => diff: %s) for %s " % (debit_balance, credit_balance, net_balance, context.getPath()))\n
 
 
 ]]></string> </value>
@@ -144,20 +145,18 @@ if line is not None :\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>int</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>precision</string>
-                            <string>debit_list</string>
-                            <string>credit_list</string>
+                            <string>r_</string>
                             <string>None</string>
                             <string>line</string>
-                            <string>total_quantity</string>
+                            <string>net_balance</string>
+                            <string>debit_balance</string>
+                            <string>credit_balance</string>
                             <string>_getiter_</string>
-                            <string>float</string>
-                            <string>str</string>
+                            <string>line_quantity</string>
                             <string>abs</string>
-                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
