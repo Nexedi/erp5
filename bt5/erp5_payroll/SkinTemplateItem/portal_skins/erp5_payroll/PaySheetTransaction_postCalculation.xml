@@ -66,60 +66,44 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>True  = 1\n
-False = 0\n
+            <value> <string># Get Precision\n
+precision = context.Base_getPreferredPrecision()\n
+r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
-global paysheet\n
-\n
-paysheet      = context.getObject()\n
-paysheet_type = paysheet.getPortalType()\n
-\n
-paysheet_line_type = \'Pay Sheet Line\'\n
-paysheet_cell_type = \'Pay Sheet Cell\'\n
-\n
-employee        = paysheet.getDestinationSection()\n
-employee_object = paysheet.getDestinationSectionValue()\n
-employer        = paysheet.getSourceSection()\n
-employer_object = paysheet.getSourceSectionValue()\n
-\n
-\n
-\n
-# delete all objects in the paysheet\n
+# Delete all objects in the paysheet\n
 id_list = []\n
-for paysheet_item in paysheet.objectValues():\n
+for paysheet_item in context.objectValues(portal_type=[\'Pay Sheet Transaction Line\', \'Pay Sheet Line\']):\n
+  # Delete Line to keep the payment_condition_payment_date sub-object\n
   id_list.append(paysheet_item.getId())\n
-paysheet.manage_delObjects(id_list)\n
+context.manage_delObjects(id_list)\n
 \n
-\n
-\n
-# this function register all paysheet informations in paysheet lines and cells\n
+# This function register all paysheet informations in paysheet lines and cells\n
 def createPaySheetItem(title=\'\', res=\'\', dest_org=\'\', cells=[]):\n
-  global paysheet\n
-  # select good cells only\n
+  # Select good cells only\n
   good_cells = []\n
   for cell in cells:\n
     if cell["base"] not in (\'\', 0, None) and cell["rate"] not in (\'\', 0, None):\n
       good_cells.append(cell)\n
   if len(good_cells) == 0:\n
     return\n
-  # get all variation categories used in cells\n
+  # Get all variation categories used in cells\n
   var_cat_list = []\n
   for cell in good_cells:\n
-    # don\'t add a variation category if already in it\n
+    # Don\'t add a variation category if already in it\n
     if cell["x"] not in var_cat_list:\n
       var_cat_list.append(cell["x"])\n
     if cell["y"] not in var_cat_list:\n
       var_cat_list.append(cell["y"])\n
-  # add a new Pay Sheet Line\n
-  payline = paysheet.newContent( portal_type                  = \'Pay Sheet Line\'\n
-                               , title                        = title\n
-                               , source                    = employer\n
-                               , resource                     = res\n
-                               , destination_section          = dest_org\n
-                               , destination                  = dest_org\n
-                               , variation_base_category_list = (\'tax_category\', \'salary_range\')\n
-                               , variation_category_list      = var_cat_list\n
-                               )\n
+  # Add a new Pay Sheet Line\n
+  payline = context.newContent( portal_type                  = \'Pay Sheet Line\'\n
+                              , title                        = title\n
+                              , source                       = context.getSourceSection()\n
+                              , resource                     = res\n
+                              , destination_section          = dest_org\n
+                              , destination                  = dest_org\n
+                              , variation_base_category_list = (\'tax_category\', \'salary_range\')\n
+                              , variation_category_list      = var_cat_list\n
+                              )\n
   base_id = \'movement\'\n
   payline.updateCellRange( script_id = \'PaySheetLine_asCellRange\'\n
                          , base_id   = base_id\n
@@ -135,129 +119,110 @@ def createPaySheetItem(title=\'\', res=\'\', dest_org=\'\', cells=[]):\n
                 , category_list              = cell_cat_list\n
                 )\n
 \n
-\n
-\n
 # set the title of the paysheet if empty\n
-months = [\'janvier\', \'f\xc3\xa9vrier\', \'mars\', \'avril\', \'mai\', \'juin\', \'juillet\', \'ao\xc3\xbbt\', \'septembre\', \'octobre\', \'novembre\', \'d\xc3\xa9cembre\']\n
-if paysheet.getTitle() in (\'\', None):\n
-  new_title = \'Salaire \' + employee_object.getTitle()\n
-  if paysheet.getStartDate() not in (\'\', None):\n
-    new_title += \' \' + months[int(str(paysheet.getStartDate())[5:7])-1] + \' \' + str(paysheet.getStartDate())[0:4]\n
-  paysheet.setTitle(new_title)\n
-\n
-\n
+# TODO: translate using current language\n
+months = (\'janvier\', \'f\xc3\xa9vrier\', \'mars\', \'avril\', \'mai\', \'juin\', \'juillet\', \'ao\xc3\xbbt\', \'septembre\', \'octobre\', \'novembre\', \'d\xc3\xa9cembre\')\n
+if context.getTitle() in (\'\', None):\n
+  if context.getStartDate() in (\'\', None):\n
+    context.setTitle(\'Salaire %s\' % context.getDestinationSectionValue().getTitle())\n
+  else:\n
+    context.setTitle(\'Salaire %s %s %s\' % (context.getDestinationSectionValue().getTitle(), months[int(str(context.getStartDate())[5:7])-1], str(context.getStartDate())[0:4]))\n
 \n
 # get the ordered list of standard preview line objects\n
 std_lines = context.PaySheetTransaction_initializePreview()\n
-\n
-\n
-\n
 # this list contain all paysheet items, indexed by service\n
 paysheet_items = {}\n
+# initialise the user preview line index\n
+user_line_index = 0\n
+total_employee_share = 0.0\n
 \n
 # scan every standard preview line to create an item for each service\n
 for std_line in std_lines:\n
   # get the service url (unique because containing the id)\n
   service = std_line.getProperty(\'service_url\')\n
-  # verify that the service is not existing\n
-  if not paysheet_items.has_key(service):\n
-    # create a temporary service item\n
-    temp_item = {}\n
-    # fill the new item with needed data\n
-    temp_item[\'title\']    = std_line.getProperty(\'title\')\n
-    temp_item[\'res\']      = std_line.getProperty(\'service_url\')\n
-    temp_item[\'dest_org\'] = std_line.getProperty(\'organisation_url\')\n
-    temp_item[\'cells\']    = []\n
-    # add the new service item to the list\n
-    paysheet_items[service] = temp_item\n
-\n
-# initialise the user preview line index\n
-user_line_index = 0\n
-\n
-# scan every standard preview line and get the correspondant user preview line to put user parameters in appropriate cells\n
-total_employee_share = 0.0\n
-for std_line in std_lines:\n
   # define some values related to current standard preview line\n
-  service          = std_line.getProperty(\'service_url\')\n
   salary_range_cat = std_line.getProperty(\'salary_range_cat\')\n
   tax_cat          = std_line.getProperty(\'tax_cat\')\n
-  # increment the user line index: we can use this strategy because preview lines (user or standard ones) are sorted\n
+  # verify that the service is not existing\n
+  if not paysheet_items.has_key(service):\n
+    paysheet_items[service] = { \'title\'   : std_line.getTitle()\n
+                              , \'res\'     : std_line.getProperty(\'service_url\')\n
+                              , \'dest_org\': std_line.getProperty(\'organisation_url\')\n
+                              , \'cells\'   : []\n
+                              }\n
+  # Increment the user line index: we can use this strategy because preview lines (user or standard ones) are sorted\n
   user_line_index += 1\n
-  # get user paysheet parameters stored in user preview line (=listbox)\n
+  # Get user paysheet parameters stored in user preview line (=listbox)\n
   for user_line in listbox:\n
     # Base_viewSearchResultList the user preview line corresponding to the standard preview line\n
     if user_line.has_key(\'listbox_key\') and int(user_line[\'listbox_key\'])==user_line_index:\n
-      # got it ! we have the right line\n
-      # get the base salary\n
-      base = user_line[\'base\']\n
-      # scan allowed tax categories to get employee and/or employer share rate\n
-      for cat in tax_cat:\n
-        # define an empty new cell\n
-        new_cell = None\n
-        # convert rate from percent\n
-        employer_rate = user_line[\'employer_share_rate\']\n
-        employee_rate = user_line[\'employee_share_rate\']\n
-        if str(cat).endswith(\'employer_share\') != -1 and employer_rate not in (None, \'\'):\n
-          rate = float(employer_rate) / 100.0 # TODO : use % in the previous listbox\n
-          new_cell = { "x"    : cat\n
-                     , "y"    : salary_range_cat\n
-                     , "base" : -base\n
-                     , "rate" : rate  # XXX Bad use of % (JPS)\n
-                     }\n
-        if str(cat).endswith(\'employee_share\') != -1 and employee_rate not in (None, \'\'):\n
-          rate = float(employee_rate) / 100.0\n
-          new_cell = { "x"    : cat\n
-                     , "y"    : salary_range_cat\n
-                     , "base" : -base\n
-                     , "rate" : rate  # XXX Bad use of % (JPS)\n
-                     }\n
-          total_employee_share += float(base) * float(rate)\n
-        # add the cell to the conresponding paysheet item\n
-        if new_cell != None:\n
-          paysheet_items[service][\'cells\'].append(new_cell)\n
+      # Got it ! we have the right line\n
+      if user_line[\'base\'] not in (None, \'\'):\n
+        # Get the base salary if given by the user\n
+        base = r_(user_line[\'base\'])\n
+        # Scan allowed tax categories to get employee and/or employer share rate\n
+        for cat in tax_cat:\n
+          # Define an empty new cell\n
+          new_cell = None\n
+          # Convert rate from percent\n
+          employer_rate = user_line[\'employer_share_rate\']\n
+          employee_rate = user_line[\'employee_share_rate\']\n
+          if str(cat).endswith(\'employer_share\') and employer_rate not in (None, \'\'):\n
+            rate = float(employer_rate) / 100.0\n
+            new_cell = { "x"    : cat\n
+                      , "y"    : salary_range_cat\n
+                      , "base" : -base\n
+                      , "rate" : rate  # XXX Bad use of % (JPS)\n
+                      }\n
+          if str(cat).endswith(\'employee_share\') and employee_rate not in (None, \'\'):\n
+            rate = float(employee_rate) / 100.0\n
+            new_cell = { "x"    : cat\n
+                      , "y"    : salary_range_cat\n
+                      , "base" : -base\n
+                      , "rate" : rate  # XXX Bad use of % (JPS)\n
+                      }\n
+            context.log("PaySheetTransaction_postCalculation","cat=%s base=%s rate=%s" % (cat, base, rate))\n
 \n
-# create a paysheet item for each service with user data in it\n
-for item in paysheet_items:\n
-  if paysheet_items[item][\'cells\'] not in ([], None, \'\'):\n
-    createPaySheetItem( title    = paysheet_items[item][\'title\']\n
-                      , res      = paysheet_items[item][\'res\']\n
-                      , dest_org = paysheet_items[item][\'dest_org\']\n
-                      , cells    = paysheet_items[item][\'cells\']\n
+            total_employee_share = r_(total_employee_share + r_(base * float(rate)))\n
+          # Add the cell to the conresponding paysheet item\n
+          if new_cell != None:\n
+            paysheet_items[service][\'cells\'].append(new_cell)\n
+\n
+# Create a paysheet item for each service with user data in it\n
+for item in paysheet_items.values():\n
+  if item[\'cells\'] not in ([], None, \'\'):\n
+    createPaySheetItem( title    = item[\'title\']\n
+                      , res      = item[\'res\']\n
+                      , dest_org = item[\'dest_org\']\n
+                      , cells    = item[\'cells\']\n
                       )\n
 \n
 # Finaly add the salary line\n
-gross_salary = float(paysheet.getGrossSalary())\n
-net_salary = gross_salary - total_employee_share\n
-\n
-cells = []\n
-new_cell = { "x"    : \'tax_category/social/employee_share\'\n
-           , "y"    : \'salary_range/france\'\n
-           , "base" : 1\n
-           , "rate" : -net_salary\n
-           }\n
-cells.append(new_cell)\n
-new_cell = { "x"    : \'tax_category/social/employer_share\'\n
-           , "y"    : \'salary_range/france\'\n
-           , "base" : 1\n
-           , "rate" : -gross_salary\n
-           }\n
-cells.append(new_cell)\n
 \n
 # during 06/2005 service module has been renamed service_module\n
 # both names are supported\n
-erp5site = context.portal_url.getPortalObject()\n
-if hasattr(erp5site, \'service_module\') : \n
+if hasattr(context.getPortalObject(), \'service_module\'):\n
   service_module_name = \'service_module\'\n
-else : \n
+else :\n
   service_module_name = \'service\'\n
+gross_salary = r_(context.getGrossSalary())\n
 \n
 createPaySheetItem( title    = \'Salary\'\n
-                  , res      = \'%s/labour\'%service_module_name\n
-                  , dest_org = employee\n
-                  , cells    = cells\n
+                  , res      = \'%s/labour\' % service_module_name\n
+                  , dest_org = context.getDestinationSection()\n
+                  , cells    = [{ "x"    : \'tax_category/social/employee_share\'\n
+                                , "y"    : \'salary_range/france\'\n
+                                , "base" : 1\n
+                                , "rate" : r_(total_employee_share - gross_salary)\n
+                                },\n
+                                { "x"    : \'tax_category/social/employer_share\'\n
+                                , "y"    : \'salary_range/france\'\n
+                                , "base" : 1\n
+                                , "rate" : -gross_salary\n
+                                }]\n
                   )\n
 \n
-# return to pay sheet\n
+# Return to pay sheet\n
 return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Pay+sheet+calculation+done.\')\n
 </string> </value>
         </item>
@@ -270,6 +235,12 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_postCalculation</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -301,38 +272,28 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
                           <tuple>
                             <string>listbox</string>
                             <string>kw</string>
-                            <string>True</string>
-                            <string>False</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>paysheet</string>
-                            <string>paysheet_type</string>
-                            <string>paysheet_line_type</string>
-                            <string>paysheet_cell_type</string>
-                            <string>employee</string>
-                            <string>employee_object</string>
-                            <string>employer</string>
-                            <string>employer_object</string>
+                            <string>precision</string>
+                            <string>r_</string>
                             <string>id_list</string>
                             <string>_getiter_</string>
                             <string>paysheet_item</string>
                             <string>createPaySheetItem</string>
                             <string>months</string>
                             <string>None</string>
-                            <string>new_title</string>
                             <string>_getitem_</string>
                             <string>int</string>
                             <string>str</string>
                             <string>std_lines</string>
                             <string>paysheet_items</string>
-                            <string>std_line</string>
-                            <string>service</string>
-                            <string>temp_item</string>
-                            <string>_write_</string>
                             <string>user_line_index</string>
                             <string>total_employee_share</string>
+                            <string>std_line</string>
+                            <string>service</string>
                             <string>salary_range_cat</string>
                             <string>tax_cat</string>
+                            <string>_write_</string>
                             <string>user_line</string>
                             <string>base</string>
                             <string>cat</string>
@@ -342,12 +303,9 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_stat
                             <string>float</string>
                             <string>rate</string>
                             <string>item</string>
-                            <string>gross_salary</string>
-                            <string>net_salary</string>
-                            <string>cells</string>
-                            <string>erp5site</string>
                             <string>hasattr</string>
                             <string>service_module_name</string>
+                            <string>gross_salary</string>
                           </tuple>
                         </value>
                     </item>
