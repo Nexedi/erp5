@@ -46,6 +46,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>action</string> </key>
             <value> <string>AccountModule_viewTrialBalanceReport</string> </value>
         </item>
@@ -87,7 +93,10 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_gap_root</string>
+                        <string>my_gap_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -95,7 +104,6 @@
                     <value>
                       <list>
                         <string>my_transaction_simulation_state</string>
-                        <string>my_gap_root</string>
                       </list>
                     </value>
                 </item>
