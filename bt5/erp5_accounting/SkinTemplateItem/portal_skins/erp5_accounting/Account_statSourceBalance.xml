@@ -183,6 +183,11 @@ if params.has_key(\'to_date\'):\n
   if params.has_key(\'from_date\'): del params[\'from_date\']\n
 \n
 ###\n
+# Include the previous balance\n
+if params.has_key(\'from_date\') and params.has_key(\'at_date\'):\n
+  del params[\'from_date\']\n
+\n
+###\n
 # Call the query with selected parameters\n
 # context.log("SQL with %s \\n" % params, context.Account_zGetTotalQuantity(src__=1, **params))\n
 result = context.Account_zGetTotalQuantity(**params)\n
