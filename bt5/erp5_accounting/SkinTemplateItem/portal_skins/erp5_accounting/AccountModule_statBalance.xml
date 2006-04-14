@@ -83,12 +83,12 @@ if at_date :\n
   params[\'at_date\'] = at_date\n
 \n
 simulation_state = preference.getPreferredAccountingTransactionSimulationStateList()\\\n
-                      or kw.get(\'simulation_state\', kw.get(\'transaction_simulation_state\', None))\n
+                      or kw.get(\'simulation_state\', kw.get(\'simulation_state\', None))\n
 if simulation_state :\n
   params[\'simulation_state\'] = simulation_state\n
 \n
 section_category = preference.getPreferredAccountingTransactionSectionCategory()\\\n
-                      or kw.get(\'section_category\', kw.get(\'transaction_section_category\', None))\n
+                      or kw.get(\'section_category\', kw.get(\'section_category\', None))\n
 if section_category :\n
   params[\'section_category\'] = section_category\n
 \n
@@ -123,8 +123,7 @@ if kw.get(\'omit_input\'):\n
 if kw.get(\'omit_output\'):\n
   params[\'omit_output\'] = 1\n
 \n
-results = context.Resource_zStatInventory(omit_simulation=1,\n
-                                         **params)\n
+results = context.Resource_zStatInventory(omit_simulation=1, **params)\n
 row = results[0]\n
 total = 0\n
 if row.total_price :\n
@@ -135,6 +134,7 @@ return total\n
 # here we have to buildSQLQuery on \'node\' catalog table alias and not catalog.\n
 # currently this doesn\'t work.\n
 context.log(\'SQL:\', context.portal_simulation.getInventory( src__=1, omit_simulation=1, **params ))\n
+\n
 return context.portal_simulation.getInventory( omit_simulation=1, **params )\n
 </string> </value>
         </item>
