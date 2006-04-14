@@ -69,10 +69,8 @@
             <value> <string>portal_type = context.getPortalType()\n
 if portal_type == \'Web Site\':\n
   return None\n
-if portal_type == \'Web Section\':\n
-  if context.REQUEST[\'editable_mode\']:\n
-    return context\n
-  return context.getDefaultSourceValue()\n
+if portal_type == \'Web Section\' and not getattr(context.REQUEST, \'editable_mode\', None):\n
+  return context.WebSite_getDefaultDocumentValue()\n
 return context\n
 </string> </value>
         </item>
@@ -124,7 +122,7 @@ return context\n
                             <string>context</string>
                             <string>portal_type</string>
                             <string>None</string>
-                            <string>_getitem_</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
