@@ -804,10 +804,12 @@ class SubversionTool(UniqueObject, Folder):
     itemStatus = item.msg_status
     if itemStatus == 'added' :
       itemColor='green'
-    elif itemStatus == 'modified' :
+    elif itemStatus == 'modified' or  itemStatus == 'replaced' :
       itemColor='orange'
     elif itemStatus == 'deleted' :
       itemColor='red'
+    elif itemStatus == 'conflicted' :
+      itemColor='grey'
     else :
       itemColor='black'
       
