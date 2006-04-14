@@ -1,3 +1,7 @@
+2006-04-14 Kevin
+* Update to have good rounding.
+* Delete GAP with trailing '0'.
+
 2006-04-03 Kevin
 * Add FiscalReport_getFiscalReportItemList to get a dynamic list of fiscal report.
 
