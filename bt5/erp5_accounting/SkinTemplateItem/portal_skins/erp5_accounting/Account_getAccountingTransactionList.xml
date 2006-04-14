@@ -66,26 +66,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>src__ = 0\n
+            <value> <string>src__ = False\n
 if kw.has_key(\'src__\'): src__ = kw[\'src__\']\n
 precision = context.Base_getPreferredPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
+# TODO: Selection override Preferences.\n
+# Thanks to this, we can generate accounting reports based on generic listbox: from the ERP5 html view, no selection are set, so preferences are get as parameters to get the list of accounting lines. In case of accounting report (like AccountModule_getGeneralLedgerReportSectionList) we set the selection to pass parameters to the listbox.\n
+selection_kw = {}\n
+if selection != None:\n
+  selection_kw = selection.getParams()\n
+context.log("Selection must overide preference here for AccountModule_getGeneralLedgerReportSectionList !", repr(selection_kw))\n
+\n
+if selection_kw.has_key(\'is_accounting_report\'):\n
+  request = context.REQUEST\n
+  request.set(\'is_accounting_report\', True)\n
+\n
 # Read settings from user preference\n
 preference       = context.getPortalObject().portal_preferences\n
-simulation_state = kw.get(\'simulation_state\', \n
-                      preference.getPreferredAccountingTransactionSimulationStateList())\n
-section_category = kw.get(\'section_category\', \n
-                      preference.getPreferredAccountingTransactionSectionCategory())\n
-from_date        = kw.get(\'from_date\',\n
-                      preference.getPreferredAccountingTransactionFromDate())\n
-at_date          = kw.get(\'at_date\',\n
-                      preference.getPreferredAccountingTransactionAtDate())\n
+simulation_state = kw.get(\'simulation_state\', preference.getPreferredAccountingTransactionSimulationStateList())\n
+section_category = kw.get(\'section_category\', preference.getPreferredAccountingTransactionSectionCategory())\n
+from_date        = kw.get(\'from_date\',        preference.getPreferredAccountingTransactionFromDate())\n
+at_date          = kw.get(\'at_date\',          preference.getPreferredAccountingTransactionAtDate())\n
 \n
 # Build the common inventory dict\n
 params = {}\n
 \n
-if kw.get(\'no_from_date\', 0): from_date = None\n
+if kw.get(\'no_from_date\', False): from_date = None\n
 \n
 if simulation_state: params[\'simulation_state\'] = simulation_state\n
 if section_category: params[\'section_category\'] = section_category\n
@@ -93,23 +100,20 @@ if section_category: params[\'section_category\'] = section_category\n
 # Get payment and mirror related parameters\n
 MARKER = []\n
 no_payment_uid        = kw.get(\'no_payment_uid\',        MARKER)\n
-payment_uid           = kw.get(   \'payment_uid\',        MARKER)\n
+payment_uid           = kw.get(\'payment_uid\',           MARKER)\n
 no_mirror_section_uid = kw.get(\'no_mirror_section_uid\', MARKER)\n
-mirror_section_uid    = kw.get(   \'mirror_section_uid\', MARKER)\n
+mirror_section_uid    = kw.get(\'mirror_section_uid\',    MARKER)\n
 # Try alternate method to get payment_uid\n
 if no_payment_uid is MARKER: no_payment_uid = kw.get(\'no_source_uid\', MARKER)\n
-if    payment_uid is MARKER:    payment_uid = kw.get(   \'source_uid\', MARKER)\n
+if payment_uid    is MARKER: payment_uid    = kw.get(\'source_uid\',    MARKER)\n
 # Save results in the dict\n
-if no_payment_uid        is not MARKER: params[\'no_payment_uid\']        = 1\n
-if    payment_uid        is not MARKER: params[   \'payment_uid\']        = payment_uid\n
-if no_mirror_section_uid is not MARKER: params[\'no_mirror_section_uid\'] = 1\n
-if    mirror_section_uid is not MARKER: params[   \'mirror_section_uid\'] = mirror_section_uid\n
+if no_payment_uid        is not MARKER: params[\'no_payment_uid\']        = True\n
+if payment_uid           is not MARKER: params[\'payment_uid\']           = payment_uid\n
+if no_mirror_section_uid is not MARKER: params[\'no_mirror_section_uid\'] = True\n
+if mirror_section_uid    is not MARKER: params[\'mirror_section_uid\']    = mirror_section_uid\n
 \n
 # Get node_uid parameters\n
-node_uid = kw.get(\'node_uid\', MARKER)\n
-if node_uid is not MARKER:\n
-  params[\'node_uid\'] = node_uid\n
-  params[\'getUid\']   = node_uid # Account_zGetAccountingTransactionList compat\n
+params[\'node_uid\'] = kw.get(\'node_uid\', context.getUid())\n
 \n
 # Create the related accouting line list\n
 new_result  = []\n
@@ -117,14 +121,12 @@ net_balance = 0.0\n
 \n
 # Create a new parameter list to get the previous balance\n
 get_inventory_kw = params.copy()\n
-get_inventory_kw.update({ \'omit_simulation\'         : 1\n
-                        , \'to_date\'                 : from_date\n
-                        , \'section_portal_type_list\': [\'Organisation\']\n
-                        , \'stat\'                    : 1\n
+get_inventory_kw.update({ \'omit_simulation\' : True\n
+                        , \'to_date\'         : from_date\n
+                        , \'where_expression\': " section.portal_type = \'Organisation\' "\n
+                        , \'stat\'            : True\n
                         })\n
-get_inventory_kw[\'node_uid\'] = kw.get(\'node_uid\', context.getUid())\n
 \n
-# Get previous debit and credit\n
 # Get previous debit and credit\n
 getInventoryAssetPrice = context.getPortalObject().portal_simulation.getInventoryAssetPrice\n
 previous_total_debit  = getInventoryAssetPrice(omit_output=True, **get_inventory_kw)\n
@@ -144,15 +146,15 @@ if previous_total_credit != 0 or previous_total_debit != 0:\n
   previous_balance.setUid(\'new_000\')\n
 \n
   previous_balance.edit( \\\n
-      title                   = context.Base_translateString("Previous Balance")\n
-    , date                    = from_date - 1\n
-    , portal_type             = ""\n
-    , simulation_state_title  = ""\n
-    , debit                   = previous_total_debit\n
-    , credit                  = previous_total_credit\n
-    , balance                 = net_balance\n
-    , net_balance             = net_balance\n
-    , is_previous_balance     = True\n
+      title                  = context.Base_translateString("Previous Balance")\n
+    , date                   = from_date - 1\n
+    , portal_type            = ""\n
+    , simulation_state_title = ""\n
+    , debit                  = previous_total_debit\n
+    , credit                 = previous_total_credit\n
+    , balance                = net_balance\n
+    , net_balance            = net_balance\n
+    , is_previous_balance    = True\n
     )\n
   new_result.append(previous_balance)\n
 \n
@@ -237,32 +239,36 @@ return new_result\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>False</string>
                             <string>src__</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>context</string>
                             <string>precision</string>
                             <string>r_</string>
+                            <string>selection_kw</string>
+                            <string>selection</string>
+                            <string>None</string>
+                            <string>repr</string>
+                            <string>request</string>
+                            <string>True</string>
                             <string>preference</string>
                             <string>simulation_state</string>
                             <string>section_category</string>
                             <string>from_date</string>
                             <string>at_date</string>
                             <string>params</string>
-                            <string>None</string>
                             <string>_write_</string>
                             <string>MARKER</string>
                             <string>no_payment_uid</string>
                             <string>payment_uid</string>
                             <string>no_mirror_section_uid</string>
                             <string>mirror_section_uid</string>
-                            <string>node_uid</string>
                             <string>new_result</string>
                             <string>net_balance</string>
                             <string>get_inventory_kw</string>
                             <string>getInventoryAssetPrice</string>
                             <string>_apply_</string>
-                            <string>True</string>
                             <string>previous_total_debit</string>
                             <string>previous_total_credit</string>
                             <string>Products.ERP5Type.Document</string>
