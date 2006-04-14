@@ -68,8 +68,12 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+# Get Precision\n
+precision = context.Base_getPreferredPrecision()\n
+r_ = lambda x: context.Base_getRoundValue(x, precision)\n
+\n
 # this dict contain all paysheet details\n
-paysheet_details = {}\n
+details = {}\n
 \n
 # initialize total share\n
 total_employer_share         = 0.0\n
@@ -87,17 +91,17 @@ for object in context.objectValues():\n
     if object.getResource() == \'service_module/labour\':\n
       for cell in object.objectValues():\n
         if cell.getCategoriesList() == [\'tax_category/social/employer_share\', \'salary_range/france\']:\n
-          gross_salary = float(cell.getPrice())\n
+          gross_salary = r_(cell.getPrice())\n
         elif cell.getCategoriesList() == [\'tax_category/social/employee_share\', \'salary_range/france\']:\n
-          net_salary = float(cell.getPrice())\n
+          net_salary = r_(cell.getPrice())\n
     else:\n
       object_list += [object]\n
 \n
 # change the sign\n
-gross_salary = float(-gross_salary)\n
-net_salary = float(-net_salary)\n
+gross_salary = r_(-gross_salary)\n
+net_salary   = r_(-net_salary)\n
 \n
-total_employee_share = gross_salary - net_salary\n
+total_employee_share = r_(gross_salary - net_salary)\n
 \n
 # Sort the list by id since lines are already ordered by id.\n
 object_list.sort(lambda x, y: cmp(int(x.getId()), int(y.getId())))\n
@@ -105,14 +109,13 @@ for pay_sheet_line in object_list:\n
   variation_list = pay_sheet_line.getVariationCategoryList()\n
   range_variation = []\n
   for variation in variation_list:\n
-    if variation.find(\'salary_range\')==0:\n
+    if variation.find(\'salary_range\') == 0:\n
       if not variation in range_variation: # Extra checking because\n
                                            # get VariationCategoryList returns\n
                                            # the same 1 items 2 times\n
         range_variation += [variation]\n
   for range in range_variation:\n
     pay_sheet_dict = {}\n
-    #pay_sheet_dict[\'range\']=range[range.rfind(\'/\')+1:]\n
     pay_sheet_dict[\'id\'] = pay_sheet_line.getId()\n
     pay_sheet_dict[\'title\'] = pay_sheet_line.getResourceTitle()\n
     for cell in pay_sheet_line.objectValues():\n
@@ -123,13 +126,14 @@ for pay_sheet_line in object_list:\n
           # BUG: why cell.getTotalPrice() use the method from Amount instead of the one defined in Movement ?\n
           cell_price       = cell.getPrice()\n
           cell_quantity    = cell.getQuantity()\n
-          cell_total_price = cell_price * cell_quantity\n
-          if cell_total_price != 0:\n
-            if category.find(\'employee_share\')>=0:\n
+          cell_total_price = r_(cell_price * cell_quantity)\n
+          # Hack not to display prime and ser\n
+          if cell_total_price != 0 or cell.getResourceId() not in (\'primes\', \'retenue_maladie\'):\n
+            if category.find(\'employee_share\') >= 0:\n
               pay_sheet_dict[\'base\'] = -cell_quantity # change the sign for the beautification effect\n
-              pay_sheet_dict[\'employee_share\'] = -cell_total_price \n
+              pay_sheet_dict[\'employee_share\'] = -cell_total_price\n
               pay_sheet_dict[\'employee_share_rate\'] = cell_price * 100\n
-              # here we decide if a resource is taxable or not\n
+              # here we decide if a resource is taxable\n
               if str(pay_sheet_line.getResource())[-14:] == \'non_deductible\' or str(pay_sheet_line.getResource())[-4:] == \'crds\' or str(pay_sheet_line.getResource())[-7:] == \'taxable\':\n
                 pay_sheet_dict[\'taxable\'] = \'yes\'\n
               elif str(pay_sheet_line.getResource())[-10:] == \'deductible\':\n
@@ -138,16 +142,16 @@ for pay_sheet_line in object_list:\n
                 pay_sheet_dict[\'taxable\'] = \'no\'\n
               if pay_sheet_dict[\'taxable\'] == \'yes\':\n
                 if pay_sheet_dict[\'employee_share\'] not in (\'\', None):\n
-                  total_taxable_employee_share += float(pay_sheet_dict[\'employee_share\'])\n
-            elif category.find(\'employer_share\')>=0:\n
+                  total_taxable_employee_share = r_(total_taxable_employee_share + r_(pay_sheet_dict[\'employee_share\']))\n
+            elif category.find(\'employer_share\') >= 0:\n
               pay_sheet_dict[\'base\'] = -cell_quantity # change the sign for the beautification effect\n
               pay_sheet_dict[\'employer_share\'] = -cell_total_price\n
               pay_sheet_dict[\'employer_share_rate\'] = cell_price * 100\n
               if pay_sheet_dict[\'employer_share\'] not in (\'\', None):\n
-                total_employer_share += float(pay_sheet_dict[\'employer_share\'])\n
-    for key in (\'employee_share\',\'employee_share_rate\',\'employer_share\',\'employer_share_rate\'):\n
+                total_employer_share = r_(total_employer_share + r_(pay_sheet_dict[\'employer_share\']))\n
+    for key in [\'employee_share\',\'employee_share_rate\',\'employer_share\',\'employer_share_rate\']:\n
       if not (pay_sheet_dict.has_key(key)):\n
-        pay_sheet_dict[key]=\'\' # so that we can display nothing\n
+        pay_sheet_dict[key] = \'\' # so that we can display nothing\n
 \n
     # find the category of the current pay sheet line\n
     cat_id = None\n
@@ -202,36 +206,41 @@ for paysheet_obj in paysheet_transactions:\n
   # ignore the current paysheet to avoid infinite loop\n
   if paysheet_obj.getId() != context.getId():\n
     # the paysheet must have the same employee\n
-    if (employee==None) or (employee!=None and context.restrictedTraverse(paysheet_obj.getDestinationSectionRelativeUrl())==employee):\n
+    if (employee == None) or \\\n
+       (employee != None and \\\n
+         context.restrictedTraverse(paysheet_obj.getDestinationSectionRelativeUrl()) == employee):\n
       # check the date\n
-      if (start_date==None) or (start_date!=None and paysheet_obj.getStartDate()!=None and start_date.year()==paysheet_obj.getStartDate().year() and paysheet_obj.getStartDate()<= start_date):\n
+      if (start_date == None) or \\\n
+         (start_date != None                                       and \\\n
+           paysheet_obj.getStartDate() != None                     and \\\n
+           start_date.year() == paysheet_obj.getStartDate().year() and \\\n
+           paysheet_obj.getStartDate() <= start_date):\n
         # get all detailed values of the paysheet\n
-        ps_details = paysheet_obj.PaySheetTransaction_getDetails()\n
+        old_ps = paysheet_obj.PaySheetTransaction_getDetails()\n
         # sum of yearly values\n
-        yearly_net_salary          += float(ps_details[\'net_salary\'])\n
-        yearly_gross_salary        += float(ps_details[\'gross_salary\'])\n
-        yearly_employee_share      += float(ps_details[\'total_employee_share\'])\n
-        yearly_employer_share      += float(ps_details[\'total_employer_share\'])\n
-        yearly_taxable_net_salary  += float(ps_details[\'taxable_net_salary\'])\n
+        yearly_net_salary         = r_(yearly_net_salary         + r_(old_ps[\'net_salary\']))\n
+        yearly_gross_salary       = r_(yearly_gross_salary       + r_(old_ps[\'gross_salary\']))\n
+        yearly_employee_share     = r_(yearly_employee_share     + r_(old_ps[\'total_employee_share\']))\n
+        yearly_employer_share     = r_(yearly_employer_share     + r_(old_ps[\'total_employer_share\']))\n
+        yearly_taxable_net_salary = r_(yearly_taxable_net_salary + r_(old_ps[\'taxable_net_salary\']))\n
 \n
 # save the total share values in the exported dict\n
-paysheet_details[\'net_salary\']                    = net_salary\n
-paysheet_details[\'gross_salary\']                  = gross_salary\n
-paysheet_details[\'paysheet_categories\']           = paysheet_cat\n
-paysheet_details[\'total_employee_share\']          = total_employee_share\n
-# change the sign for the beautification effect\n
-paysheet_details[\'total_employer_share\']          = total_employer_share\n
-paysheet_details[\'total_taxable_employee_share\']  = -total_taxable_employee_share\n
-paysheet_details[\'taxable_net_salary\']            = paysheet_details[\'net_salary\'] + total_taxable_employee_share\n
+details[\'net_salary\']                   = net_salary\n
+details[\'gross_salary\']                 = gross_salary\n
+details[\'paysheet_categories\']          = paysheet_cat\n
+details[\'total_employee_share\']         = total_employee_share\n
+details[\'total_employer_share\']         = total_employer_share\n
+details[\'total_taxable_employee_share\'] = -total_taxable_employee_share # change the sign for the beautification effect\n
+details[\'taxable_net_salary\']           = r_(total_taxable_employee_share + r_(details[\'net_salary\']))\n
 \n
 # don\'t forget to add the current values to the yearly sum\n
-paysheet_details[\'yearly_net_salary\']         = yearly_net_salary + paysheet_details[\'net_salary\']\n
-paysheet_details[\'yearly_gross_salary\']       = yearly_gross_salary + paysheet_details[\'gross_salary\']\n
-paysheet_details[\'yearly_employee_share\']     = yearly_employee_share + paysheet_details[\'total_employee_share\']\n
-paysheet_details[\'yearly_employer_share\']     = yearly_employer_share + paysheet_details[\'total_employer_share\']\n
-paysheet_details[\'yearly_taxable_net_salary\'] = yearly_taxable_net_salary + paysheet_details[\'taxable_net_salary\']\n
+details[\'yearly_net_salary\']         = r_(yearly_net_salary         + r_(details[\'net_salary\']))\n
+details[\'yearly_gross_salary\']       = r_(yearly_gross_salary       + r_(details[\'gross_salary\']))\n
+details[\'yearly_employee_share\']     = r_(yearly_employee_share     + r_(details[\'total_employee_share\']))\n
+details[\'yearly_employer_share\']     = r_(yearly_employer_share     + r_(details[\'total_employer_share\']))\n
+details[\'yearly_taxable_net_salary\'] = r_(yearly_taxable_net_salary + r_(details[\'taxable_net_salary\']))\n
 \n
-return paysheet_details\n
+return details\n
 
 
 ]]></string> </value>
@@ -245,6 +254,12 @@ return paysheet_details\n
         <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/nexedi/portal_skins/erp5_payroll/PaySheetTransaction_getDetails</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -274,7 +289,11 @@ return paysheet_details\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>paysheet_details</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>precision</string>
+                            <string>r_</string>
+                            <string>details</string>
                             <string>total_employer_share</string>
                             <string>total_taxable_employee_share</string>
                             <string>paysheet_cat</string>
@@ -282,11 +301,8 @@ return paysheet_details\n
                             <string>gross_salary</string>
                             <string>net_salary</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>object</string>
                             <string>cell</string>
-                            <string>float</string>
                             <string>total_employee_share</string>
                             <string>pay_sheet_line</string>
                             <string>variation_list</string>
@@ -320,7 +336,7 @@ return paysheet_details\n
                             <string>stop_date</string>
                             <string>employee</string>
                             <string>paysheet_obj</string>
-                            <string>ps_details</string>
+                            <string>old_ps</string>
                           </tuple>
                         </value>
                     </item>
