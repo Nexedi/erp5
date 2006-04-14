@@ -158,7 +158,7 @@ class BusinessTemplateArchive:
 
 class BusinessTemplateFolder(BusinessTemplateArchive):
   """
-    Class archiving businnes template into a folder tree
+    Class archiving business template into a folder tree
   """
   def _initCreation(self, path):
     self.path = path
@@ -438,7 +438,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj = self.removeProperties(obj)
       id_list = obj.objectIds()
       if hasattr(aq_base(obj), 'groups'):
-        # we must keep groups because it's ereased when we delete subobjects
+        # we must keep groups because it's erased when we delete subobjects
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
