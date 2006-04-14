@@ -1,3 +1,13 @@
+2006-04-14 Kevin
+* Delete Section_getCurrencyPrecision.
+* Merge of my recent enhancements with the main branch.
+
+2006-04-12 Kevin
+* Validate transactions in accounting_workflow by only comparing dates to avoid inconsistent time problems.
+
+2006-04-10 Kevin
+* Verify third party state and third party region before validate an Accounting Transaction (its illegal to doesn't know from which region came the third party, and this information help us to do some automatic calculation).
+
 2006-03-31 Kevin
 * Add "Create Closing Transaction" action on Accounting Transaction Module.
 * Add missing parameter list on AccountingTransactionModule_createClosingTransaction.
