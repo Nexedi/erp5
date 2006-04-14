@@ -125,7 +125,8 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js>\n
                 <tr><td>  </td></tr>\n
                 <tr><td><font color="green" size="1">Added File</font></td></tr>\n
                 <tr><td><font color="orange" size="1">Modified File</font></td></tr>\n
-                <tr><td><font color="red" size="1">Deleted File</font></td></tr></table>\n
+                <tr><td><font color="red" size="1">Deleted File</font></td></tr>\n
+                <tr><td><font color="grey" size="1">Conflicted File</font></td></tr></table>\n
                 <br><br>\n
                 </td>\n
 \t</tr>\n
