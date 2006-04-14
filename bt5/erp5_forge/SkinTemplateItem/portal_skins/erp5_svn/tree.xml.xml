@@ -66,7 +66,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject().portal_subversion.extractBT(context)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+context.getPortalObject().portal_subversion.extractBT(context)\n
 \n
 bt_name = context.getPortalObject()["portal_templates"][context.getId()].getTitle()\n
 context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml;; charset=utf-8\')\n
@@ -78,9 +80,13 @@ if path[-1] != \'/\':\n
 path+=bt_name\n
 root = context.getPortalObject().portal_subversion.getModifiedTree(path)\n
 if not root:\n
-  raise "Erreur: couldn\'t get tree of modified files"\n
+  return \'\'\'<?xml version=\'1.0\' encoding=\'iso-8859-1\'?>\n
+<tree id=\'0\'></tree>\'\'\'\n
+\n
 return context.getPortalObject().portal_subversion.treeToXML(root).strip()\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
