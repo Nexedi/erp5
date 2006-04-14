@@ -78,6 +78,7 @@ kw[\'simulation_state\'] = kwd.get(\'simulation_state\', request.get(\'simulatio
 kw["section_category"]  = kwd.get("section_category", \n
                             "group/%s"%context.restrictedTraverse(request.get("organisation")).getGroup())\n
 kw[\'at_date\'] = kwd.get(\'at_date\', request[\'at_date\'])\n
+kw[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
 \n
 \n
 def shortAccountNumberToFullGapCategory(accountNumber) :\n
@@ -114,7 +115,13 @@ return sum\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_debtorBankAccountsBalance</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_debtorBankAccountsBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

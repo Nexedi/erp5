@@ -66,37 +66,46 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script adds accounts value, only if they are debtors\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script adds accounts value, only if they are debtors.\n
 """\n
 \n
 def shortAccountNumberToFullGapCategory(accountNumber) :\n
-  """ translates a short account number (eg 280) to a full gap category url \n
-    (eg gap/2/28/280) """\n
+  """\n
+    Translates a short account number (eg 280) to a full gap category url (eg gap/2/28/280).\n
+  """\n
   accountNumber = accountNumber.strip()\n
-  gap = request.get("gap_base", kwd.get("gap_base", "gap/fr/pcg/"))\n
-  for i in range(len(accountNumber)) :\n
-    gap += accountNumber[:i+1]+"/"\n
+  gap = request.get("gap_base", kwd.get(\'gap_base\', \'gap/fr/pcg/\'))\n
+  for i in range(len(accountNumber)):\n
+    gap += accountNumber[:i+1] + \'/\'\n
   return gap[:-1]\n
 \n
 request=context.REQUEST\n
 kw = dict(kwd)\n
 kw[\'simulation_state\'] = kwd.get(\'simulation_state\', request.get(\'simulation_state\', [\'stopped\', \'delivered\']))\n
-if kw.get("resource") :\n
-  kw["resource"]        = kwd[\'resource\']\n
 kw["section_category"]  = kwd.get("section_category",\n
                             "group/%s"%context.restrictedTraverse(request.get("organisation")).getGroup())\n
-kw[\'to_date\'] = kwd.get(\'at_date\', request[\'at_date\']) +1\n
+kw[\'at_date\'] = kwd.get(\'at_date\', request[\'at_date\'])\n
+kw[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
+\n
+if kw.get("resource"):\n
+  kw["resource"]        = kwd[\'resource\']\n
+\n
 \n
 sum = 0.0\n
-for accountNumber in accounts :\n
+for accountNumber in accounts:\n
   # we get all acounts strict member of this GAP category\n
-  gap = context.restrictedTraverse("portal_categories/"+shortAccountNumberToFullGapCategory(accountNumber))\n
-  for account in gap.getGapRelatedValueList(portal_type=\'Account\') :\n
-     sum += context.getPortalObject().portal_simulation.getInventoryAssetPrice( node_uid = account.getUid(), **kw )\n
+  gap = context.restrictedTraverse(\'portal_categories/\' + shortAccountNumberToFullGapCategory(accountNumber))\n
+  for account in gap.getGapRelatedValueList(portal_type=\'Account\'):\n
+    result = context.getPortalObject().portal_simulation.getInventoryAssetPrice(node_uid = account.getUid(), **kw)\n
+    if result > 0:\n
+      sum += result\n
 return sum\n
-# vim: syntax=python\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -112,7 +121,13 @@ return sum\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_debtorAccountsSum</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_debtorAccountsSum</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -158,6 +173,7 @@ return sum\n
                             <string>gap</string>
                             <string>account</string>
                             <string>_apply_</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
