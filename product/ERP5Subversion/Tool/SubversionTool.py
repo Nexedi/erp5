@@ -155,10 +155,10 @@ class DiffFile:
     # Getting revisions in header
     for line in self.header.split('\n'):
       if line.startswith('--- '):
-        tmp = re.search('\\([\w\s]+\\)$', line)
+        tmp = re.search('\\([^)]+\\)$', line)
         self.old_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
       if line.startswith('+++ '):
-        tmp = re.search('\\([\w\s]+\\)$', line)
+        tmp = re.search('\\([^)]+\\)$', line)
         self.new_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
     # Splitting the body from the header
     self.body = '\n'.join(raw_diff.strip().split('\n')[4:])
