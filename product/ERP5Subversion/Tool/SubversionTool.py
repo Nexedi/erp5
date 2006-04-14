@@ -114,7 +114,7 @@ class File :
   def __init__(self, full_path, msg_status) :
     self.full_path = full_path
     self.msg_status = msg_status
-    self.name = full_path.split('/')[-1]
+    self.name = full_path.split(os.sep)[-1]
 ## End of File Class
 
 class Dir :
@@ -122,7 +122,7 @@ class Dir :
   def __init__(self, full_path, msg_status) :
     self.full_path = full_path
     self.msg_status = msg_status
-    self.name = full_path.split('/')[-1]
+    self.name = full_path.split(os.sep)[-1]
     self.sub_dirs = [] # list of sub directories
 
   # return a list of sub directories' names
@@ -421,8 +421,6 @@ class SubversionTool(UniqueObject, Folder):
     return self.top_working_path
 
   def _getWorkingPath(self, path):
-    if path[0] != '/':
-      path = os.path.join(self.top_working_path, path)
     path = os.path.abspath(path)
     if not path.startswith(self.top_working_path):
       raise Unauthorized, 'unauthorized access to path %s' % path
@@ -447,7 +445,7 @@ class SubversionTool(UniqueObject, Folder):
   def editPath(self, bt, path):
     """Return path to edit file
     """
-    if 'bt' in path.split('/'):
+    if 'bt' in path.split(os.sep):
       # not in zodb
       return '#'
     # if file have been deleted then not in zodb
@@ -456,16 +454,16 @@ class SubversionTool(UniqueObject, Folder):
     svn_path = bt.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path:
       raise 'Error: Please set working copy path in Subversion preferences !'
-    if svn_path[-1] != '/':
-      svn_path += '/'
+    if svn_path[-1] != os.sep:
+      svn_path += os.sep
     svn_path = svn_path + bt.getTitle()
     edit_path = path.replace(svn_path, '')
     if edit_path.strip() == '':
       # not in zodb 
       return '#'
-    if edit_path[0] == '/':
+    if edit_path[0] == os.sep:
       edit_path = edit_path[1:]
-    edit_path = '/'.join(edit_path.split('/')[1:])
+    edit_path = os.sep.join(edit_path.split(os.sep)[1:])
     if edit_path.strip() == '':
       # not in zodb 
       return '#'
@@ -473,7 +471,7 @@ class SubversionTool(UniqueObject, Folder):
     if tmp:
       extension = tmp.string[tmp.start():tmp.end()].strip()
       edit_path = edit_path.replace(extension, '')
-    edit_path = bt.REQUEST["BASE2"] + '/' + edit_path + '/manage_main'
+    edit_path = bt.REQUEST["BASE2"] + os.sep + edit_path + '/manage_main'
     return edit_path
     
   def _encodeLogin(self, realm, user, password):
@@ -501,7 +499,7 @@ class SubversionTool(UniqueObject, Folder):
     value = ','.join(login_list)
     expires = (DateTime() + 7).toZone('GMT').rfc822()
     request.set(self.login_cookie_name, value)
-    response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
+    response.setCookie(self.login_cookie_name, value, path = os.sep, expires = expires)
 
   def _getLogin(self, target_realm):
     request = self.REQUEST
@@ -542,10 +540,10 @@ class SubversionTool(UniqueObject, Folder):
       return text
     else:
       # see if tmp file is here (svn deleted file)
-      if file_path[-1]=='/':
+      if file_path[-1]==os.sep:
         file_path=file_path[:-1]
-      filename = file_path.split('/')[-1]
-      tmp_path = '/'.join(file_path.split('/')[:-1])
+      filename = file_path.split(os.sep)[-1]
+      tmp_path = os.sep.join(file_path.split(os.sep)[:-1])
       tmp_path = tmp_path+'/.svn/text-base/'+filename+'.svn-base'
       if os.path.exists(tmp_path):
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
@@ -572,7 +570,7 @@ class SubversionTool(UniqueObject, Folder):
     value = ','.join(trust_list)
     expires = (DateTime() + 7).toZone('GMT').rfc822()
     request.set(self.ssl_trust_cookie_name, value)
-    response.setCookie(self.ssl_trust_cookie_name, value, path = '/', expires = expires)
+    response.setCookie(self.ssl_trust_cookie_name, value, path = os.sep, expires = expires)
     
   def acceptSSLPerm(self, trust_dict):
     self.acceptSSLServer(self, trust_dict, True)
@@ -674,7 +672,7 @@ class SubversionTool(UniqueObject, Folder):
   def checkin(self, path, log_message=None, recurse=True):
     """Commit local changes.
     """
-    client = self._getClient(login=self.login)
+    client = self._getClient()
     return client.checkin(path, log_message, recurse)
 
   security.declareProtected('Import/Export objects', 'status')
@@ -698,20 +696,20 @@ class SubversionTool(UniqueObject, Folder):
       if str(msg_status) != "normal" and str(msg_status) != "unversioned":
         somethingModified = True
         full_path = statusObj.getPath()
-        full_path_list = full_path.split('/')[1:]
+        full_path_list = full_path.split(os.sep)[1:]
         relative_path = full_path[len(path)+1:]
-        relative_path_list = relative_path.split('/')
+        relative_path_list = relative_path.split(os.sep)
         # Processing entry
         filename = relative_path_list[-1]
         # Needed or files will be both File & Dir objects
         relative_path_list = relative_path_list[:-1]
         parent = root
-        i = len(path.split('/'))-1
+        i = len(path.split(os.sep))-1
         
         for d in relative_path_list :
           i += 1
           if d :
-            full_pathOfd = '/'+'/'.join(full_path_list[:i]).strip()
+            full_pathOfd = os.sep+os.sep.join(full_path_list[:i]).strip()
             if d not in parent.getSubDirs() :
               parent.sub_dirs.append(Dir(full_pathOfd, "normal"))
             parent = parent.getDir(d)
@@ -733,8 +731,8 @@ class SubversionTool(UniqueObject, Folder):
     svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path :
       raise "Error: Please set Subversion working path in preferences"
-    svn_path=os.path.join(svn_path,bt.getTitle())+'/'
-    path+='/'
+    svn_path=os.path.join(svn_path,bt.getTitle())+os.sep
+    path+=os.sep
     # svn del deleted files
     self.deleteOldFiles(svn_path, path, bt)
     # add new files and copy
@@ -762,10 +760,10 @@ class SubversionTool(UniqueObject, Folder):
   # return files/dirs present in new_dir but not in old_dir
   # return a set of relative paths
   def getNewFiles(self, old_dir, new_dir):
-    if old_dir[-1] != '/':
-      old_dir += '/'
-    if new_dir[-1] != '/':
-      new_dir += '/'
+    if old_dir[-1] != os.sep:
+      old_dir += os.sep
+    if new_dir[-1] != os.sep:
+      new_dir += os.sep
     old_set = self.getSetForDir(old_dir)
     new_set = self.getSetForDir(new_dir)
     return new_set.difference(old_set)
@@ -801,8 +799,8 @@ class SubversionTool(UniqueObject, Folder):
     svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path :
       raise "Error: Please set Subversion working path in preferences"
-    if svn_path[-1] != '/':
-      svn_path += '/'
+    if svn_path[-1] != os.sep:
+      svn_path += os.sep
     # Choosing a color coresponding to the status
     itemStatus = item.msg_status
     if itemStatus == 'added' :
