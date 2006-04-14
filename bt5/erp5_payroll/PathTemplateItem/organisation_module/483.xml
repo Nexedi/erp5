@@ -4,7 +4,7 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.ERP5.Document.Organisation</string>
+          <string>Products.ERP5Type.Document.Organisation</string>
           <string>Organisation</string>
         </tuple>
         <none/>
@@ -83,26 +83,8 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>role/client</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>corporate_name</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string>Vu comme un prestataire de service social dans le cadre du module de feuilles de paie.\n
-\n
-Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu\'une cotisation doit \xc3\xaatre pay\xc3\xa9 par l\'employeur \xc3\xa0 l\'\xc3\xa9tat sous la forme d\'un impot representant le cumul annuel des charges correspondantes. Des informations compl\xc3\xa9mentaires sont le bienvenu !</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>etat</string> </value>
+            <value> <string>483</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -110,7 +92,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Etat</string> </value>
+            <value> <string>CAVCIC</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -226,7 +208,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_d</string> </key>
-                                          <value> <float>38454.7624526</float> </value>
+                                          <value> <float>38454.7624357</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_day</string> </key>
@@ -250,7 +232,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_millis</string> </key>
-                                          <value> <long>1145038675905</long> </value>
+                                          <value> <long>1145038674446</long> </value>
                                       </item>
                                       <item>
                                           <key> <string>_minute</string> </key>
@@ -262,7 +244,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_nearsec</string> </key>
-                                          <value> <float>55.0</float> </value>
+                                          <value> <float>54.0</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pday</string> </key>
@@ -282,11 +264,11 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_second</string> </key>
-                                          <value> <float>55.905</float> </value>
+                                          <value> <float>54.446</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_t</string> </key>
-                                          <value> <float>1145038675.9</float> </value>
+                                          <value> <float>1145038674.45</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_tz</string> </key>
@@ -298,7 +280,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>time</string> </key>
-                                          <value> <float>0.762452604162</float> </value>
+                                          <value> <float>0.762435717596</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>
@@ -343,7 +325,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_d</string> </key>
-                                          <value> <float>38454.7624527</float> </value>
+                                          <value> <float>38454.7624358</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_day</string> </key>
@@ -367,7 +349,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_millis</string> </key>
-                                          <value> <long>1145038675909</long> </value>
+                                          <value> <long>1145038674455</long> </value>
                                       </item>
                                       <item>
                                           <key> <string>_minute</string> </key>
@@ -379,7 +361,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_nearsec</string> </key>
-                                          <value> <float>55.0</float> </value>
+                                          <value> <float>54.0</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pday</string> </key>
@@ -399,11 +381,11 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_second</string> </key>
-                                          <value> <float>55.909</float> </value>
+                                          <value> <float>54.455</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_t</string> </key>
-                                          <value> <float>1145038675.91</float> </value>
+                                          <value> <float>1145038674.45</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_tz</string> </key>
@@ -415,7 +397,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>time</string> </key>
-                                          <value> <float>0.762452650459</float> </value>
+                                          <value> <float>0.762435821758</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>
@@ -465,7 +447,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_d</string> </key>
-                                          <value> <float>38454.7624526</float> </value>
+                                          <value> <float>38454.7624354</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_day</string> </key>
@@ -489,7 +471,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_millis</string> </key>
-                                          <value> <long>1145038675901</long> </value>
+                                          <value> <long>1145038674416</long> </value>
                                       </item>
                                       <item>
                                           <key> <string>_minute</string> </key>
@@ -501,7 +483,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_nearsec</string> </key>
-                                          <value> <float>55.0</float> </value>
+                                          <value> <float>54.0</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_pday</string> </key>
@@ -521,11 +503,11 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>_second</string> </key>
-                                          <value> <float>55.901</float> </value>
+                                          <value> <float>54.416</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_t</string> </key>
-                                          <value> <float>1145038675.9</float> </value>
+                                          <value> <float>1145038674.42</float> </value>
                                       </item>
                                       <item>
                                           <key> <string>_tz</string> </key>
@@ -537,7 +519,7 @@ Organisation utilis\xc3\xa9e dans le module de feuilles de paie pour indiquer qu
                                       </item>
                                       <item>
                                           <key> <string>time</string> </key>
-                                          <value> <float>0.762452557872</float> </value>
+                                          <value> <float>0.762435370372</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>
