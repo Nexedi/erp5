@@ -13,12 +13,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>preferred_simulation_state</string> </value>
         </item>
@@ -259,7 +253,7 @@
                     <key> <string>view_separator</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<br />
+<br/>
 
 ]]></string> </value>
                 </item>

@@ -740,7 +740,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(cell, \'is_previous_balance\', False) and [(x[0],None) for x in form.listbox.get_value(\'columns\')]</string> </value>
+            <value> <string>python: getattr(cell, \'is_previous_balance\', False) and [(x[0], None) for x in form.listbox.get_value(\'columns\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
