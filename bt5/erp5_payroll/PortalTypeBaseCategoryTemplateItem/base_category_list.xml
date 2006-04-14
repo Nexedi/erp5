@@ -1,0 +1,11 @@
+<base_category_list>
+ <portal_type id="Pay Sheet Cell">
+  <item>tax_category</item>
+  <item>product_line</item>
+  <item>salary_range</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Line">
+  <item>salary_range</item>
+  <item>tax_category</item>
+ </portal_type>
+</base_category_list>

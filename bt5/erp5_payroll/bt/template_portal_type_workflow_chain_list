@@ -1,0 +1,9 @@
+Pay Sheet Cell | delivery_edit_workflow
+Pay Sheet Cell | edit_workflow
+Pay Sheet Line | delivery_edit_workflow
+Pay Sheet Line | edit_workflow
+Pay Sheet Transaction Line | delivery_edit_workflow
+Pay Sheet Transaction Line | edit_workflow
+Pay Sheet Transaction | accounting_workflow
+Pay Sheet Transaction | delivery_edit_workflow
+Pay Sheet Transaction | edit_workflow

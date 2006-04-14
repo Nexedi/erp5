@@ -1,0 +1,9 @@
+<allowed_content_type_list>
+ <portal_type id="Pay Sheet Line">
+  <item>Pay Sheet Cell</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Transaction">
+  <item>Pay Sheet Line</item>
+  <item>Pay Sheet Transaction Line</item>
+ </portal_type>
+</allowed_content_type_list>

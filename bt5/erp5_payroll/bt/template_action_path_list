@@ -1,0 +1,20 @@
+Pay Sheet Cell | history
+Pay Sheet Cell | metadata
+Pay Sheet Cell | print_pdf
+Pay Sheet Cell | view
+Pay Sheet Line | history
+Pay Sheet Line | list
+Pay Sheet Line | metadata
+Pay Sheet Line | print_pdf
+Pay Sheet Line | quantity
+Pay Sheet Line | view
+Pay Sheet Transaction Line | history
+Pay Sheet Transaction Line | metadata
+Pay Sheet Transaction Line | print_pdf
+Pay Sheet Transaction Line | view
+Pay Sheet Transaction | accounting_lines
+Pay Sheet Transaction | calcul
+Pay Sheet Transaction | history
+Pay Sheet Transaction | metadata
+Pay Sheet Transaction | print
+Pay Sheet Transaction | view

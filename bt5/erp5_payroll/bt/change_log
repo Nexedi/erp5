@@ -1,3 +1,7 @@
+2006-04-05 Kevin
+* Add some python scripts that are helpfull when debugging payroll.
+* Update PaySheetTransaction_viewAccountingLineList.
+
 2006-02-27 Kevin
 * Update AccountingTransactionModule_viewAnnualSalaryReport to show more paysheet conflicts by default.
 * Add AccountingModule_checkPaySheetConsistency, a usefull, but dirty, script to track bad destination and destination_section on Pay Sheet Lines.
