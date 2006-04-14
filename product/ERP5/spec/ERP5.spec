@@ -1,6 +1,6 @@
 %define product ERP5
 %define version 0.11
-%define release 8
+%define release 9
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -76,6 +76,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Tue Apr 04 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-9mdk
+- New build from the SVN repository
+
 * Mon Feb 06 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-8mdk
 - Create /var/lib/zope/tests directory automaticcaly
 
