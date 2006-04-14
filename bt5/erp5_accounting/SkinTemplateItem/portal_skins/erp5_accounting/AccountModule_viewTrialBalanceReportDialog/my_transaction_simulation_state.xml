@@ -230,32 +230,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>cancelled</string>
-                          <string>cancelled</string>
-                        </tuple>
-                        <tuple>
-                          <string>draft</string>
-                          <string>draft</string>
-                        </tuple>
-                        <tuple>
-                          <string>planned</string>
-                          <string>planned</string>
-                        </tuple>
-                        <tuple>
-                          <string>confirmed</string>
-                          <string>confirmed</string>
-                        </tuple>
-                        <tuple>
-                          <string>stopped</string>
-                          <string>stopped</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivered</string>
-                          <string>delivered</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
