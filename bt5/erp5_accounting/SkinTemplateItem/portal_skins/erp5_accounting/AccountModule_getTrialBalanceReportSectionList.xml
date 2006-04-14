@@ -67,119 +67,79 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Trial balance.\n
-\n
+  Trial balance.\n
 """\n
-\n
 from Products.ERP5Form.Report import ReportSection\n
 \n
 request = context.REQUEST\n
+portal  = context.portal_url.getPortalObject()\n
 \n
-at_date                         = request[\'at_date\']\n
-transaction_section_category    = request[\'transaction_section_category\']\n
-transaction_simulation_state    = request[\'transaction_simulation_state\']\n
-gap_root                        = request[\'gap_root\']\n
-from_date                       = request.get(\'from_date\', None)\n
-expand_accounts                 = request.get(\'expand_accounts\', 0)\n
+at_date              = request[\'at_date\']\n
+section_category     = request[\'transaction_section_category\']\n
+simulation_state     = request[\'transaction_simulation_state\']\n
+gap_root             = request[\'gap_root\']\n
+gap_list             = request.get(\'gap_list\'            , [])\n
+from_date            = request.get(\'from_date\'           , None)\n
+expand_accounts      = request.get(\'expand_accounts\'     , False)\n
+show_parent_accounts = request.get(\'show_parent_accounts\', False)\n
 \n
-\n
-# flat_mode is a boolean that indicate wether we should use a report tree \n
-# or a flat list of all accounts. \n
-tree_mode                       =  request.get(\'tree_mode\', 0)\n
-if tree_mode :\n
-  raise \'tree mode no longer supported\'\n
+# flat_mode is a boolean that indicate wether we should use a report tree\n
+#   or a flat list of all accounts.\n
+if request.get(\'tree_mode\', False):\n
+  raise \'Tree mode no longer supported\'\n
 \n
 result = []\n
 params = {\n
-  \'at_date\'                              : at_date,\n
-  \'transaction_section_category\'         : transaction_section_category,\n
-  \'section_category\'                     : transaction_section_category,\n
-  \'transaction_simulation_state\'         : transaction_simulation_state,\n
-  \'accounting_transaction_line_currency\' : None,\n
-  \'is_report_opened\'                     : 1,\n
-  \'report_depth\'                         : 5,\n
-  \'gap_root\'                             : gap_root,\n
-  \'expand_accounts\'                      : expand_accounts ,\n
+    \'at_date\'                             : at_date\n
+  , \'from_date\'                           : from_date\n
+  , \'section_category\'                    : section_category\n
+  , \'section_category\'                    : section_category\n
+  , \'simulation_state\'                    : simulation_state\n
+  , \'accounting_transaction_line_currency\': None\n
+  , \'is_report_opened\'                    : True\n
+  , \'report_depth\'                        : 5\n
+  , \'gap_root\'                            : gap_root\n
+  , \'gap_list\'                            : gap_list\n
+  , \'show_parent_accounts\'                : show_parent_accounts\n
+  , \'expand_accounts\'                     : expand_accounts\n
 }\n
-\n
-preferences = {\n
-  \'preferred_accounting_transaction_at_date\' : at_date,\n
-  \'preferred_accounting_transaction_section_category\' :\n
-                  transaction_section_category,\n
-  \'preferred_accounting_transaction_simulation_state\' :\n
-                  transaction_simulation_state,\n
-  \'preferred_accounting_transaction_gap_root\' : gap_root,\n
-}\n
-\n
-if from_date:\n
-  params[\'from_date\'] = from_date\n
-  preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
-\n
-portal = context.portal_url.getPortalObject()\n
-\n
-if tree_mode :\n
-  gap_id_line = (\'gap_id\', \'GAP\')\n
-else :\n
-  gap_id_line = (\'id\', \'GAP\')\n
 \n
 balance_columns = (\n
-  gap_id_line,\n
-  (\'title\', \'Account\'),\n
-  (\'opening_balance\', \'Opening Balance\'),\n
-  (\'debit_movement\', \'Debit Movements\'),\n
-  (\'credit_movement\', \'Credit Movements\'),\n
-  (\'closing_balance\', \'Closing Balance\'),\n
+    (\'id\'             , \'GAP\')\n
+  , (\'title\'          , \'Account\')\n
+  , (\'opening_balance\', \'Opening Balance\')\n
+  , (\'debit_movement\' , \'Debit Movements\')\n
+  , (\'credit_movement\', \'Credit Movements\')\n
+  , (\'closing_balance\', \'Closing Balance\')\n
 )\n
 \n
+result.append( ReportSection(\n
+                  path                 = portal.account_module.getPhysicalPath()\n
+                  # FIXME: translate later (?)\n
+                , title                = portal.Localizer.erp5_ui.gettext(\'Trial Balance\').encode(\'utf8\')\n
+                , level                = 1\n
+                , form_id              = \'AccountModule_viewAccountListForTrialBalance\'\n
+                , selection_name       = \'accounting_selection\'\n
+                , selection_params     = params\n
+                , listbox_display_mode = \'FlatListMode\'\n
+                , selection_columns    = balance_columns\n
+                ))\n
 \n
-if not tree_mode :\n
-  result.append(\n
-                ReportSection( path=portal.account_module.getPhysicalPath(),\n
-                               # FIXME translate later\n
-                               title=portal.Localizer.erp5_ui.gettext(\'Trial Balance\').encode(\'utf8\'),\n
-                               level=1,\n
-                               form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
-                               selection_name=\'accounting_selection\',\n
-                               selection_params=params,\n
-                               listbox_display_mode=\'FlatListMode\',\n
-                               selection_columns=balance_columns,\n
-                               preferences = preferences\n
-                               )\n
-               )\n
-else :\n
-  selection_report_path = \'portal_categories/\' + gap_root\n
-  selection_report_list = context.restrictedTraverse(selection_report_path).getPathList()\n
-  params[\'report_list\'] = selection_report_list\n
-  params[\'report_path\'] = selection_report_list\n
+# Add a spacer\n
+result.append( ReportSection( path    = portal.account_module.getPhysicalPath()\n
+                            , title   = \'\\n\'\n
+                            , form_id = None\n
+                            ))\n
 \n
-  result.append(\n
-                 ReportSection(path=portal.account_module.getPhysicalPath(),\n
-                               title=\'Trial Balance\',\n
-                               level=1,\n
-                               form_id=\'AccountModule_viewAccountList\',\n
-                               selection_name=\'account_selection\',\n
-                               selection_params=params,\n
-                               listbox_display_mode=\'ReportTreeMode\',\n
-                               selection_columns=balance_columns,\n
-                               selection_report_path=selection_report_path,\n
-                               selection_report_list=selection_report_list,\n
-                               preferences = preferences\n
-                               )\n
-               )\n
-\n
-if 1:\n
-  result.append( ReportSection( path=portal.account_module.getPhysicalPath(),\n
-                              title = \'\\n\', form_id = None )) # spacer\n
-                              \n
-  result.append( ReportSection( path=portal.account_module.getPhysicalPath(),\n
-                              title=\'\',\n
-                              form_id=\'AccountModule_viewTrialBalanceSummary\',\n
-                              selection_name=\'account_selection\',\n
-                              listbox_display_mode=\'FlatListMode\',\n
-                              selection_params=params,\n
-                              preferences=preferences\n
-                              ) )\n
-\n
+# Add summary lines\n
+result.append( ReportSection(\n
+                  path                 = portal.account_module.getPhysicalPath()\n
+                , title                = \'\'\n
+                , form_id              = \'AccountModule_viewTrialBalanceSummary\'\n
+                , selection_name       = \'account_selection\'\n
+                , listbox_display_mode = \'FlatListMode\'\n
+                , selection_params     = params\n
+                ))\n
 \n
 return result\n
 </string> </value>
@@ -233,24 +193,22 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>portal</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
-                            <string>transaction_section_category</string>
-                            <string>transaction_simulation_state</string>
+                            <string>section_category</string>
+                            <string>simulation_state</string>
                             <string>gap_root</string>
+                            <string>gap_list</string>
                             <string>None</string>
                             <string>from_date</string>
+                            <string>False</string>
                             <string>expand_accounts</string>
-                            <string>tree_mode</string>
+                            <string>show_parent_accounts</string>
                             <string>result</string>
+                            <string>True</string>
                             <string>params</string>
-                            <string>preferences</string>
-                            <string>_write_</string>
-                            <string>portal</string>
-                            <string>gap_id_line</string>
                             <string>balance_columns</string>
-                            <string>selection_report_path</string>
-                            <string>selection_report_list</string>
                           </tuple>
                         </value>
                     </item>
