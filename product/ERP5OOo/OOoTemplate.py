@@ -425,6 +425,12 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       # Replace content.xml in master openoffice template
       ooo_builder.replace('content.xml', doc_xml)
 
+      # Old templates correction
+      try:
+          self.OLE_documents_zipstring
+      except AttributeError:
+          self.OLE_documents_zipstring = None
+
       # If the file has embedded OLE documents, restore it
       if self.OLE_documents_zipstring:
           additional_builder = OOoBuilder( self.OLE_documents_zipstring )
