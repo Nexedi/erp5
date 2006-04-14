@@ -67,185 +67,165 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Get the report sections for general ledger\n
+  Get the report sections for general ledger\n
 """\n
 from Products.ERP5Form.Report import ReportSection\n
-request = context.REQUEST\n
+request  = context.REQUEST\n
+portal   = context.portal_url.getPortalObject()\n
+cat_tool = portal.portal_categories\n
+sim_tool = portal.portal_simulation\n
 \n
-at_date = request[\'at_date\']\n
-transaction_section_category = request[\'transaction_section_category\']\n
-transaction_simulation_state = request[\'transaction_simulation_state\']\n
-from_date = request.get(\'from_date\', None)\n
-gap = request.get(\'gap\', None)\n
-omit_empty_accounts = request.get(\'omit_empty_accounts\', 1)\n
-display_categories = request.get(\'display_categories\', 0)\n
-\n
+at_date             = request[\'at_date\']\n
+section_category    = request[\'transaction_section_category\']\n
+simulation_state    = request[\'transaction_simulation_state\']\n
+from_date           = request.get(\'from_date\', None)\n
+gap                 = request.get(\'gap\', None)\n
+omit_empty_accounts = request.get(\'omit_empty_accounts\', True)\n
+display_categories  = request.get(\'display_categories\', False)\n
 # TODO\n
-omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
+omit_grouping_reference = request.get(\'omit_grouping_reference\', False)\n
 \n
-params = {\n
-  \'at_date\'                      : at_date,\n
-  \'section_category\'             : transaction_section_category,\n
-  \'transaction_section_category\' : transaction_section_category,\n
-  \'simulation_state\'             : transaction_simulation_state,\n
-  \'accounting_transaction_line_currency\' : None,\n
-  \'omit_grouping_reference\'      : omit_grouping_reference,\n
-  \'from_date_summary\' : 1\n
-}\n
-\n
-preferences = {\n
-  \'preferred_accounting_transaction_at_date\'          : at_date,\n
-  \'preferred_accounting_transaction_simulation_state\' :\n
-                    transaction_simulation_state,\n
-  \'preferred_accounting_transaction_section_category\' :\n
-                    transaction_section_category,\n
-  # XXX put omit_grouping_reference in preferences ?\n
-  #\'preferred_accounting_omit_grouping_reference\' : omit_grouping_reference,\n
-}\n
+params = { \'at_date\'                             : at_date\n
+         , \'section_category\'                    : section_category\n
+         , \'simulation_state\'                    : simulation_state\n
+         , \'accounting_transaction_line_currency\': None\n
+         , \'omit_grouping_reference\'             : omit_grouping_reference\n
+         , \'from_date_summary\'                   : True\n
+         , \'is_accounting_report\'                : True\n
+         }\n
 \n
 if from_date:\n
   params[\'from_date\'] = from_date\n
-  preferences[\'preferred_accounting_transaction_from_date\'] = from_date\n
-else :\n
-  params[\'no_from_date\'] = 1\n
+else:\n
+  params[\'no_from_date\'] = True\n
 \n
 result = []\n
-portal = context.portal_url.getPortalObject()\n
 \n
-account_columns = (\n
-  (\'date\', \'Date\'),\n
-  (\'specific_reference\', \'Reference\'),\n
-  (\'title\', \'Label\'),\n
-  (\'translated_portal_type\', \'Type\'),\n
-  (\'third_party\', \'Third Party\'),\n
-  (\'translated_simulation_state_title\', \'State\'),\n
-  (\'debit\', \'Debit\'),\n
-  (\'credit\', \'Credit\'),\n
-  (\'net_balance\', \'Balance\'),\n
-)\n
+account_columns = ( (\'date\', \'Date\')\n
+                  , (\'specific_reference\', \'Reference\')\n
+                  , (\'title\', \'Label\')\n
+                  , (\'translated_portal_type\', \'Type\')\n
+                  , (\'third_party\', \'Third Party\')\n
+                  , (\'translated_simulation_state_title\', \'State\')\n
+                  , (\'debit\', \'Debit\')\n
+                  , (\'credit\', \'Credit\')\n
+                  , (\'net_balance\', \'Balance\')\n
+                  )\n
 \n
-if gap :\n
-  gap_value_list = [ portal.portal_categories.gap.restrictedTraverse(gap) ] +\\\n
-               portal.portal_categories.gap.restrictedTraverse(gap)\\\n
-                    .Category_getSortedCategoryChildValueList()\n
-else :\n
-  cat = \'gap/%s\'%context.portal_preferences\\\n
-              .getPreferredAccountingTransactionGap()\\\n
-              or context.getPortalDefaultGapRoot()\n
+if gap:\n
+  gap_value_list = [cat_tool.gap.restrictedTraverse(gap)] + \\\n
+                    cat_tool.gap.restrictedTraverse(gap).Category_getSortedCategoryChildValueList()\n
+else:\n
+  cat = \'gap/%s\' %  context.portal_preferences.getPreferredAccountingTransactionGap() \\\n
+                 or context.getPortalDefaultGapRoot()\n
 \n
-  gap_value_list = portal.portal_categories.resolveCategory(cat)\\\n
-                .Category_getSortedCategoryChildValueList()\n
+  gap_value_list = cat_tool.resolveCategory(cat).Category_getSortedCategoryChildValueList()\n
 \n
 # we don\'t want to display accounts that don\'t have any transactions associated,\n
 # so we use a cache to see if the account contains transaction or not ( regardless\n
 # of from_date )\n
 account_inventory_list_cache = {}\n
 account_inventory_list_cache_params = params.copy()\n
-if account_inventory_list_cache_params.has_key(\'from_date\') :\n
+if account_inventory_list_cache_params.has_key(\'from_date\'):\n
   del account_inventory_list_cache_params[\'from_date\']\n
 \n
-for c in gap_value_list :\n
+for c in gap_value_list:\n
   account_list = c.getGapRelatedValueList(portal_type="Account")\n
-  strict_account_list = c.getGapRelatedValueList(\n
-                          portal_type="Account", strict_membership = 1)\n
-  \n
+  strict_account_list = c.getGapRelatedValueList(portal_type="Account", strict_membership=1)\n
+\n
   skip_branch = 1\n
-  for account in account_list :\n
-    if account.getUid() not in account_inventory_list_cache :\n
-      account_inventory_list_cache[account.getUid()] = len(portal.\\\n
-          portal_simulation.getInventoryList( omit_simulation = 1,\n
+  for account in account_list:\n
+    if account.getUid() not in account_inventory_list_cache:\n
+      account_inventory_list_cache[account.getUid()] = len(sim_tool.getInventoryList( omit_simulation = 1,\n
           node_uid = account.getUid(), **account_inventory_list_cache_params))\n
-    if account_inventory_list_cache[account.getUid()] != 0 :\n
+    if account_inventory_list_cache[account.getUid()] != 0:\n
       skip_branch = 0\n
-  \n
-  if skip_branch :\n
+\n
+  if skip_branch:\n
     continue\n
 \n
   if display_categories and \\\n
-          len(account_list) and \\\n
-          len(strict_account_list) != 1 :\n
-    result.append(ReportSection(\n
-      path = c.getPhysicalPath(),\n
-      title = "%s: %s" % (c.getId(), c.getTitle()),\n
-      level = len(c.getPhysicalPath()) - 4,\n
-      form_id = None) )\n
+     len(account_list)  and \\\n
+     len(strict_account_list) != 1:\n
+    result.append(ReportSection( path    = c.getPhysicalPath()\n
+                               , title   = "%s: %s" % (c.getId(), c.getTitle())\n
+                               , level   = len(c.getPhysicalPath()) - 4\n
+                               , form_id = None\n
+                               ))\n
 \n
   if len(strict_account_list):\n
     for account in strict_account_list:\n
-      if account.getAccountTypeId() in (\'payable\', \'receivable\') :\n
-        for third_party_brain in context.Account_zDistinctSectionList(\n
-                           at_date = at_date,\n
-                           simulation_state = transaction_simulation_state ) :\n
+      if account.getAccountTypeId() in (\'payable\', \'receivable\'):\n
+        for third_party_brain in context.Account_zDistinctSectionList( at_date = at_date\n
+                                                                     , simulation_state = simulation_state):\n
           third_party_params = params.copy()\n
           third_party_params[\'mirror_section_uid\'] = third_party_brain.uid\n
           third_party_uid = third_party_brain.uid or " = NULL"\n
-          title = "%s: %s (%s)" % ( c.getId(),\n
-                                    account.getTitle(),\n
-                                    third_party_brain.title )\n
-          if len(portal.portal_simulation.getInventoryList(\n
-                    mirror_section_uid = third_party_uid,\n
-                    node_uid = account.getUid(),\n
-                    **account_inventory_list_cache_params )):\n
-            result.append(ReportSection(\n
-              path = account.getPhysicalPath(),\n
-              title = title,\n
-              level = 9,\n
-              form_id = \'Account_viewAccountingTransactionList\',\n
-              selection_name = \'acount_preference_selection\',\n
-              selection_params = third_party_params.copy(),\n
-              selection_columns = account_columns,\n
-              listbox_display_mode = \'FlatListMode\',\n
-              selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
-              preferences = preferences ))\n
+          title = "%s: %s (%s)" % ( c.getId()\n
+                                  , account.getTitle()\n
+                                  , third_party_brain.title\n
+                                  )\n
+          if len(sim_tool.getInventoryList( mirror_section_uid = third_party_uid\n
+                                          , node_uid           = account.getUid()\n
+                                          , **account_inventory_list_cache_params\n
+                                          )):\n
+            result.append(ReportSection( path                 = account.getPhysicalPath()\n
+                                       , title                = title\n
+                                       , level                = 9\n
+                                       , form_id              = \'Account_viewAccountingTransactionList\'\n
+                                       , selection_name       = \'acount_preference_selection\'\n
+                                       , selection_params     = third_party_params.copy()\n
+                                       , selection_columns    = account_columns\n
+                                       , listbox_display_mode = \'FlatListMode\'\n
+                                       , selection_sort_order = [(\'delivery.stop_date\', \'ascending\')]\n
+                                       ))\n
 \n
-      elif account.isMemberOf(\'account_type/asset/cash/bank\') :\n
+      elif account.isMemberOf(\'account_type/asset/cash/bank\'):\n
         # Bank Account\n
-        for bank_account_brain in account.Account_zGetDistinctPaymentList(\n
-                          at_date = at_date,\n
-                          simulation_state = transaction_simulation_state ) :\n
+        for bank_account_brain in account.Account_zGetDistinctPaymentList( at_date = at_date\n
+                                                                         , simulation_state = simulation_state\n
+                                                                         ):\n
           bank_params = params.copy()\n
-          if bank_account_brain.path is not None :\n
+          if bank_account_brain.path is not None:\n
             bank_params[\'payment_uid\'] = bank_account_brain.uid\n
             bank_account_uid = bank_account_brain.uid or " = NULL"\n
-            title = "%s: %s (%s)" % ( c.getId(),\n
-                                      account.getTitle(),\n
-                                      bank_account_brain.title )\n
+            title = "%s: %s (%s)" % ( c.getId()\n
+                                    , account.getTitle()\n
+                                    , bank_account_brain.title\n
+                                    )\n
           else :\n
             bank_params[\'no_payment_uid\'] = 1\n
             title = "%s: %s" % ( c.getId(), account.getTitle())\n
-          if len(portal.portal_simulation.getInventoryList(\n
-                    payment_uid = bank_account_uid,\n
-                    node_uid = account.getUid(),\n
-                    **account_inventory_list_cache_params )):\n
-            result.append(ReportSection(\n
-                path = account.getPhysicalPath(),\n
-                title = title,\n
-                level = 9,\n
-                form_id = \'Account_viewAccountingTransactionList\',\n
-                selection_name = \'acount_preference_selection\',\n
-                selection_params = bank_params.copy(),\n
-                selection_columns = account_columns,\n
-                listbox_display_mode = \'FlatListMode\',\n
-                selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
-                preferences = preferences ))\n
-      else :\n
-        if len(portal.portal_simulation.getInventoryList(\n
-                    node_uid = account.getUid(),\n
-                    **account_inventory_list_cache_params )):\n
-          result.append(ReportSection(\n
-            path = account.getPhysicalPath(),\n
-            title = "%s: %s" % (c.getId(), account.getTitle()),\n
-            level = 9,\n
-            form_id = \'Account_viewAccountingTransactionList\',\n
-            selection_name = \'acount_preference_selection\',\n
-            selection_params = params,\n
-            selection_columns = account_columns,\n
-            listbox_display_mode = \'FlatListMode\',\n
-            selection_sort_order = [(\'delivery.stop_date\', \'ascending\')],\n
-            preferences = preferences ))\n
+          if len(sim_tool.getInventoryList( payment_uid = bank_account_uid\n
+                                          , node_uid = account.getUid()\n
+                                          , **account_inventory_list_cache_params\n
+                                          )):\n
+            result.append(ReportSection( path                 = account.getPhysicalPath()\n
+                                       , title                = title\n
+                                       , level                = 9\n
+                                       , form_id              = \'Account_viewAccountingTransactionList\'\n
+                                       , selection_name       = \'acount_preference_selection\'\n
+                                       , selection_params     = bank_params.copy()\n
+                                       , selection_columns    = account_columns\n
+                                       , listbox_display_mode = \'FlatListMode\'\n
+                                       , selection_sort_order = [(\'delivery.stop_date\', \'ascending\')]\n
+                                       ))\n
+      else:\n
+        if len(sim_tool.getInventoryList( node_uid = account.getUid()\n
+                                        , **account_inventory_list_cache_params\n
+                                        )):\n
+          result.append(ReportSection( path                 = account.getPhysicalPath()\n
+                                     , title                = "%s: %s" % (c.getId(), account.getTitle())\n
+                                     , level                = 9\n
+                                     , form_id              = \'Account_viewAccountingTransactionList\'\n
+                                     , selection_name       = \'acount_preference_selection\'\n
+                                     , selection_params     = params\n
+                                     , selection_columns    = account_columns\n
+                                     , listbox_display_mode = \'FlatListMode\'\n
+                                     , selection_sort_order = [(\'delivery.stop_date\', \'ascending\')]\n
+                                     ))\n
 \n
 return result\n
-# vim: syntax=python\n
 </string> </value>
         </item>
         <item>
@@ -297,21 +277,24 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>portal</string>
+                            <string>cat_tool</string>
+                            <string>sim_tool</string>
                             <string>_getitem_</string>
                             <string>at_date</string>
-                            <string>transaction_section_category</string>
-                            <string>transaction_simulation_state</string>
+                            <string>section_category</string>
+                            <string>simulation_state</string>
                             <string>None</string>
                             <string>from_date</string>
                             <string>gap</string>
+                            <string>True</string>
                             <string>omit_empty_accounts</string>
+                            <string>False</string>
                             <string>display_categories</string>
                             <string>omit_grouping_reference</string>
                             <string>params</string>
-                            <string>preferences</string>
                             <string>_write_</string>
                             <string>result</string>
-                            <string>portal</string>
                             <string>account_columns</string>
                             <string>gap_value_list</string>
                             <string>cat</string>
