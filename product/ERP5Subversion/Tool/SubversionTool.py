@@ -450,6 +450,9 @@ class SubversionTool(UniqueObject, Folder):
     if 'bt' in path.split('/'):
       # not in zodb
       return '#'
+    # if file have been deleted then not in zodb
+    if not os.path.exists(path):
+      return '#'
     svn_path = bt.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path:
       raise 'Error: Please set working copy path in Subversion preferences !'
