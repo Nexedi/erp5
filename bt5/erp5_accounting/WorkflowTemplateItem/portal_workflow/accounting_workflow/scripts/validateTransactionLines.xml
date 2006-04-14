@@ -66,7 +66,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Validate Transaction Lines for source and destination section.\n
+            <value> <string>"""\n
+  Validate Transaction Lines for source and destination section.\n
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
@@ -77,16 +78,14 @@ error_message = \'\'\n
 transaction = state_change[\'object\']\n
 N_ = transaction.Base_translateString\n
 \n
-# first of all, validate the transaction it self\n
+# first of all, validate the transaction itself\n
 container.validateTransaction(state_change)\n
 \n
 # Get sections.\n
-source_section = transaction.getSourceSection(\n
-  portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
-destination_section = transaction.getDestinationSection(\n
-  portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
+source_section      = transaction.getSourceSection(     portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
+destination_section = transaction.getDestinationSection(portal_type = [\'Person\', \'Organisation\',\'Category\'])\n
 \n
-source_sum = 0\n
+source_sum      = 0\n
 destination_sum = 0\n
 \n
 # Check transaction lines\n
@@ -96,79 +95,85 @@ if transaction.getPortalType() not in (\'Balance Transaction\',) :\n
                transaction.getPortalAccountingMovementTypeList()})\n
   for transaction_line in accounting_transaction_line_list:\n
     if source_section != destination_section :\n
-      source_quantity = transaction_line\\\n
-                  .getSourceInventoriatedTotalAssetPrice() or 0\n
-      destination_quantity = transaction_line\\\n
-                  .getDestinationInventoriatedTotalAssetPrice() or 0\n
+      source_quantity      = transaction_line.getSourceInventoriatedTotalAssetPrice()      or 0\n
+      destination_quantity = transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0\n
     else :\n
       destination_quantity = source_quantity = ((transaction_line\\\n
                   .getSourceInventoriatedTotalAssetPrice() or 0) + \\\n
           (transaction_line.getDestinationInventoriatedTotalAssetPrice() or 0))\n
-      \n
-    source_sum += source_quantity\n
+\n
+    source_sum      += source_quantity\n
     destination_sum += destination_quantity\n
 \n
-    if transaction_line.getSource(portal_type = \'Account\') is None and\\\n
-       transaction_line.getDestination(portal_type = \'Account\') is None and\\\n
-       transaction_line.getQuantity() != 0 :\n
-      raise ValidationFailed, N_(\'No Account defined for Line ${line_id}\',\n
-                        mapping = {\'line_id\': transaction_line.getId()} )\n
+    if transaction_line.getSource(     portal_type = \'Account\') is None and \\\n
+       transaction_line.getDestination(portal_type = \'Account\') is None and \\\n
+       transaction_line.getQuantity() != 0:\n
+      raise ValidationFailed, N_("Action failed: no account defined for line \'${line_id}\'."\n
+                                , mapping = {\'line_id\': transaction_line.getId()}\n
+                                )\n
 \n
     for side in (SOURCE, DESTINATION) :\n
-      if side == SOURCE :\n
-        account = transaction_line.getSourceValue(portal_type = \'Account\')\n
-        mirror_section = transaction_line.getDestinationSection()\n
-        payment = transaction_line.getSourcePaymentValue()\n
+      if side == SOURCE:\n
+        account          = transaction_line.getSourceValue(portal_type = \'Account\')\n
+        payment          = transaction_line.getSourcePaymentValue()\n
+        third_party_path = transaction_line.getDestinationSection()\n
+        third_party      = transaction_line.getDestinationSectionValue()\n
       else:\n
-        account = transaction_line.getDestinationValue(portal_type = \'Account\')\n
-        mirror_section = transaction_line.getSourceSection()\n
-        payment = transaction_line.getDestinationPaymentValue()\n
-      \n
-      if account is None :\n
+        account          = transaction_line.getDestinationValue(portal_type = \'Account\')\n
+        payment          = transaction_line.getDestinationPaymentValue()\n
+        third_party_path = transaction_line.getSourceSection()\n
+        third_party      = transaction_line.getSourceSectionValue()\n
+\n
+      if account is None:\n
         continue\n
 \n
-      if account.getValidationState() != \'validated\' :\n
-        raise ValidationFailed, N_(\n
-              \'Action impossible : Account ${account_title} is ${state}\',\n
-              mapping = {\'account_title\':\n
-                            unicode(account.getTranslatedTitle(), \'utf8\'),\n
-                         \'state\': unicode(account\\\n
-                            .getTranslatedValidationStateTitle(), \'utf8\')})\n
-       \n
-      if account.getAccountTypeId() in ("receivable", "payable") and \\\n
-                mirror_section in (None, "") :\n
-        raise ValidationFailed, N_(\n
-               \'Action impossible : no Third Party defined for line ${line} \'+\n
-               \'where Account Type is ${account_type}.\',\n
-               mapping = { \'line\': transaction_line.getId(),\n
-                  \'account_type\' : unicode(account\\\n
-                  .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
-      \n
-      if side==SOURCE and account.isMemberOf("account_type/asset/cash/bank"):\n
-        if payment in (None, "") :\n
-          raise ValidationFailed, N_(\n
-              \'Action impossible : no Bank Account defined for line ${line} \'+\n
-              \'where Account Type is ${account_type}.\',\n
-              mapping = { \'line\': transaction_line.getId(),\n
-               \'account_type\' : unicode(account\\\n
-                  .getAccountTypeValue().getTranslatedLogicalPath(), \'utf8\')})\n
-        elif hasattr(payment, \'getPriceCurrency\') \\\n
-            and payment.getPriceCurrency() is not None \\\n
-            and payment.getPriceCurrency() != transaction_line.getResource() :\n
-          raise  ValidationFailed, N_(\n
-              \'Action impossible : Bank Account for line ${line} \'+\n
-              \'uses ${bank_account_currency} as default currency.\',\n
-              mapping = { \'line\': transaction_line.getId(),\n
-                    \'bank_account_currency\' : unicode(\n
-                    payment.getPriceCurrencyValue().getReference(), \'utf8\')})\n
+      if account.getValidationState() != \'validated\':\n
+          raise ValidationFailed, N_("Action failed: account \'${account_title}\' is not opened."\n
+                                    , mapping = {\'account_title\': unicode(account.getTranslatedTitle(), \'utf8\')}\n
+                                    )\n
+\n
+      # Test third party related-data\n
+      if account.getAccountTypeId() in ("receivable", "payable"):\n
+        # Test existence\n
+        if third_party_path in (None, \'\'):\n
+          raise ValidationFailed, N_("Action failed: no third party defined for line \'${line}\'."\n
+                                    , mapping = {\'line\': transaction_line.getId()}\n
+                                    )\n
+        if third_party not in (None, \'\') and third_party.getPortalType() in [\'Person\', \'Organisation\']:\n
+          # Test state\n
+          if third_party.getValidationState() != \'validated\':\n
+            raise ValidationFailed, N_("Action failed: third party \'${third_party_name}\' is not validated."\n
+                                      , mapping = {\'third_party_name\': unicode(third_party.getTranslatedTitle(), \'utf8\')}\n
+                                      )\n
+          # Test region\n
+          # Note: This test is normally handle by the entity workflow which don\'t allow validation of entity\n
+          #       until region is set. So if the previous condition is not verified, the previous test\n
+          #       catch it. We add this redundent test for easy upgrade of previous ERP5 accounting system.\n
+          if third_party.getRegion() in (None, \'\'):\n
+            raise ValidationFailed, N_("Action failed: third party \'${third_party_name}\' has no region."\n
+                                      , mapping = {\'third_party_name\': unicode(third_party.getTranslatedTitle(), \'utf8\')}\n
+                                      )\n
+\n
+      if (side == SOURCE) and account.isMemberOf("account_type/asset/cash/bank"):\n
+        if payment in (None, ""):\n
+          raise ValidationFailed, N_("Action failed: no bank account defined for line \'${line}\'."\n
+                                    , mapping = {\'line\': transaction_line.getId()}\n
+                                    )\n
+        elif hasattr(payment, \'getPriceCurrency\')   and \\\n
+             payment.getPriceCurrency() is not None and \\\n
+             payment.getPriceCurrency() != transaction_line.getResource():\n
+          raise ValidationFailed, N_("Action failed: bank account for line \'${line}\' "+\n
+                                     \'uses ${bank_account_currency} as default currency.\'\n
+                                    , mapping = { \'line\'                 : transaction_line.getId()\n
+                                                , \'bank_account_currency\': unicode(payment.getPriceCurrencyValue().getReference(), \'utf8\')\n
+                                                }\n
+                                    )\n
 \n
   if int(source_sum*100) != 0:\n
-    raise ValidationFailed, N_(\n
-        \'Action impossible : transaction is not balanced for source section\')\n
+    raise ValidationFailed, N_(\'Action failed: transaction is not balanced for source section.\')\n
 \n
   if int(destination_sum*100) != 0:\n
-    raise ValidationFailed, N_(\n
-    \'Action impossible : transaction is not balanced for destination section\')\n
+    raise ValidationFailed, N_(\'Action failed: transaction is not balanced for destination section.\')\n
 \n
 transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
 </string> </value>
@@ -258,8 +263,9 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>None</string>
                             <string>side</string>
                             <string>account</string>
-                            <string>mirror_section</string>
                             <string>payment</string>
+                            <string>third_party_path</string>
+                            <string>third_party</string>
                             <string>unicode</string>
                             <string>hasattr</string>
                             <string>int</string>
