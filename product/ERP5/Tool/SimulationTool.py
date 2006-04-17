@@ -153,16 +153,21 @@ class SimulationTool (BaseTool):
       as_text == 0: tries to lookup an uid from the relative_url
       as_text == 1: directly passes the argument as text
       """
+      if property is None :
+        return []
+      category_tool = getToolByName(self, 'portal_categories')
       property_uid_list = []
       if type(property) is type('') :
         if as_text == 0:
-          property_uid_list.append(self.portal_categories.getCategoryValue(property).getUid())
+          property_uid_list.append(
+              category_tool.getCategoryValue(property).getUid())
         else:
           property_uid_list.append(property)
       elif type(property) is type([]) or type(property) is type(()) :
         for property_item in property :
           if as_text == 0:
-            property_uid_list.append(self.portal_categories.getCategoryValue(property_item).getUid())
+            property_uid_list.append(
+                category_tool.getCategoryValue(property_item).getUid())
           else:
             property_uid_list.append(property_item)
       elif type(property) is type({}) :
@@ -171,7 +176,8 @@ class SimulationTool (BaseTool):
           property['query'] = [property['query']]
         for property_item in property['query'] :
           if as_text == 0:
-            tmp_uid_list.append(self.portal_categories.getCategoryValue(property_item).getUid())
+            tmp_uid_list.append(
+                category_tool.getCategoryValue(property_item).getUid())
           else:
             tmp_uid_list.append(property_item)
         if len(tmp_uid_list) :
@@ -335,7 +341,8 @@ class SimulationTool (BaseTool):
       # XXX Perhaps is there a better solution
       add_kw = {}
       if variation_category is not None and len(variation_category)>0:
-        where_expression = self.portal_categories.buildSQLSelector(
+        where_expression = self.getPortalObject().portal_categories\
+          .buildSQLSelector(
             category_list = variation_category,
             query_table = 'predicate_category')
         if where_expression != '':
@@ -346,7 +353,8 @@ class SimulationTool (BaseTool):
           uid_list = []
           for line in add_query:
             uid_list.append(line.uid)
-          new_kw['where_expression'] = '( %s )' % ' OR '.join(['catalog.uid=%s' % uid for uid in uid_list])
+          new_kw['where_expression'] = '( %s )' % ' OR '.join(
+                      ['catalog.uid=%s' % uid for uid in uid_list])
 
       # build the group by expression
       group_by_expression_list = []
@@ -1126,8 +1134,9 @@ class SimulationTool (BaseTool):
                          strict_membership=0, simulation_state=None):
       if simulation_state is None:
         simulation_state = self.getPortalCurrentInventoryStateList()
-      section_value = self.portal_categories.resolveCategory(section_category)
-      node_value = self.portal_categories.resolveCategory(node_category)
+      category_tool = getToolByName(self, 'portal_categories')
+      section_value = category_tool.resolveCategory(section_category)
+      node_value = category_tool.resolveCategory(node_category)
       # Initialize price
       current_asset_price = 0.0 # Missing: initial inventory price !!!
       current_inventory = 0.0
