@@ -539,6 +539,17 @@ class SimulationTool (BaseTool):
       return self.getInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableInventoryList')
+    def getAvailableInventoryList(self, **kw):
+      """
+        Returns list of current inventory grouped by section or site
+      """
+      kw['simulation_state'] = tuple(
+                    list(self.getPortalReservedInventoryStateList()) + \
+                    list(self.getPortalCurrentInventoryStateList()))
+      return self.getInventoryList(**kw)
+    
+    security.declareProtected(Permissions.AccessContentsInformation, 
                               'getFutureInventoryList')
     def getFutureInventoryList(self, **kw):
       """
@@ -580,6 +591,17 @@ class SimulationTool (BaseTool):
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryStat(**kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAvailableInventoryStat')
+    def getAvailableInventoryStat(self, **kw):
+      """
+      Returns statistics of current inventory grouped by section or site
+      """
+      kw['simulation_state'] = tuple(
+                    list(self.getPortalReservedInventoryStateList()) + \
+                    list(self.getPortalCurrentInventoryStateList()))
+      return self.getInventoryStat(**kw)
+   
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getFutureInventoryStat')
     def getFutureInventoryStat(self, **kw):
@@ -675,7 +697,9 @@ class SimulationTool (BaseTool):
       Returns list of available inventory grouped by section or site
       (current inventory - deliverable)
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
+      kw['simulation_state'] = tuple(
+                    list(self.getPortalReservedInventoryStateList()) + \
+                    list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 
