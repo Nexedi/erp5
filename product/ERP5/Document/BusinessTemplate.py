@@ -1093,7 +1093,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     # each portal type
     (default_chain, chain_dict) = getChainByType(context)
     # Set the default chain to the empty string is probably the
-    # best solution, by default it is 'default_workflow', wich is
+    # best solution, by default it is 'default_workflow', which is
     # not very usefull
     default_chain = ''
     if context.getTemplateFormatVersion() == 1:
@@ -2227,7 +2227,9 @@ class DocumentTemplateItem(BaseTemplateItem):
           # This raises an exception if the file already exists.
           try:
             globals()[self.local_file_writer_name](name, text, create=1)
-          except IOError:
+          except IOError, error:
+            if error.errno :
+              raise
             continue
           if self.local_file_importer_name is not None:
             globals()[self.local_file_importer_name](name)
