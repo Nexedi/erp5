@@ -345,7 +345,7 @@ Report bugs to <yo@nexedi.com>.'''
       kwd['foreground'] = 1
     elif o in ("-p", "--packet-dump"):
       kwd['packet_dump'] = 1
-    elif o in ("-s", "--stickey"):
+    elif o in ("-s", "--sticky"):
       pass
 
   if len(args) < 2:
