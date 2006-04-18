@@ -86,17 +86,16 @@ context.portal_categories.reindexObject(tag=\'module\',\n
                                         sql_catalog_id=sql_catalog_id,\n
                                         passive_commit=passive_commit)\n
 for o in list(context.portal_categories.objectValues()):\n
-  o.recursiveReindexObject(after_tag=\'module\',\n
-                           after_tag=(\'person_stage_1\', ),\n
+  o.recursiveReindexObject(after_tag=(\'module\', \'person_stage_1\', ),\n
                            tag=\'category\',\n
                            sql_catalog_id=sql_catalog_id,\n
                            passive_commit=passive_commit)\n
 \n
 print "#### Indexing alarms ####"\n
 context.portal_alarms.reindexObject(tag=\'module\',\n
-                                         after_tag=(\'person_stage_1\', ),\n
-                                         sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit)\n
+                                    after_tag=(\'person_stage_1\', ),\n
+                                    sql_catalog_id=sql_catalog_id,\n
+                                    passive_commit=passive_commit)\n
 for o in list(context.portal_alarms.objectValues()):\n
   o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
                            tag=\'document\',\n
