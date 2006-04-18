@@ -1,3 +1,7 @@
+2006-04-18 Kevin
+* Add a 'FIXME' comment in with details AccountingTransactionModule_zGetAccountingTransactionList.
+* Fix Opening Balance on Trial Balance when no from date set.
+
 2006-04-14 Kevin
 * Delete Section_getCurrencyPrecision.
 * Merge of my recent enhancements with the main branch.
