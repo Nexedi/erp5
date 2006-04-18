@@ -161,6 +161,10 @@ def getDefaultColumnValues(node_uid=0, **kw):\n
   if node_uid != 0:\n
     get_inventory_kw[\'node_uid\'] = node_uid\n
 \n
+  opening_balance = 0.0\n
+  debit_movement  = 0.0\n
+  credit_movement = 0.0\n
+\n
   # Use custom SQL query to get Bank Account Balance (because standard getInventory doesn\'t work)\n
   # TODO: use getInventory\n
   if kw.has_key(\'bank_account_alt\') and kw[\'bank_account_alt\']:\n
@@ -183,39 +187,43 @@ def getDefaultColumnValues(node_uid=0, **kw):\n
       # Round the result to avoid float bad precision\n
       return r_(amount)\n
 \n
-    values[\'opening_balance\'] = getBalance( to_date  = from_date\n
-                                          , **get_inventory_kw\n
-                                          )\n
-    values[\'debit_movement\']  = getBalance( from_date   = from_date\n
-                                          , at_date     = at_date\n
-                                          , omit_input  = True\n
-                                          , **get_inventory_kw\n
-                                          )\n
-    values[\'credit_movement\'] = - getBalance( from_date   = from_date\n
-                                            , at_date     = at_date\n
-                                            , omit_output = True\n
-                                            , **get_inventory_kw\n
-                                            )\n
+    if from_date not in (None, \'\'):\n
+      opening_balance = getBalance( to_date = from_date\n
+                                  , **get_inventory_kw\n
+                                  )\n
+    debit_movement  = getBalance( from_date  = from_date\n
+                                , at_date    = at_date\n
+                                , omit_input = True\n
+                                , **get_inventory_kw\n
+                                )\n
+    credit_movement = - getBalance( from_date   = from_date\n
+                                  , at_date     = at_date\n
+                                  , omit_output = True\n
+                                  , **get_inventory_kw\n
+                                  )\n
   else:\n
     # Use standard methods\n
-    values[\'opening_balance\'] = getInventory( to_date  = from_date\n
-                                            , **get_inventory_kw\n
-                                            )\n
-    values[\'debit_movement\']  = getInventory( from_date   = from_date\n
-                                            , at_date     = at_date\n
-                                            , omit_output = True\n
-                                            , **get_inventory_kw\n
-                                            )\n
-    values[\'credit_movement\'] = - getInventory( from_date  = from_date\n
-                                              , at_date    = at_date\n
-                                              , omit_input = True\n
-                                              , **get_inventory_kw\n
-                                              )\n
+    if from_date not in (None, \'\'):\n
+      opening_balance = getInventory( to_date = from_date\n
+                                    , **get_inventory_kw\n
+                                    )\n
+    debit_movement  = getInventory( from_date   = from_date\n
+                                  , at_date     = at_date\n
+                                  , omit_output = True\n
+                                  , **get_inventory_kw\n
+                                  )\n
+    credit_movement = - getInventory( from_date  = from_date\n
+                                    , at_date    = at_date\n
+                                    , omit_input = True\n
+                                    , **get_inventory_kw\n
+                                    )\n
+\n
+  values[\'opening_balance\'] = opening_balance\n
+  values[\'debit_movement\']  = debit_movement\n
+  values[\'credit_movement\'] = credit_movement\n
 \n
   # Calculate the closing balance\n
-  values[\'closing_balance\'] = values[\'opening_balance\'] + \\\n
-                              values[\'debit_movement\']  - \\\n
-                              values[\'credit_movement\']\n
+  values[\'closing_balance\'] = opening_balance + debit_movement - credit_movement\n
   return values\n
 \n
 \n
