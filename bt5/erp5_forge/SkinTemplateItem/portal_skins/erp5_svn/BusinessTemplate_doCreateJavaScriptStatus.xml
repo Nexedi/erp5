@@ -260,34 +260,11 @@ function mouseSelect(e)\n
       isMenu = false ;\n
       overpopupmenu = false;\n
       document.getElementById(\'menudiv\').style.display = "none" ;\n
-      return true ;\n
     }\n
-    return true ;\n
   }\n
-  return false;\n
+  return true;\n
 }\n
 \n
-// POP UP MENU\n
-function  ItemSelMenu(e)\n
-{\n
-  var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement; \n
-      menuSelObj = obj ;\n
-  if (ns6)\n
-  {\n
-    document.getElementById(\'menudiv\').style.left = e.clientX+document.body.scrollLeft+\'px\';\n
-    document.getElementById(\'menudiv\').style.top = e.clientY+document.body.scrollTop+\'px\';\n
-  } else\n
-  {\n
-    document.getElementById(\'menudiv\').style.pixelLeft = e.clientX+document.body.scrollLeft+\'px\';\n
-    document.getElementById(\'menudiv\').style.pixelTop = e.clientY+document.body.scrollTop+\'px\';\n
-  }\n
-  document.getElementById(\'menudiv\').style.display = "";\n
-  document.getElementById(\'item1\').style.backgroundColor=\'#FFFFFF\';\n
-  document.getElementById(\'item2\').style.backgroundColor=\'#FFFFFF\';\n
-  document.getElementById(\'item3\').style.backgroundColor=\'#FFFFFF\';\n
-  isMenu = true;\n
-  return false ;\n
-}\n
 function  showMenu()\n
 {\n
   document.getElementById(\'menudiv\').style.left = mouseX;\n
@@ -314,11 +291,11 @@ function getMouse(e)\n
     mouseX = event.clientX+document.body.scrollLeft+\'px\';\n
     mouseY = event.clientY+document.body.scrollTop+\'px\';\n
   }\n
+  return true;\n
 }\n
 \n
 document.onmousedown  = mouseSelect;\n
 document.onmousemove = getMouse;\n
-//document.oncontextmenu  = ItemSelMenu;\n
 \n
         function revert(popup,form){\n
           if(popup==1){\n
