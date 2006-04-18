@@ -67,15 +67,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>print "#### Indexing person_module, stage 1 ####"\n
-person_module=context.getPortalObject().person_module\n
-person_module.reindexObject(tag=\'person_stage_1\',\n
-                            sql_catalog_id=sql_catalog_id,\n
-                            passive_commit=passive_commit)\n
-for o in person_module.objectValues():\n
-  o.recursiveReindexObject(tag=\'person_stage_1\',\n
-                           sql_catalog_id=sql_catalog_id,\n
-                           passive_commit=passive_commit)\n
-\n
+person_module=getattr(context.getPortalObject(), \'person_module\', None)\n
+if person_module is not None :\n
+  person_module.reindexObject(tag=\'person_stage_1\',\n
+                              sql_catalog_id=sql_catalog_id,\n
+                              passive_commit=passive_commit)\n
+  for o in person_module.objectValues():\n
+    o.recursiveReindexObject(tag=\'person_stage_1\',\n
+                             sql_catalog_id=sql_catalog_id,\n
+                             passive_commit=passive_commit)\n
 \n
 print "#### Indexing translations ####"\n
 context.ERP5Site_updateTranslationTable(after_tag=(\'person_stage_1\', ),\n
@@ -301,8 +301,10 @@ return printed\n
                             <string>passive_commit</string>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>getattr</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>None</string>
                             <string>person_module</string>
                             <string>_getiter_</string>
                             <string>o</string>
