@@ -339,11 +339,11 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Tax title</string>
+                          <string>Tax Title</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Social service</string>
+                          <string>Social Service</string>
                         </tuple>
                         <tuple>
                           <string>source_section_title</string>
