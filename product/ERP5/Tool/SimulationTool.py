@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import UniqueObject
+from Products.CMFCore.utils import getToolByName
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
