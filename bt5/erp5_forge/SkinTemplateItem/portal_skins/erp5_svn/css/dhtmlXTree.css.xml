@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45365325.01</string> </value>
+            <value> <string>ts45369916.69</string> </value>
         </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
@@ -41,11 +41,11 @@
 }\n
 .containerTableStyle { overflow : auto; font-size : 12px;}\n
 /* folders & files names */\n
-.standartTreeRow{ font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; \tfont-size : 12px; -moz-user-select: none;}\n
+.standartTreeRow{ font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; \tfont-size : 12px; -moz-user-select: none; text-align: left;}\n
 .selectedTreeRow{ background-color : blue; color:white; font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; \t\tfont-size : 12px;  -moz-user-select: none;  }\n
 .standartTreeImage{ /*width:18px; height:18px;*/ overflow:hidden; border:0; padding:0; margin:0; }\n
 .hiddenRow { width:1px;   overflow:hidden;  }\n
-.dragSpanDiv{ \tfont-size : 12px; }\n
+.dragSpanDiv{\tfont-size : 12px; }\n
 
 
 ]]></string> </value>
@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>622</int> </value>
+            <value> <int>639</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
