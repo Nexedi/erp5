@@ -319,23 +319,23 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Tax title</string>
+                          <string>Tax Title</string>
                         </tuple>
                         <tuple>
                           <string>base_name</string>
-                          <string>Base name</string>
+                          <string>Base Name</string>
                         </tuple>
                         <tuple>
                           <string>base</string>
-                          <string>Base value</string>
+                          <string>Base Value</string>
                         </tuple>
                         <tuple>
                           <string>employer_share_rate</string>
-                          <string>Employer share rate (%)</string>
+                          <string>Employer Share Rate (%)</string>
                         </tuple>
                         <tuple>
                           <string>employee_share_rate</string>
-                          <string>Employee share rate (%)</string>
+                          <string>Employee Share Rate (%)</string>
                         </tuple>
                       </list>
                     </value>
@@ -346,15 +346,15 @@
                       <list>
                         <tuple>
                           <string>base</string>
-                          <string>Base value</string>
+                          <string>Base Value</string>
                         </tuple>
                         <tuple>
                           <string>employer_share_rate</string>
-                          <string>Employer share rate (%)</string>
+                          <string>Employer Share Rate (%)</string>
                         </tuple>
                         <tuple>
                           <string>employee_share_rate</string>
-                          <string>Employee share rate (%)</string>
+                          <string>Employee Share Rate (%)</string>
                         </tuple>
                       </list>
                     </value>
@@ -369,26 +369,30 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Tax title</string>
+                          <string>Tax Title</string>
                         </tuple>
                         <tuple>
                           <string>base_name</string>
-                          <string>Base name</string>
+                          <string>Base Name</string>
                         </tuple>
                         <tuple>
                           <string>base</string>
-                          <string>Base value</string>
+                          <string>Base Value</string>
                         </tuple>
                         <tuple>
                           <string>employer_share_rate</string>
-                          <string>Employer share rate (%)</string>
+                          <string>Employer Share Rate (%)</string>
                         </tuple>
                         <tuple>
                           <string>employee_share_rate</string>
-                          <string>Employee share rate (%)</string>
+                          <string>Employee Share Rate (%)</string>
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -428,15 +432,15 @@
                       <list>
                         <tuple>
                           <string>base</string>
-                          <string>Base value</string>
+                          <string>Base Value</string>
                         </tuple>
                         <tuple>
                           <string>employer_share_rate</string>
-                          <string>Employer share rate (%)</string>
+                          <string>Employer Share Rate (%)</string>
                         </tuple>
                         <tuple>
                           <string>employee_share_rate</string>
-                          <string>Employee share rate (%)</string>
+                          <string>Employee Share Rate (%)</string>
                         </tuple>
                       </list>
                     </value>
@@ -519,11 +523,11 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Tax title</string>
+                          <string>Tax Title</string>
                         </tuple>
                         <tuple>
                           <string>base_name</string>
-                          <string>Base name</string>
+                          <string>Base Name</string>
                         </tuple>
                       </list>
                     </value>

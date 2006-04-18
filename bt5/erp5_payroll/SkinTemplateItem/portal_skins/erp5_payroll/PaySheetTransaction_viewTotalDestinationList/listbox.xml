@@ -335,22 +335,26 @@
                       <list>
                         <tuple>
                           <string>target_start_date</string>
-                          <string>target_start_date</string>
+                          <string>Target Start Date</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
-                          <string>destination_title</string>
+                          <string>Destination Title</string>
                         </tuple>
                         <tuple>
                           <string>variation_text</string>
-                          <string>variation_text</string>
+                          <string>Variation Text</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
-                          <string>total_price</string>
+                          <string>Total Price</string>
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -446,7 +450,7 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -470,11 +474,15 @@
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>stat_columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
@@ -486,7 +494,9 @@
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
