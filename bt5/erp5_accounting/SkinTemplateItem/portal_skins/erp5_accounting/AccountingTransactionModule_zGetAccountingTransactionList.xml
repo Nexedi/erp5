@@ -500,6 +500,26 @@ WHERE\n
       </dtml-in>\n
     )\n
   </dtml-if>\n
+--\n
+-- FIXME: This method sometime return non-unique row, problably because of bad acquisition.\n
+--\n
+-- Exemple of bad result:\n
+-- +--------------------+--------------------------------+------------+\n
+-- | specific_reference | path                           | uid        |\n
+-- +--------------------+--------------------------------+------------+\n
+-- | 5525               | /nexedi/accounting_module/5238 | 1990514240 |\n
+-- | 59                 | /nexedi/accounting_module/5238 | 1990514240 |\n
+-- | 60                 | /nexedi/accounting_module/5156 | 1990502389 |\n
+-- | 5526               | /nexedi/accounting_module/5156 | 1990502389 |\n
+-- | 61                 | /nexedi/accounting_module/5226 | 1990513370 |\n
+--\n
+-- Instead of the previous, we expect to get the following result:\n
+-- +--------------------+--------------------------------+------------+\n
+-- | specific_reference | path                           | uid        |\n
+-- +--------------------+--------------------------------+------------+\n
+-- | 5525               | /nexedi/accounting_module/5238 | 1990514240 |\n
+-- | 5526               | /nexedi/accounting_module/5156 | 1990502389 |\n
+--\n
 <dtml-if "query[\'order_by_expression\']">\n
   ORDER BY <dtml-var "query[\'order_by_expression\']">\n
 </dtml-if>\n
@@ -662,6 +682,26 @@ WHERE\n
       </dtml-in>\n
     )\n
   </dtml-if>\n
+--\n
+-- FIXME: This method sometime return non-unique row, problably because of bad acquisition.\n
+--\n
+-- Exemple of bad result:\n
+-- +--------------------+--------------------------------+------------+\n
+-- | specific_reference | path                           | uid        |\n
+-- +--------------------+--------------------------------+------------+\n
+-- | 5525               | /nexedi/accounting_module/5238 | 1990514240 |\n
+-- | 59                 | /nexedi/accounting_module/5238 | 1990514240 |\n
+-- | 60                 | /nexedi/accounting_module/5156 | 1990502389 |\n
+-- | 5526               | /nexedi/accounting_module/5156 | 1990502389 |\n
+-- | 61                 | /nexedi/accounting_module/5226 | 1990513370 |\n
+--\n
+-- Instead of the previous, we expect to get the following result:\n
+-- +--------------------+--------------------------------+------------+\n
+-- | specific_reference | path                           | uid        |\n
+-- +--------------------+--------------------------------+------------+\n
+-- | 5525               | /nexedi/accounting_module/5238 | 1990514240 |\n
+-- | 5526               | /nexedi/accounting_module/5156 | 1990502389 |\n
+--\n
 <dtml-if "query[\'order_by_expression\']">\n
   ORDER BY <dtml-var "query[\'order_by_expression\']">\n
 </dtml-if>\n
