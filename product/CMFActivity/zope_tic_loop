@@ -1,6 +1,32 @@
 #!/bin/bash
+
+# CMFActivity tic script.
+# This script is for a standalone Zope instance running on localhost.
+# For clusters, GET distribute with the number of nodes, and GET tic
+# on each machine with the corresponding processing_node id.
+
+# Make sure this user exists in the portal, and has Member role
+[ -z $AUTH ] && AUTH=zope:zope
+[ -z $PORT ] && PORT=9080
+[ -z $SITE ] && ZOPE_TIC_LOOP_SITE=erp5
+
+[ -z $TMP ] && TMP=/tmp
+
+echo Starting tic on $SITE:$PORT with $AUTH
+
 while true; do
-wget -O /tmp/zope_distribute.out http://jp:jp@localhost:9673/coramy/portal_activities/distribute?node_count:int=1
-wget -O /tmp/zope_tic.out http://jp:jp@localhost:9673/coramy/portal_activities/tic?processing_node:int=1
-sleep 5
+  # distribute on nodes
+  wget -q -O $TMP/zope_distribute.out http://${AUTH}@localhost:${PORT}/${SITE}/portal_activities/distribute?node_count:int=1
+  
+  # execute registred activities for this node
+  wget -q -O $TMP/zope_tic.out http://${AUTH}@localhost:${PORT}/${SITE}/portal_activities/tic?processing_node:int=1
+  # sample for another node
+  #wget -q -O $TMP/zope_tic.out http://${AUTH}@anotherhost:${PORT}/${SITE}/portal_activities/tic?processing_node:int=2
+  
+  # tic alarms
+  wget -q -O $TMP/zope_alarm_tic.out http://${AUTH}@localhost:${PORT}/${SITE}/portal_alarms/tic
+  
+  # 10 is recommended on production servers, but 4 is enough for development
+  sleep 4
 done
+
