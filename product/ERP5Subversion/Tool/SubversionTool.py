@@ -499,7 +499,7 @@ class SubversionTool(UniqueObject, Folder):
     value = ','.join(login_list)
     expires = (DateTime() + 7).toZone('GMT').rfc822()
     request.set(self.login_cookie_name, value)
-    response.setCookie(self.login_cookie_name, value, path = os.sep, expires = expires)
+    response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
 
   def _getLogin(self, target_realm):
     request = self.REQUEST
