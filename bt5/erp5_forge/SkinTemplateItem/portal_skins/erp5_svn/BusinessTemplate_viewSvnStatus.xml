@@ -51,7 +51,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
  "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
-\n
 <tal:block tal:define="layout_form_id here/getApplicableLayout |  nothing;\n
                        editable_mode request/editable_mode | nothing;\n
                        global ignore_layout request/ignore_layout | nothing;\n
