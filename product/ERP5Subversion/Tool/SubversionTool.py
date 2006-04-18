@@ -153,7 +153,7 @@ class DiffFile:
     # Getting file path in header
     self.path = self.header.split('====')[0][:-1].strip()
     # Getting revisions in header
-    for line in self.header.split('\n'):
+    for line in self.header.split(os.linesep):
       if line.startswith('--- '):
         tmp = re.search('\\([^)]+\\)$', line)
         self.old_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
@@ -161,20 +161,20 @@ class DiffFile:
         tmp = re.search('\\([^)]+\\)$', line)
         self.new_revision = tmp.string[tmp.start():tmp.end()][1:-1].strip()
     # Splitting the body from the header
-    self.body = '\n'.join(raw_diff.strip().split('\n')[4:])
+    self.body = os.linesep.join(raw_diff.strip().split(os.linesep)[4:])
     # Now splitting modifications
     self.children = []
     first = True
     tmp = []
-    for line in self.body.split('\n'):
+    for line in self.body.split(os.linesep):
       if line:
         if line.startswith('@@') and not first:
-          self.children.append(CodeBlock('\n'.join(tmp)))
+          self.children.append(CodeBlock(os.linesep.join(tmp)))
           tmp = [line,]
         else:
           first = False
           tmp.append(line)
-    self.children.append(CodeBlock('\n'.join(tmp)))
+    self.children.append(CodeBlock(os.linesep.join(tmp)))
     
 
   def _escape(self, data):
@@ -242,8 +242,8 @@ class CodeBlock:
 
   def __init__(self, raw_diff):
     # Splitting body and header
-    self.body = '\n'.join(raw_diff.split('\n')[1:])
-    self.header = raw_diff.split('\n')[0]
+    self.body = os.linesep.join(raw_diff.split(os.linesep)[1:])
+    self.header = raw_diff.split(os.linesep)[0]
     # Getting modifications lines
     tmp = re.search('^@@ -\d+', self.header)
     self.old_line = tmp.string[tmp.start():tmp.end()][4:]
@@ -253,23 +253,23 @@ class CodeBlock:
     in_modif = False
     self.children = []
     tmp=[]
-    for line in self.body.split('\n'):
+    for line in self.body.split(os.linesep):
       if line:
         if (line.startswith('+') or line.startswith('-')):
           if in_modif:
             tmp.append(line)
           else:
-            self.children.append(SubCodeBlock('\n'.join(tmp)))
+            self.children.append(SubCodeBlock(os.linesep.join(tmp)))
             tmp = [line,]
             in_modif = True
         else:
             if in_modif:
-              self.children.append(SubCodeBlock('\n'.join(tmp)))
+              self.children.append(SubCodeBlock(os.linesep.join(tmp)))
               tmp = [line,]
               in_modif = False
             else:
               tmp.append(line)
-    self.children.append(SubCodeBlock('\n'.join(tmp)))
+    self.children.append(SubCodeBlock(os.linesep.join(tmp)))
     
   # Return code before modification
   def getOldCodeList(self):
@@ -305,7 +305,7 @@ class SubCodeBlock:
   def _getModif(self):
     nb_plus = 0
     nb_minus = 0
-    for line in self.body.split('\n'):
+    for line in self.body.split(os.linesep):
       if line.startswith("-"):
         nb_minus-=1
       elif line.startswith("+"):
@@ -320,14 +320,14 @@ class SubCodeBlock:
       
   def _getOldCodeLength(self):
     nb_lines = 0
-    for line in self.body.split('\n'):
+    for line in self.body.split(os.linesep):
       if not line.startswith("+"):
         nb_lines+=1
     return nb_lines
       
   def _getNewCodeLength(self):
     nb_lines = 0
-    for line in self.body.split('\n'):
+    for line in self.body.split(os.linesep):
       if not line.startswith("-"):
         nb_lines+=1
     return nb_lines
@@ -335,15 +335,15 @@ class SubCodeBlock:
   # Return code before modification
   def getOldCodeList(self):
     if self.modification=='none':
-      old_code = [(x, 'white') for x in self.body.split('\n')]
+      old_code = [(x, 'white') for x in self.body.split(os.linesep)]
     elif self.modification=='change':
-      old_code = [self._getOldCodeList(x) for x in self.body.split('\n') if self._getOldCodeList(x)[0]]
+      old_code = [self._getOldCodeList(x) for x in self.body.split(os.linesep) if self._getOldCodeList(x)[0]]
       # we want old_code_list and new_code_list to have the same length
       if(self.old_code_length < self.new_code_length):
         filling = [(None, self.color)]*(self.new_code_length-self.old_code_length)
         old_code.extend(filling)
     else: # deletion or addition
-      old_code = [self._getOldCodeList(x) for x in self.body.split('\n')]
+      old_code = [self._getOldCodeList(x) for x in self.body.split(os.linesep)]
     return old_code
   
   def _getOldCodeList(self, line):
@@ -356,15 +356,15 @@ class SubCodeBlock:
   # Return code after modification
   def getNewCodeList(self):
     if self.modification=='none':
-      new_code = [(x, 'white') for x in self.body.split('\n')]
+      new_code = [(x, 'white') for x in self.body.split(os.linesep)]
     elif self.modification=='change':
-      new_code = [self._getNewCodeList(x) for x in self.body.split('\n') if self._getNewCodeList(x)[0]]
+      new_code = [self._getNewCodeList(x) for x in self.body.split(os.linesep) if self._getNewCodeList(x)[0]]
       # we want old_code_list and new_code_list to have the same length
       if(self.new_code_length < self.old_code_length):
         filling = [(None, self.color)]*(self.old_code_length-self.new_code_length)
         new_code.extend(filling)
     else: # deletion or addition
-      new_code = [self._getNewCodeList(x) for x in self.body.split('\n')]
+      new_code = [self._getNewCodeList(x) for x in self.body.split(os.linesep)]
     return new_code
   
   def _getNewCodeList(self, line):
@@ -445,7 +445,8 @@ class SubversionTool(UniqueObject, Folder):
   def editPath(self, bt, path):
     """Return path to edit file
     """
-    if 'bt' in path.split(os.sep):
+    path = path.replace('\\', '/')
+    if 'bt' in path.split('/'):
       # not in zodb
       return '#'
     # if file have been deleted then not in zodb
@@ -454,16 +455,15 @@ class SubversionTool(UniqueObject, Folder):
     svn_path = bt.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
     if not svn_path:
       raise 'Error: Please set working copy path in Subversion preferences !'
-    if svn_path[-1] != os.sep:
-      svn_path += os.sep
-    svn_path = svn_path + bt.getTitle()
+    svn_path = os.path.join(svn_path, bt.getTitle())
+    svn_path = svn_path.replace('\\', '/')
     edit_path = path.replace(svn_path, '')
     if edit_path.strip() == '':
       # not in zodb 
       return '#'
-    if edit_path[0] == os.sep:
+    if edit_path[0] == '/':
       edit_path = edit_path[1:]
-    edit_path = os.sep.join(edit_path.split(os.sep)[1:])
+    edit_path = '/'.join(edit_path.split('/')[1:])
     if edit_path.strip() == '':
       # not in zodb 
       return '#'
@@ -471,7 +471,7 @@ class SubversionTool(UniqueObject, Folder):
     if tmp:
       extension = tmp.string[tmp.start():tmp.end()].strip()
       edit_path = edit_path.replace(extension, '')
-    edit_path = bt.REQUEST["BASE2"] + os.sep + edit_path + '/manage_main'
+    edit_path = bt.REQUEST["BASE2"] + '/' + edit_path + '/manage_main'
     return edit_path
     
   def _encodeLogin(self, realm, user, password):
@@ -536,7 +536,7 @@ class SubversionTool(UniqueObject, Folder):
       else:
         head = "<b>"+file_path+"</b>  <a href='"+self.editPath(bt, file_path)+"'><img src='imgs/edit.png' border='0'></a><hr>"
         text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%file_path)
-        text = head + '\n'.join(text.split('\n')[10:-4])
+        text = head + os.linesep.join(text.split(os.linesep)[10:-4])
       return text
     else:
       # see if tmp file is here (svn deleted file)
@@ -544,11 +544,11 @@ class SubversionTool(UniqueObject, Folder):
         file_path=file_path[:-1]
       filename = file_path.split(os.sep)[-1]
       tmp_path = os.sep.join(file_path.split(os.sep)[:-1])
-      tmp_path = tmp_path+'/.svn/text-base/'+filename+'.svn-base'
+      tmp_path = os.path.join(tmp_path,'.svn','text-base',filename,'.svn-base')
       if os.path.exists(tmp_path):
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
         text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%tmp_path)
-        text = head + '\n'.join(text.split('\n')[10:-4])
+        text = head + os.linesep.join(text.split(os.linesep)[10:-4])
       else : # does not exist
         text = "<b>"+file_path+"</b><hr>"
         text += file_path +" does not exist!"
@@ -570,7 +570,7 @@ class SubversionTool(UniqueObject, Folder):
     value = ','.join(trust_list)
     expires = (DateTime() + 7).toZone('GMT').rfc822()
     request.set(self.ssl_trust_cookie_name, value)
-    response.setCookie(self.ssl_trust_cookie_name, value, path = os.sep, expires = expires)
+    response.setCookie(self.ssl_trust_cookie_name, value, path = '/', expires = expires)
     
   def acceptSSLPerm(self, trust_dict):
     self.acceptSSLServer(self, trust_dict, True)
@@ -684,7 +684,7 @@ class SubversionTool(UniqueObject, Folder):
   
   def getModifiedTree(self, path) :
     # Remove trailing slash if it's present
-    if path[-1]=="/" :
+    if path[-1]== os.sep :
       path = path[:-1]
     
     root = Dir(path, "normal")
