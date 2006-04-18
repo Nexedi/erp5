@@ -78,8 +78,7 @@ if person_module is not None :\n
                              passive_commit=passive_commit)\n
 \n
 print "#### Indexing translations ####"\n
-context.ERP5Site_updateTranslationTable(after_tag=(\'person_stage_1\', ),\n
-                                        sql_catalog_id=sql_catalog_id)\n
+context.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)\n
 \n
 print "#### Indexing categories ####"\n
 context.portal_categories.reindexObject(tag=\'module\',\n
@@ -94,7 +93,7 @@ for o in list(context.portal_categories.objectValues()):\n
                            passive_commit=passive_commit)\n
 \n
 print "#### Indexing alarms ####"\n
-context.portal_preferences.reindexObject(tag=\'module\',\n
+context.portal_alarms.reindexObject(tag=\'module\',\n
                                          after_tag=(\'person_stage_1\', ),\n
                                          sql_catalog_id=sql_catalog_id,\n
                                          passive_commit=passive_commit)\n
