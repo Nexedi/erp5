@@ -66,84 +66,195 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>print "#### Indexing translations ####"\n
-context.ERP5Site_updateTranslationTable(sql_catalog_id=sql_catalog_id)\n
+            <value> <string>print "#### Indexing person_module, stage 1 ####"\n
+person_module=context.getPortalObject().person_module\n
+person_module.reindexObject(tag=\'person_stage_1\',\n
+                            sql_catalog_id=sql_catalog_id,\n
+                            passive_commit=passive_commit)\n
+for o in person_module.objectValues():\n
+  o.recursiveReindexObject(tag=\'person_stage_1\',\n
+                           sql_catalog_id=sql_catalog_id,\n
+                           passive_commit=passive_commit)\n
+\n
+\n
+print "#### Indexing translations ####"\n
+context.ERP5Site_updateTranslationTable(after_tag=(\'person_stage_1\', ),\n
+                                        sql_catalog_id=sql_catalog_id)\n
 \n
 print "#### Indexing categories ####"\n
-context.portal_categories.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_categories.reindexObject(tag=\'module\',\n
+                                        after_tag=(\'person_stage_1\', ),\n
+                                        sql_catalog_id=sql_catalog_id,\n
+                                        passive_commit=passive_commit)\n
 for o in list(context.portal_categories.objectValues()):\n
-  o.recursiveReindexObject(after_tag=\'module\',tag=\'category\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.recursiveReindexObject(after_tag=\'module\',\n
+                           after_tag=(\'person_stage_1\', ),\n
+                           tag=\'category\',\n
+                           sql_catalog_id=sql_catalog_id,\n
+                           passive_commit=passive_commit)\n
+\n
+print "#### Indexing alarms ####"\n
+context.portal_preferences.reindexObject(tag=\'module\',\n
+                                         after_tag=(\'person_stage_1\', ),\n
+                                         sql_catalog_id=sql_catalog_id,\n
+                                         passive_commit=passive_commit)\n
+for o in list(context.portal_alarms.objectValues()):\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
+                           tag=\'document\',\n
+                           priority=2,\n
+                           sql_catalog_id=sql_catalog_id,\n
+                           passive_commit=passive_commit)\n
 \n
 print "#### Indexing preferences ####"\n
-context.portal_preferences.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_preferences.reindexObject(tag=\'module\',\n
+                                         after_tag=(\'person_stage_1\', ),\n
+                                         sql_catalog_id=sql_catalog_id,\n
+                                         passive_commit=passive_commit)\n
 for o in list(context.portal_preferences.objectValues()):\n
-  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
+                           tag=\'document\',\n
+                           priority=2,\n
+                           sql_catalog_id=sql_catalog_id,\n
+                           passive_commit=passive_commit)\n
 \n
-# We index simulation first to make sure we can calculate tests (ie. related quantity)\n
+# We index simulation first to make sure we can calculate tests\n
+# (ie. related quantity)\n
 print "#### Indexing simulation ####"\n
-context.portal_simulation.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_simulation.reindexObject(tag=\'module\',\n
+                                        after_tag=(\'person_stage_1\', ),\n
+                                        sql_catalog_id=sql_catalog_id,\n
+                                        passive_commit=passive_commit)\n
 for o in list(context.portal_simulation.objectValues()):\n
-  o.recursiveReindexObject(after_tag=(\'module\',\'category\',\'document\'),tag=\'simulation\',priority=3, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.recursiveReindexObject(after_tag=(\'module\', \'category\',\n
+                                      \'document\', \'person_stage_1\'),\n
+                           tag=\'simulation\',\n
+                           priority=3,\n
+                           sql_catalog_id=sql_catalog_id,\n
+                           passive_commit=passive_commit)\n
 \n
 # We index templates secondly\n
 print "#### Indexing templates ####"\n
-context.portal_templates.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_templates.reindexObject(tag=\'module\',\n
+                                       after_tag=(\'person_stage_1\', ),\n
+                                       sql_catalog_id=sql_catalog_id,\n
+                                       passive_commit=passive_commit)\n
 for o in list(context.portal_templates.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
+                  tag=\'document\',\n
+                  priority=2,\n
+                  sql_catalog_id=sql_catalog_id,\n
+                  passive_commit=passive_commit)\n
 \n
 # Next we index trash bins\n
 print "#### Indexing trash bins ####"\n
-context.portal_trash.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_trash.reindexObject(tag=\'module\',\n
+                                   after_tag=(\'person_stage_1\', ),\n
+                                   sql_catalog_id=sql_catalog_id,\n
+                                   passive_commit=passive_commit)\n
 for o in list(context.portal_trash.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
+                  tag=\'document\',\n
+                  priority=2,\n
+                  sql_catalog_id=sql_catalog_id,\n
+                  passive_commit=passive_commit)\n
 \n
 # Next we index domains\n
 print "#### Indexing domains ####"\n
-context.portal_domains.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_domains.reindexObject(tag=\'module\',\n
+                                     after_tag=(\'person_stage_1\', ),\n
+                                     sql_catalog_id=sql_catalog_id,\n
+                                     passive_commit=passive_commit)\n
 for o in list(context.portal_domains.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
+                  tag=\'document\',\n
+                  priority=2,\n
+                  sql_catalog_id=sql_catalog_id,\n
+                  passive_commit=passive_commit)\n
 \n
 # Next we index applied rules\n
 print "#### Indexing applied rules ####"\n
-context.portal_rules.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_rules.reindexObject(tag=\'module\',\n
+                                   after_tag=(\'person_stage_1\', ),\n
+                                   sql_catalog_id=sql_catalog_id,\n
+                                   passive_commit=passive_commit)\n
 for o in list(context.portal_rules.objectValues()):\n
-  o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.recursiveReindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
+                           tag=\'document\',\n
+                           priority=2,\n
+                           sql_catalog_id=sql_catalog_id,\n
+                           passive_commit=passive_commit)\n
 \n
 # Next we index delivery builders\n
 print "#### Indexing delivery builders ####"\n
-context.portal_deliveries.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_deliveries.reindexObject(tag=\'module\',\n
+                                        after_tag=(\'person_stage_1\', ),\n
+                                        sql_catalog_id=sql_catalog_id,\n
+                                        passive_commit=passive_commit)\n
 for o in list(context.portal_deliveries.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.reindexObject(after_tag=(\'module\', \'category\', \'person_stage_1\'),\n
+                  tag=\'document\',\n
+                  priority=2,\n
+                  sql_catalog_id=sql_catalog_id,\n
+                  passive_commit=passive_commit)\n
 \n
 # Next we index order builders\n
 print "#### Indexing order builders ####"\n
-context.portal_orders.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_orders.reindexObject(tag=\'module\',\n
+                                    after_tag=(\'person_stage_1\', ),\n
+                                    sql_catalog_id=sql_catalog_id,\n
+                                    passive_commit=passive_commit)\n
 for o in list(context.portal_orders.objectValues()):\n
-  o.reindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+  o.reindexObject(after_tag=(\'module\',\'category\', \'person_stage_1\'),\n
+                  tag=\'document\',\n
+                  priority=2,\n
+                  sql_catalog_id=sql_catalog_id,\n
+                  passive_commit=passive_commit)\n
 \n
 # Then we index everything except inventories\n
-for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):\n
+for folder in context.portal_url.getPortalObject()\\\n
+                                .objectValues(("ERP5 Folder",)):\n
   print "#### Indexing contents inside folder %s ####" % folder.id\n
   if folder.getId() not in (\'inventory_module\',):\n
-    folder.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+    folder.reindexObject(tag=\'module\',\n
+                         after_tag=(\'person_stage_1\', ),\n
+                         sql_catalog_id=sql_catalog_id,\n
+                         passive_commit=passive_commit)\n
     for o in list(folder.objectValues()):\n
       try:\n
-        o.recursiveReindexObject(after_tag=(\'module\',\'category\'),tag=\'document\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+        o.recursiveReindexObject(after_tag=(\'module\', \'category\',\n
+                                            \'person_stage_1\'),\n
+                                 tag=\'document\',\n
+                                 priority=2,\n
+                                 sql_catalog_id=sql_catalog_id,\n
+                                 passive_commit=passive_commit)\n
       except:\n
-        #raise RuntimeError, o.getRelativeUrl()\n
-        raise\n
-        raise RuntimeError, \'error: folder=%s, o=%s\'  % (repr(folder.getId()), repr(o))\n
+        context.log(\'Unable to reindex\', \'error: folder=%s, o=%s\' %\n
+                                      (repr(folder.getId()), repr(o)))\n
 \n
 # Then we index inventories\n
-for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):\n
+for folder in context.portal_url.getPortalObject()\\\n
+                      .objectValues(("ERP5 Folder",)):\n
   if folder.getId() in (\'inventory_module\',):\n
     print "#### Indexing contents inside folder %s ####" % folder.id\n
-    folder.reindexObject(tag=\'module\', sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+    folder.reindexObject(tag=\'module\',\n
+                         after_tag=(\'person_stage_1\', ),\n
+                         sql_catalog_id=sql_catalog_id,\n
+                         passive_commit=passive_commit)\n
     for o in list(folder.objectValues()):\n
-      o.recursiveReindexObject(after_tag=(\'module\',\'document\',\'category\'),tag=\'inventory\',priority=2, sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+      o.recursiveReindexObject(after_tag=(\'module\', \'document\',\n
+                                          \'category\', \'person_stage_1\'),\n
+                              tag=\'inventory\',\n
+                              priority=2,\n
+                              sql_catalog_id=sql_catalog_id,\n
+                              passive_commit=passive_commit)\n
 \n
 # start activty from simulation because the erp5site is not an active object\n
-context.portal_simulation.activate(after_tag=(\'inventory\',\'simulation\'),priority=3).InventoryModule_reindexMovementList(sql_catalog_id=sql_catalog_id, passive_commit=passive_commit)\n
+context.portal_simulation.activate(\n
+      after_tag=(\'inventory\', \'simulation\', \'person_stage_1\'),\n
+      priority=3\n
+      ).InventoryModule_reindexMovementList(\n
+                            sql_catalog_id=sql_catalog_id,\n
+                            passive_commit=passive_commit)\n
 \n
 return printed\n
 </string> </value>
@@ -192,11 +303,11 @@ return printed\n
                             <string>_print</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>person_module</string>
                             <string>_getiter_</string>
-                            <string>list</string>
                             <string>o</string>
+                            <string>list</string>
                             <string>folder</string>
-                            <string>RuntimeError</string>
                             <string>repr</string>
                           </tuple>
                         </value>
