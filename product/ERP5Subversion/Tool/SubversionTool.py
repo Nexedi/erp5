@@ -42,7 +42,7 @@ from zExceptions import Unauthorized
 from OFS.Image import manage_addFile
 from cStringIO import StringIO
 from tempfile import mktemp
-from shutil import copy2
+from shutil import copy
 
 try:
   from base64 import b64encode, b64decode
@@ -74,18 +74,15 @@ def removeAll(entry):
     pass
       
 def copytree(src, dst, symlinks=False):
-    """Recursively copy a directory tree using copy2().
+    """Recursively copy a directory tree using copy().
 
-    The destination directory must not already exist.
     If exception(s) occur, an Error is raised with a list of reasons.
+    dst dir must exist
 
     If the optional symlinks flag is true, symbolic links in the
     source tree result in symbolic links in the destination tree; if
     it is false, the contents of the files pointed to by symbolic
     links are copied.
-
-    XXX Consider this example code rather than the ultimate tool.
-
     """
     if not os.path.exists(dst):
       os.mkdir(dst)
@@ -101,8 +98,7 @@ def copytree(src, dst, symlinks=False):
             elif os.path.isdir(srcname):
                 copytree(srcname, dstname, symlinks)
             else:
-                copy2(srcname, dstname)
-            # XXX What about devices, sockets etc.?
+                copy(srcname, dstname)
         except (IOError, os.error), why:
             errors.append((srcname, dstname, why))
     if errors:
@@ -781,8 +777,8 @@ class SubversionTool(UniqueObject, Folder):
     # detect created files
     files_set = self.getNewFiles(old_dir, new_dir)
     # Copy files
-    os.system('cp -af %s/* %s'%(new_dir, old_dir))
-    #copytree(new_dir, old_dir)
+    #os.system('cp -af %s/* %s'%(new_dir, old_dir))
+    copytree(new_dir, old_dir)
     # svn add
     for file in files_set:
           self.add(os.path.join(old_dir, file))
