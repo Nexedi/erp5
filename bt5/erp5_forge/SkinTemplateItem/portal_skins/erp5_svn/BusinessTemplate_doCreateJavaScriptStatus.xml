@@ -73,11 +73,6 @@ if "files" in context.REQUEST.keys():\n
 else:\n
   files=None\n
 \n
-if "checked" in context.REQUEST.keys():\n
-  checked = context.REQUEST["checked"]\n
-else:\n
-  checked=files\n
-\n
 print \'\'\'<script>var tree = null;\n
         var business_template;\n
         var is_expanded=false;\n
@@ -113,7 +108,6 @@ print \'\'\'<script>var tree = null;\n
                 tree.loadXML(\'tree.xml?bt_id=%s\', hideObject)\n
                 //tree.setOnClickHandler(clickHandler)\n
                 tree.setOnClickHandler(showMenu)\n
-                //business_template=getget(\'bt_name\')\n
         }\n
         \n
         function expandCollapse(){\n
@@ -342,20 +336,8 @@ document.onmousemove = getMouse;\n
           document.getElementById(\'menudiv\').style.display = "none";\n
           open(\'%s/BusinessTemplate_doSvnLs?file=\'+tree.getSelectedItemId(), \'_self\');\n
         }\n
-\n
+        </script>\n
 \'\'\'% (context.getId(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url())\n
-\n
-if checked:\n
-  print \'\'\'\n
-  function checkBoxes(){\n
-    files_array=\\\'%s\\\'.split(\',\')\n
-    for(i=0;i<files_array.length;++i){\n
-      tree.setCheck(files_array[i], 1);\n
-    }\n
-  }\'\'\'%checked\n
-else:\n
-  print \'function checkBoxes(){}\'\n
-print \'</script>\'\n
 \n
 return printed\n
 
@@ -407,7 +389,6 @@ return printed\n
                             <string>_getitem_</string>
                             <string>files</string>
                             <string>None</string>
-                            <string>checked</string>
                           </tuple>
                         </value>
                     </item>

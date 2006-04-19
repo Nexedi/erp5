@@ -147,7 +147,6 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
 \t  if (ie4 || upLevel) {\n
 \t    splash.style.visibility = "hidden";\n
           }\n
-          checkBoxes();\n
 \t}\n
         doOnLoad()\n
 </script>\n
