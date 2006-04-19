@@ -80,6 +80,8 @@ if len(revisions_list) != 2:\n
   context.REQUEST.set(\'portal_status_message\', \'You must select only TWO revisions!\')\n
   return context.asContext(file=file).BusinessTemplate_viewSvnLog()\n
 \n
+revisions_list.sort()\n
+\n
 svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
 if not svn_path :\n
   raise "Error: Please set Subversion working path in preferences"\n
@@ -87,11 +89,11 @@ if svn_path[-1]!=\'/\':\n
   svn_path+=\'/\'\n
 file = svn_path + file\n
 \n
-print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+file+"\'>"+file+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, file)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
-print \'<hr></font></b>\'\n
-print context.getPortalObject()["portal_subversion"].diffHTML(file)\n
-\n
-return printed\n
+diff = "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+file+"\'>"+file+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, file)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
+diff += \'<hr></b>\'\n
+diff += context.getPortalObject()["portal_subversion"].diffHTML(file, revision1=revisions_list[0], revision2=revisions_list[1])\n
+diff += \'</font>\'\n
+return context.asContext(diff=diff).BusinessTemplate_viewSvnMultiDiff()\n
 
 
 ]]></string> </value>
@@ -135,8 +137,6 @@ return printed\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -144,6 +144,7 @@ return printed\n
                             <string>revisions_list</string>
                             <string>len</string>
                             <string>svn_path</string>
+                            <string>diff</string>
                           </tuple>
                         </value>
                     </item>
