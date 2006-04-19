@@ -68,6 +68,9 @@
    <name>Add CMFMailIn Tools</name>
   </permission>
   <permission>
+   <name>Add CMFTranslation Tools</name>
+  </permission>
+  <permission>
    <name>Add Configured CMF Sites</name>
   </permission>
   <permission>
