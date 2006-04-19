@@ -678,6 +678,27 @@ class SubversionTool(UniqueObject, Folder):
     client = self._getClient()
     return client.status(path, **kw)
   
+  security.declareProtected('Import/Export objects', 'unversionedFiles')
+  def unversionedFiles(self, path, **kw):
+    """Return unversioned files
+    """
+    client = self._getClient()
+    status_list = client.status(path, **kw)
+    unversioned_list = []
+    for statusObj in status_list:
+      if str(statusObj.getTextStatus()) == "unversioned":
+        my_dict = {}
+        my_dict['uid'] = statusObj.getPath()
+        unversioned_list.append(my_dict)
+    return unversioned_list
+      
+  security.declareProtected('Import/Export objects', 'removeAllInList')
+  def removeAllInList(self, list):
+    """Remove all files and folders in list
+    """
+    for file in list:
+      removeAll(file)
+    
   def getModifiedTree(self, path) :
     # Remove trailing slash if it's present
     if path[-1] == os.sep :
