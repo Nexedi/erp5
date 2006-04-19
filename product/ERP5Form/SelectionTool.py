@@ -705,7 +705,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST)
       if selection is None:
         selection = Selection()
-        self.setSelectionFor(selection_name,selection, REQUEST=REQUEST)
+        self.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
 
       if listbox_display_mode == 'FlatListMode':
         flat_list_mode = 1
@@ -934,7 +934,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if object_uid is not None:
         try :
           o = self.portal_catalog.getObject(object_uid)
-        except NotFound, KeyError :
+        except (NotFound, KeyError), err :
           o = None
       if o is None:
         # we first try to reindex the object, thanks to the object_path
@@ -943,14 +943,14 @@ class SelectionTool( UniqueObject, SimpleItem ):
         if o is not None:
           # XXX
           o.immediateReindexObject()
-          object_uid = o.getUid() 
+          object_uid = o.getUid()
         else:
           raise SelectionError, \
                 "Sorrry, Error, the calling object was not catalogued. " \
                 "Do not know how to do ?"
       # Find the field which was clicked on
       # Important to get from the object instead of self
-      form = getattr(o, form_id) 
+      form = getattr(o, form_id)
       field = None
       # Search the correct field
       relation_field_found = 0
@@ -959,12 +959,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       for field in form.get_fields(include_disabled=0):
         if field.get_value('editable', REQUEST=REQUEST):
           try:
-            dumb = field.get_value('is_relation_field')
-          except:
-  #         except KeyError:
-            # XXX FIXME Exception name is not in locals.
-            # Namespace seems a bit broken...
-            LOG("SelectionTool", 0, "Exception catched with broken namespace!")
+           field.get_value('is_relation_field')
+          except KeyError:
             pass
           else:
             if index == relation_index:
@@ -975,7 +971,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if not relation_field_found:
         # We didn't find the field...
         raise SelectionError, "SelectionTool: can not find the relation" \
-                              " field %s" % index 
+                              " field %s" % index
       else:
         # Field found
         field_key = field.generate_field_key()
