@@ -38,6 +38,7 @@ from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from ZODB.POSException import ConflictError
+from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ERP5Type.Utils import UpperCase
 
 import psyco
@@ -71,6 +72,7 @@ def get_value(self, id, **kw):
         kw['form'] = form
         kw['request'] = REQUEST
         kw['here'] = object
+        kw['modules'] = SecureModuleImporter
         kw['container'] = container
         try :
             kw['preferences'] = object.getPortalObject().portal_preferences
