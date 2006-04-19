@@ -101,7 +101,7 @@ def copytree(src, dst, symlinks=False):
             else:
                 copy(srcname, dstname)
         except (IOError, os.error), why:
-            errors.append((srcname, dstname, why))
+            errors.append((srcname, dstname, 'Error: ' + str(why.strerror)))
     if errors:
         raise Error, errors
 
@@ -767,8 +767,9 @@ class SubversionTool(UniqueObject, Folder):
         dirs.remove('.svn')
       # get Directories
       for name in dirs:
+        i = root.replace(directory, '').count(os.sep)
         f = os.path.join(root, name)
-        dir_set.add(f.replace(directory,''))
+        dir_set.add((i, f.replace(directory,'')))
     return dir_set
       
   # return a set with files present in the directory
@@ -779,9 +780,10 @@ class SubversionTool(UniqueObject, Folder):
       if '.svn' in dirs:
         dirs.remove('.svn')
       # get Files
-      for name in files: 
+      for name in files:
+        i = root.replace(directory, '').count(os.sep)
         f = os.path.join(root, name)
-        dir_set.add(f.replace(directory,''))
+        dir_set.add((i, f.replace(directory,'')))
     return dir_set
   
   # return files present in new_dir but not in old_dir
@@ -793,6 +795,9 @@ class SubversionTool(UniqueObject, Folder):
       new_dir += os.sep
     old_set = self.getSetFilesForDir(old_dir)
     new_set = self.getSetFilesForDir(new_dir)
+    LOG("chrisold", 1, old_set)
+    LOG("chrisnew", 1, new_set)
+    LOG("chrisdiff", 1, new_set.difference(old_set))
     return new_set.difference(old_set)
 
   # return dirs present in new_dir but not in old_dir
@@ -813,8 +818,12 @@ class SubversionTool(UniqueObject, Folder):
     # detect removed directories
     dirs_set = self.getNewDirs(new_dir, old_dir)
     # svn del
-    self.remove([os.path.join(old_dir, x) for x in files_set])
-    self.remove([os.path.join(old_dir, x) for x in dirs_set])
+    list = [x for x in files_set]
+    list.sort()
+    self.remove([os.path.join(old_dir, x[1]) for x in list])
+    list = [x for x in dirs_set]
+    list.sort()
+    self.remove([os.path.join(old_dir, x[1]) for x in list])
   
   # copy files and add new files
   def addNewFiles(self, old_dir, new_dir, bt):
@@ -826,8 +835,12 @@ class SubversionTool(UniqueObject, Folder):
     #os.system('cp -af %s/* %s'%(new_dir, old_dir))
     copytree(new_dir, old_dir)
     # svn add
-    self.add([os.path.join(old_dir, x) for x in dirs_set])
-    self.add([os.path.join(old_dir, x) for x in files_set])
+    list = [x for x in dirs_set]
+    list.sort()
+    self.add([os.path.join(old_dir, x[1]) for x in list])
+    list = [x for x in files_set]
+    list.sort()
+    self.add([os.path.join(old_dir, x[1]) for x in list])
   
   def treeToXML(self, item) :
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
