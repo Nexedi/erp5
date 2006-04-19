@@ -34,7 +34,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, commands, time, exceptions
+import os, re, commands, time, exceptions, thread
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
@@ -756,7 +756,7 @@ class SubversionTool(UniqueObject, Folder):
     # add new files and copy
     self.addNewFiles(svn_path, path, bt)
     # Clean up
-    removeAll(path)
+    thread.start_new_thread(removeAll, (path,))
 
   # return a set with directories present in the directory
   def getSetDirsForDir(self, directory):
