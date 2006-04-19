@@ -1,0 +1,46 @@
+<workflow_chain>
+ <chain>
+  <type>Feature</type>
+  <workflow>feature_analysis_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Feature Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Case</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Case Actor</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Case Step</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Report</type>
+  <workflow>edit_workflow, test_report_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Test Report Step</type>
+  <workflow>edit_workflow, test_report_step_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Use Case</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Use Case Actor</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Use Case Scenario</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Use Case Scenario Step</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
