@@ -133,7 +133,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>added,modified,removed,checked=\'\',**kw</string> </value>
+            <value> <string>added=\'\',modified=\'\',removed=\'\',checked=\'\',**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -195,6 +195,9 @@ return context.BusinessTemplate_viewSvnStatus()\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string></string>
+                <string></string>
+                <string></string>
                 <string></string>
               </tuple>
             </value>
