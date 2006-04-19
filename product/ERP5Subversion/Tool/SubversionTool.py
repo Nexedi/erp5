@@ -795,9 +795,6 @@ class SubversionTool(UniqueObject, Folder):
       new_dir += os.sep
     old_set = self.getSetFilesForDir(old_dir)
     new_set = self.getSetFilesForDir(new_dir)
-    LOG("chrisold", 1, old_set)
-    LOG("chrisnew", 1, new_set)
-    LOG("chrisdiff", 1, new_set.difference(old_set))
     return new_set.difference(old_set)
 
   # return dirs present in new_dir but not in old_dir
