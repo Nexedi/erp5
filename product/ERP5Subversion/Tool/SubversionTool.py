@@ -84,8 +84,6 @@ def copytree(src, dst, symlinks=False):
     it is false, the contents of the files pointed to by symbolic
     links are copied.
     """
-    if not os.path.exists(dst):
-      os.mkdir(dst)
     names = os.listdir(src)
     errors = []
     for name in names:
@@ -96,6 +94,8 @@ def copytree(src, dst, symlinks=False):
                 linkto = os.readlink(srcname)
                 os.symlink(linkto, dstname)
             elif os.path.isdir(srcname):
+                if not os.path.exists(dstname):
+                  os.makedirs(dstname)
                 copytree(srcname, dstname, symlinks)
             else:
                 copy(srcname, dstname)
@@ -448,7 +448,7 @@ class SubversionTool(UniqueObject, Folder):
     # if file have been deleted then not in zodb
     if not os.path.exists(path):
       return '#'
-    svn_path = bt.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    svn_path = bt.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
     if not svn_path:
       raise 'Error: Please set working copy path in Subversion preferences !'
     svn_path = os.path.join(svn_path, bt.getTitle())
@@ -606,7 +606,7 @@ class SubversionTool(UniqueObject, Folder):
   def info(self):
     """return info of working copy
     """
-    working_copy = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    working_copy = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
     if not working_copy :
       raise 'Please set Working copy path in preferences'
     client = self._getClient()
@@ -623,7 +623,7 @@ class SubversionTool(UniqueObject, Folder):
   def cleanup(self):
     """remove svn locks in working copy
     """
-    working_copy = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    working_copy = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
     if not working_copy :
       raise 'Please set Working copy path in preferences'
     client = self._getClient()
@@ -680,7 +680,7 @@ class SubversionTool(UniqueObject, Folder):
   
   def getModifiedTree(self, path) :
     # Remove trailing slash if it's present
-    if path[-1]== os.sep :
+    if path[-1] == os.sep :
       path = path[:-1]
     
     root = Dir(path, "normal")
@@ -724,7 +724,7 @@ class SubversionTool(UniqueObject, Folder):
   def extractBT(self, bt):
     path = mktemp()
     bt.export(path=path, local=1)
-    svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    svn_path = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
     if not svn_path :
       raise "Error: Please set Subversion working path in preferences"
     svn_path=os.path.join(svn_path,bt.getTitle())+os.sep
@@ -792,7 +792,7 @@ class SubversionTool(UniqueObject, Folder):
   
   def _treeToXML(self, item, output, ident, first) :
     # svn path
-    svn_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+    svn_path = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
     if not svn_path :
       raise "Error: Please set Subversion working path in preferences"
     if svn_path[-1] != os.sep:

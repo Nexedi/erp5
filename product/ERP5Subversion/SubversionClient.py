@@ -207,7 +207,7 @@ try:
       return self.aq_parent._getLogin(realm)
     
     def _getPreferences(self):
-      working_path = self.getPortalObject().portal_preferences.getPreference('subversion_working_copy')
+      working_path = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
       if not working_path :
         raise "Error: Please set Subversion working path in preferences"
       #self.svn_username = self.getPortalObject().portal_preferences.getPreference('preferred_subversion_user_name')
