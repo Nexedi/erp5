@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.UseCase_getActorItemList()</string> </value>
+            <value> <string>here/ERP5Consulting_getActorItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

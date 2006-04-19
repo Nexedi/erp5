@@ -4,6 +4,22 @@ Document Analysis Lexicon Item | lexicon_item_ubm
 Document Analysis Lexicon | lexicon_source_type
 Feature | feature_group
 Feature | feature_state
+Test Case Actor | group
+Test Case Actor | site
+Test Case Actor | use_case_actor_role
+Test Case Step | requirement
+Test Case Step | source_section
+Test Case | requirement
+Test Case | source
+Test Case | specialise
+Test Report Actor | group
+Test Report Actor | site
+Test Report Actor | use_case_actor_role
+Test Report Step | requirement
+Test Report Step | source_section
+Test Report | requirement
+Test Report | source
+Test Report | specialise
 Use Case Actor | group
 Use Case Actor | site
 Use Case Actor | use_case_actor_role

@@ -3,6 +3,12 @@ Feature | Document
 Feature | DublinCore
 Feature | Folder
 Feature | XMLObject
+Test Case Actor | SortIndex
+Test Case Step | SortIndex
+Test Case | SortIndex
+Test Report Actor | SortIndex
+Test Report Step | SortIndex
+Test Report | SortIndex
 Use Case Actor | SortIndex
 Use Case Scenario Step | SortIndex
 Use Case Scenario | SortIndex

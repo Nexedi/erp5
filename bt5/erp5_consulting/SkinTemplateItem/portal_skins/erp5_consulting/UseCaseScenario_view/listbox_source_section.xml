@@ -287,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\',\'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.getParent().contentValues(filter={\'portal_type\':\'Use Case Actor\'})]</string> </value>
+            <value> <string>here/ERP5Consulting_getActorItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

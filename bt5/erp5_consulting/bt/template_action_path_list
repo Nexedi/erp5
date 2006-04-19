@@ -34,6 +34,41 @@ Feature Module | view
 Feature | fast_input
 Feature | print_pdf
 Feature | view
+Test Case Actor | history
+Test Case Actor | metadata
+Test Case Actor | print_pdf
+Test Case Actor | view
+Test Case Module | list_ui
+Test Case Module | sort_on
+Test Case Module | view
+Test Case Step | history
+Test Case Step | metadata
+Test Case Step | print_pdf
+Test Case Step | view
+Test Case | actor_fast_input
+Test Case | actors
+Test Case | history
+Test Case | instanciate_test_report
+Test Case | metadata
+Test Case | print_pdf
+Test Case | step_fast_input
+Test Case | view
+Test Report Actor | history
+Test Report Actor | metadata
+Test Report Actor | print_pdf
+Test Report Actor | view
+Test Report Module | list_ui
+Test Report Module | sort_on
+Test Report Module | view
+Test Report Step | history
+Test Report Step | metadata
+Test Report Step | print_pdf
+Test Report Step | view
+Test Report | actors
+Test Report | history
+Test Report | metadata
+Test Report | print_pdf
+Test Report | view
 Use Case Actor | history
 Use Case Actor | metadata
 Use Case Actor | print_pdf

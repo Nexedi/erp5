@@ -8,6 +8,24 @@
   <item>DublinCore</item>
   <item>Document</item>
  </portal_type>
+ <portal_type id="Test Case">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Test Case Actor">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Test Case Step">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Test Report">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Test Report Actor">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Test Report Step">
+  <item>SortIndex</item>
+ </portal_type>
  <portal_type id="Use Case">
   <item>SortIndex</item>
  </portal_type>
