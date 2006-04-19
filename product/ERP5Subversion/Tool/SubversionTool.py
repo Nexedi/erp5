@@ -43,6 +43,7 @@ from OFS.Image import manage_addFile
 from cStringIO import StringIO
 from tempfile import mktemp
 from shutil import copy
+from zLOG import LOG
 
 try:
   from base64 import b64encode, b64decode
@@ -757,8 +758,8 @@ class SubversionTool(UniqueObject, Folder):
     # Clean up
     removeAll(path)
 
-  # return a set with dirs & files present in the directory
-  def getSetForDir(self, directory):
+  # return a set with directories present in the directory
+  def getSetDirsForDir(self, directory):
     dir_set = set()
     for root, dirs, files in os.walk(directory):
       # don't visit SVN directories
@@ -768,41 +769,65 @@ class SubversionTool(UniqueObject, Folder):
       for name in dirs:
         f = os.path.join(root, name)
         dir_set.add(f.replace(directory,''))
+    return dir_set
+      
+  # return a set with files present in the directory
+  def getSetFilesForDir(self, directory):
+    dir_set = set()
+    for root, dirs, files in os.walk(directory):
+      # don't visit SVN directories
+      if '.svn' in dirs:
+        dirs.remove('.svn')
       # get Files
       for name in files: 
         f = os.path.join(root, name)
         dir_set.add(f.replace(directory,''))
     return dir_set
   
-  # return files/dirs present in new_dir but not in old_dir
+  # return files present in new_dir but not in old_dir
   # return a set of relative paths
   def getNewFiles(self, old_dir, new_dir):
     if old_dir[-1] != os.sep:
       old_dir += os.sep
     if new_dir[-1] != os.sep:
       new_dir += os.sep
-    old_set = self.getSetForDir(old_dir)
-    new_set = self.getSetForDir(new_dir)
+    old_set = self.getSetFilesForDir(old_dir)
+    new_set = self.getSetFilesForDir(new_dir)
     return new_set.difference(old_set)
 
+  # return dirs present in new_dir but not in old_dir
+  # return a set of relative paths
+  def getNewDirs(self, old_dir, new_dir):
+    if old_dir[-1] != os.sep:
+      old_dir += os.sep
+    if new_dir[-1] != os.sep:
+      new_dir += os.sep
+    old_set = self.getSetDirsForDir(old_dir)
+    new_set = self.getSetDirsForDir(new_dir)
+    return new_set.difference(old_set)
+    
   # svn del files that have been removed in new dir
   def deleteOldFiles(self, old_dir, new_dir, bt):
     # detect removed files
     files_set = self.getNewFiles(new_dir, old_dir)
+    # detect removed directories
+    dirs_set = self.getNewDirs(new_dir, old_dir)
     # svn del
-    for file in files_set:
-        self.remove(os.path.join(old_dir, file)) 
+    self.remove([os.path.join(old_dir, x) for x in files_set])
+    self.remove([os.path.join(old_dir, x) for x in dirs_set])
   
   # copy files and add new files
   def addNewFiles(self, old_dir, new_dir, bt):
     # detect created files
     files_set = self.getNewFiles(old_dir, new_dir)
+    # detect created directories
+    dirs_set = self.getNewDirs(old_dir, new_dir)
     # Copy files
     #os.system('cp -af %s/* %s'%(new_dir, old_dir))
     copytree(new_dir, old_dir)
     # svn add
-    for file in files_set:
-          self.add(os.path.join(old_dir, file))
+    self.add([os.path.join(old_dir, x) for x in dirs_set])
+    self.add([os.path.join(old_dir, x) for x in files_set])
   
   def treeToXML(self, item) :
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
