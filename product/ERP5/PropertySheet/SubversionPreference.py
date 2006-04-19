@@ -37,4 +37,9 @@ class SubversionPreference:
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w' },
+    { 'id'          : 'preferred_subversion_working_copy',
+      'description' : 'The Subversion working wopy',
+      'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : 'w' },
   )
