@@ -188,7 +188,7 @@ class DiffFile:
   def toHTML(self):
     # Adding header of the table
     if self.binary:
-      return '<b>Binary File!</b><br><br><br>'
+      return '<b>Binary File or no changes!</b><br><br><br>'
     
     html = '''
     <table style="text-align: left; width: 100%%;" border="0" cellpadding="0" cellspacing="0">
@@ -520,8 +520,8 @@ class SubversionTool(UniqueObject, Folder):
     trust_item_list, permanent = loads(b64decode(trust))
     return dict(trust_item_list), permanent
   
-  def diffHTML(self, file_path):
-    raw_diff = self.diff(file_path)
+  def diffHTML(self, file_path, revision1=None, revision2=None):
+    raw_diff = self.diff(file_path, revision1, revision2)
     return DiffFile(raw_diff).toHTML()
   
   # Display a file content in HTML
@@ -652,11 +652,11 @@ class SubversionTool(UniqueObject, Folder):
     return client.ls(path)
 
   security.declareProtected('Import/Export objects', 'diff')
-  def diff(self, path):
+  def diff(self, path, revision1=None, revision2=None):
     """Make a diff for a file or a directory.
     """
     client = self._getClient()
-    return client.diff(path)
+    return client.diff(path, revision1, revision2)
 
   security.declareProtected('Import/Export objects', 'revert')
   def revert(self, path):

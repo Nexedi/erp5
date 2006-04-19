@@ -251,11 +251,15 @@ try:
       # Since plain Python classes are not convenient in Zope, convert the objects.
       return [Status(x) for x in self.client.status(path, **kw)]
     
-    def diff(self, path):
+    def diff(self, path, revision1, revision2):
       self._getPreferences()
       tmp = mktemp()
       os.system('mkdir -p %s'%tmp)
-      diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False)
+      if not revision1 or not revision2:
+        diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False)
+      else:
+        diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False, revision1=pysvn.Revision(pysvn.opt_revision_kind.number,revision1), revision2=pysvn.Revision(pysvn.opt_revision_kind.number,revision2))
+      # clean up temp dir
       os.system('rm -rf %s'%tmp)
       return diff
     
