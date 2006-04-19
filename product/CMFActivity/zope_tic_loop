@@ -8,7 +8,7 @@
 # Make sure this user exists in the portal, and has Member role
 [ -z $AUTH ] && AUTH=zope:zope
 [ -z $PORT ] && PORT=9080
-[ -z $SITE ] && ZOPE_TIC_LOOP_SITE=erp5
+[ -z $SITE ] && SITE=erp5
 
 [ -z $TMP ] && TMP=/tmp
 
