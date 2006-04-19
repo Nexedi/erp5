@@ -70,11 +70,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key>                 <string>Default</string> </key>
                     <value>
                       <list>
                         <string>my_preferred_subversion_user_name</string>
-                        <string>my_subversion_working_copy</string>
+                        <string>my_preferred_subversion_working_copy</string>
                       </list>
                     </value>
                 </item>

@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>BusinessTemplate_doSvnMultiDiff</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -98,6 +98,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_file</string>
                       </list>
                     </value>
                 </item>
@@ -130,7 +131,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>View Diff between revisions</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
