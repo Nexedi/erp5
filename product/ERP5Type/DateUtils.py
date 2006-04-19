@@ -26,8 +26,18 @@
 #
 ##############################################################################
 
+from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
 from zLOG import LOG
+
+security = ModuleSecurityInfo('Products.ERP5Type.DateUtils')
+security.declarePublic('addToDate', 'getClosestDate',
+    'getIntervalBetweenDates', 'getMonthAndDaysBetween',
+    'getCompletedMonthBetween', 'getRoundedMonthBetween',
+    'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
+    'getBissextilCompliantYearFraction',
+    'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
+    'roundDate')
 
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
