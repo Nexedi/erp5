@@ -86,7 +86,7 @@ svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversi
 if not svn_path :\n
   raise "Error: Please set Subversion working path in preferences"\n
 if svn_path[-1]!=\'/\':\n
-  svn_path+=\'/\'\n
+  svn_path += \'/\'\n
 file = svn_path + file\n
 \n
 diff = "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+file+"\'>"+file+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, file)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n

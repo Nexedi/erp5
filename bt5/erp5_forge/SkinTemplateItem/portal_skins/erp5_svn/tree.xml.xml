@@ -72,7 +72,7 @@ context.getPortalObject().portal_subversion.extractBT(context)\n
 \n
 bt_name = context.getPortalObject()["portal_templates"][context.getId()].getTitle()\n
 context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml;; charset=utf-8\')\n
-path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
+path = context.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()\n
 if not path :\n
   raise "Error: Please set Subversion working path in preferences"\n
 if path[-1] != \'/\':\n
