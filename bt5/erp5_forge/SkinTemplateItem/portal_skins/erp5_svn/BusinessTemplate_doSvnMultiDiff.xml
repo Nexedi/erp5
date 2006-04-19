@@ -68,8 +68,13 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-revisions_list = context.REQUEST[\'uids\']\n
 file = context.REQUEST[\'file\']\n
+\n
+if \'uids\' not in context.REQUEST.keys():  \n
+  context.REQUEST.set(\'portal_status_message\', \'You must select only TWO revisions!\')\n
+  return context.asContext(file=file).BusinessTemplate_viewSvnLog()\n
+\n
+revisions_list = context.REQUEST[\'uids\']\n
 \n
 if len(revisions_list) != 2:\n
   context.REQUEST.set(\'portal_status_message\', \'You must select only TWO revisions!\')\n
@@ -135,8 +140,8 @@ return printed\n
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>revisions_list</string>
                             <string>file</string>
+                            <string>revisions_list</string>
                             <string>len</string>
                             <string>svn_path</string>
                           </tuple>
