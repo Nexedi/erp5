@@ -70,7 +70,11 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <none/>
+              <list>
+                <string>Purchase Supply Line</string>
+                <string>Sale Supply Line</string>
+                <string>Supply Line</string>
+              </list>
             </value>
         </item>
         <item>

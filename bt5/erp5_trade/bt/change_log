@@ -1,3 +1,6 @@
+2006-04-20 Romain
+* Make supply_line_interaction_workflow compatible with Sale/Purchase Supply Line.
+
 2006-03-09 Seb
 * Fix parameters in DeliverBuilder_selectConfirmedDeliveryList
 
