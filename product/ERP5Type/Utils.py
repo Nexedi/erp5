@@ -1568,49 +1568,47 @@ def createDefaultAccessors(property_holder, id, prop = None,
       setattr(property_holder, accessor_name, list_accessor.dummy_copy(accessor_name))
     if prop.has_key('acquired_property_id'):
       for aq_id in prop['acquired_property_id']:
-        composed_id = "%s_%s" % (id, aq_id)
-        # print "Set composed_id accessor %s" % composed_id
-        accessor_name = 'get' + UpperCase(composed_id)
-        # print "Set accessor_name accessor %s" % accessor_name
-        base_accessor = ContentProperty.Getter(accessor_name, composed_id, prop['type'], aq_id,
-                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-        if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-          setattr(property_holder, accessor_name, base_accessor)
-          property_holder.security.declareProtected( read_permission, accessor_name )
-        accessor_name = 'get' + UpperCase(composed_id) + 'List'
-        base_accessor = ContentProperty.Getter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
-                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
-        if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-          setattr(property_holder, accessor_name, base_accessor)
-          property_holder.security.declareProtected( read_permission, accessor_name )
-        # No default getter YET XXXXXXXXXXXXXX
-        # No list getter YET XXXXXXXXXXXXXX
-        accessor_name = '_set' + UpperCase(composed_id)
-        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
-                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=0)
-        if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-          setattr(property_holder, accessor_name, base_accessor)
-          property_holder.security.declareProtected( write_permission, accessor_name )
-        accessor_name = '_set' + UpperCase(composed_id) + 'List'
-        base_accessor = ContentProperty.Setter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
-                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=0)
-        if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-          setattr(property_holder, accessor_name, base_accessor)
-          property_holder.security.declareProtected( write_permission, accessor_name )
-        accessor_name = 'set' + UpperCase(composed_id)
-        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
-                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
-        if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-          setattr(property_holder, accessor_name, base_accessor)
-          property_holder.security.declareProtected( write_permission, accessor_name )
-        accessor_name = 'set' + UpperCase(composed_id) + 'List'
-        base_accessor = ContentProperty.Setter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
-                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
-        if not hasattr(property_holder, accessor_name) or prop.get('override',0):
-          setattr(property_holder, accessor_name, base_accessor)
-          property_holder.security.declareProtected( write_permission, accessor_name )
-        # No default getter YET XXXXXXXXXXXXXX
-        # No list getter YET XXXXXXXXXXXXXX
+        for composed_id in ("%s_%s" % (id, aq_id), "default_%s_%s" % (id, aq_id)) :
+          accessor_name = 'get' + UpperCase(composed_id)
+          base_accessor = ContentProperty.Getter(accessor_name, composed_id, prop['type'], aq_id,
+                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( read_permission, accessor_name )
+          accessor_name = 'get' + UpperCase(composed_id) + 'List'
+          base_accessor = ContentProperty.Getter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
+                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( read_permission, accessor_name )
+          # No default getter YET XXXXXXXXXXXXXX
+          # No list getter YET XXXXXXXXXXXXXX
+          accessor_name = '_set' + UpperCase(composed_id)
+          base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
+                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=0)
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( write_permission, accessor_name )
+          accessor_name = '_set' + UpperCase(composed_id) + 'List'
+          base_accessor = ContentProperty.Setter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
+                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=0)
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( write_permission, accessor_name )
+          accessor_name = 'set' + UpperCase(composed_id)
+          base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
+                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( write_permission, accessor_name )
+          accessor_name = 'set' + UpperCase(composed_id) + 'List'
+          base_accessor = ContentProperty.Setter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
+                  portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( write_permission, accessor_name )
+          # No default getter YET XXXXXXXXXXXXXX
+          # No list getter YET XXXXXXXXXXXXXX
   elif prop['type'] == 'object':
     # Create url getters for an object property
     accessor_name = 'get' + UpperCase(id)
