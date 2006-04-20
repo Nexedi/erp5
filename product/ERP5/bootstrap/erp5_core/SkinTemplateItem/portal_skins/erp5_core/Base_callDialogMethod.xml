@@ -66,9 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Generic method called when submitting a form in dialog mode.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Generic method called when submitting a form in dialog mode.\n
 Responsible for validating form data and redirecting to the form action.\n
-\n
 """\n
 \n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
@@ -150,6 +151,16 @@ try:\n
   # if dialog_category is search, then edit the selection\n
   if dialog_category == "object_search" :\n
     context.portal_selections.setSelectionParamsFor(selection_name, kw)\n
+  \n
+  cleanedup_kw = {}\n
+  for k, v in kw.items() :\n
+    if v is not None :\n
+      cleanedup_kw[k] = v\n
+\n
+  # If url is too long, we do not redirecting\n
+  # to avoir crash <christophe@nexedi.com>\n
+  if make_query(cleanedup_kw) > 200 :\n
+    cannot_redirect = 1\n
 \n
   # if we cannot redirect, then call the form directly.\n
   # XXX we always redirect in report mode to make sure portal_skin\n
@@ -168,10 +179,6 @@ try:\n
   # Otherwise, prepare URL to redirect, passing arguments in the URL\n
   # (we remove None values, as it doesn\'t work with make_query, which\n
   # pass \'None\')\n
-  cleanedup_kw = {}\n
-  for k, v in kw.items() :\n
-    if v is not None :\n
-      cleanedup_kw[k] = v\n
   redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
                             , dialog_method\n
                             , make_query(cleanedup_kw)\n
@@ -183,9 +190,9 @@ except FormValidationError, validation_errors:\n
   field_errors = form.ErrorFields(validation_errors)\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
-\n
-# vim: syntax=python\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -271,8 +278,8 @@ except FormValidationError, validation_errors:\n
                             <string>key</string>
                             <string>listbox_line</string>
                             <string>tuple</string>
-                            <string>dialog_form</string>
                             <string>cleanedup_kw</string>
+                            <string>dialog_form</string>
                             <string>redirect_url</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
