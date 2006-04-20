@@ -147,7 +147,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    self.assertEquals('diverged',packing_list.getCausalityState())
+    self.assertEquals('diverged', packing_list.getCausalityState())
 
   def stepCheckNewPackingListIsDivergent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -183,6 +183,17 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     self.assertEquals(False,packing_list.isDivergent())
+
+  def stepChangePackingListLineResource(self, sequence=None, 
+                                        sequence_list=None, **kw):
+    """
+    Change the resource of the packing list.
+    """
+    packing_list = sequence.get('packing_list')
+    resource = sequence.get('resource')
+    for packing_list_line in packing_list.objectValues(
+                             portal_type=self.packing_list_line_portal_type):
+      packing_list_line.edit(resource_value=resource)
 
   def stepDecreasePackingListLineQuantity(self, sequence=None, sequence_list=None, **kw):
     """
@@ -278,7 +289,8 @@ class TestPackingListMixin(TestOrderMixin):
       simulation_movement = simulation_list[0]
       self.assertEquals(simulation_movement.getQuantity(),self.default_quantity+1)
 
-  def stepChangePackingListDestination(self, sequence=None, sequence_list=None, **kw):
+  def stepChangePackingListDestination(self, sequence=None, 
+                                       sequence_list=None, **kw):
     """
       Test if packing list is divergent
     """
@@ -549,7 +561,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
                       ChangePackingListDestination \
-                      CheckPackingListIsNotDivergent \
+                      CheckPackingListIsDivergent \
                       Tic \
                       CheckSimulationDestinationUpdated \
                       '
@@ -758,6 +770,25 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       Tic \
                       CheckPackingListIsSolved \
                       CheckPackingListSplittedTwoTimes \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def test_12_PackingListLineChangeResource(self, quiet=0, run=run_all_test):
+    """
+    Test if delivery diverged when we change the resource.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      CreateNotVariatedResource \
+                      ChangePackingListLineResource \
+                      CheckPackingListIsCalculating \
+                      Tic \
+                      CheckPackingListIsDivergent \
                       '
     sequence_list.addSequenceString(sequence_string)
 
