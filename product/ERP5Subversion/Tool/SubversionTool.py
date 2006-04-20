@@ -756,7 +756,8 @@ class SubversionTool(UniqueObject, Folder):
     # add new files and copy
     self.addNewFiles(svn_path, path, bt)
     # Clean up
-    thread.start_new_thread(removeAll, (path,))
+    #removeAll(path)
+    self.activate().removeAllInList([path,])
 
   # return a set with directories present in the directory
   def getSetDirsForDir(self, directory):
