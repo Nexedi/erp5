@@ -117,13 +117,13 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
 \t\t\tstyle="width:98%; height:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:auto;">\n
 \t\t</div>\n
 \t\t</td>\n
-                <td style="vertical-align: top; text-align: left;"  width="10%" height="300">\n
-                <table><tr><td><b><u><font color=\'black\' size="1">Caption:</font></u></b></td></tr>\n
-                <tr><td>  </td></tr>\n
-                <tr><td><font color="green" size="1">Added File</font></td></tr>\n
-                <tr><td><font color="orange" size="1">Modified File</font></td></tr>\n
-                <tr><td><font color="red" size="1">Deleted File</font></td></tr>\n
-                <tr><td><font color="grey" size="1">Conflicted File</font></td></tr></table>\n
+                <td style="vertical-align: top; text-align: left;"  width="6%" height="300" id="caption">\n
+                <table style="background-color:#ffffff;"><tr><td><b><font color=\'black\' size="1">Caption:</font></b></td></tr>\n
+                <tr><td style="background-color:#000000;">  </td></tr>\n
+                <tr><td><font color="green" size="1">Added</font></td></tr>\n
+                <tr><td><font color="orange" size="1">Modified</font></td></tr>\n
+                <tr><td><font color="red" size="1">Deleted</font></td></tr>\n
+                <tr><td><font color="grey" size="1">Conflicted</font></td></tr></table>\n
                 <br><br>\n
                 </td>\n
 \t</tr>\n
