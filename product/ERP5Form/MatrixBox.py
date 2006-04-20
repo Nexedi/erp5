@@ -30,7 +30,12 @@
 from AccessControl import ClassSecurityInfo
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
+from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.Field import ZMIField
+from Products.ERP5Type.Message import Message
+
+def N_(message, **kw):
+  return Message('erp5_ui', message, **kw)
 
 class MatrixBoxWidget(Widget.Widget):
     """
@@ -183,6 +188,7 @@ class MatrixBoxWidget(Widget.Widget):
         lines = field.get_value('lines')
         columns = field.get_value('columns')
         tabs = field.get_value('tabs')
+        field_errors = REQUEST.get('field_errors', {})
         context = here
         getter_method_id = field.get_value('getter_method')
         if getter_method_id not in (None,''):
@@ -223,13 +229,11 @@ class MatrixBoxWidget(Widget.Widget):
              (not isinstance(tab_id, (list, tuple))):
             tab_id = [tab_id]
             
-          if render_format == 'list': 
+          if render_format == 'list':
             list_result_tab = [[tab[1]]]
 
           # Create the header of the table - this should probably become DTML
-          first_tab = tab[1]
-          if first_tab is None:
-            first_tab = ''
+          first_tab = tab[1] or ''
           header = """\
   <!-- Matrix Content -->
   %s<br>
@@ -244,27 +248,25 @@ class MatrixBoxWidget(Widget.Widget):
        </td>
       </div>
      </tr>
-     <tr >
-      <td colspan="%s" width="50" align="center" valign="middle"
-          class="DataA">
+     <tr>
+      <td colspan="%s" width="100" align="center" valign="middle"
+          class="Data">
       </td>
      </tr>
     </table>
    </div>
-  """ %  len(columns)
+  """ % len(columns)
 
           list_header = """\
-  <tr ><td class=\"Data\"></td>
+  <tr><td class=\"Data\"></td>
   """
 
           for cname in columns:
-              first_column = cname[1]
-              if first_column is None:
-                first_column = ''
-              list_header = list_header + ("<td class=\"Data\">%s</td>\n" %
-                  str(first_column))
-              if render_format == 'list': 
-                list_result_tab[0].append(cname[1])
+            first_column = cname[1] or ''
+            list_header = list_header + ("<td class=\"Data\">%s</td>\n" %
+                                           first_column)
+            if render_format == 'list':
+              list_result_tab[0].append(cname[1])
 
           list_header = list_header + "</tr>"
 
@@ -274,7 +276,6 @@ class MatrixBoxWidget(Widget.Widget):
           list_body = ''
           for l in lines:
 
-            
             if not i % 2:
               td_css = 'DataA'
             else:
@@ -282,13 +283,11 @@ class MatrixBoxWidget(Widget.Widget):
             list_body = list_body + '<tr><td class=\"%s\">%s</td>' % (td_css, str(l[1]))
             j = 0
             
-            if render_format == 'list': 
+            if render_format == 'list':
               list_result_lines = [ str(l[1]) ]
 
-
             for c in columns:
-              #if column_id is None and tab_id is None:
-              #  kw = []
+              has_error = 0
               column_id = c[0]
               if (column_id is not None) and \
                  (not isinstance(column_id, (list, tuple))):
@@ -309,37 +308,55 @@ class MatrixBoxWidget(Widget.Widget):
                 my_field_id = '%s_%s' % (field.id, attribute_id)
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
-                  key = my_field.id + '_cell_%s_%s_%s' % (i,j, k)
+                  key = my_field.id + '_cell_%s_%s_%s' % (i,j,k)
                   if cell != None:
-                    attribute_value = my_field.get_value('default', cell = cell, cell_index = kw, cell_position = (i,j, k))
+                    attribute_value = my_field.get_value('default',
+                           cell=cell, cell_index=kw, cell_position = (i,j,k))
                   
                     if render_format=='html':
                       REQUEST['cell'] = cell
-                      cell_body += str(my_field.render(value = attribute_value, REQUEST = REQUEST, key = key))
+                      display_value = attribute_value
 
-                    elif render_format == 'list': 
+                      if field_errors.has_key(key):
+                        # Display previous value (in case of error)
+                        display_value = REQUEST.get('field_%s' % key,
+                                                  attribute_value)
+                        has_error = 1
+                        cell_body += "%s<br/>%s" % (
+                            my_field.render(value=display_value,
+                                            REQUEST=REQUEST,
+                                            key=key),
+                            N_(field_errors[key].error_text))
+                      else:
+                        cell_body += str(my_field.render(
+                                            value=attribute_value,
+                                            REQUEST=REQUEST,
+                                            key=key))
+
+                    elif render_format == 'list':
                       if not my_field.get_value('hidden'):
                         list_result_lines.append(attribute_value)
 
                   else:
                     if my_field.get_value('hidden'):
-                      attribute_value = my_field.get_value('default', cell_index = kw, cell_position = (i,j, k))
-                      if render_format == 'html': 
-                        cell_body += str(my_field.render(value = attribute_value, REQUEST=REQUEST, key=key))
+                      attribute_value = my_field.get_value('default',
+                            cell_index=kw, cell_position=(i,j,k))
+                    else :
+                      attribute_value = my_field.get_orig_value('default')
+                    if render_format == 'html':
+                      REQUEST['cell'] = None
+                      cell_body += str(my_field.render(value=attribute_value,
+                                      REQUEST=REQUEST, key=key))
+                    elif render_format == 'list':
+                      list_result_lines.append(None)
 
-                    else:
-                      if render_format == 'html': 
-                        cell_body += str(my_field.render(value = my_field.get_orig_value('default')  , REQUEST=REQUEST, key=key))
-
-                      elif render_format == 'list': 
-                        list_result_lines.append(None)
-                    
+              css = td_css
+              if has_error :
+                css = td_css + 'Error'
               list_body = list_body + \
-                    ('<td class=\"%s\">%s</td>' % (td_css, cell_body))
-
-
-
+                    ('<td class=\"%s\">%s</td>' % (css, cell_body))
               j += 1
+
             list_body = list_body + '</tr>'
             i += 1
             
@@ -374,7 +391,7 @@ class MatrixBoxValidator(Validator.Validator):
         tabs = field.get_value('tabs')
         editable_attributes = field.get_value('editable_attributes')
         getter_method_id = field.get_value('getter_method')
-
+        error_list = []
         context = here
         if getter_method_id not in (None,''):
           context = getattr(here,getter_method_id)()
@@ -422,16 +439,21 @@ class MatrixBoxValidator(Validator.Validator):
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
                   if my_field.get_value('editable'):
-                    key = 'field_' + my_field.id + '_cell_%s_%s_%s' % (i,j, k)
-                    attribute_value = my_field.get_value('default', cell = cell, cell_index = kw,
-                                                        cell_position = (i,j, k))
-                    value = my_field.validator.validate(my_field, key, REQUEST)
+                    key = 'field_' + my_field.id + '_cell_%s_%s_%s' % (i,j,k)
+                    attribute_value = my_field.get_value('default',
+                        cell=cell, cell_index=kw, cell_position = (i,j,k))
+                    try :
+                      value = my_field.validator.validate(
+                                      my_field, key, REQUEST)
+                    except ValidationError, err :
+                      err.field_id = my_field.id + '_cell_%s_%s_%s' % (i,j,k)
+                      error_list.append(err)
 
-                    if (attribute_value != value or attribute_value not in('',None,(),[])) \
-                       and not my_field.get_value('hidden'):
+                    if (attribute_value != value or \
+                        attribute_value not in ('',None,(),[])) \
+                        and not my_field.get_value('hidden'):
                       # Only validate modified values from visible fields
-                      if not result.has_key(kw):
-                         result[kw] = {}
+                      result.setdefault(kw, {})
                       result[kw][attribute_id] = value
                     else:
                       if result.has_key(kw):
@@ -439,7 +461,8 @@ class MatrixBoxValidator(Validator.Validator):
               j += 1
             i += 1
           k += 1
-
+        if len(error_list):
+          raise FormValidationError(error_list, {})
         return result
 
 MatrixBoxValidatorInstance = MatrixBoxValidator()
@@ -462,6 +485,6 @@ class MatrixBox(ZMIField):
         return ZMIField.get_value(self, id, **kw)
 
 # Psyco
-import psyco
+from Products.ERP5Type.PsycoWrapper import psyco
 psyco.bind(MatrixBoxWidget.render)
 psyco.bind(MatrixBoxValidator.validate)
