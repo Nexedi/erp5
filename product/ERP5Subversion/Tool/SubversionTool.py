@@ -830,7 +830,6 @@ class SubversionTool(UniqueObject, Folder):
     # detect created directories
     dirs_set = self.getNewDirs(old_dir, new_dir)
     # Copy files
-    #os.system('cp -af %s/* %s'%(new_dir, old_dir))
     copytree(new_dir, old_dir)
     # svn add
     list = [x for x in dirs_set]
