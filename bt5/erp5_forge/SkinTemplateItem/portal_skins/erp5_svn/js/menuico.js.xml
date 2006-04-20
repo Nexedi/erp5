@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45545061.76</string> </value>
+            <value> <string>ts45550322.52</string> </value>
         </item>
         <item>
             <key> <string>__ac_local_roles__</string> </key>
@@ -117,7 +117,7 @@
                   setTimeout(\'MenuToolBarFlash()\',50-5*MenuToolBar.NbFlash);\n
           } else {\n
                   eval(MenuToolBar[MenuToolBar.Index].js);\n
-                  window.location=MenuToolBar[MenuToolBar.Index].url;\n
+                  //window.location=MenuToolBar[MenuToolBar.Index].url;\n
           }\n
   }\n
   \n
@@ -131,7 +131,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3559</int> </value>
+            <value> <int>3561</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
