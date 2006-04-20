@@ -63,7 +63,9 @@
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">\n
 \n
 <script  src="js/dhtmlXCommon.js"></script>\n
-<script  src="js/dhtmlXTree.js"></script>\t\n
+<script  src="js/dhtmlXTree.js"></script>\n
+<script  src="js/menuico.js"></script>\n
+\n
 <!-- Form Hidden : Selected files -->\n
 <input type=\'hidden\' name=\'removed\' value=\'\'>\n
 <input type=\'hidden\' name=\'added\' value=\'\'>\n
@@ -127,9 +129,16 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
                 </td>\n
 \t</tr>\n
 </table>\n
-<button onclick="viewDiff(0,this.form)" value="diff" name="View Diff" type="button">View Diff</button>\n
-<button onclick="commit(0,this.form)" value="commit" name="commit Changes" type="button">Commit Changes</button>\n
-<button onclick="revert(0,this.form)" value="revert" name="revert Changes" type="button">Revert Changes</button>\n
+\n
+<script>\n
+  // Menu Customization\n
+  var MenuToolBar=new CreateToolBarMenu(\'#dae6e6\', \'#FFFFFF\', \'#B1BBBB\', \'#6699FF\', \'font-family:verdana;font-size:11px;color:black;font-weight:bold\', 16, 16)\n
+  MenuToolBar.Add(\'imgs/diffoff.png\', \'imgs/diffon.png\', \'View Diff\', \'#\', \'viewDiff(0,document.main_form);\');\n
+  MenuToolBar.Add(\'imgs/execoff.png\', \'imgs/execon.png\', \'Commit Changes\', \'#\', \'commit(0,document.main_form);\');\n
+  MenuToolBar.Add(\'imgs/trashoff.png\', \'imgs/trashon.png\', \'Revert Changes\', \'#\', \'revert(0,document.main_form);\');\n
+  // Menu Display\n
+  MenuToolBar.Display();\n
+</script>\n
 </center>\n
 <script>\n
         if(upLevel) {\n

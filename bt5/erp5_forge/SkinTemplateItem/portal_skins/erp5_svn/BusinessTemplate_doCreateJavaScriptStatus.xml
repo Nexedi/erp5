@@ -129,9 +129,9 @@ print \'\'\'\n
       nbModified=0;\n
       nbAdded=0;\n
       nbRemoved=0;\n
-      FilesRemovedArray=[]\n
-      FilesAddedArray=[]\n
-      FilesModifiedArray=[]\n
+      FilesRemovedArray=[];\n
+      FilesAddedArray=[];\n
+      FilesModifiedArray=[];\n
       if(popup == 1){\n
         //hide popup\n
         document.getElementById(\'menudiv\').style.display = "none";\n
@@ -140,6 +140,7 @@ print \'\'\'\n
       }else{\n
         filesCheckedArray=tree.getAllChecked().split(\',\');\n
       }\n
+\n
       for(i=0;i<filesCheckedArray.length; ++i){\n
         if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
           FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
@@ -152,29 +153,30 @@ print \'\'\'\n
           }\n
         }\n
       }\n
+\n
       partialToCommit=tree.getAllPartiallyChecked();\n
       if(nbModified!=0){\n
         filesModified=FilesModifiedArray.join(\',\');\n
         if(partialToCommit!=\'\'){\n
-          filesModified=filesModified+\',\'+partialToCommit\n
+          filesModified=filesModified+\',\'+partialToCommit;\n
         }\n
       }else{\n
-        filesModified=\'none\'\n
+        filesModified=\'none\';\n
         if(partialToCommit!=\'\'){\n
-          filesModified=partialToCommit\n
+          filesModified=partialToCommit;\n
         }\n
       }\n
       form.modified.value=filesModified;\n
       if(nbAdded!=0){\n
         filesAdded=FilesAddedArray.join(\',\');\n
       }else{\n
-        filesAdded=\'none\'\n
+        filesAdded=\'none\';\n
       }\n
       form.added.value=filesAdded;\n
       if(nbRemoved!=0){\n
         filesRemoved=FilesRemovedArray.join(\',\');\n
       }else{\n
-        filesRemoved=\'none\'\n
+        filesRemoved=\'none\';\n
       }\n
       form.removed.value=filesRemoved;\n
       if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
@@ -188,9 +190,9 @@ print \'\'\'\n
       nbModified=0;\n
       nbAdded=0;\n
       nbRemoved=0;\n
-      FilesRemovedArray=[]\n
-      FilesAddedArray=[]\n
-      FilesModifiedArray=[]\n
+      FilesRemovedArray=[];\n
+      FilesAddedArray=[];\n
+      FilesModifiedArray=[];\n
       if(popup == 1){\n
         //hide popup\n
         document.getElementById(\'menudiv\').style.display = "none";\n
@@ -214,19 +216,19 @@ print \'\'\'\n
       if(nbModified!=0){\n
         filesModified=FilesModifiedArray.join(\',\');\n
       }else{\n
-        filesModified=\'none\'\n
+        filesModified=\'none\';\n
       }\n
       form.modified.value=filesModified;\n
       if(nbAdded!=0){\n
         filesAdded=FilesAddedArray.join(\',\');\n
       }else{\n
-        filesAdded=\'none\'\n
+        filesAdded=\'none\';\n
       }\n
       form.added.value=filesAdded;\n
       if(nbRemoved!=0){\n
         filesRemoved=FilesRemovedArray.join(\',\');\n
       }else{\n
-        filesRemoved=\'none\'\n
+        filesRemoved=\'none\';\n
       }\n
       form.removed.value=filesRemoved;\n
       if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
