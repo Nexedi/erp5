@@ -69,274 +69,266 @@
             <value> <string encoding="cdata"><![CDATA[
 
 if "files" in context.REQUEST.keys():\n
-  files=context.REQUEST["files"]\n
+  files = context.REQUEST["files"]\n
 else:\n
-  files=None\n
+  files = None\n
 \n
-print \'\'\'<script>var tree = null;\n
-        var business_template;\n
-        var is_expanded=false;\n
+print \'\'\'\n
+  <script>\n
+    var tree = null;\n
+    var business_template;\n
+    var is_expanded=false;\n
+    var ie  = document.all\n
+    var ns6 = document.getElementById&&!document.all\n
+    var isMenu  = false ;\n
+    var menuSelObj = null ;\n
+    var overpopupmenu = false;\n
 \n
-        // This script is intended for use with a minimum of Netscape 4 or IE 4.\n
-        if(document.getElementById) {\n
-\t  var upLevel = true;\n
-\t} else if(document.layers) {\n
-\t  var ns4 = true;\n
-\t} else if(document.all) {\n
-\t  var ie4 = true;\n
-\t}\n
-\n
-\tfunction preLoadImages(){\n
-\t\tvar imSrcAr = new \n
-                Array(\'document.png\',\'iconCheckAll.gif\',\'line2.gif\',\'minus2.gif\',\'minus5.gif\',\'plus2.gif\',\'plus5.gif\',\'folder_open.png\',\'iconCheckGray.gif\',\'line3.gif\',\'minus3.gif\',\'minus_ar.gif\',\'plus3.gif\',\'plus_ar.gif\',\'folder.png\',\'line1.gif\',\'line4.gif\',\'minus4.gif\',\'minus.gif\',\'plus4.gif\',\'plus.gif\',\'iconUnCheckAll.gif\', \'blank.gif\')\n
-\t\tvar imAr = new Array(0);\n
-\t\tfor(var i=0;i<imSrcAr.length;i++){\n
-\t\t\timAr[imAr.length] = new Image();\n
-\t\t\timAr[imAr.length-1].src = \'imgs/\'+imSrcAr[i]\n
-\t\t}\n
-\t}\n
-\n
-\tfunction doOnLoad(){\n
-\t\tpreLoadImages();\n
-\t\t//tree\n
-\t\ttree=new dhtmlXTreeObject(document.getElementById(\'treebox1\'),\'100%%\',\'100%%\',0);\n
-\t\ttree.setImagePath(\'imgs/\');\n
-\t\ttree.setDragHandler();\n
-\t\ttree.enableCheckBoxes(true)\n
-\t\ttree.enableThreeStateCheckboxes(true);\n
-\t\ttree.enableDragAndDrop(false)\n
-                tree.loadXML(\'tree.xml?bt_id=%s\', hideObject)\n
-                //tree.setOnClickHandler(clickHandler)\n
-                tree.setOnClickHandler(showMenu)\n
-        }\n
-        \n
-        function expandCollapse(){\n
-          if(! is_expanded){\n
-            tree.openAllItems(0);\n
-            is_expanded=true;\n
-          }else{\n
-            tree.closeAllItems(0);\n
-            is_expanded=false;\n
-          }\n
-        }\n
-        \n
-        function commit(popup, form){\n
-          nbModified=0;\n
-          nbAdded=0;\n
-          nbRemoved=0;\n
-          FilesRemovedArray=[]\n
-          FilesAddedArray=[]\n
-          FilesModifiedArray=[]\n
-          if(popup == 1){\n
-            //hide popup\n
-            document.getElementById(\'menudiv\').style.display = "none";\n
-            filesCheckedArray = [tree.getSelectedItemId()];\n
-            filesCheckedArray=filesCheckedArray.concat(tree.getAllSubItems(filesCheckedArray[0]).split(\',\'));\n
-          }else{\n
-            filesCheckedArray=tree.getAllChecked().split(\',\');\n
-          }\n
-          for(i=0;i<filesCheckedArray.length; ++i){\n
-            if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
-              FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
-            }else{\n
-              if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
-                FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
-              }else\n
-              if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
-                FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
-              }\n
-            }\n
-          }\n
-          partialToCommit=tree.getAllPartiallyChecked();\n
-          if(nbModified!=0){\n
-            filesModified=FilesModifiedArray.join(\',\');\n
-            if(partialToCommit!=\'\'){\n
-              filesModified=filesModified+\',\'+partialToCommit\n
-            }\n
-          }else{\n
-            filesModified=\'none\'\n
-            if(partialToCommit!=\'\'){\n
-              filesModified=partialToCommit\n
-            }\n
-          }\n
-          form.modified.value=filesModified;\n
-          if(nbAdded!=0){\n
-            filesAdded=FilesAddedArray.join(\',\');\n
-          }else{\n
-            filesAdded=\'none\'\n
-          }\n
-          form.added.value=filesAdded;\n
-          if(nbRemoved!=0){\n
-            filesRemoved=FilesRemovedArray.join(\',\');\n
-          }else{\n
-            filesRemoved=\'none\'\n
-          }\n
-          form.removed.value=filesRemoved;\n
-          if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
-            alert(\'Nothing to commit !\');\n
-          } else {\n
-            submitAction(form,\'%s/BusinessTemplate_doSvnCommit\');\n
-          }\n
-        }\n
-\n
-         function clickHandler(item_id){\n
-          if (tree.isItemChecked(item_id) == 0) {\n
-            tree.setCheck(item_id, 1);\n
-          }else{\n
-            tree.setCheck(item_id, 0);\n
-          }\n
-         }\n
-\n
-        function viewDiff(popup, form){\n
-          nbModified=0;\n
-          nbAdded=0;\n
-          nbRemoved=0;\n
-          FilesRemovedArray=[]\n
-          FilesAddedArray=[]\n
-          FilesModifiedArray=[]\n
-          if(popup == 1){\n
-            //hide popup\n
-            document.getElementById(\'menudiv\').style.display = "none";\n
-            filesCheckedArray = [tree.getSelectedItemId()];\n
-            filesCheckedArray=filesCheckedArray.concat(tree.getAllSubItems(filesCheckedArray[0]).split(\',\'));\n
-          }else{\n
-            filesCheckedArray=tree.getAllChecked().split(\',\');\n
-          }\n
-          for(i=0;i<filesCheckedArray.length; ++i){\n
-            if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
-              FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
-            }else{\n
-              if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
-                FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
-              }else\n
-              if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
-                FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
-              }\n
-            }\n
-          }\n
-          if(nbModified!=0){\n
-            filesModified=FilesModifiedArray.join(\',\');\n
-          }else{\n
-            filesModified=\'none\'\n
-          }\n
-          form.modified.value=filesModified;\n
-          if(nbAdded!=0){\n
-            filesAdded=FilesAddedArray.join(\',\');\n
-          }else{\n
-            filesAdded=\'none\'\n
-          }\n
-          form.added.value=filesAdded;\n
-          if(nbRemoved!=0){\n
-            filesRemoved=FilesRemovedArray.join(\',\');\n
-          }else{\n
-            filesRemoved=\'none\'\n
-          }\n
-          form.removed.value=filesRemoved;\n
-          if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
-            alert(\'Nothing to diff !\');\n
-          } else {\n
-            submitAction(form,\'%s/BusinessTemplate_viewSvnDiff\');\n
-          }\n
-        }\n
-\n
-var ie  = document.all\n
-var ns6 = document.getElementById&&!document.all\n
-var isMenu  = false ;\n
-var menuSelObj = null ;\n
-var overpopupmenu = false;\n
-function mouseSelect(e)\n
-{\n
-  var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;\n
-  if( isMenu )\n
-  {\n
-    if( overpopupmenu == false )\n
-    {\n
-      isMenu = false ;\n
-      overpopupmenu = false;\n
-      document.getElementById(\'menudiv\').style.display = "none" ;\n
+    // This script is intended for use with a minimum of Netscape 4 or IE 4.\n
+    if(document.getElementById) {\n
+      var upLevel = true;\n
+    } else if(document.layers) {\n
+      var ns4 = true;\n
+    } else if(document.all) {\n
+      var ie4 = true;\n
     }\n
-  }\n
-  return true;\n
-}\n
 \n
-function  showMenu()\n
-{\n
-  document.getElementById(\'menudiv\').style.left = mouseX;\n
-  document.getElementById(\'menudiv\').style.top = mouseY;\n
-  document.getElementById(\'menudiv\').style.display = "";\n
-  document.getElementById(\'item1\').style.backgroundColor=\'#FFFFFF\';\n
-  document.getElementById(\'item2\').style.backgroundColor=\'#FFFFFF\';\n
-  document.getElementById(\'item3\').style.backgroundColor=\'#FFFFFF\';\n
-  isMenu = true;\n
-  return false ;\n
-}\n
+    function preLoadImages(){\n
+      var imSrcAr = new \n
+      Array(\'document.png\',\'iconCheckAll.gif\',\'line2.gif\',\'minus2.gif\',\'minus5.gif\',\'plus2.gif\',\'plus5.gif\',\'folder_open.png\',\'iconCheckGray.gif\',\'line3.gif\',\'minus3.gif\',\'minus_ar.gif\',\'plus3.gif\',\'plus_ar.gif\',\'folder.png\',\'line1.gif\',\'line4.gif\',\'minus4.gif\',\'minus.gif\',\'plus4.gif\',\'plus.gif\',\'iconUnCheckAll.gif\', \'blank.gif\')\n
+      var imAr = new Array(0);\n
+      for(var i=0;i<imSrcAr.length;i++){\n
+              imAr[imAr.length] = new Image();\n
+              imAr[imAr.length-1].src = \'imgs/\'+imSrcAr[i]\n
+      }\n
+    }\n
 \n
-function getMouse(e)\n
-{\n
-  if(overpopupmenu){\n
-    document.body.style.cursor = \'default\';\n
-  }\n
-  if (ns6)\n
-  {\n
-    mouseX = e.clientX+window.pageXOffset+\'px\';\n
-    mouseY = e.clientY+window.pageYOffset+\'px\';\n
-  } else\n
-  {\n
-    mouseX = event.clientX+document.body.scrollLeft+\'px\';\n
-    mouseY = event.clientY+document.body.scrollTop+\'px\';\n
-  }\n
-  return true;\n
-}\n
-\n
-document.onmousedown  = mouseSelect;\n
-document.onmousemove = getMouse;\n
-\n
-        function revert(popup,form){\n
-          if(popup==1){\n
-            //hide popup\n
-            document.getElementById(\'menudiv\').style.display = "none";\n
-            to_revert = tree.getSelectedItemId();\n
-            sub = tree.getAllSubItems(to_revert);\n
-            if(sub != \'\'){\n
-              to_revert = to_revert + \',\' + sub;\n
-            }\n
-          }else{\n
-            to_revert = tree.getAllChecked();\n
+    function doOnLoad(){\n
+      preLoadImages();\n
+      tree=new dhtmlXTreeObject(document.getElementById(\'treebox1\'),\'100%%\',\'100%%\',0);\n
+      tree.setImagePath(\'imgs/\');\n
+      tree.setDragHandler();\n
+      tree.enableCheckBoxes(true)\n
+      tree.enableThreeStateCheckboxes(true);\n
+      tree.enableDragAndDrop(false)\n
+      tree.loadXML(\'tree.xml?bt_id=%s\', hideObject)\n
+      tree.setOnClickHandler(showMenu)\n
+    }\n
+        \n
+    function expandCollapse(){\n
+      if(! is_expanded){\n
+        tree.openAllItems(0);\n
+        is_expanded=true;\n
+      }else{\n
+        tree.closeAllItems(0);\n
+        is_expanded=false;\n
+      }\n
+    }\n
+        \n
+    function commit(popup, form){\n
+      nbModified=0;\n
+      nbAdded=0;\n
+      nbRemoved=0;\n
+      FilesRemovedArray=[]\n
+      FilesAddedArray=[]\n
+      FilesModifiedArray=[]\n
+      if(popup == 1){\n
+        //hide popup\n
+        document.getElementById(\'menudiv\').style.display = "none";\n
+        filesCheckedArray = [tree.getSelectedItemId()];\n
+        filesCheckedArray=filesCheckedArray.concat(tree.getAllSubItems(filesCheckedArray[0]).split(\',\'));\n
+      }else{\n
+        filesCheckedArray=tree.getAllChecked().split(\',\');\n
+      }\n
+      for(i=0;i<filesCheckedArray.length; ++i){\n
+        if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
+          FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
+        }else{\n
+          if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
+            FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
+          }else\n
+          if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
+            FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
           }\n
-          if (to_revert == \'\') {\n
-            alert("Nothing to revert !");\n
-          } else {\n
-            if(confirm(\'Are you sure you want to revert changes?\')){\n
-              form.files.value=to_revert;\n
-              submitAction(form,\'%s/BusinessTemplate_doSvnRevert\');\n
-            }\n
+        }\n
+      }\n
+      partialToCommit=tree.getAllPartiallyChecked();\n
+      if(nbModified!=0){\n
+        filesModified=FilesModifiedArray.join(\',\');\n
+        if(partialToCommit!=\'\'){\n
+          filesModified=filesModified+\',\'+partialToCommit\n
+        }\n
+      }else{\n
+        filesModified=\'none\'\n
+        if(partialToCommit!=\'\'){\n
+          filesModified=partialToCommit\n
+        }\n
+      }\n
+      form.modified.value=filesModified;\n
+      if(nbAdded!=0){\n
+        filesAdded=FilesAddedArray.join(\',\');\n
+      }else{\n
+        filesAdded=\'none\'\n
+      }\n
+      form.added.value=filesAdded;\n
+      if(nbRemoved!=0){\n
+        filesRemoved=FilesRemovedArray.join(\',\');\n
+      }else{\n
+        filesRemoved=\'none\'\n
+      }\n
+      form.removed.value=filesRemoved;\n
+      if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
+        alert(\'Nothing to commit !\');\n
+      } else {\n
+        submitAction(form,\'%s/BusinessTemplate_doSvnCommit\');\n
+      }\n
+    }\n
+\n
+    function viewDiff(popup, form){\n
+      nbModified=0;\n
+      nbAdded=0;\n
+      nbRemoved=0;\n
+      FilesRemovedArray=[]\n
+      FilesAddedArray=[]\n
+      FilesModifiedArray=[]\n
+      if(popup == 1){\n
+        //hide popup\n
+        document.getElementById(\'menudiv\').style.display = "none";\n
+        filesCheckedArray = [tree.getSelectedItemId()];\n
+        filesCheckedArray=filesCheckedArray.concat(tree.getAllSubItems(filesCheckedArray[0]).split(\',\'));\n
+      }else{\n
+        filesCheckedArray=tree.getAllChecked().split(\',\');\n
+      }\n
+      for(i=0;i<filesCheckedArray.length; ++i){\n
+        if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
+          FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
+        }else{\n
+          if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
+            FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
+          }else\n
+          if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
+            FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
           }\n
         }\n
+      }\n
+      if(nbModified!=0){\n
+        filesModified=FilesModifiedArray.join(\',\');\n
+      }else{\n
+        filesModified=\'none\'\n
+      }\n
+      form.modified.value=filesModified;\n
+      if(nbAdded!=0){\n
+        filesAdded=FilesAddedArray.join(\',\');\n
+      }else{\n
+        filesAdded=\'none\'\n
+      }\n
+      form.added.value=filesAdded;\n
+      if(nbRemoved!=0){\n
+        filesRemoved=FilesRemovedArray.join(\',\');\n
+      }else{\n
+        filesRemoved=\'none\'\n
+      }\n
+      form.removed.value=filesRemoved;\n
+      if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
+        alert(\'Nothing to diff !\');\n
+      } else {\n
+        submitAction(form,\'%s/BusinessTemplate_viewSvnDiff\');\n
+      }\n
+    }\n
 \n
-        function update(){\n
-          open(\'%s/BusinessTemplate_doSvnUpdate\', \'_self\');\n
+    function mouseSelect(e)\n
+    {\n
+      var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;\n
+      if( isMenu )\n
+      {\n
+        if( overpopupmenu == false )\n
+        {\n
+          isMenu = false ;\n
+          overpopupmenu = false;\n
+          document.getElementById(\'menudiv\').style.display = "none" ;\n
         }\n
+      }\n
+      return true;\n
+    }\n
 \n
-        function infos(){\n
-          open(\'%s/BusinessTemplate_doSvnInfo\', \'_self\');\n
-        }\n
+    function  showMenu()\n
+    {\n
+      document.getElementById(\'menudiv\').style.left = mouseX;\n
+      document.getElementById(\'menudiv\').style.top = mouseY;\n
+      document.getElementById(\'menudiv\').style.display = "";\n
+      document.getElementById(\'item1\').style.backgroundColor=\'#FFFFFF\';\n
+      document.getElementById(\'item2\').style.backgroundColor=\'#FFFFFF\';\n
+      document.getElementById(\'item3\').style.backgroundColor=\'#FFFFFF\';\n
+      isMenu = true;\n
+      return false ;\n
+    }\n
 \n
-        function cleanup(){\n
-          open(\'%s/BusinessTemplate_doSvnCleanup\', \'_self\');\n
-        }\n
+    function getMouse(e)\n
+    {\n
+      if(overpopupmenu){\n
+        document.body.style.cursor = \'default\';\n
+      }\n
+      if (ns6)\n
+      {\n
+        mouseX = e.clientX+window.pageXOffset+\'px\';\n
+        mouseY = e.clientY+window.pageYOffset+\'px\';\n
+      } else\n
+      {\n
+        mouseX = event.clientX+document.body.scrollLeft+\'px\';\n
+        mouseY = event.clientY+document.body.scrollTop+\'px\';\n
+      }\n
+      return true;\n
+    }\n
 \n
-        function log(){\n
-          //hide popup\n
-          document.getElementById(\'menudiv\').style.display = "none";\n
-          open(\'%s/BusinessTemplate_viewSvnLog?file=\'+tree.getSelectedItemId(), \'_self\');\n
-        }\n
+    document.onmousedown  = mouseSelect;\n
+    document.onmousemove = getMouse;\n
 \n
-        function ls(){\n
-          //hide popup\n
-          document.getElementById(\'menudiv\').style.display = "none";\n
-          open(\'%s/BusinessTemplate_doSvnLs?file=\'+tree.getSelectedItemId(), \'_self\');\n
+    function revert(popup,form){\n
+      if(popup==1){\n
+        //hide popup\n
+        document.getElementById(\'menudiv\').style.display = "none";\n
+        to_revert = tree.getSelectedItemId();\n
+        sub = tree.getAllSubItems(to_revert);\n
+        if(sub != \'\'){\n
+          to_revert = to_revert + \',\' + sub;\n
         }\n
-        </script>\n
+      }else{\n
+        to_revert = tree.getAllChecked();\n
+      }\n
+      if (to_revert == \'\') {\n
+        alert("Nothing to revert !");\n
+      } else {\n
+        if(confirm(\'Are you sure you want to revert changes?\')){\n
+          form.files.value=to_revert;\n
+          submitAction(form,\'%s/BusinessTemplate_doSvnRevert\');\n
+        }\n
+      }\n
+    }\n
+\n
+    function update(){\n
+      open(\'%s/BusinessTemplate_doSvnUpdate\', \'_self\');\n
+    }\n
+\n
+    function infos(){\n
+      open(\'%s/BusinessTemplate_doSvnInfo\', \'_self\');\n
+    }\n
+\n
+    function cleanup(){\n
+      open(\'%s/BusinessTemplate_doSvnCleanup\', \'_self\');\n
+    }\n
+\n
+    function log(){\n
+      //hide popup\n
+      document.getElementById(\'menudiv\').style.display = "none";\n
+      open(\'%s/BusinessTemplate_viewSvnLog?file=\'+tree.getSelectedItemId(), \'_self\');\n
+    }\n
+\n
+    function ls(){\n
+      //hide popup\n
+      document.getElementById(\'menudiv\').style.display = "none";\n
+      open(\'%s/BusinessTemplate_doSvnLs?file=\'+tree.getSelectedItemId(), \'_self\');\n
+    }\n
+  </script>\n
 \'\'\'% (context.getId(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url())\n
 \n
 return printed\n
