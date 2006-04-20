@@ -59,7 +59,10 @@ class TestResource(ERP5TypeTestCase):
   # Global variables
   resource_portal_type = 'Apparel Model'
   product_portal_type = 'Product'
-  supply_line_portal_type = 'Supply Line'
+  node_portal_type = 'Organisation'
+  supply_portal_type = 'Sale Supply'
+  supply_line_portal_type = 'Sale Supply Line'
+  supply_cell_portal_type = 'Sale Supply Cell'
   variation_base_category_list = ['colour', 'size', 'morphology',
                                   'industrial_phase']
   size_list = ['size/Child','size/Man']
@@ -600,7 +603,8 @@ class TestResource(ERP5TypeTestCase):
     supply_line.setSurchargeRatioQuantityStepList([])
     supply_line.getCellKeyList(base_id='path_optional_surcharge_ratio')
     cell1 = supply_line.newCell('industrial_phase/phase1',
-        base_id='path_optional_surcharge_ratio', portal_type='Supply Cell')
+        base_id='path_optional_surcharge_ratio', 
+        portal_type=self.supply_cell_portal_type)
     cell1.setSurchargeRatio(20)
     cell1.setMappedValuePropertyList(["surcharge_ratio"])
     cell1.setMembershipCriterionBaseCategory('industrial_phase')
@@ -623,13 +627,15 @@ class TestResource(ERP5TypeTestCase):
     supply_line.setAdditionalPriceQuantityStepList([])
     supply_line.getCellKeyList(base_id='path_optional_additional_price')
     cell1 = supply_line.newCell('industrial_phase/phase1',
-        base_id='path_optional_additional_price', portal_type='Supply Cell')
+        base_id='path_optional_additional_price', 
+        portal_type=self.supply_cell_portal_type)
     cell1.setAdditionalPrice(2)
     cell1.setMappedValuePropertyList(["additional_price"])
     cell1.setMembershipCriterionBaseCategory('industrial_phase')
     cell1.setMembershipCriterionCategory('industrial_phase/phase1')
     cell2 = supply_line.newCell('industrial_phase/phase2',
-        base_id='path_optional_additional_price', portal_type='Supply Cell')
+        base_id='path_optional_additional_price', 
+        portal_type=self.supply_cell_portal_type)
     cell2.setAdditionalPrice(7)
     cell2.setMappedValuePropertyList(["additional_price"])
     cell2.setMembershipCriterionBaseCategory('industrial_phase')
@@ -657,6 +663,87 @@ class TestResource(ERP5TypeTestCase):
     self.assertEquals(10, product.getPrice(
                                    categories=['industrial_phase/phase1',
                                                'industrial_phase/phase2']))
+
+  def test_11_getPriceWithDestination(self, quiet=0, run=run_all_test):
+    """
+    Test the pricing model with multiple price for 
+    differents destinations.
+    """
+    if not run: return
+    # Initialize variables
+    test_case_list = []
+    # Create product
+    product_module = self.portal.getDefaultModule(self.product_portal_type)
+    supply_module = self.portal.getDefaultModule(self.supply_portal_type)
+    currency_module = self.portal.getDefaultModule("Currency")
+    currency = supply_module.newContent(
+                     portal_type="Currency",
+                     title='A great currency')
+    # Create generic supply
+    self.logMessage("Creating generic fake supply ...", tab=1)
+    generic_supply = supply_module.newContent(
+                     portal_type=self.supply_portal_type,
+                     title='FakeGenericSupply',
+                     price_currency_value=currency)
+    # Create empty supply line
+    supply_line = generic_supply.newContent(
+          portal_type=self.supply_line_portal_type)
+    supply_line.setProperty('base_price', 0)
+    for j in range(33, 35):
+      self.logMessage("Creating fake product %s..." % j, tab=1)
+      product = product_module.newContent(
+                           portal_type=self.product_portal_type,
+                           title='AnotherFakeProduct%s' % j)
+      # Create some nodes
+      node_module = self.portal.getDefaultModule(self.node_portal_type)
+      for i in range(11, 14):
+        self.logMessage("Creating fake node %s..." % i, tab=1)
+        node = node_module.newContent(
+                       portal_type=self.node_portal_type,
+                       title='FakeNode%s%s' % (j, i))
+        # Create a supply
+        self.logMessage("Creating fake supply %s..." % i, tab=1)
+        supply = supply_module.newContent(
+                                     portal_type=self.supply_portal_type,
+                                     title='FakeSupply%s' % i,
+                                     destination_value=node)
+        self.logMessage("Creating fake supply line %s..." % i, tab=1)
+        supply_line = supply.newContent(
+              portal_type=self.supply_line_portal_type,
+              resource_value=product)
+        # Set pricing parameter
+        base_price = i*j
+        supply_line.setProperty('base_price', base_price)
+        # Register the case
+        test_case_list.append((product, node, base_price))
+      # Create generic supply line
+      self.logMessage("Creating generic fake supply line ...", tab=1)
+      supply_line = generic_supply.newContent(
+            portal_type=self.supply_line_portal_type,
+            resource_value=product)
+      supply_line.setProperty('base_price', j)
+      test_case_list.append((product, None, j))
+    # Commit transaction
+    self.logMessage("Commit transaction...", tab=1)
+    get_transaction().commit()
+    # Tic
+    self.logMessage("Tic...", tab=1)
+    self.tic()
+    # Test the cases
+    for product, node, base_price in test_case_list:
+      if node is not None:
+        self.logMessage("Check product %s with destination %s" % \
+                        (product.getTitle(), node.getTitle()),
+                        tab=1)
+        self.assertEquals(base_price, 
+                          product.getPrice(
+                        categories=['destination/%s' % node.getRelativeUrl()]))
+      else:
+        self.logMessage("Check product %s without destination" % \
+                        product.getTitle(),
+                        tab=1)
+        self.assertEquals(base_price, 
+                          product.getPrice())
 
 if __name__ == '__main__':
     framework()
