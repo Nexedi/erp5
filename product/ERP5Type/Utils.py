@@ -133,6 +133,9 @@ def convertToUpperCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
+  if not isinstance(key, str):
+    LOG('ERP5Type.Utils.convertToUpperCase', PROBLEM,
+        'key `%s` is type %s' % (key, type(key)))
   return ''.join([part.capitalize() for part in str(key).split('_')])
 
 UpperCase = convertToUpperCase
@@ -142,6 +145,9 @@ def convertToMixedCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
+  if not isinstance(key, str):
+    LOG('ERP5Type.Utils.convertToMixedCase', PROBLEM,
+        'key `%s` is type %s' % (key, type(key)))
   parts = str(key).split('_', 1)
   if len(parts) == 2:
     parts[1] = convertToUpperCase(parts[1])
