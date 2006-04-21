@@ -704,6 +704,18 @@ class SubversionTool(UniqueObject, Folder):
     else:
       path = self.relativeToAbsolute(path, bt)
     return client.revert(path)
+    
+  security.declareProtected('Import/Export objects', 'resolved')
+  # path can be absolute or relative
+  def resolved(self, path, bt):
+    """remove conflicted status
+    """
+    client = self._getClient()
+    if isinstance(path, list) :
+      path = [self.relativeToAbsolute(x, bt) for x in path]
+    else:
+      path = self.relativeToAbsolute(path, bt)
+    return client.resolved(path)
 
   def relativeToAbsolute(self, path, bt) :
     if path[0] == os.sep:

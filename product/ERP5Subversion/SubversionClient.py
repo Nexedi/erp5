@@ -276,6 +276,9 @@ try:
     def add(self, path):
       return self.client.add(path=path, force=True)
 
+    def resolved(self, path):
+      return self.client.resolved(path=path)
+    
     def info(self, path):
       try:
         entry = self.client.info(path=path)
