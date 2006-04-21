@@ -15,8 +15,6 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from DateTime import DateTime
 from ZTUtils import make_query
 from Products.CMFCore.utils import getToolByName
-from zLOG import LOG
-
 
 class InventoryBrain(ZSQLBrain):
   """
@@ -271,9 +269,7 @@ class InventoryListBrain(ZSQLBrain):
         else :
           return N_("${delivery_portal_type} ${delivery_title}",
                     mapping = mapping )
-    else :
-      return N_('Unknown')
-    return explanation_text
+    return N_('Unknown')
 
 class DeliveryListBrain(InventoryListBrain):
   """
@@ -328,7 +324,6 @@ class DeliveryListBrain(InventoryListBrain):
       Returns inventory at the date provided by the SQL method
     """
     at_date=self.at_date
-    LOG("At Date",0,str(at_date))
     return self.getInventory(
             at_date=at_date, ignore_variation=0, 
             simulation_state= \
