@@ -70,14 +70,9 @@
 
 from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 from Products.ERP5Type.Document import newTempBase\n
-svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
-if not svn_path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if svn_path[-1]!=\'/\':\n
-  svn_path+=\'/\'\n
-file = svn_path + file\n
+\n
 try:\n
-  log_list = context.getPortalObject()["portal_subversion"].log(file)\n
+  log_list = context.getPortalObject()["portal_subversion"].log(file, context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\').BusinessTemplate_viewSvnSSLTrust()\n
@@ -147,9 +142,8 @@ return object_list\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>svn_path</string>
                             <string>_getitem_</string>
+                            <string>context</string>
                             <string>log_list</string>
                             <string>error</string>
                             <string>error1</string>

@@ -59,7 +59,7 @@
                        infos_dict context/infos_dict">\n
 \n
 <font color=\'black\'>\n
-<br><a tal:attributes="href python:\'BusinessTemplate_viewSvnShowFile?file=\'+str(path)"><b tal:content="path"></b></a>\n
+<br><a tal:attributes="href python:\'BusinessTemplate_viewSvnShowFile?file=\'+str(path)"><b tal:content="python:context.getPortalObject()[\'portal_subversion\'].relativeToAbsolute(path,context)"></b></a>\n
 <a tal:attributes="href context/edit_path"><img src=\'imgs/edit.png\' border=\'0\'></a><hr><br>\n
 <span tal:condition="infos_dict">\n
       <table width=60%% border=1>\n

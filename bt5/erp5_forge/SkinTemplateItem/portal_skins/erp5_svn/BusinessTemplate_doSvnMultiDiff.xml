@@ -82,16 +82,9 @@ if len(revisions_list) != 2:\n
 \n
 revisions_list.sort()\n
 \n
-svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
-if not svn_path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if svn_path[-1]!=\'/\':\n
-  svn_path += \'/\'\n
-file = svn_path + file\n
-\n
-diff = "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+file+"\'>"+file+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, file)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
+diff = "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+context.getPortalObject()["portal_subversion"].relativeToAbsolute(file)+"\'>"+context.getPortalObject()["portal_subversion"].relativeToAbsolute(file)+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, file)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
 diff += \'<hr></b>\'\n
-diff += context.getPortalObject()["portal_subversion"].diffHTML(file, revision1=revisions_list[0], revision2=revisions_list[1])\n
+diff += context.getPortalObject()["portal_subversion"].diffHTML(file, context, revision1=revisions_list[0], revision2=revisions_list[1])\n
 diff += \'</font>\'\n
 return context.asContext(diff=diff).BusinessTemplate_viewSvnMultiDiff()\n
 
@@ -143,7 +136,6 @@ return context.asContext(diff=diff).BusinessTemplate_viewSvnMultiDiff()\n
                             <string>file</string>
                             <string>revisions_list</string>
                             <string>len</string>
-                            <string>svn_path</string>
                             <string>diff</string>
                           </tuple>
                         </value>

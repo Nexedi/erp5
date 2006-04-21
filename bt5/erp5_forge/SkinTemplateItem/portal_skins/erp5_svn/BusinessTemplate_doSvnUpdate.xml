@@ -67,13 +67,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
-\n
-svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
-if not svn_path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if svn_path[-1]!=\'/\':\n
-  svn_path+=\'/\'\n
-svn_path += context.getTitle()\n
+svn_path = context.getPortalObject()["portal_subversion"].getSubversionPath(context)\n
 \n
 try:\n
   context.getPortalObject()["portal_subversion"].update(svn_path)\n
@@ -130,9 +124,9 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>SubversionSSLTrustError</string>
                             <string>SubversionLoginError</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>context</string>
                             <string>svn_path</string>
-                            <string>_getitem_</string>
                             <string>error</string>
                             <string>error1</string>
                           </tuple>

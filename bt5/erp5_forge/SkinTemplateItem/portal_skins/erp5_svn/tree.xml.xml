@@ -70,20 +70,14 @@
 
 context.getPortalObject().portal_subversion.extractBT(context)\n
 \n
-bt_name = context.getPortalObject()["portal_templates"][context.getId()].getTitle()\n
 context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml;; charset=utf-8\')\n
-path = context.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()\n
-if not path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if path[-1] != \'/\':\n
-  path += \'/\'\n
-path+=bt_name\n
-root = context.getPortalObject().portal_subversion.getModifiedTree(path)\n
+\n
+root = context.getPortalObject().portal_subversion.getModifiedTree(context)\n
 if not root:\n
   return \'\'\'<?xml version=\'1.0\' encoding=\'iso-8859-1\'?>\n
 <tree id=\'0\'></tree>\'\'\'\n
 \n
-return context.getPortalObject().portal_subversion.treeToXML(root).strip()\n
+return context.getPortalObject().portal_subversion.treeToXML(root, context).strip()\n
 
 
 ]]></string> </value>
@@ -128,9 +122,6 @@ return context.getPortalObject().portal_subversion.treeToXML(root).strip()\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getitem_</string>
-                            <string>bt_name</string>
-                            <string>path</string>
                             <string>root</string>
                           </tuple>
                         </value>

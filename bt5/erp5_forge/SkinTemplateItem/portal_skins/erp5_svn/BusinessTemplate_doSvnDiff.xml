@@ -68,12 +68,6 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
-if not svn_path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if svn_path[-1]!=\'/\':\n
-  svn_path+=\'/\'\n
-\n
 #params modified,added,removed\n
 modified=context.REQUEST["modified"]\n
 added=context.REQUEST["added"]\n
@@ -86,21 +80,21 @@ tab_Removed=removed.split(\',\')\n
 \n
 if modified != \'none\':\n
   for f in tab_Modified:\n
-    f = svn_path+f    \n
+    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)    \n
     print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
     print \'<hr></font></b>\'\n
-    print context.getPortalObject()["portal_subversion"].diffHTML(f)\n
+    print context.getPortalObject()["portal_subversion"].diffHTML(f, context)\n
 \n
 if added != \'none\':\n
   for f in tab_Added:\n
-    f = svn_path+f\n
+    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
     print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
     print \'<hr></font></b>\'\n
     print "<font color=\'green\'>File Added</font><br><br>"\n
 \n
 if removed != \'none\':\n
   for f in tab_Removed:\n
-    f = svn_path+f\n
+    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
     print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
     print \'<hr></font></b>\'\n
     print "<font color=\'red\'>File Removed</font><br><br>"\n
@@ -151,10 +145,9 @@ return printed\n
                           <tuple>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>svn_path</string>
-                            <string>_getitem_</string>
                             <string>modified</string>
                             <string>added</string>
                             <string>removed</string>

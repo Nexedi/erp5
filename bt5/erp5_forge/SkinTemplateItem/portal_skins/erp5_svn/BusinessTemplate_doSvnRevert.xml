@@ -71,15 +71,8 @@
 else:\n
   to_revert = files\n
 \n
-svn_path = context.getPortalObject().portal_preferences.getPreference(\'subversion_working_copy\')\n
-if not svn_path :\n
-  raise "Error: Please set Subversion working path in preferences"\n
-if svn_path[-1]!=\'/\':\n
-  svn_path+=\'/\'\n
-\n
-if to_revert != \'none\' :\n
-  to_revert = [svn_path + relative_path for relative_path in to_revert]\n
-  context.getPortalObject()["portal_subversion"].revert(path=to_revert)\n
+if to_revert != \'none\' and to_revert != \'\':\n
+  context.getPortalObject()["portal_subversion"].revert(path=to_revert, bt=context)\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Changes reverted successfully!\')\n
 return context.BusinessTemplate_viewSvnStatus()\n
@@ -126,13 +119,8 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>files</string>
                             <string>_getattr_</string>
                             <string>to_revert</string>
-                            <string>context</string>
-                            <string>svn_path</string>
                             <string>_getitem_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>relative_path</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

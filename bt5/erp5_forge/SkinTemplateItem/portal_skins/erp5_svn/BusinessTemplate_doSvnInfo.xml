@@ -69,7 +69,7 @@
             <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
 try:\n
-  entry_dict = context.getPortalObject()["portal_subversion"].info()\n
+  entry_dict = context.getPortalObject()["portal_subversion"].info(context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'info\').BusinessTemplate_viewSvnSSLTrust()\n
