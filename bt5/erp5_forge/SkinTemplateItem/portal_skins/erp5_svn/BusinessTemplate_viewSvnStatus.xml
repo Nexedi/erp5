@@ -100,9 +100,10 @@
 \n
 <tal:js replace="structure \n
 here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
-\n
-<font color=\'black\'><b><u>Repository URL :</u></b> <b tal:content="python:context.getPortalObject()[\'portal_subversion\'].info(context)[\'url\']">repository url</b>\n
-</font>\n
+<span tal:define="repos_url python:context.getPortalObject()[\'portal_subversion\'].info(context)[\'url\']">\n
+  <font color=\'black\'><b>Repository URL :</b> <a tal:attributes="href repos_url"><b tal:content="repos_url">repository url</b>\n
+  </a></font>\n
+</span>\n
 <center><table width="100%" height="300">\n
 \t<tr>\n
 \t\t<td height="300">\n
