@@ -607,7 +607,6 @@ class SubversionTool(UniqueObject, Folder):
       if bt_name in os.listdir(wc) :
         wc_path = os.path.join(wc, bt_name)
         if os.path.isdir(wc_path):
-          LOG("wc path", 1, wc_path);
           if with_name:
             return wc_path
           else:
