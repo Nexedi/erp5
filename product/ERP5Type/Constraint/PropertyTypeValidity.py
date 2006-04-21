@@ -54,35 +54,12 @@ class PropertyTypeValidity(Constraint):
     'date':               (type(DateTime()), ),
   }
 
-  def _checkPropertiesAttributes(self):
-    """
-      Make sure instance has no _properties
-    """
-    # XXX FIXME what is _properties ?
-    errors = []
-    if '_properties' in object.__dict__:
-      # Remove _properties
-      error_message = "Instance has local _properties property"
-      if fixit:
-        local_properties = object._properties
-        del object._properties
-        object._local_properties = []
-        class_property_ids = object.propertyIds()
-        for p in local_properties:
-          if p['id'] not in class_property_ids:
-            object._local_properties.append(p)
-        error_message += " (Fixed)"
-      errors.append(self._generateError(object, error_message))
-    return errors
-
   def checkConsistency(self, object, fixit=0):
     """
       This is the check method, we return a list of string,
       each string corresponds to an error.
     """
     errors = []
-    # XXX FIXME Is this still useful ?
-    errors.extend(self._checkPropertiesAttributes())
     # For each attribute name, we check type
     for property in object.propertyMap():
       property_id = property['id']
