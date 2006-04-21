@@ -441,19 +441,16 @@ class SubversionTool(UniqueObject, Folder):
   # return '#' if no zodb path is found
   def editPath(self, bt, path):
     """Return path to edit file
+       path can be relative or absolute
     """
-    path = path.replace('\\', '/')
+    path = self.relativeToAbsolute(path, bt).replace('\\', '/')
     if 'bt' in path.split('/'):
       # not in zodb
       return '#'
     # if file have been deleted then not in zodb
     if not os.path.exists(path):
       return '#'
-    svn_path = bt.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
-    if not svn_path:
-      raise 'Error: Please set working copy path in Subversion preferences !'
-    svn_path = os.path.join(svn_path, bt.getTitle())
-    svn_path = svn_path.replace('\\', '/')
+    svn_path = self.getSubversionPath(bt).replace('\\', '/')
     edit_path = path.replace(svn_path, '')
     if edit_path.strip() == '':
       # not in zodb 
@@ -478,6 +475,10 @@ class SubversionTool(UniqueObject, Folder):
   def _decodeLogin(self, login):
     # Decode login information.
     return loads(b64decode(login))
+  
+  def goToWorkingCopy(self, bt):
+      working_path = self.getSubversionPath(bt)
+      os.chdir(working_path)
     
   def setLogin(self, realm, user, password):
     """Set login information.
@@ -520,12 +521,13 @@ class SubversionTool(UniqueObject, Folder):
     trust_item_list, permanent = loads(b64decode(trust))
     return dict(trust_item_list), permanent
   
-  def diffHTML(self, file_path, revision1=None, revision2=None):
-    raw_diff = self.diff(file_path, revision1, revision2)
+  def diffHTML(self, file_path, bt, revision1=None, revision2=None):
+    raw_diff = self.diff(file_path, bt, revision1, revision2)
     return DiffFile(raw_diff).toHTML()
   
   # Display a file content in HTML
   def fileHTML(self, bt, file_path):
+    file_path = self.relativeToAbsolute(file_path, bt)
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
         text = "<b>"+file_path+"</b><hr>"
@@ -541,7 +543,8 @@ class SubversionTool(UniqueObject, Folder):
         file_path=file_path[:-1]
       filename = file_path.split(os.sep)[-1]
       tmp_path = os.sep.join(file_path.split(os.sep)[:-1])
-      tmp_path = os.path.join(tmp_path,'.svn','text-base',filename,'.svn-base')
+      tmp_path = os.path.join(tmp_path,'.svn','text-base',filename+'.svn-base')
+      LOG('path_HD', 1, tmp_path)
       if os.path.exists(tmp_path):
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
         text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%tmp_path)
@@ -588,7 +591,29 @@ class SubversionTool(UniqueObject, Folder):
   def _getClient(self, **kw):
     # Get the svn client object.
     return newSubversionClient(self, **kw)
-
+  
+  security.declareProtected('Import/Export objects', 'getSubversionPath')
+  # with_name : with business template name at the end of the path
+  def getSubversionPath(self, bt, with_name=True):
+    # return the working copy path corresponding to
+    # the given business template browsing
+    # working copy list in preferences (looking
+    # only at first level of directories)
+    wc_list = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopyList()
+    bt_name = bt.getTitle()
+    if len(wc_list) == 0 :
+      raise 'Preferences Error', 'Please set at least one Subversion Working Copy in preferences first!'
+    for wc in wc_list:
+      if bt_name in os.listdir(wc) :
+        wc_path = os.path.join(wc, bt_name)
+        if os.path.isdir(wc_path):
+          LOG("wc path", 1, wc_path);
+          if with_name:
+            return wc_path
+          else:
+            return os.sep.join(wc_path.split(os.sep)[:-1])
+    raise 'Unknown Business Template', "Could not find '"+bt_name+"' at first level of working copies!"
+    
   security.declareProtected('Import/Export objects', 'update')
   def update(self, path):
     """Update a working copy.
@@ -597,43 +622,52 @@ class SubversionTool(UniqueObject, Folder):
     return client.update(path)
 
   security.declareProtected('Import/Export objects', 'add')
-  def add(self, path):
+  # path can be a list or not (relative or absolute)
+  def add(self, path, bt=None):
     """Add a file or a directory.
     """
+    if bt:
+      if isinstance(path, list) :
+        path = [self.relativeToAbsolute(x, bt) for x in path]
+      else:
+        path = self.relativeToAbsolute(path, bt)
     client = self._getClient()
     return client.add(path)
 
   security.declareProtected('Import/Export objects', 'info')
-  def info(self):
+  def info(self, bt):
     """return info of working copy
     """
-    working_copy = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
-    if not working_copy :
-      raise 'Please set Working copy path in preferences'
+    working_copy = self.getSubversionPath(bt)
     client = self._getClient()
     return client.info(working_copy)
   
   security.declareProtected('Import/Export objects', 'log')
-  def log(self, path):
+  # path can be absolute or relative
+  def log(self, path, bt):
     """return log of a file or dir
     """
     client = self._getClient()
-    return client.log(path)
+    return client.log(self.relativeToAbsolute(path, bt))
   
   security.declareProtected('Import/Export objects', 'cleanup')
-  def cleanup(self):
+  def cleanup(self, bt):
     """remove svn locks in working copy
     """
-    working_copy = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
-    if not working_copy :
-      raise 'Please set Working copy path in preferences'
+    working_copy = self.getSubversionPath(bt)
     client = self._getClient()
     return client.cleanup(working_copy)
 
   security.declareProtected('Import/Export objects', 'remove')
-  def remove(self, path):
+  # path can be a list or not (relative or absolute)
+  def remove(self, path, bt=None):
     """Remove a file or a directory.
     """
+    if bt:
+      if isinstance(path, list) :
+        path = [self.relativeToAbsolute(x, bt) for x in path]
+      else:
+        path = self.relativeToAbsolute(path, bt)
     client = self._getClient()
     return client.remove(path)
 
@@ -645,30 +679,52 @@ class SubversionTool(UniqueObject, Folder):
     return client.move(src, dest)
 
   security.declareProtected('Import/Export objects', 'ls')
-  def ls(self, path):
+  # path can be relative or absolute
+  def ls(self, path, bt):
     """Display infos about a file.
     """
     client = self._getClient()
-    return client.ls(path)
+    return client.ls(self.relativeToAbsolute(path, bt))
 
   security.declareProtected('Import/Export objects', 'diff')
-  def diff(self, path, revision1=None, revision2=None):
+  # path can be relative or absolute
+  def diff(self, path, bt, revision1=None, revision2=None):
     """Make a diff for a file or a directory.
     """
     client = self._getClient()
-    return client.diff(path, revision1, revision2)
+    return client.diff(self.relativeToAbsolute(path, bt), revision1, revision2)
 
   security.declareProtected('Import/Export objects', 'revert')
-  def revert(self, path):
+  # path can be absolute or relative
+  def revert(self, path, bt):
     """Revert local changes in a file or a directory.
     """
     client = self._getClient()
+    if isinstance(path, list) :
+      path = [self.relativeToAbsolute(x, bt) for x in path]
+    else:
+      path = self.relativeToAbsolute(path, bt)
     return client.revert(path)
 
+  def relativeToAbsolute(self, path, bt) :
+    if path[0] == os.sep:
+      # already absolute
+      return path
+    # relative path
+    if path.split(os.sep)[0] == bt.getTitle():
+      return os.path.join(self.getSubversionPath(bt, False), path)
+    else:
+      return os.path.join(self.getSubversionPath(bt), path)
+
   security.declareProtected('Import/Export objects', 'checkin')
-  def checkin(self, path, log_message=None, recurse=True):
+  # path can be relative or absolute (can be a list of paths too)
+  def checkin(self, path, bt, log_message=None, recurse=True):
     """Commit local changes.
     """
+    if isinstance(path, list) :
+      path = [self.relativeToAbsolute(x, bt) for x in path]
+    else:
+      path = self.relativeToAbsolute(path, bt)
     client = self._getClient()
     return client.checkin(path, log_message, recurse)
 
@@ -700,11 +756,9 @@ class SubversionTool(UniqueObject, Folder):
     for file in list:
       removeAll(file)
     
-  def getModifiedTree(self, path) :
+  def getModifiedTree(self, bt) :
     # Remove trailing slash if it's present
-    if path[-1] == os.sep :
-      path = path[:-1]
-    
+    path = self.getSubversionPath(bt)
     root = Dir(path, "normal")
     somethingModified = False
     
@@ -744,19 +798,15 @@ class SubversionTool(UniqueObject, Folder):
     return somethingModified and root
   
   def extractBT(self, bt):
-    path = mktemp()
+    path = mktemp()  +os.sep
     bt.export(path=path, local=1)
-    svn_path = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
-    if not svn_path :
-      raise "Error: Please set Subversion working path in preferences"
-    svn_path=os.path.join(svn_path,bt.getTitle())+os.sep
-    path+=os.sep
+    svn_path = self.getSubversionPath(bt) + os.sep
     # svn del deleted files
     self.deleteOldFiles(svn_path, path, bt)
     # add new files and copy
     self.addNewFiles(svn_path, path, bt)
+    self.goToWorkingCopy(bt)
     # Clean up
-    #removeAll(path)
     self.activate().removeAllInList([path,])
 
   # return a set with directories present in the directory
@@ -839,20 +889,15 @@ class SubversionTool(UniqueObject, Folder):
     list.sort()
     self.add([os.path.join(old_dir, x[1]) for x in list])
   
-  def treeToXML(self, item) :
+  def treeToXML(self, item, bt) :
+    working_copy = self.getSubversionPath(bt, False) + os.sep
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
     output += "<tree id='0'>" + os.linesep
-    output = self._treeToXML(item, output, 1, True)
+    output = self._treeToXML(item, working_copy, output, 1, True)
     output += "</tree>" + os.linesep
     return output
   
-  def _treeToXML(self, item, output, ident, first) :
-    # svn path
-    svn_path = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
-    if not svn_path :
-      raise "Error: Please set Subversion working path in preferences"
-    if svn_path[-1] != os.sep:
-      svn_path += os.sep
+  def _treeToXML(self, item, working_copy, output, ident, first) :
     # Choosing a color coresponding to the status
     itemStatus = item.msg_status
     if itemStatus == 'added' :
@@ -865,23 +910,21 @@ class SubversionTool(UniqueObject, Folder):
       itemColor='grey'
     else :
       itemColor='black'
-      
     if isinstance(item, Dir) :
       for i in range(ident) :
         output += '\t'
       if first :
         output += '<item open="1" text="%s" id="%s" aCol="%s" '\
         'im0="folder.png" im1="folder_open.png" '\
-        'im2="folder.png">'%(item.name,
-item.full_path.replace(svn_path, ''), itemColor,) + os.linesep
-        first=False
+        'im2="folder.png">'%(item.name, item.full_path.replace(working_copy, ''), itemColor,) + os.linesep
+        first = False
       else :
         output += '<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
       'im1="folder_open.png" im2="folder.png">'%(item.name,
-item.full_path.replace(svn_path, ''), itemColor,) + os.linesep
+item.full_path.replace(working_copy, ''), itemColor,) + os.linesep
       for it in item.sub_dirs:
         ident += 1
-        output = self._treeToXML(item.getDir(it.name), output, ident,
+        output = self._treeToXML(item.getDir(it.name), working_copy, output, ident,
 first)
         ident -= 1
       for i in range(ident) :
@@ -891,7 +934,7 @@ first)
       for i in range(ident) :
         output += '\t'
       output += '<item text="%s" id="%s" aCol="%s" im0="document.png"/>'\
-                %(item.name, item.full_path.replace(svn_path, ''), itemColor,) + os.linesep
+                %(item.name, item.full_path.replace(working_copy, ''), itemColor,) + os.linesep
     return output
     
 InitializeClass(SubversionTool)

@@ -205,13 +205,6 @@ try:
     
     def getLogin(self, realm):
       return self.aq_parent._getLogin(realm)
-    
-    def _getPreferences(self):
-      working_path = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopy()
-      if not working_path :
-        raise "Error: Please set Subversion working path in preferences"
-      #self.svn_username = self.getPortalObject().portal_preferences.getPreference('preferred_subversion_user_name')
-      os.chdir(working_path);
 
     def getTimeout(self):
       return self.timeout
@@ -226,7 +219,6 @@ try:
       return self.exception
     
     def checkin(self, path, log_message, recurse):
-      self._getPreferences()
       try:
         return self.client.checkin(path, log_message=log_message or 'none', recurse=recurse)
       except pysvn.ClientError, error:
@@ -237,7 +229,6 @@ try:
           raise error
 
     def update(self, path):
-      self._getPreferences()
       try:
         return self.client.update(path)
       except pysvn.ClientError, error:
@@ -252,7 +243,6 @@ try:
       return [Status(x) for x in self.client.status(path, **kw)]
     
     def diff(self, path, revision1, revision2):
-      self._getPreferences()
       tmp = mktemp()
       os.system('mkdir -p %s'%tmp)
       if not revision1 or not revision2:
@@ -264,11 +254,9 @@ try:
       return diff
     
     def revert(self, path):
-      self._getPreferences()
       return self.client.revert(path)
     
     def log(self, path):
-      self._getPreferences()
       try:
         log_list = self.client.log(path)
       except pysvn.ClientError, error:
@@ -286,11 +274,9 @@ try:
       return log_list
         
     def add(self, path):
-      self._getPreferences()
       return self.client.add(path=path, force=True)
 
     def info(self, path):
-      self._getPreferences()
       try:
         entry = self.client.info(path=path)
       except pysvn.ClientError, error:
@@ -308,7 +294,6 @@ try:
       return entry_dict
       
     def ls(self, path):
-      self._getPreferences()
       try:
         dict_list = self.client.ls(url_or_path=path, recurse=False)
       except pysvn.ClientError, error:
@@ -326,11 +311,9 @@ try:
       return dict_list
 
     def cleanup(self, path):
-      self._getPreferences()
       return self.client.cleanup(path=path)
 
     def remove(self, path):
-      self._getPreferences()
       return self.client.remove(url_or_path=path, force=True)
 
   def newSubversionClient(container, **kw):
