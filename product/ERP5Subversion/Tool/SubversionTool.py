@@ -798,9 +798,9 @@ class SubversionTool(UniqueObject, Folder):
     return somethingModified and root
   
   def extractBT(self, bt):
+    svn_path = self.getSubversionPath(bt) + os.sep
     path = mktemp()  +os.sep
     bt.export(path=path, local=1)
-    svn_path = self.getSubversionPath(bt) + os.sep
     # svn del deleted files
     self.deleteOldFiles(svn_path, path, bt)
     # add new files and copy
