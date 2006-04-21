@@ -75,6 +75,7 @@
                       <list>
                         <string>my_preferred_subversion_user_name</string>
                         <string>my_preferred_subversion_working_copy</string>
+                        <string>my_preferred_bootstrap_working_copy</string>
                       </list>
                     </value>
                 </item>
