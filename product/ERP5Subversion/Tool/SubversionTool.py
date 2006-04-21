@@ -760,6 +760,20 @@ class SubversionTool(UniqueObject, Folder):
         unversioned_list.append(my_dict)
     return unversioned_list
       
+  security.declareProtected('Import/Export objects', 'conflictedFiles')
+  def conflictedFiles(self, path, **kw):
+    """Return unversioned files
+    """
+    client = self._getClient()
+    status_list = client.status(path, **kw)
+    conflicted_list = []
+    for statusObj in status_list:
+      if str(statusObj.getTextStatus()) == "conflicted":
+        my_dict = {}
+        my_dict['uid'] = statusObj.getPath()
+        conflicted_list.append(my_dict)
+    return conflicted_list
+
   security.declareProtected('Import/Export objects', 'removeAllInList')
   def removeAllInList(self, list):
     """Remove all files and folders in list
