@@ -20,6 +20,7 @@ from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir
+from zExceptions import BadRequest
 
 class ERP5PropertyManager(PropertyManager):
   """
@@ -101,7 +102,7 @@ def PropertyManager_setProperty(self, id, value, type=None):
 
     self._wrapperCheck(value)
     if not self.valid_property_id(id):
-        raise 'Bad Request', 'Invalid or duplicate property id'
+        raise BadRequest, 'Invalid or duplicate property id: %s' % id
 
     if type in ('selection', 'multiple selection'):
         if not hasattr(self, value):
