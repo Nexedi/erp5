@@ -28,6 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5.Core.Node import Node
 from Products.ERP5.Document.Entity import Entity
@@ -163,19 +164,21 @@ class Person(Entity, Node, XMLObject):
           PAS _AND_ ERP5UserManager are used
       """
       if value:
-        if PluggableAuthService is not None:
-          plugin_list = self.acl_users.plugins.listPlugins(
+        acl_users = getToolByName(self, 'acl_users')
+        if PluggableAuthService is not None and isinstance(acl_users,
+              PluggableAuthService.PluggableAuthService.PluggableAuthService):
+          plugin_list = acl_users.plugins.listPlugins(
               PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin)
           for plugin_name, plugin_value in plugin_list:
             if isinstance(plugin_value, ERP5UserManager):
-              user_list = self.acl_users.searchUsers(id = value,
-                                                     exact_match = True)
+              user_list = acl_users.searchUsers(id=value,
+                                                exact_match=True)
               if len(user_list) > 0:
                 raise RuntimeError, 'user id %s already exist' % (value,)
               break
       self._setReference(value)
       self.reindexObject()
-      # invalid the cache for ERP5Security      
+      # invalid the cache for ERP5Security
       clearCache()
     
     security.declareProtected(Permissions.SetOwnPassword, 'setPassword')
