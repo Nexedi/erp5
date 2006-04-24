@@ -102,7 +102,7 @@ class Organisation:
     # Acquisition
     { 'id'          : 'address',
       'storage_id'  : 'default_address',
-      'description' : 'The organisations this persons works for',
+      'description' : 'The default address of this organisations',
       'type'        : 'content',
       'portal_type' : ('Address'),
       'acquisition_base_category' : ('region', ),
@@ -141,7 +141,7 @@ class Organisation:
       'mode'        : 'w' },
     { 'id'          : 'fax',
       'storage_id'  : 'default_fax',
-      'description' : 'The organisations this persons works for',
+      'description' : 'The defaut fax phone number for this organisation',
       'type'        : 'content',
       'portal_type' : ('Fax'),
       'acquisition_base_category' : ('region', ),
@@ -154,7 +154,7 @@ class Organisation:
       'mode'        : 'w' },
     { 'id'          : 'email',
       'storage_id'  : 'default_email',
-      'description' : 'The organisations this persons works for',
+      'description' : 'The default email address for this organisation',
       'type'        : 'content',
       'portal_type' : ('Email'),
       'acquisition_base_category' : ('region', ),
@@ -164,11 +164,6 @@ class Organisation:
       'acquisition_sync_value'    : 0,
       'acquisition_accessor_id'   : 'getDefaultEmailValue',
       'acquisition_depends'       : None,
-      'mode'        : 'w' },
-    # Amortisation
-    { 'id'          : 'financial_year_stop_date',
-      'description' : 'The date which ends the organisation financial year',
-      'type'        : 'date',
       'mode'        : 'w' },
   )
 

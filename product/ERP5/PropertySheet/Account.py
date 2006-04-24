@@ -28,12 +28,15 @@
 
 class Account:
   """
-    Organisation properties and categories
+    Account properties and categories
   """
 
   _properties = (
-    { 'id'          : 'is_credit_account',
-      'description' : 'Some account are',
+      { 'id'          : 'is_credit_account', # XXX: this property should be
+                                             # named diferently : an account can
+                                             # be naturally debitor, creditor,
+                                             # or none of those
+      'description' : 'Some accounts are',
       'type'        : 'boolean',
       'mode'        : 'w' ,
       'default'     : 0 },

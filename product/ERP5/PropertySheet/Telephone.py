@@ -29,23 +29,25 @@
 class Telephone:
     """
         Properties for Telephone Objects
+        
+        Can be used for Fax numbers aswell.
     """
 
     _properties = (
         {   'id'          : 'telephone_country',
-            'description' : '',
+            'description' : 'Country indicative number',
             'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'telephone_area',
-            'description' : '',
+            'description' : 'Area indicative number',
             'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'telephone_number',
-            'description' : '',
+            'description' : 'Telephone number minus indicatives',
             'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'telephone_extension',
-            'description' : '',
+            'description' : 'Telephone number extension',
             'type'        : 'string',
             'mode'        : 'w' },
     )

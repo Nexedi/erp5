@@ -33,7 +33,7 @@ class Url:
 
     _properties = (
         {   'id'          : 'url_string',
-            'description' : 'demo of url creation stuff within 15 minutes',
+            'description' : 'url value',
             'type'        : 'string',
             'mode'        : 'w'
             },

@@ -29,11 +29,16 @@
 class AppliedRule:
   """
     AppliedRule
+
+    An AppliedRule makes the link between simulation movements it contains
+    and the rule that generated them.
   """
 
   _properties = (
         {   'id'          : 'last_expand_simulation_state',
-            'description' : '',
+            'description' : 'Contains the id of the simulation state when the '\
+                            'object was last expanded (in order to avoid '\
+                            'recalculation)',
             'type'        : 'string',
             'mode'        : 'w' },
   )

@@ -35,7 +35,6 @@ class Amortisation:
         These properties are applied to an Immobilisation Movement or to an Item
 
         TODO:
-
           - rename categories for more genericity (input_acount -> input)
     """
 

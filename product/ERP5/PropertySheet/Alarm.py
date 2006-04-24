@@ -29,6 +29,8 @@
 class Alarm:
     """
         Properties which allow to define a generic Alarm.
+
+        An alarm can be used to trigger an action periodically.
     """
 
     _properties = (

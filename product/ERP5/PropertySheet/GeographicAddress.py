@@ -33,15 +33,15 @@ class GeographicAddress:
 
     _properties = (
         {   'id'          : 'street_address',
-            'description' : '',
+            'description' : 'Street address.',
             'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'city',
-            'description' : '',
+            'description' : 'City name.',
             'type'        : 'string',
             'mode'        : 'w' },
         {   'id'          : 'zip_code',
-            'description' : '',
+            'description' : 'Zip code.',
             'type'        : 'string',
             'mode'        : 'w' },
     )

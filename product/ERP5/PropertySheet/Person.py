@@ -36,24 +36,24 @@ class Person:
   _properties = (
     # Personnal properties
     { 'id'         : 'password'
-    , 'description': ''
+    , 'description': 'Cleartext password.'
     , 'type'       : 'string'
     , 'write_permission' : 'Set own password'
     , 'read_permission'  : 'Manage users'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_name'
-    , 'description': ''
+    , 'description': 'First name.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'last_name'
-    , 'description': ''
+    , 'description': 'Last name.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'middle_name'
-    , 'description': ''
+    , 'description': 'Middle name.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
@@ -63,17 +63,17 @@ class Person:
     , 'mode'       : 'w'
     },
     { 'id'         : 'prefix'
-    , 'description': ''
+    , 'description': 'Name prefix.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'suffix'
-    , 'description': ''
+    , 'description': 'Name suffix.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
     { 'id'         : 'birthday'
-    , 'description': ''
+    , 'description': 'Date of birth.'
     , 'type'       : 'date'
     , 'mode'       : 'w'
     },
@@ -83,12 +83,12 @@ class Person:
     , 'mode'       : 'w'
     },
     { 'id'         : 'partner_count'
-    , 'description': ''
+    , 'description': 'Number of familial partners.'
     , 'type'       : 'int'
     , 'mode'       : 'w'
     },
     { 'id'         : 'child_count'
-    , 'description': ''
+    , 'description': 'Number of childs.'
     , 'type'       : 'int'
     , 'mode'       : 'w'
     },

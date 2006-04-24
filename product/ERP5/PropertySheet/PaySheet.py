@@ -32,15 +32,15 @@ class PaySheet:
     """
 
     _properties = (
-        {   'id'          : 'gross_salary',
+        {   'id'          : 'gross_salary', #XXX data duplication
             'description' : '',
             'type'        : 'float',
             'mode'        : 'w' },
         {   'id'          : 'work_duration',
-            'description' : '',
+            'description' : 'Duration of work.',
             'type'        : 'date',
             'mode'        : 'w' },
-        {   'id'          : 'advantage',
+        {   'id'          : 'advantage', #XXX data duplication
             'description' : '',
             'type'        : 'float',
             'mode'        : 'w' },

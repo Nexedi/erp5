@@ -28,7 +28,10 @@
 
 class BusinessTemplate:
   """
-    Organisation properties and categories
+    Business templates properties and categories
+
+    A business template contains all zope objects needed to add a given
+    functionnality to ERP5, like accounting or pdf rendering.
   """
 
   _properties = (

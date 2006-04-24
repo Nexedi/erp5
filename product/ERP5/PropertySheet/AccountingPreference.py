@@ -28,7 +28,9 @@
 
 class AccountingPreference:
   """
-    User Preferences for erp5_accounting
+    User Preferences for erp5_accounting.
+    
+    Contains all preferences (see portal_preferences) relative to accounting.
   """
   
   _properties = (
