@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="image_link">\n
+  <a tal:condition="python: hasattr(object, \'meta_type\') and object.Base_getSourceVisibility()"\n
+     tal:attributes="href python: \'%s/%s\' % (object.absolute_url(), manage);\n
+                     title info;"><img tal:attributes="src python: \'images/%s\' % (image, );\n
+                                                       alt info;"/></a>\n
+</tal:block>\n
+<tal:block metal:define-macro="form">\n
+  <tal:block tal:define="image python: \'editform.png\';\n
+                         info python: \'Edit this form\';\n
+                         object python: form;\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="context/form_developper_buttons/macros/image_link"/>\n
+  </tal:block>\n
+  <tal:block tal:define="image python: \'editformrenderer.png\';\n
+                         info python: \'Edit this form\\\'s renderer\';\n
+                         object python: getattr(context, form.pt, None);\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="context/form_developper_buttons/macros/image_link"/>\n
+  </tal:block>\n
+  <tal:block tal:define="image python: \'editlayout.png\';\n
+                         info python: \'Edit this layout\';\n
+                         object python: getattr(context, layout_id, None);\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="context/form_developper_buttons/macros/image_link"/>\n
+  </tal:block>\n
+  <tal:block tal:define="image python: \'editformaction.png\';\n
+                         info python: \'Edit this form\\\'s action\';\n
+                         object python: getattr(context, form.action, None);\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="context/form_developper_buttons/macros/image_link"/>\n
+  </tal:block>\n
+</tal:block>\n
+<tal:block metal:define-macro="field">\n
+  <tal:block tal:define="image python: \'editfield.png\';\n
+                         info python: \'Edit this field\';\n
+                         object python: field;\n
+                         manage python: \'manage_main\'">\n
+    <tal:block metal:use-macro="context/form_developper_buttons/macros/image_link"/>\n
+  </tal:block>\n
+</tal:block>\n
+<tal:block metal:define-macro="tab">\n
+  <tal:block tal:condition="python: context.portal_preferences.getPreferredHtmlStyleContextualHelp()\n
+                             and hasattr(context, \'%s_getHelp\' % (context.getPortalType(), ))">\n
+    <a title="Help on this action"\n
+     tal:attributes="href python: \'Base_viewHelp?action_id=%s\' % (action[\'id\'], )"><img src="images/help.png" alt="Help" width="13" height="13"></a>\n
+  </tal:block>\n
+</tal:block>\n
+<tal:block metal:define-macro="help">\n
+  <tal:block tal:condition="context/portal_preferences/getPreferredHtmlStyleContextualHelp"\n
+             tal:define="help_object_id python: \'%s_getHelp\' % (context.getPortalType(), )">\n
+    <a title="Help" href="Base_viewHelp"\n
+     tal:condition="python: hasattr(here, help_object_id)"><img src="images/help.png" alt="Help"></a>\n
+  </tal:block>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>form_developper_buttons</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
