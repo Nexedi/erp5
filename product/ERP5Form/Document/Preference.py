@@ -55,6 +55,7 @@ class Preference( Folder ):
                     , PropertySheet.Preference
                     , PropertySheet.AccountingPreference
                     , PropertySheet.SubversionPreference
+                    , PropertySheet.HtmlStylePreference
                     )
   
   # Declarative security
