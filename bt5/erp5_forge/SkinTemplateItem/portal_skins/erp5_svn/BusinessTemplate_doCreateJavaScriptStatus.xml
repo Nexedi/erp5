@@ -153,18 +153,25 @@ print \'\'\'\n
           }\n
         }\n
       }\n
-\n
-      partialToCommit=tree.getAllPartiallyChecked();\n
+      if(popup==1){\n
+        //TODO\n
+        filesPartiallyCheckedArray=[];\n
+      }else{\n
+        filesPartiallyCheckedArray=tree.getAllPartiallyChecked().split(\',\');\n
+      }\n
+      for(i=0;i<filesPartiallyCheckedArray.length; ++i){\n
+        // useless for removed directories\n
+        if(tree.getItemColor(filesPartiallyCheckedArray[i])==\'green\'){\n
+          FilesAddedArray[nbAdded++]=filesPartiallyCheckedArray[i];\n
+        }else\n
+        if(tree.getItemColor(filesPartiallyCheckedArray[i])==\'orange\'){\n
+          FilesModifiedArray[nbModified++]=filesPartiallyCheckedArray[i];\n
+        }\n
+      }\n
       if(nbModified!=0){\n
         filesModified=FilesModifiedArray.join(\',\');\n
-        if(partialToCommit!=\'\'){\n
-          filesModified=filesModified+\',\'+partialToCommit;\n
-        }\n
       }else{\n
         filesModified=\'none\';\n
-        if(partialToCommit!=\'\'){\n
-          filesModified=partialToCommit;\n
-        }\n
       }\n
       form.modified.value=filesModified;\n
       if(nbAdded!=0){\n
