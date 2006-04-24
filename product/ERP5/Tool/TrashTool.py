@@ -39,7 +39,7 @@ from Acquisition import aq_base
 
 class TrashTool(BaseTool):
   """
-    TrashTool manage removed object from installation of BusinessTemplates
+    TrashTool contains objects removed/replaced during installation of business templates.
   """
   title = 'Trash Tool'
   id = 'portal_trash'
@@ -157,7 +157,6 @@ class TrashTool(BaseTool):
     trashbin = self.newContent(portal_type='Trash Bin', id=new_trash_id, title=bt_title, start_date=start_date, causality_value=bt)
 #     LOG('trash item created', 0, trashbin)
     return trashbin
-  
 
   def getTrashBinObjectsList(self, trashbin):
     """
@@ -180,7 +179,5 @@ class TrashTool(BaseTool):
     list = getChildObjects(trashbin)
     list.sort()
     return list
-
-
 
 InitializeClass(TrashTool)
