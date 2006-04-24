@@ -30,40 +30,41 @@ from CopyToTarget import CopyToTarget
 
 class TransformationSourcingCopyToTarget(CopyToTarget):
   """
-  Copy values simulation movement as target, and
+    Copy values simulation movement as target, and
     recursively solve the sourcing tree.
   """
-  def _generateValueDeltaDict(self, movement):
+  def _generateValueDeltaDict(self, simulation_movement):
     """
-    Get interesting value
+      Get interesting value
     """
-    value_dict = CopyToTarget._generateValueDict(self, movement)
+    value_dict = CopyToTarget._generateValueDict(self, simulation_movement)
     value_dict.update({
-      'aggregate_list': movement.getDeliveryValue().getAggregateList(),
+      'aggregate_list':
+        simulation_movement.getDeliveryValue().getAggregateList(),
     })
     return value_dict
 
-  def _generateValueDict(self, movement, aggregate_list=None,
+  def _generateValueDict(self, simulation_movement, aggregate_list = None,
                          **value_delta_dict):
     """
-    Generate values to save on movement.
+      Generate values to save on movement.
     """
-    value_dict = CopyToTarget._generateValueDict(self, movement,
+    value_dict = CopyToTarget._generateValueDict(self, simulation_movement,
                                                  **value_delta_dict)
     # Modify aggregate_list
     if aggregate_list is not None:
       value_dict['aggregate_list'] = aggregate_list
     return value_dict
 
-  def _getParentParameters(self, movement, 
+  def _getParentParameters(self, simulation_movement, 
                            **value_delta_dict):
     """
-    Get parent movement, and its value delta dict.
+      Get parent movement, and its value delta dict.
     """
-    applied_rule = movement.getParentValue()
+    applied_rule = simulation_movement.getParentValue()
     rule = applied_rule.getSpecialiseValue()
     if rule.getPortalType() != "Transformation Sourcing Rule":
       value_delta_dict.pop('aggregate_list', None)
-    return CopyToTarget._getParentParameters(self, movement, 
+    return CopyToTarget._getParentParameters(self, simulation_movement, 
                                              **value_delta_dict)
 

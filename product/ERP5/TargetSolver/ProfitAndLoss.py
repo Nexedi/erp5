@@ -29,7 +29,6 @@
 
 # from Products.ERP5.Tool.SimulationTool import registerTargetSolver
 from CopyToTarget import CopyToTarget
-from zLOG import LOG
 
 class ProfitAndLoss(CopyToTarget):
   """
@@ -45,13 +44,17 @@ class ProfitAndLoss(CopyToTarget):
       Movement difference as a profit (ie. a quantity coming from nowhere)
       Accumulate into delivered movement
     """
-    LOG('profit and loss called on movement', 0, repr(movement))
     delivery_line = movement.getDeliveryValue()
     delivery_line_quantity = delivery_line.getQuantity()
     if delivery_line_quantity is not None:
       target_quantity = delivery_line_quantity * movement.getDeliveryRatio()
       added_quantity = movement.getQuantity() - target_quantity
-      movement.edit(profit_quantity=added_quantity)
+      movement.edit(profit_quantity = added_quantity)
     delivery = movement.getDeliveryValue()
     if delivery is not None:
-      delivery.activate(after_path_and_method_id=(movement.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
+      delivery.activate(
+        after_path_and_method_id = (
+          movement.getPath(),
+          ['immediateReindexObject', 'recursiveImmediateReindexObject']
+        )
+      ).edit()

@@ -31,34 +31,46 @@ from CopyToTarget import CopyToTarget
 from zLOG import LOG
 
 class SplitQuantity(CopyToTarget):
+  """
+    Split a simulation movement based on a resource quantity.
+  """
 
-  def solve(self, movement):
+  def solve(self, simulation_movement):
     """
-      Split a movement based on a given quantity
+      From simulation_movement, generate new_movement containing self.quantity
+      resources, of start_date self.start_date and stop_date self.stop_date.
+      
+      movement.quantity is updated
+      
+      XXX incomplete docstring
     """
     split_index = 0
-    new_id = "%s_split_%s" % (movement.getId(), split_index)
-    while getattr(movement.aq_parent, new_id, None) is not None:
+    new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
+    while getattr(simulation_movement.aq_parent, new_id, None) is not None:
       split_index += 1
-      new_id = "%s_split_%s" % (movement.getId(), split_index)
+      new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
     # Adopt different dates for defferred movements
-    new_movement = movement.aq_parent.newContent(
-                      portal_type="Simulation Movement",
-                      id=new_id,
-                      efficiency=movement.getEfficiency(),
-                      start_date=self.start_date,
-                      stop_date=self.stop_date,
-                      # XXX resource
-                      order=movement.getOrder(),
-                      deliverable=movement.isDeliverable(),
-                      quantity=self.quantity,
-                      source = movement.getSource(),
-                      destination = movement.getDestination(),
-                      source_section = movement.getSourceSection(),
-                      destination_section = movement.getDestinationSection(),
-                      activate_kw=self.activate_kw,
-                      **self.additional_parameters
+    new_movement = simulation_movement.aq_parent.newContent(
+      portal_type = "Simulation Movement",
+      id = new_id,
+      efficiency = simulation_movement.getEfficiency(),
+      start_date = self.start_date,
+      stop_date = self.stop_date,
+      # XXX resource
+      order = simulation_movement.getOrder(),
+      deliverable = simulation_movement.isDeliverable(),
+      quantity = self.quantity,
+      source = simulation_movement.getSource(),
+      destination = simulation_movement.getDestination(),
+      source_section = simulation_movement.getSourceSection(),
+      destination_section = simulation_movement.getDestinationSection(),
+      activate_kw = self.activate_kw,
+      **self.additional_parameters
     )
-    movement._v_activate_kw = self.activate_kw
-    movement.edit(quantity=(movement.getQuantity() - self.quantity) * movement.getDeliveryRatio())
+    simulation_movement._v_activate_kw = self.activate_kw
+    simulation_movement.edit (
+      quantity = (simulation_movement.getQuantity() - self.quantity)
+                 * simulation_movement.getDeliveryRatio()
+    )
+    #XXX: vincent: I don't understand why it's multiplicated.
     return new_movement

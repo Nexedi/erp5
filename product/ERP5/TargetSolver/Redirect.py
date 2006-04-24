@@ -35,7 +35,7 @@ class Redirect(TargetSolver):
     Redirects all simulation movements to new target
   """
 
-  def solve(self, movement, new_target):
+  def solve(self, simulation_movement, new_target):
     """
       Updates all sources and destinations to new values defined 
       in self by mapping 
@@ -46,15 +46,15 @@ class Redirect(TargetSolver):
     """
     for p in ('source', 'destination'):
       for q in ('source', 'destination'):
-        if movement.getProperty(p) == getattr(self, q):
+        if simulation_movement.getProperty(p) == getattr(self, q):
           self.setProperty(p, getattr(self, 'target_%s' % q))
           break
     for p in ('source_section', 'destination_section'):
       for q in ('source_section', 'destination_section'):
-        if movement.getProperty(p) == getattr(self, q):
+        if simulation_movement.getProperty(p) == getattr(self, q):
           self.setProperty(p, getattr(self, 'target_%s' % q))
           break
-    delivery_value = movement.getDeliveryValue() # Get delivery movement
+    delivery_value = simulation_movement.getDeliveryValue() # Get delivery movement
     if delivery_value is not None:
       delivery_value = delivery_value.getDeliveryValue() # Get root delivery
       if delivery_value is not None:

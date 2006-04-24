@@ -31,25 +31,26 @@ from TargetSolver import TargetSolver
 
 class CopyToTarget(TargetSolver):
   """
-  Copy values simulation movement as target. This is
-  only acceptable for root movements. The meaning of
-  this solver of other movements is far from certain.
+    Copy values simulation movement as target. This is
+    only acceptable for root movements. The meaning of
+    this solver of other movements is far from certain.
   """
-  def _generateValueDeltaDict(self, movement):
+  def _generateValueDeltaDict(self, simulation_movement):
     """
-    Get interesting value
+      Get interesting values
+      XXX: better description is possible. But is it needed ?
     """
     # Get interesting value
-    old_quantity = movement.getQuantity()
-    old_start_date = movement.getStartDate()
-    old_stop_date = movement.getStopDate()
-    new_quantity = movement.getDeliveryQuantity() * \
-                   movement.getDeliveryRatio()
-    new_start_date = movement.getDeliveryStartDateList()[0]
-    new_stop_date = movement.getDeliveryStopDateList()[0]
+    old_quantity = simulation_movement.getQuantity()
+    old_start_date = simulation_movement.getStartDate()
+    old_stop_date = simulation_movement.getStopDate()
+    new_quantity = simulation_movement.getDeliveryQuantity() * \
+                   simulation_movement.getDeliveryRatio()
+    new_start_date = simulation_movement.getDeliveryStartDateList()[0]
+    new_stop_date = simulation_movement.getDeliveryStopDateList()[0]
     # Calculate delta
     quantity_ratio = 0
-    if old_quantity not in (None,0.0):
+    if old_quantity not in (None,0.0): # XXX: What if quantity happens to be an integer ?
       quantity_ratio = new_quantity / old_quantity
     start_date_delta = 0
     stop_date_delta = 0
@@ -63,51 +64,51 @@ class CopyToTarget(TargetSolver):
       'stop_date_delta': stop_date_delta,
     }
 
-  def solve(self, movement):
+  def solve(self, simulation_movement):
     """
-    Adopt values as new target
+      Adopt values as new target
     """
-    value_dict = self._generateValueDeltaDict(movement)
+    value_dict = self._generateValueDeltaDict(simulation_movement)
     # Modify recursively simulation movement
-    self._recursivelySolve(movement, **value_dict)
+    self._recursivelySolve(simulation_movement, **value_dict)
 
-  def _generateValueDict(self, movement, quantity_ratio=1, 
+  def _generateValueDict(self, simulation_movement, quantity_ratio=1, 
                          start_date_delta=0, stop_date_delta=0,
                          **value_delta_dict):
     """
-    Generate values to save on movement.
+      Generate values to save on simulation movement.
     """
     value_dict = {}
     # Modify quantity, start_date, stop_date
-    start_date = movement.getStartDate()
+    start_date = simulation_movement.getStartDate()
     if start_date is not None:
       value_dict['start_date'] = start_date + start_date_delta
-    stop_date = movement.getStopDate()
+    stop_date = simulation_movement.getStopDate()
     if stop_date is not None:
       value_dict['stop_date'] = stop_date + stop_date_delta
-    value_dict['quantity'] = movement.getQuantity() * quantity_ratio
+    value_dict['quantity'] = simulation_movement.getQuantity() * quantity_ratio
     return value_dict
 
-  def _getParentParameters(self, movement, 
+  def _getParentParameters(self, simulation_movement, 
                            **value_delta_dict):
     """
-    Get parent movement, and its value delta dict.
+      Get parent movement, and its value delta dict.
     """
-    applied_rule = movement.getParentValue()
+    applied_rule = simulation_movement.getParentValue()
     parent_movement = applied_rule.getParentValue()
     if parent_movement.getPortalType() != "Simulation Movement":
       parent_movement = None
     return parent_movement, value_delta_dict
 
-  def _recursivelySolve(self, movement, **value_delta_dict):
+  def _recursivelySolve(self, simulation_movement, **value_delta_dict):
     """
-    Update value of the current simulation movement, and update his parent
-    movement.
+      Update value of the current simulation movement, and update
+      his parent movement.
     """
-    value_dict = self._generateValueDict(movement, **value_delta_dict)
-    movement.edit(**value_dict)
+    value_dict = self._generateValueDict(simulation_movement, **value_delta_dict)
+    simulation_movement.edit(**value_dict)
     parent_movement, parent_value_delta_dict = \
-                self._getParentParameters(movement, **value_delta_dict)
+                self._getParentParameters(simulation_movement, **value_delta_dict)
     if parent_movement is not None:
       # Modify the parent movement
       self._recursivelySolve(parent_movement, **parent_value_delta_dict)

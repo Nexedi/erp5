@@ -42,39 +42,39 @@ class SplitAndDefer(CopyToTarget):
     (excessive qty is not covered)
   """
 
-  def solve(self, movement):
+  def solve(self, simulation_movement):
     """
-      Split a movement and accumulate
+      Split a simulation movement and accumulate
     """
-    movement_quantity = movement.getQuantity()
-    delivery_quantity = movement.getDeliveryQuantity()
-    new_movement_quantity = delivery_quantity * movement.getDeliveryRatio()
+    movement_quantity = simulation_movement.getQuantity()
+    delivery_quantity = simulation_movement.getDeliveryQuantity()
+    new_movement_quantity = delivery_quantity * simulation_movement.getDeliveryRatio()
 
     if movement_quantity > new_movement_quantity:
       split_index = 0
-      new_id = "%s_split_%s" % (movement.getId(), split_index)
-      while getattr(movement.aq_parent, new_id, None) is not None:
+      new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
+      while getattr(simulation_movement.aq_parent, new_id, None) is not None:
         split_index += 1
-        new_id = "%s_split_%s" % (movement.getId(), split_index)
+        new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       # Adopt different dates for defferred movements
-      new_movement = movement.aq_parent.newContent(
+      new_movement = simulation_movement.aq_parent.newContent(
                         portal_type="Simulation Movement",
                         id=new_id,
-                        efficiency=movement.getEfficiency(),
+                        efficiency=simulation_movement.getEfficiency(),
                         start_date=self.start_date,
                         stop_date=self.stop_date,
-                        order=movement.getOrder(),
-                        deliverable=movement.isDeliverable(),
+                        order=simulation_movement.getOrder(),
+                        deliverable=simulation_movement.isDeliverable(),
                         quantity=movement_quantity-new_movement_quantity,
-                        source = movement.getSource(),
-                        destination = movement.getDestination(),
-                        source_section = movement.getSourceSection(),
-                        resource = movement.getResource(),
-                        destination_section = movement.getDestinationSection(),
+                        source = simulation_movement.getSource(),
+                        destination = simulation_movement.getDestination(),
+                        source_section = simulation_movement.getSourceSection(),
+                        resource = simulation_movement.getResource(),
+                        destination_section = simulation_movement.getDestinationSection(),
                         activate_kw=self.activate_kw,
                         **self.additional_parameters
       )
       new_movement.activate(**self.additional_parameters).expand()
-    movement._v_activate_kw = self.activate_kw
-    movement.activate(**self.additional_parameters).expand()
-    CopyToTarget.solve(self, movement)
+    simulation_movement._v_activate_kw = self.activate_kw
+    simulation_movement.activate(**self.additional_parameters).expand()
+    CopyToTarget.solve(self, simulation_movement)

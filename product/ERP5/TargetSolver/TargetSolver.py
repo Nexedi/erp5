@@ -44,9 +44,12 @@ class TargetSolver:
 
     - call 'updateNewTarget' on Applied rule
       to update parent target
+
+    This class is the base class for all target solvers.
+    It's virtual due to "solve", which needs to be overloaded.
   """
 
-  def __init__(self, additional_parameters=None,activate_kw=None,**kw):
+  def __init__(self, additional_parameters=None, activate_kw=None, **kw):
     """
       Creates an instance of TargetSolver with parameters
     """
@@ -69,11 +72,14 @@ class TargetSolver:
 
       XXX: maybe we do not need to pass previous_target as parameter
       (since we accumulate it)
+
+      This function must be implemented by the actual solver which derivates
+      from this class.
     """
 
   def solveDelivery(self, delivery):
     """
-      Called in case it is needed for the solving process
+      Solves the whole delivery.
     """
     # Then apply to all movements
     for movement in delivery.getMovementList():
@@ -81,9 +87,9 @@ class TargetSolver:
 
   def solveMovement(self, movement):
     """
-      Called in case it is needed for the solving process
+      Solves a movement.
     """
-    # apply to all movements
+    # Apply to all simulation movements
     simulation_movement_list = movement.getDeliveryRelatedValueList(
                                              portal_type="Simulation Movement")
     solved_movement_list = []
@@ -99,5 +105,4 @@ class TargetSolver:
     """
     # XXX this is not the job of TargetSolver to create new Delivery !
     pass
-
 
