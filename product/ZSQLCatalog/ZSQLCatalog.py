@@ -470,7 +470,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       catalog.manage_uncatalogObject(REQUEST, RESPONSE, URL1, urls=urls)
 
 
-  def manage_catalogReindex(self, REQUEST, RESPONSE, URL1, sql_catalog_id=None):
+  def manage_catalogReindex(self, REQUEST, RESPONSE, URL1, urls=None, sql_catalog_id=None):
     """ clear the catalog, then re-index everything """
     if sql_catalog_id is None:
       sql_catalog_id = REQUEST.get('sql_catalog_id', None)
