@@ -200,8 +200,35 @@ class TestERP5Type(ERP5TypeTestCase):
       self.assertEquals(organisation.corporate_name,'Nexedi')
       self.assertEquals(organisation.default_telephone.corporate_name,'Toto')
 
+    def test_06_CachingMethod(self):
+      """Tests Caching methods."""
+      cached_var1 = cached_var1_orig = 'cached_var1'
+      cached_var2 = cached_var2_orig = 'cached_var2'
 
-
+      def _cache1():
+        return cached_var1
+      def _cache2():
+        return cached_var2
+      
+      from Products.ERP5Type.Cache import CachingMethod, clearCache
+      cache1 = CachingMethod(_cache1, id='_cache1')
+      cache2 = CachingMethod(_cache2, id='_cache2')
+      
+      self.assertEquals(cache1(), cached_var1)
+      self.assertEquals(cache2(), cached_var2)
+      
+      cached_var1 = 'cached_var1 (modified)'
+      cached_var2 = 'cached_var2 (modified)'
+      self.assertEquals(cache1(), cached_var1_orig)
+        
+      # clearCache with a method argument only clear this cache
+      clearCache(method_id = '_cache1')
+      self.assertEquals(cache1(), cached_var1)
+      self.assertEquals(cache2(), cached_var2_orig)
+      
+      # clearCache with no arguments clear all caches
+      clearCache()
+      self.assertEquals(cache2(), cached_var2)
 
 if __name__ == '__main__':
     framework()

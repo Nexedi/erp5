@@ -147,8 +147,19 @@ class CachingMethod:
 
 allow_class(CachingMethod)
 
-def clearCache():
-  CachingMethod.cached_object_dict.clear()
+def clearCache(method_id=None):
+  """Clear the cache.
+  If method_id is specified, it clears the cache only for this method,
+  otherwise, it clears the whole cache."""
+  if method_id is None:
+    CachingMethod.cached_object_dict.clear()
+  else:
+    caching_method_keys = CachingMethod.cached_object_dict.keys()
+    for key in caching_method_keys :
+      # CachingMethod dict contains a string representation of a list
+      # of tuples keys.
+      if method_id in key :
+        del CachingMethod.cached_object_dict[key]
 
 # TransactionCache is a cache per transaction. The purpose of this cache is
 # to accelerate some heavy read-only operations. Note that this must not be
