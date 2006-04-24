@@ -67,7 +67,9 @@
 <script  src="js/dhtmlXTree.js"></script>\n
 <script  src="js/menuico.js"></script>\n
 <script  src="js/movableMenu.js"></script>\n
-\n
+<noscript>\n
+<font color=\'red\'>Please activate javascript in your web browser or this module won\'t work.</font>\n
+</noscript>\n
 <!-- Form Hidden : Selected files -->\n
 <input type=\'hidden\' name=\'removed\' value=\'\'>\n
 <input type=\'hidden\' name=\'added\' value=\'\'>\n
@@ -125,7 +127,6 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
 \t\t</td>\n
 \t</tr>\n
 </table>\n
-\n
 <div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#EBF8F8 #C0CACA #C0CACA #C0CACA;">\n
   <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
     <span class="titleBarText">Caption -- SVN</span>\n
