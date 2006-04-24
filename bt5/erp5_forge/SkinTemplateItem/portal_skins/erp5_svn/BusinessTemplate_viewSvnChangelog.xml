@@ -82,7 +82,6 @@
                     <key>                 <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>my_checked</string>
                         <string>my_modified</string>
                         <string>my_added</string>
                         <string>my_removed</string>
