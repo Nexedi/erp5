@@ -53,6 +53,16 @@ except ImportError:
 class Error(exceptions.EnvironmentError):
     pass
 
+class SubversionPreferencesError(Exception):
+  """The base exception class for the Subversion preferences.
+  """
+  pass
+  
+class SubversionUnknownBusinessTemplateError(Exception):
+  """The base exception class when business template is unknown.
+  """
+  pass
+
 def removeAll(entry):
   '''
     Remove all files and directories under 'entry'.
@@ -603,10 +613,10 @@ class SubversionTool(UniqueObject, Folder):
     if not wc_list:
       wc_list = self.getPortalObject().portal_preferences.default_site_preference.getPreferredSubversionWorkingCopyList()
       if not wc_list:
-        raise 'Preferences Error', 'Please set at least one Subversion Working Copy in preferences first.'
+        raise SubversionPreferencesError, 'Please set at least one Subversion Working Copy in preferences first.'
     bt_name = bt.getTitle()
     if len(wc_list) == 0 :
-      raise 'Preferences Error', 'Please set at least one Subversion Working Copy in preferences first.'
+      raise SubversionPreferencesError, 'Please set at least one Subversion Working Copy in preferences first.'
     for wc in wc_list:
       if bt_name in os.listdir(wc) :
         wc_path = os.path.join(wc, bt_name)
@@ -615,7 +625,7 @@ class SubversionTool(UniqueObject, Folder):
             return wc_path
           else:
             return os.sep.join(wc_path.split(os.sep)[:-1])
-    raise 'Unknown Business Template', "Could not find '"+bt_name+"' at first level of working copies."
+    raise SubversionUnknownBusinessTemplateError, "Could not find '"+bt_name+"' at first level of working copies."
     
   security.declareProtected('Import/Export objects', 'update')
   def update(self, path):
