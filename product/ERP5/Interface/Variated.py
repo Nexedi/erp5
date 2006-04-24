@@ -27,123 +27,126 @@
 ##############################################################################
 
 try:
-    from Interface import Interface
+  from Interface import Interface
 except ImportError:
-    # for Zope versions before 2.6.0
-    from Interface import Base as Interface
+  # for Zope versions before 2.6.0
+  from Interface import Base as Interface
 
 class Variated(Interface):
+  """
+    Common Interface for all objects which can be
+    variated.
+  """
+
+  # The following methods are intended to access to the
+  # variation value of a variated object. Discrete variations
+  # are based on categories. General variations are encapsulated
+  # into VariationValue instances.
+
+  # Discrete Variation accessors
+  def getVariationCategoryList():
     """
-        Common Interface for all objects which can be
-        variated.
+      returns a list or relative URLs which defines
+      a discrete variation (ie. a list of category
+      memberships)
     """
+    pass
 
-    # The following methods are intended to access to the
-    # variation value of a variated object. Discrete variations
-    # are based on categories. General variations are encapsulated
-    # into VariationValue instances.
+  def _setVariationCategoryList(node_list):
+    """
+      modifies the discrete variation of an
+      variated instance by providing a list
+      of relative URLs
+    """
+    pass
 
-    # Discrete Variation accessors
-    def getVariationCategoryList():
-        """
-            returns a list or relative URLs which defines
-            a discrete variation (ie. a list of category
-            memberships)
-        """
-        pass
+  def setVariationCategoryList(node_list):
+    """
+      modifies the discrete variation of an
+      variated instance by providing a list
+      of relative URLs
 
-    def _setVariationCategoryList(node_list):
-        """
-            modifies the discrete variation of an
-            variated instance by providing a list
-            of relative URLs
-        """
-        pass
+      reindexes the object
+    """
+    pass
 
-    def setVariationCategoryList(node_list):
-        """
-            modifies the discrete variation of an
-            variated instance by providing a list
-            of relative URLs
+  def getVariationBaseCategoryList(node_list):
+    """
+      returns a list of base category ids
+      which are used to define discrete variations
+      for this instance
+    """
+    pass
 
-            reindexes the object
-        """
-        pass
+  def _setVariationBaseCategoryList(node_list):
+    """
+      modifies the list of base category ids
+      which are used to define discrete variations
+      for this instance
+    """
+    pass
 
-    def getVariationBaseCategoryList(node_list):
-        """
-            returns a list of base category ids
-            which are used to define discrete variations
-            for this instance
-        """
-        pass
+  def setVariationBaseCategoryList(node_list):
+    """
+      modifies the list of base category ids
+      which are used to define discrete variations
+      for this instance
+    """
+    pass
 
-    def _setVariationBaseCategoryList(node_list):
-        """
-            modifies the list of base category ids
-            which are used to define discrete variations
-            for this instance
-        """
-        pass
+  # General Variation accessors
+  def getVariationValue():
+    """
+      Returns a VariationValue object. 
+    """
+    pass
 
-    def setVariationBaseCategoryList(node_list):
-        """
-            modifies the list of base category ids
-            which are used to define discrete variations
-            for this instance
-        """
-        pass
+  def _setVariationValue(value):
+    """
+      Private setter for VariationValue.
+    """
+    pass
 
-    # General Variation accessors
-    def getVariationValue():
-        """
-        """
-        pass
-
-    def _setVariationValue(value):
-        """
-        """
-        pass
-
-    def setVariationValue(value):
-        """
-        """
-        pass
+  def setVariationValue(value):
+    """
+      Sets the VariationValue.
+    """
+    pass
 
 
-    # The following methods are intended to access the
-    # variation range of a variated object. A Variation range can
-    # be defined in a Resource instance or in any object
-    # which has a relation with a Resource (Amount, Transformation)
+  # The following methods are intended to access the
+  # variation range of a variated object. A Variation range can
+  # be defined in a Resource instance or in any object
+  # which has a relation with a Resource (Amount, Transformation)
 
-    # Discrete Variation Range accessors
+  # Discrete Variation Range accessors
 
-    def getVariationRangeCategoryList(base_category_list=(), base=1):
-        """
-            returns a list of categories which are acceptable
-            as discrete variation values
-        """
-        pass
+  def getVariationRangeCategoryList(base_category_list=(), base=1):
+    """
+      returns a list of categories which are acceptable
+      as discrete variation values
+    """
+    pass
 
-    def getVariationRangeCategoryItemList(base_category_list=(),
-                              display_id='getTitle', base=1, current_category=None):
-        """
-            returns a list of (category.id, category.display_id()) which are acceptable
-            as discrete variation values
-        """
-        pass
+  def getVariationRangeCategoryItemList(base_category_list=(),
+                          display_id='getTitle', base=1, current_category=None):
+    """
+      returns a list of (category.id, category.display_id()) which are acceptable
+      as discrete variation values
+    """
+    pass
 
-    def getVariationRangeBaseCategoryList(base_category_list=(), base=1):
-        """
-            returns a list of base categories which are acceptable
-            as discrete variation values
-        """
-        pass
+  def getVariationRangeBaseCategoryList(base_category_list=(), base=1):
+    """
+      returns a list of base categories which are acceptable
+      as discrete variation values
+    """
+    pass
 
-    def getVariationRangeBaseCategoryItemList(base_category_list=(),
-                              display_id='getTitle', base=1, current_category=None):
-        """
-            returns a list of base category items which are acceptable
-            as discrete variation values
-        """
-        pass
+  def getVariationRangeBaseCategoryItemList(base_category_list=(),
+                          display_id='getTitle', base=1, current_category=None):
+    """
+      returns a list of base category items which are acceptable
+      as discrete variation values
+    """
+    pass

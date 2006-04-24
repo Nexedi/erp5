@@ -27,31 +27,31 @@
 ##############################################################################
 
 try:
-    from Interface import Interface
+  from Interface import Interface
 except ImportError:
-    # for Zope versions before 2.6.0
-    from Interface import Base as Interface
+  # for Zope versions before 2.6.0
+  from Interface import Base as Interface
 
 class Coordinate(Interface):
+  """
+    Common Interface for all Coordinate objects
+  """
+
+  def asText():
     """
-        Common Interface for all Coordinate objects
+      returns the coordinate as a text string
     """
+    pass
 
-    def asText():
-        """
-            returns the coordinate as a text string
-        """
-        pass
+  def fromText(coordinate_text):
+    """
+      modifies the coordinate according to the input text
+    """
+    pass
 
-    def fromText(coordinate_text):
-        """
-             modifies the coordinate according to the input text
-        """
-        pass
-
-    def standardTextFormat():
-        """
-             returns a string which defines the standard
-             string format for that coordinate
-        """
-        pass
+  def standardTextFormat():
+    """
+      returns a string which defines the standard
+      string format for that coordinate
+    """
+    pass

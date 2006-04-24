@@ -27,86 +27,85 @@
 ##############################################################################
 
 try:
-    from Interface import Interface
+  from Interface import Interface
 except ImportError:
-    # for Zope versions before 2.6.0
-    from Interface import Base as Interface
+  # for Zope versions before 2.6.0
+  from Interface import Base as Interface
 
 class Entity(Interface):
+  """
+    Common Interface for Entity objects
+  """
+
+  def getDefaultAddress():
     """
-        Common Interface for Entity objects
+      Returns the default address as a text string
     """
+    pass
 
-    def getDefaultAddress():
-        """
-          Returns the default address as a text string
-        """
-        pass
+  def getDefaultAddressStreetAddress():
+    """
+      Returns the default address street as a text string
+    """
+    pass
 
-    def getDefaultAddressStreetAddress():
-        """
-          Returns the default address street as a text string
-        """
-        pass
+  def getDefaultAddressCity():
+    """
+      Returns the default address city as a text string
+    """
+    pass
 
-    def getDefaultAddressCity():
-        """
-          Returns the default address city as a text string
-        """
-        pass
+  def getDefaultAddressRegion():
+    """
+      Returns the default address region as a text string
+    """
+    pass
 
-    def getDefaultAddressRegion():
-        """
-          Returns the default address region as a text string
-        """
-        pass
+  def getDefaultAddressZipCode():
+    """
+      Returns the default address zip code as a text string
+    """
+    pass
 
-    def getDefaultAddressZipCode():
-        """
-          Returns the default address zip code as a text string
-        """
-        pass
+  def getDefaultTelephone():
+    """
+      Returns the default telephone as a text string
+    """
+    pass
 
-    def getDefaultTelephone():
-        """
-          Returns the default telephone as a text string
-        """
-        pass
+  def getDefaultFax():
+    """
+      Returns the default fax as a text string
+    """
+    pass
 
-    def getDefaultFax():
-        """
-          Returns the default fax as a text string
-        """
-        pass
+  def getDefaultEmail():
+    """
+      Returns the default email as a text string
+    """
+    pass
 
-    def getDefaultEmail():
-        """
-          Returns the default email as a text string
-        """
-        pass
+  def setDefaultAddress(coordinate):
+    """
+      Updates the default address from a standard text string
+    """
+    pass
 
-    def setDefaultAddress(coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        pass
+  def setDefaultTelephone(coordinate):
+    """
+      Updates the default telephone from a standard text string
+    """
+    pass
 
-    def setDefaultTelephone(coordinate):
-        """
-          Updates the default telephone from a standard text string
-        """
-        pass
+  def setDefaultFax(coordinate):
+    """
+      Updates the default fax from a standard text string
+    """
+    pass
 
-    def setDefaultFax(coordinate):
-        """
-          Updates the default fax from a standard text string
-        """
-        pass
-
-    def setDefaultEmail(coordinate):
-        """
-          Updates the default email from a standard text string
-        """
-        pass
-
+  def setDefaultEmail(coordinate):
+    """
+      Updates the default email from a standard text string
+    """
+    pass
 
