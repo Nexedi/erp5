@@ -154,8 +154,7 @@ print \'\'\'\n
         }\n
       }\n
       if(popup==1){\n
-        //TODO\n
-        filesPartiallyCheckedArray=[];\n
+        filesPartiallyCheckedArray=tree.getAllParentsIds(tree.getSelectedItemId()).split(\',\');\n
       }else{\n
         filesPartiallyCheckedArray=tree.getAllPartiallyChecked().split(\',\');\n
       }\n
