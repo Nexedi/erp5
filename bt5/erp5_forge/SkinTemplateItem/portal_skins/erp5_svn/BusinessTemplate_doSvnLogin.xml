@@ -103,7 +103,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,6 +129,7 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
