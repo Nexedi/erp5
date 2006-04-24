@@ -41,18 +41,18 @@ from Products.ERP5 import _dtmldir
 from zLOG import LOG
 
 class TestTool (BaseTool):
-    """
-    holds tests
-    """
-    id = 'portal_tests'
-    meta_type = 'ERP5 Test Tool'
-    portal_type = 'Test Tool'
-    allowed_types = ( 'ERP5 Portal Test',)
+  """
+    Container for fonctionnal tests.
+  """
+  id = 'portal_tests'
+  meta_type = 'ERP5 Test Tool'
+  portal_type = 'Test Tool'
+  allowed_types = ( 'ERP5 Portal Test',)
 
-    # Declarative Security
-    security = ClassSecurityInfo()
+  # Declarative Security
+  security = ClassSecurityInfo()
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
+  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
+  manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
 
 InitializeClass(TestTool)
