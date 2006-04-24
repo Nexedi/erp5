@@ -105,6 +105,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
                        i18n:translate="" i18n:domain="ui"\n
                        tal:attributes="value action/url">Saut</option>\n
               </tal:block>\n
+              <tal:block tal:condition="python: context.portal_workflow.Base_getSourceVisibility()">\n
+                <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>\n
+                <tal:block tal:repeat="workflow python: context.portal_workflow.getWorkflowsFor(context)">\n
+                  <option tal:attributes="value python: \'%s/manage_properties\' % (workflow.absolute_url(), )" tal:content="workflow/title"></option>\n
+                </tal:block>\n
+              </tal:block>\n
              </select></td>\n
           <td valign="bottom" align="center" nowrap>\n
             <input type="image" src="/images/erp5_html_style/images/jump.png" title="Jump"\n
@@ -159,12 +165,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
               tal:attributes="src string:$portal_url/images/exec16.png"/> &nbsp;\n
           </td>\n
           <td width="100%"><tal:block metal:define-slot="buttons"/></td>\n
-          <td aligh="right" valign="center">\n
-            <img alt="Activity Pending" src="/images/erp5_html_style/images/activity_busy.png"\n
-                 tal:condition="here/hasActivity | nothing"\n
-                 border="0" title="Activity Pending"\n
-                 i18n:attributes="title" i18n:domain="ui"\n
-                 tal:attributes="src string:$portal_url/images/activity_busy.png"/>\n
+          <td align="right" valign="center"\n
+           tal:condition="python: here.portal_types[here.getPortalType()].Base_getSourceVisibility()">\n
+            <a i18n:attributes="title" i18n:domain="ui" title="Portal Type"\n
+             tal:attributes="href python: \'%s/manage_workspace\' % (here.portal_types[here.getPortalType()].absolute_url(),)">\n
+              <img alt="Help" src="images/portaltype.png" border="0" alt="Help" i18n:attributes="alt" i18n:domain="ui"/>\n
+            </a>\n
+          </td>\n
+          <td align="right" valign="center">\n
+            <tal:block metal:use-macro="context/form_developper_buttons/macros/help"/>\n
+          </td>\n
+          <td aligh="right" valign="center"\n
+           tal:condition="here/hasActivity | nothing">\n
+            <a title="Portal Activities"\n
+             tal:attributes="href python: here.portal_activities.Base_getSourceVisibility() and \'%s/manageActivities\' % (here.portal_activities.absolute_url(), ) or \'#\'">\n
+              <img alt="Activity Pending" src="/images/erp5_html_style/images/activity_busy.png"\n
+                   border="0" title="Activity Pending"\n
+                   i18n:attributes="title" i18n:domain="ui"\n
+                   tal:attributes="src string:$portal_url/images/activity_busy.png"/>\n
+            </a>\n
           </td>\n
         </tr>\n
       </table>\n
