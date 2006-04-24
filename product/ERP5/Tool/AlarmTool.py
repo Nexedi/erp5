@@ -47,12 +47,12 @@ except ImportError:
 
 class AlarmTool(BaseTool):
   """
-  This tool will be usefull to  manage alarms. There's
-  alarms everywhere in ERP5, and it is a nice idea to be able
-  to manage all of them from a central point.
+    This tool manages alarms. 
+    
+    It is used as a central managment point for all alarms.
 
-  Inside this tool we will have a way to retrieve all reports comings
-  from Alarms,...
+    Inside this tool we have a way to retrieve all reports comings
+    from Alarms,...
   """
   id = 'portal_alarms'
   meta_type = 'ERP5 Alarm Tool'
@@ -69,29 +69,29 @@ class AlarmTool(BaseTool):
   manageAlarmList = DTMLFile( 'manageAlarmList', _dtmldir )
 
   manage_options = ( ( { 'label'   : 'Overview'
-             , 'action'   : 'manage_overview'
-             }
-            , { 'label'   : 'All Alarms'
-             , 'action'   : 'manageAlarmList'
-             }
-            )
-           + Folder.manage_options
-           )
+                       , 'action'   : 'manage_overview'
+                       }
+                     , { 'label'   : 'All Alarms'
+                       , 'action'   : 'manageAlarmList'
+                       }
+                     )
+                     + Folder.manage_options
+                   )
 
   interval = 60 # Default interval for alarms is 60 seconds
   last_tic = time.time()
+
   # Factory Type Information
   factory_type_information = \
     {    'id'             : portal_type
        , 'meta_type'      : meta_type
-       , 'description'    : """\
-TemplateTool manages Business Templates."""
+       , 'description'    : """AlarmTool manages alarms."""
        , 'icon'           : 'folder_icon.gif'
        , 'product'        : 'ERP5Type'
        , 'factory'        : 'addFolder'
        , 'immediate_view' : 'Folder_viewContentList'
        , 'allow_discussion'     : 1
-       , 'allowed_content_types': ('Business Template',)
+       , 'allowed_content_types': ()
        , 'filter_content_types' : 1
        , 'global_allow'   : 1
        , 'actions'        :
@@ -99,55 +99,57 @@ TemplateTool manages Business Templates."""
         , 'name'          : 'View'
         , 'category'      : 'object_view'
         , 'action'        : 'Folder_viewContentList'
-        , 'permissions'   : (
-            Permissions.View, )
+        , 'permissions'   : ( Permissions.View, )
         },
       )
     }
 
   # API to manage alarms
-  """
-  This is what we should do:
-
-  -- be able to see all alarms stored everywhere
-  -- defines global alarms
-  -- activate an alarm
-  -- see reports
-  -- see active alarms
-  -- retrieve all alarms
-  """
+  # Aim of this API:
+  #-- see all alarms stored everywhere
+  #-- defines global alarms
+  #-- activate an alarm
+  #-- see reports
+  #-- see active alarms
+  #-- retrieve all alarms
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getAlarmList')
-  def getAlarmList(self,to_active=0):
+  def getAlarmList(self, to_active = 0):
     """
-    We retrieve thanks to the catalog the full list of alarms
+      We retrieve thanks to the catalog the full list of alarms
     """
     user = self.portal_catalog.getOwner()
     newSecurityManager(self.REQUEST, user)
     if to_active:
       now = str(DateTime())
       date_expression = '<= %s' % now
-      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression)
+      catalog_search = self.portal_catalog(portal_type = \
+        self.getPortalAlarmTypeList(), alarm_date = date_expression)
     else:
-      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList())
+      catalog_search = self.portal_catalog(portal_type = \
+        self.getPortalAlarmTypeList())
     alarm_list = map(lambda x:x.getObject(),catalog_search)
-    # LOG('AlarmTool.getAlarmList, alarm_list',0,alarm_list)
     if to_active:
       now = DateTime()
       date_expression = '<= %s' % str(now)
-      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression)
+      catalog_search = self.portal_catalog(
+        portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression
+      )
       # check again the alarm date in case the alarm was not yet reindexed
-      alarm_list = [x.getObject() for x in catalog_search if x.getObject().getAlarmDate()<=now]
+      alarm_list = [x.getObject() for x in catalog_search \
+          if x.getObject().getAlarmDate()<=now]
     else:
-      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList())
+      catalog_search = self.portal_catalog(
+        portal_type = self.getPortalAlarmTypeList()
+      )
       alarm_list = map(lambda x:x.getObject(),catalog_search)
     return alarm_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'tic')
   def tic(self):
     """
-    We will look at all alarms and see if they should be activated,
-    if so then we will activate them.
+      We will look at all alarms and see if they should be activated,
+      if so then we will activate them.
     """
     current_date = DateTime()
     for alarm in self.getAlarmList(to_active=1):
@@ -161,23 +163,25 @@ TemplateTool manages Business Templates."""
 
   security.declareProtected(Permissions.ManageProperties, 'subscribe')
   def subscribe(self):
-    """ subscribe to the global Timer Service """
+    """
+      Subscribe to the global Timer Service.
+    """
     service = getTimerService(self)
     if not service:
       LOG('AlarmTool', INFO, 'TimerService not available')
       return
-      
     service.subscribe(self)
     return "Subscribed to Timer Service"
 
   security.declareProtected(Permissions.ManageProperties, 'unsubscribe')
   def unsubscribe(self):
-    """ unsubscribe from the global Timer Service """
+    """
+      Unsubscribe from the global Timer Service.
+    """
     service = getTimerService(self)
     if not service:
       LOG('AlarmTool', INFO, 'TimerService not available')
       return
-    
     service.unsubscribe(self)
     return "Usubscribed from Timer Service"
 
@@ -191,16 +195,11 @@ TemplateTool manages Business Templates."""
         
   def process_timer(self, tick, interval, prev="", next=""):
     """ 
-    Call tic() every x seconds. x is defined in self.interval
-    This method is called by TimerService in the interval given
-    in zope.conf. The Default is every 5 seconds.
+      Call tic() every x seconds. x is defined in self.interval
+      This method is called by TimerService in the interval given
+      in zope.conf. The Default is every 5 seconds.
     """
     if tick - self.last_tic >= self.interval:
       self.tic()
       self.last_tic = tick
-    for alarm in self.getAlarmList(to_active=1):
-      if alarm.isActive() or not alarm.isEnabled(): 
-        # do nothing if already active, or not enabled
-        continue
-      alarm.activate().activeSense()
 
