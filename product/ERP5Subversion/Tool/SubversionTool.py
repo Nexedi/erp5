@@ -600,6 +600,10 @@ class SubversionTool(UniqueObject, Folder):
     # working copy list in preferences (looking
     # only at first level of directories)
     wc_list = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopyList()
+    if not wc_list:
+      wc_list = self.getPortalObject().portal_preferences.default_site_preference.getPreferredSubversionWorkingCopyList()
+      if not wc_list:
+        raise 'Preferences Error', 'Please set at least one Subversion Working Copy in preferences first.'
     bt_name = bt.getTitle()
     if len(wc_list) == 0 :
       raise 'Preferences Error', 'Please set at least one Subversion Working Copy in preferences first.'
