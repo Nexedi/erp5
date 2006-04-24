@@ -40,76 +40,63 @@ import threading
 from zLOG import LOG
 
 class IdTool(UniqueObject, Folder):
-    """
-    This tools allows to generate new ids
-    """
-    id = 'portal_ids'
-    meta_type = 'ERP5 Id Tool'
-    portal_type = 'Id Tool'
-    allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule',)
+  """
+    This tools handles the generation of IDs.
+  """
+  id = 'portal_ids'
+  meta_type = 'ERP5 Id Tool'
+  portal_type = 'Id Tool'
+  allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule',)
 
-    # Declarative Security
-    security = ClassSecurityInfo()
+  # Declarative Security
+  security = ClassSecurityInfo()
 
-    #
-    #   ZMI methods
-    #
-    manage_options = ( ( { 'label'      : 'Overview'
-                         , 'action'     : 'manage_overview'
-                         }
-                        ,
-                        )
-                     + Folder.manage_options
+  #
+  #   ZMI methods
+  #
+  manage_options = ( ( { 'label'      : 'Overview'
+                       , 'action'     : 'manage_overview'
+                       }
+                     ,
                      )
+                   + Folder.manage_options
+                   )
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainIdTool', _dtmldir )
+  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
+  manage_overview = DTMLFile( 'explainIdTool', _dtmldir )
 
-    # Filter content (ZMI))
-    def __init__(self):
-      return Folder.__init__(self, IdTool.id)
+  # Filter content (ZMI))
+  def __init__(self):
+    return Folder.__init__(self, IdTool.id)
         
-
-    # Filter content (ZMI))
-    def generateNewId(self, id_group=None, default=None, method=None):
-      """
+  # Filter content (ZMI))
+  def generateNewId(self, id_group=None, default=None, method=None):
+    """
       Generate a new Id
+    """
+    if not hasattr(self,'dict_ids'):
+      self.dict_ids = PersistentMapping()
 
-      XXX We should in the future use class instead of method to generate
-      new ids. It would be nice to have a management page giving the list
-      of id_group with each time the last_id and the class generator
-      """
-      if not hasattr(self,'dict_ids'):
-        self.dict_ids = PersistentMapping()
+    new_id = None
+    if id_group is not None and id_group!='None':
+      # Getting the last id
+      last_id = None
+      l = threading.Lock()
+      l.acquire()
+      try:
+        last_id = self.dict_ids.get(id_group, default or 0)
 
-      new_id = None
-      if id_group is not None and id_group!='None':
-        # Getting the last id
-        last_id = None
-        l = threading.Lock()
-        l.acquire()
-        try:
-          if self.dict_ids.has_key(id_group):
-            last_id = self.dict_ids[id_group]
-          elif default is not None:
-            last_id = default
-          else:
-            last_id = 0
+        # Now generate a new id
+        if method is not None:
+          new_id = method(last_id)
+        else:
+          new_id = last_id + 1
+ 
+        # Store the new value
+        self.dict_ids[id_group] = new_id
+      finally:
+        l.release()
 
-          # Now generate a new id
-          if method is not None:
-            new_id = method(last_id)
-          else:
-            new_id = last_id + 1
-          
-          # Store the new value
-          self.dict_ids[id_group] = new_id
-        finally:
-          l.release()
-
-      return new_id
-
-
-
+    return new_id
 
 InitializeClass(IdTool)
