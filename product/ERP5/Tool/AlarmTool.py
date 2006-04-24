@@ -81,29 +81,6 @@ class AlarmTool(BaseTool):
   interval = 60 # Default interval for alarms is 60 seconds
   last_tic = time.time()
 
-  # Factory Type Information
-  factory_type_information = \
-    {    'id'             : portal_type
-       , 'meta_type'      : meta_type
-       , 'description'    : """AlarmTool manages alarms."""
-       , 'icon'           : 'folder_icon.gif'
-       , 'product'        : 'ERP5Type'
-       , 'factory'        : 'addFolder'
-       , 'immediate_view' : 'Folder_viewContentList'
-       , 'allow_discussion'     : 1
-       , 'allowed_content_types': ()
-       , 'filter_content_types' : 1
-       , 'global_allow'   : 1
-       , 'actions'        :
-      ( { 'id'            : 'view'
-        , 'name'          : 'View'
-        , 'category'      : 'object_view'
-        , 'action'        : 'Folder_viewContentList'
-        , 'permissions'   : ( Permissions.View, )
-        },
-      )
-    }
-
   # API to manage alarms
   # Aim of this API:
   #-- see all alarms stored everywhere
