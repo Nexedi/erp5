@@ -26,9 +26,7 @@
 #
 ##############################################################################
 
-
-
 class Amount:
-    """
-      An amount defines a quantity and variation of a resource
-    """
+  """
+    An amount defines a quantity and variation of a resource
+  """

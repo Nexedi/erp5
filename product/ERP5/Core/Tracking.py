@@ -26,10 +26,8 @@
 #
 ##############################################################################
 
-
-
 class Tracking:
-    """
-      Points to items invoved in a transformation
-      (incl. identity transformation)
-    """
+  """
+    Points to items invoved in a transformation
+    (incl. identity transformation)
+  """

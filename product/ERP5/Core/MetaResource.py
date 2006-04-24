@@ -27,9 +27,9 @@
 ##############################################################################
 
 class MetaResource:
-    """
-      A meta resource is an abstract resource which summarizes
-      a collection of resources.
+  """
+    A meta resource is an abstract resource which summarizes
+    a collection of resources.
 
-      Applicatino is : budgetting
-    """
+    Application is : budgetting
+  """

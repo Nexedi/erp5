@@ -26,10 +26,8 @@
 #
 ##############################################################################
 
-
-
 class Prototype:
-    """
-      A transformed resource which can be extended
-      All Transformations should be prototypes
-    """
+  """
+    A transformed resource which can be extended
+    All Transformations should be prototypes
+  """

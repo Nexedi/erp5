@@ -26,9 +26,7 @@
 #
 ##############################################################################
 
-
-
 class Quantity:
-    """
-      Quantities are float in ERP5
-    """
+  """
+    Quantities are float in ERP5
+  """

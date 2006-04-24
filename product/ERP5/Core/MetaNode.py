@@ -26,36 +26,32 @@
 #
 ##############################################################################
 
-
-
 class MetaNode:
-    """
-      A metanode aggregates a collection of real nodes.
-      It is used for planning and budgeting. 
-      One application of a metanode is to create accounting rules....
+  """
+    A metanode aggregates a collection of real nodes.
+    It is used for planning and budgeting. 
+    One application of a metanode is to create accounting rules....
       
-      Ex. accounting
+    Ex. accounting
 
-        source/coramy/accounting/4003
-        destination/norfatex/accounting/2001
+      source/coramy/accounting/4003
+      destination/norfatex/accounting/2001
 
-        resource: EUR
-        amount: 10.0
+      resource: EUR
+      amount: 10.0
 
+      source/portal_categories/country/france/accounting/4003
+      destination/portal_categories/country/spain/accounting/2001
 
-        source/portal_categories/country/france/accounting/4003
-        destination/portal_categories/country/spain/accounting/2001
+      resource: EUR
+      amount: 10.0
 
-        resource: EUR
-        amount: 10.0
+    This means that we may have to add some uid to movement table
+    if we wish to benefit from acquisition.
 
-      This means that we may have to add some uid to movement table
-      if we wish to benefit from acquisition.
+  """
 
+  def getNodeList():
     """
-
-
-    def getNodeList():
-      """
-        Returns the subnodes of this metanode
-      """
+      Returns the subnodes of this metanode
+    """

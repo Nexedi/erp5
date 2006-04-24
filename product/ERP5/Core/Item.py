@@ -26,11 +26,10 @@
 #
 ##############################################################################
 
-
 class Item:
-    """
-      An Item defines a serial number and is referenced by an amount
-      or a movement (or a couple of). During transformations, a tracking
-      document can be produced to provide details between transformed items.
-    """
+  """
+    An Item defines a serial number and is referenced by an amount
+    or a movement (or a couple of). During transformations, a tracking
+    document can be produced to provide details between transformed items.
+  """
 

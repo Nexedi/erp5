@@ -27,9 +27,9 @@
 ##############################################################################
 
 class Path(Relation):
-    """
-        A path defines a planning path between two nodes
-        source, destination, domain (which resource)
-        mapped value is : delivery, price etc.
-    """
+  """
+    A path defines a planning path between two nodes
+    source, destination, domain (which resource)
+    mapped value is : delivery, price etc.
+  """
 

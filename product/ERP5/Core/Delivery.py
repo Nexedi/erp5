@@ -26,9 +26,7 @@
 #
 ##############################################################################
 
-
-
 class Delivery:
-    """
-        A Delivery object is a collection of movements
-    """
+  """
+    A Delivery object is a collection of movements
+  """

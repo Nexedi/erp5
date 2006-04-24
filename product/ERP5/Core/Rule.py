@@ -26,9 +26,7 @@
 #
 ##############################################################################
 
-
-
 class Rule:
-    """
-      Implemented as a movement template in XSL approach
-    """
+  """
+    Implemented as a movement template in XSL approach
+  """

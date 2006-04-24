@@ -26,10 +26,9 @@
 #
 ##############################################################################
 
-
 from Item import Item
 
 class Container(Item):
-    """
+  """
     A container is a collection of Items (and Containers)
-    """
+  """

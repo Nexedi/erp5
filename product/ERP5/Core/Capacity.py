@@ -26,11 +26,9 @@
 #
 ##############################################################################
 
-
-
 class Capacity:
-    """
-      A capacity is defined as a set of resources with quantities
-      expressed in a standard unit
-    """
-    pass
+  """
+    A capacity is defined as a set of resources with quantities
+    expressed in a standard unit
+  """
+  pass

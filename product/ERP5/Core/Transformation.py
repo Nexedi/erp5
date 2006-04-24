@@ -26,10 +26,8 @@
 #
 ##############################################################################
 
-
-
 class Transformation:
-    """
-      Collectino of transformed resources
-    """
-    pass
+  """
+    Collection of transformed resources
+  """
+  pass
