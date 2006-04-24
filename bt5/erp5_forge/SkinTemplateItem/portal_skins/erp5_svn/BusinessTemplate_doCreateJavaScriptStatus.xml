@@ -75,6 +75,10 @@ else:\n
 \n
 print \'\'\'\n
   <script>\n
+    // Konqueror is unsupported at the moment, it works but it is a little buggy\n
+    if(navigator.userAgent.indexOf(\'Konqueror\') != -1 || navigator.userAgent.indexOf(\'konqueror\') != -1){\n
+      document.write("<font color=\'red\'>Your web browser is unsupported, hence you may experience some problems. <b>Firefox</b> is advised.</font>");\n
+    }\n
     var tree = null;\n
     var business_template;\n
     var is_expanded=false;\n
