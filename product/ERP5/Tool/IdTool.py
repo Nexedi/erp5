@@ -74,7 +74,8 @@ class IdTool(UniqueObject, Folder):
     """
       Generate a new Id
     """
-    if not hasattr(self,'dict_ids'):
+    
+    if getattr(self, 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
 
     new_id = None
