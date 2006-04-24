@@ -602,7 +602,7 @@ class SubversionTool(UniqueObject, Folder):
     wc_list = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopyList()
     bt_name = bt.getTitle()
     if len(wc_list) == 0 :
-      raise 'Preferences Error', 'Please set at least one Subversion Working Copy in preferences first!'
+      raise 'Preferences Error', 'Please set at least one Subversion Working Copy in preferences first.'
     for wc in wc_list:
       if bt_name in os.listdir(wc) :
         wc_path = os.path.join(wc, bt_name)
@@ -611,7 +611,7 @@ class SubversionTool(UniqueObject, Folder):
             return wc_path
           else:
             return os.sep.join(wc_path.split(os.sep)[:-1])
-    raise 'Unknown Business Template', "Could not find '"+bt_name+"' at first level of working copies!"
+    raise 'Unknown Business Template', "Could not find '"+bt_name+"' at first level of working copies."
     
   security.declareProtected('Import/Export objects', 'update')
   def update(self, path):
