@@ -36,26 +36,18 @@ from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 
 class OrderTool(BaseTool):
-    """
-    The OrderTool implements portal object
-    orders building policies.
-    """
-    id = 'portal_orders'
-    meta_type = 'ERP5 Order Tool'
-    portal_type = 'Order Tool'
-    allowed_types = ('ERP5 Order Buider',)
+  """
+    OrderTool is a container for Order Builders.
+  """
+  id = 'portal_orders'
+  meta_type = 'ERP5 Order Tool'
+  portal_type = 'Order Tool'
+  allowed_types = ('ERP5 Order Buider',)
 
-    # Declarative Security
-    security = ClassSecurityInfo()
+  # Declarative Security
+  security = ClassSecurityInfo()
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainOrderTool', _dtmldir )
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'tic')
-    def tic(self):
-      """
-      We will look at all order builder and activate them.
-      """
-      pass
+  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
+  manage_overview = DTMLFile( 'explainOrderTool', _dtmldir )
 
 InitializeClass(OrderTool)
