@@ -43,7 +43,7 @@ document_classes = updateGlobals( this_module, globals(),
 import Form, FSForm, ListBox, MatrixBox, SelectionTool
 import ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField
-import RelationField, ImageField, MultiRelationField
+import RelationField, ImageField, MultiRelationField, MultiLinkField
 import ZPyChart
 import PreferenceTool
 
@@ -62,12 +62,9 @@ content_constructors = ()
 import FormulatorPatch
 
 # Optimization
-import psyco
+from Products.ERP5Type.PsycoWrapper import psyco
 psyco.bind(ListBox.ListBoxWidget.render)
 psyco.bind(ListBox.ListBoxValidator.validate)
-#psyco.bind(Form.ERP5Field.get_value)
-#psyco.bind(Form.ERP5Form.__call__)
-#psyco.bind(Form.ERP5Form._exec)
 
 # Finish installation
 def initialize( context ):
@@ -87,7 +84,7 @@ def initialize( context ):
                                 'www/StringField.gif')
     FieldRegistry.registerField(EditorField.EditorField,
                                 'www/TextAreaField.gif')
-    FieldRegistry.registerField(FormBox.FormBox, 
+    FieldRegistry.registerField(FormBox.FormBox,
                                 'www/StringField.gif')
     FieldRegistry.registerField(POSBox.POSBox,
                                 'www/StringField.gif')
@@ -109,8 +106,6 @@ def initialize( context ):
                                 'www/StringField.gif')
     FieldRegistry.registerField(StandardFields.StringField,
                                 'www/StringField.gif')
-    #FieldRegistry.registerField(StandardFields.LabelField,
-    #                            'www/LabelField.gif')
     FieldRegistry.registerField(StandardFields.CheckBoxField,
                                 'www/CheckBoxField.gif')
     FieldRegistry.registerField(StandardFields.IntegerField,
@@ -143,6 +138,8 @@ def initialize( context ):
                                 'www/FileField.gif')
     FieldRegistry.registerField(StandardFields.LinkField,
                                 'www/LinkField.gif')
+    FieldRegistry.registerField(MultiLinkField.MultiLinkField,
+                                'www/LinkField.gif')
  
     # some helper fields
     FieldRegistry.registerField(HelperFields.ListTextAreaField)
@@ -154,19 +151,12 @@ def initialize( context ):
     # register field help for all fields
     FieldRegistry.registerFieldHelp(context)
 
-    # register the form itself
-    #context.registerClass(
-    #    Form.ZMIForm,
-    #    constructors = (Form.manage_addForm,
-    #                    Form.manage_add),
-    #    icon = 'www/Form.png')
-
     # make Dummy Fields into real fields
     FieldRegistry.initializeFields()
 
     # do initialization of Form class to make fields addable
     Form.initializeForm(FieldRegistry)
-    Form.initializeForm(FieldRegistry, form_class = Report.ERP5Report)
+    Form.initializeForm(FieldRegistry, form_class=Report.ERP5Report)
 
     # Register FSPDFTemplate icon
     registerIcon(PDFTemplate.FSPDFTemplate,
@@ -180,6 +170,4 @@ def initialize( context ):
 ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
 import Selection
 allow_class(Selection)
-
-from AccessControl.SecurityInfo import allow_module
 
