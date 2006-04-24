@@ -93,7 +93,7 @@ if \'changelog\' not in context.REQUEST.keys() :\n
   return context.asContext(added=added, modified=modified, removed=removed ,checked=checked).BusinessTemplate_viewSvnChangelog()\n
 \n
 if not changelog :\n
-  context.REQUEST.set(\'portal_status_message\', "Error: Changelog Message can\'t be empty!")\n
+  context.REQUEST.set(\'portal_status_message\', "Error: Changelog Message can\'t be empty.")\n
   return context.asContext(added=added, modified=modified, removed=removed ,checked=checked).BusinessTemplate_viewSvnChangelog()\n
 \n
 try:\n
@@ -108,7 +108,7 @@ except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
   return context.asContext(added=added, modified=modified, removed=removed, caller=\'commit\', realm = error1.getRealm(), changelog=changelog, username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Files commited successfully!\')\n
+context.REQUEST.set(\'portal_status_message\', \'Files commited successfully.\')\n
 return context.BusinessTemplate_viewSvnStatus()\n
 </string> </value>
         </item>

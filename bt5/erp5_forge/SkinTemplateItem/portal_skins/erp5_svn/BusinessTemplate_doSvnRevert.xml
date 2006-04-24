@@ -74,7 +74,7 @@ else:\n
 if to_revert != \'none\' and to_revert != \'\':\n
   context.getPortalObject()["portal_subversion"].revert(path=to_revert, bt=context)\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Changes reverted successfully!\')\n
+context.REQUEST.set(\'portal_status_message\', \'Changes reverted successfully.\')\n
 return context.BusinessTemplate_viewSvnStatus()\n
 </string> </value>
         </item>

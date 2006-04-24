@@ -69,12 +69,12 @@
             <value> <string>if \'uids\' in context.REQUEST.keys():\n
   files_list = context.REQUEST[\'uids\']\n
 else:\n
-  context.REQUEST.set(\'portal_status_message\', \'You MUST select at leat one file!\')\n
+  context.REQUEST.set(\'portal_status_message\', \'You MUST select at leat one file.\')\n
   return context.BusinessTemplate_viewConflicted() \n
 \n
 context.getPortalObject()["portal_subversion"].resolved(files_list)\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Conflicted files resolved successfully!\')\n
+context.REQUEST.set(\'portal_status_message\', \'Conflicted files resolved successfully.\')\n
 return context.BusinessTemplate_viewConflicted()\n
 </string> </value>
         </item>

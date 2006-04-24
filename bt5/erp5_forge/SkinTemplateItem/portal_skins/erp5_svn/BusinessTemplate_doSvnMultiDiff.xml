@@ -71,13 +71,13 @@
 file = context.REQUEST[\'file\']\n
 \n
 if \'uids\' not in context.REQUEST.keys():  \n
-  context.REQUEST.set(\'portal_status_message\', \'You must select TWO revisions!\')\n
+  context.REQUEST.set(\'portal_status_message\', \'You must select TWO revisions.\')\n
   return context.asContext(file=file).BusinessTemplate_viewSvnLog()\n
 \n
 revisions_list = context.REQUEST[\'uids\']\n
 \n
 if len(revisions_list) != 2:\n
-  context.REQUEST.set(\'portal_status_message\', \'You must select exactly TWO revisions!\')\n
+  context.REQUEST.set(\'portal_status_message\', \'You must select exactly TWO revisions.\')\n
   return context.asContext(file=file).BusinessTemplate_viewSvnLog()\n
 \n
 revisions_list.sort()\n

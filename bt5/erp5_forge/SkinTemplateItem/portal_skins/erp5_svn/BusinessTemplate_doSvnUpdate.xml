@@ -78,7 +78,7 @@ except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
   return context.asContext(caller=\'update\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Working Copy updated successfully!\')\n
+context.REQUEST.set(\'portal_status_message\', \'Working Copy updated successfully.\')\n
 return context.BusinessTemplate_viewSvnStatus()\n
 </string> </value>
         </item>

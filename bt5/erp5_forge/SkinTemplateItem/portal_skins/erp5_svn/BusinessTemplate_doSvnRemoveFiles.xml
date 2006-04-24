@@ -69,12 +69,12 @@
             <value> <string>if \'uids\' in context.REQUEST.keys():\n
   files_list = context.REQUEST[\'uids\']\n
 else:\n
-  context.REQUEST.set(\'portal_status_message\', \'You MUST select at leat one file / folder!\')\n
+  context.REQUEST.set(\'portal_status_message\', \'You MUST select at leat one file / folder.\')\n
   return context.BusinessTemplate_viewUnversioned() \n
 \n
 context.getPortalObject()["portal_subversion"].removeAllInList(files_list)\n
 \n
-context.REQUEST.set(\'portal_status_message\', \'Unversioned files removed successfully!\')\n
+context.REQUEST.set(\'portal_status_message\', \'Unversioned files removed successfully.\')\n
 return context.BusinessTemplate_viewUnversioned()\n
 </string> </value>
         </item>
