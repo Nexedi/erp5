@@ -85,10 +85,9 @@ if uids != []:\n
   #context.manage_copyObjects(uids=REQUEST[\'uids\'], REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
   context.manage_copyObjects(uids=uids, REQUEST=REQUEST, RESPONSE=REQUEST.RESPONSE)\n
   message = N_("Item(s)+Copied.")\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
 else:\n
   message = N_("Please+select+one+or+more+items+to+copy+first.")\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
+return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
 </string> </value>
         </item>
         <item>

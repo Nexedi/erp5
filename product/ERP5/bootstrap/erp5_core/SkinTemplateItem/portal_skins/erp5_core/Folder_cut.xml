@@ -84,10 +84,9 @@ if uids != []:\n
   #context.manage_cutObjects(uids=REQUEST[\'uids\'], REQUEST=REQUEST)\n
   context.manage_cutObjects(uids=uids, REQUEST=REQUEST)\n
   message = N_("Item(s)+Cut.")\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
 else:\n
   message = N_("Please+select+one+or+more+items+to+cut+first.")\n
-  return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/Folder_viewContentList?portal_status_message=%s\' % message)\n
+return REQUEST.RESPONSE.redirect(context.absolute_url() + \'/\' + form_id + \'?portal_status_message=%s\' % message)\n
 </string> </value>
         </item>
         <item>

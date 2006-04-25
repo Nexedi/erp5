@@ -1,3 +1,7 @@
+2006-04-25 yo
+* Folder_cut must redirect to the original form even when it fails.
+* Reduce the duplicated code in Folder_copy.
+
 2006-04-18 jerome
 * update ERP5Site_reindexAll to reindex portal_alarms and to reindex the whole site in 2 stages, persons in stage 1, and everything again in stage 2 (ERP5Security requires Persons to be indexed)
 
