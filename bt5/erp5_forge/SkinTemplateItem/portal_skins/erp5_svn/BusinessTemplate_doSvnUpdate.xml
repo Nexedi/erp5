@@ -66,10 +66,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
 try:\n
-  context.getPortalObject()["portal_subversion"].update(context)\n
+  new_bt = context.getPortalObject()["portal_subversion"].update(context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'update\').BusinessTemplate_viewSvnSSLTrust()\n
@@ -78,8 +80,10 @@ except SubversionLoginError, error1 :\n
   return context.asContext(caller=\'update\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Working Copy updated successfully.\')\n
-return context.BusinessTemplate_viewSvnStatus()\n
-</string> </value>
+return new_bt.REQUEST.RESPONSE.redirect(new_bt.REQUEST[\'BASE3\']+\'/\'+new_bt.getId()+\'/\'+\'BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=\'+context.getId())\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -125,6 +129,7 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>context</string>
+                            <string>new_bt</string>
                             <string>error</string>
                             <string>error1</string>
                           </tuple>
