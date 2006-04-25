@@ -3749,7 +3749,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     def _install(self, force=1, object_to_update={}, **kw):
       """
-        Install a new Business Template, if force, all we be upgrade or installed
+        Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update
       """
 
