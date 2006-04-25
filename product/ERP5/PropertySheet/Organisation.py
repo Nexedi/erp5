@@ -165,7 +165,12 @@ class Organisation:
       'acquisition_accessor_id'   : 'getDefaultEmailValue',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
-  )
+    # Amortisation
+    { 'id'          : 'financial_year_stop_date',
+      'description' : 'The date which ends the organisation financial year',
+      'type'        : 'date',
+      'mode'        : 'w' },
+   )
 
   _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 'region',
                   'social_form', 'function', 'source', 'destination', 'source_section',
