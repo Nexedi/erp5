@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update SVN Working Copy</string> </value>
+            <value> <string>Update Business Template from SVN</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
