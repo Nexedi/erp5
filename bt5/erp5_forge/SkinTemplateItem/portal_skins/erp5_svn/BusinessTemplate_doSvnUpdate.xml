@@ -67,10 +67,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
-svn_path = context.getPortalObject()["portal_subversion"].getSubversionPath(context)\n
 \n
 try:\n
-  context.getPortalObject()["portal_subversion"].update(svn_path)\n
+  context.getPortalObject()["portal_subversion"].update(context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'update\').BusinessTemplate_viewSvnSSLTrust()\n
@@ -126,7 +125,6 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>context</string>
-                            <string>svn_path</string>
                             <string>error</string>
                             <string>error1</string>
                           </tuple>
