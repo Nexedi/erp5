@@ -633,9 +633,12 @@ class SubversionTool(UniqueObject, Folder):
     """
     path = self.getSubversionPath(bt)
     client = self._getClient()
-    res = client.update(path)
-    self.importBT(bt);
-    return res
+    # Revert first to import a "pure" BT after update
+    self.revert(path=path, recurse=True)
+    # Update from SVN
+    client.update(path)
+    # Import in zodb
+    return self.importBT(bt);
 
   security.declareProtected('Import/Export objects', 'add')
   # path can be a list or not (relative or absolute)
@@ -712,15 +715,16 @@ class SubversionTool(UniqueObject, Folder):
 
   security.declareProtected('Import/Export objects', 'revert')
   # path can be absolute or relative
-  def revert(self, path, bt):
+  def revert(self, path, bt=None, recurse=False):
     """Revert local changes in a file or a directory.
     """
     client = self._getClient()
-    if isinstance(path, list) :
-      path = [self.relativeToAbsolute(x, bt) for x in path]
-    else:
-      path = self.relativeToAbsolute(path, bt)
-    return client.revert(path)
+    if bt:
+      if isinstance(path, list) :
+        path = [self.relativeToAbsolute(x, bt) for x in path]
+      else:
+        path = self.relativeToAbsolute(path, bt)
+    return client.revert(path, recurse)
     
   security.declareProtected('Import/Export objects', 'resolved')
   # path can be absolute or relative
@@ -852,7 +856,7 @@ class SubversionTool(UniqueObject, Folder):
     self.activate().removeAllInList([path,])
     
   def importBT(self, bt):
-    bt.download(self.getSubversionPath(bt))
+    return bt.download(self.getSubversionPath(bt))
 
   # return a set with directories present in the directory
   def getSetDirsForDir(self, directory):

@@ -253,8 +253,8 @@ try:
       os.system('rm -rf %s'%tmp)
       return diff
     
-    def revert(self, path):
-      return self.client.revert(path)
+    def revert(self, path, recurse=False):
+      return self.client.revert(path, recurse)
     
     def log(self, path):
       try:
