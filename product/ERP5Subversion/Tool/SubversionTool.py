@@ -628,11 +628,14 @@ class SubversionTool(UniqueObject, Folder):
     raise SubversionUnknownBusinessTemplateError, "Could not find '"+bt_name+"' at first level of working copies."
     
   security.declareProtected('Import/Export objects', 'update')
-  def update(self, path):
+  def update(self, bt):
     """Update a working copy.
     """
+    path = self.getSubversionPath(bt)
     client = self._getClient()
-    return client.update(path)
+    res = client.update(path)
+    self.importBT(bt);
+    return res
 
   security.declareProtected('Import/Export objects', 'add')
   # path can be a list or not (relative or absolute)
@@ -847,6 +850,9 @@ class SubversionTool(UniqueObject, Folder):
     self.goToWorkingCopy(bt)
     # Clean up
     self.activate().removeAllInList([path,])
+    
+  def importBT(self, bt):
+    bt.download(self.getSubversionPath(bt))
 
   # return a set with directories present in the directory
   def getSetDirsForDir(self, directory):
