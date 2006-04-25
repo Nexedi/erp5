@@ -76,6 +76,7 @@ else:\n
 print \'\'\'\n
   <script>\n
     // Konqueror is unsupported at the moment, it works but it is a little buggy\n
+    // Konqueror 3.5 is doing quite well but isn\'t default on Mandriva 2006\n
     if(navigator.userAgent.indexOf(\'Konqueror\') != -1 || navigator.userAgent.indexOf(\'konqueror\') != -1){\n
       document.write("<font color=\'red\'>Your web browser is unsupported, hence you may experience some problems. <b>Firefox</b> is advised.</font>");\n
     }\n
@@ -184,7 +185,7 @@ print \'\'\'\n
       }\n
       form.added.value=filesAdded;\n
       if(nbRemoved!=0){\n
-        filesRemoved=FilesRemovedArray.join(\',\');\n
+        filesRemoved=FilesRemovedArray.reverse().join(\',\');\n
       }else{\n
         filesRemoved=\'none\';\n
       }\n
