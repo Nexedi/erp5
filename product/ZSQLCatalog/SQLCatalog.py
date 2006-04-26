@@ -565,7 +565,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     self.security_uid_index = 0
 
   security.declarePrivate('getSecurityUid')
-  def getSecurityUid(self, object):
+  def getSecurityUid(self, wrapped_object):
     """
       Cache a uid for each security permission
 
@@ -573,13 +573,13 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       and to assign security only to root document
     """
     # Get security information
-    allowed_roles_and_users = object.allowedRolesAndUsers()
+    allowed_roles_and_users = wrapped_object.allowedRolesAndUsers()
     # Sort it
     allowed_roles_and_users = list(allowed_roles_and_users)
     allowed_roles_and_users.sort()
     allowed_roles_and_users = tuple(allowed_roles_and_users)
-    # Make sure no diplicates
-    if not hasattr(aq_base(self), 'security_uid_dict'):
+    # Make sure no duplicates
+    if getattr(aq_base(self), 'security_uid_dict', None) is None:
       self._clearSecurityCache()
     if self.security_uid_dict.has_key(allowed_roles_and_users):
       return (self.security_uid_dict[allowed_roles_and_users], None)
@@ -787,7 +787,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if klass._local_clear_reserved_time != self._last_clear_reserved_time:
       self._v_uid_buffer = UidBuffer()
       klass._local_clear_reserved_time = self._last_clear_reserved_time
-    elif not hasattr(self, '_v_uid_buffer'):
+    elif getattr(self, '_v_uid_buffer', None) is None:
       self._v_uid_buffer = UidBuffer()
     if len(self._v_uid_buffer) == 0:
       method_id = self.sql_catalog_produce_reserved
@@ -1032,7 +1032,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             klass = self.__class__
             try:
               klass._reserved_uid_lock.acquire()
-              if hasattr(self, '_v_uid_buffer'):
+              if getattr(self, '_v_uid_buffer', None) is not None:
                 # This is the case where:
                 #   1. The object got an uid.
                 #   2. The catalog was cleared.
