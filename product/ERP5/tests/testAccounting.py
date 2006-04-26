@@ -86,9 +86,16 @@ class TestAccounting(ERP5TypeTestCase):
   start_date = DateTime(2004, 01, 01)
   stop_date  = DateTime(2004, 12, 31)
 
+  default_region = 'europe/west/france'
+
   def getTitle(self):
     return "Accounting"
   
+  def afterSetUp(self):
+    """Prepare the test."""
+    self.createCategories()
+    self.login()
+
   def login(self) :
     """sets the security manager"""
     uf = self.getPortal().acl_users
@@ -99,17 +106,19 @@ class TestAccounting(ERP5TypeTestCase):
   
   def createCategories(self):
     """Create the categories for our test. """
-    TestPackingListMixin.createCategories(self)
     # create categories
-    for cat_string in self.getNeededCategoryList() :
+    for cat_string in self.getNeededCategoryList():
       base_cat = cat_string.split("/")[0]
       path = self.getPortal().portal_categories[base_cat]
-      for cat in cat_string.split("/")[1:] :
-        if not cat in path.objectIds() :
+      for cat in cat_string.split("/")[1:]:
+        if not cat in path.objectIds():
           path = path.newContent(
-            portal_type = 'Category',
-            id = cat,
-            immediate_reindex = 1 )
+            portal_type='Category',
+            id=cat,
+            immediate_reindex=1)
+        else:
+          path = path[cat]
+          
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
       self.assertNotEquals(None,
@@ -117,11 +126,12 @@ class TestAccounting(ERP5TypeTestCase):
                 cat_string)
                 
   def getNeededCategoryList(self):
-    """return a list of categories that should be created."""
-    return ('group/client', 'group/vendor' )
+    """Returns a list of categories that should be created."""
+    return ('group/client', 'group/vendor',
+            'region/%s'%self.default_region, )
   
   def getBusinessTemplateList(self):
-    """ """
+    """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',)
 
   def stepTic(self, **kw):
@@ -138,6 +148,11 @@ class TestAccounting(ERP5TypeTestCase):
         portal_type = self.organisation_portal_type,
         group = "group/vendor",
         price_currency = "currency_module/EUR")
+    # validate entities
+    for entity in (client, vendor):
+      entity.setRegion(self.default_region)
+      self.getWorkflowTool().doActionFor(entity, 'validate_action')
+    
     sequence.edit( client = client,
                    vendor = vendor,
                    organisation = vendor )
@@ -978,7 +993,34 @@ class TestAccounting(ERP5TypeTestCase):
       except ValidationFailed, err :
         self.assert_(0, "Validation failed : %s" % err.msg)
       
-
+  def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):
+    """Check validating a transaction remove empty lines. """
+    transaction = sequence.get('transaction')
+    lines_count = len(transaction.getMovementList())
+    empty_lines_count = 0
+    for line in transaction.getMovementList():
+      if line.getSourceTotalAssetPrice() ==  \
+         line.getDestinationTotalAssetPrice() == 0:
+        empty_lines_count += 1
+    if empty_lines_count == 0:
+      transaction.newContent(
+            portal_type=self.accounting_transaction_line_portal_type)
+    
+    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
+    self.assertEquals(len(transaction.getMovementList()),
+                      lines_count - empty_lines_count)
+    
+    # we don't remove empty lines if there is only empty lines
+    transaction = self.getAccountingModule().newContent(
+                      portal_type=self.accounting_transaction_portal_type,
+                      created_by_builder=1)
+    for i in range(3):
+      transaction.newContent(
+            portal_type=self.accounting_transaction_line_portal_type)
+    lines_count = len(transaction.getMovementList())
+    transaction.AccountingTransaction_deleteEmptyLines(redirect=0)
+    self.assertEquals(len(transaction.getMovementList()), lines_count)
+    
   ############################################################################
   ## Test Methods ############################################################
   ############################################################################
@@ -1170,6 +1212,19 @@ class TestAccounting(ERP5TypeTestCase):
       stepCreateValidAccountingTransaction
       stepValidateNoPayment
     """)
+
+  def test_AccountingTransactionValidationRemoveEmptyLines(self, quiet=0,
+                                             run=RUN_ALL_TESTS):
+    """Transaction validation removes empty lines"""
+    if not run : return
+    self.playSequence("""
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateAccounts
+      stepCreateValidAccountingTransaction
+      stepValidateRemoveEmptyLines
+    """)
+
 
 if __name__ == '__main__':
   framework()
