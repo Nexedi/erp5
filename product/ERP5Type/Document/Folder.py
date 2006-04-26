@@ -78,7 +78,7 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
                                            default=default, method=method))
     else:
       new_id = str(id)
-    if portal_type is None: 
+    if portal_type is None:
       # XXX This feature is very confusing 
       # And made the code more difficult to update
       portal_type = container.allowedContentTypes()[0].id
@@ -104,9 +104,9 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
     """ delete items in this folder.
       `id` can be a list or a string.
     """
-    if type(id) is type(''):
+    if isinstance(id, str):
       self._delObject(id)
-    elif type(id) is type([]) or type(id) is type(()):
+    elif isinstance(id, list) or isinstance(id, tuple):
       for my_id in id:
         self._delObject(my_id)
     else:
@@ -116,32 +116,30 @@ class FolderMixIn(ExtensionClass.Base, CopyContainer):
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
   def generateNewId(self,id_group=None,default=None,method=None):
-      """
-        Generate a new Id which has not been taken yet in this folder.
-        Eventually increment the id number until an available id
-        can be found
+    """
+      Generate a new Id which has not been taken yet in this folder.
+      Eventually increment the id number until an available id
+      can be found
 
-        Permission is view because we may want to add content to a folder
-        without changing the folder content itself. XXXXXXXXXXX
-        XXXXXXXXXXXX
-      """
-      my_id = None
-      if id_group is None:
-        id_group = self.getIdGroup()
-      if id_group is None or id_group=='None':
-        try:
-          my_id = int(self.getLastId())
-        except TypeError:
-          my_id = 1
-        while self.hasContent(str(my_id)):
-          my_id = my_id + 1
-        #LOG('_setLastId', 0, str(self))
-        #LOG('_setLastId', 0, str(self.aq_base))
-        self._setLastId(str(my_id)) # Make sure no reindexing happens
-      else:
-        my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
+      Permission is view because we may want to add content to a folder
+      without changing the folder content itself. XXXXXXXXXXX
+      XXXXXXXXXXXX
+    """
+    my_id = None
+    if id_group is None:
+      id_group = self.getIdGroup()
+    if id_group is None or id_group=='None':
+      try:
+        my_id = int(self.getLastId())
+      except TypeError:
+        my_id = 1
+      while self.hasContent(str(my_id)):
+        my_id = my_id + 1
+      self._setLastId(str(my_id)) # Make sure no reindexing happens
+    else:
+      my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
 
-      return str(my_id)
+    return str(my_id)
 
   security.declareProtected(Permissions.View, 'hasContent')
   def hasContent(self,id):
