@@ -71,10 +71,7 @@
 return \'\'\'<script>\n
 \n
   function doCommit(form){\n
-    if(confirm(\'Are you sure you want to commit?\')){\n
-      //Commit Files\n
       submitAction(form,\'%s/BusinessTemplate_doSvnCommit\');\n
-    }\n
   }\n
 \n
   function goBack(){\n
