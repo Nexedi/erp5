@@ -82,7 +82,7 @@ context.getPortalObject()["portal_subversion"].acceptSSLServer(trust_dict, True)
 if caller == \'update\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_update\')\n
 elif caller == \'commit\':\n
-  return context.asContext(changelog=changelog,added=added,removed=removed,modified=modified).BusinessTemplate_doSvnCommit()\n
+  return context.BusinessTemplate_doSvnCommit(changelog=changelog,added=added,removed=removed,modified=modified)\n
 elif caller == \'ls\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLs?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
 elif caller == \'log\':\n
