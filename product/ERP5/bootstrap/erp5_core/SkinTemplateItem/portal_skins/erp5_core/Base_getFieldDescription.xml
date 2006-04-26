@@ -71,11 +71,10 @@
 if desc in (\'\', None):\n
   if field.getId().startswith(\'my_\'):\n
     properties = context.propertyMap()\n
-    id = \'%s_\' % field.getId()\n
+    id = \'%s_\' % field.getId() # To avoid matching a subword\n
     for property in properties:\n
-      if \'_%s_\' % property[\'id\'] in id:\n
-        desc = property[\'description\']\n
-        break\n
+      if \'_%s_\' % property[\'id\'] in id: # To avoid matching "my_"\n
+        return property.get(\'description\', \'\')\n
 \n
 return desc\n
 </string> </value>
