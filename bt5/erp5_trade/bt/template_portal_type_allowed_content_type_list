@@ -26,6 +26,8 @@ Returned Sale Packing List Line | Returned Sale Packing List Cell
 Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Container
 Returned Sale Packing List | Returned Sale Packing List Line
+Rule Tool | Delivery Rule
+Rule Tool | Order Rule
 Sale Order Line | Delivery Cell
 Sale Order Module | Sale Order
 Sale Order | Discount

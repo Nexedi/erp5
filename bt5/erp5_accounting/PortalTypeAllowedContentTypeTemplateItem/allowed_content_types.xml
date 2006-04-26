@@ -46,6 +46,12 @@
   <item>Trade Condition</item>
   <item>Invoice Line</item>
  </portal_type>
+ <portal_type id="Rule Tool">
+  <item>Invoice Rule</item>
+  <item>Invoice Transaction Rule</item>
+  <item>Invoicing Rule</item>
+  <item>Payment Rule</item>
+ </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>Sale Invoice Transaction Line</item>
   <item>Trade Condition</item>

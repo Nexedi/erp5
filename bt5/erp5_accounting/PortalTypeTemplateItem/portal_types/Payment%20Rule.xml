@@ -37,10 +37,6 @@
             </value>
         </item>
         <item>
-            <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -54,29 +50,23 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>folder_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Rule Tool</string> </value>
+            <value> <string>ERP5 Payment Rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The RulesTool implements portal objects transformation policies.</string> </value>
+            <value> <string>      Payment Rule generates payment simulation movement from invoice transaction simulation movements.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string></string> </value>
+            <value> <string>addPaymentRule</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
             <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>group_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
         <item>
             <key> <string>hidden_content_type_list</string> </key>
@@ -86,7 +76,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Rule Tool</string> </value>
+            <value> <string>Payment Rule</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

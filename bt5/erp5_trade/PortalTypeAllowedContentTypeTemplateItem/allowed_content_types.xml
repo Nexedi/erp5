@@ -71,6 +71,10 @@
  <portal_type id="Returned Sale Packing List Module">
   <item>Returned Sale Packing List</item>
  </portal_type>
+ <portal_type id="Rule Tool">
+  <item>Order Rule</item>
+  <item>Delivery Rule</item>
+ </portal_type>
  <portal_type id="Sale Order">
   <item>Sale Order Line</item>
   <item>Discount</item>
