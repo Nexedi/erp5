@@ -33,7 +33,8 @@ class HtmlStylePreference:
   
   _properties = (
     { 'id'          : 'preferred_html_style_developper_mode',
-      'description' : 'When true, usefull links for developpers are shown in the interface.',
+      'description' : 'When true, usefull links for developpers are shown in '\
+                      'the interface.',
       'type'        : 'boolean',
       'preference'  : 1,
       'mode'        : 'w' },
