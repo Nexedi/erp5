@@ -66,27 +66,34 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script deletes all empty (ie. with balance == 0) lines in an accounting transaction\n
+            <value> <string>"""Deletes all empty (ie. with balance == 0) lines in an accounting transaction\n
 """\n
-\n
+from Producs.ERP5Type.Message import Message\n
+N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 lines_portal_type = context.getPortalAccountingMovementTypeList()\n
 transaction = context.getObject()\n
+transaction_lines = transaction.objectValues(portal_type=lines_portal_type)\n
+id_to_delete_list = []\n
 \n
-for line in transaction.objectValues(portal_type=lines_portal_type) :\n
+\n
+for line in transaction_lines:\n
   line = line.getObject()\n
   # Do not delete lines involved in simulation\n
-  if len( line.getDeliveryRelatedValueList(\n
+  if len(line.getDeliveryRelatedValueList(\n
                     portal_type = \'Simulation Movement\') +\n
           line.getOrderRelatedValueList(\n
-                    portal_type = \'Simulation Movement\') ) == 0 :\n
+                    portal_type = \'Simulation Movement\')) == 0:\n
     if not line.getSourceInventoriatedTotalAssetPrice() and \\\n
-       not line.getDestinationInventoriatedTotalAssetPrice() :\n
-      transaction.deleteContent(line.getId())\n
+       not line.getDestinationInventoriatedTotalAssetPrice():\n
+      id_to_delete_list.append(line.getId())\n
 \n
-if redirect :\n
+if len(id_to_delete_list) != len(transaction_lines):\n
+  # Don\'t delete everything\n
+  transaction.deleteContents(id_to_delete_list)\n
+\n
+if redirect:\n
   context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
-      transaction.getPath(), context.Base_translateString(\'Empty Lines Deleted.\')))\n
+      transaction.getPath(), N_(\'Empty+Lines+Deleted.\')))\n
 </string> </value>
         </item>
         <item>
@@ -107,7 +114,7 @@ if redirect :\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>redirect = 0</string> </value>
+            <value> <string>redirect=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -134,10 +141,15 @@ if redirect :\n
                         <value>
                           <tuple>
                             <string>redirect</string>
+                            <string>Producs.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>N_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>lines_portal_type</string>
                             <string>transaction</string>
+                            <string>transaction_lines</string>
+                            <string>id_to_delete_list</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>len</string>
