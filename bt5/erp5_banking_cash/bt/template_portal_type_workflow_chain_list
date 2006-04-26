@@ -1,4 +1,4 @@
-Cash Classification | cash_classification_workflow
-Cash Classification | edit_workflow
-Cash Transfer | cash_transfer_workflow
-Cash Transfer | edit_workflow
+Cash Sorting | cash_sorting_workflow
+Cash Sorting | edit_workflow
+Usual Cash Transfer | edit_workflow
+Usual Cash Transfer | usual_cash_transfer_workflow

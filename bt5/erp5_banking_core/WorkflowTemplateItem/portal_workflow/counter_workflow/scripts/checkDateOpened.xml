@@ -71,7 +71,8 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
-site = transaction.getSourceValue()\n
+site = transaction.getSiteValue()\n
+\n
 while True:\n
   if not hasattr(site, \'getVaultTypeList\'):\n
     msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
@@ -80,11 +81,11 @@ while True:\n
     break\n
   site = site.getParentValue()\n
 \n
-kwd = {\'portal_type\' : \'Accounting Date\', \'simulation_state\' : \'open\', \'site_uid\' : site.getUid()}\n
+kwd = {\'portal_type\' : \'Counter Date\', \'simulation_state\' : \'open\', \'site_uid\' : site.getUid()}\n
 date_list = [x.getObject() for x in context.portal_catalog(**kwd)]\n
 \n
 if len(date_list) == 0:\n
-  msg = Message(domain=\'ui\', message="Accounting date is not opened.")\n
+  msg = Message(domain=\'ui\', message="Counter date is not opened.")\n
   raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>

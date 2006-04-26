@@ -1,5 +1,6 @@
-Cash Classification | Price
-Cash Transfer | Amount
-Cash Transfer | Price
-Incoming Cash Classification Line | CashDeliveryLine
-Outgoing Cash Classification Line | CashDeliveryLine
+Cash Sorting | Price
+Incoming Cash Sorting Line | CashDeliveryLine
+Outgoing Cash Sorting Cell | CashDeliveryLine
+Outgoing Cash Sorting Line | CashDeliveryLine
+Usual Cash Transfer | Amount
+Usual Cash Transfer | Price

@@ -1,28 +1,25 @@
-Cash Classification Module | list_ui
-Cash Classification Module | sort_on
-Cash Classification Module | view
-Cash Classification | external
-Cash Classification | fastinputIn
-Cash Classification | fastinputOut
-Cash Classification | history
-Cash Classification | list
-Cash Classification | metadata
-Cash Classification | print
-Cash Classification | source
-Cash Classification | view
-Cash Transfer Module | list_ui
-Cash Transfer Module | sort_on
-Cash Transfer Module | view
-Cash Transfer | fastinput
-Cash Transfer | history
-Cash Transfer | metadata
-Cash Transfer | print
-Cash Transfer | view
-Incoming Cash Classification Line | list
-Incoming Cash Classification Line | metadata
-Incoming Cash Classification Line | print
-Incoming Cash Classification Line | view
-Outgoing Cash Classification Line | list
-Outgoing Cash Classification Line | metadata
-Outgoing Cash Classification Line | print
-Outgoing Cash Classification Line | view
+Cash Sorting Module | list
+Cash Sorting Module | list_ui
+Cash Sorting Module | sort_on
+Cash Sorting Module | view
+Cash Sorting | history
+Cash Sorting | incoming_fastinput
+Cash Sorting | incoming_line_view
+Cash Sorting | metadata
+Cash Sorting | outgoing_fastinput
+Cash Sorting | outgoing_line_list
+Cash Sorting | view
+Incoming Cash Sorting Line | metadata
+Incoming Cash Sorting Line | view
+Outgoing Cash Sorting Cell | metadata
+Outgoing Cash Sorting Cell | view
+Outgoing Cash Sorting Line | metadata
+Outgoing Cash Sorting Line | view
+Usual Cash Transfer Module | list_ui
+Usual Cash Transfer Module | sort_on
+Usual Cash Transfer Module | view
+Usual Cash Transfer | fastinput
+Usual Cash Transfer | history
+Usual Cash Transfer | metadata
+Usual Cash Transfer | print
+Usual Cash Transfer | view

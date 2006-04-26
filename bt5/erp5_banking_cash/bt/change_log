@@ -1,3 +1,9 @@
+2006-04-26 aurel
+* add outgoing cash sorting cell
+
+2006-04-24 aurel
+* use cash sorting instead of cash classification
+
 2006-04-06 aurel
 * remove accounting event for cash classification
 

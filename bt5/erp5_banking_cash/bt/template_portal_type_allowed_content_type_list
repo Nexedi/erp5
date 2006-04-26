@@ -1,7 +1,7 @@
-Cash Classification Module | Cash Classification
-Cash Classification | Incoming Cash Classification Line
-Cash Classification | Outgoing Cash Classification Line
-Cash Transfer Module | Cash Transfer
-Cash Transfer | Cash Delivery Line
-Incoming Cash Classification Line | Cash Delivery Cell
-Outgoing Cash Classification Line | Cash Delivery Cell
+Cash Sorting Module | Cash Sorting
+Cash Sorting | Incoming Cash Sorting Line
+Cash Sorting | Outgoing Cash Sorting Line
+Incoming Cash Sorting Line | Cash Delivery Cell
+Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
+Usual Cash Transfer Module | Usual Cash Transfer
+Usual Cash Transfer | Cash Delivery Line

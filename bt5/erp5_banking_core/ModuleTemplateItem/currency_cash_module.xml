@@ -174,6 +174,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add ERP5Subversion Tools</name>
+  </permission>
+  <permission>
    <name>Add ERP5SyncML Tools</name>
    <role>Manager</role>
   </permission>
@@ -246,10 +249,6 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add Portal ZSyncer Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Add Python Scripts</name>
    <role>Manager</role>
   </permission>
@@ -315,10 +314,6 @@
   </permission>
   <permission>
    <name>Add ZODB Mount Points</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Add ZSyncers</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -544,10 +539,6 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Manage Translation Services</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Manage Vocabulary</name>
    <role>Manager</role>
   </permission>
@@ -713,10 +704,6 @@
   </permission>
   <permission>
    <name>WebDAV access</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>ZSyncer: Use ZSyncer</name>
    <role>Manager</role>
   </permission>
   <permission>

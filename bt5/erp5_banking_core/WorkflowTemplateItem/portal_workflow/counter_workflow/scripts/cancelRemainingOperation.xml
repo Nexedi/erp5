@@ -71,14 +71,8 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change.object\n
-site = transaction.getSourceValue()\n
-while True:\n
-  if not hasattr(site, \'getVaultTypeList\'):\n
-    msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
-    raise ValidationFailed, (msg,)\n
-  if \'site\' in site.getVaultTypeList():\n
-    break\n
-  site = site.getParentValue()\n
+\n
+site = transaction.Baobab_getVaultSite(vault=transaction.getSourceValue())\n
 \n
 # get the current counter date\n
 kwd = {\'portal_type\' : \'Accounting Date\', \'simulation_state\' : \'open\', \'site_uid\' : site.getUid()}\n
@@ -91,13 +85,17 @@ else:\n
   current_date = date_list[0].getStartDate()\n
 \n
 site_uid = transaction.getSiteUid()\n
+\n
 # get all operations related to this counter\n
-# as source\n
-kwd_source = {\'source_uid\' : site_uid, \'delivery.start_date\' : current_date, \'simulation_state\' : \'confirmed\'}\n
-# as destination\n
-kwd_destination = {\'destination_uid\' : site_uid, \'delivery.start_date\' : current_date, \'simulation_state\' : \'confirmed\'}\n
-operation_list = list(context.portal_catalog(**kwd_source)) + list(context.portal_catalog(**kwd_destination))\n
-operation_list_object = [x.getObject() for x in operation_list]\n
+# # as source\n
+# kwd_source = {\'source_uid\' : site_uid, \'delivery.start_date\' : current_date, \'simulation_state\' : \'confirmed\'}\n
+# # as destination\n
+# kwd_destination = {\'destination_uid\' : site_uid, \'delivery.start_date\' : current_date, \'simulation_state\' : \'confirmed\'}\n
+# operation_list = list(context.portal_catalog(**kwd_source)) + list(context.portal_catalog(**kwd_destination))\n
+# operation_list_object = [x.getObject() for x in operation_list]\n
+\n
+operation_list_object = transaction.Baobab_getRemainingOperationList(site_uid=site_uid, date=current_date, simulation_state=[\'confirmed\',])\n
+ \n
 context.log(\'counter_workflow, cancelRemainingOperation\', \'operation list = %s\' %(operation_list_object,))\n
 \n
 for operation in operation_list_object:\n
@@ -165,9 +163,6 @@ for operation in operation_list_object:\n
                             <string>_getattr_</string>
                             <string>transaction</string>
                             <string>site</string>
-                            <string>True</string>
-                            <string>hasattr</string>
-                            <string>msg</string>
                             <string>kwd</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -179,12 +174,9 @@ for operation in operation_list_object:\n
                             <string>None</string>
                             <string>current_date</string>
                             <string>len</string>
+                            <string>msg</string>
                             <string>_getitem_</string>
                             <string>site_uid</string>
-                            <string>kwd_source</string>
-                            <string>kwd_destination</string>
-                            <string>list</string>
-                            <string>operation_list</string>
                             <string>operation_list_object</string>
                             <string>operation</string>
                           </tuple>

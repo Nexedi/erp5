@@ -99,8 +99,8 @@ def l_split(line) :\n
       new_e_list.append(e)\n
   return new_e_list\n
 \n
-def create_category(cat) :\n
-\n
+def create_category(cat, vault_type=None) :\n
+  context.log(\'create_category\',cat)\n
   cat_list = lowerCase(cat).split(\'/\')\n
   cat_len = len(cat_list)\n
   \n
@@ -116,21 +116,30 @@ def create_category(cat) :\n
 \n
     if relative_category is None :\n
       relative_category = create_category(lowerCase(\'/\'.join(cat_list[:-1])))\n
+      if vault_type is not None:\n
+        relative_category.setVaultType(vault_type)\n
 \n
     cat = relative_category.get(lowerCase(cat_list[-1]))\n
     if cat is not None :\n
       return cat\n
     else :\n
-      return relative_category.newContent(portal_type = \'Category\',\n
-          id = lowerCase(cat_list[-1]),\n
-          title = upperCase(cat_list[-1]))\n
+      new_cat = relative_category.newContent(portal_type = \'Category\',\n
+                                            id = lowerCase(cat_list[-1]),\n
+                                            title = upperCase(cat_list[-1]))\n
+      if vault_type is not None:\n
+        new_cat.setVaultType(vault_type)\n
+      return new_cat\n
 \n
 def generate_vault_dict() :\n
   c_list = context.portal_categories.vault_type.getCategoryChildValueList()\n
+  # function to sort category by title\n
+  def sortCategory(a, b):\n
+    return cmp(a.getRelativeUrl(), b.getRelativeUrl())\n
   vault_dict = {}\n
-  for c in c_list :\n
+  c_list.sort(sortCategory)\n
+  for c in c_list:\n
     code = c.getProperty(\'codification\')\n
-    if code is not None :\n
+    if code is not None and not vault_dict.has_key(code):\n
       vault_dict[code]=c.getRelativeUrl()\n
   return vault_dict\n
 \n
@@ -176,37 +185,89 @@ elif import_type == \'assign_codification\' :\n
 \n
 elif import_type == \'assign_vault_type\' :\n
   vault_type_dict = generate_vault_dict()\n
+  context.log(\'vault_type_dict\', vault_type_dict)\n
   vault_type_list = vault_type_dict.keys()\n
   for e_list in line_list :\n
     if len(e_list) == 2 and e_list[1] in vault_type_list :\n
       category = context.portal_categories.getCategoryValue(lowerCase(e_list[0]))\n
       category.setCategoryList([vault_type_dict[e_list[1]]])\n
-      print \'set %s to %s\' % ([vault_type_dict[e_list[1]]], category)\n
+      print \'set %s to %s for e_list %s\' % ([vault_type_dict[e_list[1]]], category, e_list)\n
+\n
 \n
 elif import_type == \'create_subvaults\' :\n
 #Encaisse des Billets Restitues par Tiers a Detruire# seulemnt sur sites disposant de tri tiers\n
 #Encaisse des Billets Recus pour Ventilation# seulement sur sites principaux\n
   subvault_dict = {}\n
   for e_list in line_list :\n
+    context.log(\'e_list\', e_list)\n
     if len(e_list) == 3 :\n
-      vault = lowerCase(e_list[0])\n
-      subvault = upperCase(e_list[1])\n
-      subvault_code = upperCase(e_list[2])\n
+      vault = lowerCase(e_list[0]) # ex : Vault_Type/Site/caveau/Auxiliaire\n
+      subvault = upperCase(e_list[1]) # ex : Encaisse des Devises\n
+      subvault_code = upperCase(e_list[2]) # ex : D\n
+      counter_string_list = [] # the list of counters, like [\'guichet_1,entrant\',...]\n
+      one_way_counter_list = (\'gros_paiement\',\'gros_versement\')\n
+      two_way_counter_list = (\'banque_interne\',\'operations_diverses\')\n
+      counter_list = one_way_counter_list + two_way_counter_list\n
+      max_counter = 3 # we may not have always the same number of counters\n
+      counter_name = vault.split(\'/\')[-1]\n
+      # add as many counters as required\n
+      if counter_name in counter_list:\n
+        if counter_name in one_way_counter_list:\n
+          max_counter=2\n
+        for i in range(1,max_counter+1):\n
+#           if counter_name in two_way_counter_list:\n
+#             counter_string_list.append(\'guichet_%s/entrante\' % i)\n
+#             counter_string_list.append(\'guichet_%s/sortante\' % i)\n
+#           else:\n
+          counter_string_list.append(\'guichet_%s\' % i)\n
+      else:\n
+        counter_string_list = [\'\']\n
+\n
+      context.log(\'counter_string_list\',counter_string_list)\n
       if not subvault_dict.has_key(vault) :\n
         subvault_dict[vault] = []\n
-      subvault_dict[vault].append([subvault, subvault_code])\n
-      if subvault == \'Encaisse des Devises\' :\n
-        for c in context.currency.objectValues() :\n
-          if c.getId() != context.Baobab_getPortalReferenceCurrencyID():\n
-            subvault_dict[vault].append([\'%s/%s\' % (subvault, c.getTitle()), None])\n
-      if subvault == \'Encaisse des Billets Recus pour Ventilation\' :\n
-        for c in context.portal_categories.site.agence.principale.objectIds() :\n
-          subvault_dict[vault].append([\'%s/%s\' % (subvault, upperCase(c)), None])\n
+      for counter_string in counter_string_list:\n
+        context.log(\'counter_string\', counter_string)\n
+        if counter_string != \'\':\n
+          counter_subvault = \'%s/%s\' % (counter_string,subvault)\n
+        else:\n
+           counter_subvault = subvault\n
+        context.log(\'counter_subvault\', counter_subvault)\n
+        subvault_dict[vault].append([counter_subvault, subvault_code])\n
+        if subvault == \'Encaisse des Devises\' :\n
+          for c in context.currency_module.objectValues() :\n
+            if c.getId() != context.Baobab_getPortalReferenceCurrencyID():\n
+              if counter_name in two_way_counter_list:\n
+                context.log(\'add encaisse des billets et monnaies E/S\',counter_subvault)\n
+                subvault_dict[vault].append([\'%s/%s/%s\' % (counter_subvault, c.getTitle(), "entrante"), None])\n
+                subvault_dict[vault].append([\'%s/%s/%s\' % (counter_subvault, c.getTitle(), "sortante"), None])\n
+              else:\n
+                context.log(\'add encaisse des billets et monnaies\',counter_subvault)\n
+                subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, c.getTitle()), None])\n
+        if subvault == \'Encaisse des Billets Recus pour Ventilation\' :\n
+          for c in context.portal_categories.site.agence.principale.objectIds() :\n
+            if counter_name in two_way_counter_list:\n
+              context.log(\'add ventilation E/S\', counter_subvault)\n
+              subvault_dict[vault].append([\'%s/%s/%s\' % (counter_subvault, upperCase(c), "entrante"), None])\n
+              subvault_dict[vault].append([\'%s/%s/%s\' % (counter_subvault, upperCase(c), "sortante"), None])\n
+            else:\n
+              context.log(\'add ventilation\', counter_subvault)\n
+              subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, upperCase(c)), None])\n
+\n
+  # subvault_dict looks like this :\n
+  #subvault_dict : {\'vault_type/site/surface/operations_diverses\': [[\'Encaisse des Devises\', \'D\'], [\'Encaisse des Devises/Francs Suisses\', None], \n
+  #                          [\'Encaisse des Billets et Monnaies\', \'A\']]}\n
+\n
+\n
 \n
   vault_type_list = subvault_dict.keys()\n
+  context.log("vault_type_list", vault_type_list)\n
+  context.log("vault_type_dict :",subvault_dict)\n
 \n
+  # parse the for site category tree and add sub categories if required\n
   for c in context.portal_categories.site.getCategoryChildValueList() :\n
     for vault_type in vault_type_list :\n
+      context.log("c = %s, vault_type = %s" %(c, vault_type), "c.getvaultType = %s" %(c.getVaultType()))\n
       if context.portal_categories.isMemberOf(c, vault_type, strict=1) :\n
         print c.getRelativeUrl(), \'is\', vault_type\n
         for subvault_data in subvault_dict[vault_type] :\n
@@ -221,14 +282,22 @@ elif import_type == \'create_subvaults\' :\n
               pass\n
             else :\n
               print \'  creating\', subvault_path\n
-              new_category_obj = create_category(\'%s/%s\' % (c.getRelativeUrl(), subvault_path))\n
-              if subvault_code not in (None, \'\'):\n
-                new_category_obj.setCodification(subvault_code)\n
+              if \'guichet\' in subvault_path:\n
+                subcat_vault_type = \'%s/guichet\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+              else:\n
+                subcat_vault_type = \'/\'.join(vault_type.split(\'/\')[1:])                 \n
+              new_category_obj = create_category(cat = \'%s/%s\' % (c.getRelativeUrl(), subvault_path), vault_type = subcat_vault_type)\n
           else :\n
             print \'  creating\', subvault_path\n
-            new_category_obj = create_category(\'%s/%s\' % (c.getRelativeUrl(), subvault_path))\n
-            if subvault_code not in (None, \'\'):\n
-              new_category_obj.setCodification(subvault_code)\n
+            if \'guichet\' in subvault_path:\n
+              subcat_vault_type = \'%s/guichet\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+            else:\n
+              subcat_vault_type = \'/\'.join(vault_type.split(\'/\')[1:])\n
+            new_category_obj = create_category(cat = \'%s/%s\' % (c.getRelativeUrl(), subvault_path), vault_type = subcat_vault_type)\n
+          # set codification\n
+          if subvault_code not in (None, \'\'):\n
+            new_category_obj.setCodification(subvault_code)\n
+          \n
         print\n
         break\n
     else : print c.getRelativeUrl(), \'not here\'\n
@@ -249,6 +318,12 @@ return printed\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -297,13 +372,13 @@ return printed\n
                             <string>upperCase</string>
                             <string>l_clean</string>
                             <string>l_split</string>
+                            <string>None</string>
                             <string>create_category</string>
                             <string>generate_vault_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>getattr</string>
-                            <string>None</string>
                             <string>import_type</string>
                             <string>line_list</string>
                             <string>append</string>
@@ -322,11 +397,22 @@ return printed\n
                             <string>vault</string>
                             <string>subvault</string>
                             <string>subvault_code</string>
+                            <string>counter_string_list</string>
+                            <string>one_way_counter_list</string>
+                            <string>two_way_counter_list</string>
+                            <string>counter_list</string>
+                            <string>max_counter</string>
+                            <string>counter_name</string>
+                            <string>range</string>
+                            <string>i</string>
                             <string>_write_</string>
+                            <string>counter_string</string>
+                            <string>counter_subvault</string>
                             <string>c</string>
                             <string>vault_type</string>
                             <string>subvault_data</string>
                             <string>subvault_path</string>
+                            <string>subcat_vault_type</string>
                             <string>new_category_obj</string>
                           </tuple>
                         </value>
@@ -354,6 +440,27 @@ return printed\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -69,7 +69,7 @@
             <value> <string># put all counter in closing state for the given site\n
 transaction = state_change.object\n
 \n
-site = transaction.getSourceValue()\n
+site = transaction.getSiteValue()\n
 while True:\n
   if not hasattr(site, \'getVaultTypeList\'):\n
     msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n

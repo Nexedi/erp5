@@ -66,8 +66,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getMovementList(portal_type=portal_type)\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+# return context.getMovementList(portal_type=portal_type)\n
+# here we suppose we have only two level of portal type\n
+if not same_type(portal_type, []):\n
+  return context.getMovementList(portal_type=portal_type)\n
+if len(portal_type) > 2 or len(portal_type) == 0:\n
+  # use catalog\n
+  return context.getMovementList(portal_type=portal_type)\n
+\n
+line_list = context.objectValues(portal_type=portal_type[0])\n
+invert = 0\n
+if len(line_list) == 0:\n
+  # try with the second portal type\n
+  line_list = context.objectValues(portal_type=portal_type[1])\n
+  invert = 1\n
+if len(line_list) == 0:\n
+  return []\n
+cell_list = []\n
+for line in line_list:\n
+  if invert:\n
+    cell_type = portal_type[0]\n
+  else:\n
+    cell_type = portal_type[1]\n
+  cell_list.extend(list(line.objectValues(portal_type=cell_type)))\n
+\n
+return cell_list\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -87,7 +115,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=None, *argv, **kw</string> </value>
+            <value> <string>portal_type=[], *argv, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -116,8 +144,18 @@
                             <string>portal_type</string>
                             <string>argv</string>
                             <string>kw</string>
+                            <string>same_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>line_list</string>
+                            <string>invert</string>
+                            <string>cell_list</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>cell_type</string>
+                            <string>list</string>
                           </tuple>
                         </value>
                     </item>
@@ -130,7 +168,7 @@
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
+                <list/>
               </tuple>
             </value>
         </item>
