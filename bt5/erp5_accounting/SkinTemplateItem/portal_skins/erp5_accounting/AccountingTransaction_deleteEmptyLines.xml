@@ -68,7 +68,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Deletes all empty (ie. with balance == 0) lines in an accounting transaction\n
 """\n
-from Producs.ERP5Type.Message import Message\n
+from Products.ERP5Type.Message import Message\n
 N_ = lambda msg: Message(\'erp5_ui\', msg)\n
 lines_portal_type = context.getPortalAccountingMovementTypeList()\n
 transaction = context.getObject()\n
@@ -89,7 +89,7 @@ for line in transaction_lines:\n
 \n
 if len(id_to_delete_list) != len(transaction_lines):\n
   # Don\'t delete everything\n
-  transaction.deleteContents(id_to_delete_list)\n
+  transaction.deleteContent(id_to_delete_list)\n
 \n
 if redirect:\n
   context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
