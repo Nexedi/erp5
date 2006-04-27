@@ -73,13 +73,14 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
     def allowedRolesAndUsers(self):
         """
-        Return a list of roles and users with View permission.
+        Return a list of roles and users with Access contents
+        information permission.
         Used by PortalCatalog to filter out items you're not allowed to see.
         """
         ob = self.__ob
         allowed = {}
         for r in rolesForPermissionOn('Access_contents_information', ob):
-            allowed[r] = 1
+          allowed[r] = 1
         if withnuxgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
         else:
@@ -104,20 +105,20 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             new_dict[key] = new_list
         localroles = new_dict
         for user, roles in localroles.items():
-            for role in roles:
-                if allowed.has_key(role):
-                    if withnuxgroups:
-                      allowed[user] = 1
-                    else:
-                      allowed['user:' + user] = 1
-                # Added for ERP5 project by JP Smets
-                if role != 'Owner':
-                  if withnuxgroups:
-                    allowed[user + ':' + role] = 1
-                  else:
-                    allowed['user:' + user + ':' + role] = 1
+          for role in roles:
+            if allowed.has_key(role):
+              if withnuxgroups:
+                allowed[user] = 1
+              else:
+                allowed['user:' + user] = 1
+            # Added for ERP5 project by JP Smets
+            if role != 'Owner':
+              if withnuxgroups:
+                allowed[user + ':' + role] = 1
+              else:
+                allowed['user:' + user + ':' + role] = 1
         if allowed.has_key('Owner'):
-            del allowed['Owner']
+          del allowed['Owner']
         #LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         return list(allowed.keys())
 
@@ -269,8 +270,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             for group in groups:
                 result.append('user:%s' % group)
         # end groups
-        return result        
-      elif withnuxgroups: 
+        return result
+      elif withnuxgroups:
         return _getAllowedRolesAndUsers(user)
       else:
         return CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
@@ -527,7 +528,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return property_dict
 
     security.declarePrivate('getDynamicRelatedKeyList')
-    def getDynamicRelatedKeyList(self, sql_catalog_id=None,**kw):
+    def getDynamicRelatedKeyList(self, sql_catalog_id=None, **kw):
       """
       Return the list of dynamic related keys.
       This method will try to automatically generate new related key
@@ -537,9 +538,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       destination_title | category,catalog/title/z_related_destination
       default_destination_title | category,catalog/title/z_related_destination
       """
-      if len(kw)>0:
-        # import pdb;pdb.set_trace()
-        pass
       related_key_list = []
       base_cat_id_list = self.portal_categories.getBaseCategoryList()
       default_string = 'default_'
