@@ -66,11 +66,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># This script should be smart enough to guess what to use for lines, columns and tabs.\n
-# For now, we only statically define it.\n
-\n
-dimension_list = [\'tax_category\', \'product\', \'region\', \'product_line\',\n
+            <value> <string>dimension_list = [\'tax_category\', \'product\', \'region\', \'product_line\',\n
                   \'destination_region\', \'has_vat_number\', \'movement\']\n
+\n
+dimension_list.extend([ pred.getStringIndex()\n
+            for pred in context.objectValues(portal_type=\'Predicate\')\n
+            if pred.getStringIndex() not in dimension_list ])\n
 \n
 if list_dimensions == 1 :\n
   return dimension_list\n
@@ -79,10 +80,9 @@ dimension_result_list = []\n
 \n
 for dimension in dimension_list :\n
   if dimension is not None :\n
-    predicate_list = context.searchFolder(string_index=dimension, sort_on=\'int_index\')\n
+    predicate_list = context.searchFolder(string_index=dimension,\n
+                                          sort_on=\'int_index\')\n
     if len(predicate_list):\n
-     # context.log(\'InvoiceTransactionRule_asCellRance predicate_list %s \' %dimension,\n
-    #              [x.getObject() for x in predicate_list])\n
       dimension_result_list.append(predicate_list)\n
 \n
 \n
@@ -90,10 +90,13 @@ dimension_ids_list = []\n
 \n
 if matrixbox == 1 :\n
   for dimension_result in dimension_result_list :\n
-    dimension_ids_list.append(map(lambda x: (x.getObject().getRelativeUrl(), x.getObject().getTitle()), dimension_result))\n
+    dimension_ids_list.append(\n
+              map(lambda x: (x.getObject().getRelativeUrl(),\n
+                             x.getObject().getTitle()), dimension_result))\n
 else :\n
   for dimension_result in dimension_result_list :\n
-    dimension_ids_list.append(map(lambda x: x.getObject().getRelativeUrl(), dimension_result))\n
+    dimension_ids_list.append(\n
+          map(lambda x: x.getObject().getRelativeUrl(), dimension_result))\n
 \n
 return dimension_ids_list\n
 # vim: syntax=python\n
@@ -147,12 +150,15 @@ return dimension_ids_list\n
                             <string>list_dimensions</string>
                             <string>kw</string>
                             <string>dimension_list</string>
-                            <string>dimension_result_list</string>
+                            <string>_getattr_</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>context</string>
+                            <string>pred</string>
+                            <string>dimension_result_list</string>
                             <string>dimension</string>
                             <string>None</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>predicate_list</string>
                             <string>len</string>
                             <string>dimension_ids_list</string>
