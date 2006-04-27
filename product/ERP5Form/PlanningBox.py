@@ -1,6 +1,8 @@
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Tomas Bernard <thomas@nexedi.com>
+#     from an original experimental script written by :
 #                    Jonathan Loriette <john@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -8,7 +10,7 @@
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
 # garantees and support are strongly adviced to contract a Free Software
-# Service Company
+# Service Companyf
 #
 # This program is Free Software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,7 +27,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import pdb
+
 import string, types, sys
+
+# class monitoring access security control
+from Products.PythonScripts.Utility import allow_class
+from AccessControl import ClassSecurityInfo
+from Globals import InitializeClass
+
+
 from Form import BasicForm
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
@@ -43,2023 +54,2112 @@ from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from Products.Formulator.Form import BasicForm
 from Products.CMFCore.utils import getToolByName
 
+from Products.ERP5Type.Utils import getPath
+
 class PlanningBoxValidator(Validator.StringBaseValidator):
-  def validate(self, field, key, REQUEST):
-    """allows to check if one block is not outside of the planning"""
-    bmoved=REQUEST.get('block_moved')
+  """
+  Class holding all methods used to validate a modified PlanningBox
+  can be called only from a HTML rendering using wz_dragdrop script
+  """
+  def validate(self,field,key,REQUEST):
+    """
+    main method to solve validation
+    first rebuild the whole structure but do not display it
+    then recover the list of block moved and check the modifications to
+    apply
+    """
+
+    # init params
+    value = None
     form = field.aq_parent
-    height_global_div= field.get_value('height_global_div')    
-    width_line = field.get_value('width_line')
     here = getattr(form, 'aq_parent', REQUEST)
-    space_line=field.get_value('space_line')
-    selection_name = field.get_value('selection_name')
-    sort = field.get_value('sort')
-    color_script=getattr(here,field.get_value('color_script'),None)
-    height_header = field.get_value('height_header')
-    height_global_div = field.get_value('height_global_div')
-    height_axis_x=field.get_value('height_axis_x')
-    meta_types = field.get_value('meta_types')
-    list_method = field.get_value('list_method')
-    report_root_list = field.get_value('report_root_list')
-    portal_types = field.get_value('portal_types')
-    object_start_method_id = field.get_value('x_start_bloc')
-    object_stop_method_id= field.get_value('x_stop_bloc')
-    y_axis_width = field.get_value('y_axis_width')
-    script=getattr(here,field.get_value('x_axis_script_id'),None)
-    scriptY = getattr(here,field.get_value('max_y'),None)
-    x_range = field.get_value('x_range')
-    info_center = field.get_value('info_center')
-    info_topleft = field.get_value('info_topleft')        
-    info_topright = field.get_value('info_topright')
-    info_backleft = field.get_value('info_backleft')
-    info_backright = field.get_value('info_backright')
-    block_height= getattr(here,field.get_value('y_axis_method'),None)
-    portal_url = here.portal_url()
-    list_error=REQUEST.get('list_block_error')
+
+    # recover usefull properties
+    #pdb.set_trace()
+    block_moved_string = REQUEST.get('block_moved')
+    old_delta1 = REQUEST.get('old_delta1')
     old_delta2 = REQUEST.get('old_delta2')
-    lineb= REQUEST.get('line_begin')
-    if old_delta2!='None':
-      if old_delta2!='':
-        if old_delta2!={}:
-          old_delta2=convertStringToDict(old_delta2)
-    else:
-      old_delta2={}
-    
-    #first we rebuild the initial object structure with only line and activity block.
-    
-    # list_object is the variable that contains all the structure of the graphic.
-    # Basically, it a list a Line Object.
-    list_object=[]
-    selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-    default_params = {}
-    if selection is None:
-      selection = Selection(params=default_params, default_sort_on = sort)
-    else:
-      selection.edit(default_sort_on = sort)
-      selection.edit(sort_on = sort)       
-    here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
-    current_top = height_header
-    #we check what is the current zoom in order to redefine height & width
-    current_zoom = selection.getZoom()
-    current_zoom= float(current_zoom)
-    if current_zoom<=1:
-      height_global_div = round(height_global_div * current_zoom)
-      width_line = round(width_line * current_zoom)
-      space_line = round(space_line * current_zoom)  
-    #we build line
-    (list_object,nbr_line,report_sections,blocks_object)=createLineObject(meta_types=meta_types,
-                                                            selection=selection,
-                                                            selection_name=selection_name,field=field,
-                                                            REQUEST=REQUEST,list_method=list_method,
-                                                            here=here,report_root_list=report_root_list,
-                                                            y_axis_width=y_axis_width,width_line=width_line,
-                                                            space_line=space_line,
-                                                            height_global_div=height_global_div,
-                                                            height_header=height_header,
-                                                            height_axis_x=height_axis_x,form=form,
-                                                            current_top=current_top,portal_types=portal_types)
-    # blocks_object is a dictionnary that contains all informations used for building blocks of each line
- 
-    #we build x_occurence (used for the range in x-Axis 
-    x_occurence=[]
-    #report_sections contains treeListLine instance objects
-    for treelistobject in report_sections: 
-      method_start = getattr(treelistobject.getObject(),object_start_method_id,None)
-      method_stop= getattr(treelistobject.getObject(),object_stop_method_id,None)
-      if method_start!=None:
-        block_begin = method_start()
-      else:
-        block_begin = None
-      
-      if method_stop!=None:
-        block_stop= method_stop()
-      else:
-        block_stop=None
-      if block_begin != None: 
-       x_occurence.append([block_begin,block_stop])
-      #if method start is None it means that we construct the graphic with informations contained
-      #in blocks_object. 
-      if method_start == None and report_sections!={}:
-        for Ablock in blocks_object:
-          #object_content is the current object used for building a block.
-          #For instance if the context is a project, then object_content is an orderLine.
-          for object_content in blocks_object[Ablock]:
-            method_start = getattr(object_content,object_start_method_id,None)
-            method_stop= getattr(object_content,object_stop_method_id,None)
-              
-            if method_start!=None:
-              block_begin = method_start()
-            else:
-              block_begin = None
-            
-            if method_stop!=None:
-              block_stop= method_stop()
-            else:
-              block_stop=None
-              
-            if block_begin!=None:# and block_stop!=None:
-              x_occurence.append([block_begin,block_stop])
-          
-      params=selection.getParams()
-      start=params.get('list_start')
-      
-      x_axe=script(x_occurence,x_range,float(current_zoom),start)
-      y_max= 1
-      current_max = 1
-      #this part is used for determining the maximum through datas fetched via scriptY
-      #y_max is used when blocks have different height.
-      if scriptY != None:
-        for s in report_sections:
-          current_max=scriptY(s.getObject())
-          if current_max > y_max:
-            y_max = current_max
-      else:
-        y_max = 1
-      indic_line=0
-      while indic_line != len(report_sections):
-        # o is a Line object, for each line, we add its blocks via insertActivityBlock
-        for o in list_object:
-          if o.title == report_sections[indic_line].getObject().getTitle():
-            if list_object != [] and report_sections[indic_line].getDepth()==0:
-              o.insertActivityBlock(line_content=report_sections[indic_line].getObject(),
-                                    object_start_method_id=object_start_method_id,
-                                    object_stop_method_id=object_stop_method_id,
-                                    x_axe=x_axe,field=field,info_center=info_center,
-                                    info_topright=info_topright,info_topleft=info_topleft,
-                                    info_backleft=info_backleft,info_backright=info_backright,
-                                    list_error=list_error,old_delta=['None','None'],REQUEST=REQUEST,
-                                    blocks_object=blocks_object,width_line=width_line,
-                                    script_height_block=block_height,y_max=y_max,color_script=color_script)                                                      
-              break
-        indic_line+=1 
-    
-    #  the structure is now rebuilt
-    block_moved = [] 
-    bloc_and_line=[] # store the line and the coordinates of block moved
-    if bmoved != '':
-      block_moved=convertStringToList(bmoved)
+
+    #pdb.set_trace()
+
+    ##################################################
+    ############## REBUILD STRUCTURE #################
+    ##################################################
+    # build structure
+    structure = PlanningBoxWidgetInstance.render_structure(field=field, key=key, value=value, REQUEST=REQUEST, here=here)
+
+    # getting coordinates script generator
+    planning_coordinates_method = getattr(here,'planning_coordinates')
+    # calling script to generate coordinates
+    planning_coordinates = planning_coordinates_method(structure=structure)
+
+    ##################################################
+    ########## RECOVERING BLOK MOVED DICT ############
+    ##################################################
+    #  converting string to a structure
+    block_moved_list = []
+    if block_moved_string != '':
+      block_moved_object_list = block_moved_string.split('*')
+      for block_moved_object_string in block_moved_object_list:
+        block_moved_dict = None
+        block_moved_dict = {}
+        block_moved_sub_list = block_moved_object_string.split(',')
+        block_moved_dict['name'] = block_moved_sub_list[0]
+        block_moved_dict['old_X'] = float(block_moved_sub_list[1])
+        block_moved_dict['old_Y'] = float(block_moved_sub_list[2])
+        block_moved_dict['new_X'] = float(block_moved_sub_list[3])
+        block_moved_dict['new_Y'] = float(block_moved_sub_list[4])
+        block_moved_dict['width'] = float(block_moved_sub_list[5])
+        block_moved_dict['height'] = float(block_moved_sub_list[6])
+        block_moved_list.append(block_moved_dict)
     else:
       return ''
-    
-    # When a block is moved, we fetch its object Line and its corresponding object Blocks*
-    # via returnBlock 
-    for current_block in block_moved:
-      bloc_and_line=returnBlock(current_block,list_object,bloc_and_line)
-    
-    #At this point, we know which blocks have moved and the line they belong  
-    #IMPORTANT INFORMATION ABOUT RECORD:
-    #There is a problem with absolute and relative coordinates, that is why we do not
-    #directly use coordinates from bmoved, but only 'delta' which allows to find correct
-    #coordinates 
-    my_field = None
-    prev_delta='' #we store the current delta in a formated string
-    list_block_error = []
-    errors = []
-    error_result = {}
-    prev_deltaX=0
-    prev_deltaY=0
-    deltaX = 0 
-    deltaY = 0 
-    correct = 1 # correct = 1 if the block is correct otherwise correct = 0
-    new_object_planning = {} #structure returned
-    for mblock in bloc_and_line:
-      if old_delta2!=None:
-        # For each block that has moved, we add its former coordinates and its delta
-        if old_delta2.has_key(mblock[1].name):
-          prev_deltaX=float(old_delta2[mblock[1].name][0])
-          prev_deltaY=float(old_delta2[mblock[1].name][1])
-      deltaX =float(mblock[0][3]) - float(mblock[0][1])+prev_deltaX 
-      deltaY = float(mblock[0][4]) - float(mblock[0][2])+prev_deltaY
-      widthblock= float(mblock[0][5])
-      heightblock=float(mblock[0][6])
-      if mblock[1].url!='':
-        url = mblock[1].url
+    # block_moved_list now holds a list of structure recovered from the REQUEST.
+
+    # XXX once this works, call a special python script 'planning_validator' to process
+    # the content instead of hardcoding it in the 'PlanningBox' script
+    # for the moment, to have faster and easier debugging, leaving this part of
+    # code in the main script
+
+
+    # dict aimed to hold all informations about block
+    final_block_dict = {}
+
+    # dict holding all the activities that will need an update because at least one
+    # of the blocks concerned is moved
+    activity_dict = {}
+
+    ##################################################
+    ########## GETTING BLOCK INFORMATIONS ############
+    ##################################################
+    # iterating each block_moved element and recovering all usefull properties
+    # BEWARE : no update is done here as an activity can be composed of several
+    # blocks and so we need first to check all the blocks moved
+    for block_moved in block_moved_list:
+      final_block = {}
+      # recovering the block object from block_moved informations
+      final_block['block_object'] = self.getBlockObject(block_moved['name'], structure.planning.content)
+      # recovering original activity object
+      final_block['activity_origin'] = final_block['block_object'].parent_activity
+      # recovering original axis_group object
+      final_block['group_origin'] = final_block['activity_origin'].parent_axis_element.parent_axis_group
+      # recovering relative block information in planning_coordinates
+      final_block['block_info'] = planning_coordinates['content'][block_moved['name']]
+
+
+      # calculating delta
+      # block_moved holds coordinates recovered from drag&drop script, while
+      # block_info has the relative coordinates.
+      # In fact the Drag&Drop java script used to get destination coordinates
+      # gives them in absolute. so using original block position to get the
+      # relative position
+      deltaX = block_moved['old_X'] - final_block['block_info']['margin-left']
+      deltaY = block_moved['old_Y'] - final_block['block_info']['margin-top']
+
+      # calculating new block position:
+      # width and height are already in the good format
+      block_moved['left'] = block_moved['new_X'] - deltaX
+      block_moved['top']  = block_moved['new_Y'] - deltaY
+
+      # abstracting axis representation (for generic processing)
+      if structure.planning.render_format == 'YX':
+        block_moved['main_axis_position']      = block_moved['top']
+        block_moved['main_axis_length']        = block_moved['height']
+        block_moved['secondary_axis_position'] = block_moved['left']
+        block_moved['secondary_axis_length']   = block_moved['width']
+        # used afterwards to get destination group
+        group_position = 'margin-top'
+        group_length = 'height'
+        # used afterwards to get secondary axis displacements and modifications
+        axis_length = 'width'
+
       else:
-        url= mblock[2].url
-      # several test to know if a block is correct. If it is not, wee add it to list_block_error.
-      if mblock[1].begin <0:
-        deltaX = (mblock[1].begin)*mblock[2].width + float(mblock[0][3]) +prev_deltaX
-      # mblock[1] is a  block ; mblock[2] is a line
-      if (mblock[1].marge_top)*mblock[2].height+mblock[2].top+deltaY >mblock[2].top+mblock[2].height:  
-        correct = 0
-      if (mblock[1].marge_top)*mblock[2].height+heightblock+mblock[2].top+deltaY< mblock[2].top:
-        correct = 0
-      if (mblock[1].begin)*mblock[2].width+widthblock+mblock[2].begin+deltaX <mblock[2].begin:
-        correct = 0
-      if (mblock[1].begin)*mblock[2].width + deltaX+ mblock[2].begin> mblock[2].begin + mblock[2].width:
-        correct = 0
-      if correct == 0:
-        list_block_error.append(mblock)
-        err = ValidationError(StandardError,mblock[1])
-        errors.append(err)
-        if prev_delta!='':
-          prev_delta+='*'
-        prev_delta+=str(mblock[1].name)+','+str(deltaX)+','+str(deltaY)
-        # we store once again old_delta because we will need it when a block is moved again.     
-      else:
-        new_object_planning = convertDataToDate(mblock,x_axe,width_line, deltaX, 
-                                                deltaY, url, new_object_planning,lineb)  
-    REQUEST.set('list_block_error',list_block_error)
-    REQUEST.set('old_delta1',prev_delta)
-    if len(errors)>0:
-      raise FormValidationError(errors,{})
-    return new_object_planning
+        block_moved['main_axis_position']      = block_moved['left']
+        block_moved['main_axis_length']        = block_moved['width']
+        block_moved['secondary_axis_position'] = block_moved['top']
+        block_moved['secondary_axis_length']   = block_moved['height']
+        group_position = 'margin-left'
+        group_length = 'width'
+        axis_length = 'height'
 
-def convertDataToDate(mblock,x_axe,width_line, deltaX, deltaY, object_url,
-                      new_object_planning, lineb):                 
-  """this is in this method that we calculate new startdate & stopdate in order 
-     to save them"""  
-  delta_axe = (DateTime(x_axe[0][-1])-DateTime(x_axe[0][0]))
-  #lineb is used to know where really starts the line due to problems with others html tags.
-  begin = (mblock[2].begin - float(mblock[0][3])+(float(lineb)-mblock[2].begin))*(-1)
-  length = float(mblock[0][5])
-  axe_begin = DateTime(x_axe[0][0])
-  coeff = float(delta_axe) / float(mblock[2].width)
-  delta_start = begin * coeff
-  delta_length = length * coeff
-  new_start = axe_begin + delta_start
-  new_stop=new_start + delta_length
-  new_object_planning[object_url]={'start_date':new_start,'stop_date':new_stop}
-  return new_object_planning    
+      # calculating center of block over main axis to check block position
+      block_moved['center'] = (block_moved['main_axis_length'] / 2) + block_moved['main_axis_position']
 
+      # now that block coordinates are recovered as well as planning coordinates
+      # recovering destination group over the main axis to know if the block has
+      # been moved from a group to another
+      group_destination = self.getDestinationGroup(structure, block_moved,planning_coordinates['main_axis'], group_position, group_length)
 
-PlanningBoxValidatorInstance=PlanningBoxValidator()        
-
-
-def returnBlock(block_searched,planning_struct,block_and_line):
-  """return a specific structre containing the block object and its line 
-   thanks to its name"""
-  for line in planning_struct:
-    for block in line.content:
-      if block.name == block_searched[0]:
-        block_and_line.append([block_searched,block,line])   
-        break
-      else:
-        if line.son!=[]:
-          block_and_line = returnBlock(block_searched,line.son,block_and_line)
-  return block_and_line
-
-def convertStringToList(import_string):
-  """ convert a string from this type 'name,x,y,w,h-name,x,y,w,h...' to a list"""
-  list_moved= []
-  r_List = import_string.split('*')
-  for i in r_List:
-    current_block = i.split(',')
-    list_moved.append(current_block)
-  return list_moved
-
-def convertStringToDict(import_string):
-  """ convert a string from this type name,x1,x2,x,y,w,h*name,x1,x2,x,y,w,h
-      to list of dictionnaries where the key is the name""" 
-  dic={}
-  r_List=import_string.split('*')
-  for i in r_List:
-    current_block = i.split(',')
-    dic[current_block[0]]=[current_block[1],current_block[2]]
-  return dic    
-
-  
-def createLineObject(meta_types,selection,selection_name,field,REQUEST,list_method,
-                     here,report_root_list,y_axis_width,width_line,space_line,
-                     height_global_div,height_header,height_axis_x,form,current_top,portal_types):
-  """creates Line Object and stores it in list_object"""
-  report_sections = []
-  filtered_portal_types = map(lambda x: x[0], portal_types)
-  if len(filtered_portal_types) == 0:
-    filtered_portal_types = None
-  section_index = 0
-  if len(report_sections) > section_index:
-    current_section = report_sections[section_index]
-  elif len(report_sections):
-    current_section = report_sections[0]
-  else:
-    current_section = None
-  filtered_meta_types = map(lambda x: x[0], meta_types)
-  params = selection.getParams()
-  sort = field.get_value('sort')
-  selection.edit(default_sort_on = sort)
-  kw=params
-  report_depth = REQUEST.get('report_depth', None)
-  is_report_opened = REQUEST.get('is_report_opened', selection.isReportOpened())
-  portal_categories = getattr(form, 'portal_categories', None)
-  portal_domains = getattr(form, 'portal_domains', None)
-  if 'select_expression' in kw:
-    del kw['select_expression']
-  if hasattr(list_method, 'method_name'):
-    if list_method.method_name == 'objectValues':
-      list_method = here.objectValues
-      kw = copy(params)
-      kw['spec'] = filtered_meta_types
-    else:
-     # The Catalog Builds a Complex Query
-      kw = {}
-      if REQUEST.form.has_key('portal_type'):
-        kw['portal_type'] = REQUEST.form['portal_type']
-      elif REQUEST.has_key('portal_type'):
-        kw['portal_type'] = REQUEST['portal_type']
-      elif filtered_portal_types is not None:
-        kw['portal_type'] = filtered_portal_types
-      elif filtered_meta_types is not None:
-        kw['meta_type'] = filtered_meta_types
-      elif kw.has_key('portal_type'):
-        if kw['portal_type'] == '':
-          del kw['portal_type']
-      # Remove useless matter
-      for cname in params.keys():
-        if params[cname] != '' and params[cname]!=None:
-          kw[cname] = params[cname]
-      # Try to get the method through acquisition
-      try:
-        list_method = getattr(here, list_method.method_name)
-      except AttributeError:
+      if group_destination == None:
+        # XXX need to take care of such a case :
+        # block has been moved outside the content area
         pass
-  elif list_method in (None, ''): # Use current selection
-    list_method = None
-  select_expression = ''
-  default_selection_report_path = report_root_list[0][0].split('/')[0]
-  if default_selection_report_path in portal_categories.objectIds() or \
-    (portal_domains is not None and default_selection_report_path in portal_domains.objectIds()):
-    pass
-  else:
-    default_selection_report_path = report_root_list[0][0]          
-  selection_report_path = selection.getReportPath(default = (default_selection_report_path,))
-  if report_depth is not None:
-    selection_report_current = ()
-  else:
-    selection_report_current = selection.getReportList()
-  report_tree_list = makeTreeList(here=here, form=form, root_dict=None,report_path=selection_report_path,
-                                  base_category=None,depth=0, 
-                                  unfolded_list=selection_report_current, selection_name=selection_name, 
-                                  report_depth=report_depth,
-                                  is_report_opened=is_report_opened, sort_on=selection.sort_on,
-                                  form_id=form.id)
-  
-  if report_depth is not None:
-    report_list = map(lambda s:s[0].getRelativeUrl(), report_tree_list)
-    selection.edit(report_list=report_list)
-  report_sections = []
-  list_object = []
-  nbr_line=0
-  object_list=[]    
-  indic_line=0 
-  index_line = 0
-  blocks_object= {}  
-  for object_tree_line in report_tree_list:      
-    selection.edit(report = object_tree_line.getSelectDomainDict())            
-    if object_tree_line.getIsPureSummary():
-      original_select_expression = kw.get('select_expression')
-      kw['select_expression'] = select_expression
-      selection.edit( params = kw )
-      if original_select_expression is None:
-        del kw['select_expression']
-      else:
-        kw['select_expression'] = original_select_expression
-    
-    if object_tree_line.getIsPureSummary() and selection_report_path[0]=='parent':
-      stat_result = {}
-      index = 1
-      report_sections += [object_tree_line]
-      nbr_line+=1       
+
+      # now that all informations about the main axis changes are
+      # known, checking modifications over the secondary axis.
+      secondary_axis_positions = self.getDestinationBounds(structure, block_moved, final_block['block_object'], planning_coordinates, axis_length)
+      block_moved['secondary_axis_start'] = secondary_axis_positions[0]
+      block_moved['secondary_axis_stop'] = secondary_axis_positions[1]
+
+      final_block['block_moved'] = block_moved
+      final_block['group_destination'] = group_destination
+
+      #final_block_dict[block_moved['name']] = final_block
+      try:
+        activity_dict[final_block['activity_origin'].name].append(final_block)
+      except KeyError:
+        activity_dict[final_block['activity_origin'].name] = [final_block]
+
+
+    ##################################################
+    ############# UPDATING ACTIVITIES ################
+    ##################################################
+    update_dict = {}
+    # now processing activity updates
+    for activity_name in activity_dict.keys():
+      # recovering list of moved blocks in the current activity
+      activity_block_moved_list = activity_dict[activity_name]
+      # recovering activity object from first moved block
+      activity_object = activity_block_moved_list[0]['activity_origin']
+
+      # now getting list of blocks related to the activity (moved or not)
+      activity_block_list = activity_object.block_list
+
+      # recovering new activity bounds
+      new_bounds = self.getActivityBounds(activity_object, activity_block_moved_list, activity_block_list)
+
+      # XXX call specific external method to round value in case hh:mn:s are useless
+
+      # saving updating informations in the final dict
+      update_dict[activity_object.link]={'start_date':new_bounds[0],'stop_date':new_bounds[1]}
+
+    # all process is now finished, just need to return final dict
+    return update_dict
+
+
+
+
+  def getBlockObject(self, block_name, content_list):
+    """
+    recover the block related to the block_name inside the content_list
+    """
+    for block in content_list:
+      if block.name == block_name:
+        return block
+
+
+
+  def getDestinationGroup(self, structure, block_moved, axis_groups, group_position, group_length):
+    """
+    recover destination group from block coordinates and main axis coordinates
+    block_moved is a dict of properties.
+    returns the group object itself, none if the block has no good coordinates
+    """
+    good_group_name = ''
+    # recovering group name
+    for axis_name in axis_groups.keys():
+      if  axis_groups[axis_name][group_position] < block_moved['center'] and axis_groups[axis_name][group_position] + axis_groups[axis_name][group_length] > block_moved['center']:
+        # the center of the block is between group min and max bounds
+        # the group we are searching for is known
+        good_group_name = axis_name
+        break
+    # if no group is found, this means the block has been put outside the bounds
+    if good_group_name == '':
+      return None
+    # group name is known, searching corresponding group object
+    for group in structure.planning.main_axis.axis_group:
+      if group.name == good_group_name:
+        return group
+    return None
+
+
+
+  def getDestinationBounds(self, structure, block_moved, block_object, planning_coordinates, axis_length):
+    """
+    check the new bounds of the block over the secondary axis according to its
+    new position
+    """
+
+    # XXX CALENDAR
+    # has to be improved : for now the axis bounds are recovered globally, it
+    # implies that all groups have the same bounds, which is not the case in
+    # calendar mode. for that will need to add special informations about the
+    # group itself to know its own bounds.
+    delta_start = block_moved['secondary_axis_position'] / planning_coordinates['frame']['content'][axis_length]
+    delta_stop  = (block_moved['secondary_axis_position'] + block_moved['secondary_axis_length']) / planning_coordinates['frame']['content'][axis_length]
+
+    # testing different cases of invalidation
+    if delta_stop < 0 or delta_start > 1 :
+      # block if fully out of the bounds
+      # XXX must generate a block_error
+      pass
     else:
-      # Prepare query
-      selection.edit( params = kw )
-      if list_method not in (None, ''):
-        selection.edit(exception_uid_list=object_tree_line.getExceptionUidList())
-        object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+      if delta_start < 0 or delta_stop > 1:
+        # part of the block is inside
+        pass
+
+    axis_range = structure.basic.secondary_axis_info['bound_stop'] - structure.basic.secondary_axis_info['bound_start']
+
+    # defining new final block bounds
+    new_start = delta_start * axis_range + structure.basic.secondary_axis_info['bound_start']
+    new_stop  = delta_stop * axis_range + structure.basic.secondary_axis_info['bound_start']
+
+    return [new_start,new_stop]
+
+
+
+  def getActivityBounds(self, activity, activity_block_moved_list, activity_block_list):
+    """
+    takes a list with modified blocks and another one with original blocks,
+    returning new startactivity_block_moved_list & stop for the activity
+    BEWARE : in case an activity bound was cut off to fit planning size, the
+    value will not be updated (as the block was not on the real activity bound)
+    """
+    # getting list moved block names
+    block_moved_name_list = map(lambda x: x['block_moved']['name'], activity_block_moved_list)
+
+
+    for activity_block in activity_block_list:
+      if activity_block.name in block_moved_name_list:
+        # the block composing the activity has been moved, not taking care of
+        # the original one, but only the final position (block_moved)
+        for temp_block_moved in activity_block_moved_list:
+          # recovering corresponding moved block
+          if temp_block_moved['block_moved']['name'] == activity_block.name:
+            # moved block has been found
+            temp_start = temp_block_moved['block_moved']['secondary_axis_start']
+            temp_stop  = temp_block_moved['block_moved']['secondary_axis_stop']
+            break
       else:
-        object_list = here.portal_selections.getSelectionValueList(selection_name,
-                                                          context=here, REQUEST=REQUEST)
-      
-      exception_uid_list = object_tree_line.getExceptionUidList()
-      if exception_uid_list is not None:
-      # Filter folders if this is a parent tree
-        new_object_list = []
-        for o in object_list:
-          if o.getUid() not in exception_uid_list:
-            new_object_list.append(o)
-                      
-        object_list = new_object_list
-      
-      current_list=[]
-      add = 1
-      #a test with 'add' variable because maketreelist return two times the 
-      #same object when it is open, don't know why...
-      for object in report_sections:
-        if getattr(object_tree_line.getObject(),'uid') == getattr(object.getObject(),'uid'):
-          add = 0
-          break  
-      if add == 1:       
-        report_sections += [object_tree_line] 
-        nbr_line+=1
-        for p in object_list:
-          current_list.append(p.getObject())
-        blocks_object[object_tree_line.getObject()]=current_list
-  selection.edit(report=None)
-  index = 0
-  #we start to build our line object structure right here.
-  index_report=0
-  for line_report in report_sections:
-    stat_result = {}
-    stat_context = line_report.getObject().asContext(**stat_result)
-    stat_context.domain_url = line_report.getObject().getRelativeUrl()
-    stat_context.absolute_url = lambda x: line_report.getObject().absolute_url()     
-    url=getattr(stat_context,'domain_url','')
+        # the block has not been moved
+        temp_start = activity_block.position_secondary.absolute_begin
+        temp_stop  = activity_block.position_secondary.absolute_end
+      # once the start & stop values are recovered, need to test them to check
+      # if it is needed to update
+      try:
+        if temp_start < new_start:
+          new_start = temp_start
+        if temp_stop > new_stop:
+          new_stop = temp_stop
+      except NameError:
+        # new_start is not defined because it is the first block found
+        new_start = temp_start
+        new_stop = temp_stop
 
-    if line_report.getDepth() == 0:
-      paternity = 1    
-      height=(height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))/float(nbr_line)
-      line = Line(title=line_report.getObject().getTitle(),
-                   name='fra' + str(indic_line),
-                   begin=y_axis_width,
-                   width=width_line,
-                   height=height,
-                   top=current_top,color='#ffffff',
-                   paternity=paternity,url=url)    
-      list_object.append(line)
-      
-      if paternity == 0:
-        height=(height_global_div-height_header-height_axis_x-
-               ((nbr_line-1)*space_line))/(float(nbr_line)) + (space_line)  
-        current_top=current_top+height
+    # new start & stop values are known
+    # checking weither activity has been cut-off to fit the planning bounds 
+    if activity.secondary_axis_begin != activity.secondary_axis_start:
+      new_start = activity.secondary_axis_begin
+    if activity.secondary_axis_end != activity.secondary_axis_stop:
+      new_stop  = activity.secondary_axis_end
 
-      else:
-        if (index+1)<=(len(report_sections)-1): 
-          if report_sections[index+1].getDepth()==0:
-            height=((height_global_div-height_header-height_axis_x-
-                   (((nbr_line-1))*space_line))/float(nbr_line))+ (space_line)
-            current_top=current_top+height    
-          else:
-            height=((height_global_div-height_header-height_axis_x-
-                   (((nbr_line-1))*space_line))/float(nbr_line))
-            current_top=current_top+height 
-    else:
-      current_index = 0      
-      while line_report.getDepth() == report_sections[index-current_index].getDepth():
-        current_index += 1
-      if report_sections[index-current_index].getDepth() == 0:
-        current_top=list_object[len(list_object)-1].createLineChild(report_sections,field,
-                                current_top,y_axis_width,width_line,space_line,height_global_div,
-                                height_header,height_axis_x,nbr_line,index,url)
-      else : # in this case wee add a son to a son
-        depth=0 
-        current_son=list_object[len(list_object)-1]
-        while depth != (line_report.getDepth()-1):
-          current_son=list_object[len(list_object)-1].son[len(list_object[len(list_object)-1].son)-1]
-          depth+=1
-        current_top=current_son.createLineChild(report_sections,field,current_top,y_axis_width,
-                                                 width_line,space_line,height_global_div,height_header
-                                                ,height_axis_x,nbr_line,index,url)    
-    index += 1
-    indic_line+=1
-  return (list_object,nbr_line,report_sections,blocks_object)
+    return [new_start,new_stop]
 
-def createGraphicCall(current_line,graphic_call):
-  """ create html code of children used by graphic library to know which block can be moved.
-      Refers to javascript library for more information"""
-  for line in current_line.son:
-    for block in line.content:
-      if block.types=='activity' or block.types=='activity_error':
-        graphic_call+='\"'+block.name+'\",'
-      elif block.types=='info':
-        graphic_call+='\"'+block.name+'\"+NO_DRAG,'   
-    if line.son!=[]: # case of a son which has sons...
-      graphic_call+=createGraphicCall(line,graphic_call)        
-  return graphic_call
-  
+
 class PlanningBoxWidget(Widget.Widget):
-    property_names = Widget.Widget.property_names +\
-                     ['height_header', 'height_global_div','height_axis_x', 'width_line','space_line',
-                     'list_method','report_root_list','selection_name','portal_types',
-                     'meta_types','sort','title_line','y_unity','y_axis_width','y_range','x_range',
-                     'x_axis_script_id','x_start_bloc','x_stop_bloc','y_axis_method','max_y',
-                     'constraint_method','color_script','info_center','info_topleft','info_topright',
-                     'info_backleft','info_backright','security_index']
-    
-    default = fields.TextAreaField('default',
-                                title='Default',
-                                description=(
-        "Default value of the text in the widget."),
-                                default="",
-                                width=20, height=3,
-                                required=0)	     
-     
-                             
-    height_header = fields.IntegerField('height_header',
-                                title='height of the header (px):',
-                                description=(
-        "value of the height of the header, required"),
-                                default=50,
-                                required=1)    
-                                                                             
-    height_global_div = fields.IntegerField('height_global_div',
-                                title='height of the graphic (px):',
-                                description=(
-        "value of the height of the graphic, required"),
-                                default=700,
-                                required=1) 
-    height_axis_x = fields.IntegerField('height_axis_x',
-                                title='height of X-axis (px):',
-                                description=(
-        "value of the height of X-axis"),
-                                default=50,
-                                required=1) 	
-                                
-    width_line = fields.IntegerField('width_line',
-                                title='width of the graphic (px):',
-                                description=(
-        "value of width_line, required"),
-                                default=1000,
-                                required=1) 
-    space_line = fields.IntegerField('space_line',
-                                title='space between each line of the graphic (px):',
-                                description=(
-        "space between each line of the graphic,not required"),
-                                default=10,
-                                required=0)   
-                                
-    report_root_list = fields.ListTextAreaField('report_root_list',
-                                 title="Report Root",
-                                 description=(
-        "A list of domains which define the possible root."),
-                                 default=[],
-                                 required=0)
-  
-    selection_name = fields.StringField('selection_name',
-                                 title='Selection Name',
-                                 description=('The name of the selection to store'
-                                              'params of selection'),
-                                 default='',
-                                 required=0)
-                                 
-    portal_types = fields.ListTextAreaField('portal_types',
-                                 title="Portal Types",
-                                 description=(
-        "Portal Types of objects to list. Required."),
-                                 default=[],
-                                 required=0)
-                                 
-    meta_types = fields.ListTextAreaField('meta_types',
-                                 title="Meta Types",
-                                 description=(
-        "Meta Types of objects to list. Required."),
-                                 default=[],
-                                 required=0)
-                                                              
-    sort = fields.ListTextAreaField('sort',
-                                 title='Default Sort',
-                                 description=('The default sort keys and order'),
-                                 default=[],
-                                 required=0)
-  
-    list_method = fields.MethodField('list_method',
-                                 title='List Method',
-                                 description=('The method to use to list'
-                                             'objects'),
-                                 default='',
-                                 required=0)                             
+  """
+  PlanningBox main class used to run all the process in order to generate
+  the structure of the Planning including all internal properties.
+  Contains BasicStructure and PlanningStructure instances
+  """
 
-    title_line = fields.StringField('title_line',
-                                title='specific method which fetches the title of each line: ',
-                                description=('specific method for inserting title in line'),
-                                default='',
-                                required=0)                            
 
-    y_unity = fields.StringField('y_unity',
-                                 title='Unity in Y-axis:',
-                                 description=('The unity in Y-axis,not required'),
-                                 default='',
-                                 required=0)
 
-    y_axis_width = fields.IntegerField('y_axis_width',
-                                title='width of Y-axis (px):',
-                                description=(
-        "width of Y-axis, required"),
-                                default=200,
-                                required=1) 
-    
-    y_range = fields.IntegerField('y_range',
-                                title='number of range of Y-axis :',
-                                description=(
-        "Number of Range of Y-axis, not required"),
-                                default=0,
-                                required=0) 
- 
-    x_range = fields.StringField('x_range',
-                                 title='range of X-Axis:',
-                                 description=('Nature of the subdivisions of X-Axes, not Required'),
-                                 default='day',
-                                 required=0)	
- 
-    x_axis_script_id = fields.StringField('x_axis_script_id',
-                                 title='script for building the X-Axis:',
-                                 description=('script for building the X-Axis'),
-                                 default='',
-                                 required=0)	
+  property_names = Widget.Widget.property_names +\
+  ['height_header', 'height_global_div','height_axis_x', 'width_line',
+   'space_line','list_method','report_root_list','selection_name',
+   'portal_types','sort','title_line','y_unity','y_axis_width',
+   'y_range','x_range','x_axis_script_id','x_start_bloc','x_stop_bloc',
+   'y_axis_method','max_y','constraint_method','color_script','info_center',
+   'info_topleft','info_topright','info_backleft','info_backright',
+   'security_index']
 
-    x_start_bloc = fields.StringField('x_start_bloc',
-                                 title='specific method which fetches the data for the beginning of a\
-                                        block:',
-                                 description=('Method for building X-Axis such as getstartDate'
-                                              'objects'),
-                                 default='getStartDate',
-                                 required=0)	
-    
-    x_stop_bloc = fields.StringField('x_stop_bloc',
-                                 title='specific method which fetches the data for the end of each block',
-                                 description=('Method for building X-Axis such getStopDate'
-                                              'objects'),
-                                 default='',
-                                 required=0)	
+  # Planning properties (accessed through Zope Management Interface)
 
- 
-    y_axis_method = fields.StringField('y_axis_method',
-                                 title='specific method of data type for creating height of blocks',
-                                 description=('Method for building height of blocks'
-                                              'objects'),
-                                 default='',
-                                 required=0) 
-                                 
 
-    max_y  = fields.StringField('max_y',
-                                 title='specific method of data type for creating Y-Axis',
-                                 description=('Method for building Y-Axis'
-                                              'objects'),
-                                 default='',
-                                 required=0)
+  # kind of representation to render :
+  # Planning or Calendar
+  representation_type = fields.Stringfield('representation_type',
+      title='',
+      description='',
+      default='Planning',
+      required=1)
+
+  # added especially for new Planning Structure generation
+  # is used to split result in pages in a ListBox like rendering
+  # (delimitation over the main axis)
+  main_axis_groups = fields.IntegerField('main_axis_groups',
+      title='groups per page on main axis:',
+      description=('number of groups displayed per page on main axis'),
+      default=10,
+      required=1)
+
+  # setting header height
+  size_header_height = fields.IntegerField('size_header_height',
+      title='header height:',
+      desciption=(
+      'height of the planning header'),
+      default=100,
+      required=1)
+
+  # setting left border size
+  size_border_width_left = fields.IntegerField('size_border_width_left',
+      title='Size border width left',
+      desciption=(
+      'setting left border size'),
+      default=10,
+      required=1)
+
+  # setting the width of the Planning (excl. Y axis : only the block area)
+  size_planning_width = fields.IntegerField('size_planning_width',
+      title='Planning width:',
+      desciption=(
+      'size of the planning area, excluding axis size'),
+      default=1000,
+      required=1)
+
+  # setting the with of the Y axis
+  size_y_axis_width = fields.IntegerField('size_y_axis_width',
+      title='Y axis width:',
+      description=(
+      'width of the Y axis'),
+      default=200,
+      required=1)
+
+  # setting the with of the space (between Planning and Y axis)
+  size_y_axis_space = fields.IntegerField('size_y_axis_space',
+      title='Y axis space:',
+      description=(
+      'space between Y axis and PLanning content'),
+      default=10,
+      required=1)
+
+  # setting the height of the Planning (excl. X axis)
+  size_planning_height = fields.IntegerField('size_planning_height',
+      title='Planning height:',
+      description=(
+      'size of the planning area, excluding axis_size'),
+      default=800,
+      required=1)
+
+  # setting the height of the X axis
+  size_x_axis_height = fields.IntegerField('size_x_axis_height',
+      title='X axis height:',
+      description=(
+      'height of the X axis'),
+      default=200,
+      required=1)
+
+  # setting the height of the space (between Planning and X axis)
+  size_x_axis_space = fields.IntegerField('size_x_axis_space',
+      title='X axis space:',
+      description=(
+      'space between X axis and PLaning content '),
+      default=10,
+      required=1)
 
   
-  
-    constraint_method = fields.StringField('constraint_method',
-                                          title='name of constraint method between blocks',
-                                          description=('Constraint method between blocks'
-                                                      'objects'),
-                                          default='SET_DHTML',
-                                          required=1)
-  
-    
-    color_script = fields.StringField('color_script',
-                                        title='name of script which allow to colorize blocks',
-                                        description=('script for block colors'  
-                                                    'objects'),                        
-                                        default='',   
-                                        required=0)  
-    
-    
-    info_center = fields.StringField('info_center',
-                                 title='specific method of data called for inserting info in block center',
-                                 description=('Method for displaying info in the center of a block'
-                                              'objects'),
-                                 default='',
-                                 required=0) 
-   
-    info_topright = fields.StringField('info_topright',
-                                 title='specific method of data called for inserting info in block topright',
-                                 description=('Method for displaying info in the topright of a block'
-                                              'objects'),
-                                 default='',
-                                 required=0)
-                                 
-    info_topleft = fields.StringField('info_topleft',
-                                 title='specific method of data called for inserting info in block topleft',
-                                 description=('Method for displaying info in the topleft corner of a block'
-                                              'objects'),
-                                 default='',
-                                 required=0)                             
-                                 
-    info_backleft = fields.StringField('info_backleft',
-                                 title='specific method of data called for inserting info in block backleft',
-                                 description=('Method for displaying info in the backleft of a block'
-                                              'objects'),
-                                 default='',
-                                 required=0)
-    info_backright = fields.StringField('info_backright',
-                                 title='specific method of data called for inserting info in block backright',
-                                 description=('Method for displaying info in the backright of a block'
-                                              'objects'),
-                                 default='',
-                                 required=0)
-   
-    security_index = fields.IntegerField('security_index',
-                                title='variable depending of the type of web browser :',
-                                description=("This variable is used because the rounds of each\
-                                              web browser seem to work differently"),
-                                default=2,
-                                required=0) 	 
-                                                                                       
-    def render_css(self, field, key, value, REQUEST):
-        """In this method we build our structure object, then we return all the style sheet of each div"""
-        
-        # DATA DEFINITION 
-        height_header = field.get_value('height_header')
-        height_global_div = field.get_value('height_global_div')
-        height_axis_x=field.get_value('height_axis_x')
-        width_line = field.get_value('width_line')
-        space_line = field.get_value('space_line')
-        selection_name = field.get_value('selection_name')
-        security_index = field.get_value('security_index')
-        y_unity = field.get_value('y_unity')
-        y_axis_width = field.get_value('y_axis_width')
-        y_range = field.get_value('y_range')
-        portal_types= field.get_value('portal_types')
-        meta_types = field.get_value('meta_types')
-        x_range=field.get_value('x_range')
-        here = REQUEST['here']
-        title=field.get_value('title')
-        list_method = field.get_value('list_method')
-        report_root_list = field.get_value('report_root_list')
-        scriptY = getattr(here,field.get_value('max_y'),None)
-        script=getattr(here,field.get_value('x_axis_script_id'),None)
-        block_height= getattr(here,field.get_value('y_axis_method'),None)
-        constraint_method = field.get_value('constraint_method')
-        color_script = getattr(here,field.get_value('color_script'),None)
-        #info inside a block
-        
-        info_center = field.get_value('info_center')
-        info_topleft = field.get_value('info_topleft')        
-        info_topright = field.get_value('info_topright')
-        info_backleft = field.get_value('info_backleft')
-        info_backright = field.get_value('info_backright')
 
-        object_start_method_id = field.get_value('x_start_bloc')
-        object_stop_method_id= field.get_value('x_stop_bloc')
-        form = field.aq_parent
-        sort = field.get_value('sort')   
-        x_occurence=[] # contains datas of start and stop of each block like
-                       # this [ [ [x1,x2],[x1,x2] ],[ [x1,x2],[x1,x2] ],.....] 
-                       #it is not directly coordinates but datas.                    
-        x_axe=[] # will contain what wee need to display in X-axis.
-        yrange=[] # we store the value in Y-axis of each block 
-        nbr=1
-        blocks_object={}      
-        current_top=height_header
-        line_list=[] #in this list we store all the objects of type Line
-        giant_string='' #will contain all the html code.
-        report_sections=[]
-        list_error=REQUEST.get('list_block_error')
-        old_delta=[REQUEST.get('old_delta1'),REQUEST.get('old_delta2')]
-        # END DATA DEFINITION                         
-        
-        # we fetch fold/unfold datas 
-        #here.portal_selections.setSelectionFor(selection_name, None)#uncoment to put selection to null
-        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-        default_params = {}
-        if selection is None:
-          selection = Selection(params=default_params, default_sort_on = sort)
+
+
+
+  default = fields.TextAreaField('default',
+      title='Default',
+      description=(
+      "Default value of the text in the widget."),
+      default="",
+      width=20, height=3,
+      required=0)
+
+  height_header = fields.IntegerField('height_header',
+      title='height of the header (px):',
+      description=(
+      "value of the height of the header, required"),
+      default=50,
+      required=1)
+
+  height_global_div = fields.IntegerField('height_global_div',
+      title='height of the graphic (px):',
+      description=(
+      "value of the height of the graphic, required"),
+      default=700,
+      required=1)
+
+  height_axis_x = fields.IntegerField('height_axis_x',
+      title='height of X-axis (px):',
+      description=(
+      "value of the height of X-axis"),
+      default=50,
+      required=1)
+
+  
+
+  width_line = fields.IntegerField('width_line',
+      title='width of the graphic (px):',
+      description=(
+      "value of width_line, required"),
+      default=1000,
+      required=1)
+
+  space_line = fields.IntegerField('space_line',
+      title='space between each line of the graphic (px):',
+      description=("space between each line of the graphic,not required"),
+      default=10,
+      required=0)
+
+  report_root_list = fields.ListTextAreaField('report_root_list',
+      title="Report Root",
+      description=("A list of domains which define the possible root."),
+      default=[],
+      required=0)
+
+  selection_name = fields.StringField('selection_name',
+      title='Selection Name',
+      description=("The name of the selection to store selections params"),
+      default='',
+      required=0)
+
+  portal_types = fields.ListTextAreaField('portal_types',
+      title="Portal Types",
+      description=("Portal Types of objects to list. Required."),
+      default=[],
+      required=0)
+
+  sort = fields.ListTextAreaField('sort',
+      title='Default Sort',
+      description=("The default sort keys and order"),
+      default=[],
+      required=0)
+
+  list_method = fields.MethodField('list_method',
+      title='List Method',
+      description=("Method to use to list objects"),
+      default='',
+      required=0)
+
+  title_line = fields.StringField('title_line',
+      title="specific method which fetches the title of each line: ",
+      description=("specific method for inserting title in line"),
+      default='',
+      required=0)
+
+  y_unity = fields.StringField('y_unity',
+      title='Unity in Y-axis:',
+      description=('The unity in Y-axis,not required'),
+      default='',
+      required=0)
+
+  y_axis_width = fields.IntegerField('y_axis_width',
+      title='width of Y-axis (px):',
+      description=(
+      "width of Y-axis, required"),
+      default=200,
+      required=1) 
+
+  y_range = fields.IntegerField('y_range',
+      title='number of range of Y-axis :',
+      description=(
+      "Number of Range of Y-axis, not required"),
+      default=0,
+      required=0) 
+
+  x_range = fields.StringField('x_range',
+      title='range of X-Axis:',
+      description=('Nature of the subdivisions of X-Axes, not Required'),
+      default='day',
+      required=0)	
+
+  x_axis_script_id = fields.StringField('x_axis_script_id',
+      title='script for building the X-Axis:',
+      description=('script for building the X-Axis'),
+      default='',
+      required=0)	
+
+  x_start_bloc = fields.StringField('x_start_bloc',
+      title='specific method which fetches the data for the beginning\
+      of a block:',
+      description=('Method for building X-Axis such as getstartDate\
+      objects'),
+      default='getStartDate',
+      required=0)
+
+  x_stop_bloc = fields.StringField('x_stop_bloc',
+      title='specific method which fetches the data for the end of\
+      each block',
+      description=('Method for building X-Axis such getStopDate\
+      objects'),
+      default='getStopDate',
+      required=0)	
+
+  y_axis_method = fields.StringField('y_axis_method',
+      title='specific method of data type for creating height of blocks',
+      description=('Method for building height of blocks objects'),
+      default='',
+      required=0) 
+
+  max_y  = fields.StringField('max_y',
+      title='specific method of data type for creating Y-Axis',
+      description=('Method for building Y-Axis objects'),
+      default='',
+      required=0)
+
+  constraint_method = fields.StringField('constraint_method',
+      title='name of constraint method between blocks',
+      description=('Constraint method between blocks objects'),
+      default='SET_DHTML',
+      required=1)
+
+  color_script = fields.StringField('color_script',
+      title='name of script which allow to colorize blocks',
+      description=('script for block colors object'),
+      default='',
+      required=0)
+
+  info_center = fields.StringField('info_center',
+      title='specific method of data called for inserting info in\
+      block center',
+      description=('Method for displaying info in the center of a\
+      block object'),
+      default='',
+      required=0) 
+
+  info_topright = fields.StringField('info_topright',
+      title='specific method of data called for inserting info in\
+      block topright',
+      description=('Method for displaying info in the topright of a block\
+      object'),
+      default='',
+      required=0)
+
+  info_topleft = fields.StringField('info_topleft',
+      title='specific method of data called for inserting info in\
+      block topleft',
+      description=('Method for displaying info in the topleft corner\
+      of a block object'),
+      default='',
+      required=0)
+
+  info_backleft = fields.StringField('info_backleft',
+      title='specific method of data called for inserting info in\
+      block backleft',
+      description=('Method for displaying info in the backleft of a\
+      block object'),
+      default='',
+      required=0)
+
+  info_backright = fields.StringField('info_backright',
+      title='specific method of data called for inserting info in\
+      block backright',
+      description=('Method for displaying info in the backright of a\
+      block object'),
+      default='',
+      required=0)
+
+  security_index = fields.IntegerField('security_index',
+      title='variable depending on the type of web browser :',
+      description=("This variable is used because the rounds of each\
+      web browser seem to work differently"),
+      default=2,
+      required=0)
+
+
+
+  def render_css(self,field, key, value, REQUEST):
+    """
+    first method called for rendering by PageTemplate form_view
+    create the whole object based structure, and then call a special
+    external PageTemplate (or DTML depending) to render the CSS code
+    relative to the structure that need to be rendered
+    """
+    
+    #pdb.set_trace()
+
+
+    # build structure
+    here = REQUEST['here']
+    structure = self.render_structure(field=field, key=key, value=value, REQUEST=REQUEST, here=here)
+
+    # getting CSS script generator
+    planning_css_method = getattr(REQUEST['here'],'planning_css')
+
+    # recover CSS data buy calling DTML document
+    #pdb.set_trace()
+    CSS_data = planning_css_method(structure=structure)
+
+    # saving structure inside the request to be able to recover it afterwards when needing
+    # to render the HTML code
+    REQUEST.set('structure',structure)
+
+    # return CSS data
+    return CSS_data
+
+  def render(self,field,key,value,REQUEST):
+    """
+    method called to render the HTML code relative to the planning.
+    for that recover the structure previouly saved in the REQUEST, and then
+    call a special Page Template aimed to render
+    """
+
+    # need to test if render is HTML (to be implemented in a page template)
+    # or list (to generated a PDF output or anything else).
+
+    # recover structure
+    structure = REQUEST.get('structure')
+
+    #pdb.set_trace()
+    if structure != None:
+      # getting HTML rendering Page Template
+      planning_html_method = getattr(REQUEST['here'],'planning_content')
+
+      # recovering HTML data by calling Page Template document
+      HTML_data = planning_html_method(struct=structure)
+
+      return HTML_data
+
+
+  def render_structure(self, field, key, value, REQUEST, here):
+    """ this method is the begining of the rendering procedure. it calls all
+        methods needed to generate BasicStructure with ERP5 objects, and then
+        creates the PlanningStructure before applying zoom.
+        No code is generated (for example HTML code) contrary to the previous
+        implementation of PlanningBox. The final rendering must be done through
+        a PageTemplate parsing the PlanningStructure object.
+        """
+
+    # DATA DEFINITION
+
+
+    # recovering usefull planning properties
+    form = field.aq_parent # getting form
+    list_method = field.get_value('list_method') # method used to list objects
+    report_root_list = field.get_value('report_root_list') # list of domains
+                                                # defining the possible root
+    portal_types = field.get_value('portal_types') # Portal Types of objects to list
+    # selection name used to store selection params
+    selection_name = field.get_value('selection_name')
+    # getting sorting keys and order (list)
+    sort = field.get_value('sort')
+    # contains the list of blocks that are not validated
+    # for them a special rendering is done (special colors for example)
+    list_error=REQUEST.get('list_block_error')
+    if list_error==None : list_error = []
+
+    # END DATA DEFINITION
+
+    # XXX testing : uncoment to put selection to null 
+    #here.portal_selections.setSelectionFor(selection_name, None)
+
+    selection = here.portal_selections.getSelectionFor(
+                      selection_name, REQUEST)
+
+    # params contained in the selection object is a dictionnary.
+    # must exist as an empty dictionnary if selection is empty.
+    try:
+      params = selection.getParams()
+    except (AttributeError,KeyError):
+      params = {}
+
+    #if selection.has_attribute('getParams'):
+    #  params = selection.getParams()
+
+
+    # CALL CLASS METHODS TO BUILD BASIC STRUCTURE
+    # creating BasicStructure instance (and initializing its internal values)
+    self.basic = BasicStructure(here=here,form=form, field=field, REQUEST=REQUEST, list_method=list_method, selection=selection, params = params, selection_name=selection_name, report_root_list=report_root_list, portal_types=portal_types, sort=sort, list_error=list_error)
+    # call build method to generate BasicStructure
+    self.basic.build()
+
+    # CALL CLASS METHODS TO BUILD PLANNING STRUCTURE
+    # creating PlanningStructure instance and initializing its internal values
+    self.planning = PlanningStructure()
+    # call build method to generate final Planning Structure
+    self.planning.build(basic_structure = self.basic,field=field, REQUEST=REQUEST)
+
+    # end of main process
+    # structure is completed, now just need to return structure
+    return self
+
+
+
+# instanciating class
+PlanningBoxWidgetInstance = PlanningBoxWidget()
+
+class BasicStructure:
+  """
+  First Structure recovered from ERP5 objects. Does not represent in any
+  way the final structure used for rendering the Planning (for that see
+  PlanningStructure class). for each returned object from ERP5's request,
+  create a BasicGroup and stores all object properties.
+  No zoom is applied on this structure
+  """
+
+  def __init__ (self, here='', form='', field='', REQUEST='', list_method='',
+    selection=None, params = '', selection_name='', report_root_list='',
+    portal_types='', sort=None, list_error=None):
+    """ init main internal parameters """
+    self.here = here
+    self.form = form
+    self.field = field
+    self.REQUEST = REQUEST
+    self.sort = sort
+    self.selection = selection
+    self.params = params
+    self.list_method = list_method
+    self.selection_name = selection_name # used in case no valid list_method 
+                                         # has been found
+    self.report_root_list = report_root_list
+    self.portal_types = portal_types
+    self.basic_group_list = None
+    self.report_groups= '' # needed to generate groups
+    self.list_error = list_error
+
+    self.secondary_axis_occurence = []
+    self.render_format = '' # 'list' in case output is a list containing the
+                            # full planning structure without any selection
+
+
+    self.main_axis_info = {}
+    self.secondary_axis_info = {}
+
+
+  def build(self):
+    """
+    build BasicStructure from given parameters, and for that do the
+    specified processes :
+    1 - define variables
+    2 - building query
+    3 - generate report_tree, a special structure containing all the
+        objects with their values
+    4 - create report_sections
+    """
+
+    default_params ={}
+    current_section = None
+    #params = self.selection.getParams()
+
+
+    #recovering selection if necessary
+    if self.selection is None:
+      self.selection = Selection(params=default_params, default_sort_on=self.sort)
+    else:
+      # immediately updating the default sort value
+      self.selection.edit(default_sort_on=self.sort)
+      self.selection.edit(sort_on=self.sort)
+
+    self.here.portal_selections.setSelectionFor(self.selection_name,
+                                        self.selection,REQUEST=self.REQUEST)
+
+    # building list of portal_types
+    self.filtered_portal_types = map(lambda x: x[0], self.portal_types)
+    if len(self.filtered_portal_types) == 0:
+      self.filtered_portal_types = None
+
+    report_depth = self.REQUEST.get('report_depth',None)
+    # In report tree mode, need to remember if the items have to be displayed
+    is_report_opened = self.REQUEST.get('is_report_opened',\
+                                    self.selection.isReportOpened())
+    portal_categories = getattr(self.form,'portal_categories',None)
+    portal_domains = getattr(self.form,'portal_domains',None)
+
+    ##################################################
+    ############### BUILDING QUERY ###################
+    ##################################################
+
+    kw = self.params
+
+    # remove selection_expression if present
+    # This is necessary for now, because the actual selection expression in
+    # search catalog does not take the requested columns into account. If
+    # select_expression is passed, this can raise an exception, because stat
+    # method sets select_expression, and this might cause duplicated column
+    # names.
+    if 'select_expression' in kw:
+      del kw['select_expression']
+
+    
+
+    if hasattr(self.list_method, 'method_name'):
+      if self.list_method.method_name == 'ObjectValues':
+        # list_method is available
+        self.list_method = self.here.objectValues
+        kw = copy(params)
+      else:
+        # building a complex query so we should not pass too many variables
+        kw={}
+        if self.REQUEST.form.has_key('portal_type'):
+          kw['portal_type'] = self.REQUEST.form['portal_type']
+        elif self.REQUEST.has_key('portal_type'):
+          kw['portal_type'] = self.REQUEST['portal_type']
+        elif self.filtered_portal_types is not None:
+          kw['portal_type'] = self.filtered_portal_types
+        elif kw.has_key('portal_type'):
+          if kw['portal_type'] == '':
+            del kw['portal_type']
+
+        # remove useless matter
+        for cname in self.params.keys():
+          if self.params[cname] != '' and self.params[cname] != None:
+            kw[cname] = self.params[cname]
+
+        # try to get the method through acquisition
+        try:
+          self.list_method = getattr(self.here, self.list_method.method_name)
+        except (AttributeError, KeyError):
+          pass
+    elif self.list_method in (None,''):
+      # use current selection
+      self.list_method = None
+
+
+
+    ##################################################
+    ############ BUILDING REPORT_TREE ################
+    ##################################################
+
+    # assuming result is report tree, building it
+    # When building the body, need to go through all report lines
+    # each report line is a tuple of the form :
+    #(selection_id, is_summary, depth, object_list, object_list_size, is_open)
+    default_selection_report_path = self.report_root_list[0][0].split('/')[0]
+    if (default_selection_report_path in portal_categories.objectIds()) or \
+      (portal_domains is not None and default_selection_report_path in \
+       portal_domaind.objectIds()):
+      pass
+    else:
+      default_selection_root_path = self.report_root_list[0][0]
+    selection_report_path = self.selection.getReportPath(default = \
+     (default_selection_report_path,))
+
+    # testing report_depth value
+    if report_depth is not None:
+      selection_report_curent = ()
+    else:
+      selection_report_current = self.selection.getReportList()
+
+    # building report_tree_list
+    report_tree_list = makeTreeList(here=self.here, form=self.form, root_dict=None,
+     report_path=selection_report_path, base_category=None, depth=0,
+     unfolded_list=selection_report_current, selection_name=self.selection_name,
+     report_depth=report_depth,is_report_opened=is_report_opened,
+     sort_on=self.selection.sort_on,form_id=self.form.id)
+
+    # update report list if report_depth was specified
+    if report_depth is not None:
+      report_list = map(lambda s:s[0].getRelativeUrl(), report_tree_list)
+      self.selection.edit(report_list=report_list)
+
+
+
+    ##################################################
+    ########### BUILDING REPORT_GROUPS ###############
+    ##################################################
+    # report_groups is another structure based on report_tree but
+    # taking care of the object activities.
+    # build two structures :
+    # - report_groups : list of object_tree_lines composing the planning,
+    #   whatever the current group depth, just listing all of them
+    # - blocks_object : dict (object_tree_line.getObject()) of objects
+    # (assuming objects is a list of activities).
+
+    # first init parameters
+    self.report_groups = []
+    list_object = []
+    self.nbr_groups=0
+    object_list=[]
+    self.report_activity_dict = {}
+    indic_line=0
+    index_line=0
+    blocks_object={}
+    select_expression = ''
+
+
+    # now iterating through object_tree_list
+    for object_tree_line in report_tree_list:
+      # prepare query by defining selection report object
+      self.selection.edit(report = object_tree_line.getSelectDomainDict())
+
+      if object_tree_line.getIsPureSummary():
+        # push new select_expression
+        original_select_expression = kw.get('select_expression')
+        kw['select_expression'] = select_expression
+        self.selection.edit(params = kw)
+        # pop new select_expression
+        if original_select_expression is None:
+          del kw['select_expression']
         else:
-          selection.edit(default_sort_on = sort)
-          selection.edit(sort_on = sort)       
-        here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
-        # we check what is the current zoom in order to redefine height & width
-        if selection is None:
-          current_zoom = 1
+          kw['select_expression'] = original_select_expression
+
+      if (object_tree_line.getIsPureSummary() and \
+         selection_report_path[0]=='parent'):
+        # object_tree_line is Pure summary : does not have any activity
+        stat_result = {}
+        index=1
+        # adding current line to report_section where
+        # line is pure Summary
+        self.report_groups += [object_tree_line]
+        self.nbr_groups = self.nbr_groups + 1
+
+      else:
+        # object_tree_line is not pure summary : it has activities
+        # prepare query
+        self.selection.edit(params = kw)
+
+
+        if self.list_method not in (None,''):
+          # valid list_method has been found
+          self.selection.edit(exception_uid_list= \
+             object_tree_line.getExceptionUidList())
+          object_list = self.selection(method = self.list_method,
+             context=self.here, REQUEST=self.REQUEST)    
         else:
-          current_zoom = selection.getZoom()
-        current_zoom= float(current_zoom)
-        if current_zoom<=1:
-          height_global_div = round(height_global_div * current_zoom)
-          width_line = round(width_line * current_zoom)
-          space_line = round(space_line * current_zoom)  
-        #we build lines 
-        (line_list,nbr_line,report_sections,blocks_object)=createLineObject(meta_types=meta_types,
-                                                                selection=selection,
-                                                                selection_name=selection_name,field=field,
-                                                                REQUEST=REQUEST,list_method=list_method,
-                                                                here=here,report_root_list=report_root_list,
-                                                                y_axis_width=y_axis_width,
-                                                                width_line=width_line,space_line=space_line,
-                                                                height_global_div=height_global_div,
-                                                                height_header=height_header,
-                                                                height_axis_x=height_axis_x,form=form,
-                                                                current_top=current_top,
-                                                                portal_types=portal_types)
-        #we build x_occurence (used for the range in x-Axis 
-        
-        for tree_list_object in report_sections:
-          method_start = getattr(tree_list_object.getObject(),object_start_method_id,None)
-          method_stop= getattr(tree_list_object.getObject(),object_stop_method_id,None)
-          if method_start!=None:
+          # no list_method found
+          object_list = self.here.portal_selections.getSelectionValueList(
+            self.selection_name, context=self.here, REQUEST=self.REQUEST)
+
+
+        exception_uid_list = object_tree_line.getExceptionUidList()
+        if exception_uid_list is not None:
+          # Filter folders if parent tree :
+          # build new object_list for current line
+          # (list of relative elements)
+          new_object_list = []
+          for selected_object in object_list:
+            if selected_object.getUid() not in exception_uid_list:
+              new_object_list.append(selected_object)
+          object_list = new_object_list
+
+        object_list = []
+        add=1
+
+        # comparing report_groups'object with object_tree_line to check
+        # if the object is already present.
+        # this has to be done as there seems to be a 'bug' with make_tree_list
+        # returning two times the same object...
+        for object in self.report_groups:
+          if getattr(object_tree_line.getObject(),'uid') == \
+           getattr(object.getObject(),'uid'):
+            # object already present, flag <= 0 to prevent new add
+            add=0
+            break
+        if add == 1: # testing : object not present, can add it
+          # adding current line to report_section where
+          # line is report_tree
+          self.report_groups += [object_tree_line]
+          self.nbr_groups += 1
+          for p_object in object_list:
+            #iterating and adding each object to current_list
+            object_list.append(p_object)
+          self.report_activity_dict[object_tree_line.getObject().getTitle()] = object_list
+
+    self.selection.edit(report=None)
+
+
+    ##################################################
+    ########### GETTING MAIN AXIS BOUNDS #############
+    ##################################################
+    # before building group_object structure, need to recover axis begin & end
+    # for main to be able to generate a 'smart' structure taking into account
+    # only the area that need to be rendered. This prevents from useless processing
+
+    # calculating main axis bounds
+    self.getMainAxisInfo(self.main_axis_info)
+
+    # applying main axis selection
+    self.report_groups = self.report_groups[self.main_axis_info['bound_start']:
+                                            self.main_axis_info['bound_stop']]
+
+
+    ##################################################
+    ############ GETTING SEC AXIS BOUNDS #############
+    ##################################################
+    # now that our report_group structure has been cut need to get secondary axis
+    # bounds to add only the blocs needed afterwards
+
+    # getting secondary_axis_occurence to define begin and end secondary_axis
+    # bounds (getting absolute size)
+    self.secondary_axis_occurence = self.getSecondaryAxisOccurence()
+
+
+    # now getting start & stop bounds (getting relative size to the current
+    # rendering)
+    self.getSecondaryAxisInfo(self.secondary_axis_info)
+
+
+
+    ##################################################
+    ####### SAVING NEW PROPERTIES INTO REQUEST #######
+    ##################################################
+    if self.list_method is not None and self.render_format != 'list':
+     self.selection.edit(params = self.params)
+     self.here.portal_selections.setSelectionFor(self.selection_name, self.selection, REQUEST = self.REQUEST)
+
+
+    ##################################################
+    ######### BUILDING GROUP_OBJECT STRUCTURE ########
+    ##################################################
+    # building group_object structure using sub lines depth (in case of a
+    # report tree) by doing this.
+    # taking into account page bounds to generate only the structure needed
+
+    # instanciate BasicGroup class in BasicStructure so that the structure can
+    # be built
+    self.buildGroupStructure()
+
+
+  def getSecondaryAxisOccurence(self):
+    """
+    get secondary_axis occurences in order to define begin and end bounds
+    """
+    secondary_axis_occurence = []
+
+    # specific start & stop methods name for secondary axis
+    start_method_id = self.field.get_value('x_start_bloc')
+    stop_method_id= self.field.get_value('x_stop_bloc')
+    for object_tree_group in self.report_groups:
+      # recover method to et begin and end limits
+      method_start = getattr(object_tree_group.getObject(),start_method_id,None)
+      method_stop = getattr(object_tree_group.getObject(),stop_method_id,None)
+
+      try:
+        child_activity_list = self.report_activity_dict[object_tree_group.title]
+      except AttributeError:
+        child_activity_list = None
+
+      if method_start == None and child_activity_list != None:
+        # can not recover method from object_tree_group itself, trying
+        # over the activity list
+        for child_activity in child_activity_list:
+          method_start = getattr(child_activity,start_method_id,None)
+          method_stop = getattr(child_activity,stop_method_id,None)
+          if method_start != None:
             block_begin = method_start()
           else:
             block_begin = None
-          
-          if method_stop!=None:
-            block_stop= method_stop()
+
+          if method_stop != None:
+            block_stop = method_stop()
           else:
-            block_stop=None
-          
-          if block_begin!=None:# and block_stop!=None:  
-            x_occurence.append([block_begin,block_stop])
-          
-          if method_start == None and report_sections!={}:
-            for Ablock in blocks_object:
-              for object_content in blocks_object[Ablock]:
-                method_start = getattr(object_content,object_start_method_id,None)
-                method_stop= getattr(object_content,object_stop_method_id,None)
-              
-                if method_start!=None:
-                  block_begin = method_start()
-                else:
-                  block_begin = None
-            
-                if method_stop!=None:
-                  block_stop= method_stop()
-                else:
-                  block_stop=None
-              
-                if block_begin!=None:# and block_stop!=None:
-                  x_occurence.append([block_begin,block_stop])
-          
-        params=selection.getParams()
-        start=params.get('list_start')
-        
-        x_axe=script(x_occurence,x_range,float(current_zoom),start)
-        #x_axe[0] is a list of chronological dates that wich represents the 
-        #the range of the graphic.for example: 
-        #x_axis=[['2005/11/04','2005/12/04' etc.],['april','may','june' etc.]
-        #,start_delimiter,delta]
-        # we add mobile block to the line object 
-        
-        y_max= 1
-        current_max = 1
-        if scriptY != None:
-          for s in report_sections:
-            current_max=scriptY(s.getObject())
-            if current_max > y_max:
-              y_max = current_max
+            block_stop = None
+
+          secondary_axis_occurence.append([block_begin,block_stop])
+
+      else:
+        # method sucessfully recovered
+        # getting values
+        if method_start != None:
+          block_begin = method_start()
         else:
-          y_max = 1
+          block_begin = None
 
-        indic_line=0
-        while indic_line != len(report_sections):
-          for object_line in line_list:
-            if object_line.title == report_sections[indic_line].getObject().getTitle():
-              if line_list != [] and report_sections[indic_line].getDepth()==0:
-                object_line.insertActivityBlock(line_content=report_sections[indic_line].getObject(),
-                                      object_start_method_id=object_start_method_id,
-                                      object_stop_method_id=object_stop_method_id,
-                                      x_axe=x_axe,field=field,info_center=info_center,
-                                      info_topright=info_topright,info_topleft=info_topleft,
-                                      info_backleft=info_backleft,info_backright=info_backright,
-                                      list_error=list_error,old_delta=old_delta,REQUEST=REQUEST,
-                                      blocks_object=blocks_object,width_line=width_line,
-                                      script_height_block=block_height,y_max=y_max,color_script=color_script)                                                      
-                break
-          indic_line+=1
-        # At this point line_list contains our tree of datas. Then we
-        # add others labels, indicators etc. for the graphic.
-
-        #One constructs the vertical dotted line
-        if x_axe != []:        
-          marge_left=y_axis_width+width_line/float(len(x_axe[1]))
-          for i in line_list:
-            i.appendVerticalDottedLine(x_axe,width_line,marge_left)
-
-        #one constructs the maximum horizontal dotted line 10px under the top of the line
-        maximum_y=y_max
-        marge_top=10
-        if y_range!=0:
-          for i in line_list:  
-            i.appendHorizontalDottedLine(marge_top,maximum_y,height_global_div,height_header,
-                                         height_axis_x,nbr_line,y_range,y_max)
-        #end construct of horizontal dotted line 
-
-        # we construct y-axis
-        way=[]    
-        y=[] #we store here the objects for creating y-axis 
-        level=0
-        current_top=height_header
-        idx=0
-        
-        for i in line_list:
-          current_top=i.buildYtype(way=way,y=y,level=level,y_axis_width=y_axis_width,
-                                   height_global_div=height_global_div,height_header=height_header,
-                                   height_axis_x=height_axis_x,nbr_line=nbr_line,current_top=current_top,
-                                   space_line=space_line,y_max=y_max,y_range=y_range,
-                                   y_unity=y_unity,selection_name=selection_name,form=form)  
-          height=((height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))/\
-                 float(nbr_line))+space_line
-          current_top=y[-1].top+height
-          idx+=1
-        line_list=y+line_list #we need to add the y-axis block at the beginning of our structure
-                                  #otherwise the display is not correct;don't know why...
-
-        #build X axis 
-        line_list.append(Line('','axis_x',y_axis_width,width_line,height_axis_x,\
-                                current_top-space_line)) 
-        line_list[-1].createXAxis(x_axe,width_line,y_axis_width)
-        if x_axe!=[]:
-          x_subdivision=width_line/float(len(x_axe[1]))
+        if method_stop != None:
+          block_stop = method_stop()
         else:
-          x_subdivision = 0
-        REQUEST.set('line_list',line_list)  
-        REQUEST.set('report_root_list',report_root_list)
-        REQUEST.set('selection_name',selection_name)
-        REQUEST.set('x_axe',x_axe)
-        REQUEST.set('start',start)
-        REQUEST.set('delta1',old_delta[0])
-        REQUEST.set('delta2',old_delta[1])
-        REQUEST.set('constraint_method',constraint_method)
-        for i in line_list:
-          giant_string+=i.render_css(y_axis_width,security_index,x_subdivision)   
-        return giant_string
-    
-    def render(self,field, key, value, REQUEST):
-        """ this method return a string called 'giant_string' wich contains the planningbox html
-            of the web page""" 
-        here = REQUEST['here']
-        portal_url= here.portal_url()
-        title=field.get_value('title')
-        line_list = REQUEST.get('line_list')
-        x_axe = REQUEST.get('x_axe')  
-        width_line = field.get_value('width_line')
-        start_page=REQUEST.get('list_start')
-        height_global_div = field.get_value('height_global_div')
-        y_axis_width = field.get_value('y_axis_width')
-        report_root_list=REQUEST.get('report_root_list')
-        selection_name = field.get_value('selection_name')
-        start_page=REQUEST.get('start')
-        report_root_list = field.get_value('report_root_list')
-        constraint_method=REQUEST.get('constraint_method')
-        #the following javascript function allows to know where is exactly situated 
-        #the beginning of lines in absolute coordinates since we have problems due to 
-        #others tags (form,tr,table...) which are declared previously in the html.    
-        
-        giant_string="""<script type="text/javascript">
-        function setLineBegin()
-        {
-        document.forms["main_form"]["line_begin"].value = document.getElementById("fra0").offsetLeft;
-        }
-        window.onmousemove = setLineBegin;
-        </script>"""
-        
-        # we record current delta in delta1, and we record old_delta in delta2
-        odelta=[REQUEST.get('delta1'),REQUEST.get('delta2')]
-        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-        giant_string+='<input type=\"hidden\" name=\"list_selection_name\" value='+selection_name+' />\n'
-        
-        #header of the graphic###
-        giant_string+='<div id=\"header\" style=\"position:absolute;width:'+str(width_line+y_axis_width)+\
-                      'px;height:'+str(height_global_div)+'px;background:#d5e6de;margin-left:0px;\
-                       border-style:solid;border-color:#000000;border-width:1px;margin-top:1px\">\
-                       <table><tr><td><h3><u>'+title+'</h3></u></td><td>'
+          block_stop = None
 
-        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-        if selection is None:
-          selection_report_path = report_root_list[0]
-        else:  
-          selection_report_path = selection.getReportPath()
-        
-        report_tree_options = ''
-        for c in report_root_list:
-          if c[0] == selection_report_path:
-            report_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], c[1])
-          else:
-            report_tree_options += """<option value="%s">%s</option>\n""" % (c[0], c[1])
-        
-        report_popup = """<select name="report_root_url"
-                       onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
-                       %s</select></td>\n""" % (here.getUrl(),report_tree_options)
-        giant_string += report_popup
-        
-        #now we declare zoom widget 
-        if selection != None:
-          current_zoom=selection.getZoom()
-        else:
-          current_zoom = 1
-        zoom=(0.25,0.5,0.75,1,2,4,8,10)
-        zoom_select= """<td>
-              <select name="zoom" onChange="submitAction(this.form,'"""
-        zoom_select+=here.getUrl()+ '/portal_selections/setZoom\')">'
-        for z in zoom:
-          if z == float(current_zoom):
-            zoom_select+='<option selected value=\"'+str(z)+'\">x'+str(z)+'</option>\n'
-          else:
-            zoom_select+='<option value=\"'+str(z)+'\">x'+str(z)+'</option>\n'
-        giant_string += zoom_select
-        
-        
-        #now the page number widget 
-        pages='</select></td><td><select name="list_start" title=Change  \
-        onChange="submitAction(this.form,\''+here.getUrl()+'/portal_selections/setPage\')">'
-        selected=''
-        date_planning=''
-        if x_axe!=[]:
-          x_planning=x_axe[2]
-          delta=x_axe[3]
-          if isinstance(x_planning, DateTime):
-            date_planning = x_planning
-            for p in range(1,float(current_zoom)+1):
-              if x_planning == start_page :
-                selected= 'selected '
-              else:
-                selected= '' 
-              pages+='<option '+selected+'value=\"'+str(date_planning.Date())+'\">'+str(p)+' of '\
-                     +str(current_zoom)+'</option>\n'
-              date_planning+=delta
-              x_planning=date_planning.Date()
-          else:
-            for p in range(1,float(current_zoom)+1):
-              axe_index = 0
-              while x_planning != x_axe[0][axe_index]:
-                axe_index+=1 
-              
-              if x_planning == start_page :
-                selected= 'selected '
-              else:
-                selected= '' 
-              pages+='<option '+selected+'value=\"'+str(x_axe[0][axe_index])+'\">'+str(p)+' of '\
-                     +str(current_zoom)+'</option>\n'
-              axe_index = axe_index + delta       
-              current_item = x_axe[0][axe_index]
-        else:
-          x_planning=[]
-          delta=0
-  
-        pages+='</select></td></tr></table></div>\n'        
-        giant_string += pages 
-        #just because setPage wants it
-        giant_string += '<input type=\"hidden\" name=\"listbox_uid:list\">\n'
-        #we change old_delta2 to  old_delta1
-        giant_string += '<input type=\"hidden\" name=\"old_delta1\" value=\"'+str(odelta[0])+'\">\n'
-        giant_string += '<input type=\"hidden\" name=\"old_delta2\" value=\"'+str(odelta[0])+'\">\n' 
-        giant_string+= '<input type=\"hidden\" name=\"block_moved\">\n'
-        giant_string+= '<input type=\"hidden\" name=\"line_begin\">\n'
+        secondary_axis_occurence.append([block_begin,block_stop])
 
-        for i in range(0,len(line_list)):
-          giant_string+=line_list[i].render(portal_url,y_axis_width)    
-
-        #here is the declaration of four divs which are used for redimensionning
-        giant_string+='<div id=\"top\" style=\"position:absolute;width:5px;height:5px;\
-                        background:#a45d10\"></div>\n'
-        giant_string+='<div id=\"right\" style=\"position:absolute;width:5px;height:5px;\
-                        background:#a45d10"></div>\n'
-        giant_string+='<div id=\"bottom\" style=\"position:absolute;width:5px;height:5px\
-                       ;background:#a45d10\"></div>\n'
-        giant_string+='<div id=\"left\" style=\"position:absolute;width:5px;height:5px;\
-                       background:#a45d10\"></div>\n'
-        giant_string+='<script type=\"text/javascript\">\n'+ constraint_method + '('
-
-        for i in range(0,len(line_list)):
-          graphic_call=''
-          for j in line_list[i].content:
-            if j.types=='activity' or j.types=='activity_error':
-              giant_string+='\"'+j.name+'\",'
-            elif j.types=='info':
-              giant_string+='\"'+j.name+'\"+NO_DRAG,'
-          current_object=line_list[i]
-          if current_object.son!=[]:  
-           giant_string+=createGraphicCall(current_object,graphic_call)     
-        giant_string+='\"top\"+CURSOR_N_RESIZE+VERTICAL, \"right\"+CURSOR_E_RESIZE+HORIZONTAL,\
-                       \"bottom\"+CURSOR_S_RESIZE+VERTICAL,\
-                       \"left\"+CURSOR_W_RESIZE+HORIZONTAL);\n'
-        giant_string+='</script> </div> \n '
-        return giant_string  
-
-# class line 
-class Line:
-  """objects which represent a line directly in a planningbox"""
-  def __init__(self,title='',name='',begin=0,width=0,height=0,top=0,color='',son=None,y_type='none',
-               paternity=0,url=''):  
-    """used for building a Line object"""
-    if son is None:
-     son = []
-    self.title=title
-    self.name=name
-    self.begin=begin
-    self.width=width
-    self.height=height
-    self.top=top
-    self.content=[]
-    self.color=color
-    self.son=son
-    self.y_type=y_type
-    self.paternity=paternity
-    self.url=url
-
-  def render(self,portal_url,y_axis_width):
-    """ creates "pure" html code of the line, its Block, its son """
-    html_render='<div id=\"'+self.name+'\"></div>\n'
-    for block in self.content:
-      if block.types=='activity' or block.types=='activity_error':
-        #checks if the block starts before the beginning of the line               
-        if ((self.begin+block.begin*self.width) < self.begin): 
-          html_render+='<div id=\"'+block.name+'\" ondblclick=\"showGrips()\" onclick=\"if (dd.elements.'\
-                       +block.name+'.moved==0){dd.elements.'+block.name+'.moveBy('+\
-                       str(round(block.begin*self.width))+',0);dd.elements.'+block.name+'.resizeTo('+\
-                       str(round(block.width*self.width))+','+ str(block.height*(self.height-10))+\
-                       ');dd.elements.'+block.name+'.moved=1;} \">'
-        # "done" is used because otherwise everytime we move the block it will execute moveby()
-        #checks if the block is too large for the end of the line if it is the case, one cuts the block
-        elif ((block.width*self.width)+(self.begin+block.begin*self.width)>self.width+y_axis_width): 
-          html_render+='<div id=\"'+block.name+'\" ondblclick=\"showGrips()\" onclick=\"dd.elements.'\
-                       +block.name+'.resizeTo('+str(round(block.width*self.width))+','\
-                       +str(block.height*(self.height-10))+') \">'
-        else:
-          html_render+='<div id=\"'+block.name+'\" ondblclick=\"showGrips()\">'      
-        # we add info Block inside the div thanks to the render method of the Block class
-        html_render+=block.render(self.width,self.height,portal_url,self.begin,y_axis_width,self)      
-        html_render+='</div>\n'
-      elif block.types!='info':
-        html_render+='<div id=\"'+block.name+'\">'+str(block.text)+'</div>\n'      
-    if self.son!=[]:
-      for i in self.son:
-        html_render+=i.render(portal_url,y_axis_width)      
-    return html_render    
-    
-    
-  def render_css(self,y_axis_width,security_index,x_subdivision):
-    """creates style sheet of each div which represents a Line instance """
-    css_render='#'+self.name+'{position:absolute;\nborder-style:solid;\nborder-color:#53676e;\
-                               \nborder-width:1px;\n'
-    data={}
-    if self.color!='':
-      css_render+='background:'+str(self.color)+';\n'
-    css_render+='height:'+str(self.height)+'px;\n'
-    css_render+='margin-left:'+str(self.begin)+'px;\n'
-    css_render+='margin-top:'+str(self.top)+'px;\n'
-    if self.y_type=='father1':
-      css_render+='border-bottom-width:0px;'
-    elif self.y_type=='son1':
-      css_render+='border-top-width:0px;\nborder-bottom-width:0px;\n'    
-    elif self.y_type=='son2':
-      css_render+='border-top-width:0px;'
-    css_render+='width:'+str(self.width)+'px;\n}'
-    for block in self.content: #we generate block's css
-      if block.types=='activity' or block.types=='activity_error':
-        if block.types=='activity':
-          css_render+='#'+block.name+'{position:absolute;\nbackground:'+block.color+';\nborder-style:solid;\
-                      \nborder-color:#53676e;\nborder-width:1px;\n'
-        if block.types=='activity_error':
-          css_render+='#'+block.name+'{position:absolute;\nbackground:'+block.color+';\nborder-style:solid;\
-                      \nborder-color:#ff0000;\nborder-width:1px;\n'
-        css_render+='height:'+str((block.height*(self.height-10))-security_index)+'px;\n' 
-        #-10 because wee don't want a block sticked to border-top of the line
-        if ((self.begin+block.begin*self.width) < self.begin) and block.types!='activity_error': 
-        #checks if the block starts before the beginning of the line
-          css_render+='margin-left:'+str(self.begin)+'px;\n' 
-          css_render+='width:'+str((block.width*self.width+block.begin*self.width))+'px;\n' 
-        #checks if the block is too large for the end of the line. if it is the case, one cuts the block  
-        elif ((block.width*self.width)+(self.begin+block.begin*self.width)>self.width+y_axis_width) and \
-               block.types!='activity_error': 
-          css_render+='width:'+str(round(block.width*self.width)-((self.begin+block.begin*self.width+
-          block.width*self.width)-(self.width+y_axis_width)))+'px;\n'
-          css_render+='margin-left:'+str(round(self.begin+block.begin*self.width))+'px;\n' 
-        else:  
-          css_render+='width:'+str(round(block.width*self.width))+'px;\n'
-          css_render+='margin-left:'+str(round(self.begin+block.begin*self.width))+'px;\n' 
-        css_render+='margin-top:'+str(self.top+10+block.marge_top*(self.height-10))+'px;}\n'
-        # we add info Block inside the div  
-        css_render+=block.render_css(self.width,self.height,self,y_axis_width)       
-        
-      elif block.types=='text_x' : 
-        data={'border-style:':'solid;','border-color:':'#53676e;','border-width:':'1px;',
-              'margin-left:':str(block.begin)+'px;',
-              'margin-top:':str(round(1+self.top+self.height/2))+'px;'}
-        
-      elif block.types=='text_y':
-        data={'border-style:':'solid;','border-color:':'#53676e;','border-width:':'0px;',  
-              'margin-left:':str(self.width/4)+'px;',
-              'margin-top:':str(round(1+self.top+self.height/2))+'px;'}
+    return secondary_axis_occurence
 
 
-      elif block.types=='vertical_dotted':
-        data={'border-style:':'dotted;','border-color':'#53676e;',
-              'margin-left:':str(block.begin)+'px;','margin-top:':str(1+round(self.top))+'px;',
-              'height:':str(self.height)+'px;',
-              'border-left-width:':'1px;','border-right-width:':'0px;','border-top-width:':'0px;',    
-              'border-bottom-width:':'0px;'}
-
-      elif block.types=='horizontal_dotted': 
-        data={'border-style:':'dotted;','border-color:':'#53676e;',
-               'margin-left:':str(self.begin)+'px;','margin-top:':str(self.top+block.marge_top)+'px;',
-               'border-left-width:':'0px;','border-right-width:':'0px;',
-               'border-top-width:':'1px;','border-bottom-width:':'0px;',
-               'width:':str(self.width)+'px;'}
-
-      elif block.types=='y_coord':
-        data={'border-style:':'solid;','border-color:':'#53676e;','border-width:':'0px;',
-               'margin-left:':str(self.width-(len(block.text)*5))+'px;',
-               'margin-top:':str(self.top+block.marge_top)+'px;',
-               'height:':'','border-left-width:':'1px;','border-right-width:':'0px;',
-               'border-top-width:':'0px;','border-bottom-width':'0px;','font-size:':'9px;'}
-            
-      elif block.types=='vertical':
-        data={'border-style:':'solid;','border-color:':'#53676e;',
-              'margin-left:':str((self.width/4)+block.begin)+'px;',
-              'margin-top:':str(round(self.top)-self.height/2+13)+'px;',
-              'height:':str(block.height)+'px;','border-left-width:':'1px;',
-              'border-right-width:':'0px;','border-top-width:':'0px;', 
-              'border-bottom-width:':'0px;'}
-                       
-      elif block.types=='horizontal':
-        data={'border-style:':'solid;','border-color:':'#53676e;',
-              'margin-left:':str((self.width/4)+block.begin)+'px;',
-              'margin-top:':str(round(1+self.top+self.height/2))+'px;',
-              'height:':'1px;','border-left-width:':'0px;','border-right-width:':'0px;',
-              'border-top-width:':'1px;','border-bottom-width:':'0px;','width:':'16px;','height:':'1px;',
-             }      
-
-      if block.types!='activity':
-        if block.types!='activity_error':
-          if block.types!='info':
-            css_render+='#'+block.name+'{position:absolute;\n'
-            for key in data:
-              css_render+=key + data[key] + '\n'
-            css_render+='}\n'  
-
-    if self.son!=[]:
-      for i in self.son:
-        css_render+=i.render_css(y_axis_width,security_index,x_subdivision);
-    return css_render      
-
-  def addBlock(self,name,block,error=0):
-    """just create and add a block inside 'content' attribut of a Line instance""" 
-    type_block=''
-    if error == 0:
-      type_block='activity'
-    else:
-      type_block='activity_error'
-    self.content.append(Block(type_block,name=name,begin=block[0],width=block[1],height=block[2],text='',
-                              content=block[3],marge_top=block[4],url=block[5],color=block[6]))
-    
-    
-  def addBlockInfo(self,name):
-    """add a block info inside an activity block"""
-    self.content.append(Block('info',name,0,0,0,''))
-    
-  def addBlockTextY(self,name,text):
-    """ add a text  block in y-axis"""
-    self.content.append(Block('text_y',name,0,0,0,text))  
-  
-  def addBlockCoordY(self,name,text,marge_top):
-    """ add a text block in y-axis (coordinates) """
-    self.content.append(Block('y_coord',name,0,0,0,text,{},marge_top))  
-    
-  def addBlockTextX(self,name,begin,text):
-    """ add a text block in x-axis"""
-    self.content.append(Block('text_x',name,begin,0,0,text))    
-    
-  def addBlockDottedVert(self,name,begin):
-    """ add a vertical dotted line"""
-    self.content.append(Block('vertical_dotted',name,begin,0,0,''))  
-    
-  def addBlockDottedHoriz(self,name,marge_top):
-    """append a dotted horizontal block"""
-    self.content.append(Block('horizontal_dotted',name,0,0,0,'',{},marge_top))   
-  
-  def addBlockVertical(self,name,marge_top,height,marge_left):
-    """append a vertical block(line)""" 
-    self.content.append(Block('vertical',name,marge_left,0,height,'',{},marge_top)) 
-     
-  def addBlockHorizontal(self,name,marge_top,height,marge_left):
-    """append a horizontal  block (line)""" 
-    self.content.append(Block('horizontal',name,marge_left,0,height,'',{},marge_top))    
-         
-  def appendVerticalDottedLine(self,x_axe,width_line,marge_left):
-    """append a vertical dotted  block"""
-    current_marge=marge_left
-    indic=0
-    for j in x_axe[1]:
-      nameblock='Block_vert_'+self.name+str(indic)
-      self.addBlockDottedVert(nameblock,current_marge)
-      current_marge+=width_line/float(len(x_axe[1]))   
-      indic+=1
-    if self.son!=[]:
-      for i in self.son:
-        i.appendVerticalDottedLine(x_axe,width_line,marge_left) 
-      
-  def buildYtype(self,way=[],y=[],level=0,y_axis_width=0,height_global_div=0,height_header=0,
-                 height_axis_x=0,nbr_line=0,current_top=0,space_line=0,y_max=0,y_range=0,
-                 y_unity=0,selection_name='',form=0): 
-    """ used for determining the type of each part of y axis taking into account father and children
-       'way' is a list whichs allows to determinate if the current block is a type 'son1' or 'son2'.
-        y parameter is a list which contains all the objects for creating y-axis.  
-
+  def getSecondaryAxisInfo(self, axis_dict):
     """
-    report_url=self.url
-    if level==0:
-      name='axis'+str(self.name)
-      if self.son!=[]:
-        y.append(Line('',name,1,y_axis_width,
-                ((height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))/float(nbr_line)),
-                current_top,'',[],'father1'))
-      else:
-        y.append(Line('',name,1,y_axis_width,((height_global_div-height_header-height_axis_x-\
-        ((nbr_line-1)*space_line))/float(nbr_line)),current_top,'',[],'father2'))
-        
-      if self.paternity==1:
-        if self.son!=[]:
-          y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+\
-          '<a href="portal_selections/foldReport?report_url='+report_url+'&form_id='+\
-          form.id+'&list_selection_name='+selection_name+'">-'+self.title+'</a>')
-        else:
-          y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+\
-          '<a href="portal_selections/unfoldReport?report_url='+\
-          report_url+'&form_id='+form.id+'&list_selection_name='+\
-          selection_name+'">+'+self.title+'</a>')
-      else:
-        y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+self.title)
-      
-      #one constructs the indicators
-      if y_range!=0:
-        y[-1].createIndicators(y_unity,y_range,y_max,height_global_div,height_header,height_axis_x,nbr_line)
-      
-      if self.son!=[]:
-        level+=1
-        for j in range(0,len(self.son)):
-          if j==(len(self.son)-1):
-            way.append(1)
-          else:
-            way.append(0)
-          current_top+=((height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))/
-                       float(nbr_line))  
-         
-          current_top=self.son[j].buildYtype(way=way,y=y,level=level,y_axis_width=y_axis_width,
-                                             height_global_div=height_global_div,
-                                             height_header=height_header,
-                                             height_axis_x= height_axis_x,nbr_line=nbr_line,
-                                             current_top=current_top,space_line=space_line,
-                                             y_max=y_max,y_range=y_range,
-                                             y_unity=y_unity,selection_name=selection_name,form=form)
-          del way[-1]
-  
-    else:
-      if self.son!=[]:
-        name=str(self.name)
-        for num in way:
-          name=name+str(num)
-        y.append(Line('',name,1,y_axis_width,((height_global_div-height_header-height_axis_x)/float(nbr_line))
-                      ,current_top,'',[],'son1'))
+    secondary_axis_ocurence holds couples of data (begin,end) related to
+    basicActivity blocks, and axis if the instance representing the sec axis.
+    it is now possible to recover begin and end value of the planning and then
+    apply selection informations to get start and stop.
+    """
 
-        if self.paternity==1:
-          if self.son!=[]:
-            y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+\
-                                      '<a href="portal_selections/foldReport?report_url='+report_url+\
-                                      '&form_id='+form.id+'&list_selection_name='+selection_name+'">-'+\
-                                      self.title+'</a>')
-          else:
-            y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+\
-                                      '<a href="portal_selections/unfoldReport?report_url='+report_url+\
-                                      '&form_id='+form.id+'&list_selection_name='+selection_name+'">+'\
-                                      +self.title+'</a>') 
-        else:
-          y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+self.title)
+    #pdb.set_trace()
 
-        # one constructs the stick
-        y[-1].addBlockVertical('stickVer'+name,current_top-
-                                    ((height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))\
-                                    /float(nbr_line)),
-                                    (height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))\
-                                    /float(nbr_line),3*level*5-18) 
-                                     #5 is the width of the standart font, maybe a future parameter
-        y[-1].addBlockHorizontal('stickHor'+name,current_top-
-                                    ((height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))\
-                                    /float(nbr_line)),
-                                    (height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))\
-                                    /float(nbr_line),3*level*5-18) 
-        #one constructs the indicators
-        if y_range!=0:
-          y[-1].createIndicators(y_unity,y_range,y_max,height_global_div,height_header,height_axis_x,nbr_line)
-        level+=1
-        for j in range(0,len(self.son)):
-          current_top+=((height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))/\
-                       float(nbr_line))
-          if j==(len(self.son)-1):
-            way.append(1)
-          else:
-            way.append(0)
-          current_top=self.son[j].buildYtype(way=way,y=y,level=level,y_axis_width=y_axis_width,
-                                             height_global_div=height_global_div,
-                                             height_header=height_header,height_axis_x=height_axis_x,
-                                             nbr_line=nbr_line,current_top=current_top,
-                                             space_line=space_line,y_max=y_max,y_range=y_range,
-                                             y_unity=y_unity,selection_name=selection_name,form=form)
-          del way[-1]
-      else:
-        name=str(self.name)
-        test='true'
-        for num in way:
-          name=name+str(num)
-          if num==0:
-            test='false'
-        if test=='true':
-          y.append(Line('',name,1,y_axis_width,((height_global_div-height_header-height_axis_x-\
-                       ((nbr_line-1)*space_line))/float(nbr_line)),current_top,'',[],'son2'))
-        else:
-          y.append(Line('',name,1,y_axis_width,((height_global_div-height_header-height_axis_x-\
-                       ((nbr_line-1)*space_line))/float(nbr_line)),current_top,'',[],'son1'))
-          
-        if self.paternity==1:
-          if self.son!=[]:
-            y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+
-            '<a href="portal_selections/foldReport?report_url='+report_url+
-            '&form_id='+form.id+'&list_selection_name='+selection_name+'">-'+self.title+'</a>')
-          else:
-            y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+
-            '<a href="portal_selections/unfoldReport?report_url='+report_url+
-            '&form_id='+form.id+'&list_selection_name='+selection_name+'">+'+self.title+'</a>')
-            
-        else:
-          y[-1].addBlockTextY('ytext'+name,str(3*'&nbsp '*level)+self.title)  
-  
-        # one constructs the sticks
-        y[-1].addBlockVertical('stickVer'+name,current_top-((height_global_div-height_header-\
-                               height_axis_x-((nbr_line-1)*space_line))/float(nbr_line)),
-                               (height_global_div-height_header-height_axis_x)/float(nbr_line),\
-                               3*level*5-18)  
-        y[-1].addBlockHorizontal('stickHor'+name,current_top-((height_global_div-height_header\
-                                 -height_axis_x-((nbr_line-1)*space_line))/float(nbr_line)),
-                                 (height_global_div-height_header-height_axis_x)/float(nbr_line),\
-                                 3*level*5-18) 
-        #one constructs the indicators   
-        if y_range!=0:
-          y[-1].createIndicators(y_unity,y_range,y_max,height_global_div,height_header,\
-                                 height_axis_x,nbr_line)
-    return current_top      
 
-  def createIndicators(self,y_unity,y_range,y_max,height_global_div,height_header,\
-                       height_axis_x,nbr_line):
-    """creates a blocks used for y-axis coordinates"""
+    axis_dict['zoom_start'] = int(self.params.get('zoom_start',0))
+    axis_dict['zoom_level'] = float(self.params.get('zoom_level',1))
+
+    # recovering min and max bounds to get absolute bounds
+    axis_dict['bound_begin'] = self.secondary_axis_occurence[0][0]
+    axis_dict['bound_end'] = axis_dict['bound_begin']
+    for occurence in self.secondary_axis_occurence:
+      if occurence[0] < axis_dict['bound_begin']:
+        axis_dict['bound_begin'] = occurence[0]
+      if occurence[1] > axis_dict['bound_end']:
+        axis_dict['bound_end'] = occurence[1]
+    import pdb; pdb.set_trace()
+    axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
+    # now start and stop have the extreme values of the second axis bound.
+    # this represents in fact the size of the Planning
+
+    # can now getting selection informations ( float range 0..1)
+    axis_dict['bound_start'] = 0
+    axis_dict['bound_stop'] = 1
+    if self.selection != None:
+      try:
+        axis_dict['bound_start'] = self.selection.getSecondaryAxisStart()
+        axis_dict['bound_stop'] = self.selection.getSecondaryAxisStop()
+      except AttributeError: #XXX
+        pass
+
+    # getting secondary axis page step
+    axis_zoom_step = axis_dict['bound_range'] / axis_dict['zoom_level']
+
+    # now setting bound_start
+    axis_dict['bound_start'] = axis_dict['zoom_start'] * axis_zoom_step + axis_dict['bound_begin']
+    # for bound_stop just add page step
+    axis_dict['bound_stop'] = axis_dict['bound_start'] + axis_zoom_step
+
+    # saving current zoom values
+    self.params['zoom_level'] = axis_dict['zoom_level']
+    self.params['zoom_start'] = axis_dict['zoom_start']
+
+
+  def getMainAxisInfo(self, axis_dict):
+    """
+    getting main axis properties (total pages, current page, groups per page)
+    and setting selection bounds (start & stop).
+    beware this justs calculate the position of the first group present on the
+    page (same for the last one), applying the selection is another thing in
+    case of report tree (if the first element is a sub group of a report for
+    example).
+    """
+
+    #pdb.set_trace()
+    # recovering number of groups displayed per page
+    axis_dict['bound_axis_groups'] = self.REQUEST.get('list_lines',None)
+    if axis_dict['bound_axis_groups'] == None:
+      # XXX default value is 10:
+      axis_dict['bound_axis_groups'] = self.params.get('list_lines',10)
+
     
-    maximum_y=y_max
-    marge_top=0
-    indic=0
-    while maximum_y>=0:
-      nameblock='Block_'+self.name+str(indic)
-      text=str('%.2f' %maximum_y)+y_unity    
-      self.addBlockCoordY(nameblock,text,marge_top) 
-      maximum_y=maximum_y-(y_max/float(y_range)) 
-      marge_top+=(((height_global_div-height_header-height_axis_x)/float(nbr_line))-10)/y_range 
-      indic+=1
-
-
-  def appendHorizontalDottedLine(self,marge_top,maximum_y,height_global_div,height_header,
-                                 height_axis_x,nbr_line,y_range,y_max): 
-    """creates a horizontal dotted line """
-    current_top=marge_top
-    max_y=maximum_y
-    indic=0
-    if y_range !=0:
-      while max_y>=0:
-        nameblock='Block_hor_'+self.name+str(indic)
-        self.addBlockDottedHoriz(nameblock,current_top) 
-        max_y=max_y-(y_max/float((y_range-1)))  #-1 because we don't want a dotted line on the X-axis
-        #10px under the top of the line . float is important here!
-        current_top+=(((height_global_div-height_header-height_axis_x)/float(nbr_line))-marge_top)/y_range
-        indic+=1
-      if self.son!=[]:
-        for i in self.son:
-          i.appendHorizontalDottedLine(marge_top,maximum_y,height_global_div,
-                                       height_header,height_axis_x,nbr_line,y_range,y_max)
-     
-  def appendActivityBlock(self,list_block,list_error,old_delta,REQUEST):
-    """create an activity block"""
-    indic=0
-    name_block=''
-    prev_deltaX=0
-    prev_deltaY=0
-    old_delta2=old_delta[1]
-    if old_delta2!='None' and old_delta2!=None:
-      if old_delta2!='':
-        if old_delta2!={}:
-          old_delta2=convertStringToDict(old_delta2)
+    # setting begin & end bounds
+    axis_dict['bound_begin'] = 0
+    axis_dict['bound_end'] = len(self.report_groups)
+    if self.render_format == 'list':
+      axis_dict['bound_start'] = 0
+      axis_dict['bound_stop'] = axis_dict['bound_end']
+      axis_dict['bound_page_total'] = 1
+      axis_dict['bound_page_current'] = 1
+      axis_dict['bound_page_groups'] = 1
     else:
-      old_delta2={}  
-    
-    for data_block in list_block:
-      name_block='ActivityBlock_'+self.name+'_'+str(indic)
-      if list_error != None: 
-        for blockerror in list_error: #we are about to build block with red border
-          if blockerror[0][0] == name_block:
-            if old_delta2.has_key(name_block):
-              prev_deltaX=float(old_delta2[name_block][0])
-              prev_deltaY=float(old_delta2[name_block][1])
-            deltaX =float(blockerror[0][3]) - float(blockerror[0][1])+prev_deltaX 
-            deltaY = float(blockerror[0][4]) - float(blockerror[0][2])+prev_deltaY
-            #data_block_error is [begin,width,top,info,height]
-            begin=(blockerror[1].begin*blockerror[2].width+deltaX)/blockerror[2].width
-            width=float(blockerror[0][5])/blockerror[2].width
-            top=((blockerror[1].marge_top)*(blockerror[2].height-10)+deltaY)/(blockerror[2].height-10)
-            height=float(blockerror[0][6])/(blockerror[2].height-10)
-            data_block_error= [begin,width,height,data_block[3],top,blockerror[1].url]
-            self.addBlock(name_block,data_block_error,1)  
-          else:
-            self.addBlock(name_block,data_block)
-      else:
-        self.addBlock(name_block,data_block)  
-      indic+=1
-    
-  def createXAxis(self,x_axe,width_line,y_axis_width):
-    """creates x-axis """
-    marge_left=y_axis_width
-    indic1=0
-    if x_axe!=[]:
-      for i in x_axe[1]:
-        nameblock='block_'+self.name+str(indic1)
-        self.addBlockTextX(nameblock,marge_left,i)
-        indic1+=1  
-        marge_left+=width_line/float(len(x_axe[1]))
-        
-  def addSon(self,son):
-    """add a child Line to a Line """
-    self.son.append(son)       
+      # recovering first group displayed on actual page
+      try:
+        # trying to recover from REQUEST
+        axis_dict['bound_start'] = self.REQUEST.get('list_start')
+        axis_dict['bound_start'] = int(axis_dict['bound_start'])
+      except (AttributeError, TypeError):
+        # recovering from params is case failed with REQUEST
+        axis_dict['bound_start'] = self.params.get('list_start',0)
+        if type(axis_dict['bound_start']) is type([]):
+          axis_dict['bound_start'] = axis_dict['bound_start'][0]
+        axis_dict['bound_start'] = int(axis_dict['bound_start'])
+      axis_dict['bound_start'] = max(axis_dict['bound_start'],0)
 
-  def createLineChild(self,report_section=None,field='',current_top=0,y_axis_width=0,
-                      width_line=0,space_line=0,height_global_div=0,height_header=0,
-                      height_axis_x=0,nbr_line=0,current_index=0,url=''): 
-    """ create the Line object which is the son of an other Line Object"""
-    if len(report_section[current_index].getObject().objectValues())!=0:
-      paternity=1
-    else:
-      paternity=0   
-    son=Line(title=str(report_section[current_index].getObject().getTitle()),
-              name=self.name+'s'+str(current_index) ,begin=y_axis_width,width=width_line,
-              height=(height_global_div-height_header-height_axis_x-((nbr_line-1)*space_line))\
-              /float(nbr_line),top=current_top,color='#ffffff',paternity=paternity,url=url) 
-    if (current_index+1)<=(len(report_section)-1): 
-     if report_section[current_index+1].getDepth() == 0:
-       current_top=current_top+((height_global_div-height_header-height_axis_x-
-                   ((nbr_line-1)*space_line))/float(nbr_line))+space_line       
-     else:
-       current_top=current_top+((height_global_div-height_header-height_axis_x-
-                   ((nbr_line-1)*space_line))/float(nbr_line))
-    self.addSon(son)                
-    return current_top 
+      if axis_dict['bound_start'] > axis_dict['bound_end']:
+        # new report_group is so small that previous if after the last element
+        axis_dict['bound_start'] = axis_dict['bound_end']
 
-  def insertActivityBlock(self,line_content=None,object_start_method_id=None,object_stop_method_id=None,
-                          x_axe=[],field='',info_center='',info_topright='',info_topleft='',
-                          info_backleft='',info_backright='',list_error='',old_delta='',REQUEST=None,
-                          blocks_object={},width_line=0,script_height_block=None,y_max = 1,color_script=None):
-    """allows to create the mobile block objects"""
-    #first we check if the block has information
-    center= getattr(line_content,info_center,None) 
-    topright = getattr(line_content,info_topright,None)
-    topleft = getattr(line_content,info_topleft,None)
-    backleft= getattr(line_content,info_backleft,None)
-    backright= getattr(line_content,info_backright,None)
-    info={}
-    if center!=None: info['center']=str(center())
-    if topright!=None: info['topright']=str(topright())
-    if topleft!=None: info['topleft']=str(topleft())
-    if backleft!=None: info['botleft']=str(backleft())
-    if backright!=None: info['backright']=str(backright()) 
-    marge=0
-    method_start = getattr(line_content,object_start_method_id,None)  
-    method_stop= getattr(line_content,object_stop_method_id,None)
-    wrong_left=0 
-    wrong_right=0
-    list_block=[]
+      # updating start position to fit page size.
+      axis_dict['bound_start'] -= (axis_dict['bound_start'] % axis_dict['bound_axis_groups'])
+
+      # setting last group displayed on page
+      axis_dict['bound_stop'] = min (axis_dict['bound_start'] + axis_dict['bound_axis_groups'], axis_dict['bound_end'])
+      # calculating total number of pages
+      axis_dict['bound_page_total'] = int(max(axis_dict['bound_end'] - 1,0) / axis_dict['bound_axis_groups']) + 1
+      # calculating current page number
+      axis_dict['bound_page_current'] = int(axis_dict['bound_start'] / axis_dict['bound_axis_groups']) + 1
+      # adjusting first group displayed on current page
+      axis_dict['bound_start'] = min(axis_dict['bound_start'], max(0, (axis_dict['bound_page_total']-1) * axis_dict['bound_axis_groups']))
+    
+      self.params['list_lines'] = axis_dict['bound_axis_groups']
+      self.params['list_start'] = axis_dict['bound_start']
+
+
+  def buildGroupStructure(self):
+      """
+      this procedure builds BasicGroup instances corresponding to the
+      report_group_objects returned from the ERP5 request.
+      """
+      position = 0
+
+      # iterating each element
+      for report_group_object in self.report_groups:
+
+        stat_result = {}
+        stat_context = report_group_object.getObject().asContext(**stat_result)
+        stat_context.domain_url = report_group_object.getObject().getRelativeUrl()
+        stat_context.absolute_url = lambda x: report_group_object.getObject().absolute_url()
+        url=getattr(stat_context,'domain_url','')
+        # updating position_informations
+        position +=1
+        # recovering usefull informations
+        title = report_group_object.getObject().getTitle()
+        name = report_group_object.getObject().getTitle()
+        depth = report_group_object.getDepth()
+        is_open = report_group_object.is_open
+        is_pure_summary = report_group_object.is_pure_summary
+
+        # creating new group_object with all the informations collected
+        child_group = BasicGroup( title=title, name=name, url=url, constraints=None, depth=depth, position=position, field =self.field, object=report_group_object, is_open=is_open, is_pure_summary=is_pure_summary)
+
+        # creating activities related to the new group
+        # first recovering activity list if exists
+        report_activity_list = []
+        if title in self.report_activity_dict.keys():
+          report_activity_list = self.report_activity_dict[child_group.title]
+        # linking activities to the bloc. the parameter is a list of elements
+        # to link to the child_group object.
+        child_group.setBasicActivities(report_activity_list,self.list_error,self.secondary_axis_info)
+
+        try:
+          self.basic_group_list.append(child_group)
+        except (AttributeError):
+          self.basic_group_list = []
+          self.basic_group_list.append(child_group)
+
+
+
+
+class BasicGroup:
+  """
+  A BasicGroup holds informations about an ERP5Object and is stored
+  exclusively in BasicStructure. for each activity that will need to be
+  represented in the PlanningBox, a BasicActivity is created and added to
+  the current structure (for example BasicGroup represents an employee,
+  and each BasicActivity represents a task the employee has).
+  *Only one BasicGroup present while in Calendar mode.
+  *BasicGroup instance itself can hold other BasicGroups in case of
+  ReportTree mode to handle child groups.
+  """
+
+  def __init__ (self, title='', name='', url='', constraints='', depth=0, position=0, field = None, object = None, is_open=0, is_pure_summary=1):
+    self.title = title
+    self.name = name
+    self.url = url
+    self.basic_group_list = None # used with ReportTree
+    self.basic_activity_list = None # bloc activities
+    self.constraints = constraints# global contraints applying to all group
+    self.depth = depth # depth of the actual group (report_tree mode)
+    self.position = position # position of current group in the selection
+    self.field = field # field object itself. used for several purposes
+    self.object = object # ERP5 object returned & related to the group
+    self.is_open = is_open # define is report is opened  or not
+    self.is_pure_summary = is_pure_summary # define id report is single or has sons
+    
+    # specific start and stop bound values specifiec to the current group and used
+    # in case of calendar mode
+    self.start = None
+    self.stop = None
+
+
+  def setBasicActivities(self,activity_list, list_error,secondary_axis_info):
+    """
+    link a list of activities to the current object.
+    + recover group properties. Used in case activity is built from Group itself
+    + create a BasicActivity for each activity referenced in the list if 
+      necessary
+    + add the activity to the current group.
+    + update secondary_axis_occurence
+    """
+
+    # specific color scriptactivity
+    color_script = getattr(self, self.field.get_value('color_script'),None)
+
+    # specific block text_information methods
+    info_center = self.field.get_value('info_center')
+    info_topleft = self.field.get_value('info_topleft')
+    info_topright = self.field.get_value('info_topright')
+    info_backleft = self.field.get_value('info_backleft')
+    info_backright = self.field.get_value('info_backright')
+
+    # specific begin & stop methods for secondary axis
+    object_begin_method_id = self.field.get_value('x_start_bloc')
+    object_end_method_id= self.field.get_value('x_stop_bloc')
+
+    info = {}
+
+
+    # recover method to et begin and end limits
+    method_begin = getattr(self.object.getObject(),object_begin_method_id,None)
+    method_end = getattr(self.object.getObject(),object_end_method_id,None)
+
+    # getting info method from activity itself if exists
+    info_center_method = getattr(self.object.getObject(),info_center,None)
+    info_topright_method = getattr(self.object.getObject(),info_topright,None)
+    info_topleft_method = getattr(self.object.getObject(),info_topleft,None)
+    info_backleft_method = getattr(self.object.getObject(),info_backleft,None)
+    info_backright_method = getattr(self.object.getObject(),info_backright,None)
+
+    # if method recovered is not null, then updating 
+    if info_center_method!=None: info['info_center']=str(info_center_method())
+    if info_topright_method!=None: info['info_topright']=str(info_topright_method())
+    if info_topleft_method!=None: info['info_topleft']=str(info_topleft_method())
+    if info_backleft_method!=None: info['info_backleft'] =str(info_backleft_method())
+    if info_backright_method!=None: info['info_backright']=str(info_backright_method())
+
+
+    # calling color script if exists to set up activity_color
     current_color=''
-    if method_start==None and blocks_object!={}:
-      for Ablock in blocks_object:
-        #object_content is the current object used for building a block.
-        #For instance if the context is a project, then object_content is an orderLine.
-        for object_content in blocks_object[Ablock]:
-          if self.title == Ablock.getObject().getTitle(): 
-            method_start = getattr(object_content,object_start_method_id,None)  
-            method_stop= getattr(object_content,object_stop_method_id,None)     
-    
-            if method_start != None:
-              block_begin = method_start()
-            else:
-              block_begin = None
-      
-            if method_stop!=None:
-              block_stop= method_stop()
-            else:
-              block_stop=None
-            if isinstance(block_begin,DateTime):    
-                if round(block_begin-DateTime(x_axe[0][0]))>0:
-                  block_left=float(round(block_begin-DateTime(x_axe[0][0])))/round(
-                             (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
-                elif round(block_begin-DateTime(x_axe[0][0]))==0:
-                  block_left=0
-                else:
-                  block_left=float(round(block_begin-DateTime(x_axe[0][0])))/round(
-                         (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
+    if color_script !=None:
+      current_color = color_script(self)
 
-                if block_stop-DateTime(x_axe[0][0])<=0:
-                  wrong_left = 1  #means that the block is outside of x-axis range
-        
-                if block_begin-DateTime(x_axe[0][-1])>=0:            
-                  wrong_right = 1 #the same
-      
-                block_right=float(round(block_stop-DateTime(x_axe[0][0])))/round(
-                              (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
-                
-                center= getattr(object_content,info_center,None) 
-                topright = getattr(object_content,info_topright,None)
-                topleft = getattr(object_content,info_topleft,None)
-                backleft= getattr(object_content,info_backleft,None)
-                backright= getattr(object_content,info_backright,None)
-                info={}
-                if center!=None: info['center']=str(center())
-                if topright!=None: info['topright']=str(topright())
-                if topleft!=None: info['topleft']=str(topleft())
-                if backleft!=None: info['botleft']=str(backleft())
-                if backright!=None: ignfo['botright']=str(backright())
-                url = getattr(object_content,'domain_url','')
-                url = object_content.getUrl()
-                
-                #if there is a script wich allows to know the height of the current block,
-                #then we use it, otherwise block's height is 0,75
-                if script_height_block == None or y_max==1:
-                  height = 0.75
-                else:
-                  height = float(script_height_block(object_content))/y_max
-                
-                if color_script != None:
-                  current_color = color_script(object_content)
-                
-                if wrong_left!=1 and wrong_right!=1: # if outside we do not display
-                  list_block.append([block_left,block_right-block_left,height,info,1-height,url,current_color])
-            else:
-              if block_begin !=None:
-                for i in x_axe[0]:
-                  if block_begin==i:
-                    center= getattr(object_content,info_center,None) 
-                    topright = getattr(object_content,info_topright,None)
-                    topleft = getattr(object_content,info_topleft,None)
-                    backleft= getattr(object_content,info_backleft,None)
-                    backright= getattr(object_content,info_backright,None)
-                    info={}
-                    if center!=None: info['center']=str(center())
-                    if topright!=None: info['topright']=str(topright())
-                    if topleft!=None: info['topleft']=str(topleft())
-                    if backleft!=None: info['botleft']=str(backleft())
-                    if backright!=None: ignfo['botright']=str(backright())
-                    url = getattr(object_content,'domain_url','')
-                    if script_height_block == None or y_max==1:
-                      height = 0.75
-                    else:
-                      height = float(script_height_block(object_content))/y_max
-                    if color_script != None:
-                      current_color = color_script(object_content) 
-                    list_block.append([marge,(block_stop-block_begin)/(float(len(x_axe[0]))),height,info,
-                                      1-height,url,current_color])   
-               # 0.75(height) need to be defined        
-                  marge+=1/float(len(x_axe[0])) 
+    if method_begin == None and activity_list not in ([],None):
+
+      # modifying iterating mode from original PlanningBox.py script to prevent
+      # useless and repetitive tests.
+      # this process should be somehow quicker and smarter
+      indic=0
+
+      # iterating each activity linked to the current group
+      for activity_content in activity_list:
+
+        # group does not have valid begin_method, trying to find them on
+        # the activity itself.
+        method_begin = getattr(activity_content,object_begin_method_id,None)
+        method_end = getattr(activity_content,object_end_method_id,None)
+
+
+        # interpreting results and getting begin and end values from 
+        # previously recovered method
+        block_begin = ''
+        block_end = ''
+        if method_begin !=None:
+          block_begin = method_begin()
+        else:
+          block_begin = None
+
+        if method_end != None:
+          block_end = method_end()
+        else:
+          block_end = None
+
+        # testing if activity is visible according to the current zoom selection over
+        # the secondary_axis
+        if  block_begin > secondary_axis_info['bound_stop'] or block_end < secondary_axis_info['bound_start']:
+          # activity will not be displayed, stopping process
+          pass
+        else:
+          # activity is somehow displayed. checking if need to cut its bounds
+          if block_begin < secondary_axis_info['bound_start']:
+            # need to cut begin bound
+            block_start = secondary_axis_info['bound_start']
+          else: block_start = block_begin
+
+          if block_end > secondary_axis_info['bound_stop']:
+            block_stop = secondary_axis_info['bound_stop']
+          else:
+            block_stop = block_end
+
+          # defining name
+          name = "Activity_%s_%s" % (self.object.getObject().getTitle(),str(indic))
+
+          # getting info text from activity itself if exists
+          info_center_method = getattr(activity_content,info_center,None)
+          info_topright_method = getattr(activity_content,info_topright,None)
+          info_topleft_method = getattr(activity_content,info_topleft,None)
+          info_backleft_method = getattr(activity_content,info_backleft,None)
+          info_backright_method = getattr(activity_content,info_backright,None)
+
+          # if value recovered is not null, then updating 
+          if info_center_method!=None: info['info_center']=str(info_center_method())
+          if info_topright_method!=None: info['info_topright']=str(info_topright_method())
+          if info_topleft_method!=None: info['info_topleft']=str(info_topleft_method())
+          if info_backleft_method!=None: info['info_backleft'] =str(info_backleft_method())
+          if info_backright_method!=None: info['info_backright']=str(info_backright_method())
+
+          # calling color script if exists to set up activity_color
+          current_color=''
+          if color_script !=None:
+            current_color = color_script(activity_content)
+
+          # testing if some activities have errors
+          error = 'false'
+          if list_error !=None:
+            for activity_error in list_error:
+              if activity_error[0][0] == name:
+                error = 'true'
+                break
+
+
+          # creating new activity instance
+          activity = BasicActivity(title=info['info_center'],name=name, url=self.url,absolute_begin=block_begin, absolute_end=block_end,color = current_color, info_dict=info, error=error)
+
+
+          # adding new activity to personal group activity list
+          try:
+            self.basic_activity_list.append(activity)
+          except (AttributeError):
+            self.basic_activity_list = []
+            self.basic_activity_list.append(activity)
+          # incrementing indic used for differenciating activities in the same 
+          # group (used for Activity naming)
+          indic += 1
+
+
     else:
-      if method_start != None:
-        block_begin = method_start()
+
+      # getting begin and end values from previously recovered method
+      if method_begin !=None:
+        block_begin = method_begin()
       else:
         block_begin = None
-      
-      if method_stop!=None:
-        block_stop= method_stop()
-      else:
-        block_stop=None
-      # if datas are DateTime type we need to do special process.
-      if isinstance(block_begin,DateTime):    
-        if round(block_begin-DateTime(x_axe[0][0]))>0:
-          block_left=float(round(block_begin-DateTime(x_axe[0][0])))/float(
-                     (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
-        elif round(block_begin-DateTime(x_axe[0][0]))==0:
-          block_left=0
-        else:
-          block_left=float(round(block_begin-DateTime(x_axe[0][0])))/round(
-                 (DateTime(x_axe[0][-1]+1))-DateTime(x_axe[0][0]))
 
-        if block_stop!=None:
-          if block_stop-DateTime(x_axe[0][0])<=0:
-            wrong_left = 1  #means that the block is outside of x-axis range
-        
-        if block_begin-DateTime(x_axe[0][-1])>=0:            
-          wrong_right = 1 #the same
-        if block_stop!=None:
-          block_right=float(round(block_stop-DateTime(x_axe[0][0])))/round(
-                            (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
-        
-        if wrong_left!=1 and wrong_right!=1: # if outside we do not display
-          if script_height_block == None or y_max==1:
-            height = 0.75
-          else:
-            height = float(script_height_block(line_content.getObject()))/y_max
-          if color_script != None:
-            current_color = color_script(line_content)  
-          if block_stop != None:  
-            list_block.append([block_left,block_right-block_left,height,info,1-height,'',current_color])
-          else:
-            list_block.append([block_left,1/(float(len(x_axe[0]))),height,info,1-height,'',current_color])
-          
+      if method_end != None:
+        block_end = method_end()
       else:
-        if block_begin !=None:
-          if block_stop !=None:
-            for i in x_axe[0]:
-              if block_begin==i:
-                if script_height_block == None or y_max==1:
-                  height = 0.75
-                else:
-                  height = float(script_height_block(line_content.getObject()))/y_max
-                if color_script != None:
-                  current_color = color_script(object_content)
-              list_block.append([marge,1/(float(len(x_axe[0]))),height,info,1-height,'',current_color])   
-                # 0.75(height) need to be defined        
-              marge+=1/float(len(x_axe[0]))
-          else:
-            for i in x_axe[0]:
-              if isinstance(block_begin,list): 
-                for item in block_begin:
-                  if item == i:
-                    if script_height_block == None or y_max==1:
-                      height = 0.75
-                    else:
-                      height = float(script_height_block(line_content.getObject()))/y_max
-                    if color_script != None:
-                      current_color = color_script(object_content) 
-                    list_block.append([marge,1/(float(len(x_axe[0]))),height,info,1-height,'',current_color])  
-              marge+=1/float(len(x_axe[0]))
-    if list_block!=[]:
-      self.appendActivityBlock(list_block,list_error,old_delta,REQUEST) 
-      
-    if self.son!=[]:
-      son_line= line_content.objectValues()
-      indic=0
-      while indic != len(son_line):
-        indic2=0
-        for s in son_line:
-          if s.getTitle() == self.son[indic].title:
-            
-            self.son[indic].insertActivityBlock(line_content=s,object_start_method_id=object_start_method_id,
-                                                object_stop_method_id=object_stop_method_id,x_axe=x_axe,
-                                                field=field,info_center=info_center,
-                                                info_topright=info_topright,info_topleft=info_topleft,
-                                                info_backleft=info_backleft,info_backright=info_backright,
-                                                list_error=list_error,old_delta=old_delta,REQUEST=REQUEST,
-                                                width_line=width_line,
-                                                script_height_block=script_height_block,
-                                                color_script=color_script)
-        indic+=1
-  
-        
-# class block      
-class Block:
-  def __init__(self,types,name,begin,width=0,height=0,text='',content={},marge_top=0,id='',url='',color=''):
-    """creates a block object"""
-    self.types=types
-    self.name=name
-    self.begin=begin
-    self.width=width
-    self.height=height
-    self.text=text
-    self.content=content #stores info block in a dictionnary
-    self.marge_top=marge_top
-    if color=='':
-      self.color='#bdd2e7'
-    else: 
-      self.color=color 
-    self.id = name
+        block_end = None
+
+      # testing if activity is visible according to the current zoom selection over
+      # the secondary_axis
+      if  block_begin > secondary_axis_info['bound_stop'] or block_end < secondary_axis_info['bound_start']:
+        # activity will not be displayed, stopping process
+        pass
+      else:
+        # activity is somehow displayed. checking if need to cut its bounds
+        if block_begin < secondary_axis_info['bound_start']:
+          # need to cut begin bound
+          block_start = secondary_axis_info['bound_start']
+        else: block_start = block_begin
+
+        if block_end > secondary_axis_info['bound_stop']:
+          block_stop = secondary_axis_info['bound_stop']
+        else:
+          block_stop = block_end
+
+        # testing if some activities have errors
+        error = 'false'
+        if list_error !=None:
+          for activity_error in list_error:
+            if activity_error[0][0] == name:
+              error = 'true'
+              break
+
+        # defining name
+        name = "Activity_%s" % (self.object.getObject().getTitle())
+
+        # creating new activity instance
+        activity = BasicActivity(title=info['info_center'],name=name, url=self.url, absolute_begin=block_begin, absolute_end=block_end, absolute_start=block_start, absolute_stop=block_stop,color = current_color, info_dict=info, error=error)
+
+        # adding new activity to personal group activity list
+        try:
+          self.basic_activity_list.append(activity)
+        except (AttributeError):
+          self.basic_activity_list = []
+          self.basic_activity_list.append(activity)
+
+
+
+
+
+class BasicActivity:
+  """ Represents an activity, a task, in the group it belongs to. Beware
+      nothing about multitask rendering. """
+
+  def __init__ (self, title='', name='', url='', absolute_begin=None,
+    absolute_end=None,absolute_start=None,absolute_stop=None, constraints='', color=None, error='false', info_dict= None):
+    self.title = title
+    self.name = name
     self.url = url
-  
-  def render(self,line_width,line_height,portal_url,line_begin,y_axis_width,line):
-    """used for inserting text in a block. one calculates how to organise the space.
-    one defines a width and height parameters (in pixel) which can be 
-    changed (depends on the size and the font used).
-    One fetches content which is a dictionnary like 
-    this {'center':'ezrzerezr','topright':'uihiuhiuh',
-          'topleft':'jnoinoin','botleft':'ioioioioi','botright':'ononono'}
-    """ 
-    string=''
-    font_height=10
-    font_width=6
-    info=''
-    #checks if the block starts before the beginning of the line
-    if ((line_begin+self.begin*line_width) < line_begin): 
-      block_width=self.width+self.begin 
-    #checks if the block is too large for the end of the line. if it is the case, one cuts the block
-    elif ((self.width*line_width)+(line_begin+self.begin*line_width)>line_width+y_axis_width): 
-      block_width=self.width*line_width-((line_begin+self.begin*line_width+self.width*line_width)\
-                  -(line_width+y_axis_width))
-      block_width=block_width/line_width
+    self.absolute_begin = absolute_begin # absolute values independant of any
+                                         # hypothetic zoom
+    self.absolute_end = absolute_end
+    self.absolute_start = absolute_start
+    self.absolute_stop = absolute_stop
+    self.constraints = constraints# constraints specific to the current Activity
+    self.color = color
+    self.info_dict = info_dict
+    self.error = error
+
+
+
+
+class PlanningStructure:
+  """ class aimed to generate the Planning final structure, including :
+      - activities with their blocs (so contains Activity structure)
+      - Axis informations (contains Axis Structure).
+      The zoom properties on secondary axis are applied to this structure.
+      """
+
+
+  def __init__ (self,):
+    self.main_axis = ''
+    self.secondary_axis = ''
+    self.content = []
+    self.content_delimiters = None
+
+
+  def build(self,basic_structure=None, field=None, REQUEST=None):
+    """
+    main procedure for building Planning Structure
+    do all the necessary process to construct a full Structure compliant with all
+    expectations (axis, zoom, colors, report_tree, multi_lines, etc.). From this
+    final structure just need to run a PageTemplate to get an HTML output, or any
+    other script to get the Planning result in the format you like...
+    """
+
+    # XXX defining render_format
+    # afterwards will be defined as a planningBox's property field or (perhaps even better)
+    # a on the fly button integrated over the planning representation 
+    #render_format = field.get_value('render_format')
+    self.render_format = 'YX'
+
+    # declaring main axis
+    self.main_axis = Axis(title='main axis', name='axis',
+                     unit='', axis_order=1,axis_group=[])
+
+    # declaring secondary axis
+    self.secondary_axis = Axis(title='sec axis', name='axis',
+                     unit='', axis_order=2, axis_group=[])
+
+    # linking axis objects to their corresponding accessor, i.e X or Y
+    # this allows the planning to be generic.
+    if self.render_format == 'YX':
+      self.Y = self.main_axis
+      self.X = self.secondary_axis
     else:
-      block_width=self.width
-    return self.buildInfoBlockBody(line_width,block_width,font_width,line_height,font_height,
-                                   line,portal_url)
-    
-  def render_css(self,line_width,line_height,line,y_axis_width):
-    """used for inserting info inside an activity block"""
-    string=''
-    font_height=10
-    font_width=6
-    line_begin=line.begin
-    #checks if the block starts before the beginning of the line
-    if ((line_begin+self.begin*line_width) < line_begin) and self.types!='activity_error':
-      block_width=self.width+self.begin
-    #checks if the block is too large for the end of the line. if it is the case, one cuts the block  
-    elif ((self.width*line_width)+(line_begin+self.begin*line_width)>line_width+y_axis_width) \
-          and self.types!='activity_error':
-      block_width=self.width*line_width-((line_begin+self.begin*line_width+self.width*line_width)\
-                  -(line_width+y_axis_width))
-      block_width=block_width/line_width
+      self.Y = self.secondary_axis
+      self.X = self.main_axis
+
+    # initializing axis properties
+    self.X.name = 'axis_x'
+    self.Y.name = 'axis_y'
+
+
+    # recovering secondary_axis_ bounds
+    self.secondary_axis.start = basic_structure.secondary_axis_info['bound_start']
+    self.secondary_axis.stop = basic_structure.secondary_axis_info['bound_stop']
+
+
+    self.main_axis.size =  self.buildGroups(basic_structure=basic_structure)
+
+    #pdb.set_trace()
+    # call method to build secondary axis structure
+    # need start_bound, stop_bound and number of groups to build
+    self.buildSecondaryAxis(basic_structure)
+
+
+    # completing axisgroup informations according to their bounds
+    self.buildAxis()
+
+    # the whole structure is almost completed : axis_groups are defined, as
+    # axis_elements with their activities. Just need to create blocks related to
+    # the activities (special process only for Calendar mode) with their
+    # BlockPosition
+    self.buildBlocs()
+
+
+  def buildSecondaryAxis(self,basic_structure):
+    """
+    build secondary axis structure
+    """
+    #pdb.set_trace()
+    # getting secondary axis script generator
+    planning_secondary_axis_method = getattr(basic_structure.here,'planning_secondary_axis')
+    # calling script to generate axis_group_list
+    group_list = planning_secondary_axis_method(self.secondary_axis.start, self.secondary_axis.stop, 4)
+    axis_group_number = 0
+    for group_title in group_list:
+      # adding new group to list of groups
+      axis_group = AxisGroup(name='Group_sec_' + str(axis_group_number), title=group_title)
+
+      # updating informations
+      axis_group.axis_element_start = axis_group_number
+      axis_group.axis_element_number = 1
+      axis_group.axis_element_stop  = axis_group_number + 1
+
+      self.secondary_axis.axis_group.append(axis_group)
+      axis_group = None
+      axis_group_number += 1
+
+
+  def buildAxis (self):
+    """
+    complete axis infomations (and more precisely axis position objects) thanks
+    to the actual planning structure
+    """
+
+    # processing main axis
+    for axis_group_element in self.main_axis.axis_group:
+      axis_group_element.position_main.absolute_begin = float(axis_group_element.axis_element_start - 1) / float(self.main_axis.size)
+      axis_group_element.position_main.absolute_end = float(axis_group_element.axis_element_stop) / float(self.main_axis.size)
+      axis_group_element.position_main.absolute_range = float(axis_group_element.axis_element_number) / float(self.main_axis.size)
+      axis_group_element.position_secondary.absolute_begin = 0
+      axis_group_element.position_secondary.absolute_end = 1
+      axis_group_element.position_secondary.absolute_range= 1
+
+    for axis_group_element in self.secondary_axis.axis_group:
+      axis_group_element.position_main.absolute_begin = 0
+      axis_group_element.position_main.absolute_end = 1
+      axis_group_element.position_main.absolute_range= 1
+      axis_group_element.position_secondary.absolute_begin = float(axis_group_element.axis_element_start) / float(len(self.secondary_axis.axis_group))
+      axis_group_element.position_secondary.absolute_end = float(axis_group_element.axis_element_stop) / float(len(self.secondary_axis.axis_group))
+      axis_group_element.position_secondary.absolute_range= float(1) / float(len(self.secondary_axis.axis_group))
+
+
+  def buildGroups (self, basic_structure=None):
+    """
+    build groups from activities saved in the structure groups.
+    """
+    axis_group_number = 0
+    axis_element_already_present=0
+    for basic_group_object in basic_structure.basic_group_list:
+      axis_group_number += 1
+      axis_group = AxisGroup(name='Group_' + str(axis_group_number), title=basic_group_object.title, AxisGroup_number= axis_group_number, is_open=basic_group_object.is_open, is_pure_summary=basic_group_object.is_pure_summary, url = basic_group_object.url,depth = basic_group_object.depth, secondary_axis_start= self.secondary_axis.start, secondary_axis_stop= self.secondary_axis.stop)
+      if self.render_format == 'YX':
+        axis_group.position_y = axis_group.position_main
+        axis_group.position_x = axis_group.position_secondary
+      else:
+        axis_group.position_y = axis_group.position_secondary
+        axis_group.position_x = axis_group.position_main
+      # init absolute position over the axis
+      # XXX if a special axisGroup length is needed (statistics, or report_tree),
+      # then it should be implemented here.
+      axis_group.position_secondary.absolute_begin = 0
+      axis_group.position_secondary.absolute_end= 1
+      axis_group.position_secondary.absolute_range = 1
+      # updating axis_group properties
+      axis_group.fixProperties(form_id = basic_structure.form.id, selection_name = basic_structure.selection_name)
+      # updating start value
+      axis_group.axis_element_start = axis_element_already_present + 1
+      activity_number = 0
+      if basic_group_object.basic_activity_list != None:
+        # need to check if activity list is not empty : possible in case zoom
+        # selection is used over the secondary axis
+        for basic_activity_object in basic_group_object.basic_activity_list:
+          activity_number += 1
+          # create new activity in the PlanningStructure
+          activity = Activity(name='Group_' + str(axis_group_number) + '_Activity_' + str(activity_number), title=basic_activity_object.title, color=basic_activity_object.color, link=basic_activity_object.url, secondary_axis_begin=basic_activity_object.absolute_begin, secondary_axis_end=basic_activity_object.absolute_end, secondary_axis_start=basic_activity_object.absolute_start, secondary_axis_stop=basic_activity_object.absolute_stop, primary_axis_block=self, info=basic_activity_object.info_dict, render_format=self.render_format)
+          # adding activity to the current group
+          axis_group.addActivity(activity,axis_element_already_present)
+      else:
+        # basic_activity_list is empty : need to add a empty axis_element to
+        # prevent bug or crash
+        axis_group.axis_element_number = 1
+        new_axis_element = AxisElement(name='Group_' + str(axis_group_number) + '_AxisElement_1', relative_number= 1 , absolute_number = axis_group.axis_element_start, parent_axis_group=axis_group)
+        # add new activity to this brand new axis_element
+        new_axis_element.activity_list = []
+        axis_group.axis_element_list = []
+        axis_group.axis_element_list.append(new_axis_element)
+        
+      axis_group.axis_element_stop = axis_element_already_present + axis_group.axis_element_number
+      axis_element_already_present = axis_group.axis_element_stop
+      try:
+        self.main_axis.axis_group.append(axis_group)
+      except AttributeError:
+        self.main_axis.axis_group = []
+        self.main_axis.axis_group.append(axis_group)
+    return axis_element_already_present
+
+
+  def buildBlocs(self):
+    """
+    iterate the whole planning structure to get various activities and build
+    their related blocs.
+    """
+    try:
+      for axis_group_object in self.main_axis.axis_group:
+        for axis_element_object in axis_group_object.axis_element_list:
+          for activity in axis_element_object.activity_list:
+            activity.addBlocs(main_axis_start=0, main_axis_stop=self.main_axis.size, secondary_axis_start=self.secondary_axis.start, secondary_axis_stop=self.secondary_axis.stop,planning=self)
+    except TypeError:
+      pass
+
+
+
+
+class Activity:
+  """
+  Class representing a task in the Planning, for example an appointment or
+  a duration. Can be divided in several blocs for being rendered correctly
+  (contains Bloc Structure).
+  Activity instance are not rendered but only their blocs. This Activity
+  structure is used for rebuilding tasks from bloc positions when
+  validating the Planning.
+  """
+  def __init__ (self,name=None,title=None,types=None,color=None,link=None,secondary_axis_begin=None,secondary_axis_end=None,secondary_axis_start=None,secondary_axis_stop=None,primary_axis_block=None, info=None, render_format='YX'):
+    self.name = name # internal activity_name
+    self.title = title # displayed activity_name
+    self.types = types # activity, activity_error, info
+    self.color = color # color used to render all Blocs
+    self.link = link # link to the ERP5 object
+    # self.constraints = constraints
+    self.block_list = None # contains all the blocs used to render the activity
+    self.secondary_axis_begin =secondary_axis_begin
+    self.secondary_axis_end=secondary_axis_end
+    self.secondary_axis_start=secondary_axis_start
+    self.secondary_axis_stop=secondary_axis_stop
+    self.primary_axis_block = primary_axis_block
+    self.block_bounds = None
+    self.info = info
+    self.parent_axis_element = None
+    self.render_format= render_format
+
+
+  def isValidPosition(self, bound_begin, bound_end):
+    """
+    can check if actual activity can fit within the bounds, returns :
+    - 0 if not
+    - 1 if partially ( need to cut the activity bounds to make it fit)
+    - 2 definitely
+    """
+    if self.begin > range_end or self.end < range_begin:
+      return 0
+    elif self.begin > range_begin and self.end < range_end:
+      return 1
     else:
-      block_width=self.width
-    return self.buildInfoBlockCss(font_height,line_height,block_width,line_width,font_width,line)
+      return 2
+
+
+  def addBlocs(self, main_axis_start=None, main_axis_stop=None, secondary_axis_start=None, secondary_axis_stop=None,planning=None):
+    """
+    define list of (begin & stop) values for blocs representing the actual
+    activity (can have several blocs if necessary).
+    """
+
+    # recover list of bounds
+    secondary_block_bounds = self.splitActivity()
+
+    block_number = 0
+    # iterating resulting list
+    for (start,stop) in secondary_block_bounds:
+
+      block_number += 1
+      # create new block instance
+      new_block = Bloc(name=self.name + '_Block_' + str(block_number) ,color=self.color,link=self.link, number = block_number, render_format=self.render_format, parent_activity=self)
+
+      #pdb.set_trace()
+      new_block.buildInfoDict(info_dict = self.info)
+
+      # updating secondary_axis block position
+      new_block.position_secondary.absolute_begin = start
+      new_block.position_secondary.absolute_end = stop
+      new_block.position_secondary.absolute_range = stop - start
+      # updating main_axis block position
+      new_block.position_main.absolute_begin = self.parent_axis_element.absolute_number - 1
+      new_block.position_main.absolute_end = self.parent_axis_element.absolute_number
+      new_block.position_main.absolute_range = new_block.position_main.absolute_end - new_block.position_main.absolute_begin
+
+      # now absolute positions are updated, and the axis values are known
+      # (as parameters), processing relative values
+      new_block.position_secondary.relative_begin = \
+          float(new_block.position_secondary.absolute_begin - secondary_axis_start) / float(secondary_axis_stop - secondary_axis_start)
+      new_block.position_secondary.relative_end = \
+          float(new_block.position_secondary.absolute_end - secondary_axis_start) / float(secondary_axis_stop - secondary_axis_start)
+      new_block.position_secondary.relative_range = \
+          new_block.position_secondary.relative_end - new_block.position_secondary.relative_begin
+      new_block.position_main.relative_begin = \
+          float(new_block.position_main.absolute_begin - main_axis_start) / float(main_axis_stop - main_axis_start)
+      new_block.position_main.relative_end = \
+          float(new_block.position_main.absolute_end - main_axis_start) / float(main_axis_stop - main_axis_start)
+      new_block.position_main.relative_range = \
+          new_block.position_main.relative_end - new_block.position_main.relative_begin
+
+      try:
+        self.block_list.append(new_block)
+      except AttributeError:
+        # in case this is the first add 
+        # need to initialize the list
+        self.block_list = []
+        self.block_list.append(new_block)
+        
+      try:
+        planning.content.append(new_block)
+      except AttributeError:
+        planning.content = []
+        planning.content.append(new_block)
+
+  def splitActivity(self):
+    """
+    Used for splitting an activity in multiple bloc.
+    [EDIT] will not be used to split Calendar axis (by date time depending on
+           the axis size), but will certainly be used afterwards in all cases
+           to split activity in multiple blocs according to some external
+           constraints (do not work sat & sun, or for a dayly planning do not
+           work from 18P.M to 9A.M).
+           will use an external script to do so.
+    """
+    # XXX not implemented yet
+    return [(self.secondary_axis_start,self.secondary_axis_stop)]
+
+
+
+
+class Bloc:
+  """
+  structure that will be rendered as a bloc, a task element.
+  Blocs are referenced in the Activity they belong to (logical structure),
+  but are also referenced in their relative AxisElement (to be able to
+  calculate the number of lines required for rendering when having
+  multi-tasking in parallel).
+  Contains Bloc Structure for position informations.
+  """
+
+  def __init__ (self, name=None, types=None,
+                color=None, info=None, link=None, number=0,
+                constraints=None, secondary_start=None, secondary_stop=None, render_format='YX', parent_activity = None):
+    """
+    creates a Bloc object
+    """
+    self.name = name # internal name
+    self.types = types # activity, activity_error, info
+    self.color = color
+    self.info = info # dict containing text with their position
+    self.link = link # on clic link
+    self.number = number
+    self.title=''
+    self.parent_activity = parent_activity
+    self.constraints = constraints
+    # list of all the groups the bloc belongs to (reportTree)
+    #self.container_axis_group = container_AxisGroup
+    # integer pointing to the AxisElement containing the bloc (multitasking)
+    #self.container_axis_element = container_AxisElement
+    self.position_main = Position()
+    self.position_secondary = Position(absolute_begin=secondary_start,absolute_end=secondary_stop)
+    if render_format == 'YX':
+      self.position_y = self.position_main
+      self.position_x = self.position_secondary
+    else:
+      self.position_y = self.position_secondary
+      self.position_x = self.position_main
+    self.render_dict = None
+    
+  def buildInfoDict (self, info_dict=[]):
+    """
+    create Info objects to display text & images, then link them to the current object
+    """
+    #XXX /4
+    self.info = {}
+    title_list = []
+    #pdb.set_trace()
+    title_list.append(self.buildInfo(info_dict=info_dict, area='info_topleft'))
+    title_list.append(self.buildInfo(info_dict=info_dict, area='info_topright'))
+    title_list.append(self.buildInfo(info_dict=info_dict, area='info_center'))
+    title_list.append(self.buildInfo(info_dict=info_dict, area='info_botleft'))
+    title_list.append(self.buildInfo(info_dict=info_dict, area='info_botright'))
+    # updating title
+    self.title = " | ".join(title_list)
+
+  def buildInfo(self,info_dict=[],area=None):
+    if area in info_dict:
+      # creating new object
+      info = Info(info = info_dict[area], link = self.link)
+      # saving new object to block dict
+      self.info[area] = info
+      # recovering text information
+      return info_dict[area]
+    else:
+      return ''
+
+class Position:
+  """
+  gives a bloc [/or an area] informations about it's position on the X or Y
+  axis. can specify position in every kind of axis : continuous or listed
+  with lower and upper bound.
+  """
+
+  def __init__ (self, absolute_begin=None,
+                absolute_end=None, absolute_size=None,
+                relative_begin=None, relative_end=None, relative_size=None):
+    # absolute size takes the bloc size in the original unit for the axis
+    self.absolute_begin = absolute_begin
+    self.absolute_end = absolute_end
+    self.absolute_size = absolute_size
+    # selative size in % of the current axis size
+    self.relative_begin = relative_begin
+    self.relative_end = relative_end
+    self.relative_size = relative_size
+
+
+class Axis:
+  """
+  Structure holding informations about a specified axis.Can be X or Y axis.
+  Is aimed to handle axis with any kind of unit : continuous or listed (
+  including possibly a listed ReportTree).
+  Two of them are needed in a PlanningStructure to have X and Y axis.
+  In case of listed axis, holds AxisGroup Structure.
+  """
+
+  def __init__(self, title=None, unit=None, types=None, axis_order=None, name=None, axis_group=None):
+    self.title = title # axis title
+    self.unit = unit # unit kind (time, nb... person, task, etc.)
+    self.types = types # continuous / listed (incl. ReportTree)
+    self.name = name
+    self.size = 0 # value
+    # axis group is a single group that contain the axis structure.
+    # defined to be able to use a generic and recursive method to 
+    self.axis_group = axis_group
+    # specify if axis is primary or secondary.
+    # - if primary axis in Planning, zoom selection is applied thanks to 
+    # a cut over the basic structure objects (based on their position and
+    # their length).
+    # - if secondary axis in Planning, then need to apply the second zoom
+    # bounds (application will be based on two bounds : start & stop)
+    self.axis_order = axis_order
+    # dict containing all class properties with their values
+    self.render_dict=None
+
+
+class AxisGroup:
+  """
+  Class representing an item, that can have the following properties :
+  - one or several rendered lines (multiTasking) : contains AxisElement
+  structure to hold this.
+  - one or several sub groups (ReportTree) : contains AxisGroup structure
+  to hold sub groups elements.
+  """
+
+  def __init__ (self, name='', title='',
+                AxisGroup_list=None, AxisGroup_number=0,
+                AxisElement_list=None,AxisElement_number=0, is_open=0, is_pure_summary=1,depth=0, url=None, axis_element_already_insered= 0, secondary_axis_start=None, secondary_axis_stop=None):
+    self.name = name
+    self.title = title
+    self.axis_group_list = AxisGroup_list # ReportTree
+    self.axis_group_number = AxisGroup_number
+    self.axis_element_list = AxisElement_list # Multitasking
+    self.axis_element_number = AxisElement_number
+    self.axis_element_start = None
+    self.axis_element_stop = None
+    # dict containing all class properties with their values
+    self.render_dict=None
+    self.is_open = is_open
+    self.is_pure_summary = is_pure_summary
+    self.depth = depth
+    self.url = url
+    self.link = None # link to fold or unfold current report in report-tree mode
+    self.position_main = Position()
+    self.position_secondary = Position()
+    self.position_x = None
+    self.position_y = None
+    # UPDATE secondary axis_bounds are now linked to each axis_group to support
+    # calendar output( were each axis_group has its own start and stop)
+    self.secondary_axis_start = secondary_axis_start
+    self.secondary_axis_stop = secondary_axis_stop
+
+
+  def fixProperties(self, form_id=None, selection_name=None):
+    """
+    using actual AxisGroup properties to define some special comportement that
+    the axisGroup should have, especially in case of report-tree
+    """
+    if self.is_open:
+      # current report is unfold, action 'fold'
+      self.link = 'portal_selections/foldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
+      self.title = '[-] ' + self.title
+    else:
+      # current report is fold, action 'unfold'
+      self.link = 'portal_selections/unfoldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
+      self.title = '[+] ' + self.title
     
 
-  def addInfoCenter(self,info): 
-    """add info in center of a block"""    
-    self.content['center']=info  
-    
-  def addInfoTopLeft(self,info): 
-    """add info in the top left corner of a block """   
-    self.content['topleft']=info
+  def addActivity(self, activity=None, axis_element_already_insered= 0):
+    """
+    procedure that permits to add activity to the corresponding AxisElement.
+    can create new Axis Element in the actual Axisgroup if necessary.
+    Permits representation of MULTITASKING
+    """
+
+    # declaring variable used to check if activity has already been added
+    added = 0
+    try:
+      # iterating each axis_element of the axis_group
+      for axis_element in self.axis_element_list:
   
-  def addInfoTopRight(self,info): 
-    """add info in the top right corner of a block"""    
-    self.content['topright']=info
+        can_add = 1
+        # recovering all activity properties of the actual axis_element and
+        # iterating through them to check if one of them crosses the new one
+        for activity_statement in axis_element.activity_list:
   
-  def addInfoBottomLeft(self,info): 
-    """add info in the bottom left corner of a block"""    
-    self.content['botleft']=info
+          if activity_statement.isValidPosition(activity.begin, activity.end) != 0:
+            # isValidPosition returned 1 or 2, this means the activity already
+            # present does prevent from adding the new activity as there is
+            # coverage.
+            # stop iterating actual axis_element and try with the next one
+            can_add = 0
+            break
   
-  def addInfoBottomRight(self,info): 
-    """add info in the bottom right corner of a block"""    
-    self.content['botright']=info
-   
+        if can_add:
+          # the whole activity_statements in actual axis have been succesfully
+          # tested without problem.
+          # can add new activity to the actual axis_element
+          added = 1
+          axis_element.activity_list.append(activity)
+  
+          # updating activity properties
+          activity.parent_axis_element = axis_element
+  
+      if not added:
+        # all axis_elements of the current group have been tested and no one can
+        # contain the new activity.
+        self.axis_element_number += 1
+        # Need to create a new axis_element to hold the new activity
+        new_axis_element = AxisElement(name='Group_' + str(self.axis_group_number) + '_AxisElement_' + str(self.axis_element_number), relative_number=self.axis_element_number, absolute_number=axis_element_already_insered  + self.axis_element_number)
+  
+        # add new activity to this brand new axis_element
+        new_axis_element.activity_list = []
+        new_axis_element.activity_list.append(activity)
+  
+        # updating activity properties
+        activity.parent_axis_element = new_axis_element
+  
+        # register the axis_element to the actual group.
+        self.axis_element_list.append(new_axis_element)
+    except TypeError:
+      # in case axis_element_list is None
+      # Need to create a new axis_element to hold the new activity
+      self.axis_element_number += 1
+      new_axis_element = AxisElement(name='Group_' + str(self.axis_group_number) + '_AxisElement_1', relative_number= self.axis_element_number, absolute_number = axis_element_already_insered + self.axis_element_number, parent_axis_group=self)
 
-  def buildInfoBlockBody(self,line_width,block_width,font_width,line_height,font_height,line,portal_url):
-    """ create the body of the html for displaying info inside a block"""
-    string=''
-    #line_height=line_height-10
-    already=0
-    block_name=''
-    length_list_info=0
-    info=''
-    curr_url = ''
-    for i in self.content:
-      if self.content[i]!=None:
-        length_list_info += 1
-    for i in self.content:
-      if length_list_info==5:
-        test_height= font_height<=((self.height*line_height)/3)
-        test_width= ((len(self.content[i])*font_width)<=((block_width*line_width)/3))
-      if length_list_info==4 or length_list_info==3:
-        test_height= font_height<=((self.height*line_height)/2)
-        test_width= ((len(self.content[i])*font_width)<=((block_width*line_width)/2))
-      if length_list_info==2:
-        test_height=font_height<=(self.height*line_height)
-        test_width= (len(self.content[i]*font_width)<=((block_width*line_width)/2))
-      if length_list_info==1: 
-        test_height= font_height<=(self.height*line_height)
-        test_width= (len(self.content[i]*font_width)<=(block_width*line_width))   
-      if test_height & test_width:
-        if self.url!='':
-          curr_url = self.url
-        else:
-          curr_url = line.url
-        string+='<div id=\"'+self.name+i+'\"><a href=\"'+portal_url+'/'+curr_url+'\">'+ self.content[i]
-        string+='</a href></div>\n' 
-      else: #one adds interogation.png  
-        if ((self.width*line_width>=15) & (self.height*line_height>=15)): 
-          info+=self.content[i]+'|'
-          if already==0 or i=='center':
-            block_name=self.name+i
-            already=1
-    if already==1:
-      string+='<div id=\"'+block_name+'\" title=\"'+info+'\"><a href=\"'+portal_url+'/'+curr_url+'\">\
-              <img src=\"'+portal_url+'/images/question.png\" height=\"15\" width=\"15\"></a href> '
-      string+='</div>\n'   
-    return string     
+      # add new activity to this brand new axis_element
+      new_axis_element.activity_list = []
+      new_axis_element.activity_list.append(activity)
+
+      # updating activity properties
+      activity.parent_axis_element = new_axis_element
+
+      # register the axis_element to the actual group.
+      self.axis_element_list = []
+      self.axis_element_list.append(new_axis_element)
 
 
-  def buildInfoBlockCss(self,font_height,line_height,block_width,line_width,font_width,line):
-    """used for creating css code when one needs to add info inside a block"""
-    string=''
-    already=0#used when we add interro.png 
-    list_info_length = 0 #counts number of info inside a block(between 0 and 5)
-    for j in self.content:
-      if  self.content[j]!= None:
-        list_info_length += 1 
-    if list_info_length ==0:return ''
+class AxisElement:
+  """
+  Represents a line in an item. In most cases, an AxisGroup element will
+  hold ony one AxisElement (simple listed axis), but sometimes more
+  AxisElements are required (multi, simultaneous tasking).
+  AxisElement is linked with the blocs displayed in it : this is only
+  usefull when doing multitasking to check if a new bloc can be added to an
+  existing AxisElement or if it is needed to create a new AxisElement in
+  the AxisGroup to hold it.
+  """
+  def __init__ (self,name='', relative_number=0, absolute_number=0, activity_list=None, parent_axis_group = None):
+    self.name = name
+    self.relative_number = relative_number # personal AxisElement id in the AxisGroup
+    self.absolute_number = absolute_number # id in the current rendering
+    self.activity_list = activity_list
+    # dict containing all class properties with their values
+    self.render_dict=None
+    self.parent_axis_group = parent_axis_group
 
-    #definition of coefficient for different cases of info display.
-    matrix = {
-    ('center',5):{'left':2,'top':2},
-    ('center',4):{'left':0,'top':0},
-    ('center',3):{'left':2,'top':2},
-    ('center',2):{'left':2,'top':2},
-    ('center',1):{'left':2,'top':2},
-    
-    ('topright',5):{'left':1.01,'top':0},
-    ('topright',4):{'left':1.01,'top':0},
-    ('topright',3):{'left':1.01,'top':0},
-    ('topright',2):{'left':1.01,'top':2},
-    ('topright',1):{'left':1.01,'top':0},
-    
-    ('topleft',5):{'left':0,'top':0},
-    ('topleft',4):{'left':1,'top':1},
-    ('topleft',3):{'left':0,'top':0},
-    ('topleft',2):{'left':0,'top':0},
-    ('topleft',1):{'left':0,'top':0},
-    
-    ('botleft',5):{'left':0,'top':1},
-    ('botleft',4):{'left':0,'top':1},
-    ('botleft',3):{'left':0,'top':1},
-    ('botleft',2):{'left':0,'top':1},
-    ('botleft',1):{'left':0,'top':1},
-    
-    ('botright',5):{'left':1.01,'top':1.1},
-    ('botright',4):{'left':1.01,'top':1.1},
-    ('botright',3):{'left':1.01,'top':1.1},
-    ('botright',2):{'left':1.01,'top':1.1},
-    ('botright',1):{'left':1.01,'top':1.1}
-    }   
-    #definition of coefficient for different cases, when info strings are too long,
-    #we use a small picture. The coefficient are suitable for are 15x15px picture. 
-    matrix_picture = {
-    ('center',5):{'left':2,'top':2},
-    ('center',4):{'left':0,'top':0},
-    ('center',3):{'left':2,'top':2},
-    ('center',2):{'left':0,'top':2},
-    ('center',1):{'left':2,'top':2},
-    
-    ('topright',5):{'left':1,'top':0},
-    ('topright',4):{'left':1,'top':0},
-    ('topright',3):{'left':1,'top':0},
-    ('topright',2):{'left':1,'top':2},
-    ('topright',1):{'left':0,'top':0},
-    
-    ('topleft',5):{'left':0,'top':0},
-    ('topleft',4):{'left':1,'top':1},
-    ('topleft',3):{'left':0,'top':0},
-    ('topleft',2):{'left':0,'top':0},
-    ('topleft',1):{'left':0,'top':0},
-    
-    ('botleft',5):{'left':0,'top':1},
-    ('botleft',4):{'left':0,'top':1},
-    ('botleft',3):{'left':0,'top':1},
-    ('botleft',2):{'left':0,'top':1}, 
-    ('botleft',1):{'left':0,'top':1},
-    
-    ('botright',5):{'left':1,'top':1},
-    ('botright',4):{'left':0,'top':0},
-    ('botright',3):{'left':0,'top':0},
-    ('botright',2):{'left':0,'top':0},
-    ('botright',1):{'left':1,'top':1}
-    }  
-    
-    idx= 0
-    margin_left=0
-    margin_top=0
-   
-    for block in self.content:         
-      matrix_data = matrix[(block,list_info_length)]
-      left = matrix_data['left']
-      top= matrix_data['top']
-      if left == 0:
-        margin_left=0
-      else:
-        margin_left = round(((block_width*line_width)/left)-(font_width*len(self.content[block]))/left)  
-      if top==0:
-        margin_top=0  
-      else:
-        margin_top = round(((self.height*(line_height-10))/top)-(font_height))
-      if list_info_length==5:
-        test_height= font_height<=((self.height*(line_height))/3)
-        test_width= ((len(self.content[block])*font_width)<=((block_width*line_width)/3))
-      if list_info_length==4 or list_info_length==3:
-        test_height= font_height<=((self.height*(line_height))/2)
-        test_width= ((len(self.content[block])*font_width)<=((block_width*line_width)/2))
-      if list_info_length==2:
-        test_height=font_height<=(self.height*(line_height))
-        test_width= (len(self.content[block]*font_width)<=((block_width*line_width)/2))
-      if list_info_length==1: 
-        test_height= font_height<=(self.height*(line_height))
-        test_width= (len(self.content[block]*font_width)<=(block_width*line_width))
 
-      if test_height & test_width:
-        string+='#'+self.name+block+'{position:absolute;\nmargin-left:'+\
-                 str(margin_left)+'px;\nmargin-top:'+str(margin_top)+'px;\n}\n'              
-        line.addBlockInfo(self.name+block)
-      else: # we add question.png because the size of the block is not enough
-        if ((self.width*line_width>=15) & (self.height*line_height>=15)): 
-          matrix_data= matrix_picture[(block,list_info_length)]
-          left = matrix_data['left']
-          top = matrix_data['top']
-          if left == 0:
-            margin_left=0
-          else:
-           margin_left=round(((block_width*line_width)/left)-(15/left))
-          if top==0:
-            margin_top=0  
-          else:
-            margin_top=round(((self.height*(line_height-10))/top)-(15/top))
-          if block=='center' and list_info_length==3:
-            margin_left=round(((block_width*line_width)/left)-(15/left))
-            margin_top=round(((self.height*(line_height-10))/top)-(font_height))
-          if block=='center' and list_info_length==2:  
-            margin_top=round(((self.height*(line_height-10))/top)-(font_height/top))    
-          if already==0 or block=='center':
-            string+='#'+self.name+block+'{position:absolute;\nmargin-left:'+str(margin_left)+\
-                    'px;\nmargin-top:'+str(margin_top)+'0px;\n}'  
-            block_disp=self.name+block
-            already=1
-    return string
-    
-  def get_error_message(self,err_type):
-    return 'incorrect block'
-PlanningBoxWidgetInstance = PlanningBoxWidget()        
-          
+class Info:
+  """
+  Class holding all informations to display an info text div inside of a block or
+  AxisGroup or whatever
+  """
+  security = ClassSecurityInfo()
+
+  def __init__(self, info=None, link=None, title=None):
+    self.info = info
+    self.link = link
+    self.title = title
+
+  security.declarePublic('edit')
+  def edit(self, info=None):
+     """
+     special method allowing to update Info content from an external script
+     """
+     self.info = info
+
+# declaring validator instance
+PlanningBoxValidatorInstance = PlanningBoxValidator()
+
 class PlanningBox(ZMIField):
     meta_type = "PlanningBox"
     widget = PlanningBoxWidgetInstance
@@ -2069,9 +2169,34 @@ class PlanningBox(ZMIField):
     def get_value(self, id, **kw):
       if id == 'default' and kw.get('render_format') in ('list', ):
         return self.widget.render(self, self.generate_field_key() , None , 
-                                  kw.get('REQUEST'), render_format=kw.get('render_format'))
+                                  kw.get('REQUEST'),
+                                  render_format=kw.get('render_format'))
       else:
         return ZMIField.get_value(self, id, **kw)
 
-    def render_css(self, value=None, REQUEST=None):      
+    def render_css(self, value=None, REQUEST=None):
       return self.widget.render_css(self,'',value,REQUEST)
+
+
+InitializeClass(BasicStructure)
+allow_class(BasicStructure)
+InitializeClass(BasicGroup)
+allow_class(BasicGroup)
+InitializeClass(BasicActivity)
+allow_class(BasicActivity)
+InitializeClass(PlanningStructure)
+allow_class(PlanningStructure)
+InitializeClass(Activity)
+allow_class(Activity)
+InitializeClass(Bloc)
+allow_class(Bloc)
+InitializeClass(Position)
+allow_class(Position)
+InitializeClass(Axis)
+allow_class(Axis)
+InitializeClass(AxisGroup)
+allow_class(AxisGroup)
+InitializeClass(AxisElement)
+allow_class(AxisElement)
+InitializeClass(Info)
+allow_class(Info)
