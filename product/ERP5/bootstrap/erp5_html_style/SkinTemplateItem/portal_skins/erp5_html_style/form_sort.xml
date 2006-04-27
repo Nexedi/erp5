@@ -100,7 +100,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
             <span tal:replace="row_index" />\n
           </td>\n
-          <td>\n
+          <td id="sort_on_0" tal:attributes=\'id python:"sort_on_%d" % row_index\'>\n
             <select name="field_sort_on">\n
               <span tal:repeat="option python: [(\'None\',\'None\')] + all_columns">\n
               <option tal:condition="python:option[0]==item[0]"\n
@@ -117,7 +117,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               </span>\n
             </select>\n
           </td>\n
-          <td>\n
+          <td id="sort_order_0" tal:attributes=\'id python:"sort_order_%d" % row_index\'>\n
             <span tal:replace="structure python:form.sort_order.render(item[1], request)" />\n
           </td>\n
         </tr>\n
@@ -128,7 +128,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>\n
             <span tal:replace="row_index" />\n
           </td>\n
-          <td>\n
+          <td id="sort_on_0" tal:attributes=\'id python:"sort_on_%d" % row_index\'>\n
             <select name="field_sort_on">\n
               <option selected value="None">None</option>\n
               <option tal:repeat="option all_columns"\n
@@ -138,7 +138,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                  value="None"></option>\n
             </select>\n
           </td>\n
-          <td>\n
+          <td id="sort_order_0" tal:attributes=\'id python:"sort_order_%d" % row_index\'>\n
             <span tal:replace="structure python:form.sort_order.render(\'\', request)" />\n
           </td>\n
         </tr>\n
