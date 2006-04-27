@@ -70,7 +70,7 @@
 , \'operation_currency\'       :  context.Baobab_getPortalReferenceCurrencyID()                        # The operation currently\n
 , \'cashStatus_list\'          : [\'to_sort\',]                   # List of possible cashStatus or None if all\n
 , \'emissionLetter_list\'      : [\'not_defined\',]                # List of possible emissionLetter or None if all\n
-, \'variation_list\'           : [\'2003\',]                       # List of possible variation or None if all\n
+, \'variation_list\'           :  context.Baobab_getResourceVintageList(banknote=1)                    # List of possible variation or None if all\n
 , \'currencyCash_portalType\'  : \'Banknote\'                           # \'Coin\' or \'Banknote\' or None if both\n
 , \'updatePossible\'           : True                           # If true, the fastinput will not allow change\n
 , \'columnBase\'               : \'variation\'                    # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
