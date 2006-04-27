@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Check Deposit</type>
-  <workflow>check_deposit_workflow</workflow>
+  <workflow>check_deposit_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Check Payment</type>
