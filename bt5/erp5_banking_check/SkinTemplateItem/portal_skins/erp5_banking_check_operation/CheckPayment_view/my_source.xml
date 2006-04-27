@@ -308,7 +308,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Delivery_getVaultItemList(vault_type=[\'site/surface/banque_interne\'], current_url=here.getSource(), user_site=1, leaf_node=0, strict_membership=1)</string> </value>
+            <value> <string>python:here.Delivery_getVaultItemList(vault_type=[\'site/surface/banque_interne\', \'site/surface/operations_diverses\', \'site/surface/gros_paiement\'], current_url=here.getSource(), user_site=1, leaf_node=0, strict_membership=1)</string> </value>
         </item>
       </dictionary>
     </pickle>
