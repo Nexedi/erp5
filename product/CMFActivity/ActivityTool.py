@@ -183,12 +183,11 @@ class Message:
       self.is_executed = 1
     except:
       self.is_executed = 0
-      exc_info = sys.exc_info()
-      self.exc_type = exc_info[0]
-      self.traceback = exc_info[2]
-      LOG('WARNING ActivityTool', 0,
+      self.exc_type = sys.exc_info()[0]
+      self.traceback = ''.join(traceback.format_tb(sys.exc_info()[2]))
+      LOG('ActivityTool', WARNING,
           'Could not call method %s on object %s' % (
-          self.method_id, self.object_path), error=exc_info)
+          self.method_id, self.object_path), error=sys.exc_info())
 
   def validate(self, activity, activity_tool):
     return activity.validate(activity_tool, self, **self.activity_kw)
@@ -213,9 +212,8 @@ Document: %s
 Method: %s
 Traceback:
 %s
-""" % (activity_tool.email_from_address, user_email,
-       message, message, '/'.join(self.object_path), self.method_id,
-       ''.join(traceback.format_tb(self.traceback)))
+""" % (activity_tool.email_from_address, user_email, message,
+       message, '/'.join(self.object_path), self.method_id, self.traceback)
     activity_tool.MailHost.send( mail_text )
 
   def reactivate(self, activity_tool):
