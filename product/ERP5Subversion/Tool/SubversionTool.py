@@ -723,12 +723,12 @@ class SubversionTool(UniqueObject, Folder):
       object_to_update = {}
       if isinstance(path, list) :
         path = [self.relativeToAbsolute(x, bt) for x in path]
-        for p in path:
+        #for p in path:
           #object_to_update[p.split(os.sep)[-1]] = 'install'
       else:
         path = self.relativeToAbsolute(path, bt)
         #object_to_update[path.split(os.sep)[-1]] = 'install'
-    else:
+    #else:
       #bt.install(object_to_update=object_to_update)
     client.revert(path, recurse)
     
