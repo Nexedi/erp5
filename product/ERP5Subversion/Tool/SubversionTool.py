@@ -638,14 +638,14 @@ class SubversionTool(UniqueObject, Folder):
     # Update from SVN
     client.update(path)
     # Import in zodb
-    return self.importBT(bt);
+    return self.importBT(bt)
 
   security.declareProtected('Import/Export objects', 'add')
   # path can be a list or not (relative or absolute)
   def add(self, path, bt=None):
     """Add a file or a directory.
     """
-    if bt:
+    if bt is not None:
       if isinstance(path, list) :
         path = [self.relativeToAbsolute(x, bt) for x in path]
       else:
@@ -682,7 +682,7 @@ class SubversionTool(UniqueObject, Folder):
   def remove(self, path, bt=None):
     """Remove a file or a directory.
     """
-    if bt:
+    if bt is not None:
       if isinstance(path, list) :
         path = [self.relativeToAbsolute(x, bt) for x in path]
       else:
@@ -719,12 +719,18 @@ class SubversionTool(UniqueObject, Folder):
     """Revert local changes in a file or a directory.
     """
     client = self._getClient()
-    if bt:
+    if bt is not None:
+      object_to_update = {}
       if isinstance(path, list) :
         path = [self.relativeToAbsolute(x, bt) for x in path]
+        for p in path:
+          #object_to_update[p.split(os.sep)[-1]] = 'install'
       else:
         path = self.relativeToAbsolute(path, bt)
-    return client.revert(path, recurse)
+        #object_to_update[path.split(os.sep)[-1]] = 'install'
+    else:
+      #bt.install(object_to_update=object_to_update)
+    client.revert(path, recurse)
     
   security.declareProtected('Import/Export objects', 'resolved')
   # path can be absolute or relative
