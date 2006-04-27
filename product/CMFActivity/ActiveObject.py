@@ -30,13 +30,14 @@ import ExtensionClass
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from ZODB.POSException import ConflictError
+from Products.CMFCore.utils import getToolByName
 
 try:
   from Products.CMFCore import permissions
 except ImportError:
   from Products.CMFCore import CMFCorePermissions as permissions
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 DEFAULT_ACTIVITY = 'SQLDict'
 
@@ -45,16 +46,28 @@ DISTRIBUTABLE_STATE = -1
 INVOKE_ERROR_STATE = -2
 VALIDATE_ERROR_STATE = -3
 STOP_STATE = -4
-POSITIVE_NODE_STATE = 'Positive Node State' # Special state which allows to select positive nodes
+# Special state which allows to select positive nodes
+POSITIVE_NODE_STATE = 'Positive Node State'
 
 class ActiveObject(ExtensionClass.Base):
+  """Active Object Mixin Class.
+
+  Active object are objects whose methods are lazilly evaluated in the
+  Activity Queue. To use an active object, you just have to call the
+  method on the wrapper returned by the `activate` method like this:
+
+  >>> obj.activate().aMethod()
+  
+  This will defer the call to obj.aMethod() 
+  """
 
   security = ClassSecurityInfo()
 
-  def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, passive_commit=0, 
-                     activate_kw=None,**kw):
-    """
-      Reserved Optional parameters
+  def activate(self, activity=DEFAULT_ACTIVITY, active_process=None,
+               passive_commit=0, activate_kw=None, **kw):
+    """Returns an active wrapper for this object.
+    
+      Reserved Optional parameters:
       
       at_date           --  request execution date for this activate call
       
@@ -68,8 +81,17 @@ class ActiveObject(ExtensionClass.Base):
     
       after_path        --  never validate message if after_path
                             is in the list of path which are
-                            going to be executed                                                              
+                            going to be executed
       
+      after_path_and_method_id
+                        -- never validate message if a message for
+                           method_id on path is in the queue.
+
+      tag               -- add a tag to a message
+
+      after_tag         -- never validate message if there is a message
+                           tagged with this tag.
+
     """
     # Get activate values from activate_kw, then _v_activate_kw
     # only if they are not set directly as arguments to activate()
@@ -79,11 +101,11 @@ class ActiveObject(ExtensionClass.Base):
           kw[key] = value
     # This volatile variable '_v_activate_kw' can be used to pass parameters
     # automatically to activate.
-    if hasattr(self, '_v_activate_kw'):
+    if getattr(self, '_v_activate_kw', None) is not None:
       for key,value in self._v_activate_kw.items():
         if not kw.has_key(key):
           kw[key] = value
-    activity_tool = getattr(self, 'portal_activities', None)
+    activity_tool = getToolByName(self, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters
@@ -93,7 +115,8 @@ class ActiveObject(ExtensionClass.Base):
     except ConflictError:
       raise
     except:
-      LOG("WARNING CMFActivity:",0, 'could not create activity for %s' % self.getRelativeUrl())
+      LOG("CMFActivity", WARNING,
+          'could not create activity for %s' % self.getRelativeUrl())
       # If the portal_activities were not created
       # return a passive object
       if passive_commit: get_transaction().commit()
@@ -101,18 +124,13 @@ class ActiveObject(ExtensionClass.Base):
 
   security.declareProtected( permissions.ModifyPortalContent, 'flushActivity' )
   def flushActivity(self, invoke=0, **kw):
-    activity_tool = getattr(self, 'portal_activities', None)
+    activity_tool = getToolByName(self, 'portal_activities', None)
     if activity_tool is None: return # Do nothing if no portal_activities
     # flush all activities related to this object
-    #try:
-    if 1:
-      activity_tool.flush(self, invoke=invoke, **kw)
-    #except:
-    #  # If the portal_activities were not created
-    #  # nothing to do
-    #  pass
+    activity_tool.flush(self, invoke=invoke, **kw)
 
-  security.declareProtected( permissions.ModifyPortalContent, 'recursiveFlushActivity' )
+  security.declareProtected( permissions.ModifyPortalContent,
+                             'recursiveFlushActivity' )
   def recursiveFlushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
     self.flushActivity(invoke=invoke, **kw)
@@ -123,10 +141,9 @@ class ActiveObject(ExtensionClass.Base):
 
   security.declareProtected( permissions.View, 'hasActivity' )
   def hasActivity(self, **kw):
+    """Tells if there is pending activities for this object.
     """
-      Tells if an object if active
-    """
-    activity_tool = getattr(self, 'portal_activities', None)
+    activity_tool = getToolByName(self, 'portal_activities', None)
     if activity_tool is None: return 0 # Do nothing if no portal_activities
     try:
       return activity_tool.hasActivity(self, **kw)
@@ -139,20 +156,19 @@ class ActiveObject(ExtensionClass.Base):
 
   security.declareProtected( permissions.View, 'hasErrorActivity' )
   def hasErrorActivity(self, **kw):
-    """
-      Tells if an object if active
+    """Tells if there is failed activities for this object.
     """
     return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
 
   security.declareProtected( permissions.View, 'hasInvalidActivity' )
   def hasInvalidActivity(self, **kw):
-    """
-      Tells if an object if active
+    """Tells if there is invalied activities for this object.
     """
     return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
 
   security.declareProtected( permissions.View, 'getActiveProcess' )
   def getActiveProcess(self):
-    activity_tool = getattr(self, 'portal_activities', None)
+    activity_tool = getToolByName(self, 'portal_activities', None)
     if activity_tool is None: return None # Do nothing if no portal_activities
-    return self.portal_activities.getActiveProcess()
+    return activity_tool.getActiveProcess()
+
