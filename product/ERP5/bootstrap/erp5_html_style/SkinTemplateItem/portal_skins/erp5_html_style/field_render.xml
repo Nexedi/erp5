@@ -59,20 +59,17 @@
     <tal:block tal:define="html_render python: field.render_htmlgrid(value, request)">\n
       <tal:block tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
         <tal:repeat repeat="html_tuple html_render">\n
-          <tr tal:attributes="title python: context.Base_getFieldDescription(field)" i18n:translate="title" i18n:domain="ui">\n
+          <tr>\n
             <td tal:content="structure python: html_tuple[0]"\n
                 tal:attributes="class python: \n
                              {0: {0: None, 1: \'required\'},\n
                               1: {0: \'error\', 1: \'reqerror\'}}[field_errors.has_key(field.id)][field.is_required()]"\n
-                i18n:translate="" i18n:domain="ui">\n
-            </td>\n
-            <td>\n
-              <tal:block metal:use-macro="context/form_developper_buttons/macros/field"/>\n
-            </td>\n
+                i18n:translate="" i18n:domain="ui" />\n
             <td>\n
               <tal:block tal:replace="structure python: html_tuple[1]" />\n
             </td>\n
           </tr>\n
+        \n
         </tal:repeat>\n
       </tal:block>\n
       <tr tal:condition="python: field_errors.has_key(field.id)">\n

@@ -51,17 +51,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
-    "DTD/xhtml1-strict.dtd">\n
+ "DTD/xhtml1-strict.dtd">\n
+\n
 <tal:block tal:replace="nothing">\n
 <!--\n
 Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
@@ -121,7 +116,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <tal:block metal:define-macro="form_layout">\n
           <div class="Main" tal:define="field_errors python: request.get(\'field_errors\',{});\n
                                         dummy python: request.set(\'here\',here)">\n
-            <tal:block metal:use-macro="here/form_developper_buttons/macros/form"/>\n
             <tal:block tal:define="groups python: form.get_groups();\n
                                     rows python:[];">\n
               <tal:block tal:repeat="group groups">\n
@@ -154,7 +148,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                   <tal:block tal:condition="python: \'bottom\' in groups[row[0]].lower()">\n
                     <tal:block tal:repeat="cell row">\n
                       <tal:block tal:repeat="field python:form.get_fields_in_group(groups[cell])">\n
-                        <tal:block metal:use-macro="here/form_developper_buttons/macros/field"/>\n
                         <tal:block tal:define="value python:request.get(field.id, None)"\n
                          tal:replace="structure python:field.render(value, request)" />\n
                       </tal:block>\n

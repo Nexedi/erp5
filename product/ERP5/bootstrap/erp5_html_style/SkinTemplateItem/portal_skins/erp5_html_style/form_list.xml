@@ -45,12 +45,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -99,19 +93,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
   <body>\n
 <div metal:fill-slot="main">\n
-  <div class="Main">\n
-    <tal:block metal:use-macro="here/form_developper_buttons/macros/form"/>\n
+          <div class="Main">\n
 <span tal:define="groups python: form.get_groups(include_empty=1);\n
                   field_errors python: request.get(\'field_errors\',{});\n
                   dummy python: request.set(\'here\',here)">\n
-  <tal:block tal:condition="python: len(groups)>0">\n
+  <span tal:condition="python: len(groups)>0">\n
     <span tal:repeat="field python:form.get_fields_in_group(groups[0])">\n
-      <tal:block metal:use-macro="here/form_developper_buttons/macros/field"/>\n
       <div class="FormDescription" tal:content="python:field.get_value(\'description\')"></div>\n
       <span tal:define="value python:request.get(field.id,None)"\n
         tal:replace="structure python:field.render(value,request)" />\n
     </span>\n
-  </tal:block>\n
+  </span>\n
 </span>\n
           </div>\n
       </div>\n

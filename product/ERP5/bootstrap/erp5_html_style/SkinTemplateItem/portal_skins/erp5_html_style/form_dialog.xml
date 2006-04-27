@@ -88,7 +88,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 <tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
   <tal:block metal:fill-slot="main">\n
     <div class="Search">\n
-    <tal:block metal:use-macro="here/form_developper_buttons/macros/form"/>\n
 <span tal:define="groups python: form.get_groups(include_empty=1);\n
                   field_errors python: request.get(\'field_errors\',{});\n
                   params python: here.portal_selections.getSelectionParams(selection_name, REQUEST=request);\n
@@ -164,7 +163,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </td>\n
           <td tal:define="field_key python:field.id.startswith(\'my_\') and field.id[3:] or field.id;\n
                           value python:field.get_value(\'default\') or request.get(field_key, params.get(field_key,None))">\n
-            <tal:block metal:use-macro="here/form_developper_buttons/macros/field"/>\n
             <span tal:replace="structure python:field.render(value,request)" />\n
           </td>\n
         </tr>\n
@@ -209,7 +207,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </td>\n
           <td tal:define="field_key python:field.id.startswith(\'my_\') and field.id[3:] or field.id;\n
                           value python:field.get_value(\'default\') or request.get(field_key, params.get(field_key,None))">\n
-            <tal:block metal:use-macro="here/form_developper_buttons/macros/field"/>\n
             <span tal:replace="structure python:field.render(value,request)" />\n
           </td>\n
         </tr>\n
@@ -260,7 +257,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <tr>\n
           <td tal:define="field_key python:field.id.startswith(\'my_\') and field.id[3:] or field.id;\n
                           value python:field.get_value(\'default\') or request.get(field_key, params.get(field_key,None))">\n
-             <tal:block metal:use-macro="here/form_developper_buttons/macros/field"/>\n
              <span tal:replace="structure python:field.render(value,request)"/>\n
             </td>\n
           </tr>\n
@@ -302,6 +298,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>form_dialog</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

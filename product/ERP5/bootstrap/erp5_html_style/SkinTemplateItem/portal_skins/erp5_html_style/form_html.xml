@@ -139,6 +139,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
     <div metal:use-macro="here/global_definition/macros/global_definition" />\n
     <input type="hidden" name="form_id" value="form"\n
        tal:attributes="value form/id | template/id | script/id">\n
+    <input type="hidden" name="query_string" value="query"\n
+       tal:attributes="value request/QUERY_STRING">\n
     <input type="hidden" name="object_uid" value="uid"\n
        tal:attributes="value here/getUid">\n
     <input type="hidden" name="object_path" value="path"\n
