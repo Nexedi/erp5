@@ -1,21 +1,21 @@
 <allowed_content_type_list>
- <portal_type id="Cash Classification">
-  <item>Outgoing Cash Classification Line</item>
-  <item>Incoming Cash Classification Line</item>
+ <portal_type id="Cash Sorting">
+  <item>Incoming Cash Sorting Line</item>
+  <item>Outgoing Cash Sorting Line</item>
  </portal_type>
- <portal_type id="Cash Classification Module">
-  <item>Cash Classification</item>
+ <portal_type id="Cash Sorting Module">
+  <item>Cash Sorting</item>
  </portal_type>
- <portal_type id="Cash Transfer">
+ <portal_type id="Incoming Cash Sorting Line">
+  <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Outgoing Cash Sorting Line">
+  <item>Outgoing Cash Sorting Cell</item>
+ </portal_type>
+ <portal_type id="Usual Cash Transfer">
   <item>Cash Delivery Line</item>
  </portal_type>
- <portal_type id="Cash Transfer Module">
-  <item>Cash Transfer</item>
- </portal_type>
- <portal_type id="Incoming Cash Classification Line">
-  <item>Cash Delivery Cell</item>
- </portal_type>
- <portal_type id="Outgoing Cash Classification Line">
-  <item>Cash Delivery Cell</item>
+ <portal_type id="Usual Cash Transfer Module">
+  <item>Usual Cash Transfer</item>
  </portal_type>
 </allowed_content_type_list>
