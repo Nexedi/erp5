@@ -278,7 +278,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # Deliveries we are trying to update
     delivery_select_method_id = self.getDeliverySelectMethodId()
     if delivery_select_method_id not in ["", None]:
-      to_update_delivery_sql_list = getattr(portal, delivery_select_method_id) \
+      to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
                                       (movement_list=movement_list)
       delivery_to_update_list.extend([sql_delivery.getObject() \
                                      for sql_delivery \
