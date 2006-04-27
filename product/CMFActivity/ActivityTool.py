@@ -184,6 +184,7 @@ class Message:
     except:
       self.is_executed = 0
       self.exc_type = sys.exc_info()[0]
+      self.exc_value = str(sys.exc_info()[1])
       self.traceback = ''.join(traceback.format_tb(sys.exc_info()[2]))
       LOG('ActivityTool', WARNING,
           'Could not call method %s on object %s' % (
@@ -210,10 +211,12 @@ Subject: %s
 
 Document: %s
 Method: %s
+Exception: %s %s
 Traceback:
 %s
 """ % (activity_tool.email_from_address, user_email, message,
-       message, '/'.join(self.object_path), self.method_id, self.traceback)
+       message, '/'.join(self.object_path), self.method_id,
+       self.exc_type, self.exc_value, self.traceback)
     activity_tool.MailHost.send( mail_text )
 
   def reactivate(self, activity_tool):
