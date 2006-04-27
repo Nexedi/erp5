@@ -48,7 +48,7 @@ import md5
 import pickle
 import hmac
 import random
-
+import re
 import string
 from zLOG import LOG
 from Acquisition import Implicit, aq_base
@@ -86,7 +86,32 @@ class SelectionTool( UniqueObject, SimpleItem ):
     security.declareProtected( ERP5Permissions.ManagePortal
                              , 'manage_view_selections' )
     manage_view_selections = DTMLFile( 'SelectionTool_manageViewSelections', _dtmldir )
-    
+
+    _query_string_reset_regexp = re.compile('\\breset(:int|)?=')
+    _query_string_report_depth_regexp = re.compile('\\breport_depth(:int|)?=')
+    def _redirectToOriginalForm(self, REQUEST=None, form_id=None, query_string=None,
+                                no_reset=False, no_report_depth=False):
+      """Redirect to the original form, using the information given as parameters.
+         If no_reset is True, replace reset parameters with noreset.
+         If no_report_depth is True, replace report_depth parameters with noreport_depth.
+      """
+      if REQUEST is None:
+        return
+
+      context = self.aq_parent
+      if form_id is None:
+        form_id = 'view'
+      url = context.absolute_url() + '/' + form_id
+      if query_string is not None:
+        if no_reset:
+          query_string = self._query_string_reset_regexp.sub('noreset\\1=',
+                                                             query_string)
+        if no_report_depth:
+          query_string = self._query_string_report_depth_regexp.sub('noreport_depth\\1=',
+                                                                    query_string)
+        url = url + '?' + query_string
+      return REQUEST.RESPONSE.redirect(url)
+
     security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
     def getSelectionNames(self, context=None, REQUEST=None):
       if context is None: context = self
@@ -113,7 +138,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if not REQUEST:
         REQUEST = get_request()
-        
+
       if not hasattr(self, 'selection_data'):
         self.selection_data = PersistentMapping()
       user_id = self.portal_membership.getAuthenticatedMember().getUserName()
@@ -238,7 +263,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return []
 
     security.declareProtected(ERP5Permissions.View, 'checkAll')
-    def checkAll(self, selection_name, listbox_uid=[], REQUEST=None):
+    def checkAll(self, selection_name, listbox_uid=[], REQUEST=None,
+                 query_string=None, form_id=None):
       """
         Sets the selection params for a given selection_name
       """
@@ -253,15 +279,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
           except ValueError:
             pass # this can happen in report
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
-      request = REQUEST
-      if request:
-        referer = request['HTTP_REFERER']
-        referer = referer.replace('reset=', 'noreset=')
-        referer = referer.replace('reset:int=', 'noreset:int=')
-        return request.RESPONSE.redirect(referer)
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string, no_reset=True)
 
     security.declareProtected(ERP5Permissions.View, 'uncheckAll')
-    def uncheckAll(self, selection_name, listbox_uid=[], REQUEST=None):
+    def uncheckAll(self, selection_name, listbox_uid=[], REQUEST=None,
+                   query_string=None, form_id=None):
       """
         Sets the selection params for a given selection_name
       """
@@ -276,12 +300,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
           except ValueError:
             pass # This happens in report mode
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
-      request = REQUEST
-      if request:
-        referer = request['HTTP_REFERER']
-        referer = referer.replace('reset=', 'noreset=')
-        referer = referer.replace('reset:int=', 'noreset:int=')
-        return request.RESPONSE.redirect(referer)
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string, no_reset=True)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionListUrlFor')
     def getSelectionListUrlFor(self, selection_name, REQUEST=None):
@@ -322,7 +343,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection.edit(sort_on=sort_on)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionQuickSortOrder')
-    def setSelectionQuickSortOrder(self, selection_name, sort_on, REQUEST=None):
+    def setSelectionQuickSortOrder(self, selection_name, sort_on, REQUEST=None,
+                                   query_string=None, form_id=None):
       """
         Defines the sort order of the selection directly from the listbox
         In this method, sort_on is just a string that comes from url
@@ -347,11 +369,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
           new_sort_on = [(sort_on,'ascending')]
         selection.edit(sort_on=new_sort_on)
 
-      request = REQUEST
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('reset=', 'noreset=')
-      referer = referer.replace('reset:int=', 'noreset:int=')
-      return request.RESPONSE.redirect(referer)
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string, no_reset=True)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionSortOrder')
     def getSelectionSortOrder(self, selection_name, REQUEST=None):
@@ -519,7 +539,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'setPage')
-    def setPage(self, listbox_uid, uids=None, REQUEST=None):
+    def setPage(self, listbox_uid, query_string=None, uids=None, REQUEST=None):
       """
         Access the previous page of a list
       """
@@ -539,147 +559,139 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection.edit(params= selection.params)
 
       self.uncheckAll(selection_name, listbox_uid)
-      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
+      return self.checkAll(selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
-    
+
     security.declareProtected(ERP5Permissions.View, 'setZoom')
-    
-    def setZoom(self, uids=None, REQUEST=None):
+    def setZoom(self, uids=None, REQUEST=None, form_id=None, query_string=None):
       """
       Set graphic zoom in PlanningBox
-      """  
+      """
       if uids is None: uids = []
-      request = REQUEST  
-      zoom=request.get('zoom')
+      zoom=REQUEST.get('zoom')
       selection_name=request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
         params['zoom'] = zoom
         selection.edit(params= params)
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('reset=', 'noreset=')
-      referer = referer.replace('reset:int=', 'noreset:int=')
-      return request.RESPONSE.redirect(referer) 
-    
-    
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string)
+
     security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
-    def setDomainRoot(self, REQUEST):
+    def setDomainRoot(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root domain for the current selection
       """
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
+      selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      root_url = request.form.get('domain_root_url','portal_categories')
+      root_url = REQUEST.form.get('domain_root_url','portal_categories')
       selection.edit(domain_path=root_url, domain_list=())
 
-      return request.RESPONSE.redirect(request['HTTP_REFERER'])
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'unfoldDomain')
-    def unfoldDomain(self, REQUEST):
+    def unfoldDomain(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root domain for the current selection
       """
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
+      selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      domain_url = request.form.get('domain_url',None)
-      domain_depth = request.form.get('domain_depth',0)
+      domain_url = REQUEST.form.get('domain_url',None)
+      domain_depth = REQUEST.form.get('domain_depth',0)
       domain_list = list(selection.getDomainList())
       domain_list = domain_list[0:min(domain_depth, len(domain_list))]
-      if type(domain_url) == type('a'):
+      if isinstance(domain_url, str):
         selection.edit(domain_list = domain_list + [domain_url])
 
-      return request.RESPONSE.redirect(request['HTTP_REFERER'])
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'foldDomain')
-    def foldDomain(self, REQUEST):
+    def foldDomain(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root domain for the current selection
       """
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
+      selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      domain_url = request.form.get('domain_url',None)
-      domain_depth = request.form.get('domain_depth',0)
+      domain_url = REQUEST.form.get('domain_url',None)
+      domain_depth = REQUEST.form.get('domain_depth',0)
       domain_list = list(selection.getDomainList())
       domain_list = domain_list[0:min(domain_depth, len(domain_list))]
-      selection.edit(domain_list=filter(lambda x:x != domain_url, domain_list))
+      selection.edit(domain_list=[x for x in domain_list if x != domain_url])
 
-      return request.RESPONSE.redirect(request['HTTP_REFERER'])
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string)
 
 
     security.declareProtected(ERP5Permissions.View, 'setReportRoot')
-    def setReportRoot(self, REQUEST):
+    def setReportRoot(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root domain for the current selection
       """
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
+      selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      root_url = request.form.get('report_root_url','portal_categories')
+      root_url = REQUEST.form.get('report_root_url','portal_categories')
       selection.edit(report_path=root_url, report_list=())
 
-      return request.RESPONSE.redirect(request['HTTP_REFERER'])
-
+      if REQUEST is not None:
+        return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                            query_string=query_string)
 
     security.declareProtected(ERP5Permissions.View, 'unfoldReport')
-    def unfoldReport(self, REQUEST):
+    def unfoldReport(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root domain for the current selection
 
         report_list is a list of relative_url of category, domain, etc.
       """
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
+      selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      report_url = request.form.get('report_url',None)
+      report_url = REQUEST.form.get('report_url',None)
       if type(report_url) == type('a'):
         selection.edit(report_list=list(selection.getReportList()) + [report_url])
 
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')
-      return request.RESPONSE.redirect(referer)
+      return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                          query_string=query_string,
+                                          no_report_depth=True)
 
     security.declareProtected(ERP5Permissions.View, 'foldReport')
-    def foldReport(self, REQUEST):
+    def foldReport(self, REQUEST, form_id=None, query_string=None):
       """
         Sets the root domain for the current selection
       """
-      request = REQUEST
-      #form_id = request.form_id
-      selection_name = request.list_selection_name
+      selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      report_url = request.form.get('report_url',None)
+      report_url = REQUEST.form.get('report_url',None)
       if type(report_url) == type('a'):
         report_list = selection.getReportList()
-        selection.edit(report_list=filter(lambda x:x != report_url, report_list))
+        selection.edit(report_list=[x for x in report_list if x != report_url])
 
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')
-      return request.RESPONSE.redirect(referer)
+      return self._redirectToOriginalForm(REQUEST=REQUEST, form_id=form_id,
+                                          query_string=query_string,
+                                          no_report_depth=True)
 
     security.declareProtected(ERP5Permissions.View, 'getListboxDisplayMode')
     def getListboxDisplayMode(self, selection_name, REQUEST=None):
       if REQUEST is None:
         REQUEST = get_request()
       selection = self.getSelectionFor(selection_name, REQUEST)
-    
+
       if getattr(selection, 'report_tree_mode', 0):
         return 'ReportTreeMode'
       elif getattr(selection, 'domain_tree_mode', 0):
         return 'DomainTreeMode'
       return 'FlatListMode'
-          
+
     security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
     def setListboxDisplayMode(self, REQUEST, listbox_display_mode, 
-                              selection_name=None, redirect=0):
+                              selection_name=None, redirect=0,
+                              form_id=None, query_string=None):
       """
         Toogle display of the listbox
       """
@@ -723,7 +735,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         flat_list_mode = 0
         domain_tree_mode = 0
         report_tree_mode = 0      
-        
+
       selection.edit(flat_list_mode=flat_list_mode,
                      domain_tree_mode=domain_tree_mode,
                      report_tree_mode=report_tree_mode)
@@ -733,12 +745,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection.edit(params = params)
 
       if redirect:
-        referer = request['HTTP_REFERER']
-        referer = referer.replace('noreset=', 'reset=')
-        referer = referer.replace('noreset:int=', 'reset:int=')
-        referer = referer.replace('reset=', 'noreset=')
-        referer = referer.replace('reset:int=', 'noreset:int=')
-        return request.RESPONSE.redirect(referer)
+        return self._redirectToOriginalForm(REQUEST=request, form_id=form_id,
+                                            query_string=query_string,
+                                            no_reset=True)
 
     security.declareProtected(ERP5Permissions.View, 'setFlatListMode')
     def setFlatListMode(self, REQUEST, selection_name=None):
@@ -996,7 +1005,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
           property_get_related_uid_method_name = \
             "get%sUidList" % ''.join(['%s%s' % (x[0].upper(), x[1:]) \
                                       for x in base_category.split('_')])
-          
           current_uid_list = getattr(o, property_get_related_uid_method_name)\
                                (portal_type=[x[0] for x in \
                                   field.get_value('portal_type')])
@@ -1083,7 +1091,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
                 return aq_base_name
             else:
               sub_index = None
-            
+
             # generate dynamicaly needed forwarder methods
             def viewSearchRelatedDocumentDialogWrapper(self, form_id, 
                                                        REQUEST=None, **kw):
