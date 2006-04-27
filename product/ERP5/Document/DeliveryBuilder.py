@@ -125,7 +125,7 @@ class DeliveryBuilder(OrderBuilder):
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
     else:
-      select_method = getattr(self, self.simulation_select_method_id)
+      select_method = getattr(self.getPortalObject(), self.simulation_select_method_id)
       movement_list = select_method(**kw)
     # XXX Use buildSQLQuery will be better
     movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
@@ -177,7 +177,7 @@ class DeliveryBuilder(OrderBuilder):
       simulation related to this transaction.
     """
     # We have to get a delivery, else, raise a Error
-    delivery = self.restrictedTraverse(delivery_relative_url)
+    delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
 
     delivery_uid = delivery.getUid()
 

@@ -140,7 +140,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     delivery_module_before_building_script_id = \
         self.getDeliveryModuleBeforeBuildingScriptId()
     if delivery_module_before_building_script_id not in ["", None]:
-      delivery_module = getattr(self, self.getDeliveryModule())
+      delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
   def searchMovementList(self, applied_rule_uid=None,**kw):
@@ -271,13 +271,14 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
     # Module where we can create new deliveries
-    delivery_module = getattr(self, self.getDeliveryModule())
-    delivery_to_update_list = [self.restrictedTraverse(relative_url) for \
+    portal = self.getPortalObject()
+    delivery_module = getattr(portal, self.getDeliveryModule())
+    delivery_to_update_list = [portal.restrictedTraverse(relative_url) for \
                                relative_url in delivery_relative_url_list]
     # Deliveries we are trying to update
     delivery_select_method_id = self.getDeliverySelectMethodId()
     if delivery_select_method_id not in ["", None]:
-      to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
+      to_update_delivery_sql_list = getattr(portal, delivery_select_method_id) \
                                       (movement_list=movement_list)
       delivery_to_update_list.extend([sql_delivery.getObject() \
                                      for sql_delivery \
