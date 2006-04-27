@@ -77,12 +77,16 @@ from urllib import pathname2url, url2pathname
 from difflib import unified_diff
 
 
+# those attributes from CatalogMethodTemplateItem are kept for
+# backward compatibility
 catalog_method_list = ('_is_catalog_list_method_archive',
                        '_is_uncatalog_method_archive',
-                       '_is_clear_method_archive', '_is_filtered_archive')
+                       '_is_clear_method_archive',
+                       '_is_filtered_archive',)
 
-catalog_method_filter_list = ('_filter_expression_archive', '_filter_expression_instance_archive',
-                              '_filter_type_archive')
+catalog_method_filter_list = ('_filter_expression_archive',
+                              '_filter_expression_instance_archive',
+                              '_filter_type_archive',)
 
 
 def removeAll(entry):
@@ -1408,22 +1412,44 @@ class PortalTypeBaseCategoryTemplateItem(PortalTypeAllowedContentTypeTemplateIte
   class_property = 'base_category_list'
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
-
+  """Template Item for catalog methods.
+  
+    This template item stores catalog method and install them in the
+    default catalog.
+    The use Catalog makes for methods is saved as well and recreated on
+    installation.
+  """
+  
   def __init__(self, id_list, tool_id='portal_catalog', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
-    self._is_catalog_list_method_archive = PersistentMapping()
-    self._is_uncatalog_method_archive = PersistentMapping()
-    self._is_clear_method_archive = PersistentMapping()
+    # a mapping to store properties of methods. 
+    # the mapping contains an entry for each method, and this entry is
+    # another mapping having the id of the catalog property as key and a
+    # boolean value to say wether the method is part of this catalog
+    # configuration property.
+    self._method_properties = PersistentMapping()
+    
     self._is_filtered_archive = PersistentMapping()
     self._filter_expression_archive = PersistentMapping()
     self._filter_expression_instance_archive = PersistentMapping()
     self._filter_type_archive = PersistentMapping()
 
+  def _extractMethodProperties(self, catalog, method_id):
+    """Extracts properties for a given method in the catalog.
+    Returns a mapping of property name -> boolean """
+    method_properties = PersistentMapping()
+    for prop in catalog._properties:
+      if prop.get('select_variable') == 'getCatalogMethodIds':
+        if prop['type'] == 'selection' and \
+            getattr(catalog, prop['id']) == method_id:
+          method_properties[prop['id']] = 1
+        elif prop['type'] == 'multiple selection' and \
+            method_id in getattr(catalog, prop['id']):
+          method_properties[prop['id']] = 1
+    return method_properties
+
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
-    self._check_catalog(context)
-
-  def _check_catalog(self, context):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1431,17 +1457,25 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     if catalog is None:
       LOG('BusinessTemplate build', 0, 'catalog not found')
       return
+    
+    # upgrade old
+    if not hasattr(self, '_method_properties'):
+      self._method_properties = PersistentMapping()
+      
     for obj in self._objects.values():
       method_id = obj.id
-      self._is_catalog_list_method_archive[method_id] = method_id in catalog.sql_catalog_object_list
-      self._is_uncatalog_method_archive[method_id] = method_id in catalog.sql_uncatalog_object
-      self._is_clear_method_archive[method_id] = method_id in catalog.sql_clear_catalog
+      self._method_properties[method_id] = self._extractMethodProperties(
+                                                          catalog, method_id)
       self._is_filtered_archive[method_id] = 0
       if catalog.filter_dict.has_key(method_id):
-        self._is_filtered_archive[method_id] = catalog.filter_dict[method_id]['filtered']
-        self._filter_expression_archive[method_id] = catalog.filter_dict[method_id]['expression']
-        self._filter_expression_instance_archive[method_id] = catalog.filter_dict[method_id]['expression_instance']
-        self._filter_type_archive[method_id] = catalog.filter_dict[method_id]['type']
+        self._is_filtered_archive[method_id] = \
+                    catalog.filter_dict[method_id]['filtered']
+        self._filter_expression_archive[method_id] = \
+                    catalog.filter_dict[method_id]['expression']
+        self._filter_expression_instance_archive[method_id] = \
+                    catalog.filter_dict[method_id]['expression_instance']
+        self._filter_type_archive[method_id] = \
+                    catalog.filter_dict[method_id]['type']
 
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
@@ -1464,17 +1498,19 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
       f = open(object_path, 'wt')
       xml_data = '<catalog_method>'
-      for method in catalog_method_list:
-        value = getattr(self, method, 0)[method_id]
-        xml_data += os.linesep+' <item key="%s" type="int">' %(method,)
-        xml_data += os.linesep+'  <value>%s</value>' %(str(int(value)))
+      
+      for method_property, value in self._method_properties[method_id].items():
+        xml_data += os.linesep+' <item key="%s" type="int">' %(method_property,)
+        xml_data += os.linesep+'  <value>%s</value>' %(value,)
         xml_data += os.linesep+' </item>'
+      
       if catalog.filter_dict.has_key(method_id):
+        xml_data += os.linesep+' <item key="_is_filtered_archive" type="int">' 
+        xml_data += os.linesep+'  <value>1</value>'
+        xml_data += os.linesep+' </item>'
         for method in catalog_method_filter_list:
           value = getattr(self, method, '')[method_id]
-          if method == '_filter_expression_instance_archive':
-            pass
-          else:
+          if method != '_filter_expression_instance_archive':
             if type(value) in (type(''), type(u'')):
               xml_data += os.linesep+' <item key="%s" type="str">' %(method,)
               xml_data += os.linesep+'  <value>%s</value>' %(str(value))
@@ -1485,7 +1521,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
                 xml_data += os.linesep+'  <value>%s</value>' %(str(item))
               xml_data += os.linesep+' </item>'
       xml_data += os.linesep+'</catalog_method>'
-      f.write(str(xml_data))
+      f.write(xml_data)
       f.close()
       
   # Function to generate XML Code Manually
@@ -1500,7 +1536,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def install(self, context, trashbin, **kw):
     ObjectTemplateItem.install(self, context, trashbin, **kw)
-    self._check_catalog(context)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except KeyError:
@@ -1541,28 +1576,21 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     for obj in values:
       method_id = obj.id
-
-      is_catalog_list_method = int(self._is_catalog_list_method_archive[method_id])
-      is_uncatalog_method = int(self._is_uncatalog_method_archive[method_id])
-      is_clear_method = int(self._is_clear_method_archive[method_id])
-      is_filtered = int(self._is_filtered_archive[method_id])
-
-      if is_catalog_list_method and method_id not in sql_catalog_object_list:
-        sql_catalog_object_list.append(method_id)
-      elif not is_catalog_list_method and method_id in sql_catalog_object_list:
-        sql_catalog_object_list.remove(method_id)
-
-      if is_uncatalog_method and method_id not in sql_uncatalog_object:
-        sql_uncatalog_object.append(method_id)
-      elif not is_uncatalog_method and method_id in sql_uncatalog_object:
-        sql_uncatalog_object.remove(method_id)
-
-      if is_clear_method and method_id not in sql_clear_catalog:
-        sql_clear_catalog.append(method_id)
-      elif not is_clear_method and method_id in sql_clear_catalog:
-        sql_clear_catalog.remove(method_id)
-
-      if is_filtered:
+     
+      # Restore catalog properties for methods
+      if hasattr(self, '_method_properties'):
+        for key in self._method_properties.get(method_id, {}).keys():
+          old_value = getattr(catalog, key, None)
+          if isinstance(old_value, str):
+            setattr(catalog, key, method_id)
+          elif isinstance(old_value, list) or isinstance(old_value, tuple):
+            if method_id not in old_value:
+              new_value = list(old_value) + [method_id]
+              new_value.sort()
+              setattr(catalog, key, tuple(new_value))
+      
+      # Restore filter
+      if self._is_filtered_archive.get(method_id, 0):
         expression = self._filter_expression_archive[method_id]
         if context.getTemplateFormatVersion() == 1:
           expr_instance = Expression(expression)
@@ -1577,13 +1605,40 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       elif method_id in catalog.filter_dict.keys():
         catalog.filter_dict[method_id]['filtered'] = 0
 
-    sql_catalog_object_list.sort()
-    catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
-    sql_uncatalog_object.sort()
-    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
-    sql_clear_catalog.sort()
-    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+      # backward compatibility
+      if hasattr(self, '_is_catalog_list_method_archive'):
+        LOG("BusinessTemplate.CatalogMethodTemplateItem", 0,
+            "installing old style catalog method configuration")
+        is_catalog_list_method = int(
+                  self._is_catalog_list_method_archive[method_id])
+        is_uncatalog_method = int(
+                  self._is_uncatalog_method_archive[method_id])
+        is_clear_method = int(
+                  self._is_clear_method_archive[method_id])
 
+        if is_catalog_list_method and method_id not in sql_catalog_object_list:
+          sql_catalog_object_list.append(method_id)
+        elif not is_catalog_list_method and\
+                        method_id in sql_catalog_object_list:
+          sql_catalog_object_list.remove(method_id)
+
+        if is_uncatalog_method and method_id not in sql_uncatalog_object:
+          sql_uncatalog_object.append(method_id)
+        elif not is_uncatalog_method and method_id in sql_uncatalog_object:
+          sql_uncatalog_object.remove(method_id)
+
+        if is_clear_method and method_id not in sql_clear_catalog:
+          sql_clear_catalog.append(method_id)
+        elif not is_clear_method and method_id in sql_clear_catalog:
+          sql_clear_catalog.remove(method_id)
+    
+        sql_catalog_object_list.sort()
+        catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
+        sql_uncatalog_object.sort()
+        catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+        sql_clear_catalog.sort()
+        catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+      
   def uninstall(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
@@ -1605,25 +1660,22 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       value = self._archive[object_path]
       if value is not None:
         values.append(value)
-    # Make copies of attributes of the default catalog of portal_catalog.
-    sql_catalog_object_list = list(catalog.sql_catalog_object_list)
-    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
-    sql_clear_catalog = list(catalog.sql_clear_catalog)
 
     for obj in values:
       method_id = obj.id
-      if method_id in sql_catalog_object_list:
-        sql_catalog_object_list.remove(method_id)
-      if method_id in sql_uncatalog_object:
-        sql_uncatalog_object.remove(method_id)
-      if method_id in sql_clear_catalog:
-        sql_clear_catalog.remove(method_id)
+      # remove method references in portal_catalog
+      for catalog_prop in catalog._properties:
+        if catalog_prop.get('select_variable') == 'getCatalogMethodIds'\
+            and catalog_prop['type'] == 'multiple selection':
+          old_value = getattr(catalog, catalog_prop['id'], ())
+          if method_id in old_value:
+            new_value = list(old_value)
+            new_value.remove(method_id)
+            setattr(catalog, catalog_prop['id'], new_value)
+          
       if catalog.filter_dict.has_key(method_id):
         del catalog.filter_dict[method_id]
-
-    catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
-    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
-    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+    
     # uninstall objects
     ObjectTemplateItem.uninstall(self, context, **kw)
 
@@ -1637,7 +1689,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         connection=obj._p_jar
       obj = connection.importFile(file, customImporters=customImporters)
       self._objects[file_name[:-4]] = obj
-    elif '.catalog_keys' in file_name:
+    else:
       # recreate data mapping specific to catalog method
       path, name = os.path.split(file_name)
       id = string.split(name, '.')[0]
@@ -1661,9 +1713,12 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           LOG('BusinessTemplate import CatalogMethod, type unknown', 0, key_type)
           continue
         if key in catalog_method_list or key in catalog_method_filter_list:
-          dict = getattr(self, key)
+          dict = getattr(self, key, {})
           dict[id] = value
-
+        else:
+          # new style key
+          self._method_properties.setdefault(id, PersistentMapping())[key] = 1
+          
 class ActionTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, **kw):
@@ -2625,7 +2680,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+os.sep+'resutl_table_list'] = key_list
+      self._objects[self.__class__.__name__+os.sep+'result_table_list'] = key_list
 
   def _importFile(self, file_name, file):
     list = []
@@ -2666,7 +2721,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       for key in keys:
         if key not in sql_search_tables:
           sql_search_tables.append(key)
-      catalog.sql_search_tables = sql_search_tables
+      catalog.sql_search_tables = list(sql_search_tables)
 
   def uninstall(self, context, **kw):
     try:
@@ -3791,6 +3846,20 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
 
+      # always created a trash bin because we may to save object already present
+      # but not in a previous business templates apart at creation of a new site
+      if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1):
+        trashbin = trash_tool.newTrashBin(self.getTitle(), self)
+      else:
+        trashbin = None
+
+      # Install everything
+      if len(object_to_update) > 0 or force:
+        for item_name in self._item_name_list:
+          item = getattr(self, item_name, None)
+          if item is not None:
+            item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
+      
       # update catalog if necessary
       update_catalog=0
       catalog_method = getattr(self, '_catalog_method_item', None)
@@ -3813,20 +3882,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         else:
           LOG('Business Template', 0, 'Updating SQL Catalog')
           catalog.manage_catalogClear()
-
-      # always created a trash bin because we may to save object already present
-      # but not in a previous business templates apart at creation of a new site
-      if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates.objectIds()) > 1):
-        trashbin = trash_tool.newTrashBin(self.getTitle(), self)
-      else:
-        trashbin = None
-
-      # Install everything
-      if len(object_to_update) > 0 or force:
-        for item_name in self._item_name_list:
-          item = getattr(self, item_name, None)
-          if item is not None:
-            item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
 
       # get objects to remove
       # do remove after because we may need backup object from installation
@@ -4263,7 +4318,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogRequestKey' : '_catalog_request_key_item',
         'CatalogMultivalueKey' : '_catalog_multivalue_key_item',
         'CatalogTopicKey' : '_catalog_topic_key_item',
-	'CatalogMethod' : '_catalog_method_item',
         }
 
       object_id = REQUEST.object_id
@@ -4318,18 +4372,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
         # Remove unneeded properties
         new_object = new_item.removeProperties(new_object)
         installed_object = installed_item.removeProperties(installed_object)
-	# XML Export in memory
+        # XML Export in memory
         OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
         OFS.XMLExportImport.exportXML(installed_object._p_jar, installed_object._p_oid, f2)
         new_obj_xml = f1.getvalue()
-	f1.close()
+        f1.close()
         installed_obj_xml = f2.getvalue()
         f2.close()
         new_ob_xml_lines = new_obj_xml.splitlines()
         installed_ob_xml_lines = installed_obj_xml.splitlines()
-	# End of XML export
-	
-	# Diff between XML objects
+        # End of XML export
+        
+        # Diff between XML objects
         diff_list = list(unified_diff(installed_ob_xml_lines, new_ob_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
           diff_msg += '\n\nObject %s diff :\n' % (object_id,)
@@ -4338,14 +4392,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
           diff_msg = 'No diff'
 
       elif item_name in item_list_2:
-	# Generate XML code manually
+        # Generate XML code manually
         new_obj_xml = new_item.generateXml(path= object_id)
         installed_obj_xml = installed_item.generateXml(path= object_id)
         new_obj_xml_lines = new_obj_xml.splitlines()
         installed_obj_xml_lines = installed_obj_xml.splitlines()
-	# End of XML Code Generation
-	
-	# Diff between XML objects
+        # End of XML Code Generation
+        
+        # Diff between XML objects
         diff_list = list(unified_diff(installed_obj_xml_lines, new_obj_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
           diff_msg += '\n\nObject %s diff :\n' % (object_id,)
@@ -4354,7 +4408,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           diff_msg = 'No diff'
 
       elif item_name in item_list_3:
-	# Diff between text objects
+        # Diff between text objects
         new_obj_lines = new_object.splitlines()
         installed_obj_lines = installed_object.splitlines()
         diff_list = list(unified_diff(installed_obj_lines, new_obj_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
@@ -4365,7 +4419,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           diff_msg = 'No diff'
 
       else: # Added By <christophe@nexedi.com>
-	diff_msg += 'Unsupported file !'
+        diff_msg += 'Unsupported file !'
 
       if compare_to_zodb:
         self.portal_templates.manage_delObjects(ids=['installed_bt_for_diff'])
