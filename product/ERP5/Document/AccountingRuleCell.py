@@ -54,7 +54,8 @@ An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Ma
                       , PropertySheet.ValueAddedTax
                       , PropertySheet.EcoTax
                       , PropertySheet.CopyrightTax
-                      , PropertySheet.Predicate                      
+                      , PropertySheet.Predicate
+                      , PropertySheet.MappedValue
                       )
 
     # CMF Type Definition
