@@ -105,7 +105,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                         <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>\n
                         <span tal:replace="row_index" />\n
                       </td>\n
-                      <td>\n
+                      <td id="column_0" tal:attributes="id python:\'column_%d\' % row_index">\n
                         <select name="field_columns">\n
                           <span tal:repeat="option python: [(\'None\',\'None\')] + all_columns">\n
                             <option tal:condition="python:option[0]==item[0]"\n
@@ -148,7 +148,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                         <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>\n
                         <span tal:replace="row_index" />\n
                       </td>\n
-                      <td>\n
+                      <td id="column_0" tal:attributes="id python:\'column_%d\' % row_index">\n
                         <select name="field_columns">\n
                           <option selected\n
                                   value="None"\n

@@ -1,5 +1,8 @@
 2006-04-27 yo
-* Generate ids for table data in form_sort, to east functional testing.
+* Generate ids for table data in form_list_ui, to ease functional testing.
+
+2006-04-27 yo
+* Generate ids for table data in form_sort, to ease functional testing.
 
 2006-04-27 yo
 * Embed the query string in a request int the resulting HTML in form_html, list_dialog_master, list_master and view_master.
