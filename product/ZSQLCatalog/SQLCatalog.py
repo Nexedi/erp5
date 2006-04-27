@@ -523,7 +523,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             value = ''
             for text in prop.childNodes:
               if text.nodeType == text.TEXT_NODE:
-                value = text.data
+                value = str(text.data)
                 break
           else:
             value = []
@@ -533,7 +533,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 raise CatalogError, 'unknown item type %r' % (item_type,)
               for text in item.childNodes:
                 if text.nodeType == text.TEXT_NODE:
-                  value.append(text.data)
+                  value.append(str(text.data))
                   break
             value = tuple(value)
 
@@ -542,7 +542,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         if not hasattr(self, 'filter_dict'):
           self.filter_dict = PersistentMapping()
         for filt in root.getElementsByTagName("filter"):
-          id = filt.getAttribute("id")
+          id = str(filt.getAttribute("id"))
           expression = filt.getAttribute("expression")
           if not self.filter_dict.has_key(id):
             self.filter_dict[id] = PersistentMapping()
@@ -716,7 +716,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       for field in field_list:
         keys[field] = 1
         keys['%s.%s' % (table, field)] = 1  # Is this inconsistent ?
-    for related in self.sql_catalog_related_keys:
+    for related in self.getSqlCatalogRelatedKeyList():
       related_tuple = related.split('|')
       related_key = related_tuple[0].strip()
       keys[related_key] = 1
