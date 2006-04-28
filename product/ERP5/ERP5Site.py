@@ -146,7 +146,7 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       return None
 
     # Required to allow content creation outside folders
-    security.declareProtected(Permissions.View, 'setLastId')
+    security.declareProtected(Permissions.ModifyPortalContent, 'setLastId')
     def setLastId(self, id):
       self.last_id = id
 
