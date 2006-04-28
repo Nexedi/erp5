@@ -722,15 +722,25 @@ class SubversionTool(UniqueObject, Folder):
     if bt is not None:
       object_to_update = {}
       if isinstance(path, list) :
+        for p in path:
+          path_list = p.split(os.sep)
+          if 'bt' not in path_list:
+            if len(path_list) > 2 :
+              tmp=os.sep.join(path_list[2:])
+              object_to_update[tmp] = 'install'
+        #raise str(object_to_update)
         path = [self.relativeToAbsolute(x, bt) for x in path]
-        #for p in path:
-          #object_to_update[p.split(os.sep)[-1]] = 'install'
       else:
+        path_list = path.split(os.sep)
+        if 'bt' not in path_list:
+          if len(path_list) > 2 :
+            tmp=os.sep.join(path_list[2:])
+            object_to_update[tmp] = 'install'
         path = self.relativeToAbsolute(path, bt)
-        #object_to_update[path.split(os.sep)[-1]] = 'install'
-    #else:
-      #bt.install(object_to_update=object_to_update)
     client.revert(path, recurse)
+    if bt is not None:
+      installed_bt = bt.portal_templates.getInstalledBusinessTemplate(                                                          bt.getTitle())
+      installed_bt.install(object_to_update=object_to_update, force=0)
     
   security.declareProtected('Import/Export objects', 'resolved')
   # path can be absolute or relative
@@ -863,6 +873,14 @@ class SubversionTool(UniqueObject, Folder):
     
   def importBT(self, bt):
     return bt.download(self.getSubversionPath(bt))
+  
+  # Get a list of files and keep only parents
+  # Necessary before recursively commit removals
+  def cleanChildrenInList(self, list):
+    res = list
+    for file in list:
+      res = [x for x in res if file == x or file not in x]
+    return res
 
   # return a set with directories present in the directory
   def getSetDirsForDir(self, directory):

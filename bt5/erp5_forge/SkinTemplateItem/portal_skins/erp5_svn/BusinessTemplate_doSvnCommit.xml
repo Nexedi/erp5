@@ -84,7 +84,7 @@ else:\n
 if commit_non_recurs != \'\' and commit_non_recurs != \'none\':\n
   commit_non_recurs = commit_non_recurs.split(\',\')\n
 if removed != \'\' and removed != \'none\':\n
-  commit_recurs = removed.split(\',\')\n
+  commit_recurs = context.getPortalObject()["portal_subversion"].cleanChildrenInList(removed.split(\',\'))\n
 else:\n
   commit_recurs = removed\n
 \n

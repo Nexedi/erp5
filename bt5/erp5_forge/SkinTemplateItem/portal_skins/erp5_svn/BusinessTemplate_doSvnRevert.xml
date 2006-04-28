@@ -69,7 +69,8 @@
             <value> <string>if files != \'none\' and files !=\'\':\n
   to_revert = files.split(\',\')\n
 else:\n
-  to_revert = files\n
+  context.REQUEST.set(\'portal_status_message\', \'Nothing to revert.\')\n
+  return context.BusinessTemplate_viewSvnStatus()\n
 \n
 if to_revert != \'none\' and to_revert != \'\':\n
   context.getPortalObject()["portal_subversion"].revert(path=to_revert, bt=context)\n
@@ -119,8 +120,8 @@ return context.BusinessTemplate_viewSvnStatus()\n
                             <string>files</string>
                             <string>_getattr_</string>
                             <string>to_revert</string>
-                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
