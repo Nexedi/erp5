@@ -37,7 +37,7 @@ from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.MethodField import BoundMethod
 from Selection import Selection, DomainSelection
 from DateTime import DateTime
-from Products.ERP5Type.Utils import getPath
+from Products.ERP5Type.Utils import getPath, convertToUpperCase
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from copy import copy
@@ -152,26 +152,26 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
   else:
     oblist = root.objectValues()
   for o in oblist:
-    tree_body += '<TR>' + '<TD WIDTH="16" NOWRAP>' * depth
+    tree_body += '<tr>' + '<td width="16" nowrap>' * depth
     relative_url = o.getRelativeUrl()
     if base_category is not None and not relative_url.startswith(base_category + '/'):
       url = '%s/%s' % (base_category, relative_url)
     else:
       url = relative_url
     if url in unfolded_list:
-      tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
+      tree_body += """<td nowrap valign="top" align="left" colspan="%s">
 <a href="portal_selections/foldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s" >- <b>%s</b></a>
-</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
+</td>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = o
       tree_body += makeTreeBody(form = form, root_dict = new_root_dict, domain_path = domain_path,
                                 depth = depth + 1, total_depth = total_depth, unfolded_list = unfolded_list,
                                 selection_name = selection_name, base_category = base_category)
     else:
-      tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
+      tree_body += """<td nowrap valign="top" align="left" colspan="%s">
 <a href="portal_selections/unfoldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" title="%s">+ %s</a>
-</TD>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
-    #tree_body += '</TD>' * depth + '</TR>'
+</td>""" % (total_depth - depth + 1, url, form_id, selection_name, depth, unicode(o.getTranslatedTitle(), 'utf8'), o.id)
+    tree_body += '</td>' * depth + '</tr>'
 
   return tree_body
 
@@ -2026,20 +2026,20 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
               select_tree_body = ''
           select_tree_html = """<!-- Select Tree -->
 %s
-<table cellpadding="0" border="0">
+<table id="%s_domain_tree_table" cellpadding="0" border="0">
 %s
 </table>
-"""  % (select_tree_header, select_tree_body )
+"""  % (select_tree_header, field.id, select_tree_body )
 
           return """<!-- Table Wrapping for Select Tree -->
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-<tr><td valign="top">""" + """
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+<tr><td valign="top">
 %s
 </td><td valign="top">
 %s
 <!-- End of Table Wrapping for Select Tree -->
 </td></tr>
-</table>""" % (select_tree_html,list_html)
+</table>""" % (select_tree_html, list_html)
         #render_end = DateTime()
         #result = (render_end-render_start) * 86400
         #LOG('Listbox render end call', 0, result)
@@ -2235,7 +2235,13 @@ class ListBox(ZMIField):
       if id == 'default' and kw.get('render_format') in ('list', ):
         return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=kw.get('render_format'))
       else:
-        return ZMIField.get_value(self, id, **kw)
+        # Try an ERP5-style accessor, if available.
+        method_id = 'get' + convertToUpperCase(id)
+        method = getattr(self.widget, method_id, None)
+        if method is not None:
+          return method(**kw)
+        else:
+          return ZMIField.get_value(self, id, **kw)
 
 
 
