@@ -69,7 +69,7 @@ class TestERP5BankingMixin:
         obj = brain.getObject()
         userdb_path, user_id = obj.getOwnerTuple()
         obj.assignRoleToSecurityGroup(user_name = user_id)
-  
+
   def assignPASRolesToUser(self, user_name, role_list):
     """
       Assign a list of roles to one user with PAS.
@@ -121,7 +121,7 @@ class TestERP5BankingMixin:
       #   by the assignment workflow when NuxUserGroup is used and
       #   by ERP5Security PAS plugins in the context of PAS use.
       assignment.open()
-      
+
     if self.PAS_installed:
       # reindexing is required for the security to work
       get_transaction().commit()
@@ -140,13 +140,13 @@ class TestERP5BankingMixin:
     Return the person module
     """
     return getattr(self.getPortal(), 'person_module', None)
-  
+
   def getOrganisationModule(self):
     """
     Return the organisation module
     """
     return getattr(self.getPortal(), 'organisation_module', None)
-  
+
   def getCurrencyCashModule(self):
     """
     Return the Currency Cash Module
@@ -164,25 +164,25 @@ class TestERP5BankingMixin:
     Return the Bank Account Inventory Module
     """
     return getattr(self.getPortal(), 'bank_account_inventory_module', None)
-  
+
   def getCurrencyModule(self):
     """
     Return the Currency Module
     """
     return getattr(self.getPortal(), 'currency_module', None)
-  
+
   def getCategoryTool(self):
     """
     Return the Category Tool
     """
     return getattr(self.getPortal(), 'portal_categories', None)
-  
+
   def getWorkflowTool(self):
     """
     Return the Worklfow Tool
     """
     return getattr(self.getPortal(), 'portal_workflow', None)
-  
+
   def getSimulationTool(self):
     """
     Return the Simulation Tool
@@ -200,13 +200,13 @@ class TestERP5BankingMixin:
     Return the Check Deposit Module
     """
     return getattr(self.getPortal(), 'check_deposit_module', None)
-  
+
   def getCheckbookModule(self):
     """
     Return the Checkbook Module
     """
     return getattr(self.getPortal(), 'checkbook_module', None)
-  
+
 
   def getCounterDateModule(self):
     """
@@ -271,12 +271,14 @@ class TestERP5BankingMixin:
     # add the category valid in cash_status which define status of banknotes and coin
     self.cash_status_valid = self.cash_status_base_category.newContent(id='valid', portal_type='Category')
     self.cash_status_to_sort = self.cash_status_base_category.newContent(id='to_sort', portal_type='Category')
-    
+    self.cash_status_cancelled = self.cash_status_base_category.newContent(id='cancelled', portal_type='Category')
+
     self.emission_letter_base_category = getattr(self.category_tool, 'emission_letter')
     # add the category k in emission letter that will be used fo banknotes and coins
-    self.emission_letter_k = self.emission_letter_base_category.newContent(id='k', portal_type='Category')
+    self.emission_letter_p = self.emission_letter_base_category.newContent(id='p', portal_type='Category')
+    self.emission_letter_s = self.emission_letter_base_category.newContent(id='s', portal_type='Category')
     self.emission_letter_b = self.emission_letter_base_category.newContent(id='b', portal_type='Category')
-    self.emission_letter_d = self.emission_letter_base_category.newContent(id='d', portal_type='Category')
+    self.emission_letter_not_defined = self.emission_letter_base_category.newContent(id='not_defined', portal_type='Category')
 
     self.variation_base_category = getattr(self.category_tool, 'variation')
     # add the category 1992 in variation
@@ -305,7 +307,7 @@ class TestERP5BankingMixin:
     # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
     self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
-    
+
     # get the base category function
     self.function_base_category = getattr(self.category_tool, 'function')
     # add category banking in function which will hold all functions neccessary in a bank (at least for this unit test)
@@ -316,9 +318,12 @@ class TestERP5BankingMixin:
     self.gestionnaire_caisse_courante = self.banking.newContent(id='gestionnaire_caisse_courante', portal_type='Category', codification='CCO')
     self.gestionnaire_caveau = self.banking.newContent(id='gestionnaire_caveau', portal_type='Category', codification='CCV')
     self.caissier_particulier = self.banking.newContent(id='caissier_particulier', portal_type='Category', codification='CGU')
+    self.controleur_caisse_courante = self.banking.newContent(id='controleur_caisse_courante', portal_type='Category', codification='CCC')
+    self.controleur_caveau = self.banking.newContent(id='controleur_caveau', portal_type='Category', codification='CCA')
     self.comptable = self.banking.newContent(id='comptable', portal_type='Category', codification='FXF')
     self.chef_section = self.banking.newContent(id='chef_section_comptable', portal_type='Category', codification='FXS')
     self.chef_comptable = self.banking.newContent(id='chef_comptable', portal_type='Category', codification='CCB')
+    self.chef_de_tri = self.banking.newContent(id='chef_de_tri', portal_type='Category', codification='CTR')
 
     # get the base category group
     self.group_base_category = getattr(self.category_tool, 'group')
@@ -329,33 +334,55 @@ class TestERP5BankingMixin:
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
     self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category', codification='TEST', vault_type='site')
-    # add vault caisse_1 in testsite
-    self.caisse_1 = self.testsite.newContent(id='caisse_1', portal_type='Category', codification='C1',  vault_type='site/vault')
-    # add vault caisse_2 in testsite
-    self.caisse_2 = self.testsite.newContent(id='caisse_2', portal_type='Category', codification='C2',  vault_type='site/vault')
-    self.siegesite = self.site_base_category.newContent(id='siege', portal_type='Category', codification='SIEGE',  vault_type='site')
-    self.agencesite = self.site_base_category.newContent(id='agence', portal_type='Category', codification='AGENCE',  vault_type='site')
-    self.principalesite = self.agencesite.newContent(id='principale', portal_type='Category', codification='PRINCIPALE',  vault_type='site/vault')
-    self.auxisite = self.agencesite.newContent(id='auxiliaire', portal_type='Category', codification='AUXILIAIRE',  vault_type='site/vault')        
-    self.encaisse_billets_et_monnaies = self.testsite.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='C1',  vault_type='site/vault')
-    self.encaisse_externe = self.testsite.newContent(id='encaisse_des_externes', portal_type='Category', codification='C1',  vault_type='site/vault')
-    self.encaisse_ventilation = self.testsite.newContent(id='encaisse_des_billets_recus_pour_ventilation', portal_type='Category', codification='C1',  vault_type='site/vault')
-    self.caisse_lille = self.encaisse_ventilation.newContent(id='lille', portal_type='Category', codification='C1',  vault_type='site/vault')
-    self.paris = self.principalesite.newContent(id='paris', portal_type='Category', codification='K00',  vault_type='site/vault')
+    self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P1',  vault_type='site')
+    self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S1',  vault_type='site')
+
+    for c in self.testsite.getCategoryChildValueList():
+      # create bank structure for each agency
+      site = c.getId()
+      # surface
+      surface = c.newContent(id='surface', portal_type='Category', codification='',  vault_type='site/surface')
+      caisse_courante = surface.newContent(id='caisse_courante', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+      caisse_courante.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+      # create counter for surface
+      for s in ['banque_interne', 'gros_versement', 'gros_payement']:
+        s = surface.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
+        for ss in ['guichet_1', 'guichet_2', 'guichet_3']:
+          ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
+      # create sort room
+      salle_de_tri = surface.newContent(id='salle_de_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_de_tri')
+      for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation']:
+        ss =  salle_de_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_de_tri')
+        if 'ventilation' in ss.getId():
+          for country in ['France', 'Spain']:
+            if country[0] != c.getCodification()[0]:
+              ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+      # caveau
+      caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
+      for s in ['auxiliaire', 'reserve', 'externes']:
+        s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+        for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 'encaisse_des_billets_recus_pour_ventilation']:
+          ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+          if 'ventilation' in ss.getId():
+            for country in ['France', 'Spain']:
+              if country[0] != c.getCodification()[0]:
+                ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
 
 
-  def openCounterDate(self, date=None):
+  def openCounterDate(self, date=None, site=None):
     """
     open a couter date fort the given date
     by default use the current date
     """
     if date is None:
       date = DateTime().Date()
+    if site is None:
+      site = self.testsite
     # create a counter date
     self.counter_date_module = self.getCounterDateModule()
     self.counter_date = self.counter_date_module.newContent(id='counter_date_1', portal_type="Counter Date",
-                                                            site_value = self.testsite,
-                                                            start_date = date)    
+                                                            site_value = site,
+                                                            start_date = date)
     # open the counter date
     self.counter_date.open()
 
@@ -406,7 +433,7 @@ class TestERP5BankingMixin:
                                          portal_type = 'Person',
                                          first_name = first_name,
                                          last_name = last_name)
-        
+
 
   def createBankAccount(self, person, account_id, currency, amount):
     """
@@ -434,7 +461,7 @@ class TestERP5BankingMixin:
                                            inventory=amount)
     self.account_inventory_number += 1
     return bank_account
-    
+
 
   def createCheckbook(self, id, vault, bank_account, min, max, date=None):
     """
@@ -457,9 +484,9 @@ class TestERP5BankingMixin:
     """
     check = checkbook.newContent(id=id,
                                  portal_type = 'Check',
-                                 reference=reference                                
+                                 reference=reference
                                 )
-    
+
     # mark the check as issued
     check.confirm()
     return check
@@ -502,7 +529,7 @@ class TestERP5BankingMixin:
                                  line['resource'],
                                  line['variation_id'],
                                  line['variation_value'],
-                                 line['quantity'],)      
+                                 line['quantity'],)
     return inventory_group
 
 
@@ -549,7 +576,7 @@ class TestERP5BankingMixin:
     Check that all have been create after setup
     """
     # check that Categories were created
-    self.assertEqual(self.encaisse_billets_et_monnaies.getPortalType(), 'Category')
+    self.assertEqual(self.paris.getPortalType(), 'Category')
 
     # check that Resources were created
     # check portal type of billet_10000
@@ -569,7 +596,7 @@ class TestERP5BankingMixin:
     self.assertEqual(self.billet_5000.getPriceCurrency(), 'currency_module/EUR')
     # check years  of billet_5000
     self.assertEqual(self.billet_5000.getVariationList(), ['1992', '2003'])
-    
+
     # check portal type of billet_200
     self.assertEqual(self.billet_200.getPortalType(), 'Banknote')
     # check value of billet_200
