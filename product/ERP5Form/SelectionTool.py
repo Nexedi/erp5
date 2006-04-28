@@ -331,7 +331,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        selection.edit(invert_mode=0, params={}, checked_uids=[])
+        selection.edit(invert_mode=0, params={}, checked_uids=[],
+                       domain=None, domain_path=None, domain_list=(),
+                       report=None, report_path=None, report_list=())
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionSortOrder')
     def setSelectionSortOrder(self, selection_name, sort_on, REQUEST=None):
