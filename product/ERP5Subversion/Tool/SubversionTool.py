@@ -471,10 +471,11 @@ class SubversionTool(UniqueObject, Folder):
     if edit_path.strip() == '':
       # not in zodb 
       return '#'
+    # remove file extension
     tmp = re.search('\\.[\w]+$', edit_path)
     if tmp:
       extension = tmp.string[tmp.start():tmp.end()].strip()
-      edit_path = edit_path.replace(extension, '')
+      edit_path = edit_path[:-len(extension)]
     edit_path = bt.REQUEST["BASE2"] + '/' + edit_path + '/manage_main'
     return edit_path
     
@@ -712,43 +713,70 @@ class SubversionTool(UniqueObject, Folder):
     """
     client = self._getClient()
     return client.diff(self.relativeToAbsolute(path, bt), revision1, revision2)
-
+  
   security.declareProtected('Import/Export objects', 'revert')
   # path can be absolute or relative
   def revert(self, path, bt=None, recurse=False):
     """Revert local changes in a file or a directory.
     """
     client = self._getClient()
+    if not isinstance(path, list) :
+      path = [path]
     if bt is not None:
-      object_to_update = {}
-      if isinstance(path, list) :
-        for p in path:
-          path_list = p.split(os.sep)
-          if 'bt' not in path_list:
-            if len(path_list) > 2 :
-              tmp=os.sep.join(path_list[2:])
-              tmp2 = re.search('\\.[\w]+$', tmp)
-              if tmp2:
-                extension = tmp2.string[tmp2.start():tmp2.end()].strip()
-                tmp = tmp.replace(extension, '')
-              object_to_update[tmp] = 'install'
-        path = [self.relativeToAbsolute(x, bt) for x in path]
-      else:
-        path_list = path.split(os.sep)
-        if 'bt' not in path_list:
-          if len(path_list) > 2 :
-            tmp=os.sep.join(path_list[2:])
-            tmp2 = re.search('\\.[\w]+$', tmp)
-            if tmp2:
-              extension = tmp2.string[tmp2.start():tmp2.end()].strip()
-              tmp = tmp.replace(extension, '')
-            object_to_update[tmp] = 'install'
-        path = self.relativeToAbsolute(path, bt)
+      path = [self.relativeToAbsolute(x, bt) for x in path]
     client.revert(path, recurse)
-    if bt is not None:
+
+  security.declareProtected('Import/Export objects', 'revertZODB')
+  # path can be absolute or relative
+  def revertZODB(self, bt, added_files=None, other_files=None, recurse=False):
+    """Revert local changes in a file or a directory
+       in ZODB and on hard drive
+    """
+    client = self._getClient()
+    object_to_update = {}
+    if not added_files :
+      added_files = []
+    if not other_files :
+      other_files = []
+    if not isinstance(added_files, list) :
+      added_files=[added_files]
+    if not isinstance(other_files, list) :
+      other_files=[other_files]
+    
+    # Reinstall removed or modified files
+    for p in other_files :
+      path_list = p.split(os.sep)
+      if 'bt' not in path_list:
+        if len(path_list) > 2 :
+          tmp = os.sep.join(path_list[2:])
+          # Remove file extension
+          tmp2 = re.search('\\.[\w]+$', tmp)
+          if tmp2:
+            extension = tmp2.string[tmp2.start():tmp2.end()].strip()
+            tmp=tmp[:-len(extension)]
+          object_to_update[tmp] = 'install'
+          
+    # remove added files
+    for p in added_files :
+      path_list = p.split(os.sep)
+      if 'bt' not in path_list:
+        if len(path_list) > 2 :
+          tmp = os.sep.join(path_list[2:])
+          # Remove file extension
+          tmp2 = re.search('\\.[\w]+$', tmp)
+          if tmp2:
+            extension = tmp2.string[tmp2.start():tmp2.end()].strip()
+            tmp=tmp[:-len(extension)]
+          object_to_update[tmp] = 'remove'
+
+    #revert changes
+    added_files.extend(other_files)
+    to_revert = [self.relativeToAbsolute(x, bt) for x in added_files]
+    if len(to_revert) != 0 :
+      client.revert(to_revert, recurse)
+      # Partially reinstall installed bt
       installed_bt = bt.portal_templates.getInstalledBusinessTemplate(                                                          bt.getTitle())
       installed_bt.reinstall(object_to_update=object_to_update, force=0)
-      bt.build()
     
   security.declareProtected('Import/Export objects', 'resolved')
   # path can be absolute or relative
