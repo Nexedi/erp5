@@ -197,6 +197,61 @@ print \'\'\'\n
       }\n
     }\n
 \n
+\n
+    function revert(popup,form){\n
+      nbModified=0;\n
+      nbAdded=0;\n
+      nbRemoved=0;\n
+      FilesRemovedArray=[];\n
+      FilesAddedArray=[];\n
+      FilesModifiedArray=[];\n
+      if(popup == 1){\n
+        //hide popup\n
+        document.getElementById(\'menudiv\').style.display = "none";\n
+        filesCheckedArray = [tree.getSelectedItemId()];\n
+        filesCheckedArray=filesCheckedArray.concat(tree.getAllSubItems(filesCheckedArray[0]).split(\',\'));\n
+      }else{\n
+        filesCheckedArray=tree.getAllChecked().split(\',\');\n
+      }\n
+      for(i=0;i<filesCheckedArray.length; ++i){\n
+        if(tree.getItemColor(filesCheckedArray[i])==\'red\'){\n
+          FilesRemovedArray[nbRemoved++]=filesCheckedArray[i];\n
+        }else{\n
+          if(tree.getItemColor(filesCheckedArray[i])==\'green\'){\n
+            FilesAddedArray[nbAdded++]=filesCheckedArray[i];\n
+          }else\n
+          if(tree.getItemColor(filesCheckedArray[i])==\'orange\'){\n
+            FilesModifiedArray[nbModified++]=filesCheckedArray[i];\n
+          }\n
+        }\n
+      }\n
+      if(nbModified!=0){\n
+        filesModified=FilesModifiedArray.join(\',\');\n
+      }else{\n
+        filesModified=\'none\';\n
+      }\n
+      form.modified.value=filesModified;\n
+      if(nbAdded!=0){\n
+        filesAdded=FilesAddedArray.join(\',\');\n
+      }else{\n
+        filesAdded=\'none\';\n
+      }\n
+      form.added.value=filesAdded;\n
+      if(nbRemoved!=0){\n
+        filesRemoved=FilesRemovedArray.join(\',\');\n
+      }else{\n
+        filesRemoved=\'none\';\n
+      }\n
+      form.removed.value=filesRemoved;\n
+      if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
+        alert("Nothing to revert !");\n
+      } else {\n
+        if(confirm(\'Are you sure you want to revert changes?\')){\n
+          submitAction(form,\'%s/BusinessTemplate_doSvnRevert\');\n
+        }\n
+      }\n
+    }\n
+\n
     function viewDiff(popup, form){\n
       nbModified=0;\n
       nbAdded=0;\n
@@ -295,28 +350,6 @@ print \'\'\'\n
 \n
     document.onmousedown  = mouseSelect;\n
     document.onmousemove = getMouse;\n
-\n
-    function revert(popup,form){\n
-      if(popup==1){\n
-        //hide popup\n
-        document.getElementById(\'menudiv\').style.display = "none";\n
-        to_revert = tree.getSelectedItemId();\n
-        sub = tree.getAllSubItems(to_revert);\n
-        if(sub != \'\'){\n
-          to_revert = to_revert + \',\' + sub;\n
-        }\n
-      }else{\n
-        to_revert = tree.getAllChecked();\n
-      }\n
-      if (to_revert == \'\') {\n
-        alert("Nothing to revert !");\n
-      } else {\n
-        if(confirm(\'Are you sure you want to revert changes?\')){\n
-          form.files.value=to_revert;\n
-          submitAction(form,\'%s/BusinessTemplate_doSvnRevert\');\n
-        }\n
-      }\n
-    }\n
 \n
     function update(){\n
       open(\'%s/BusinessTemplate_doSvnUpdate\', \'_self\');\n
