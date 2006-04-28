@@ -138,10 +138,10 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     # Create an Organisation that will be used for users assignment
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
-                          function='banking', group='baobab',  site='testsite')
+                          function='banking', group='baobab',  site='testsite/paris')
     # define the user
     user_dict = {
-        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite']
+        'super_user' : [['Manager'], self.organisation, 'banking/comptable', 'baobab', 'testsite/paris']
       }
     # call method to create this user
     self.createERP5Users(user_dict)
