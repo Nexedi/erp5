@@ -47,9 +47,9 @@ if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
   
 
-class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
   """
-    This class is a unit test to check the module of Cash Transfer
+    This class is a unit test to check the module of Usual Cash Transfer
 
     Here are the following step that will be done in the test :
   
@@ -90,7 +90,7 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     """
       Return the title of the test
     """
-    return "ERP5BankingCashTransfer"
+    return "ERP5BankingUsualCashTransfer"
 
 
   def getBusinessTemplateList(self):
@@ -106,11 +106,11 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
            , 'erp5_banking_cash' # erp5_banking_cash contains all method for cash transfer
            )
 
-  def getCashTransferModule(self):
+  def getUsualCashTransferModule(self):
     """
     Return the Cash Transer Module
     """
-    return getattr(self.getPortal(), 'cash_transfer_module', None)
+    return getattr(self.getPortal(), 'usual_cash_transfer_module', None)
 
 
   def afterSetUp(self):
@@ -120,7 +120,7 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     # Set some variables : 
     self.initDefaultVariable()
     # the cahs transfer module
-    self.cash_transfer_module = self.getCashTransferModule()
+    self.usual_cash_transfer_module = self.getUsualCashTransferModule()
     
     self.createManagerAndLogin()
 
@@ -135,18 +135,19 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     inventory_dict_line_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_10000}
     
     inventory_dict_line_2 = {'id' : 'inventory_line_2',
                              'resource': self.piece_200,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
-                             'variation_value': ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+                             'variation_value': ('emission_letter/p', 'cash_status/valid') + self.variation_list,
                              'quantity': self.quantity_200}
     
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
-
-    self.createCashInventory(source=None, destination=self.caisse_1, currency=self.currency_1,
+    self.usual_cash = self.paris.surface.caisse_courante.encaisse_des_billets_et_monnaies
+    self.counter = self.paris.surface.banque_interne.guichet_1
+    self.createCashInventory(source=None, destination=self.usual_cash, currency=self.currency_1,
                              line_list=line_list)
 
 
@@ -157,10 +158,10 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     on are really here.
     """
     self.checkResourceCreated()
-    # check that CashTransfer Module was created
-    self.assertEqual(self.cash_transfer_module.getPortalType(), 'Cash Transfer Module')
+    # check that UsualCashTransfer Module was created
+    self.assertEqual(self.usual_cash_transfer_module.getPortalType(), 'Usual Cash Transfer Module')
     # check cash transfer module is empty
-    self.assertEqual(len(self.cash_transfer_module.objectValues()), 0)
+    self.assertEqual(len(self.usual_cash_transfer_module.objectValues()), 0)
 
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -168,56 +169,56 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Check the initial inventory before any operations
     """
     self.simulation_tool = self.getSimulationTool()
-    # check we have 5 banknotes of 10000 in caisse_1
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    # check we have 12 coin of 200 in caisse_1
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    # check we have 5 banknotes of 10000 in usual_cash
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    # check we have 12 coin of 200 in usual_cash
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
   def stepCheckSource(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check inventory in source vault (caisse_1) before a confirm
+    Check inventory in source vault (usual_cash) before a confirm
     """
     # check we have 5 banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coin of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
   def stepCheckDestination(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check inventory in destination vault (caisse_2) before confirm
+    Check inventory in destination vault (counter) before confirm
     """
     # check we don't have banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we don't have coins of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
-  def stepCreateCashTransfer(self, sequence=None, sequence_list=None, **kwd):
+  def stepCreateUsualCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash transfer document and check it
     """
-    # Cash transfer has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_transfer = self.cash_transfer_module.newContent(id='cash_transfer_1', portal_type='Cash Transfer', source_value=self.caisse_1, destination_value=self.caisse_2, source_total_asset_price=52400.0)
+    # Cash transfer has usual_cash for source, counter for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
+    self.usual_cash_transfer = self.usual_cash_transfer_module.newContent(id='usual_cash_transfer_1', portal_type='Usual Cash Transfer', source_value=self.usual_cash, destination_value=self.counter, source_total_asset_price=52400.0)
     # execute tic
     self.stepTic()
     # check we have only one cash transfer
-    self.assertEqual(len(self.cash_transfer_module.objectValues()), 1)
+    self.assertEqual(len(self.usual_cash_transfer_module.objectValues()), 1)
     # get the cash transfer document
-    self.cash_transfer = getattr(self.cash_transfer_module, 'cash_transfer_1')
+    self.usual_cash_transfer = getattr(self.usual_cash_transfer_module, 'usual_cash_transfer_1')
     # check its portal type
-    self.assertEqual(self.cash_transfer.getPortalType(), 'Cash Transfer')
-    # check that its source is caisse_1
-    self.assertEqual(self.cash_transfer.getSource(), 'site/testsite/caisse_1')
-    # check that its destination is caisse_2
-    self.assertEqual(self.cash_transfer.getDestination(), 'site/testsite/caisse_2')
+    self.assertEqual(self.usual_cash_transfer.getPortalType(), 'Usual Cash Transfer')
+    # check that its source is usual_cash
+    self.assertEqual(self.usual_cash_transfer.getSource(), 'site/testsite/paris/surface/caisse_courante/encaisse_des_billets_et_monnaies')
+    # check that its destination is counter
+    self.assertEqual(self.usual_cash_transfer.getDestination(), 'site/testsite/paris/surface/banque_interne/guichet_1')
 
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
@@ -225,15 +226,15 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Create the cash transfer line 1 with banknotes of 10000 and check it has been well created
     """
     # create the cash transfer line
-    self.addCashLineToDelivery(self.cash_transfer, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+    self.addCashLineToDelivery(self.usual_cash_transfer, 'valid_line_1', 'Cash Delivery Line', self.billet_10000,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
     self.stepTic()
     # check there is only one line created
-    self.assertEqual(len(self.cash_transfer.objectValues()), 1)
+    self.assertEqual(len(self.usual_cash_transfer.objectValues()), 1)
     # get the cash transfer line
-    self.valid_line_1 = getattr(self.cash_transfer, 'valid_line_1')
+    self.valid_line_1 = getattr(self.usual_cash_transfer, 'valid_line_1')
     # check its portal type
     self.assertEqual(self.valid_line_1.getPortalType(), 'Cash Delivery Line')
     # check the resource is banknotes of 10000
@@ -247,15 +248,15 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     # now check for each variation (years 1992 and 2003)
     for variation in self.variation_list:
       # get the delivery cell
-      cell = self.valid_line_1.getCell('emission_letter/k', variation, 'cash_status/valid')
+      cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/valid')
       # chek portal types
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       # check the banknote of the cell is banknote of 10000
       self.assertEqual(cell.getResourceValue(), self.billet_10000)
-      # check the source vault is caisse_1
-      self.assertEqual(cell.getSourceValue(), self.caisse_1)
-      # check the destination vault is caisse_2
-      self.assertEqual(cell.getDestinationValue(), self.caisse_2)
+      # check the source vault is usual_cash
+      self.assertEqual(cell.getSourceValue(), self.usual_cash)
+      # check the destination vault is counter
+      self.assertEqual(cell.getDestinationValue(), self.counter)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
         self.assertEqual(cell.getQuantity(), 2.0)
@@ -271,11 +272,11 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Check the amount after the creation of cash transfer line 1
     """
     # Check number of lines
-    self.assertEqual(len(self.cash_transfer.objectValues()), 1)
+    self.assertEqual(len(self.usual_cash_transfer.objectValues()), 1)
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
-    self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0)
+    self.assertEqual(self.usual_cash_transfer.getTotalQuantity(), 5.0)
     # Check the total price
-    self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0)
+    self.assertEqual(self.usual_cash_transfer.getTotalPrice(), 10000 * 5.0)
 
 
   def stepCreateValidLine2(self, sequence=None, sequence_list=None, **kwd):
@@ -283,15 +284,15 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Create the cash transfer line 2 wiht coins of 200 and check it has been well created
     """
     # create the line
-    self.addCashLineToDelivery(self.cash_transfer, 'valid_line_2', 'Cash Delivery Line', self.piece_200,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+    self.addCashLineToDelivery(self.usual_cash_transfer, 'valid_line_2', 'Cash Delivery Line', self.piece_200,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
     self.stepTic()
     # check the number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_transfer.objectValues()), 2)
+    self.assertEqual(len(self.usual_cash_transfer.objectValues()), 2)
     # get the second cash transfer line
-    self.valid_line_2 = getattr(self.cash_transfer, 'valid_line_2')
+    self.valid_line_2 = getattr(self.usual_cash_transfer, 'valid_line_2')
     # check portal types
     self.assertEqual(self.valid_line_2.getPortalType(), 'Cash Delivery Line')
     # check the resource is coin of 200
@@ -304,7 +305,7 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.valid_line_2.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_line_2.getCell('emission_letter/k', variation, 'cash_status/valid')
+      cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/valid')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       if cell.getId() == 'movement_0_0_0':
@@ -323,37 +324,37 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     check the total with the invalid cash transfer line
     """
     # create a line in which quanity of banknotes of 5000 is higher that quantity available at source
-    # here create a line with 24 (11+13) banknotes of 500 although the vault caisse_1 has no banknote of 5000
-    self.addCashLineToDelivery(self.cash_transfer, 'invalid_line', 'Cash Delivery Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+    # here create a line with 24 (11+13) banknotes of 500 although the vault usual_cash has no banknote of 5000
+    self.addCashLineToDelivery(self.usual_cash_transfer, 'invalid_line', 'Cash Delivery Line', self.billet_5000,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_5000)
     # execute tic
     self.stepTic()
     # Check number of cash transfer lines (line1 + line2 +invalid_line)
-    self.assertEqual(len(self.cash_transfer.objectValues()), 3)
+    self.assertEqual(len(self.usual_cash_transfer.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
-    self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0 + 12.0 + 24)
+    self.assertEqual(self.usual_cash_transfer.getTotalQuantity(), 5.0 + 12.0 + 24)
     # chect the total price
-    self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
+    self.assertEqual(self.usual_cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
 
-  def stepTryConfirmCashTransferWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepTryConfirmUsualCashTransferWithBadInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Try to confirm the cash transfer with a bad cash transfer line and
     check the try of confirm the cash transfer with the invalid line has failed
     """
     # fix amount (10000 * 5.0 + 200 * 12.0 + 5000 * 24)
-    self.cash_transfer.setSourceTotalAssetPrice('172400.0')
+    self.usual_cash_transfer.setSourceTotalAssetPrice('172400.0')
     # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition 
-    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.usual_cash_transfer, 'confirm_action', wf_id='usual_cash_transfer_workflow')
     # execute tic
     self.stepTic()
     # get state of the cash transfer
-    state = self.cash_transfer.getSimulationState()
+    state = self.usual_cash_transfer.getSimulationState()
     # check the state is draft
     self.assertEqual(state, 'draft')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_transfer, name='history', wf_id='usual_cash_transfer_workflow')
     # check its len is 2
     self.assertEqual(len(workflow_history), 2)
     # check we get an "Insufficient balance" message in the workflow history because of the invalid line
@@ -365,7 +366,7 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Delete the invalid cash transfer line previously create
     """
-    self.cash_transfer.deleteContent('invalid_line')
+    self.usual_cash_transfer.deleteContent('invalid_line')
 
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
@@ -373,109 +374,109 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     Check the total after the creation of the two cash transfer lines
     """
     # Check number of lines (line1 + line2)
-    self.assertEqual(len(self.cash_transfer.objectValues()), 2)
+    self.assertEqual(len(self.usual_cash_transfer.objectValues()), 2)
     # Check quantity, banknotes : 2 for 1992 and 3 for 2003, coin : 5 for 1992 and 7 for 2003
-    self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0 + 12.0)
+    self.assertEqual(self.usual_cash_transfer.getTotalQuantity(), 5.0 + 12.0)
     # check the total price
-    self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
+    self.assertEqual(self.usual_cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
 
 
-  def stepConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
+  def stepConfirmUsualCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the cash transfer and check it
     """
     # fix amount (10000 * 5.0 + 200 * 12.0)
-    self.cash_transfer.setSourceTotalAssetPrice('52400.0')
+    self.usual_cash_transfer.setSourceTotalAssetPrice('52400.0')
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
+    self.workflow_tool.doActionFor(self.usual_cash_transfer, 'confirm_action', wf_id='usual_cash_transfer_workflow')
     # execute tic
     self.stepTic()
     # get state
-    state = self.cash_transfer.getSimulationState()
+    state = self.usual_cash_transfer.getSimulationState()
     # check state is confirmed
     self.assertEqual(state, 'confirmed')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_transfer, name='history', wf_id='usual_cash_transfer_workflow')
     # check len of workflow history is 4
     self.assertEqual(len(workflow_history), 4)
 
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault caisse_1 is right after confirm and before deliver 
+    Check that compution of inventory at vault usual_cash is right after confirm and before deliver 
     """
     # check we have 5 banknotes of 10000 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we will have 0 banknote of 10000 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 12 coins of 200 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     # check we will have 0 coin of 200 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
   def stepCheckDestinationCreditPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
+    Check that compution of inventory at vault counter is right after confirm and before deliver
     """
     # check we have 0 banknote of 10000 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we will have 5 banknotes of 10000 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 0 coin of 200 currently
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     # check we will have 12 coins of 200 after deliver
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
-  def stepDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
+  def stepDeliverUsualCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     Deliver the cash transfer with a good user
     and check that the deliver of a cash tranfer have achieved
     """
     # do the workflow transition "deliver_action"
-    self.workflow_tool.doActionFor(self.cash_transfer, 'deliver_action', wf_id='cash_transfer_workflow')
+    self.workflow_tool.doActionFor(self.usual_cash_transfer, 'deliver_action', wf_id='usual_cash_transfer_workflow')
     # execute tic
     self.stepTic()
     # get state of cash transfer
-    state = self.cash_transfer.getSimulationState()
+    state = self.usual_cash_transfer.getSimulationState()
     # check that state is delivered
     self.assertEqual(state, 'delivered')
     # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.usual_cash_transfer, name='history', wf_id='usual_cash_transfer_workflow')
     # check len of len workflow history is 6
     self.assertEqual(len(workflow_history), 6)
     
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check inventory at source (vault caisse_1) after deliver of the cash transfer
+    Check inventory at source (vault usual_cash) after deliver of the cash transfer
     """
     # check we have 0 banknote of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 0 coin of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.usual_cash.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
 
   def stepCheckDestinationCredit(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check inventory at destination (vault caisse_2) after deliver of the cash transfer
+    Check inventory at destination (vault counter) after deliver of the cash transfer
     """
     # check we have 5 banknotes of 10000
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we have 12 coins of 200
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.counter.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
   ##################################
   ##  Tests
   ##################################
 
-  def test_01_ERP5BankingCashTransfer(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_ERP5BankingUsualCashTransfer(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
     Define the sequence of step that will be play
     """
@@ -483,17 +484,17 @@ class TestERP5BankingCashTransfer(TestERP5BankingMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory CheckSource CheckDestination ' \
-                    + 'CreateCashTransfer ' \
+                    + 'CreateUsualCashTransfer ' \
                     + 'CreateValidLine1 CheckSubTotal ' \
                     + 'CreateValidLine2 CheckTotal ' \
                     + 'CheckSource CheckDestination ' \
                     + 'CreateInvalidLine ' \
-                    + 'TryConfirmCashTransferWithBadInventory ' \
+                    + 'TryConfirmUsualCashTransferWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
-                    + 'ConfirmCashTransfer ' \
+                    + 'ConfirmUsualCashTransfer ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
-                    + 'DeliverCashTransfer ' \
+                    + 'DeliverUsualCashTransfer ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
@@ -506,5 +507,5 @@ else:
   import unittest
   def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestERP5BankingCashTransfer))
+    suite.addTest(unittest.makeSuite(TestERP5BankingUsualCashTransfer))
     return suite
