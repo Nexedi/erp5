@@ -1183,7 +1183,6 @@ class BasicStructure:
         axis_dict['bound_begin'] = occurence[0]
       if occurence[1] > axis_dict['bound_end']:
         axis_dict['bound_end'] = occurence[1]
-    import pdb; pdb.set_trace()
     axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
     # now start and stop have the extreme values of the second axis bound.
     # this represents in fact the size of the Planning
