@@ -727,20 +727,28 @@ class SubversionTool(UniqueObject, Folder):
           if 'bt' not in path_list:
             if len(path_list) > 2 :
               tmp=os.sep.join(path_list[2:])
+              tmp2 = re.search('\\.[\w]+$', tmp)
+              if tmp2:
+                extension = tmp2.string[tmp2.start():tmp2.end()].strip()
+                tmp = tmp.replace(extension, '')
               object_to_update[tmp] = 'install'
-        #raise str(object_to_update)
         path = [self.relativeToAbsolute(x, bt) for x in path]
       else:
         path_list = path.split(os.sep)
         if 'bt' not in path_list:
           if len(path_list) > 2 :
             tmp=os.sep.join(path_list[2:])
+            tmp2 = re.search('\\.[\w]+$', tmp)
+            if tmp2:
+              extension = tmp2.string[tmp2.start():tmp2.end()].strip()
+              tmp = tmp.replace(extension, '')
             object_to_update[tmp] = 'install'
         path = self.relativeToAbsolute(path, bt)
     client.revert(path, recurse)
     if bt is not None:
       installed_bt = bt.portal_templates.getInstalledBusinessTemplate(                                                          bt.getTitle())
-      installed_bt.install(object_to_update=object_to_update, force=0)
+      installed_bt.reinstall(object_to_update=object_to_update, force=0)
+      bt.build()
     
   security.declareProtected('Import/Export objects', 'resolved')
   # path can be absolute or relative
@@ -860,6 +868,7 @@ class SubversionTool(UniqueObject, Folder):
     return somethingModified and root
   
   def extractBT(self, bt):
+    bt.build()
     svn_path = self.getSubversionPath(bt) + os.sep
     path = mktemp()  +os.sep
     bt.export(path=path, local=1)
