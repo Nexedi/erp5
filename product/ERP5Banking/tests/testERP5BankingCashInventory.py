@@ -105,8 +105,8 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     on are really here.
     """
     # check that Categories were created
-    self.assertEqual(self.caisse_1.getPortalType(), 'Category')
-    self.assertEqual(self.caisse_2.getPortalType(), 'Category')
+    self.assertEqual(self.paris.getPortalType(), 'Category')
+    self.assertEqual(self.madrid.getPortalType(), 'Category')
 
     # check that Resources were created
     # check portal type of billet_10000
@@ -148,14 +148,14 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     self.simulation_tool = self.getSimulationTool()
     # check we have 0 banknotes of 10000 in caisse_1
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 0 coin of 200 in caisse_1
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     # check we have 0 banknotes of 5000 in caisse_1
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
 
   def stepCreateCashInventoryGroup(self, sequence=None, sequence_list=None, **kwd):
@@ -163,7 +163,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     Create a cash inventory document and check it
     """
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
-    self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group', portal_type='Cash Inventory Group', source_value=None, destination_value=self.caisse_1)
+    self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris)
     # execute tic
     self.stepTic()
     # check we have only one cash inventory
@@ -175,7 +175,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     # check that its source is caisse_1
     self.assertEqual(self.cash_inventory.getSource(), None)
     # check that its destination is caisse_2
-    self.assertEqual(self.cash_inventory.getDestination(), 'site/testsite/caisse_1')
+    self.assertEqual(self.cash_inventory.getDestination(), 'site/testsite/paris')
 
 
   def stepCreateCashInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -195,7 +195,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     # check that its source is caisse_1
     self.assertEqual(self.cash_inventory.getSource(), None)
     # check that its destination is caisse_2
-    self.assertEqual(self.cash_inventory.getDestination(), 'site/testsite/caisse_1')
+    self.assertEqual(self.cash_inventory.getDestination(), 'site/testsite/paris')
 
 
   def stepCreateInventoryLine1(self, sequence=None, sequence_list=None, **kwd):
@@ -204,7 +204,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create the cash inventory
     self.addCashLineToDelivery(self.cash_inventory, 'valid_line_1', 'Cash Inventory Line', self.billet_10000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
     self.stepTic()
@@ -225,7 +225,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     # now check for each variation (years 1992 and 2003)
     for variation in self.variation_list:
       # get the delivery cell
-      cell = self.valid_line_1.getCell('emission_letter/k', variation, 'cash_status/valid')
+      cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/valid')
       # chek portal types
       self.assertEqual(cell.getPortalType(), 'Cash Inventory Cell')
       # check the banknote of the cell is banknote of 10000
@@ -233,7 +233,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the source vault is caisse_1
       self.assertEqual(cell.getSourceValue(), None)
       # check the destination vault is caisse_2
-      self.assertEqual(cell.getDestinationValue(), self.caisse_1)
+      self.assertEqual(cell.getDestinationValue(), self.paris)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity of banknote for year 1992 is 2
         self.assertEqual(cell.getQuantity(), 2.0)
@@ -259,8 +259,8 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
 
     
   def stepCreateInventoryLine2(self, sequence=None, sequence_list=None, **kwd):
@@ -269,7 +269,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     # create the line
     self.addCashLineToDelivery(self.cash_inventory, 'valid_line_2', 'Cash Inventory Line', self.piece_200,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
     self.stepTic()
@@ -289,7 +289,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.valid_line_2.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_line_2.getCell('emission_letter/k', variation, 'cash_status/valid')
+      cell = self.valid_line_2.getCell('emission_letter/p', variation, 'cash_status/valid')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Inventory Cell')
       # check the banknote of the cell is banknote of 10000
@@ -297,7 +297,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the source vault is caisse_1
       self.assertEqual(cell.getSourceValue(), None)
       # check the destination vault is caisse_2
-      self.assertEqual(cell.getDestinationValue(), self.caisse_1)
+      self.assertEqual(cell.getDestinationValue(), self.paris)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 5.0)
@@ -324,8 +324,8 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
   def stepCreateInventoryLine3(self, sequence=None, sequence_list=None, **kwd):
@@ -336,7 +336,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     # create a line in which quanity of banknotes of 5000 is higher that quantity available at source
     # here create a line with 24 (11+13) banknotes of 500 although the vault caisse_1 has no banknote of 5000
     self.addCashLineToDelivery(self.cash_inventory, 'valid_line_3', 'Cash Inventory Line', self.billet_5000,
-            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
+            ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_5000)
     # execute tic
     self.stepTic()
@@ -356,7 +356,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(self.valid_line_3.objectValues()), 2)
     for variation in self.variation_list:
       # get the delivery  cell
-      cell = self.valid_line_3.getCell('emission_letter/k', variation, 'cash_status/valid')
+      cell = self.valid_line_3.getCell('emission_letter/p', variation, 'cash_status/valid')
       # check the portal type
       self.assertEqual(cell.getPortalType(), 'Cash Inventory Cell')
       # check the banknote of the cell is banknote of 10000
@@ -364,7 +364,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
       # check the source vault is caisse_1
       self.assertEqual(cell.getSourceValue(), None)
       # check the destination vault is caisse_2
-      self.assertEqual(cell.getDestinationValue(), self.caisse_1)
+      self.assertEqual(cell.getDestinationValue(), self.paris)
       if cell.getId() == 'movement_0_0_0':
         # check the quantity for coin for year 1992 is 5
         self.assertEqual(cell.getQuantity(), 11.0)
@@ -390,14 +390,14 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
     """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
 
   ##################################
   ##  Tests
