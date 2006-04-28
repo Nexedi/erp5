@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
 
 
-class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingCashSorting(TestERP5BankingMixin, ERP5TypeTestCase):
 
   login = PortalTestCase.login
 
@@ -59,7 +59,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     """
       Return the title of the test
     """
-    return "ERP5BankingCashClassification"
+    return "ERP5BankingCashSorting"
 
 
   def getBusinessTemplateList(self):
@@ -74,7 +74,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
            , 'erp5_banking_inventory'
            , 'erp5_banking_cash' # erp5_banking_cash contains all method for cash sorting
            )
-
+  
   def getCashSortingModule(self):
     """
     Return the Cash Sorting Module
@@ -87,7 +87,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
       Method called before the launch of the test to initialize some data
     """
     self.initDefaultVariable()
-    # Set some variables :
+    # Set some variables : 
     self.cash_sorting_module = self.getCashSortingModule()
 
     # Create a user and login as manager to populate the erp5 portal with objects for tests.
@@ -102,7 +102,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
                              'quantity': self.quantity_10000}
-
+    
     inventory_dict_line_2 = {'id' : 'inventory_line_2',
                              'resource': self.billet_200,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
@@ -115,13 +115,13 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
                              'variation_value': ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
                              'quantity': self.quantity_5000}
 
-
+    
     line_list = [inventory_dict_line_1, inventory_dict_line_2, inventory_dict_line_3]
-    self.encaisse_tri = self.paris.surface.salle_de_tri.encaisse_des_billets_recus_pour_ventilation.Spain
+    self.encaisse_tri = self.paris.surface.salle_de_tri.encaisse_des_billets_et_monnaies
     self.encaisse_reserve = self.paris.caveau.reserve.encaisse_des_billets_et_monnaies
     self.encaisse_externe = self.paris.caveau.externes.encaisse_des_externes
-    self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_recus_pour_ventilation.Spain
-
+    self.encaisse_auxiliaire = self.paris.caveau.auxiliaire.encaisse_des_billets_et_monnaies
+    
     self.createCashInventory(source=None, destination=self.encaisse_tri, currency=self.currency_1,
                              line_list=line_list)
 
@@ -182,7 +182,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_tri.getRelativeUrl(), resource = self.billet_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_tri.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_tri.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
-
+    
 
   def stepCheckDestination(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -211,7 +211,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.encaisse_auxiliaire.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
-
+    
 
   def stepCreateCashSorting(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -228,7 +228,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     # check its portal type
     self.assertEqual(self.cash_sorting.getPortalType(), 'Cash Sorting')
     # check that its source is encaisse_paris
-    self.assertEqual(self.cash_sorting.getSource(), 'site/testsite/paris/surface/salle_de_tri/encaisse_des_billets_recus_pour_ventilation/Spain')
+    self.assertEqual(self.cash_sorting.getSource(), 'site/testsite/paris/surface/salle_de_tri/encaisse_des_billets_et_monnaies')
     # check that its destination is encaisse_externe
     self.assertEqual(self.cash_sorting.getDestination(), None)
 
@@ -540,7 +540,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
-    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver
+    Check that compution of inventory at vault encaisse_paris is right after confirm and before deliver 
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.encaisse_tri.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
@@ -592,7 +592,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_sorting, name='history', wf_id='cash_sorting_workflow')
     # check len of len workflow history is 6
     self.assertEqual(len(workflow_history), 7)
-
+    
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -627,7 +627,7 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin, ERP5TypeTestCase):
   ##  Tests
   ##################################
 
-  def test_01_ERP5BankingCashClassification(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_ERP5BankingCashSorting(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
     Define the sequence of step that will be play
     """
@@ -657,5 +657,5 @@ else:
   import unittest
   def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestERP5BankingCashClassification))
+    suite.addTest(unittest.makeSuite(TestERP5BankingCashSorting))
     return suite
