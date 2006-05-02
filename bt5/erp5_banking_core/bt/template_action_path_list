@@ -22,7 +22,8 @@ Banking Operation Line | history
 Banking Operation Line | metadata
 Banking Operation Line | print
 Banking Operation Line | view
-Banknote | translate
+Banknote | history
+Banknote | metadata
 Banknote | view
 Cash Delivery Cell | metadata
 Cash Delivery Cell | view
@@ -45,6 +46,8 @@ Checkbook | history
 Checkbook | metadata
 Checkbook | print
 Checkbook | view
+Coin | history
+Coin | metadata
 Coin | view
 Counter Date Module | list_ui
 Counter Date Module | sort_on
