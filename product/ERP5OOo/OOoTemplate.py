@@ -98,6 +98,14 @@ class OOoTemplate(ZopePageTemplate):
         A page template which is able to embed and OpenOffice
         file (zip archive) and replace content.xml at render time
         with XML dynamically generated through TAL/TALES/METAL expressions
+
+        TODO:
+          - find a way to embed TALES in OOo documents in such 
+            way that editing woth OOo does not destroy TAL/TALES
+
+          - add preprocessing option to handle explicit macros in
+            OOo in any language. Include debugging options in this case
+            (on preprocessed source rather than pure source)
     """
     meta_type = "ERP5 OOo Template"
     icon = "www/OOo.png"
