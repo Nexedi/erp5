@@ -163,14 +163,24 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
       id = title_path_list[-1].lstrip("Encaisse des ")\n
     else:\n
       id = title_path_list[-1]\n
+    # get a counter if there is\n
+    counter_name = None\n
+    for counter in [\'Guichet 1\', \'Guichet 2\', \'Guichet 3\']:\n
+      if counter in title_path_list:\n
+        # produce a shorter name for the counter\n
+        counter_name = \'%s%s\' %(counter[0], counter[-1])\n
+        # remove counter to construct the list as if there is none\n
+        title_path_list.remove(counter)\n
+        path_len = path_len - 1\n
+\n
     new_title_list = []\n
     # create new title\n
-    if \'Siege\' in title_path_list:  \n
+    if \'Siege\' in title_path_list:\n
       new_title_list.append(title_path_list[0]) # ie Siege\n
       if path_len > 2:\n
         new_title_list.append(title_path_list[2]) # ie Auxiliaire, Devise...\n
       if id not in new_title_list: # ie last part of path\n
-        new_title_list.append(id)    \n
+        new_title_list.append(id)\n
     else:\n
       if path_len <= 2:\n
         new_title_list = title_path_list[:]\n
@@ -179,7 +189,10 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
           new_title_list.append(title_path_list[i])\n
       if id not in new_title_list: # ie last part of path\n
         new_title_list.append(id)\n
-      \n
+    # put back the counter name into the list\n
+    if counter_name is not None:\n
+      new_title_list.insert(2, counter_name)\n
+\n
     new_id = \'/\'.join(new_title_list)\n
     if with_base:\n
       item_value = \'/\'.join([\'site\'] + id_path_list[:])\n
@@ -187,7 +200,7 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
       item_value = \'/\'.join(id_path_list[:])\n
     item = (new_id, item_value)\n
     vault_dict[new_id] = item_value\n
-    \n
+\n
   vault_list = vault_dict.items()\n
   vault_list.sort()\n
   return vault_list\n
@@ -198,7 +211,7 @@ if vault_type is None:\n
   assignment_list = context.Baobab_getUserAssignmentList()\n
 else:\n
   assignment_list = None\n
-  \n
+\n
 if user_site == 1:\n
   site_list = context.Baobab_getUserAssignedSiteList()\n
 else:\n

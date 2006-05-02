@@ -67,6 +67,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import Message\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 site = vault\n
 if same_type(site, \'\'):\n
   site = context.restrictedTraverse(\'portal_categories/site/%s\' %(site,))\n
@@ -129,6 +130,8 @@ return site\n
                             <string>vault</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>Message</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>site</string>
                             <string>same_type</string>
                             <string>_getattr_</string>
@@ -136,7 +139,6 @@ return site\n
                             <string>True</string>
                             <string>hasattr</string>
                             <string>msg</string>
-                            <string>ValidationFailed</string>
                           </tuple>
                         </value>
                     </item>

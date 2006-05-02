@@ -68,6 +68,8 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+# XXX must use a cache for this method\n
+\n
 emission_letter_dict = {}\n
 user_site_list = []\n
 if site == None :\n

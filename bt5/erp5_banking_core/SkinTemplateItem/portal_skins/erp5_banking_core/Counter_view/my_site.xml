@@ -281,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [x for x in here.Delivery_getVaultItemList(vault_type=(\'site/surface/banque_interne\', \'site/surface/gros_paiement\', \'site/surface/gros_versement\', \'site/surface/operations_diverses\'), strict_membership = 0, leaf_node=0, user_site=1, current_url=here.getSite(), with_base=0) if len(x[0].split(\'/\')) == 2]</string> </value>
+            <value> <string>python: here.Baobab_getCounterList()</string> </value>
         </item>
       </dictionary>
     </pickle>

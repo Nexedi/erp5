@@ -69,7 +69,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 # get the current logged user site\n
-login = context.portal_membership.getAuthenticatedMember().getUserName()\n
+if user_id is None:\n
+  login = context.portal_membership.getAuthenticatedMember().getUserName()\n
+else:\n
+  login = user_id\n
 persons = context.acl_users.erp5_users.getUserByLogin(login)\n
 \n
 if len(persons) == 0:\n
@@ -122,7 +125,7 @@ return valid_assignment_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>user_id=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -150,12 +153,14 @@ return valid_assignment_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>user_id</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>login</string>
@@ -170,7 +175,6 @@ return valid_assignment_list\n
                             <string>stop</string>
                             <string>start</string>
                             <string>DateTime</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -182,7 +186,9 @@ return valid_assignment_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

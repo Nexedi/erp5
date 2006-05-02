@@ -66,36 +66,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return 1 if the counter date is open/closing for the given date and the given site\n
+            <value> <string># return counter list for a given site and a given vault type\n
 \n
-if date is None:\n
-  # get current date\n
-  from DateTime import DateTime\n
-  date = DateTime()\n
-  date = date.Date()\n
+if vault_type is None:\n
+    vault_type = (\'site/surface/banque_interne\', \'site/surface/gros_paiement\', \'site/surface/gros_versement\', \'site/surface/operations_diverses\')\n
 \n
-if site is None:\n
-  # get site from user assignment\n
-  site_list = context.Baobab_getUserAssignedSiteList()\n
-  if len(site_list) == 0:\n
-    context.log(\'Baobab_checkCounterDateOpen\', \'No site found for the user\')\n
-    return 0\n
-  else:\n
-    site = site_list[0]\n
 \n
-# get only the office, not need of vault\n
-context.log(\'Baobab_checkCounterDateOpen\', \'get site for vault %s\' %(site))\n
-site = context.Baobab_getVaultSite(site)\n
+vault_list = context.Delivery_getVaultItemList(vault_type=vault_type, strict_membership = 0, leaf_node=0, user_site=1, with_base=0)\n
+counter_dict = {}\n
+for vault in vault_list:\n
+    if len(vault[0].split("/")) == 4:\n
+        counter = \'/\'.join(vault[0].split("/")[:3])\n
+        if not counter_dict.has_key(counter):\n
+            counter_dict[counter] = \'/\'.join(vault[1].split("/")[:6])\n
 \n
-kw = {"portal_type" : \'Counter Date\', "delivery.start_date" : str(date), "site_id" : site.getId(), "simulation_state" : "open"}\n
-context.log(\'Baobab_checkCounterDateOpen\', \'kw = %s\' %(kw,))\n
-counter_date_list = [x.getObject() for x in context.portal_catalog(**kw)]\n
-#context.log(\'Baobab_checkCounterDateOpen\', \'counter_date_list = %s, requete = %s\' %(counter_date_list, context.portal_catalog(src__=1, **kw)))\n
-\n
-if len(counter_date_list) == 0:\n
-  return 0\n
-else:\n
-  return 1\n
+list = counter_dict.items()\n
+list.sort()\n
+return list\n
 </string> </value>
         </item>
         <item>
@@ -112,7 +99,7 @@ else:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_checkCounterDateOpen</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getCounterList</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -122,15 +109,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site=None, date=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>vault_type=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -150,29 +129,26 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site</string>
-                            <string>date</string>
+                            <string>vault_type</string>
+                            <string>kw</string>
                             <string>None</string>
-                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>site_list</string>
+                            <string>vault_list</string>
+                            <string>counter_dict</string>
+                            <string>_getiter_</string>
+                            <string>vault</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>str</string>
-                            <string>kw</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>x</string>
-                            <string>counter_date_list</string>
+                            <string>counter</string>
+                            <string>_write_</string>
+                            <string>list</string>
                           </tuple>
                         </value>
                     </item>
@@ -186,13 +162,12 @@ else:\n
             <value>
               <tuple>
                 <none/>
-                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_checkCounterDateOpen</string> </value>
+            <value> <string>Baobab_getCounterList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
