@@ -16,7 +16,7 @@ Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
 Conflicts: ERP5
-Requires:  erp5-zope >= 2.7.8, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5Subversion, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile, zope-TimerService
+Requires:  erp5-zope >= 2.7.8, erp5-CMFPhoto, erp5-Formulator, zope-CMFReportTool, zope-Localizer, zope-Photo, zope-ZMySQLDDA, zope-ZMySQLDA, zope-BTreeFolder2, zope-CMFMailIn, zope-ERP5Catalog, zope-ERP5Form, zope-ERP5Subversion, zope-ERP5SyncML, zope-CMFCategory, zope-ERP5Type, python-numeric, python-psyco, python-glpk, zope-CMFActivity, zope-ERP5Security, zope-ERP5OOo, zope-ExtFile, zope-TimerService, zope-FCKeditor
 
 #----------------------------------------------------------------------
 %description
