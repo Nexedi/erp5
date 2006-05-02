@@ -363,7 +363,8 @@ def removeLocalPropertySheet(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
-  os.remove(path)
+  if os.path.exists(path):
+    os.remove(path)
 
 def readLocalPropertySheet(class_id):
   instance_home = getConfiguration().instancehome
