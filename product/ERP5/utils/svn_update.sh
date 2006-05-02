@@ -2,7 +2,8 @@
 
 # Modules to get from the SVN
 PRODUCTS="CMFActivity CMFCategory ERP5 ERP5Catalog ERP5Form \
-          ERP5OOo ERP5Security ERP5SyncML ERP5Type ZSQLCatalog"
+          ERP5OOo ERP5Security ERP5Subversion ERP5SyncML    \
+          ERP5Type ZSQLCatalog"
 
 # System user and group that own Zope product files
 USER="zope"
