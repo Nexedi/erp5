@@ -30,19 +30,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Cash Transfers to Validate (%(count)s)</string> </value>
+            <value> <string>Usual Cash Transfers to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Cash Transfer
+Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Usual Cash Transfer
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cash Transfers to Validate</string> </value>
+            <value> <string>Usual Cash Transfers to Validate</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -107,7 +107,7 @@ Base_viewSearchResultList?simulation_state=confirmed&reset=1&portal_type=Cash Tr
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Cash Transfer</string>
+                        <string>Usual Cash Transfer</string>
                       </tuple>
                     </value>
                 </item>

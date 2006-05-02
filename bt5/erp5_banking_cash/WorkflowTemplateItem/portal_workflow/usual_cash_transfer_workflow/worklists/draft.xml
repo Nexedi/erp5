@@ -36,7 +36,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?simulation_state=draft&portal_type=Cash Transfer&reset=1
+Base_viewSearchResultList?simulation_state=draft&portal_type=Usual Cash Transfer&reset=1
 
 ]]></string> </value>
         </item>
@@ -107,7 +107,7 @@ Base_viewSearchResultList?simulation_state=draft&portal_type=Cash Transfer&reset
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Cash Transfer</string>
+                        <string>Usual Cash Transfer</string>
                       </tuple>
                     </value>
                 </item>
