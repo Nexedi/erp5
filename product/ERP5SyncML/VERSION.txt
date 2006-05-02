@@ -1,1 +1,1 @@
-ERP5SyncML 0.11
+ERP5SyncML 0.12
