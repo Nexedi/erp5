@@ -28,6 +28,7 @@
 ##############################################################################
 
 from Products.CMFCore.utils import UniqueObject
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Document.Folder import Folder
@@ -44,6 +45,7 @@ from cStringIO import StringIO
 from tempfile import mktemp
 from shutil import copy
 from zLOG import LOG
+
 
 try:
   from base64 import b64encode, b64decode
@@ -381,7 +383,7 @@ class SubCodeBlock:
       return (' '+line[1:], self.color)
     return (line, self.color)
   
-class SubversionTool(UniqueObject, Folder):
+class SubversionTool(BaseTool, UniqueObject, Folder):
   """The SubversionTool provides a Subversion interface to ERP5.
   """
   id = 'portal_subversion'
