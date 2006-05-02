@@ -15,7 +15,7 @@ def get_request():
   return current_app.REQUEST
 
 Products.ERP5Type.Utils.get_request = get_request
-Globals = get_request
+Globals.get_request = get_request
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
@@ -29,6 +29,10 @@ try:
   from transaction import get as get_transaction
 except ImportError:
   pass
+
+# XXX: Suppress DeprecationWarnings
+import warnings
+warnings.simplefilter('ignore', DeprecationWarning, append=1)
 
 # Std Zope Products
 ZopeTestCase.installProduct('ExtFile')
@@ -44,6 +48,7 @@ ZopeTestCase.installProduct('MailHost')
 ZopeTestCase.installProduct('PageTemplates')
 ZopeTestCase.installProduct('PythonScripts')
 ZopeTestCase.installProduct('ExternalMethod')
+ZopeTestCase.installProduct('iHotfix')
 ZopeTestCase.installProduct('Localizer')
 ZopeTestCase.installProduct('TimerService')
 
@@ -206,7 +211,7 @@ class ERP5TypeTestCase(PortalTestCase):
                 template = '%s.bt5' % id
             else:
               template = template_list[0]
-          else :            
+          else:
             template = '%s' % template
             if not os.path.exists(template):
               template = '%s.bt5' % template
@@ -300,7 +305,10 @@ class ERP5TypeTestCase(PortalTestCase):
           # This prevents an infinite loop.
           count -= 1
           if count == 0:
-            raise RuntimeError, 'tic is looping forever. These messages are pending: %r' % ([('/'.join(m.object_path), m.method_id, m.processing_node, m.priority) for m in portal_activities.getMessageList()],)
+            raise RuntimeError,\
+              'tic is looping forever. These messages are pending: %r' % (
+            [('/'.join(m.object_path), m.method_id, m.processing_node, m.priority)
+            for m in portal_activities.getMessageList()],)
           # This give some time between messages
           if count % 10 == 0:
             from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -314,7 +322,6 @@ class ERP5TypeTestCase(PortalTestCase):
       for i in b:
         self.failUnless(i in a, msg)
       self.assertEquals(len(a), len(b), msg)
-
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, title='',quiet=0,
                   light_install=1,create_activities=1,hot_reindexing=1):
@@ -337,16 +344,17 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
             newSecurityManager(None, user)
             # Add ERP5 Site
-            #factory = app.manage_addProduct['CMFDefault']
-            #factory.manage_addCMFSite(id)
             reindex = 1
             if hot_reindexing:
               setattr(app,'isIndexable',0)
               reindex = 0
-            if not quiet: ZopeTestCase._print('Adding %s ERP5 Site ... \n' % portal_name)
+            if not quiet:
+              ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
             factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
             factory.manage_addERP5Site(portal_name,light_install=light_install,
                 reindex=reindex,create_activities=create_activities)
+            if not quiet:
+              ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
             # Release locks
             get_transaction().commit()
             portal=app[portal_name]
@@ -359,23 +367,22 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               removeLocalConstraint(id)
             # Disable reindexing before adding templates
             # VERY IMPORTANT: Add some business templates
-            for url,id in business_template_list:
-              ZopeTestCase._print('Adding %s business template ... \n' % id)
-              #portal.portal_templates.download('%s.zexp' % id, id=id)
+            for url, id in business_template_list:
+              start = time.time()
+              ZopeTestCase._print('Adding %s business template ... ' % id)
               portal.portal_templates.download(url, id=id)
               portal.portal_templates[id].install(light_install=light_install)
-              #from ZODB.utils import oid_repr, readable_tid_repr
-              #print 'portal._p_oid = %r, portal._p_serial = %r' % (oid_repr(portal._p_oid), readable_tid_repr(portal._p_serial))
               # Release locks
               get_transaction().commit()
+              ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
             # Enbable reindexing
             # Do hot reindexing # Does not work
             if hot_reindexing:
-              setattr(app,'isIndexable',1)
+              setattr(app,'isIndexable', 1)
               portal.portal_catalog.manage_hotReindexAll()
 
             get_transaction().commit()
-            portal_activities = getattr(portal,'portal_activities',None)
+            portal_activities = getattr(portal, 'portal_activities', None)
             if portal_activities is not None:
               count = 1000
               while len(portal_activities.getMessageList()) > 0:
@@ -384,7 +391,11 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
                 get_transaction().commit()
                 count -= 1
                 if count == 0:
-                  raise RuntimeError, 'tic is looping forever. These messages are pending: %r' % ([('/'.join(m.object_path), m.method_id, m.processing_node, m.priority) for m in portal_activities.getMessageList()],)
+                  raise RuntimeError, \
+                  'tic is looping forever. These messages are pending: %r' % (
+                      [('/'.join(m.object_path), m.method_id,
+                       m.processing_node, m.priority)
+                       for m in portal_activities.getMessageList()],)
             # Reset aq dynamic, so all unit tests will start again
             from Products.ERP5Type.Base import _aq_reset
             _aq_reset()
