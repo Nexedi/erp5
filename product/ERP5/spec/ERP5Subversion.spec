@@ -1,6 +1,6 @@
 %define product ERP5Subversion
-%define version 0
-%define release 0
+%define version 0.12
+%define release 1
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -15,6 +15,7 @@ URL:       http://www.erp5.org
 Source0:   %{product}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-rootdir
 BuildArch: noarch
+Conflicts: ERP5Subversion
 Requires:  erp5-zope pysvn
 
 #----------------------------------------------------------------------
@@ -54,5 +55,8 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Tue May 02 2006 Kevin Deldycke <kevin@nexedi.com> 0.12-1mdk
+- New build from the SVN repository
+
 * Tue May 02 2006 Kevin Deldycke <kevin@nexedi.com> 0
 - Initial release

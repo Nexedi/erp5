@@ -1,6 +1,6 @@
 %define product ERP5OOo
-%define version 0.11
-%define release 6
+%define version 0.12
+%define release 1
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -55,6 +55,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Tue May 02 2006 Kevin Deldycke <kevin@nexedi.com> 0.12-1mdk
+- New build from the SVN repository
+
 * Tue Apr 04 2006 Kevin Deldycke <kevin@nexedi.com> 0.11-6mdk
 - New build from the SVN repository
 
