@@ -486,7 +486,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>banking_cash_transfer_selection</string> </value>
+                    <value> <string>usual_cash_transfer_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
