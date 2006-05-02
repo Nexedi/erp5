@@ -30,7 +30,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_order?simulation_state=draft&portal_type=Sale+Order&local_roles=%(local_roles)s&reset=1
+sale_order_module?simulation_state=draft&portal_type=Sale+Order&local_roles=%(local_roles)s&reset=1
 
 ]]></string> </value>
         </item>
