@@ -148,7 +148,7 @@ def makeTreeBody(form = None, root_dict = None, domain_path = '',
   tree_body = ''
   if root is None: return tree_body
   if hasattr(root, 'getChildDomainValueList'):
-    oblist = root.getChildDomainValueList(root)
+    oblist = root.getChildDomainValueList(root,depth=depth)
   else:
     oblist = root.objectValues()
   for o in oblist:
@@ -251,7 +251,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
             tree_list += [(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
   else:
     if hasattr(root, 'getChildDomainValueList'):
-      oblist = root.getChildDomainValueList(root)
+      oblist = root.getChildDomainValueList(root,depth=depth)
     else:
       oblist = root.objectValues()
     for o in oblist:
