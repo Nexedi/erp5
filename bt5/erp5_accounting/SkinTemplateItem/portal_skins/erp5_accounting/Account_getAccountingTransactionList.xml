@@ -212,7 +212,7 @@ return new_result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>selection=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -232,12 +232,13 @@ return new_result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>selection</string>
                             <string>kw</string>
                             <string>False</string>
                             <string>src__</string>
@@ -247,7 +248,6 @@ return new_result\n
                             <string>precision</string>
                             <string>r_</string>
                             <string>selection_kw</string>
-                            <string>selection</string>
                             <string>None</string>
                             <string>repr</string>
                             <string>request</string>
@@ -290,7 +290,9 @@ return new_result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
