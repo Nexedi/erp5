@@ -231,8 +231,8 @@ class TemplateTool (BaseTool):
             except KeyError:
               continue
             value = tar.extractfile(info).read()
-            if prop_type == 'text' or prop_type == 'string'
-               or prop_type == 'int':
+            if prop_type == 'text' or prop_type == 'string' \
+                                   or prop_type == 'int':
               prop_dict[pid] = value
             elif prop_type == 'lines' or prop_type == 'tokens':
               prop_dict[pid[:-5]] = value.split(str(os.linesep))
