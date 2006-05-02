@@ -56,7 +56,7 @@ except ImportError:
 
 class LocalConfiguration(Implicit):
   """
-    Holds local configuration information
+    Contains local configuration information
   """
   def __init__(self, **kw):
     self.__dict__.update(kw)
@@ -69,15 +69,10 @@ class TemplateTool (BaseTool):
       TemplateTool manages Business Templates.
 
       TemplateTool provides some methods to deal with Business Templates:
-
         - download
-
         - publish
-
         - install
-
         - update
-
         - save
     """
     id = 'portal_templates'
@@ -97,28 +92,38 @@ class TemplateTool (BaseTool):
 
     def getInstalledBusinessTemplate(self, title, **kw):
       """
-        Return a installed business template if any.
+        Return an installed version of business template of a certain title.
       """
       # This can be slow if, say, 10000 business templates are present.
-      # However, that unlikely happens, and using a Z SQL Method has a potential danger
-      # because business templates may exchange catalog methods, so the database could be
-      # broken temporarily.
+      # However, that unlikely happens, and using a Z SQL Method has a
+      # potential danger because business templates may exchange catalog
+      # methods, so the database could be broken temporarily.
       for bt in self.contentValues(filter={'portal_type':'Business Template'}):
         if bt.getInstallationState() == 'installed' and bt.getTitle() == title:
           return bt
       return None
 
     def updateLocalConfiguration(self, template, **kw):
+      """
+        Call the update method on the configuration, create if it doesn't
+        exists.
+      """
       template_id = template.getId()
-      if not hasattr(self, '_local_configuration'): self._local_configuration = PersistentMapping()
+      if getattr(self, '_local_configuration', None) is None:
+        self._local_configuration = PersistentMapping()
       if not self._local_configuration.has_key(template_id):
         self._local_configuration[template_id] = LocalConfiguration(**kw)
       else:
         self._local_configuration[template_id].update(**kw)
 
     def getLocalConfiguration(self, template):
+      """
+        Return the configuration for the given business template, or None if
+        it's not defined.
+      """
       template_id = template.getId()
-      if not hasattr(self, '_local_configuration'): self._local_configuration = PersistentMapping()
+      if getattr(self, '_local_configuration', None) is None:
+        self._local_configuration = PersistentMapping()
       local_configuration = self._local_configuration.get(template_id, None)
       if local_configuration is not None:
         return local_configuration.__of__(template)
@@ -127,27 +132,32 @@ class TemplateTool (BaseTool):
     security.declareProtected( 'Import/Export objects', 'save' )
     def save(self, business_template, REQUEST=None, RESPONSE=None):
       """
-        Save BT in folder format
+        Save the BusinessTemplate in the servers's filesystem.
       """
       cfg = getConfiguration()
-      path = os.path.join(cfg.clienthome, '%s' % (business_template.getTitle(),))
+      path = os.path.join(cfg.clienthome,
+                          '%s' % (business_template.getTitle(),))
       path = pathname2url(path)
       business_template.export(path=path, local=1)
       if REQUEST is not None:
-        ret_url = business_template.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        qs = '?portal_status_message=Saved+in+%s+.' % pathname2url(path)
-        if RESPONSE is None: RESPONSE = REQUEST.RESPONSE
-        return REQUEST.RESPONSE.redirect( ret_url + qs )
+        ret_url = '%s/%s?portal_status_message=Saved+in+%s+.' % \
+                  (business_template.absolute_url(),
+                   REQUEST.get('form_id', 'view'), pathname2url(path))
+        if RESPONSE is None:
+          RESPONSE = REQUEST.RESPONSE
+        return REQUEST.RESPONSE.redirect( ret_url )
 
     security.declareProtected( 'Import/Export objects', 'export' )
     def export(self, business_template, REQUEST=None, RESPONSE=None):
       """
-        Export BT in tarball format 
+        Export the Business Template as a bt5 file and offer the user to
+        download it.
       """
       path = business_template.getTitle()
       path = pathname2url(path)
-      tmpdir_path = mkdtemp() # XXXXXXXXXXXXXXX Why is it necessary to create a temporary directory?
-      current_directory = os.getcwd() # XXXXXXXXXXXXXXXXXX not thread safe
+      tmpdir_path = mkdtemp() # XXX Why is it necessary to create a temporary
+                              # directory?
+      current_directory = os.getcwd() # XXX not thread safe
       os.chdir(tmpdir_path)
       export_string = business_template.export(path=path)
       os.chdir(current_directory)
@@ -165,17 +175,19 @@ class TemplateTool (BaseTool):
     security.declareProtected( 'Import/Export objects', 'publish' )
     def publish(self, business_template, url, username=None, password=None):
       """
-        Publish in a format or another
+        Publish the given business template at the given URL.
       """
       business_template.build()
-      export_string = self.manage_exportObject(id=business_template.getId(), download=1)
+      export_string = self.manage_exportObject(id=business_template.getId(),
+                                               download=1)
       bt = Resource(url, username=username, password=password)
-      bt.put(file=export_string, content_type='application/x-erp5-business-template')
+      bt.put(file=export_string,
+             content_type='application/x-erp5-business-template')
       business_template.setPublicationUrl(url)
 
     def update(self, business_template):
       """
-        Update an existing template
+        Update an existing template from its publication URL.
       """
       url = business_template.getPublicationUrl()
       id = business_template.getId()
@@ -186,7 +198,7 @@ class TemplateTool (BaseTool):
 
     def _importBT(self, path=None, id=id):
       """
-        Import template from a temp file
+        Import template from a temp file (as uploaded by the user)
       """
       file = open(path, 'r')
       try:
@@ -202,6 +214,8 @@ class TemplateTool (BaseTool):
         bt.id = id # Make sure id is consistent
         bt.setProperty('template_format_version', 0, type='int')
       else: # new version
+        # XXX: should really check for a magic and offer a falback if it
+        # doens't correspond to anything handled.
         tar = tarfile.open(path, 'r:gz')
         try:
           # create bt object
@@ -217,7 +231,8 @@ class TemplateTool (BaseTool):
             except KeyError:
               continue
             value = tar.extractfile(info).read()
-            if prop_type == 'text' or prop_type == 'string' or prop_type == 'int':
+            if prop_type == 'text' or prop_type == 'string'
+               or prop_type == 'int':
               prop_dict[pid] = value
             elif prop_type == 'lines' or prop_type == 'tokens':
               prop_dict[pid[:-5]] = value.split(str(os.linesep))
@@ -244,23 +259,27 @@ class TemplateTool (BaseTool):
             
       if REQUEST is not None:
         ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+Successfully"
-                           % ret_url)
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+" \
+                                  "Templates+Downloaded+Successfully"
+                                  % ret_url)
 
     security.declareProtected( 'Import/Export objects', 'download' )
     def download(self, url, id=None, REQUEST=None):
       """
-        Download Business template, can be file or local directory
+        Download Business Template from url, can be file or local directory
       """
-      # For backward compatibility; If REQUEST is passed, it is likely from the management interface.
+      # For backward compatibility: If REQUEST is passed, it is likely that we
+      # come from the management interface.
       if REQUEST is not None:
         return self.manage_download(url, id=id, REQUEST=REQUEST)
 
       urltype, name = splittype(url)
-      if os.path.isdir(name): # new version of business template in plain format (folder)
+      if os.path.isdir(name): # new version of business template in plain
+                              # format (folder)
         file_list = []
         def callback(arg, directory, files):
-          if 'CVS' not in directory and '.svn' not in directory:
+          if 'CVS' not in directory and '.svn' not in directory: # XXX:
+                                                        # possible side-effects
             for file in files:
               file_list.append(os.path.join(directory, file))
 
@@ -305,15 +324,16 @@ class TemplateTool (BaseTool):
 
     def importFile(self, import_file=None, id=None, REQUEST=None, **kw):
       """
-        Import Business template from one file
+        Import Business Template from one file
       """
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
         
       if (import_file is None) or (len(import_file.read()) == 0) :
         if REQUEST is not None :
-          REQUEST.RESPONSE.redirect("%s?portal_status_message=No+file+or+an+empty+file+was+specified"
-              % self.absolute_url())
+          REQUEST.RESPONSE.redirect("%s?portal_status_message=No+file+or+an+" \
+                                    "empty+file+was+specified"
+                                    % self.absolute_url())
           return
         else :
           raise RuntimeError, 'No file or an empty file was specified'
@@ -335,38 +355,47 @@ class TemplateTool (BaseTool):
 
       if REQUEST is not None:
         ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Templates+Imported+Successfully"
-                           % ret_url)
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+" \
+                                  "Templates+Imported+Successfully"
+                                  % ret_url)
 
-    def runUnitTestList(self, test_list=[], **kwd) :
+    def runUnitTestList(self, test_list=[], **kwd):
       """
         Runs Unit Tests related to this Business Template
       """
-      
+      # XXX: should check for file presence before trying to execute.
+      # XXX: should check if the unit test file is configured in the BT
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
-      return os.popen('/usr/bin/python %s %s 2>&1' % (getUnitTestFile(), ' '.join(test_list))).read()
-
+      return os.popen('/usr/bin/python %s %s 2>&1'
+                      % (getUnitTestFile(), ' '.join(test_list))).read()
 
     def diffObject(self, REQUEST, **kw):
       """
-      Make diff between two objects
+        Make diff between two objects, whose paths are stored in values bt1
+        and bt2 in the REQUEST object.
       """
       bt1_id = getattr(REQUEST, 'bt1', None)
       bt2_id = getattr(REQUEST, 'bt2', None)
       bt1 = self._getOb(bt1_id)
       bt2 = self._getOb(bt2_id)
-      if self.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0: 
+      if self.compareVersions(bt1.getVersion(), bt2.getVersion()) < 0:
         return bt2.diffObject(REQUEST, compare_with=bt1_id)
       else:
         return bt1.diffObject(REQUEST, compare_with=bt2_id)
 
-    security.declareProtected( 'Import/Export objects', 'updateRepositoryBusinessTemplateList' )
-    def updateRepositoryBusinessTemplateList(self, repository_list, REQUEST=None, RESPONSE=None, **kw):
-      """Update the information on Business Templates in repositories.
+    security.declareProtected( 'Import/Export objects',
+                               'updateRepositoryBusinessTemplateList' )
+
+    def updateRepositoryBusinessTemplateList(self, repository_list,
+                                             REQUEST=None, RESPONSE=None, **kw):
+      """
+        Update the information on Business Templates from repositories.
       """
       self.repository_dict = PersistentMapping()
-      property_list = ('title', 'version', 'description', 'license', 'dependency', 'copyright')
-      #LOG('updateRepositoryBusiessTemplateList', 0, 'repository_list = %r' % (repository_list,))
+      property_list = ('title', 'version', 'description', 'license',
+                       'dependency', 'copyright')
+      #LOG('updateRepositoryBusiessTemplateList', 0,
+      #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
         url = '/'.join([repository, 'bt5list'])
         f = urlopen(url)
@@ -394,11 +423,16 @@ class TemplateTool (BaseTool):
               property_dict = {}
               property_dict['id'] = id
               property_dict['title'] = temp_property_dict.get('title', [''])[0]
-              property_dict['version'] = temp_property_dict.get('version', [''])[0]
-              property_dict['description'] = temp_property_dict.get('description', [''])[0]
-              property_dict['license'] = temp_property_dict.get('license', [''])[0]
-              property_dict['dependency_list'] = temp_property_dict.get('dependency', ())
-              property_dict['copyright_list'] = temp_property_dict.get('copyright', ())
+              property_dict['version'] = \
+                  temp_property_dict.get('version', [''])[0]
+              property_dict['description'] = \
+                  temp_property_dict.get('description', [''])[0]
+              property_dict['license'] = \
+                  temp_property_dict.get('license', [''])[0]
+              property_dict['dependency_list'] = \
+                  temp_property_dict.get('dependency', ())
+              property_dict['copyright_list'] = \
+                  temp_property_dict.get('copyright', ())
               
               property_dict_list.append(property_dict)
           finally:
@@ -410,26 +444,33 @@ class TemplateTool (BaseTool):
         
       if REQUEST is not None:
         ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Templates+Updated+Successfully"
-                           % ret_url)
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+" \
+                                  "Templates+Updated+Successfully"
+                                  % ret_url)
                 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getRepositoryList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getRepositoryList' )
     def getRepositoryList(self):
-      """Get the list of repositories.
+      """
+        Get the list of repositories.
       """
       return self.repository_dict.keys()
       
     security.declarePublic( 'decodeRepositoryBusinessTemplateUid' )
     def decodeRepositoryBusinessTemplateUid(self, uid):
-      """Decode the uid of a business template in a repository. Return a repository and an id.
+      """
+        Decode the uid of a business template from a repository.
+        Return a repository and an id.
       """
       return cPickle.loads(b64decode(uid))
       
-    security.declareProtected( Permissions.AccessContentsInformation, 'getRepositoryBusinessTemplateList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getRepositoryBusinessTemplateList' )
     def getRepositoryBusinessTemplateList(self, update_only=0, **kw):
       """Get the list of Business Templates in repositories.
       """
-      version_state_title_dict = { 'new' : 'New', 'present' : 'Present', 'old' : 'Old' }
+      version_state_title_dict = { 'new' : 'New', 'present' : 'Present',
+                                   'old' : 'Old' }
 
       from Products.ERP5Type.Document import newTempBusinessTemplate
       template_list = []
@@ -442,19 +483,24 @@ class TemplateTool (BaseTool):
           for property_dict in property_dict_list:
             title = property_dict['title']
             if title not in template_item_dict:
-              # If this is the first time to see this business template, insert it.
+              # If this is the first time to see this business template,
+              # insert it.
               template_item_dict[title] = (repository, property_dict)
             else:
-              # If this business template has been seen before, insert it only if
-              # this business template is newer.
-              previous_repository, previous_property_dict = template_item_dict[title]
-              if self.compareVersions(previous_property_dict['version'], property_dict['version']) < 0:
+              # If this business template has been seen before, insert it only
+              # if this business template is newer.
+              previous_repository, previous_property_dict = \
+                  template_item_dict[title]
+              if self.compareVersions(previous_property_dict['version'],
+                                      property_dict['version']) < 0:
                 template_item_dict[title] = (repository, property_dict)
         # Next, select only updated business templates.
         for repository, property_dict in template_item_dict.values():
-          installed_bt = self.getInstalledBusinessTemplate(property_dict['title'])
+          installed_bt = \
+              self.getInstalledBusinessTemplate(property_dict['title'])
           if installed_bt is not None:
-            if self.compareVersions(installed_bt.getVersion(), property_dict['version']) < 0:
+            if self.compareVersions(installed_bt.getVersion(),
+                                    property_dict['version']) < 0:
               template_item_list.append((repository, property_dict))
         # FIXME: resolve dependencies
       else:
@@ -487,7 +533,8 @@ class TemplateTool (BaseTool):
       template_list.sort(lambda x,y:cmp(x.getTitle(), y.getTitle()))
       return template_list
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getUpdatedRepositoryBusinessTemplateList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getUpdatedRepositoryBusinessTemplateList' )
     def getUpdatedRepositoryBusinessTemplateList(self, **kw):
       """Get the list of updated Business Templates in repositories.
       """
@@ -495,28 +542,22 @@ class TemplateTool (BaseTool):
       return self.getRepositoryBusinessTemplateList(update_only=1, **kw)
       
     def compareVersions(self, version1, version2):
-      """Return negative if version1 < version2, 0 if version1 == version2, positive if version1 > version2.
+      """
+        Return negative if version1 < version2, 0 if version1 == version2,
+        positive if version1 > version2.
 
       Here is the algorithm:
-
-        - Non-alphanumeric characters are not significant, besides the function of delimiters.
-
+        - Non-alphanumeric characters are not significant, besides the function
+          of delimiters.
         - If a level of a version number is missing, it is assumed to be zero.
-
         - An alphabetical character is less than any numerical value.
-
         - Numerical values are compared as integers.
 
-      This archives the following predicates:
-
+      This implements the following predicates:
         - 1.0 < 1.0.1
-
         - 1.0rc1 < 1.0
-
         - 1.0a < 1.0.1
-
         - 1.1 < 2.0
-
         - 1.0.0 = 1.0
       """
       r = re.compile('(\d+|[a-zA-Z])')
