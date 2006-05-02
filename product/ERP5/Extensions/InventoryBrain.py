@@ -15,17 +15,18 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from DateTime import DateTime
 from ZTUtils import make_query
 from Products.CMFCore.utils import getToolByName
+from zLOG import LOG, PROBLEM
 
 class InventoryBrain(ZSQLBrain):
   """
     Global analysis (all variations and categories)
   """
   # Stock management
-  def getInventory(self, at_date=None, ignore_variation=0, 
+  def getInventory(self, at_date=None, ignore_variation=0,
                    simulation_state=None, **kw):
-    if type(simulation_state) is type('a'):
+    if isinstance(simulation_state, str):
       simulation_state = [simulation_state]
-    result = self.Resource_zGetInventory( 
+    result = self.Resource_zGetInventory(
                       resource_uid=[self.resource_uid],
                       to_date=at_date, omit_simulation=0,
                       section_category=self.getPortalDefaultSectionCategory(),
@@ -43,7 +44,7 @@ class InventoryBrain(ZSQLBrain):
       Returns current inventory
     """
     return self.getInventory(
-        simulation_state=self.getPortalCurrentInventoryStateList(), 
+        simulation_state=self.getPortalCurrentInventoryStateList(),
         ignore_variation=1)
 
   def getFutureInventory(self):
@@ -166,34 +167,18 @@ class InventoryListBrain(ZSQLBrain):
         if o is not None:
           explanation = o.getExplanationValue()
           if explanation is not None:
-            return '%s/%s/view' % (self.portal_url.getPortalObject().absolute_url(),
-                              explanation.getRelativeUrl())
+            return '%s/%s/view' % (
+                    self.portal_url.getPortalObject().absolute_url(),
+                    explanation.getRelativeUrl())
         else:
           return ''
-        # XXX Coramy, to be deleted
-#       elif cname_id in ('getAggregateList','getAggregateListText',):
-#         kw = {
-#            'list_method_id' : 'Resource_zGetAggregateList',
-#            'explanation_uid' : self.explanation_uid,
-#            'node_uid' : self.node_uid,
-#            'section_uid' : self.section_uid,
-#            'variation_text' : self.variation_text,
-#            'resource_uid' : self.resource_uid,
-#            'reset': 1
-#         }
-#         url_params_string = make_query(kw)
-#         # should be search XXX
-#         return '%s/piece_tissu?%s ' % (
-#             self.portal_url.getPortalObject().absolute_url(),
-#             url_params_string
-#             )
       elif (self.resource_relative_url is not None):
         # A resource is defined, so try to display the movement list
         resource = self.portal_categories.unrestrictedTraverse(
                                 self.resource_relative_url)
         form_name = 'Resource_viewMovementHistory'
         query_kw = {
-          'variation_text': self.variation_text, 
+          'variation_text': self.variation_text,
           'selection_name': selection_name,
           'selection_index': selection_index,
           'domain_name': selection_name,
@@ -206,11 +191,9 @@ class InventoryListBrain(ZSQLBrain):
           }
         elif cname_id in ('getAvailableInventory', ):
           query_kw_update = {
-            # XXX FIXME Not consistent with simulation tool.
-#             'omit_simulation': 1, 
-#             'omit_input': 1,
             'simulation_state': \
-              list(self.getPortalReservedInventoryStateList())
+              list(self.getPortalReservedInventoryStateList())+\
+              list(self.getPortalCurrentInventoryStateList())
           }
         elif cname_id in ('getFutureInventory', 'inventory', ):
           query_kw_update = {
@@ -231,7 +214,9 @@ class InventoryListBrain(ZSQLBrain):
           resource.absolute_url(),
           form_name,
           make_query(**query_kw))
-    except (AttributeError, KeyError):
+    except (AttributeError, KeyError), e:
+      LOG('InventoryListBrain', PROBLEM,
+        'exception caught in getListItemUrl', e)
       return ''
 
   def getAggregateListText(self):
@@ -279,12 +264,9 @@ class DeliveryListBrain(InventoryListBrain):
   # Stock management
   def getInventory(self, at_date=None, ignore_variation=0, 
                    simulation_state=None, **kw):
-    if type(simulation_state) is type('a'):
+    if isinstance(simulation_state, str):
       simulation_state = [simulation_state]
-    if hasattr(self, 'where_expression'):
-      where_expression = self.where_expression
-    else:
-      where_expression = None
+    where_expression = getattr(self, 'where_expression', None)
     result = self.Resource_zGetInventory(
                     resource_uid = [self.resource_uid],
                     to_date=at_date,
