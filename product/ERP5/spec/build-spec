@@ -144,7 +144,9 @@ $CHANGELOG" >> $TMP_SPEC
   rm -f $RPM_PATH/SPECS/$NAME.spec
   mv -f $TMP_SPEC $RPM_PATH/SPECS/$NAME.spec
 
-  #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
+  # rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
+
+  # A rpmlint can be launch here.
 
   echo "-------------"
   echo "Please commit the new $NAME.spec file in the Nexedi repository ($REPOSIT)"
