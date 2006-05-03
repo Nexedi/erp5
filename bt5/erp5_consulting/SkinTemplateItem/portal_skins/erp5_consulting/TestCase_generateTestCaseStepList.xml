@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -119,7 +119,13 @@ return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/TestCase_vi
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_consulting/TestCase_generateTestCaseStepList</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/TestCase_generateTestCaseStepList</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

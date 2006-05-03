@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -177,7 +177,7 @@ return context.REQUEST.RESPONSE.redirect(destination.absolute_url() + \'?portal_
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_consulting/FastInput_generateTwoLevelObjectStructure</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/FastInput_generateTwoLevelObjectStructure</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

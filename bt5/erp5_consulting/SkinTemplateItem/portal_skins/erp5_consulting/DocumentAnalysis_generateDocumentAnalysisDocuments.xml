@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -105,7 +105,7 @@ context.FastInput_generateTwoLevelObjectStructure( transformation_rules = fast_i
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_consulting/DocumentAnalysis_generateDocumentAnalysisDocuments</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_consulting/DocumentAnalysis_generateDocumentAnalysisDocuments</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>

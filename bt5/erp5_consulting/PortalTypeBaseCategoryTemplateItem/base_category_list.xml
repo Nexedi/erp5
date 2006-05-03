@@ -33,6 +33,7 @@
   <item>specialise</item>
  </portal_type>
  <portal_type id="Test Report Actor">
+  <item>source</item>
   <item>group</item>
   <item>use_case_actor_role</item>
   <item>site</item>

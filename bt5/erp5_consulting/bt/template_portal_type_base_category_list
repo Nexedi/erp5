@@ -14,6 +14,7 @@ Test Case | source
 Test Case | specialise
 Test Report Actor | group
 Test Report Actor | site
+Test Report Actor | source
 Test Report Actor | use_case_actor_role
 Test Report Step | requirement
 Test Report Step | source_section
