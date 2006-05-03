@@ -1,3 +1,6 @@
+2006-05-03 Romain
+* Remove useless field in PurchaseTradeCondition_viewProfile.
+
 2006-04-20 Romain
 * Make supply_line_interaction_workflow compatible with Sale/Purchase Supply Line.
 
