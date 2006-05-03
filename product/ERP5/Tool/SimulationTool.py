@@ -87,10 +87,6 @@ class SimulationTool (BaseTool):
     manage_overview = DTMLFile( 'explainSimulationTool', _dtmldir )
 
     # Filter content (ZMI))
-    #def __init__(self):
-    #    return Folder.__init__(self, SimulationTool.id)
-
-    # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
         all = SimulationTool.inheritedAttribute('filtered_meta_types')(self)
@@ -103,6 +99,23 @@ class SimulationTool (BaseTool):
     def tpValues(self) :
       """ show the content in the left pane of the ZMI """
       return self.objectValues()
+  
+    security.declarePrivate('manage_afterAdd')
+    def manage_afterAdd(self, item, container) :
+      """Init permissions right after creation.
+      
+      Permissions in simulation tool are simple:
+       o Each member can access and create some content.
+       o Only manager can view, because simulation can be seen as
+         sensitive information.
+      """
+      item.manage_permission(Permissions.AddPortalContent,
+            ['Member', 'Author', 'Manager'])
+      item.manage_permission(Permissions.AccessContentsInformation,
+            ['Member', 'Auditor', 'Manager'])
+      item.manage_permission(Permissions.View,
+            ['Manager',])
+      BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
     def solveDelivery(self, delivery, dsolver_name, tsolver_name, 
                                      additional_parameters=None,**kw):
