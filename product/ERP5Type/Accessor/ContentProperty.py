@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, ATTRIBUTE_PREFIX, Method
 import Base
 from Products.ERP5Type.PsycoWrapper import psyco
 
@@ -51,7 +51,8 @@ class ValueGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, acquired_property, portal_type=None, storage_id=None, default=None):
+    def __init__(self, id, key, property_type, acquired_property,
+                 portal_type=None, storage_id=None, default=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -75,14 +76,10 @@ class ValueGetter(Method):
       else:
         default_result = self._default
       o = None
-      #LOG('ValueGetter.__call__, default',0,self._default)
-      #LOG('ValueGetter.__call__, storage_id_list',0,self._storage_id_list)
-      #LOG('ValueGetter.__call__, portal_type',0,self._portal_type)
       for k in self._storage_id_list:
         o = getattr(instance, k, None)
-        #LOG('ValueGetter.__call__, o',0,o)
-        if o is not None and (o.portal_type is None or o.portal_type in self._portal_type):
-          #LOG('ValueGetter.__call__, o will be returned...',0,'ok')
+        if o is not None and (o.portal_type is None or
+                              o.portal_type in self._portal_type):
           return o
       return default_result
 
@@ -102,7 +99,8 @@ class ValueListGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, acquired_property, portal_type=None, storage_id=None, default=None):
+    def __init__(self, id, key, property_type, acquired_property,
+                 portal_type=None, storage_id=None, default=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -119,7 +117,8 @@ class ValueListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return [o.getObject() for o in self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id_list})]
+      return [o.getObject() for o in self.contentValues(
+          {'portal_type': self._portal_type, 'id': self._storage_id_list})]
 
     psyco.bind(__call__)
 
@@ -139,7 +138,8 @@ class Getter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, acquired_property, portal_type=None, storage_id=None, default=None):
+    def __init__(self, id, key, property_type, acquired_property,
+                 portal_type=None, storage_id=None, default=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -166,7 +166,6 @@ class Getter(Method):
       for k in self._storage_id_list:
         o = getattr(instance, k, None)
         if o is not None and o.portal_type in self._portal_type:
-          #return o.getRelativeUrl()
           return o.getProperty(self._acquired_property, default, **kw)
       return default
 
@@ -186,7 +185,8 @@ class Setter(Method):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, acquired_property, portal_type=None, storage_id=None, reindex=0):
+    def __init__(self, id, key, property_type, acquired_property,
+                 portal_type=None, storage_id=None, reindex=0):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -216,9 +216,10 @@ class Setter(Method):
           else:
             o._setProperty(self._acquired_property, *args, **kw)
       if o is None and available_id is not None:
-        from Products.ERP5Type.Utils import assertAttributePortalType   
+        from Products.ERP5Type.Utils import assertAttributePortalType
         assertAttributePortalType(instance, available_id, self._portal_type)
-        o = instance.newContent(id = available_id, portal_type = self._portal_type[0])
+        o = instance.newContent(id=available_id,
+                                portal_type=self._portal_type[0])
         if self._reindex:
           o.setProperty(self._acquired_property, *args, **kw)
         else:
@@ -238,7 +239,8 @@ class ListGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, acquired_property, portal_type=None, storage_id=None):
+    def __init__(self, id, key, property_type, acquired_property,
+                 portal_type=None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -254,7 +256,9 @@ class ListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return [o.relative_url for o in self.searchFolder(portal_type = self._portal_type, id = self._storage_id_list)]
+      return [o.relative_url for o in self.searchFolder(
+                                    portal_type=self._portal_type,
+                                    id=self._storage_id_list)]
 
     psyco.bind(__call__)
 
@@ -273,7 +277,8 @@ class Tester(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, acquired_property, storage_id=None):
+    def __init__(self, id, key, property_type, acquired_property,
+                 storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -285,5 +290,5 @@ class Tester(Method):
       self._acquired_property = acquired_property
 
     def __call__(self, instance, *args, **kw):
-      #return getattr(instance, self._key, None) not in self._null
       return getattr(instance, self._storage_id, None) is not None
+
