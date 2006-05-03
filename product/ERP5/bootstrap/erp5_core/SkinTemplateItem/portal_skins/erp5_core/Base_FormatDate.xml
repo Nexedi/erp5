@@ -68,30 +68,29 @@
             <key> <string>_body</string> </key>
             <value> <string>""" Format the date according to current user preferences."""\n
 \n
-if not date :\n
+if not date:\n
   return \'\'\n
 \n
-try :\n
+try:\n
   order = context.getPortalObject().portal_preferences.getPreferredDateOrder()\n
-except AttributeError :\n
+except AttributeError:\n
   order = \'ymd\'\n
 \n
 y = date.year()\n
 m = date.month()\n
 d = date.day()\n
 \n
-result = "%04d/%02d/%02d" % (y, m, d)\n
-if order == \'ymd\':\n
-  result = "%04d/%02d/%02d" % (y, m, d)\n
-elif order == \'dmy\':\n
+if order == \'dmy\':\n
   result = "%02d/%02d/%04d" % (d, m, y)\n
-elif input_order == \'mdy\':\n
+elif order == \'mdy\':\n
   result = "%02d/%02d/%04d" % (m, d, y)\n
+else: # ymd is default\n
+  result = "%04d/%02d/%02d" % (y, m, d)\n
 \n
-if hour_minute or seconds : \n
-  if seconds :\n
+if hour_minute or seconds:\n
+  if seconds:\n
     hour_minute_text = "%02dh%02dmn%02ds" % (date.hour(), date.minute(), date.second())\n
-  else : \n
+  else:\n
     hour_minute_text = "%02dh%02dmn" % (date.hour(), date.minute())\n
   result = context.Base_translateString("${date} at ${hour_minute_text}", \n
               mapping = {\'date\' : result, \'hour_minute_text\' : hour_minute_text  })\n
@@ -148,14 +147,13 @@ return result\n
                             <string>hour_minute</string>
                             <string>seconds</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>order</string>
                             <string>AttributeError</string>
                             <string>y</string>
                             <string>m</string>
                             <string>d</string>
                             <string>result</string>
-                            <string>input_order</string>
                             <string>hour_minute_text</string>
                           </tuple>
                         </value>
