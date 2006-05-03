@@ -679,7 +679,7 @@ class PlanningBoxWidget(Widget.Widget):
     # build structure
     here = REQUEST['here']
 
-
+    pdb.set_trace()
     structure = self.render_structure(field=field, key=key, value=value, REQUEST=REQUEST, here=here)
 
     if structure != None:
@@ -1148,11 +1148,11 @@ class BasicStructure:
 
       try:
         child_activity_list = self.report_activity_dict[object_tree_group.getObject().getTitle()]
-      except AttributeError:
+      except (AttributeError, KeyError):
         child_activity_list = None
 
       #if method_start == None and child_activity_list != None:
-      if child_activity_list != None:
+      if child_activity_list not in (None, [], {}):
         # can not recover method from object_tree_group itself, trying
         # over the activity list
         # XXX in fact can not fail to recover method from object_tree_group
@@ -1385,8 +1385,15 @@ class BasicGroup:
     + update secondary_axis_occurence
     """
 
-    # specific color scriptactivity
-    color_script = getattr(self, self.field.get_value('color_script'),None)
+
+    # specific begin & stop methods for secondary axis
+    object_begin_method_id = self.field.get_value('x_start_bloc')
+    object_end_method_id= self.field.get_value('x_stop_bloc')
+
+    # recover method to et begin and end limits
+    method_begin = getattr(self.object.getObject(),object_begin_method_id,None)
+    method_end = getattr(self.object.getObject(),object_end_method_id,None)
+
 
     # specific block text_information methods
     info_center = self.field.get_value('info_center')
@@ -1395,16 +1402,8 @@ class BasicGroup:
     info_backleft = self.field.get_value('info_backleft')
     info_backright = self.field.get_value('info_backright')
 
-    # specific begin & stop methods for secondary axis
-    object_begin_method_id = self.field.get_value('x_start_bloc')
-    object_end_method_id= self.field.get_value('x_stop_bloc')
 
     info = {}
-
-
-    # recover method to et begin and end limits
-    method_begin = getattr(self.object.getObject(),object_begin_method_id,None)
-    method_end = getattr(self.object.getObject(),object_end_method_id,None)
 
     # getting info method from activity itself if exists
     info_center_method = getattr(self.object.getObject(),info_center,None)
@@ -1421,10 +1420,7 @@ class BasicGroup:
     if info_backright_method!=None: info['info_backright']=str(info_backright_method())
 
 
-    # calling color script if exists to set up activity_color
-    current_color=''
-    if color_script !=None:
-      current_color = color_script(self)
+    
 
     #if method_begin == None and activity_list not in ([],None):
     if activity_list not in ([],None):
@@ -1499,10 +1495,11 @@ class BasicGroup:
           if info_backleft_method!=None: info['info_backleft'] =str(info_backleft_method())
           if info_backright_method!=None: info['info_backright']=str(info_backright_method())
 
+          color_script = getattr(activity_content.getObject(), self.field.get_value('color_script'),None)
           # calling color script if exists to set up activity_color
           current_color=''
           if color_script !=None:
-            current_color = color_script(activity_content)
+            current_color = color_script(activity_content.getObject())
 
           # testing if some activities have errors
           error = 'false'
@@ -1536,6 +1533,16 @@ class BasicGroup:
 
 
     else:
+
+      # specific color scriptactivity
+      color_script = getattr(self.object.getObject(), self.field.get_value('color_script'),None)
+
+
+      # calling color script if exists to set up activity_color
+      current_color=''
+      if color_script !=None:
+        current_color = color_script(self.object.getObject())
+
 
       # getting begin and end values from previously recovered method
       if method_begin !=None:
