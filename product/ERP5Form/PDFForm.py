@@ -240,9 +240,9 @@ class CalculatedValues :
 
 allow_class(CalculatedValues)
 
-class EmptyERP5PdfForm(Exception):
+class EmptyERP5PdfFormError(Exception):
   """Error thrown when you try to display an empty Pdf. """
-allow_class(EmptyERP5PdfForm)
+allow_class(EmptyERP5PdfFormError)
 
 class PDFForm(File):
   """
@@ -445,7 +445,7 @@ class PDFForm(File):
   def generatePDF(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ generates the PDF with form filled in """
     if not self.hasPdfContent() :
-      raise EmptyERP5PdfForm, 'Pdf content must be downloaded first'
+      raise EmptyERP5PdfFormError, 'Pdf content must be downloaded first'
     values = self.calculateCellValues(REQUEST, *args, **kwargs)
     context = { 'here' : self.aq_parent,
                 'context' : self.aq_parent,
@@ -487,11 +487,15 @@ class PDFForm(File):
     # list of values that need to be reevaluated (i.e. they depend on the
     # value of a cell that was not already evaluated when evaluating them )
     uncalculated_values = []
+    # cleanup kw arguments, not to pass `cell` twice to evaluateCell
+    if 'cell' in kwargs:
+      del kwargs['cell']
+
     for cell_name in self.cells.keys() :
       not_founds = []
       value = self.evaluateCell(cell_name, REQUEST = REQUEST,
               cell = SafeMapping(CalculatedValues(
-                                      values, cell_name, not_founds)))
+                              values, cell_name, not_founds)), **kwargs)
       if len(not_founds) != 0 :
         uncalculated_values.append(cell_name)
       else :
@@ -508,7 +512,7 @@ class PDFForm(File):
         not_founds = []
         value = self.evaluateCell(cell_name, REQUEST = REQUEST,
                 cell = SafeMapping(CalculatedValues(
-                                      values, cell_name, not_founds)))
+                                values, cell_name, not_founds)), **kwargs)
         if len(not_founds) == 0 :
           uncalculated_values.remove(cell_name)
           values[cell_name] = value
@@ -560,7 +564,7 @@ class PDFForm(File):
     context = { 'here' : self.aq_parent,
                 'context' : self.aq_parent,
                 'request' : REQUEST }
-    context.update (kwargs)
+    context.update(kwargs)
     try :
       compiled_tales = getEngine().compile(self.cells[cell_name])
       value = getEngine().getContext(context).evaluate(compiled_tales)
