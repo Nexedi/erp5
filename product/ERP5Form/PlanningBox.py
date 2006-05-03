@@ -42,6 +42,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.Formulator.MethodField import BoundMethod
 from DateTime import DateTime
+#import DateUtils
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from SelectionTool import makeTreeList,TreeListLine
@@ -80,7 +81,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     old_delta1 = REQUEST.get('old_delta1')
     old_delta2 = REQUEST.get('old_delta2')
 
-    #pdb.set_trace()
+    
 
     ##################################################
     ############## REBUILD STRUCTURE #################
@@ -231,7 +232,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # XXX call specific external method to round value in case hh:mn:s are useless
 
       # saving updating informations in the final dict
-      update_dict[activity_object.link]={'start_date':new_bounds[0],'stop_date':new_bounds[1]}
+      update_dict[activity_object.object.getUrl()]={'start_date':new_bounds[0],'stop_date':new_bounds[1]}
 
     # all process is now finished, just need to return final dict
     return update_dict
@@ -366,11 +367,12 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   property_names = Widget.Widget.property_names +\
-  ['height_header', 'height_global_div','height_axis_x', 'width_line',
-   'space_line','list_method','report_root_list','selection_name',
-   'portal_types','sort','title_line','y_unity','y_axis_width',
-   'y_range','x_range','x_axis_script_id','x_start_bloc','x_stop_bloc',
-   'y_axis_method','max_y','constraint_method','color_script','info_center',
+  ['representation_type','main_axis_groups','size_header_height', 'size_border_width_left',
+  'size_planning_width', 'size_y_axis_width','size_y_axis_space','size_planning_height','size_x_axis_height',
+  'size_x_axis_space'
+  ,'list_method','report_root_list','selection_name',
+   'portal_types','sort','title_line','x_start_bloc','x_stop_bloc',
+   'y_axis_method','constraint_method','color_script','info_center',
    'info_topleft','info_topright','info_backleft','info_backright',
    'security_index']
 
@@ -379,10 +381,10 @@ class PlanningBoxWidget(Widget.Widget):
 
   # kind of representation to render :
   # Planning or Calendar
-  representation_type = fields.Stringfield('representation_type',
-      title='',
-      description='',
-      default='Planning',
+  representation_type = fields.TextAreaField('representation_type',
+      title='representtion Type (YX or XY)',
+      description='YX for horizontal or XY for vertical',
+      default='YX',
       required=1)
 
   # added especially for new Planning Structure generation
@@ -492,8 +494,6 @@ class PlanningBoxWidget(Widget.Widget):
       default=50,
       required=1)
 
-  
-
   width_line = fields.IntegerField('width_line',
       title='width of the graphic (px):',
       description=(
@@ -507,11 +507,15 @@ class PlanningBoxWidget(Widget.Widget):
       default=10,
       required=0)
 
+
+
   report_root_list = fields.ListTextAreaField('report_root_list',
       title="Report Root",
       description=("A list of domains which define the possible root."),
       default=[],
       required=0)
+
+
 
   selection_name = fields.StringField('selection_name',
       title='Selection Name',
@@ -671,27 +675,29 @@ class PlanningBoxWidget(Widget.Widget):
     external PageTemplate (or DTML depending) to render the CSS code
     relative to the structure that need to be rendered
     """
-    
-    #pdb.set_trace()
-
 
     # build structure
     here = REQUEST['here']
+
+
     structure = self.render_structure(field=field, key=key, value=value, REQUEST=REQUEST, here=here)
 
-    # getting CSS script generator
-    planning_css_method = getattr(REQUEST['here'],'planning_css')
+    if structure != None:
+      # getting CSS script generator
+      planning_css_method = getattr(REQUEST['here'],'planning_css')
 
-    # recover CSS data buy calling DTML document
-    #pdb.set_trace()
-    CSS_data = planning_css_method(structure=structure)
+      # recover CSS data buy calling DTML document
+      CSS_data = planning_css_method(structure=structure)
 
-    # saving structure inside the request to be able to recover it afterwards when needing
-    # to render the HTML code
-    REQUEST.set('structure',structure)
+      # saving structure inside the request to be able to recover it afterwards when needing
+      # to render the HTML code
+      REQUEST.set('structure',structure)
 
-    # return CSS data
-    return CSS_data
+      # return CSS data
+      return CSS_data
+    else:
+      REQUEST.set('structure',None)
+      return None
 
   def render(self,field,key,value,REQUEST):
     """
@@ -707,14 +713,13 @@ class PlanningBoxWidget(Widget.Widget):
     structure = REQUEST.get('structure')
 
     #pdb.set_trace()
-    if structure != None:
-      # getting HTML rendering Page Template
-      planning_html_method = getattr(REQUEST['here'],'planning_content')
+    # getting HTML rendering Page Template
+    planning_html_method = getattr(REQUEST['here'],'planning_content')
 
-      # recovering HTML data by calling Page Template document
-      HTML_data = planning_html_method(struct=structure)
+    # recovering HTML data by calling Page Template document
+    HTML_data = planning_html_method(struct=structure)
 
-      return HTML_data
+    return HTML_data
 
 
   def render_structure(self, field, key, value, REQUEST, here):
@@ -762,12 +767,15 @@ class PlanningBoxWidget(Widget.Widget):
     #if selection.has_attribute('getParams'):
     #  params = selection.getParams()
 
-
     # CALL CLASS METHODS TO BUILD BASIC STRUCTURE
     # creating BasicStructure instance (and initializing its internal values)
     self.basic = BasicStructure(here=here,form=form, field=field, REQUEST=REQUEST, list_method=list_method, selection=selection, params = params, selection_name=selection_name, report_root_list=report_root_list, portal_types=portal_types, sort=sort, list_error=list_error)
     # call build method to generate BasicStructure
-    self.basic.build()
+    returned_value = self.basic.build()
+    
+    if returned_value == None:
+      # in case group list is empty
+      return None
 
     # CALL CLASS METHODS TO BUILD PLANNING STRUCTURE
     # creating PlanningStructure instance and initializing its internal values
@@ -876,13 +884,12 @@ class BasicStructure:
     if 'select_expression' in kw:
       del kw['select_expression']
 
-    
 
     if hasattr(self.list_method, 'method_name'):
       if self.list_method.method_name == 'ObjectValues':
         # list_method is available
         self.list_method = self.here.objectValues
-        kw = copy(params)
+        kw = copy(self.params)
       else:
         # building a complex query so we should not pass too many variables
         kw={}
@@ -1028,30 +1035,41 @@ class BasicStructure:
               new_object_list.append(selected_object)
           object_list = new_object_list
 
-        object_list = []
+        #object_list = []
         add=1
+        new_list = [x.getObject() for x in object_list]
+        object_list = new_list
 
         # comparing report_groups'object with object_tree_line to check
         # if the object is already present.
         # this has to be done as there seems to be a 'bug' with make_tree_list
         # returning two times the same object...
+        already_in_list = 0
         for object in self.report_groups:
           if getattr(object_tree_line.getObject(),'uid') == \
-           getattr(object.getObject(),'uid'):
+           getattr(object.getObject(),'uid') and \
+           not(object_tree_line.getIsPureSummary()):
             # object already present, flag <= 0 to prevent new add
-            add=0
+            already_in_list = 1
+            #add=0
             break
+        #pdb.set_trace()
         if add == 1: # testing : object not present, can add it
           # adding current line to report_section where
           # line is report_tree
+          if already_in_list:
+            self.report_groups = self.report_groups[:-1]
           self.report_groups += [object_tree_line]
           self.nbr_groups += 1
-          for p_object in object_list:
+          #for p_object in object_list:
             #iterating and adding each object to current_list
-            object_list.append(p_object)
-          self.report_activity_dict[object_tree_line.getObject().getTitle()] = object_list
+          #  object_list.append(p_object)
+          # XXX This not a good idea at all to use the title as a key of the
+          # dictionnary
+          self.report_activity_dict[object_tree_line.getObject().getTitle()] = object_list 
 
     self.selection.edit(report=None)
+    LOG('self.report_activity_dict',0,self.report_activity_dict)
 
 
     ##################################################
@@ -1065,8 +1083,13 @@ class BasicStructure:
     self.getMainAxisInfo(self.main_axis_info)
 
     # applying main axis selection
-    self.report_groups = self.report_groups[self.main_axis_info['bound_start']:
-                                            self.main_axis_info['bound_stop']]
+    if self.report_groups != []:
+      self.report_groups = self.report_groups[self.main_axis_info['bound_start']:
+                                              self.main_axis_info['bound_stop']]
+    else:
+      # XXX need to handle this kind of error:
+      # no group is available so the Y and X axis will be empty...
+      return None
 
 
     ##################################################
@@ -1105,6 +1128,9 @@ class BasicStructure:
     # be built
     self.buildGroupStructure()
 
+    # everything is fine
+    return 1
+
 
   def getSecondaryAxisOccurence(self):
     """
@@ -1121,13 +1147,17 @@ class BasicStructure:
       method_stop = getattr(object_tree_group.getObject(),stop_method_id,None)
 
       try:
-        child_activity_list = self.report_activity_dict[object_tree_group.title]
+        child_activity_list = self.report_activity_dict[object_tree_group.getObject().getTitle()]
       except AttributeError:
         child_activity_list = None
 
-      if method_start == None and child_activity_list != None:
+      #if method_start == None and child_activity_list != None:
+      if child_activity_list != None:
         # can not recover method from object_tree_group itself, trying
         # over the activity list
+        # XXX in fact can not fail to recover method from object_tree_group
+        # get : <bound method ImplicitAcquirerWrapper.(?) of <Project at /erp5/project_module/planning>>
+        # so just trying if children exist
         for child_activity in child_activity_list:
           method_start = getattr(child_activity,start_method_id,None)
           method_stop = getattr(child_activity,stop_method_id,None)
@@ -1179,9 +1209,9 @@ class BasicStructure:
     axis_dict['bound_begin'] = self.secondary_axis_occurence[0][0]
     axis_dict['bound_end'] = axis_dict['bound_begin']
     for occurence in self.secondary_axis_occurence:
-      if occurence[0] < axis_dict['bound_begin']:
+      if (occurence[0] < axis_dict['bound_begin'] or axis_dict['bound_begin'] == None) and occurence[0] != None:
         axis_dict['bound_begin'] = occurence[0]
-      if occurence[1] > axis_dict['bound_end']:
+      if (occurence[1] > axis_dict['bound_end'] or axis_dict['bound_end'] == None) and occurence[1] != None:
         axis_dict['bound_end'] = occurence[1]
     axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
     # now start and stop have the extreme values of the second axis bound.
@@ -1221,13 +1251,12 @@ class BasicStructure:
     """
 
     #pdb.set_trace()
-    # recovering number of groups displayed per page
-    axis_dict['bound_axis_groups'] = self.REQUEST.get('list_lines',None)
+    axis_dict['bound_axis_groups'] = self.field.get_value('main_axis_groups')
     if axis_dict['bound_axis_groups'] == None:
-      # XXX default value is 10:
-      axis_dict['bound_axis_groups'] = self.params.get('list_lines',10)
+      #XXX raise exception : no group defined
+      pass
 
-    
+
     # setting begin & end bounds
     axis_dict['bound_begin'] = 0
     axis_dict['bound_end'] = len(self.report_groups)
@@ -1266,7 +1295,7 @@ class BasicStructure:
       axis_dict['bound_page_current'] = int(axis_dict['bound_start'] / axis_dict['bound_axis_groups']) + 1
       # adjusting first group displayed on current page
       axis_dict['bound_start'] = min(axis_dict['bound_start'], max(0, (axis_dict['bound_page_total']-1) * axis_dict['bound_axis_groups']))
-    
+
       self.params['list_lines'] = axis_dict['bound_axis_groups']
       self.params['list_start'] = axis_dict['bound_start']
 
@@ -1302,7 +1331,7 @@ class BasicStructure:
         # first recovering activity list if exists
         report_activity_list = []
         if title in self.report_activity_dict.keys():
-          report_activity_list = self.report_activity_dict[child_group.title]
+          report_activity_list = self.report_activity_dict[title]
         # linking activities to the bloc. the parameter is a list of elements
         # to link to the child_group object.
         child_group.setBasicActivities(report_activity_list,self.list_error,self.secondary_axis_info)
@@ -1312,8 +1341,6 @@ class BasicStructure:
         except (AttributeError):
           self.basic_group_list = []
           self.basic_group_list.append(child_group)
-
-
 
 
 class BasicGroup:
@@ -1328,7 +1355,7 @@ class BasicGroup:
   ReportTree mode to handle child groups.
   """
 
-  def __init__ (self, title='', name='', url='', constraints='', depth=0, position=0, field = None, object = None, is_open=0, is_pure_summary=1):
+  def __init__ (self, title='', name='',url='', constraints='', depth=0, position=0, field = None, object = None, is_open=0, is_pure_summary=1):
     self.title = title
     self.name = name
     self.url = url
@@ -1341,7 +1368,7 @@ class BasicGroup:
     self.object = object # ERP5 object returned & related to the group
     self.is_open = is_open # define is report is opened  or not
     self.is_pure_summary = is_pure_summary # define id report is single or has sons
-    
+
     # specific start and stop bound values specifiec to the current group and used
     # in case of calendar mode
     self.start = None
@@ -1386,7 +1413,7 @@ class BasicGroup:
     info_backleft_method = getattr(self.object.getObject(),info_backleft,None)
     info_backright_method = getattr(self.object.getObject(),info_backright,None)
 
-    # if method recovered is not null, then updating 
+    # if method recovered is not null, then updating
     if info_center_method!=None: info['info_center']=str(info_center_method())
     if info_topright_method!=None: info['info_topright']=str(info_topright_method())
     if info_topleft_method!=None: info['info_topleft']=str(info_topleft_method())
@@ -1399,7 +1426,8 @@ class BasicGroup:
     if color_script !=None:
       current_color = color_script(self)
 
-    if method_begin == None and activity_list not in ([],None):
+    #if method_begin == None and activity_list not in ([],None):
+    if activity_list not in ([],None):
 
       # modifying iterating mode from original PlanningBox.py script to prevent
       # useless and repetitive tests.
@@ -1417,8 +1445,8 @@ class BasicGroup:
 
         # interpreting results and getting begin and end values from 
         # previously recovered method
-        block_begin = ''
-        block_end = ''
+        block_begin = None
+        block_end = None
         if method_begin !=None:
           block_begin = method_begin()
         else:
@@ -1429,6 +1457,14 @@ class BasicGroup:
         else:
           block_end = None
 
+
+        # ahndling case where activity bound is not defined
+        if block_begin == None:
+          block_begin = secondary_axis_info['bound_start']
+          current_color='#E4CCE1'
+        if block_end == None:
+          block_end = secondary_axis_info['bound_stop']
+          current_color='#E4CCE1'
         # testing if activity is visible according to the current zoom selection over
         # the secondary_axis
         if  block_begin > secondary_axis_info['bound_stop'] or block_end < secondary_axis_info['bound_start']:
@@ -1470,15 +1506,19 @@ class BasicGroup:
 
           # testing if some activities have errors
           error = 'false'
-          if list_error !=None:
+          if list_error not in (None, []):
             for activity_error in list_error:
               if activity_error[0][0] == name:
                 error = 'true'
                 break
 
+          stat_result = {}
+          stat_context = activity_content.getObject().asContext(**stat_result)
+          stat_context.domain_url = activity_content.getObject().getRelativeUrl()
+          stat_context.absolute_url = lambda x: activity_content.getObject().absolute_url()
 
           # creating new activity instance
-          activity = BasicActivity(title=info['info_center'],name=name, url=self.url,absolute_begin=block_begin, absolute_end=block_end,color = current_color, info_dict=info, error=error)
+          activity = BasicActivity(title=info['info_center'],name=name,object = stat_context.getObject(),  url=stat_context.getUrl(),absolute_begin=block_begin, absolute_end=block_end, absolute_start = block_start, absolute_stop = block_stop, color = current_color, info_dict=info, error=error)
 
 
           # adding new activity to personal group activity list
@@ -1490,6 +1530,9 @@ class BasicGroup:
           # incrementing indic used for differenciating activities in the same 
           # group (used for Activity naming)
           indic += 1
+
+          info = None
+          info = {}
 
 
     else:
@@ -1507,8 +1550,14 @@ class BasicGroup:
 
       # testing if activity is visible according to the current zoom selection over
       # the secondary_axis
-      if  block_begin > secondary_axis_info['bound_stop'] or block_end < secondary_axis_info['bound_start']:
-        # activity will not be displayed, stopping process
+      if block_begin == None:
+        block_begin = secondary_axis_info['bound_start']
+        current_color='#E4CCE1'
+      if block_end == None:
+        block_end = secondary_axis_info['bound_stop']
+        current_color='#E4CCE1'
+      if  (block_begin > secondary_axis_info['bound_stop'] or block_end < secondary_axis_info['bound_start']):
+      #  # activity will not be displayed, stopping process
         pass
       else:
         # activity is somehow displayed. checking if need to cut its bounds
@@ -1524,7 +1573,7 @@ class BasicGroup:
 
         # testing if some activities have errors
         error = 'false'
-        if list_error !=None:
+        if list_error not in (None,[]):
           for activity_error in list_error:
             if activity_error[0][0] == name:
               error = 'true'
@@ -1534,7 +1583,7 @@ class BasicGroup:
         name = "Activity_%s" % (self.object.getObject().getTitle())
 
         # creating new activity instance
-        activity = BasicActivity(title=info['info_center'],name=name, url=self.url, absolute_begin=block_begin, absolute_end=block_end, absolute_start=block_start, absolute_stop=block_stop,color = current_color, info_dict=info, error=error)
+        activity = BasicActivity(title=info['info_center'], name=name, object = self.object.object, url=self.url, absolute_begin=block_begin, absolute_end=block_end, absolute_start=block_start, absolute_stop=block_stop,color = current_color, info_dict=info, error=error)
 
         # adding new activity to personal group activity list
         try:
@@ -1551,10 +1600,11 @@ class BasicActivity:
   """ Represents an activity, a task, in the group it belongs to. Beware
       nothing about multitask rendering. """
 
-  def __init__ (self, title='', name='', url='', absolute_begin=None,
+  def __init__ (self, title='', name='',object = None, url='', absolute_begin=None,
     absolute_end=None,absolute_start=None,absolute_stop=None, constraints='', color=None, error='false', info_dict= None):
     self.title = title
     self.name = name
+    self.object = object
     self.url = url
     self.absolute_begin = absolute_begin # absolute values independant of any
                                          # hypothetic zoom
@@ -1597,7 +1647,10 @@ class PlanningStructure:
     # afterwards will be defined as a planningBox's property field or (perhaps even better)
     # a on the fly button integrated over the planning representation 
     #render_format = field.get_value('render_format')
-    self.render_format = 'YX'
+    self.render_format = field.get_value('representation_type')
+    #self.render_format = 'YX'
+
+
 
     # declaring main axis
     self.main_axis = Axis(title='main axis', name='axis',
@@ -1635,7 +1688,7 @@ class PlanningStructure:
 
 
     # completing axisgroup informations according to their bounds
-    self.buildAxis()
+    self.buildMainAxis()
 
     # the whole structure is almost completed : axis_groups are defined, as
     # axis_elements with their activities. Just need to create blocks related to
@@ -1648,7 +1701,48 @@ class PlanningStructure:
     """
     build secondary axis structure
     """
-    #pdb.set_trace()
+    """
+    pdb.set_trace()
+    # defining min and max delimiter number
+    delimiter_min_number = 4
+    date_stop = self.secondary_axis.stop
+    date_start = self.secondary_axis.start
+    date_range = date_stop - date_start
+
+    # testing delimiter_type to apply (day, week, month, year)
+    # from smallest type to biggest
+    type_list = [['year',  365],
+                 ['month',  30],
+                 ['week',    7],
+                 ['day',     1]
+                 ]
+    # default good_type is last one (if nothing else matches)
+    good_type = type_list[-1]
+    for date_type in type_list:
+      # iterating each delimiter_type and testing if it matches the delimitation
+      # number definition
+      if date_range / date_type[1] >= delimiter_min_number:
+        good_type = date_type
+        break
+
+    # good type is known need to get first delimiter after start_date
+    # for that use special function getClosestDate (cf. DateUtils.py)
+    first_delimiter = getClosestDate(date=None, target_date=date_start, precision=good_type[0], before=0)
+
+
+    delimiter_list = []
+    current_delimiter = first_delimiter
+    while current_delimiter.Date() < date_stop.Date():
+      delimiter_list.append(current_delimiter.Date())
+      #DateUtils.addToDate(current_delimiter,
+
+
+      self.secondary_axis.axis_group.append(axis_group)
+
+
+    return None
+
+    """
     # getting secondary axis script generator
     planning_secondary_axis_method = getattr(basic_structure.here,'planning_secondary_axis')
     # calling script to generate axis_group_list
@@ -1668,7 +1762,7 @@ class PlanningStructure:
       axis_group_number += 1
 
 
-  def buildAxis (self):
+  def buildMainAxis (self):
     """
     complete axis infomations (and more precisely axis position objects) thanks
     to the actual planning structure
@@ -1700,7 +1794,7 @@ class PlanningStructure:
     axis_element_already_present=0
     for basic_group_object in basic_structure.basic_group_list:
       axis_group_number += 1
-      axis_group = AxisGroup(name='Group_' + str(axis_group_number), title=basic_group_object.title, AxisGroup_number= axis_group_number, is_open=basic_group_object.is_open, is_pure_summary=basic_group_object.is_pure_summary, url = basic_group_object.url,depth = basic_group_object.depth, secondary_axis_start= self.secondary_axis.start, secondary_axis_stop= self.secondary_axis.stop)
+      axis_group = AxisGroup(name='Group_' + str(axis_group_number), title=basic_group_object.title, object = basic_group_object.object, axis_group_number = axis_group_number, is_open=basic_group_object.is_open, is_pure_summary=basic_group_object.is_pure_summary, url = basic_group_object.url,depth = basic_group_object.depth, secondary_axis_start= self.secondary_axis.start, secondary_axis_stop= self.secondary_axis.stop)
       if self.render_format == 'YX':
         axis_group.position_y = axis_group.position_main
         axis_group.position_x = axis_group.position_secondary
@@ -1724,7 +1818,7 @@ class PlanningStructure:
         for basic_activity_object in basic_group_object.basic_activity_list:
           activity_number += 1
           # create new activity in the PlanningStructure
-          activity = Activity(name='Group_' + str(axis_group_number) + '_Activity_' + str(activity_number), title=basic_activity_object.title, color=basic_activity_object.color, link=basic_activity_object.url, secondary_axis_begin=basic_activity_object.absolute_begin, secondary_axis_end=basic_activity_object.absolute_end, secondary_axis_start=basic_activity_object.absolute_start, secondary_axis_stop=basic_activity_object.absolute_stop, primary_axis_block=self, info=basic_activity_object.info_dict, render_format=self.render_format)
+          activity = Activity(name='Group_' + str(axis_group_number) + '_Activity_' + str(activity_number), title=basic_activity_object.title, object=basic_activity_object.object, color=basic_activity_object.color, link=basic_activity_object.url, secondary_axis_begin=basic_activity_object.absolute_begin, secondary_axis_end=basic_activity_object.absolute_end, secondary_axis_start=basic_activity_object.absolute_start, secondary_axis_stop=basic_activity_object.absolute_stop, primary_axis_block=self, info=basic_activity_object.info_dict, render_format=self.render_format)
           # adding activity to the current group
           axis_group.addActivity(activity,axis_element_already_present)
       else:
@@ -1736,7 +1830,7 @@ class PlanningStructure:
         new_axis_element.activity_list = []
         axis_group.axis_element_list = []
         axis_group.axis_element_list.append(new_axis_element)
-        
+
       axis_group.axis_element_stop = axis_element_already_present + axis_group.axis_element_number
       axis_element_already_present = axis_group.axis_element_stop
       try:
@@ -1772,9 +1866,10 @@ class Activity:
   structure is used for rebuilding tasks from bloc positions when
   validating the Planning.
   """
-  def __init__ (self,name=None,title=None,types=None,color=None,link=None,secondary_axis_begin=None,secondary_axis_end=None,secondary_axis_start=None,secondary_axis_stop=None,primary_axis_block=None, info=None, render_format='YX'):
+  def __init__ (self,name=None, title=None, object=None, types=None, color=None, link=None, secondary_axis_begin=None, secondary_axis_end=None, secondary_axis_start=None, secondary_axis_stop=None, primary_axis_block=None, info=None, render_format='YX'):
     self.name = name # internal activity_name
     self.title = title # displayed activity_name
+    self.object = object
     self.types = types # activity, activity_error, info
     self.color = color # color used to render all Blocs
     self.link = link # link to the ERP5 object
@@ -1790,7 +1885,6 @@ class Activity:
     self.parent_axis_element = None
     self.render_format= render_format
 
-
   def isValidPosition(self, bound_begin, bound_end):
     """
     can check if actual activity can fit within the bounds, returns :
@@ -1798,9 +1892,9 @@ class Activity:
     - 1 if partially ( need to cut the activity bounds to make it fit)
     - 2 definitely
     """
-    if self.begin > range_end or self.end < range_begin:
+    if self.secondary_axis_begin > bound_end or self.secondary_axis_end < bound_begin:
       return 0
-    elif self.begin > range_begin and self.end < range_end:
+    elif self.secondary_axis_begin > bound_begin and self.secondary_axis_end < bound_end:
       return 1
     else:
       return 2
@@ -1813,7 +1907,10 @@ class Activity:
     """
 
     # recover list of bounds
-    secondary_block_bounds = self.splitActivity()
+    if self.secondary_axis_start != None or self.secondary_axis_stop != None:
+      secondary_block_bounds = self.splitActivity()
+    else:
+      secondary_block_bounds = [[self.secondary_axis_start,self.secondary_axis_stop]]
 
     block_number = 0
     # iterating resulting list
@@ -1827,8 +1924,14 @@ class Activity:
       new_block.buildInfoDict(info_dict = self.info)
 
       # updating secondary_axis block position
-      new_block.position_secondary.absolute_begin = start
-      new_block.position_secondary.absolute_end = stop
+      if self.secondary_axis_start != None:
+        new_block.position_secondary.absolute_begin = start
+      else:
+        new_block.position_secondary.absolute_begin = secondary_axis_start
+      if self.secondary_axis_stop != None:
+        new_block.position_secondary.absolute_end = stop
+      else:
+        new_block.position_secondary.absolute_end = secondary_axis_stop
       new_block.position_secondary.absolute_range = stop - start
       # updating main_axis block position
       new_block.position_main.absolute_begin = self.parent_axis_element.absolute_number - 1
@@ -2004,15 +2107,16 @@ class AxisGroup:
   to hold sub groups elements.
   """
 
-  def __init__ (self, name='', title='',
-                AxisGroup_list=None, AxisGroup_number=0,
-                AxisElement_list=None,AxisElement_number=0, is_open=0, is_pure_summary=1,depth=0, url=None, axis_element_already_insered= 0, secondary_axis_start=None, secondary_axis_stop=None):
+  def __init__ (self, name='', title='', object = None,
+                axis_group_list=None, axis_group_number=0,
+                axis_element_list=None, axis_element_number=0, is_open=0, is_pure_summary=1,depth=0, url=None, axis_element_already_insered= 0, secondary_axis_start=None, secondary_axis_stop=None):
     self.name = name
     self.title = title
-    self.axis_group_list = AxisGroup_list # ReportTree
-    self.axis_group_number = AxisGroup_number
-    self.axis_element_list = AxisElement_list # Multitasking
-    self.axis_element_number = AxisElement_number
+    self.object = object # physical object related to the current group (used to validate modifications)
+    self.axis_group_list = axis_group_list # ReportTree
+    self.axis_group_number = axis_group_number
+    self.axis_element_list = axis_element_list # Multitasking
+    self.axis_element_number = axis_element_number
     self.axis_element_start = None
     self.axis_element_stop = None
     # dict containing all class properties with their values
@@ -2065,10 +2169,10 @@ class AxisGroup:
         # iterating through them to check if one of them crosses the new one
         for activity_statement in axis_element.activity_list:
   
-          if activity_statement.isValidPosition(activity.begin, activity.end) != 0:
+          if activity_statement.isValidPosition(activity.secondary_axis_begin, activity.secondary_axis_end) != 0:
             # isValidPosition returned 1 or 2, this means the activity already
             # present does prevent from adding the new activity as there is
-            # coverage.
+            # coverage on the current axis_element.
             # stop iterating actual axis_element and try with the next one
             can_add = 0
             break
@@ -2082,6 +2186,10 @@ class AxisGroup:
   
           # updating activity properties
           activity.parent_axis_element = axis_element
+          
+          # no need to check the next axis_elements to know if they can hold the
+          # new activity as it is already added to an axis_element
+          break
   
       if not added:
         # all axis_elements of the current group have been tested and no one can
@@ -2100,7 +2208,7 @@ class AxisGroup:
         # register the axis_element to the actual group.
         self.axis_element_list.append(new_axis_element)
     except TypeError:
-      # in case axis_element_list is None
+      # in case axis_element_list is Empty (first activity to the group)
       # Need to create a new axis_element to hold the new activity
       self.axis_element_number += 1
       new_axis_element = AxisElement(name='Group_' + str(self.axis_group_number) + '_AxisElement_1', relative_number= self.axis_element_number, absolute_number = axis_element_already_insered + self.axis_element_number, parent_axis_group=self)
