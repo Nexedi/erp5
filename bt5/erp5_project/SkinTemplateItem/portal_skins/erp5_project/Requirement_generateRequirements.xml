@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">bfINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>context_obj = context.getObject()\n
+\n
+requirement_module_type   = \'Requirement Module\'\n
+requirement_document_type = \'Requirement Document\'\n
+requirement_type          = \'Requirement\'\n
+\n
+if context_obj.getPortalType() == requirement_module_type:\n
+  # we are in a module, so create a requirement document\n
+  requirement_doc = context_obj.newContent( portal_type = requirement_document_type\n
+                                      , title       = kw[\'requirement_document_title\']\n
+                                      , description = kw[\'requirement_document_description\']\n
+                                      )\n
+  destination_obj = requirement_doc\n
+elif context_obj.getPortalType() in (requirement_document_type, requirement_type):\n
+  destination_obj = context_obj\n
+else:\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Error:+bad+context.\')\n
+\n
+# this list contain all requirements items\n
+requirements_items = []\n
+\n
+# get the user information\n
+for requirement_line in listbox:\n
+  if requirement_line.has_key(\'listbox_key\'):\n
+    requirement_line_id = int(requirement_line[\'listbox_key\'])\n
+    requirement = {}\n
+    requirement[\'id\'] = requirement_line_id\n
+    requirement[\'title\'] = requirement_line[\'requirement_title\']\n
+    requirement[\'sub_title\'] = requirement_line[\'sub_requirement_title\']\n
+    requirement[\'sub_description\'] = requirement_line[\'sub_requirement_description\']\n
+    requirements_items.append(requirement)\n
+\n
+# sort the requirements list by id to have the same order of the user\n
+requirements_items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+\n
+clean_requirements = {}\n
+has_1st_level_requirement = False\n
+has_2nd_level_requirement = False\n
+new_1st_level_requirement = None\n
+\n
+# scan every fast input line to create a structured and comprehensive list of requirements and sub-requirements\n
+for requirement_item in requirements_items:\n
+  # the item has a first level requirement\n
+  if requirement_item[\'title\'] not in (\'\', None):\n
+    has_1st_level_requirement = True\n
+    new_1st_level_requirement = []\n
+    new_1st_level_requirement_title = requirement_item[\'title\']\n
+  else:\n
+    has_1st_level_requirement = False\n
+\n
+  # the item has a second level requirement, built it\n
+  if requirement_item[\'sub_title\'] not in (\'\', None):\n
+    has_2nd_level_requirement = True\n
+    new_2nd_level_feat = {}\n
+    new_2nd_level_feat[\'title\'] = requirement_item[\'sub_title\']\n
+    if requirement_item[\'sub_title\'] not in (\'\', None):\n
+      new_2nd_level_feat[\'description\'] = requirement_item[\'sub_description\']\n
+    else:\n
+      new_2nd_level_feat[\'description\'] = None\n
+  else:\n
+    has_2nd_level_requirement = False\n
+\n
+  if has_2nd_level_requirement == True and new_1st_level_requirement != None:\n
+    new_1st_level_requirement.append(new_2nd_level_feat)\n
+\n
+  if has_1st_level_requirement == True:\n
+    if clean_requirements.has_key(new_1st_level_requirement_title):\n
+      new_1st_level_requirement = clean_requirements[new_1st_level_requirement_title] + new_1st_level_requirement\n
+    clean_requirements[new_1st_level_requirement_title] = new_1st_level_requirement\n
+\n
+# create requirement objects and sub-requirements\n
+for key in clean_requirements.keys():\n
+  new_1st_requirement = destination_obj.newContent( portal_type = requirement_type\n
+                                              , title       = key\n
+                                              )\n
+  for second_level in clean_requirements[key]:\n
+    new_2nd_requirement = new_1st_requirement.newContent( portal_type = requirement_type\n
+                                                , title       = second_level[\'title\']\n
+                                                , description = second_level[\'description\']\n
+                                                )\n
+\n
+# return to the requirement module\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'?portal_status_message=Requirement+document+added.\')\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5-2/portal_skins/erp5_project/Requirement_generateRequirements</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>listbox=[], **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>context_obj</string>
+                            <string>requirement_module_type</string>
+                            <string>requirement_document_type</string>
+                            <string>requirement_type</string>
+                            <string>_getitem_</string>
+                            <string>requirement_doc</string>
+                            <string>destination_obj</string>
+                            <string>requirements_items</string>
+                            <string>_getiter_</string>
+                            <string>requirement_line</string>
+                            <string>int</string>
+                            <string>requirement_line_id</string>
+                            <string>requirement</string>
+                            <string>_write_</string>
+                            <string>clean_requirements</string>
+                            <string>False</string>
+                            <string>has_1st_level_requirement</string>
+                            <string>has_2nd_level_requirement</string>
+                            <string>None</string>
+                            <string>new_1st_level_requirement</string>
+                            <string>requirement_item</string>
+                            <string>True</string>
+                            <string>new_1st_level_requirement_title</string>
+                            <string>new_2nd_level_feat</string>
+                            <string>key</string>
+                            <string>new_1st_requirement</string>
+                            <string>second_level</string>
+                            <string>new_2nd_requirement</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <list/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Requirement_generateRequirements</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.Report</string>
-          <string>ERP5Report</string>
-        </tuple>
-        <none/>
+        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -76,7 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Default</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>

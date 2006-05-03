@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -505,7 +502,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <value> <string>Project_viewLineList</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -609,11 +606,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

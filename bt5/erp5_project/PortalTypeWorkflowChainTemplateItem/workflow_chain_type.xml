@@ -1,0 +1,26 @@
+<workflow_chain>
+ <chain>
+  <type>Project</type>
+  <workflow>edit_workflow, order_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Project Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Requirement</type>
+  <workflow>edit_workflow, requirement_analysis_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Requirement Document</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Task</type>
+  <workflow>task_workflow, edit_workflow, order_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Task Report</type>
+  <workflow>packing_list_causality_workflow, packing_list_interaction_workflow, edit_workflow, task_report_workflow</workflow>
+ </chain>
+</workflow_chain>

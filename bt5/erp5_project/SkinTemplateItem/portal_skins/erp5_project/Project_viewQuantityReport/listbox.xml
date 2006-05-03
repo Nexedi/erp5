@@ -508,7 +508,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'year\',\'Year\'),(\'month\',\'Month\')] + [(x,x) for x in here.getSourceTitleList()]</string> </value>
+            <value> <string>python: [(\'year\',\'Year\'),(\'month\',\'Month\')] + [(x,x) for x in here.getSourceTitleList()] + [(\'unknown\',\'unknown\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

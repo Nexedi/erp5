@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.MultiRelationField</string>
-          <string>MultiRelationStringField</string>
-        </tuple>
-        <none/>
+        <global name="MultiRelationStringField" module="Products.ERP5Form.MultiRelationField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -362,6 +359,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>allow_jump</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -378,6 +383,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -431,7 +440,7 @@
                 </item>
                 <item>
                     <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -500,7 +509,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Collaborators</string> </value>
+                    <value> <string>Resources</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
