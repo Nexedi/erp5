@@ -45,6 +45,7 @@ from cStringIO import StringIO
 from tempfile import mktemp
 from shutil import copy
 from zLOG import LOG
+from Products.CMFCore.utils import getToolByName
 
 
 try:
@@ -757,7 +758,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
             extension = tmp2.string[tmp2.start():tmp2.end()].strip()
             tmp=tmp[:-len(extension)]
           object_to_update[tmp] = 'install'
-          
+    path_added_list = []
     # remove added files
     for p in added_files :
       path_list = p.split(os.sep)
@@ -769,8 +770,20 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
           if tmp2:
             extension = tmp2.string[tmp2.start():tmp2.end()].strip()
             tmp=tmp[:-len(extension)]
-          object_to_update[tmp] = 'remove'
-
+            path_added_list.append(tmp)
+    ## hack to remove objects
+    # Create a temporary bt with objects to delete
+    tmp_bt = getToolByName(bt, 'portal_templates').newContent(portal_type="Business Template")
+    tmp_bt.setTemplatePathList(path_added_list)
+    tmp_bt.setTitle('tmp_bt_revert')
+    # Build bt
+    tmp_bt.edit()
+    tmp_bt.build()
+    # Install then uninstall it to remove objects from ZODB
+    tmp_bt.install()
+    tmp_bt.uninstall()
+    # Remove it from portal template
+    bt.portal_templates.manage_delObjects(ids=tmp_bt.getId())
     #revert changes
     added_files.extend(other_files)
     to_revert = [self.relativeToAbsolute(x, bt) for x in added_files]
