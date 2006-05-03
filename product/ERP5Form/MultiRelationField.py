@@ -449,10 +449,16 @@ class MultiRelationEditor:
                           portal_type=self.portal_type_list)
         else:
           # we could call a generic method which create the setter method name
-          set_method_name = '_set%sValueList' % \
-                       convertToUpperCase(self.base_category)
-          getattr(o, set_method_name)(relation_object_list, 
-                                      portal_type=self.portal_type_list)
+          if len(relation_object_list) == 1:
+            set_method_name = '_set%sValue' % \
+                         convertToUpperCase(self.base_category)
+            getattr(o, set_method_name)(relation_object_list[0], 
+                                        portal_type=self.portal_type_list)
+          else:
+            set_method_name = '_set%sValueList' % \
+                         convertToUpperCase(self.base_category)
+            getattr(o, set_method_name)(relation_object_list, 
+                                        portal_type=self.portal_type_list)
 
 allow_class(MultiRelationEditor)
 
@@ -534,7 +540,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
     # User clicked on the wheel
     ####################################
     need_to_revalidate = 1
-    if relation_uid_list is not None:
+    if relation_uid_list not in (None, ''):
       need_to_revalidate = 0
       relation_editor_list = []
       for relation_item_id, relation_uid, value in \
@@ -717,6 +723,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
 #                 relation_editor_list.append((0, value, relation_uid, 
 #                                              display_text, None, None))
               elif len(relation_list) == 0:
+                # Add blank line
+                menu_item_list.append(('', ''))
                 # If the length is 0, raise an error
                 if field.get_value('allow_creation') == 1 :
                   # XXX
