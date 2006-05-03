@@ -95,7 +95,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     planning_coordinates = planning_coordinates_method(structure=structure)
 
     ##################################################
-    ########## RECOVERING BLOK MOVED DICT ############
+    ########## RECOVERING BLOCK MOVED DICT ###########
     ##################################################
     #  converting string to a structure
     block_moved_list = []
@@ -368,9 +368,9 @@ class PlanningBoxWidget(Widget.Widget):
 
   property_names = Widget.Widget.property_names +\
   ['representation_type','main_axis_groups','size_header_height', 'size_border_width_left',
-  'size_planning_width', 'size_y_axis_width','size_y_axis_space','size_planning_height','size_x_axis_height',
-  'size_x_axis_space'
-  ,'list_method','report_root_list','selection_name',
+   'size_planning_width', 'size_y_axis_width','size_y_axis_space','size_planning_height','size_x_axis_height',
+   'size_x_axis_space', 'delimiter',
+   'list_method','report_root_list','selection_name',
    'portal_types','sort','title_line','x_start_bloc','x_stop_bloc',
    'y_axis_method','constraint_method','color_script','info_center',
    'info_topleft','info_topright','info_backleft','info_backright',
@@ -506,6 +506,12 @@ class PlanningBoxWidget(Widget.Widget):
       description=("space between each line of the graphic,not required"),
       default=10,
       required=0)
+      
+  delimiter = fields.IntegerField('delimiter',
+      title='number of delimiters over the secondary axis:',
+      description=("number of delimitations over the sec axis, required"),
+      default = 5,
+      required=1)
 
 
 
@@ -997,7 +1003,7 @@ class BasicStructure:
           kw['select_expression'] = original_select_expression
 
       if (object_tree_line.getIsPureSummary() and \
-         selection_report_path[0]=='parent'):
+         selection_report_path=='parent'):
         # object_tree_line is Pure summary : does not have any activity
         stat_result = {}
         index=1
@@ -1691,7 +1697,7 @@ class PlanningStructure:
     #pdb.set_trace()
     # call method to build secondary axis structure
     # need start_bound, stop_bound and number of groups to build
-    self.buildSecondaryAxis(basic_structure)
+    self.buildSecondaryAxis(basic_structure,field)
 
 
     # completing axisgroup informations according to their bounds
@@ -1704,7 +1710,7 @@ class PlanningStructure:
     self.buildBlocs()
 
 
-  def buildSecondaryAxis(self,basic_structure):
+  def buildSecondaryAxis(self,basic_structure, field):
     """
     build secondary axis structure
     """
@@ -1753,7 +1759,7 @@ class PlanningStructure:
     # getting secondary axis script generator
     planning_secondary_axis_method = getattr(basic_structure.here,'planning_secondary_axis')
     # calling script to generate axis_group_list
-    group_list = planning_secondary_axis_method(self.secondary_axis.start, self.secondary_axis.stop, 4)
+    group_list = planning_secondary_axis_method(self.secondary_axis.start, self.secondary_axis.stop, field.get_value('delimiter'))
     axis_group_number = 0
     for group_title in group_list:
       # adding new group to list of groups
