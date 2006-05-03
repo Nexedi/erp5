@@ -90,12 +90,19 @@ rule_by_ptype = {\n
   \'Purchase Packing List\' : \'default_delivery_rule\',\n
 }\n
 \n
+PRIORITY = 3\n
+previous_tag = delivery.getPath() + \'_firstUpdateAppliedRule\'\n
+expand_tag   = delivery.getPath() + \'_expand\'\n
+activate_kw  = { \'tag\'     : expand_tag\n
+               , \'priority\': PRIORITY\n
+               }\n
 if rule_by_ptype.has_key(delivery_portal_type) : \n
   delivery.activate(\n
-           after_method_id = [ \'immediateReindexObject\',\n
-                               \'recursiveImmediateReindexObject\',\n
-                               \'expand\']\n
-          ).updateAppliedRule(rule_id = rule_by_ptype[delivery_portal_type])\n
+           after_tag=previous_tag,\n
+           tag = expand_tag,\n
+           priority=PRIORITY\n
+          ).updateAppliedRule(rule_id = rule_by_ptype[delivery_portal_type],\n
+                                            activate_kw=activate_kw)\n
 else : \n
   LOG("no rule_id for %s, don\'t know how to updateAppliedRule" % delivery_portal_type)\n
 \n
@@ -148,6 +155,10 @@ LOG(\'END\')\n
                             <string>portal</string>
                             <string>LOG</string>
                             <string>rule_by_ptype</string>
+                            <string>PRIORITY</string>
+                            <string>previous_tag</string>
+                            <string>expand_tag</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>
