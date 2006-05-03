@@ -509,7 +509,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>folder_selection</string> </value>
+                    <value> <string>person_assignment_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
