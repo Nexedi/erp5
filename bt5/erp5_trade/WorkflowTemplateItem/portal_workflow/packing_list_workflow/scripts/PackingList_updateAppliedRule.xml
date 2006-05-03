@@ -66,11 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>LOG=lambda msg:context.log("PackingList_updateAppliedRule", msg)\n
-LOG=lambda msg:\'DISABLED\'\n
-\n
-packing_list = state_change.object\n
-\n
+            <value> <string>packing_list = state_change[\'object\']\n
 \n
 activate_kw = {}\n
 related_order = context.getCausalityValue()\n
@@ -137,10 +133,10 @@ packing_list.activate(\n
                           <tuple>
                             <string>state_change</string>
                             <string>kw</string>
-                            <string>LOG</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
                             <string>activate_kw</string>
+                            <string>_getattr_</string>
                             <string>context</string>
                             <string>related_order</string>
                             <string>after_path_list</string>

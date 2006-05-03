@@ -66,23 +66,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>LOG=lambda msg:context.log("PackingList_buildInvoice", msg)\n
-LOG=lambda msg:\'DISABLED\'\n
-\n
-packing_list = sci.object\n
+            <value> <string>packing_list = sci[\'object\']\n
 delivery_tool = sci.getPortal().portal_deliveries\n
-LOG("packing_list : %s"%packing_list.getPath())\n
 \n
-if hasattr(delivery_tool, \'sale_invoice_builder\') :\n
-  delivery_tool.sale_invoice_builder.activate(\n
-        after_method_id = [ \'expand\', \n
-                            \'recursiveImmediateReindexObject\',\n
-                            \'immediateReindexObject\' ],\n
-        ).build()\n
-else :\n
-  context.log("ERP5 Simulation",\n
+found = 0\n
+builder_id_list = [\'sale_invoice_builder\', \'purchase_invoice_builder\']\n
+for builder_id in builder_id_list:\n
+  if hasattr(delivery_tool, builder_id):\n
+    found = 1\n
+    builder = getattr(delivery_tool, builder_id)\n
+    builder.activate(\n
+          after_method_id = [ \'expand\', \n
+                              \'recursiveImmediateReindexObject\',\n
+                              \'immediateReindexObject\' ],\n
+          ).build()\n
+\n
+if not found:\n
+  packing_list.log("ERP5 Simulation",\n
               "Unable to build Invoice from packing list at %s "\\\n
-              ": no sale_invoice_builder" % packing_list.getPath())\n
+              ": no builder" % packing_list.getPath())\n
 </string> </value>
         </item>
         <item>
@@ -130,12 +132,17 @@ else :\n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>LOG</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>packing_list</string>
+                            <string>_getattr_</string>
                             <string>delivery_tool</string>
+                            <string>found</string>
+                            <string>builder_id_list</string>
+                            <string>_getiter_</string>
+                            <string>builder_id</string>
                             <string>hasattr</string>
-                            <string>context</string>
+                            <string>getattr</string>
+                            <string>builder</string>
                           </tuple>
                         </value>
                     </item>
