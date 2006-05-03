@@ -679,7 +679,7 @@ class PlanningBoxWidget(Widget.Widget):
     # build structure
     here = REQUEST['here']
 
-    pdb.set_trace()
+    #pdb.set_trace()
     structure = self.render_structure(field=field, key=key, value=value, REQUEST=REQUEST, here=here)
 
     if structure != None:
