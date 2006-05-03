@@ -26,8 +26,9 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
 
         a1 = {}
         a1['id'] = a.getId()
-        a1['name'] = a.Title()
+        a1['title'] = a1['name'] = a.Title()
         p = a.getPermissions()
+        a1['permissions'] = p
         if p:
             a1['permission'] = p[0]
         else:
