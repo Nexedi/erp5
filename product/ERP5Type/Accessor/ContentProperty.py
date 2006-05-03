@@ -167,7 +167,7 @@ class Getter(Method):
         o = getattr(instance, k, None)
         if o is not None and o.portal_type in self._portal_type:
           #return o.getRelativeUrl()
-          return o.getProperty(self._acquired_property, default)
+          return o.getProperty(self._acquired_property, default, **kw)
       return default
 
     psyco.bind(__call__)
