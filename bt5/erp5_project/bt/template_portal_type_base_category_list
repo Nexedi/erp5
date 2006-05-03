@@ -1,0 +1,10 @@
+Project Line | predecessor
+Project Line | requirement
+Project Milestone | predecessor
+Project Milestone | requirement
+Project | predecessor
+Task Line | requirement
+Task Report Line | requirement
+Task Report | aggregate
+Task Report | predecessor
+Task | predecessor

@@ -1,0 +1,90 @@
+Project Cell | history_view
+Project Cell | metadata
+Project Cell | print
+Project Cell | view
+Project Line | available_budget
+Project Line | constraint
+Project Line | consumed_budget
+Project Line | contents
+Project Line | current_budget
+Project Line | history
+Project Line | initial_budget
+Project Line | metadata
+Project Line | print
+Project Line | view
+Project Milestone | constraint
+Project Milestone | history
+Project Milestone | metadata
+Project Milestone | print
+Project Milestone | view
+Project Module | Translate
+Project Module | print_pdf
+Project Module | view
+Project | content
+Project | detailed_report
+Project | history
+Project | metadata
+Project | milestone
+Project | planning
+Project | print
+Project | project_lines
+Project | report
+Project | task
+Project | view
+Requirement Document | detailed_report
+Requirement Document | fast_input
+Requirement Document | list_ui
+Requirement Document | orphaned
+Requirement Document | print_pdf
+Requirement Document | project_mapping
+Requirement Document | sort_on
+Requirement Document | view
+Requirement Module | fast_input
+Requirement Module | list_ui
+Requirement Module | print_pdf
+Requirement Module | sort_on
+Requirement Module | view
+Requirement | fast_input
+Requirement | print_pdf
+Requirement | view
+Task Line | history
+Task Line | metadata
+Task Line | price_view
+Task Line | print
+Task Line | quantity_view
+Task Line | view
+Task Module | list_ui
+Task Module | sort_on
+Task Module | view
+Task Report Line | history
+Task Report Line | metadata
+Task Report Line | price_view
+Task Report Line | print
+Task Report Line | quantity_view
+Task Report Line | view
+Task Report Module | icalendar_export
+Task Report Module | list_ui
+Task Report Module | planning_report
+Task Report Module | sort_on
+Task Report Module | view
+Task Report | apply_trade_condition
+Task Report | expense_view
+Task Report | history
+Task Report | jump_to_related_purchase_packing_list
+Task Report | jump_to_relation_task
+Task Report | metadata
+Task Report | payment_condition
+Task Report | print
+Task Report | profile_view
+Task Report | view
+Task Report | view_discount
+Task | apply_trade_condition
+Task | constraint
+Task | history
+Task | jump_to_related_purchase_packing_list
+Task | metadata
+Task | payment_condition
+Task | print
+Task | profile_view
+Task | view
+Task | view_discount

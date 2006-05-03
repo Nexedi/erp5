@@ -1,2 +1,4 @@
 project_module
-project_report_module
+requirement_module
+task_module
+task_report_module
