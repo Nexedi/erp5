@@ -66,8 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>src__ = False\n
-if kw.has_key(\'src__\'): src__ = kw[\'src__\']\n
+            <value> <string>src__ = kw.get(\'src__\', False)\n
 precision = context.Base_getPreferredPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
@@ -92,10 +91,13 @@ at_date          = kw.get(\'at_date\',          preference.getPreferredAccountin
 # Build the common inventory dict\n
 params = {}\n
 \n
-if kw.get(\'no_from_date\', False): from_date = None\n
+if kw.get(\'no_from_date\', False):\n
+  from_date = None\n
 \n
-if simulation_state: params[\'simulation_state\'] = simulation_state\n
-if section_category: params[\'section_category\'] = section_category\n
+if simulation_state:\n
+  params[\'simulation_state\'] = simulation_state\n
+if section_category:\n
+  params[\'section_category\'] = section_category\n
 \n
 # Get payment and mirror related parameters\n
 MARKER = []\n
@@ -121,10 +123,8 @@ net_balance = 0.0\n
 \n
 # Create a new parameter list to get the previous balance\n
 get_inventory_kw = params.copy()\n
-get_inventory_kw.update({ \'omit_simulation\' : True\n
-                        , \'to_date\'         : from_date\n
-                        , \'where_expression\': " section.portal_type = \'Organisation\' "\n
-                        , \'stat\'            : True\n
+get_inventory_kw.update({ \'to_date\'         : from_date,\n
+                          \'where_expression\': " section.portal_type = \'Organisation\' "\n
                         })\n
 \n
 # Get previous debit and credit\n
@@ -147,7 +147,7 @@ if previous_total_credit != 0 or previous_total_debit != 0:\n
 \n
   previous_balance.edit( \\\n
       title                  = context.Base_translateString("Previous Balance")\n
-    , date                   = from_date - 1\n
+    , date                   = from_date\n
     , portal_type            = ""\n
     , simulation_state_title = ""\n
     , debit                  = previous_total_debit\n
@@ -240,10 +240,9 @@ return new_result\n
                           <tuple>
                             <string>selection</string>
                             <string>kw</string>
+                            <string>_getattr_</string>
                             <string>False</string>
                             <string>src__</string>
-                            <string>_getattr_</string>
-                            <string>_getitem_</string>
                             <string>context</string>
                             <string>precision</string>
                             <string>r_</string>
