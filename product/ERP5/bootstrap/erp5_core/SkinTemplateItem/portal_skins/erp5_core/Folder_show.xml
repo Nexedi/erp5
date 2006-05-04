@@ -68,15 +68,9 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 \n
-# saved_checkeduid = context.portal_selections.getSelectionCheckedUidsFor(selection_name, REQUEST=request)\n
-\n
-context.portal_selections.setSelectionToAll(selection_name, REQUEST=request)\n
-url = context.portal_selections.getSelectionListUrlFor(selection_name, REQUEST=request)\n
-\n
-# XXX when showing all the content of a folder, shall we reset selected uids or not ? \n
-#  no for now, until we find a good way to uncheck all (not only on the current page)\n
-# context.portal_selections.checkAll(selection_name, saved_checkeduid, REQUEST=request)\n
-\n
+ps = context.portal_selections\n
+ps.setSelectionToAll(selection_name, REQUEST=request, reset_domain_tree=True, reset_report_tree=True)\n
+url = ps.getSelectionListUrlFor(selection_name, REQUEST=request)\n
 request.RESPONSE.redirect(url)\n
 </string> </value>
         </item>
@@ -122,6 +116,8 @@ request.RESPONSE.redirect(url)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
+                            <string>ps</string>
+                            <string>True</string>
                             <string>url</string>
                           </tuple>
                         </value>
