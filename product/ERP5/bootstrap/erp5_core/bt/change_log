@@ -1,5 +1,5 @@
-2006-04-27 yo
-* Embed the query string in a request int the resulting HTML in form_html, list_dialog_master, list_master and view_master.
+2006-05-04 Kevin
+* Increase url lenght test Base_callDialogMethod.
 
 2006-04-25 yo
 * Folder_deleteObjectList must redirect to the original form with an error message when nothing is selected.
