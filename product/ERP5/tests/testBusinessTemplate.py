@@ -259,17 +259,23 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     """
     pt = self.getTypeTool()
     # create module object portal type
-    pt.manage_addTypeInformation(ERP5TypeInformation.meta_type, id='Geek Object', typeinfo_name='ERP5Type: ERP5 Person')
+    pt.manage_addTypeInformation(ERP5TypeInformation.meta_type,
+                                 id='Geek Object',
+                                 typeinfo_name='ERP5Type: ERP5 Person',)
     object_type = pt._getOb('Geek Object', None)
     self.failUnless(object_type is not None)
     sequence.edit(object_ptype_id=object_type.getId())
     # create module portal type
-    pt.manage_addTypeInformation(ERP5TypeInformation.meta_type, id='Geek Module', typeinfo_name='ERP5Type: ERP5 Folder')
+    pt.manage_addTypeInformation(ERP5TypeInformation.meta_type,
+                                 id='Geek Module',
+                                 typeinfo_name='ERP5Type: ERP5 Folder')
     module_type = pt._getOb('Geek Module', None)
     self.failUnless(module_type is not None)
     module_type.filter_content_types = 1
     module_type.allowed_content_types = ('Geek Object',)
-    sequence.edit(module_ptype_id=module_type.getId())
+    sequence.edit(module_ptype_id=module_type.getId(),
+          module_ptype_filter_content_types=module_type.filter_content_types,
+          module_ptype_allowed_content_types=module_type.allowed_content_types)
 
   def stepAddPortalTypeToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -280,7 +286,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     ptype_ids = []
     ptype_ids.append(sequence.get('object_ptype_id', ''))
     ptype_ids.append(sequence.get('module_ptype_id', ''))
-    self.assertEqual(len(ptype_ids), 2)    
+    self.assertEqual(len(ptype_ids), 2)
     bt.edit(template_portal_type_id_list=ptype_ids)
     self.stepFillPortalTypesFields(sequence=sequence, sequence_list=sequence_list, **kw)
     
@@ -306,9 +312,13 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     module_id = sequence.get('module_ptype_id')
     module_type = pt._getOb(module_id, None)
     self.failUnless(module_type is not None)
+    self.failUnless(module_type.allowed_content_types,
+        sequence.get('module_ptype_allowed_content_types'))
+    self.failUnless(module_type.filter_content_types,
+        sequence.get('module_ptype_filter_content_types'))
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is not None)
-    
+
   def stepCheckPortalTypeRemoved(self, sequence=None, sequence_list=None, **kw):
     """
     Check non presence of portal type
