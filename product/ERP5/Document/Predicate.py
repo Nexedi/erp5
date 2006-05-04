@@ -43,20 +43,20 @@ class Predicate(Folder):
   """
     A Predicate object defines a list of criterions
     which can be applied to test a document or to search for documents.
-    
+
     Predicates are defined by a combination of PropertySheet values
-    (ex. membership_criterion_list) and criterion list (ex. quantity 
-    is between 0 and 10). An additional script can be associated to 
-    extend the standard Predicate semantic with any additional 
+    (ex. membership_criterion_list) and criterion list (ex. quantity
+    is between 0 and 10). An additional script can be associated to
+    extend the standard Predicate semantic with any additional
     script based test.
-    
-    The idea between Predicate in ERP5 is to have a simple 
+
+    The idea between Predicate in ERP5 is to have a simple
     way of defining simple predicates which can be later
-    searched through a simplistic rule based engine and which can 
+    searched through a simplistic rule based engine and which can
     still provide complete expressivity through additional scripting.
-    
+
     The approach is intended to provide the expressivity of a rule
-    based system without the burden of building a fully expressive 
+    based system without the burden of building a fully expressive
     rule engine.
   """
   meta_type = 'ERP5 Predicate'
@@ -65,11 +65,11 @@ class Predicate(Folder):
   isPortalContent = 1
   isRADContent = 1
   isPredicate = 1
-  
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-  
+
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.Predicate
@@ -86,7 +86,7 @@ class Predicate(Folder):
       Parameters can passed in order to ignore some conditions.
 
       - tested_base_category_list:  this is the list of category that we do
-        want to test. For example, we might want to test only the 
+        want to test. For example, we might want to test only the
         destination or the source of a predicate.
     """
     self = self.asPredicate()
@@ -94,24 +94,24 @@ class Predicate(Folder):
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
       self._range_criterion = {}
-#    LOG('PREDICATE TEST', 0, 
+#    LOG('PREDICATE TEST', 0,
 #        'testing %s on context of %s' % \
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
     for property, value in self._identity_criterion.items():
       result = result and (context.getProperty(property) == value)
-#      LOG('predicate test', 0, 
+#      LOG('predicate test', 0,
 #          '%s after prop %s : %s == %s' % \
 #          (result, property, context.getProperty(property), value))
     for property, (min, max) in self._range_criterion.items():
       value = context.getProperty(property)
       if min is not None:
         result = result and (value >= min)
-#        LOG('predicate test', 0, 
+#        LOG('predicate test', 0,
 #            '%s after prop %s : %s >= %s' % \
 #            (result, property, value, min))
       if max is not None:
         result = result and (value < max)
-#        LOG('predicate test', 0, 
+#        LOG('predicate test', 0,
 #            '%s after prop %s : %s < %s' % \
 #            (result, property, value, max))
     multimembership_criterion_base_category_list = \
@@ -119,10 +119,10 @@ class Predicate(Folder):
     membership_criterion_base_category_list = \
         self.getMembershipCriterionBaseCategoryList()
     tested_base_category = {}
-#    LOG('predicate test', 0, 
+#    LOG('predicate test', 0,
 #        'categories will be tested in multi %s single %s as %s' % \
-#        (multimembership_criterion_base_category_list, 
-#        membership_criterion_base_category_list, 
+#        (multimembership_criterion_base_category_list,
+#        membership_criterion_base_category_list,
 #        self.getMembershipCriterionCategoryList()))
     membership_criterion_category_list = \
                             self.getMembershipCriterionCategoryList()
@@ -142,18 +142,18 @@ class Predicate(Folder):
       if (bc in multimembership_criterion_base_category_list):
         tested_base_category[bc] = tested_base_category[bc] and \
                                    context.isMemberOf(c)
-#        LOG('predicate test', 0, 
+#        LOG('predicate test', 0,
 #            '%s after multi membership to %s' % \
 #            (tested_base_category[bc], c))
       elif (bc in membership_criterion_base_category_list):
         tested_base_category[bc] = tested_base_category[bc] or \
                                    context.isMemberOf(c)
 
-#        LOG('predicate test', 0, 
+#        LOG('predicate test', 0,
 #            '%s after single membership to %s' % \
 #            (tested_base_category[bc], c))
     result = result and (0 not in tested_base_category.values())
-#    LOG('predicate test', 0, 
+#    LOG('predicate test', 0,
 #        '%s after category %s ' % (result, tested_base_category.items()))
     # Test method calls
     test_method_id_list = self.getTestMethodIdList()
@@ -162,7 +162,7 @@ class Predicate(Folder):
         if (test_method_id is not None) and result:
           method = getattr(context,test_method_id)
           result = result and method()
-#        LOG('predicate test', 0, 
+#        LOG('predicate test', 0,
 #            '%s after method %s ' % (result, test_method_id))
     return result
 
@@ -174,13 +174,13 @@ class Predicate(Folder):
       A Predicate can be rendered as an SQL expression. This
       can be used to generate SQL requests in reports or in
       catalog search queries.
-      
+
       XXX - This method is not implemented yet
     """
     portal_categories = getToolByName(self, 'portal_categories')
 
     from_table_dict = {}
-    
+
     # First build SQL for membership criteria
     # It would be much nicer if all this was handled by the catalog in a central place
     membership_dict = {}
@@ -219,13 +219,13 @@ class Predicate(Folder):
                                           table=table_alias,
                                           base_category=base_category))
     multimembership_select_list = map(lambda l: ' AND '.join(l), multimembership_dict.values())
-    
-    # Build the join where expression 
+
+    # Build the join where expression
     join_select_list = []
     for k in from_table_dict.keys():
       join_select_list.append('%s.%s = %s.uid' % (join_table, join_column, k))
-    
-    sql_text = ' AND '.join(join_select_list + membership_select_list + 
+
+    sql_text = ' AND '.join(join_select_list + membership_select_list +
                             multimembership_select_list)
 
     # And now build criteria
@@ -245,17 +245,17 @@ class Predicate(Folder):
     table_list = self.buildSqlQuery(strict_membership=strict_membership, table=table)['from_table_list']
     sql_text_list = map(lambda (a,b): '%s AS %s' % (b,a), table_list)
     return ' , '.join(sql_text_list)
-  
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
   def getCriterionList(self, **kw):
     """
       Returns the list of criteria which are defined by the Predicate.
-      
+
       Each criterion is returned in a TempBase instance intended to be
       displayed in a ListBox.
-      
+
       XXX - It would be better to return criteria in a Criterion class
-            instance            
+            instance
     """
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
@@ -277,16 +277,16 @@ class Predicate(Folder):
     """
       This methods sets parameters of a criterion. There is at most one
       criterion per property. Defined parameters are
-      
+
       identity -- if not None, allows for testing identity of the property
                   with the provided value
-    
+
       min      -- if not None, allows for testing that the property
                   is greater than min
-    
+
       max      -- if not None, allows for testing that the property
                   is greater than max
-    
+
     """
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
@@ -319,6 +319,7 @@ class Predicate(Folder):
           range_criterion[criterion] = self._range_criterion[criterion]
       self._identity_criterion = identity_criterion
       self._range_criterion = range_criterion
+    kwd['reindex_object'] = 1
     return self._edit(**kwd)
 
   # Predicate fusion method
@@ -330,8 +331,8 @@ class Predicate(Folder):
       provided in category_list. Categories behave as a
       special kind of predicate which only acts on category
       membership.
-      
-      WARNING: this method does not take into account scripts at 
+
+      WARNING: this method does not take into account scripts at
       this point.
     """
     category_tool = aq_inner(self.portal_categories)
@@ -344,7 +345,7 @@ class Predicate(Folder):
     # reset criterions
     self._identity_criterion = {}
     self._range_criterion = {}
-    
+
     for c in category_list:
       bc = c.split('/')[0]
       if bc in base_category_id_list:
@@ -376,12 +377,12 @@ class Predicate(Folder):
                         membership_criterion_base_category_list=(),
                         criterion_property_list=()):
     """
-    This method generates a new temporary predicate based on an ad-hoc 
+    This method generates a new temporary predicate based on an ad-hoc
     interpretation of local properties of an object. For example,
-    a start_range_min property will be interpreted as a way to define 
+    a start_range_min property will be interpreted as a way to define
     a min criterion on start_date.
 
-    The purpose of this method is to be called from 
+    The purpose of this method is to be called from
     a script called PortalType_asPredicate to ease the generation of
     Predicates based on range properties. It should be considered mostly
     as a trick to simplify the development of Predicates and forms.
