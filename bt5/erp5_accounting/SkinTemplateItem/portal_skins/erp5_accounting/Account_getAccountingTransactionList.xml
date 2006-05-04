@@ -121,42 +121,43 @@ params[\'node_uid\'] = kw.get(\'node_uid\', context.getUid())\n
 new_result  = []\n
 net_balance = 0.0\n
 \n
-# Create a new parameter list to get the previous balance\n
-get_inventory_kw = params.copy()\n
-get_inventory_kw.update({ \'to_date\'         : from_date,\n
-                          \'where_expression\': " section.portal_type = \'Organisation\' "\n
-                        })\n
+if from_date is not None:\n
+  # Create a new parameter list to get the previous balance\n
+  get_inventory_kw = params.copy()\n
+  get_inventory_kw.update({ \'to_date\'         : from_date,\n
+                            \'where_expression\': " section.portal_type = \'Organisation\' "\n
+                          })\n
 \n
-# Get previous debit and credit\n
-getInventoryAssetPrice = context.getPortalObject().portal_simulation.getInventoryAssetPrice\n
-previous_total_debit  = getInventoryAssetPrice(omit_output=True, **get_inventory_kw)\n
-previous_total_credit = getInventoryAssetPrice(omit_input =True, **get_inventory_kw)\n
+  # Get previous debit and credit\n
+  getInventoryAssetPrice = context.getPortalObject().portal_simulation.getInventoryAssetPrice\n
+  previous_total_debit  = getInventoryAssetPrice(omit_output=True, **get_inventory_kw)\n
+  previous_total_credit = getInventoryAssetPrice(omit_input =True, **get_inventory_kw)\n
 \n
-if previous_total_credit != 0:\n
-  previous_total_credit = - previous_total_credit\n
+  if previous_total_credit != 0:\n
+    previous_total_credit = - previous_total_credit\n
 \n
-# Show the previous balance if not empty\n
-if previous_total_credit != 0 or previous_total_debit != 0:\n
-  from Products.ERP5Type.Document import newTempAccountingTransaction\n
+  # Show the previous balance if not empty\n
+  if previous_total_credit != 0 or previous_total_debit != 0:\n
+    from Products.ERP5Type.Document import newTempAccountingTransaction\n
 \n
-  net_balance = r_(previous_total_debit - previous_total_credit)\n
-  previous_balance = newTempAccountingTransaction( context.getPortalObject()\n
-                                                 , "temp_%s" % context.getUid()\n
-                                                 )\n
-  previous_balance.setUid(\'new_000\')\n
+    net_balance = r_(previous_total_debit - previous_total_credit)\n
+    previous_balance = newTempAccountingTransaction( context.getPortalObject()\n
+                                                   , "temp_%s" % context.getUid()\n
+                                                   )\n
+    previous_balance.setUid(\'new_000\')\n
 \n
-  previous_balance.edit( \\\n
-      title                  = context.Base_translateString("Previous Balance")\n
-    , date                   = from_date\n
-    , portal_type            = ""\n
-    , simulation_state_title = ""\n
-    , debit                  = previous_total_debit\n
-    , credit                 = previous_total_credit\n
-    , balance                = net_balance\n
-    , net_balance            = net_balance\n
-    , is_previous_balance    = True\n
-    )\n
-  new_result.append(previous_balance)\n
+    previous_balance.edit( \\\n
+        title                  = context.Base_translateString("Previous Balance")\n
+      , date                   = from_date - 1\n
+      , portal_type            = ""\n
+      , simulation_state_title = ""\n
+      , debit                  = previous_total_debit\n
+      , credit                 = previous_total_credit\n
+      , balance                = net_balance\n
+      , net_balance            = net_balance\n
+      , is_previous_balance    = True\n
+      )\n
+    new_result.append(previous_balance)\n
 \n
 # FIXME:\n
 # using listbox current page number * number of line per listbox page, you can call a\n
