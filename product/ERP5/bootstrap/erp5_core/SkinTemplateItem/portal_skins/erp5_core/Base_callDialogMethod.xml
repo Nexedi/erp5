@@ -159,7 +159,7 @@ try:\n
 \n
   # If url is too long, we do not redirecting\n
   # to avoir crash <christophe@nexedi.com>\n
-  if len(make_query(cleanedup_kw)) > 2000:\n
+  if len(make_query(cleanedup_kw)) > 8119:\n
     cannot_redirect = 1\n
 \n
   # if we cannot redirect, then call the form directly.\n
