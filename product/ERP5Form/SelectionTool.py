@@ -325,15 +325,18 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection.edit(invert_mode=1, uids=selection_uids, checked_uids=selection_uids)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionToAll')
-    def setSelectionToAll(self, selection_name, REQUEST=None):
+    def setSelectionToAll(self, selection_name, REQUEST=None,
+                          reset_domain_tree=False, reset_report_tree=False):
       """
         Resets the selection
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        selection.edit(invert_mode=0, params={}, checked_uids=[],
-                       domain=None, domain_path=None, domain_list=(),
-                       report=None, report_path=None, report_list=())
+        selection.edit(invert_mode=0, params={}, checked_uids=[])
+        if reset_domain_tree:
+          selection.edit(domain=None, domain_path=None, domain_list=())
+        if reset_report_tree:
+          selection.edit(report=None, report_path=None, report_list=())
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionSortOrder')
     def setSelectionSortOrder(self, selection_name, sort_on, REQUEST=None):
@@ -550,7 +553,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
       #form_id = request.form_id
       selection_name = request.list_selection_name
 
-      
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
