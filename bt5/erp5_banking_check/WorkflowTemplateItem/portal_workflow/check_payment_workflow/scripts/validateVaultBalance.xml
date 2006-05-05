@@ -70,8 +70,29 @@
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
-source_object = transaction.getSourceValue()\n
+# Compute the source form the vault choosen by\n
+# the accountant and find the counter with the\n
+# user logged in\n
+user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()\n
+site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
+#context.log(\'validateVaultBalance site_list\',site_list)\n
 source = transaction.getSource()\n
+baobab_source = None\n
+for site in site_list:\n
+  site_value = context.portal_categories.getCategoryValue(site)\n
+  if site_value.getVault().endswith(\'guichet\') and source in site:\n
+    baobab_source = site\n
+    break\n
+source = baobab_source\n
+source_object = context.portal_category.getCategoryValue(source)\n
+#source_object = transaction.getSourceValue()\n
+\n
+site_list = context.ERP5Type_getSecurityCategoryFromAssignment((\'site\',),user_id,context,context.getPortalType())\n
+context.log(\'CheckPayment_getBaobabSource site_list\',site_list)\n
+for site in site_list:\n
+  site_value = context.portal_categories.getCategoryValue(site)\n
+  if site_value.getVault().endswith(\'guichet\') and source in site:\n
+    baobab_source = site\n
 \n
 # check again that we are in the good accounting date\n
 if not transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate()):\n
@@ -156,8 +177,16 @@ elif resource == 1:\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>source_object</string>
+                            <string>user_id</string>
+                            <string>context</string>
+                            <string>site_list</string>
                             <string>source</string>
+                            <string>None</string>
+                            <string>baobab_source</string>
+                            <string>_getiter_</string>
+                            <string>site</string>
+                            <string>site_value</string>
+                            <string>source_object</string>
                             <string>msg</string>
                             <string>resource</string>
                             <string>price</string>
