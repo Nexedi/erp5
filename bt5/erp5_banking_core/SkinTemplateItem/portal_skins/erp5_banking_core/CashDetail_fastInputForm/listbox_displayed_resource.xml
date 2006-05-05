@@ -13,12 +13,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_displayed_resource</string> </value>
         </item>
@@ -285,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getProperty(\'resource\')</string> </value>
+            <value> <string>python: cell.getProperty(\'resource_translated_title\')</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -120,7 +120,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Import CSV file - Move to erp5_core ?</string> </value>
+            <value> <string>Import CSV File</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -71,21 +71,21 @@
 cell_base_id = \'movement\'\n
 \n
 variation_list      = kw[\'variation_list\']\n
-emissionLetter_list = kw[\'emissionLetter_list\']\n
-cashStatus_list     = kw[\'cashStatus_list\']\n
+emissionLetter_list = kw[\'emission_letter_list\']\n
+cashStatus_list     = kw[\'cash_status_list\']\n
 operationCurrency   = kw[\'operation_currency\']\n
-line_portal_type    = kw[\'line_portalType\']\n
+line_portal_type    = kw[\'line_portal_type\']\n
 \n
-otherParameter_list = kw[\'otherParameter\']\n
+otherParameter_list = kw[\'other_parameter\']\n
 operationCurrency   = otherParameter_list[0]\n
 line_portal_type    = otherParameter_list[1]\n
 updatePossible      = otherParameter_list[2]\n
 columnBase          = otherParameter_list[3]\n
-useInventory        = int(otherParameter_list[4])\n
+useInventory        = otherParameter_list[4]\n
 \n
-if columnBase == \'emissionLetter\':\n
+if columnBase == \'emission_letter\':\n
   numberOfColumn = len(emissionLetter_list)\n
-elif columnBase == \'cashStatus\':\n
+elif columnBase == \'cash_status\':\n
   numberOfColumn = len(cashStatus_list)\n
 else:\n
   numberOfColumn = len(variation_list)\n
@@ -129,12 +129,12 @@ for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
   else:\n
     listbox_line = listbox[i_listbox]\n
 \n
-  if last_row or (previous_resourceId is None) or not (previous_resourceId == listbox_line[\'resourceId\']):\n
+  if last_row or (previous_resourceId is None) or not (previous_resourceId == listbox_line[\'resource_id\']):\n
 \n
      if create_line :\n
         counter_line += 1\n
         # context.log(\'create new line\', line_category_list)\n
-        new_line = context.newContent(portal_type=line_portal_type)             # New line creation        \n
+        new_line = context.newContent(portal_type=line_portal_type)             # New line creation\n
         new_line.setResourceValue(resource_object)                              # Set line resource by object found\n
         new_line.setVariationBaseCategoryList(base_list)\n
         new_line.setVariationCategoryList(line_category_list)\n
@@ -158,7 +158,7 @@ for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
                    ,membership_criterion_category_list = variante_list\n
                    ,category_list = variante_list\n
                    )\n
-            \n
+\n
             if useInventory == 1:\n
                oldQuantity = cell.getProperty(\'inventory\') or 0\n
                cell.edit( inventory      = cell_category[\'quantity\'] + oldQuantity\n
@@ -178,18 +178,18 @@ for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
      line_category_list = []\n
      cell_category_list = []\n
 \n
-     old_line = context.CashDetail_search_lineByResource(listbox_line[\'resourceId\'],line_portal_type)   # Search if current object contain line with the gived portal type\n
+     old_line = context.CashDetail_search_lineByResource(listbox_line[\'resource_id\'],line_portal_type)   # Search if current object contain line with the gived portal type\n
      if old_line is not None:                # Line found, delete it\n
         context.manage_delObjects(old_line.getId())\n
 \n
 \n
-     previous_resourceId = listbox_line[\'resourceId\']\n
-     resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'),id = listbox_line[\'resourceId\'])\n
+     previous_resourceId = listbox_line[\'resource_id\']\n
+     resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'),id = listbox_line[\'resource_id\'])\n
      resource_object = resource_list[0].getObject()\n
 \n
-  if columnBase == \'cashStatus\':\n
+  if columnBase == \'cash_status\':\n
      if len(emissionLetter_list ) > 1 :\n
-        cell_emissionLetter = \'emission_letter/\' + listbox_line[\'emissionLetter\']\n
+        cell_emissionLetter = \'emission_letter/\' + listbox_line[\'emission_letter\']\n
      else :\n
         cell_emissionLetter = \'emission_letter/\' + emissionLetter_list[0]\n
      if len(variation_list ) > 1 :\n
@@ -199,9 +199,9 @@ for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
      axis_list_dict = {\'column\':cashStatus_list,\'line1\': emissionLetter_list ,\'line2\': variation_list}\n
      axis_dict      = {\'column\':\'cash_status\',\'line1\': \'emission_letter\' ,\'line2\': \'variation\'}\n
      base_line_category_list = (cell_variation,cell_emissionLetter)\n
-  elif columnBase == \'emissionLetter\':\n
+  elif columnBase == \'emission_letter\':\n
      if len(cashStatus_list ) > 1 :\n
-        cell_cashStatus = \'cash_status/\'+listbox_line[\'cashStatus\']\n
+        cell_cashStatus = \'cash_status/\'+listbox_line[\'cash_status\']\n
      else :\n
         cell_cashStatus = \'cash_status/\'+cashStatus_list[0]\n
      if len(variation_list ) > 1 :\n
@@ -213,11 +213,11 @@ for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
      base_line_category_list = (cell_variation,cell_cashStatus)\n
   else:\n
      if len(emissionLetter_list ) > 1 :\n
-         cell_emissionLetter = \'emission_letter/\' +listbox_line[\'emissionLetter\']\n
+         cell_emissionLetter = \'emission_letter/\' +listbox_line[\'emission_letter\']\n
      else :\n
         cell_emissionLetter = \'emission_letter/\' +emissionLetter_list[0]\n
      if len(cashStatus_list ) > 1 :\n
-        cell_cashStatus = \'cash_status/\'+listbox_line[\'cashStatus\']\n
+        cell_cashStatus = \'cash_status/\'+listbox_line[\'cash_status\']\n
      else :\n
         cell_cashStatus = \'cash_status/\'+cashStatus_list[0]\n
      axis_list_dict = {\'column\':variation_list,\'line1\': emissionLetter_list ,\'line2\': cashStatus_list}\n
@@ -229,16 +229,16 @@ for i_listbox in range(0,listbox_line_count_plus_1) :    # Element of ListBox\n
       counter += 1\n
       cell_quantity = int(listbox_line[\'column\'+str(counter)] or 0)\n
       if cell_quantity <> 0 :                                          # input quantity in the listbox\n
-         if columnBase == \'cashStatus\':\n
+         if columnBase == \'cash_status\':\n
             cell_cashStatus = \'cash_status/\'+col\n
-         elif columnBase == \'emissionLetter\':\n
+         elif columnBase == \'emission_letter\':\n
             cell_emissionLetter = \'emission_letter/\' +col\n
          else:\n
             cell_variation = \'variation/\'+col\n
             # check that the variation selected exist for the resource object\n
             if col != \'not_defined\' and col not in resource_object.getVariationList():\n
               raise "Input Error", "%s doesn\'t  exist for %s" %(resource_object.getTitle(), col)\n
-                          \n
+\n
          cell_category_list += [{\'emission_letter\':cell_emissionLetter  ,\'variation\':cell_variation, \'cash_status\':cell_cashStatus, \'quantity\':cell_quantity}]\n
 \n
          create_line = True\n
@@ -290,7 +290,9 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -329,7 +331,6 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>otherParameter_list</string>
                             <string>updatePossible</string>
                             <string>columnBase</string>
-                            <string>int</string>
                             <string>useInventory</string>
                             <string>len</string>
                             <string>numberOfColumn</string>
@@ -380,6 +381,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>categoy_list_created</string>
                             <string>counter</string>
                             <string>col</string>
+                            <string>int</string>
                             <string>str</string>
                             <string>cell_quantity</string>
                             <string>base_line_category</string>

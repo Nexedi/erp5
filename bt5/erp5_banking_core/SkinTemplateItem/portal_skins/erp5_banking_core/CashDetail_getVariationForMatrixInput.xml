@@ -69,70 +69,70 @@
             <value> <string encoding="cdata"><![CDATA[
 
 request = context.REQUEST\n
-default_emissionLetter_list = getattr(request,\'my_emissionLetter_list\',None)       # Find Emission letter on the REQUEST\n
-default_cashStatus_list     = getattr(request,\'my_cashStatus_list\',None)           # Find Cash Status on the REQUEST\n
+default_emission_letter_list = getattr(request,\'my_emission_letter_list\',None)       # Find Emission letter on the REQUEST\n
+default_cash_status_list     = getattr(request,\'my_cash_status_list\',None)           # Find Cash Status on the REQUEST\n
 default_variation_list      = getattr(request,\'my_variation_list\',None)            # Find Variation on the REQUEST\n
-default_otherParameter_list      = getattr(request,\'my_otherParameter\',None)            # Find Variation on the REQUEST\n
+default_other_parameter_list      = getattr(request,\'my_other_parameter\',None)            # Find Variation on the REQUEST\n
 \n
 \n
 return_list = []\n
 return_list.append([\'displayed_resource\',\'Resource\'])\n
 \n
 \n
-if default_emissionLetter_list is None:\n
-   default_emissionLetter_list = getattr(request,\'field_my_emissionLetter_list\',None)       # Find Emission letter on the REQUEST\n
-   default_cashStatus_list     = getattr(request,\'field_my_cashStatus_list\',None)           # Find Cash Status on the REQUEST\n
-   default_variation_list      = getattr(request,\'field_my_variation_list\',None)            # Find Variation on the REQUEST\n
-   default_otherParameter_list = getattr(request,\'field_my_otherParameter\',None)            # Find Variation on the REQUEST\n
+if default_emission_letter_list is None:\n
+   default_emission_letter_list = getattr(request,\'field_my_emission_letter_list\',[])       # Find Emission letter on the REQUEST\n
+   default_cash_status_list     = getattr(request,\'field_my_cash_status_list\',[])           # Find Cash Status on the REQUEST\n
+   default_variation_list      = getattr(request,\'field_my_variation_list\',[])            # Find Variation on the REQUEST\n
+   default_other_parameter_list = getattr(request,\'field_my_other_parameter\', [])            # Find Variation on the REQUEST\n
 \n
-if len(default_otherParameter_list) > 2:\n
-   default_columnBase = default_otherParameter_list[3]\n
+\n
+if len(default_other_parameter_list) > 2:\n
+   default_column_base = default_other_parameter_list[3]\n
 else :\n
-   default_columnBase = \'variation\'\n
+   default_column_base = \'variation\'\n
 \n
-allow_addLine = False\n
-if len(default_emissionLetter_list) > 1 and default_columnBase <> \'emissionLetter\':\n
-   return_list.append([\'emissionLetter\',\'Emission Letter\'])\n
-   allow_addLine = True\n
-if len(default_cashStatus_list) > 1 and default_columnBase <> \'cashStatus\':\n
-   return_list.append([\'cashStatus\',\'Cash Status\'])\n
-   allow_addLine = True\n
-if len(default_variation_list) > 1 and default_columnBase <> \'variation\':\n
+allow_add_line = False\n
+if len(default_emission_letter_list) > 1 and default_column_base <> \'emission_letter\':\n
+   return_list.append([\'emission_letter\',\'Emission Letter\'])\n
+   allow_add_line = True\n
+if len(default_cash_status_list) > 1 and default_column_base <> \'cash_status\':\n
+   return_list.append([\'cash_status\',\'Cash Status\'])\n
+   allow_add_line = True\n
+if len(default_variation_list) > 1 and default_column_base <> \'variation\':\n
    return_list.append([\'variation\',\'Variation\'])\n
-   allow_addLine = True\n
+   allow_add_line = True\n
 \n
-if allow_addLine:\n
-   return_list.append([\'numberLineToAdd\',\'numberLineToAdd\'])\n
+if allow_add_line:\n
+   return_list.append([\'number_line_to_add\',\'Lines To Add\'])\n
 \n
 \n
-if default_columnBase == \'cashStatus\':\n
-   default_columnBase_list = default_cashStatus_list\n
+if default_column_base == \'cash_status\':\n
+   default_column_base_list = default_cash_status_list\n
    column_category  = \'cash_status\'\n
-elif default_columnBase == \'emissionLetter\':\n
-   default_columnBase_list = default_emissionLetter_list\n
+elif default_column_base == \'emission_letter\':\n
+   default_column_base_list = default_emission_letter_list\n
    column_category  = \'emission_letter\'\n
 else:\n
-   default_columnBase_list = default_variation_list\n
+   default_column_base_list = default_variation_list\n
    column_category  = \'variation\'\n
 \n
 \n
 \n
-if len(default_columnBase_list) > 0 :\n
-   columnBase_list =  [x for x in context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
-                        if x[1] in default_columnBase_list]\n
+if len(default_column_base_list) > 0 :\n
+   column_base_list =  [x for x in context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
+                        if x[1] in default_column_base_list]\n
 else:\n
-   columnBase_list =  context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
+   column_base_list =  context.portal_categories[column_category].getCategoryChildTitleItemList()[1:]\n
 \n
 \n
 \n
 counter = 1\n
-for x in columnBase_list:\n
+for x in column_base_list:\n
    return_list.append([\'column\'+str(counter),x[0]])\n
    counter += 1\n
 return_list.append([\'price\',\'Price\'])\n
-return_list.append([\'resource\',\'\'])\n
-return_list.append([\'resourceId\',\'\'])\n
-#context.log(\'CashDetail_getVariationForMatrixInput\', return_list)\n
+return_list.append([\'resource_translated_title\',\'\'])\n
+return_list.append([\'resource_id\',\'\'])\n
 return return_list\n
 
 
@@ -194,24 +194,24 @@ return return_list\n
                             <string>request</string>
                             <string>getattr</string>
                             <string>None</string>
-                            <string>default_emissionLetter_list</string>
-                            <string>default_cashStatus_list</string>
+                            <string>default_emission_letter_list</string>
+                            <string>default_cash_status_list</string>
                             <string>default_variation_list</string>
-                            <string>default_otherParameter_list</string>
+                            <string>default_other_parameter_list</string>
                             <string>return_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
-                            <string>default_columnBase</string>
+                            <string>default_column_base</string>
                             <string>False</string>
-                            <string>allow_addLine</string>
+                            <string>allow_add_line</string>
                             <string>True</string>
-                            <string>default_columnBase_list</string>
+                            <string>default_column_base_list</string>
                             <string>column_category</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>columnBase_list</string>
+                            <string>column_base_list</string>
                             <string>counter</string>
                             <string>str</string>
                           </tuple>

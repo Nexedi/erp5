@@ -13,12 +13,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox_variation</string> </value>
         </item>
@@ -308,7 +302,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.CashDetail_getOthersForMatrixInput(myChoice=\'variation_item\')</string> </value>
+            <value> <string>python:here.CashDetail_getOthersForMatrixInput(my_choice=\'variation_item\')</string> </value>
         </item>
       </dictionary>
     </pickle>

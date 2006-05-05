@@ -99,10 +99,6 @@
                       <list>
                         <string>listbox_price</string>
                         <string>listbox_displayed_resource</string>
-                        <string>listbox_resourceId</string>
-                        <string>listbox_cashStatus</string>
-                        <string>listbox_emissionLetter</string>
-                        <string>listbox_resource</string>
                         <string>listbox_variation</string>
                         <string>listbox_column1</string>
                         <string>listbox_column10</string>
@@ -119,7 +115,11 @@
                         <string>listbox_column13</string>
                         <string>listbox_column14</string>
                         <string>listbox_column15</string>
-                        <string>listbox_numberLineToAdd</string>
+                        <string>listbox_cash_status</string>
+                        <string>listbox_emission_letter</string>
+                        <string>listbox_number_line_to_add</string>
+                        <string>listbox_resource_translated_title</string>
+                        <string>listbox_resource_id</string>
                       </list>
                     </value>
                 </item>
@@ -127,12 +127,12 @@
                     <key>                 <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_emissionLetter_list</string>
                         <string>my_variation_list</string>
-                        <string>my_cashStatus_list</string>
                         <string>my_operation_currency</string>
-                        <string>my_line_portalType</string>
-                        <string>my_otherParameter</string>
+                        <string>my_cash_status_list</string>
+                        <string>my_emission_letter_list</string>
+                        <string>my_line_portal_type</string>
+                        <string>my_other_parameter</string>
                       </list>
                     </value>
                 </item>
@@ -157,7 +157,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>CashDetail_fastInputForm</string> </value>
+            <value> <string>CashDelivery_generateCashDetailInputDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -181,7 +181,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>CashDetail_fastInputUpdate</string> </value>
+            <value> <string>CashDelivery_generateCashDetailInputDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

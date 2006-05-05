@@ -68,42 +68,42 @@
             <key> <string>_body</string> </key>
             <value> <string>request = context.REQUEST\n
 return_value = None\n
-if myChoice == \'emissionLetter_item\':\n
-   my_list = getattr(request,\'my_emissionLetter_list\',None)   # Find Emission letter on the REQUEST\n
-   if my_list is None: \n
-      my_list = getattr(request,\'field_my_emissionLetter_list\',None)   # Find Emission letter on the REQUEST\n
+if my_choice == \'emission_letter_item\':\n
+   my_list = getattr(request,\'my_emission_letter_list\',None)   # Find Emission letter on the REQUEST\n
+   if my_list is None:\n
+      my_list = getattr(request,\'field_my_emission_letter_list\',None)   # Find Emission letter on the REQUEST\n
 \n
-   if my_list is not None: \n
+   if my_list is not None:\n
       return_value =  [x for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()\n
                 if x[1] in my_list ]\n
-   else: \n
+   else:\n
       return_value =  [x for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()]\n
-elif myChoice == \'emissionLetter_defaultValue\':\n
-   return_value = getattr(request,\'my_emissionLetter_list\',None)   # Find Emission letter on the REQUEST\n
+elif my_choice == \'emission_letter_default_value\':\n
+   return_value = getattr(request,\'my_emission_letter_list\',None)   # Find Emission letter on the REQUEST\n
    return_value = return_value[1]\n
-elif myChoice == \'cashStatus_item\':\n
-   my_list = getattr(request,\'my_cashStatus_list\',None)   # Find cash Status on the REQUEST\n
-   if my_list is None: \n
-      my_list = getattr(request,\'field_my_cashStatus_list\',None)   # Find Emission letter on the REQUEST\n
-   if my_list is not None: \n
+elif my_choice == \'cash_status_item\':\n
+   my_list = getattr(request,\'my_cash_status_list\',None)   # Find cash Status on the REQUEST\n
+   if my_list is None:\n
+      my_list = getattr(request,\'field_my_cash_status_list\',None)   # Find Emission letter on the REQUEST\n
+   if my_list is not None:\n
       return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTitleItemList()\n
                   if x[1] in my_list]\n
    else:\n
       return_value =  [x for x in context.portal_categories.cash_status.getCategoryChildTitleItemList()]\n
-elif myChoice == \'cashStatus_defaultValue\':\n
-   return_value = getattr(request,\'my_cashStatus_list\',None)   # Find cash Status on the REQUEST\n
+elif my_choice == \'cash_status_default_value\':\n
+   return_value = getattr(request,\'my_cash_status_list\',None)   # Find cash Status on the REQUEST\n
    return_value = return_value[1]\n
 \n
-elif myChoice == \'variation_item\':\n
+elif my_choice == \'variation_item\':\n
    my_list = getattr(request,\'my_variation_list\',None)   # Find variation on the REQUEST\n
-   if my_list is None: \n
+   if my_list is None:\n
       my_list = getattr(request,\'field_my_variation_list\',None)   # Find variation on the REQUEST\n
-   if my_list is not None: \n
+   if my_list is not None:\n
       return_value =  [x for x in context.portal_categories.variation.getCategoryChildTitleItemList()\n
                   if x[1] in my_list]\n
    else:\n
       return_value =  [x for x in context.portal_categories.variation.getCategoryChildTitleItemList()]\n
-elif myChoice == \'variation_defaultValue\':\n
+elif my_choice == \'variation_default_value\':\n
    return_value = getattr(request,\'my_variation_list\',None)   # Find variation on the REQUEST\n
    return_value = return_value[1]\n
 \n
@@ -118,6 +118,12 @@ return return_value\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
             <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDetail_getOthersForMatrixInput</string> </value>
         </item>
@@ -129,7 +135,7 @@ return return_value\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>myChoice=None, **kw</string> </value>
+            <value> <string>my_choice=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -155,7 +161,7 @@ return return_value\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>myChoice</string>
+                            <string>my_choice</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -193,6 +199,27 @@ return return_value\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

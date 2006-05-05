@@ -66,13 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>sourceline_list = [x for x in context.contentValues(filter={\'portal_type\':(\'Check Payment Line\',\'Money Deposit Line\')})\n
-  if x.getResourceValue().getTitle() == resourceTitle]\n
-\n
-if len(sourceline_list) == 0 :\n
-  return None\n
-else:\n
-  return sourceline_list[0]\n
+            <value> <string>for line in context.contentValues(filter={\'portal_type\':portal_type}):\n
+  if line.getResourceId() == resource_id:\n
+    return line\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -83,7 +80,7 @@ else:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/searchLineByResource</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CashDelivery_searchLineByResource</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -93,7 +90,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resourceTitle=None</string> </value>
+            <value> <string>resource_id=None, portal_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,23 +110,19 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>resourceTitle</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>resource_id</string>
+                            <string>portal_type</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>x</string>
-                            <string>sourceline_list</string>
-                            <string>len</string>
+                            <string>line</string>
                             <string>None</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,7 +141,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>searchLineByResource</string> </value>
+            <value> <string>CashDelivery_searchLineByResource</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

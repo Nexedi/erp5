@@ -78,10 +78,12 @@ def getResourceVintageList(banknote=0, coin=0):\n
       portal_type_list = ["Banknote", "Coin"]\n
 \n
     for resource in context.currency_cash_module.objectValues():\n
+      #context.log("Baobab_getResourcevintageList", "resource.getPriceCurrency() = %s, resource.getPortalType() = %s, portal_type_list = %s" %(resource.getPriceCurrency(),resource.getPortalType(), portal_type_list))\n
       if resource.getPriceCurrency() ==  "currency_module/%s" %(context.Baobab_getPortalReferenceCurrencyID(),) and resource.getPortalType() in portal_type_list:\n
         for variation in resource.getVariationList():\n
           variation_list[variation] = 1\n
-    return variation_list.keys().sort()\n
+    #context.log("variation_list", variation_list)\n
+    return variation_list.keys()\n
 \n
 \n
 getResourceVintageList = CachingMethod(getResourceVintageList, id=\'Baobab_getResourceVintageList\', cache_duration=360000)\n
