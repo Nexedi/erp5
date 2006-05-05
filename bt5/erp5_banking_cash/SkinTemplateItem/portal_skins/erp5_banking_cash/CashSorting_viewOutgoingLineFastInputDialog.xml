@@ -66,25 +66,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>CashMovement_cashDetail_parameter = { \'line_portalType\'          : \'Outgoing Cash Sorting Line\'             # The portal type that the fastinput will create\n
-, \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()                          # The operation currently\n
-, \'cashStatus_list\'          : [\'valid\', \'cancelled\', \'to_sort\']                    # List of possible cashStatus or None if all\n
-, \'emissionLetter_list\'      : None                # List of possible emissionLetter or None if all\n
-, \'variation_list\'           : [\'2003\',]                       # List of possible variation or None if all\n
-, \'currencyCash_portalType\'  : \'Banknote\'                           # \'Coin\' or \'Banknote\' or None if both\n
-, \'updatePossible\'           : True                           # If true, the fastinput will not allow change\n
-, \'columnBase\'               : \'variation\'                    # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
+            <value> <string>cash_detail_dict = {\'line_portal_type\'           : \'Outgoing Cash Sorting Line\'\n
+                    , \'operation_currency\'       : context.Baobab_getPortalReferenceCurrencyID()\n
+                    , \'cash_status_list\'         : [\'valid\', \'cancelled\', \'to_sort\']\n
+                    , \'emission_letter_list\'     : None\n
+                    , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1)\n
+                    , \'currency_cash_portal_type\': \'Banknote\'\n
+                    , \'read_only\'                : True\n
+                    , \'column_base_category\'     : \'variation\'\n
 }\n
 \n
-return context.CashDetail_fastInputUpdate( listbox = None\n
-, cashDetail_parameter = CashMovement_cashDetail_parameter\n
-, destination = context.getObject().absolute_url())\n
+return context.CashDelivery_generateCashDetailInputDialog( listbox = None\n
+                                                           , cash_detail_dict = cash_detail_dict\n
+                                                           , destination = context.getObject().absolute_url())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -129,7 +135,7 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
                             <string>context</string>
                             <string>None</string>
                             <string>True</string>
-                            <string>CashMovement_cashDetail_parameter</string>
+                            <string>cash_detail_dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -152,6 +158,27 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

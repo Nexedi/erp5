@@ -75,28 +75,29 @@ if currency is None :\n
                               )\n
   return request.RESPONSE.redirect( redirect_url )\n
 \n
-cashStatus = None\n
-emissionLetter = None\n
-variation = [\'2003\']\n
 if currency != context.Baobab_getPortalReferenceCurrencyID():\n
-  cashStatus = [\'not_defined\']\n
-  emissionLetter = [\'not_defined\']\n
+  cash_status = [\'not_defined\']\n
+  emission_letter = [\'not_defined\']\n
   variation = [\'not_defined\']\n
+else:\n
+  cash_status = None\n
+  emission_letter = None\n
+  variation = context.Baobab_getResourceVintageList(banknote=1, coin=1)\n
 \n
-CashMovement_cashDetail_parameter = {\'line_portalType\'        : \'Cash Delivery Line\'             # The portal type that the fastinput will create\n
-, \'operation_currency\'     : currency                      # The operation currenty\n
-, \'cashStatus_list\'        : cashStatus                      # List of possible cashStatus or None if all\n
-, \'emissionLetter_list\'    : emissionLetter                       # List of possible emissionLetter or None if all\n
-, \'variation_list\'         : variation                  # List of possible variation or None if all\n
-, \'currencyCash_portalType\': None                       # \'Coin\' or \'Banknote\' or None if both\n
-, \'updatePossible\'         : True                       # If true, the fastinput will not allow change\n
-, \'columnBase\'             : \'variation\'                # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
-}\n
+cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
+                    , \'operation_currency\'       : currency\n
+                    , \'cash_status_list\'         : cash_status\n
+                    , \'emission_letter_list\'     : emission_letter\n
+                    , \'variation_list\'           : variation\n
+                    , \'currency_cash_portal_type\': None\n
+                    , \'read_only\'                : True\n
+                    , \'column_base_category\'     : \'variation\'\n
+                    }\n
 \n
-return context.CashDetail_fastInputUpdate( listbox = None\n
-                                   , cashDetail_parameter = CashMovement_cashDetail_parameter\n
-                                   , destination = context.getObject().absolute_url()\n
-                                   )\n
+return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
+                                                          , cash_detail_dict = cash_detail_dict\n
+                                                          , destination = context.getObject().absolute_url()\n
+                                                          )\n
 </string> </value>
         </item>
         <item>
@@ -155,11 +156,11 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
                             <string>currency</string>
                             <string>None</string>
                             <string>redirect_url</string>
-                            <string>cashStatus</string>
-                            <string>emissionLetter</string>
+                            <string>cash_status</string>
+                            <string>emission_letter</string>
                             <string>variation</string>
                             <string>True</string>
-                            <string>CashMovement_cashDetail_parameter</string>
+                            <string>cash_detail_dict</string>
                           </tuple>
                         </value>
                     </item>
