@@ -192,14 +192,15 @@ class InventoryListBrain(ZSQLBrain):
         elif cname_id in ('getAvailableInventory', ):
           query_kw_update = {
             'simulation_state': \
-              list(self.getPortalReservedInventoryStateList())+\
+              list(self.getPortalReservedInventoryStateList()) + \
               list(self.getPortalCurrentInventoryStateList())
           }
         elif cname_id in ('getFutureInventory', 'inventory', ):
           query_kw_update = {
             'simulation_state': \
               list(self.getPortalFutureInventoryStateList()) + \
-              list(self.getPortalReservedInventoryStateList())
+              list(self.getPortalReservedInventoryStateList()) + \
+              list(self.getPortalCurrentInventoryStateList())
           }
         elif cname_id in ('getInventoryAtDate', ):
           query_kw_update = {
@@ -286,9 +287,9 @@ class DeliveryListBrain(InventoryListBrain):
     """
       Returns current inventory at current date
     """
-    at_date=DateTime()
+    at_date = DateTime()
     current = self.getCurrentInventory()
-    result = self.Resource_zGetInventory( 
+    result = self.Resource_zGetInventory(
                 resource_uid = [self.resource_uid],
                 omit_simulation = 1, omit_input = 1,
                 section_category = self.getPortalDefaultSectionCategory(),
