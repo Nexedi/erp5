@@ -46,6 +46,9 @@ class InvoiceRule(DeliveryRule):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    
+    __implements__ = ( Interface.Predicate,
+                       Interface.Rule )
 
     # Declarative security
     security = ClassSecurityInfo()

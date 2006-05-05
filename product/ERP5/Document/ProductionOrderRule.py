@@ -49,6 +49,9 @@ class ProductionOrderRule(OrderRule):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+    __implements = ( Interface.Predicate,
+                     Interface.Rule )
+
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject

@@ -56,6 +56,9 @@ class AmortisationRule(Rule):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
+    
+    __implements__ = ( Interface.Predicate,
+                       Interface.Rule )
 
     # Default Properties
     property_sheets = ( PropertySheet.Base
