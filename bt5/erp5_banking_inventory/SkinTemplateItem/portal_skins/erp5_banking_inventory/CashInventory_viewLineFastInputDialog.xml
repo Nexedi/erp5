@@ -88,25 +88,25 @@ if redirect_url is not None:\n
 if currency_id == context.Baobab_getPortalReferenceCurrencyID():\n
   letter_list      = None\n
   variation_list   = None\n
-  cash_status_list = None \n
+  cash_status_list = None\n
 else:\n
   letter_list      = [\'not_defined\']\n
   variation_list   = [\'not_defined\']\n
   cash_status_list = [\'valid\']\n
 \n
-cash_detail_parameters = { \'line_portalType\'         : \'Cash Inventory Line\'\n
-                         , \'operation_currency\'      : context.getPriceCurrencyId()\n
-                         , \'cashStatus_list\'         : cash_status_list\n
-                         , \'emissionLetter_list\'     : letter_list\n
-                         , \'variation_list\'          : variation_list \n
-                         , \'currencyCash_portalType\' : None              # \'Cash Movement Cell\'?\n
-                         , \'updatePossible\'          : True  \n
-                         , \'columnBase\'              : \'variation\'\n
-                         , \'useInventory\'            : 1\n
-                         }\n
+cash_detail_dict = {\'line_portal_type\'           : \'Cash Inventory Line\'\n
+                    , \'operation_currency\'       : context.getPriceCurrencyId()\n
+                    , \'cash_status_list\'         : cash_status_list\n
+                    , \'emission_letter_list\'     : letter_list\n
+                    , \'variation_list\'           : variation_list\n
+                    , \'currency_cash_portal_type\': None\n
+                    , \'read_only\'                : True\n
+                    , \'column_base_category\'     : \'variation\'\n
+                    , \'use_inventory\'            : 1\n
+                    }\n
 \n
-return context.CashDetail_fastInputUpdate( listbox              = None\n
-                                         , cashDetail_parameter = cash_detail_parameters\n
+return context.CashDelivery_generateCashDetailInputDialog( listbox              = None\n
+                                         , cash_detail_dict = cash_detail_dict\n
                                          , destination          = context.getObject().absolute_url())\n
 </string> </value>
         </item>
@@ -117,8 +117,14 @@ return context.CashDetail_fastInputUpdate( listbox              = None\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_inventory/CashInventory_fastInputCashInventoryLine</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_inventory/CashInventory_viewLineFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -165,7 +171,7 @@ return context.CashDetail_fastInputUpdate( listbox              = None\n
                             <string>variation_list</string>
                             <string>cash_status_list</string>
                             <string>True</string>
-                            <string>cash_detail_parameters</string>
+                            <string>cash_detail_dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -182,12 +188,33 @@ return context.CashDetail_fastInputUpdate( listbox              = None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>CashInventory_fastInputCashInventoryLine</string> </value>
+            <value> <string>CashInventory_viewLineFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fast_Input</string> </value>
+            <value> <string>fastinput</string> </value>
         </item>
         <item>
             <key> <string>optional</string> </key>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Saisie Billetage</string> </value>
+            <value> <string>Cash Detail</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -85,7 +85,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/CashInventory_fastInputCashInventoryLine</string> </value>
+            <value> <string>string:${object_url}/CashInventory_viewLineFastInputDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
