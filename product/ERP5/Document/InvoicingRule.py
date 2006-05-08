@@ -121,6 +121,8 @@ class InvoicingRule(Rule):
           resource = my_context_movement.getResource(),
           variation_category_list = my_context_movement.\
                                             getVariationCategoryList(),
+          variation_property_dict = my_context_movement.\
+              getVariationPropertyDict(),
           start_date = my_context_movement.getStartDate(),
           stop_date = my_context_movement.getStopDate(),
           source = my_context_movement.getSource(),
