@@ -49,7 +49,7 @@ try :
 except ImportError:
   pw_encrypt = lambda pw:pw
 
-class Person(Entity, Node, XMLObject):
+class Person(Node, XMLObject):
     """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,

@@ -62,10 +62,16 @@ class Url(Coordinate, Base):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asText')
   def asText(self):
+    """
+    Returns a text representation of the Url
+    """
     return self.url_string
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   def fromText(self, text):
+    """
+    set the Url from its text representation
+    """
     self.url_string = text
 
   security.declareProtected(Permissions.AccessContentsInformation,

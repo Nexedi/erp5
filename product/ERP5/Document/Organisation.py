@@ -34,7 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Core.MetaNode import MetaNode
 
-class Organisation(Entity, MetaNode, XMLObject):
+class Organisation(MetaNode, XMLObject):
     """
       An Organisation object holds the information about
       an organisation (ex. a division in a company, a company,

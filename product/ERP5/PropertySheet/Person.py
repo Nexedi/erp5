@@ -98,6 +98,8 @@ class Person:
     , 'description'              : 'The current address of the person'
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Address', )
+    , 'acquired_property_id'     : ( 'text', 'street_address', 'city',
+                                     'zip_code', 'region', 'region_title')
     , 'acquisition_base_category': ( 'subordination', )
     , 'acquisition_portal_type'  : ( 'Organisation', )
     , 'acquisition_copy_value'   : 0
@@ -113,6 +115,7 @@ class Person:
     , 'description'              : 'The current telephone of the person'
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Telephone', )
+    , 'acquired_property_id'     : ( 'text', 'telephone_number' )
     , 'acquisition_base_category': ( 'subordination', )
     , 'acquisition_portal_type'  : ( 'Organisation', )
     , 'acquisition_copy_value'   : 0
@@ -127,6 +130,7 @@ class Person:
     , 'description'              : 'The current mobile telephone of the person'
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Telephone', )
+    , 'acquired_property_id'     : ( 'text', 'telephone_number' )
     , 'acquisition_base_category': ( 'subordination', )
     , 'acquisition_portal_type'  : ( 'Organisation', )
     , 'acquisition_copy_value'   : 0
@@ -141,6 +145,7 @@ class Person:
     , 'description'              : 'The current fax of the person'
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Fax', )
+    , 'acquired_property_id'     : ( 'text', 'telephone_number' )
     , 'acquisition_base_category': ( 'subordination', )
     , 'acquisition_portal_type'  : ( 'Organisation', )
     , 'acquisition_copy_value'   : 0
@@ -155,6 +160,7 @@ class Person:
     , 'description'              : 'The current email of the person'
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Email', )
+    , 'acquired_property_id'     : ( 'text', )
     , 'acquisition_base_category': ( 'subordination', )
     , 'acquisition_portal_type'  : ( 'Organisation', )
     , 'acquisition_copy_value'   : 0
@@ -169,6 +175,7 @@ class Person:
     , 'description'              : 'An alternate email of the person'
     , 'type'                     : 'content'
     , 'portal_type'              : ( 'Email', )
+    , 'acquired_property_id'     : ( 'text', )
     , 'acquisition_base_category': ( 'subordination', )
     , 'acquisition_portal_type'  : ( 'Organisation', )
     , 'acquisition_copy_value'   : 0

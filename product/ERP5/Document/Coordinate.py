@@ -137,7 +137,12 @@ class Coordinate(Base):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getText')
-    getText = asText
+    def getText(self):
+      """
+      calls asText
+      """
+      return self.asText()
+      
 
     security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
     def fromText(self, coordinate_text):
@@ -150,7 +155,11 @@ class Coordinate(Base):
           return script(text=coordinate_text)
 
     security.declareProtected(Permissions.ModifyPortalContent, '_setText')
-    _setText = fromText
+    def _setText(self, value):
+      """
+      calls fromText
+      """
+      return self.fromText(value)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'standardTextFormat')
