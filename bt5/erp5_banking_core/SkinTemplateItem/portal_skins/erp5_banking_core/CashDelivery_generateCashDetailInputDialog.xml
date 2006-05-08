@@ -375,7 +375,7 @@ else :\n
       cell_quantity = int(listbox_line[\'column\'+str(counter)] or 0)\n
       quantity = quantity + cell_quantity\n
       counter  += 1\n
-    listbox_line[\'price\'] = context.Integer_toString(int(quantity * resource_price))\n
+    listbox_line[\'price\'] = int(quantity * resource_price)\n
 #      raise \'KHA\',repr(( x ))\n
 \n
     total_price += int(quantity * resource_price)\n
@@ -384,7 +384,6 @@ else :\n
   listbox = new_line_list\n
 \n
 #   raise \'KHA\',repr(( listbox ))\n
-  total_price = context.Integer_toString(total_price)\n
 \n
   context.Base_updateDialogForm(  listbox=listbox\n
                                   , calculated_price=total_price\n
