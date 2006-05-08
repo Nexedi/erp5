@@ -66,34 +66,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># check that every operation assigned to the counter are delivered\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-# XXX maybe raise other exception as otherwise the transition will passed even if\n
-# check fail\n
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
 \n
-transaction = state_change.object\n
-site = transaction.Baobab_getVaultSite(vault=transaction.getSiteValue())\n
+site = context.Baobab_getVaultSite(vault=context.getSiteValue())\n
+counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", site_uid = site.getUid())]\n
 \n
-# get the current counter date\n
-kwd = {\'portal_type\' : \'Counter Date\', \'simulation_state\' : \'open\', \'site_uid\' : site.getUid()}\n
-date_list = [x.getObject() for x in context.portal_catalog(**kwd)]\n
-current_date = None\n
-if len(date_list) == 0:\n
-  msg = Message(domain = \'ui\', message = \'No Counter Date found for this counter\')\n
-  raise ValidationFailed, (msg,)\n
-else:\n
-  current_date = date_list[0].getStartDate()\n
+object_list = []\n
+i = 0\n
+for counter in counter_list:\n
+  line = newTempBase(context, \'tmp_open_%s\' %(str(i)))\n
+  line.edit(name=counter.getTitle(),\n
+            path = counter.getPath())\n
+  line.setUid(\'new_%s\' % counter.getPath())\n
+  object_list.append(line)\n
+  i += 1                                  \n
 \n
-site_uid = transaction.getSiteUid()\n
-\n
-operation_list_object = transaction.Baobab_getRemainingOperationList(site_uid=site_uid, date=current_date, simulation_state=[\'confirmed\',])\n
-\n
-context.log(\'counter_workflow, cancelRemainingOperation\', \'operation list = %s\' %(operation_list_object,))\n
-\n
-for operation in operation_list_object:\n
-  context.log(\'cancelling operations\', operation.getRelativeUrl())\n
-  operation.reject()\n
+return object_list\n
 </string> </value>
         </item>
         <item>
@@ -103,14 +91,8 @@ for operation in operation_list_object:\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/counter_workflow/scripts/cancelRemainingOperation</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/CounterDate_getSiteCounterList</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -120,7 +102,7 @@ for operation in operation_list_object:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, *args, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -140,38 +122,28 @@ for operation in operation_list_object:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>args</string>
                             <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
                             <string>_getattr_</string>
-                            <string>transaction</string>
+                            <string>context</string>
                             <string>site</string>
-                            <string>kwd</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>context</string>
                             <string>x</string>
-                            <string>date_list</string>
-                            <string>None</string>
-                            <string>current_date</string>
-                            <string>len</string>
-                            <string>msg</string>
-                            <string>_getitem_</string>
-                            <string>site_uid</string>
-                            <string>operation_list_object</string>
-                            <string>operation</string>
+                            <string>counter_list</string>
+                            <string>object_list</string>
+                            <string>i</string>
+                            <string>counter</string>
+                            <string>str</string>
+                            <string>line</string>
                           </tuple>
                         </value>
                     </item>
@@ -188,33 +160,12 @@ for operation in operation_list_object:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>cancelRemainingOperation</string> </value>
+            <value> <string>CounterDate_getSiteCounterList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_container</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

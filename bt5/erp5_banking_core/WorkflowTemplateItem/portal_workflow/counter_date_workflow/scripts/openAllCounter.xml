@@ -66,28 +66,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># put all counter in closing state for the given site\n
-transaction = state_change.object\n
+            <value> <string>listbox = state_change.kwargs.get(\'listbox\')\n
 \n
-site = transaction.getSiteValue()\n
-while True:\n
-  if not hasattr(site, \'getVaultTypeList\'):\n
-    msg = Message(domain = \'ui\', message = \'The site value is misconfigured; report this to system administrators.\')\n
-    raise ValidationFailed, (msg,)\n
-  if \'site\' in site.getVaultTypeList():\n
-    break\n
-  site = site.getParentValue()\n
-\n
-counter_list = [x.getObject() for x in context.portal_catalog(portal_type="Counter", simulation_state = \'closed\', site_uid = site.getUid())]\n
-\n
-for counter in counter_list:\n
-  counter.open()\n
+for line in listbox:\n
+  if line["choice"] == "open":\n
+    counter = context.restrictedTraverse("%s" %(line[\'listbox_key\'],))\n
+    counter.open()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -132,19 +128,11 @@ for counter in counter_list:\n
                             <string>args</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>transaction</string>
-                            <string>site</string>
-                            <string>True</string>
-                            <string>hasattr</string>
-                            <string>Message</string>
-                            <string>msg</string>
-                            <string>ValidationFailed</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>listbox</string>
                             <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
                             <string>context</string>
-                            <string>x</string>
-                            <string>counter_list</string>
                             <string>counter</string>
                           </tuple>
                         </value>
@@ -168,6 +156,27 @@ for counter in counter_list:\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
