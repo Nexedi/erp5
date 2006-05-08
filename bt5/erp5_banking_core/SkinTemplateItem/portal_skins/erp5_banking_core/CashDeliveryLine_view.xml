@@ -99,7 +99,6 @@
                     <value>
                       <list>
                         <string>matrixbox_membership_criterion_category_list</string>
-                        <string>matrixbox_quantity</string>
                         <string>membership_criterion_base_category_list</string>
                       </list>
                     </value>
@@ -110,6 +109,7 @@
                       <list>
                         <string>my_resource_translated_title</string>
                         <string>my_total_price</string>
+                        <string>matrixbox_quantity</string>
                       </list>
                     </value>
                 </item>
