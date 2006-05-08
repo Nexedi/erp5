@@ -417,7 +417,7 @@ class SimulationMovement(Movement):
     """
       Returns the quantity of related delivery(s)
     """
-    quantity = None
+    quantity = 0.0
     delivery_movement = self.getDeliveryValue()
     if delivery_movement is not None:
       quantity = delivery_movement.getQuantity()
