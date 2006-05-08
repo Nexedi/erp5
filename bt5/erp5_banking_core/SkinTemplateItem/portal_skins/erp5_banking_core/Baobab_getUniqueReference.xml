@@ -82,11 +82,19 @@ if reference in (None, \'\') or not str(reference).startswith(application_id):\n
   source = context.getSourceValue()\n
   if source not in (None, \'\'):\n
     codification = source.getCodification()\n
-    context.log(\'codification\', codification)\n
     if codification in (None, \'\'):\n
       return \'\'\n
   else:\n
-    return \'\'\n
+    # get source from user site\n
+    site_list = context.Baobab_getUserAssignedSiteList()\n
+    if len(site_list) == 0:\n
+      return \'\'\n
+    else:\n
+      site = site_list[0]\n
+      site_value = context.restrictedTraverse(\'portal_categories/%s\' %(site,))\n
+      codification = site_value.getCodification()\n
+      if codification in (None, \'\'):\n
+        return \'\'\n
 \n
   # date\n
   date = context.getStopDate()\n
@@ -97,7 +105,6 @@ if reference in (None, \'\') or not str(reference).startswith(application_id):\n
   # actual generation\n
   if reference in (None, \'\'):\n
     reference = context.portal_ids.generateNewId(id_group = baobab_id_group)\n
-  context.log(\'affectation\', str((application_id, codification, year, reference)))\n
   # affectation\n
   reference = "%s-%s-%s-%s" % (application_id, codification, year, reference)\n
   context.setSourceReference(reference)\n
@@ -110,6 +117,12 @@ return reference\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -160,6 +173,11 @@ return reference\n
                             <string>str</string>
                             <string>source</string>
                             <string>codification</string>
+                            <string>site_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>site</string>
+                            <string>site_value</string>
                             <string>date</string>
                             <string>year</string>
                           </tuple>
@@ -184,6 +202,27 @@ return reference\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
