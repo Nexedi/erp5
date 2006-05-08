@@ -1365,6 +1365,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
       if prop.has_key('acquired_property_id'):
         for aq_id in prop['acquired_property_id']:
           composed_id = "%s_%s" % (id, aq_id)
+          # Getter
           # print "Set composed_id accessor %s" % composed_id
           accessor_name = 'get' + UpperCase(composed_id)
           # print "Set accessor_name accessor %s" % accessor_name
@@ -1391,9 +1392,32 @@ def createDefaultAccessors(property_holder, id, prop = None,
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
             setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
           # Default Getter
-          ################# NOT YET
+          accessor_name = 'getDefault' + UpperCase(composed_id)
+          base_accessor = AcquiredProperty.DefaultGetter(accessor_name,
+                composed_id,
+                prop['type'],
+                prop['portal_type'],
+                aq_id,
+                prop['acquisition_base_category'],
+                prop['acquisition_portal_type'],
+                prop['acquisition_accessor_id'],
+                prop.get('acquisition_copy_value',0),
+                prop.get('acquisition_mask_value',0),
+                prop.get('acquisition_sync_value',0),
+                storage_id = prop.get('storage_id'),
+                alt_accessor_id = prop.get('alt_accessor_id'),
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0)),
+                is_tales_type = (prop['type'] == 'tales')
+                )
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( read_permission, accessor_name )
+          accessor_name = '_baseGetDefault' + UpperCase(id)
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
           # List Getter
           ################# NOT YET
+          # Setter
           accessor_name = 'set' + UpperCase(composed_id)
           base_accessor = AcquiredProperty.Setter(accessor_name,
                 composed_id,
@@ -1419,7 +1443,30 @@ def createDefaultAccessors(property_holder, id, prop = None,
           if not hasattr(property_holder, accessor_name) or prop.get('override',0):
             setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
           # Default Getter
-          ################# NOT YET
+          accessor_name = 'setDefault' + UpperCase(composed_id)
+          base_accessor = AcquiredProperty.DefaultSetter(accessor_name,
+                composed_id,
+                prop['type'],
+                prop['portal_type'],
+                aq_id,
+                prop['acquisition_base_category'],
+                prop['acquisition_portal_type'],
+                prop['acquisition_accessor_id'],
+                prop.get('acquisition_copy_value',0),
+                prop.get('acquisition_mask_value',0),
+                prop.get('acquisition_sync_value',0),
+                storage_id = prop.get('storage_id'),
+                alt_accessor_id = prop.get('alt_accessor_id'),
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0)),
+                is_tales_type = (prop['type'] == 'tales'),
+                reindex = 1
+                )
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor)
+            property_holder.security.declareProtected( write_permission, accessor_name )
+          accessor_name = 'baseSetDefault' + UpperCase(id)
+          if not hasattr(property_holder, accessor_name) or prop.get('override',0):
+            setattr(property_holder, accessor_name, base_accessor.dummy_copy(accessor_name))
           # List Getter
           ################# NOT YET
 

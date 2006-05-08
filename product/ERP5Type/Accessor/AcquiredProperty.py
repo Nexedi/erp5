@@ -99,6 +99,8 @@ class Getter(Method):
 
     psyco.bind(__call__)
 
+DefaultGetter = Getter
+
 class Setter(Method):
     """
       Gets the default reference of a relation
@@ -168,3 +170,6 @@ class Setter(Method):
         o.setProperty(self._acquired_property, value, *args, **kw)
       else:
         o._setProperty(self._acquired_property, value, *args, **kw)
+
+DefaultSetter = Setter
+
