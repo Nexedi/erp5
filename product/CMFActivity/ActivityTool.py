@@ -189,6 +189,9 @@ class Message:
       LOG('ActivityTool', WARNING,
           'Could not call method %s on object %s' % (
           self.method_id, self.object_path), error=sys.exc_info())
+      # push the error in ZODB error_log
+      if hasattr(activity_tool, 'error_log'):
+        activity_tool.error_log.raising(sys.exc_info())
 
   def validate(self, activity, activity_tool):
     return activity.validate(activity_tool, self, **self.activity_kw)
