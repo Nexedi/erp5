@@ -391,7 +391,7 @@ class SimulationMovement(Movement):
                              'getDeliveryStartDateList')
   def getDeliveryStartDateList(self):
     """
-      Returns the stop date of related delivery(s)
+      Returns the stop date of related delivery
     """
     start_date_list = []
     delivery_movement = self.getDeliveryValue()
@@ -403,7 +403,7 @@ class SimulationMovement(Movement):
                              'getDeliveryStopDateList')
   def getDeliveryStopDateList(self):
     """
-      Returns the stop date of related delivery(s)
+      Returns the stop date of related delivery
     """
     stop_date_list = []
     delivery_movement = self.getDeliveryValue()
@@ -415,7 +415,7 @@ class SimulationMovement(Movement):
                              'getDeliveryQuantity')
   def getDeliveryQuantity(self):
     """
-      Returns the quantity of related delivery(s)
+      Returns the quantity of related delivery
     """
     quantity = 0.0
     delivery_movement = self.getDeliveryValue()
