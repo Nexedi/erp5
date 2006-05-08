@@ -38,9 +38,9 @@ class Getter(Method):
     # Generic Definition of Method Object
     # This is required to call the method form the Web
     func_code = func_code()
-    func_code.co_varnames = ('self', 'instance', 'args', 'kw')
-    func_code.co_argcount = 2
-    func_defaults = ()
+    func_code.co_varnames = ('self', 'args', 'kw')
+    func_code.co_argcount = 1
+    func_defaults = None
 
     def __init__(self,  id, key, property_type, portal_type, acquired_property,
                         acquisition_base_category,
@@ -108,9 +108,9 @@ class Setter(Method):
     # Generic Definition of Method Object
     # This is required to call the method form the Web
     func_code = func_code()
-    func_code.co_varnames = ('self', 'instance', 'args', 'kw')
+    func_code.co_varnames = ('self', 'value', 'args', 'kw')
     func_code.co_argcount = 2
-    func_defaults = ()
+    func_defaults = None
 
     def __init__(self,  id, key, property_type, portal_type, acquired_property,
                         acquisition_base_category,
@@ -147,7 +147,7 @@ class Setter(Method):
       self._is_tales_type = is_tales_type
       self._reindex = reindex
 
-    def __call__(self, instance, *args, **kw):
+    def __call__(self, instance, value, *args, **kw):
       o = instance._getDefaultAcquiredProperty(self._key, None, self._null,
             base_category=self._acquisition_base_category,
             portal_type=self._acquisition_portal_type,
@@ -165,6 +165,6 @@ class Setter(Method):
         assertAttributePortalType(instance, self._storage_id, self._portal_type)
         o = instance.newContent(id = self._storage_id, portal_type = self._portal_type[0])
       if self._reindex:
-        o.setProperty(self._acquired_property, *args, **kw)
+        o.setProperty(self._acquired_property, value, *args, **kw)
       else:
-        o._setProperty(self._acquired_property, *args, **kw)
+        o._setProperty(self._acquired_property, value, *args, **kw)
