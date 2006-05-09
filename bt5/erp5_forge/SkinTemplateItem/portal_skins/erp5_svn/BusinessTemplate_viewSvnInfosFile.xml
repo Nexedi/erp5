@@ -65,7 +65,6 @@
       <table width=60%% border=1>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Name</b></td><td style=\'background-color: white;\' tal:content="python:path.split(\'/\')[-1]">filename</td></tr>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Size</b></td><td style=\'background-color: white;\' tal:content="python:\'%.2f kb\'%(infos_dict[\'size\']/1024.0)">filesize</td></tr>\n
-      <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Type</b></td><td style=\'background-color: white;\' tal:content="python:infos_dict[\'kind\']">filekind</td></tr>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Last Change Revision</b></td><td style=\'background-color: white;\' tal:content="python:infos_dict[\'created_rev\']">last revision</td></tr>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Last Change Author</b></td><td style=\'background-color: white;\' tal:content="python:infos_dict[\'last_author\']">last author</td></tr>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Last Change Date</b></td><td style=\'background-color: white;\' tal:content="python:infos_dict[\'time\']">last date</td></tr>\n
