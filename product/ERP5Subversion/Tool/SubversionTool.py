@@ -52,6 +52,12 @@ try:
   from base64 import b64encode, b64decode
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
+  
+# To keep compatibility with python 2.3
+try:
+  set
+except NameError:
+  from sets import Set as set
 
 class Error(exceptions.EnvironmentError):
     pass
