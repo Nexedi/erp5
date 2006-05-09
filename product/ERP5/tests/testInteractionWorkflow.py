@@ -359,6 +359,79 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
         "description should be 'ab' or 'ba', it is %s" %
         organisation.getDescription())
     
+  def test_11(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage(
+        'Interactions, Test that the private accessor is called')
+
+    self.createInteractionWorkflowWithTwoInteractions()
+    self.interactionA.setProperties(
+            'afterEditA',
+            method_id='_setVatCode',
+            after_script_name=('afterEditA',))
+    self.interactionB.setProperties(
+            'afterEditB',
+            method_id='setVatCode',
+            after_script_name=('afterEditB',))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "context.log('InteractionWF.test_10 in script', 'a')\n" +\
+           "description = context.getDescription()\n" +\
+           "if description is None:\n" +\
+           "  description = ''\n" +\
+           "context.setDescription(description + 'a')"
+    self.scriptA.ZPythonScript_edit(params, body)
+    self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
+
+    self.createData()
+    organisation = self.organisation
+    organisation._baseSetVatCode('x')
+    organisation.setDescription('x')
+    self.assertEquals(organisation.getVatCode(),'x')
+    self.assertEquals(organisation.getDescription(),'x')
+    organisation.edit(description='bar')
+    organisation.edit(vat_code='foo')
+    self.assertEquals(organisation.getVatCode(),'foo')
+    self.assertEquals(organisation.getDescription(),'bara')
+
+  def test_12(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage(
+        'Interactions, Test that the private accessor is called, '
+        'when using an Acquired Property')
+
+    self.createInteractionWorkflowWithTwoInteractions()
+    self.interactionA.setProperties(
+            'afterEditA',
+            method_id='_setDefaultEmailText',
+            after_script_name=('afterEditA',))
+    self.interactionB.setProperties(
+            'afterEditB',
+            method_id='setDefaultEmailText',
+            after_script_name=('afterEditB',))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "context.log('InteractionWF.test_10 in script', 'a')\n" +\
+           "vat_code = context.getVatCode()\n" +\
+           "if vat_code is None:\n" +\
+           "  vat_code = ''\n" +\
+           "context.setVatCode(vat_code + 'a')"
+    self.scriptA.ZPythonScript_edit(params, body)
+    self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
+
+    self.createData()
+    organisation = self.organisation
+    organisation._baseSetDefaultEmailText('x')
+    organisation.setVatCode('x')
+    self.assertEquals(organisation.getDefaultEmailText(),'x')
+    self.assertEquals(organisation.getVatCode(),'x')
+    organisation.edit(vat_code='foo')
+    organisation.edit(default_email_text='bar')
+    self.assertEquals(organisation.getVatCode(),'fooa')
+    self.assertEquals(organisation.getDefaultEmailText(),'bar')
+
 if __name__ == '__main__':
     framework()
 else:
