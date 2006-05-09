@@ -183,7 +183,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
 \t  if (ie4 || upLevel) {\n
 \t    splash.style.visibility = "hidden";\n
           }\n
-          var sText = "<br><br><b><font color=\'black\'>No changes detected.<font/><b/>";\n
+          var sText = "<br><h2><b><font color=\'black\'>No changes detected.<font/><b/><h2/>";\n
            if (document.layers) {\n
             //var oLayer;\n
             //oLayer = document.layers[\'treebox1\'].document;\n
