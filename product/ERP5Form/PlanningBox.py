@@ -78,7 +78,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     block_moved_string = REQUEST.get('block_moved','')
     block_previous_string = REQUEST.get('previous_block_moved','')
 
-    pdb.set_trace()
+    #pdb.set_trace()
 
     ##################################################
     ############## REBUILD STRUCTURE #################
@@ -778,8 +778,6 @@ class PlanningBoxWidget(Widget.Widget):
 
     #pdb.set_trace()
     structure = self.render_structure(field=field, key=key, value=value, REQUEST=REQUEST, here=here)
-
-    pdb.set_trace()
 
 
     if structure != None:
