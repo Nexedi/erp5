@@ -183,7 +183,27 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
 \t  if (ie4 || upLevel) {\n
 \t    splash.style.visibility = "hidden";\n
           }\n
+          var sText = "<br><br><b><font color=\'black\'>No changes detected.<font/><b/>";\n
+           if (document.layers) {\n
+            //var oLayer;\n
+            //oLayer = document.layers[\'treebox1\'].document;\n
+            //oLayer.open();\n
+            //oLayer.write(sText);\n
+            //oLayer.close();\n
+          }\n
+          else if (parseInt(navigator.appVersion)>=5&&navigator.\n
+          appName=="Netscape") {\n
+            if(document.getElementById(\'treebox1\').innerHTML.indexOf(\'folder.png\') == -1){\n
+              document.getElementById(\'treebox1\').innerHTML = sText;\n
+            }\n
+          }\n
+          else if (document.all){\n
+            if(document.all[\'treebox1\'].innerHTML.indexOf(\'folder.png\') == -1){\n
+              document.all[\'treebox1\'].innerHTML = sText\n
+            }\n
+          }\n
 \t}\n
+\n
         doOnLoad()\n
 </script>\n
 </tal:block>\n
