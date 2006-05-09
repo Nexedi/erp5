@@ -416,10 +416,6 @@
                           <string>source_total_asset_price</string>
                           <string>Amount</string>
                         </tuple>
-                        <tuple>
-                          <string>source_logical_path</string>
-                          <string>source_logical_path</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

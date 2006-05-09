@@ -9,12 +9,40 @@ Cash Sorting | metadata
 Cash Sorting | outgoing_fastinput
 Cash Sorting | outgoing_line_list
 Cash Sorting | view
+Classification Survey Module | list
+Classification Survey Module | list_ui
+Classification Survey Module | sort_on
+Classification Survey Module | view
+Classification Survey | history
+Classification Survey | incoming_fastinput
+Classification Survey | metadata
+Classification Survey | outgoing_fastinput
+Classification Survey | print
+Classification Survey | result
+Classification Survey | supply
+Classification Survey | view
 Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
+Incoming Classification Survey Line | metadata
+Incoming Classification Survey Line | view
+Monetary Survey Module | list
+Monetary Survey Module | list_ui
+Monetary Survey Module | sort_on
+Monetary Survey Module | view
+Monetary Survey | fastInput
+Monetary Survey | history
+Monetary Survey | metadata
+Monetary Survey | print
+Monetary Survey | view
 Outgoing Cash Sorting Cell | metadata
 Outgoing Cash Sorting Cell | view
 Outgoing Cash Sorting Line | metadata
 Outgoing Cash Sorting Line | view
+Outgoing Classification Survey Cell | metadata
+Outgoing Classification Survey Cell | view
+Outgoing Classification Survey Line | metadata
+Outgoing Classification Survey Line | view
+Usual Cash Transfer Module | list
 Usual Cash Transfer Module | list_ui
 Usual Cash Transfer Module | sort_on
 Usual Cash Transfer Module | view

@@ -1,7 +1,14 @@
 Cash Sorting Module | Cash Sorting
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
+Classification Survey Module | Classification Survey
+Classification Survey | Incoming Classification Survey Line
+Classification Survey | Outgoing Classification Survey Line
 Incoming Cash Sorting Line | Cash Delivery Cell
+Incoming Classification Survey Line | Cash Delivery Cell
+Monetary Survey Module | Monetary Survey
+Monetary Survey | Cash Delivery Line
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell
+Outgoing Classification Survey Line | Outgoing Classification Survey Cell
 Usual Cash Transfer Module | Usual Cash Transfer
 Usual Cash Transfer | Cash Delivery Line

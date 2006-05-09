@@ -1,7 +1,15 @@
 <workflow_chain>
  <chain>
   <type>Cash Sorting</type>
-  <workflow>cash_sorting_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, cash_sorting_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Classification Survey</type>
+  <workflow>edit_workflow, classification_survey_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Monetary Survey</type>
+  <workflow>edit_workflow, monetary_survey_workflow</workflow>
  </chain>
  <chain>
   <type>Usual Cash Transfer</type>

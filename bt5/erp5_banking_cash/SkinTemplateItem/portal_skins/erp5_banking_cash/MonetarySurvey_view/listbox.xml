@@ -13,6 +13,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
         </item>
@@ -343,7 +349,7 @@
                         </tuple>
                         <tuple>
                           <string>variation_title</string>
-                          <string>Vintage</string>
+                          <string>Issuing Year</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -398,11 +404,11 @@
                       <list>
                         <tuple>
                           <string>quantity</string>
-                          <string>quantity</string>
+                          <string>Number</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
-                          <string>total_price</string>
+                          <string>Amount</string>
                         </tuple>
                       </list>
                     </value>
@@ -486,7 +492,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>classification_survey_line_selection</string> </value>
+                    <value> <string>usual_cash_transfer_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -512,7 +518,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Cash Detail</string> </value>
+                    <value> <string>Cash Details</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

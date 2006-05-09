@@ -1,6 +1,11 @@
 Cash Sorting | Price
 Incoming Cash Sorting Line | CashDeliveryLine
+Incoming Classification Survey Line | CashDeliveryLine
+Monetary Survey | Amount
+Monetary Survey | Task
 Outgoing Cash Sorting Cell | CashDeliveryLine
 Outgoing Cash Sorting Line | CashDeliveryLine
+Outgoing Classification Survey Cell | CashDeliveryLine
+Outgoing Classification Survey Line | CashDeliveryLine
 Usual Cash Transfer | Amount
 Usual Cash Transfer | Price

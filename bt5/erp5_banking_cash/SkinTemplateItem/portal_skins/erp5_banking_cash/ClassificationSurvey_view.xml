@@ -82,9 +82,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -92,17 +90,13 @@
                     <value>
                       <list>
                         <string>my_translated_simulation_state_title</string>
-                        <string>my_total_price</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key>                 <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_total_price</string>
-                        <string>listbox_quantity</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -110,7 +104,6 @@
                     <value>
                       <list>
                         <string>my_source_reference</string>
-                        <string>my_source</string>
                         <string>my_source_total_asset_price</string>
                       </list>
                     </value>

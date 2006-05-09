@@ -1,4 +1,8 @@
 Cash Sorting | cash_sorting_workflow
 Cash Sorting | edit_workflow
+Classification Survey | classification_survey_workflow
+Classification Survey | edit_workflow
+Monetary Survey | edit_workflow
+Monetary Survey | monetary_survey_workflow
 Usual Cash Transfer | edit_workflow
 Usual Cash Transfer | usual_cash_transfer_workflow

@@ -5,10 +5,23 @@
  <portal_type id="Incoming Cash Sorting Line">
   <item>CashDeliveryLine</item>
  </portal_type>
+ <portal_type id="Incoming Classification Survey Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Monetary Survey">
+  <item>Task</item>
+  <item>Amount</item>
+ </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Outgoing Classification Survey Cell">
+  <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Outgoing Classification Survey Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Usual Cash Transfer">

@@ -66,21 +66,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency = context.Baobab_getPortalReferenceCurrencyID()\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
 \n
-CashMovement_cashDetail_parameter = { \'line_portalType\'          : \'Cash Delivery Line\'             # The portal type that the fastinput will create\n
-, \'operation_currency\'       : currency                          # The operation currently\n
-, \'cashStatus_list\'          : [\'cancelled\']                    # List of possible cashStatus or None if all\n
-, \'emissionLetter_list\'      : None                           # List of possible emissionLetter or None if all\n
-, \'variation_list\'           : [\'2003\',]                      # List of possible variation or None if all\n
-, \'currencyCash_portalType\'  : \'Banknote\'                     # \'Coin\' or \'Banknote\' or None if both\n
-, \'updatePossible\'           : True                           # If true, the fastinput will not allow change\n
-, \'columnBase\'               : \'variation\'                    # possible values : \'variation\', \'cashStatus\', \'emissionLetter\'\n
-}\n
+# Purchase Transaction .\n
+transaction = state_change.object\n
+# Get inventory\n
+vault = transaction.getSource()\n
+resource =  transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Incoming Classification Survey Line\')\n
 \n
-return context.CashDetail_fastInputUpdate( listbox = None\n
-, cashDetail_parameter = CashMovement_cashDetail_parameter\n
-, destination = context.getObject().absolute_url())\n
+# Get price and total_price.\n
+price = transaction.getSourceTotalAssetPrice()\n
+input_cash = transaction.getTotalPrice(deliveryLineType=\'Incoming Classification Survey Line\')\n
+output_cash = transaction.getTotalPrice(deliveryLineType=\'Outgoing Classification Survey Line\')\n
+\n
+if input_cash != output_cash :\n
+  msg=Message(domain="ui", message="Incoming cash amount is different from outgoing cash amount.")\n
+  raise ValidationFailed, (msg,)\n
+elif price != output_cash :\n
+  msg=Message(domain=\'ui\',message=\'Amount differs from cash total.\')\n
+  raise ValidationFailed, (msg,)\n
+elif resource != 0 :\n
+  msg=Message(domain=\'ui\',message=\'Insufficient Balance.\')\n
+  raise ValidationFailed, (msg,)\n
 </string> </value>
         </item>
         <item>
@@ -91,7 +99,7 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/ClassificationSurvey_viewFastInputDialog</string> </value>
+            <value> <string>Script (Python):/baobab/portal_workflow/classification_survey_workflow/scripts/validateBalance</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -101,7 +109,7 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,18 +129,25 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>currency</string>
-                            <string>None</string>
-                            <string>True</string>
-                            <string>CashMovement_cashDetail_parameter</string>
+                            <string>transaction</string>
+                            <string>vault</string>
+                            <string>resource</string>
+                            <string>price</string>
+                            <string>input_cash</string>
+                            <string>output_cash</string>
+                            <string>msg</string>
                           </tuple>
                         </value>
                     </item>
@@ -149,7 +164,7 @@ return context.CashDetail_fastInputUpdate( listbox = None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ClassificationSurvey_viewFastInputDialog</string> </value>
+            <value> <string>validateBalance</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

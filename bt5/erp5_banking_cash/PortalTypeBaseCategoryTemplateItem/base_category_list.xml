@@ -2,4 +2,7 @@
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>
  </portal_type>
+ <portal_type id="Outgoing Classification Survey Cell">
+  <item>variation</item>
+ </portal_type>
 </base_category_list>

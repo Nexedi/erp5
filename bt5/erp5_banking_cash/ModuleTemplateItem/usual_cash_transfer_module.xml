@@ -539,6 +539,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Manage Translation Services</name>
+  </permission>
+  <permission>
    <name>Manage Vocabulary</name>
    <role>Manager</role>
   </permission>

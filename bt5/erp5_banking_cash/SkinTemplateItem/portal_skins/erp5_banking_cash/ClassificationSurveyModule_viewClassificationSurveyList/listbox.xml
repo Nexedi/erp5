@@ -342,10 +342,6 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>source_logical_path</string>
-                          <string>Source Vault</string>
-                        </tuple>
-                        <tuple>
                           <string>source_total_asset_price</string>
                           <string>Amount</string>
                         </tuple>
@@ -387,17 +383,12 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>source_site_domain</string>
-                          <string>Source Vault</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>domain_tree</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
