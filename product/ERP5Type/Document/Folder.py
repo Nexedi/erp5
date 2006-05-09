@@ -737,6 +737,24 @@ be a problem)."""
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'contentValues' )
+  def contentValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, sort_order=None, **kw):
+    """
+    Returns a list containing object contained in this folder.
+    Filter objects with appropriate permissions (as in contentValues
+    """
+    #LOG('contentValues', 0, 'spec = %r, kw = %r' % (spec, kw))
+    if meta_type is not None:
+      spec = meta_type
+    if portal_type is not None: kw['portal_type'] = portal_type
+    object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter = kw)
+    if portal_type is not None:
+      if type(portal_type) == type(''):
+        portal_type = (portal_type,)
+      object_list = filter(lambda x: x.getPortalType() in portal_type, object_list)
+    object_list = sortValueList(object_list, sort_on, sort_order, **kw)
+    return object_list
+
   # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
