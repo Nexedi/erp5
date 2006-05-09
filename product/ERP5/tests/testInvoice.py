@@ -98,7 +98,7 @@ class TestInvoice(TestAccountingRulesMixin,
                 
   def getNeededCategoryList(self):
     """return a list of categories that should be created."""
-    return ('region/%s' % self.default_region, 
+    return ('region/%s' % self.default_region,
             'gap/%s' % self.vat_gap,
             'gap/%s' % self.sale_gap,
             'gap/%s' % self.customer_gap,
@@ -448,7 +448,7 @@ class TestInvoice(TestAccountingRulesMixin,
                      sequence.get('order').getStartDate())
           self.assertEquals(simulation_movement.getStopDate(),
                       sequence.get('order').getStopDate())
-          
+
   def stepCheckDeliveryRuleForDeferred(
                       self, sequence=None, sequence_list=None, **kw):
     """ Checks that a delivery rule has been created when we took 'split
@@ -603,16 +603,16 @@ class TestInvoice(TestAccountingRulesMixin,
     for key in found_dict.keys():
       self.assertAlmostEquals(expected_dict[key], found_dict[key], places=2)
 
-
-
   def stepRebuildAndCheckNothingIsCreated(self, sequence=None,
                                            sequence_list=None, **kw):
     """Rebuilds with sale_invoice_builder and checks nothing more is
     created. """
-    return 'TODO' #XXX
     accounting_module = self.getAccountingModule()
-    sale_invoice_transaction_list = accounting_module.objectValues()
-    self.assertEquals(len(sale_invoice_transaction_list), 1)
+    sale_invoice_transaction_count = len(accounting_module.objectValues())
+    for builder in self.getPortal().portal_deliveries.objectValues():
+      builder.build()
+    self.assertEquals(sale_invoice_transaction_count,
+                      len(accounting_module.objectValues()))
 
   def stepModifyInvoicesDate(self, sequence=None,
                                            sequence_list=None, **kw):
@@ -626,7 +626,7 @@ class TestInvoice(TestAccountingRulesMixin,
                  stop_date=self.datetime+1)
 
   def stepRemoveDateMovementGroupForTransactionBuilder(self, sequence=None,
-            sequence_list=None,**kw):
+            sequence_list=None, **kw):
     """
     Remove DateMovementGroup
     """
@@ -636,6 +636,52 @@ class TestInvoice(TestAccountingRulesMixin,
     new_list = [x for x in previous_list if x != 'DateMovementGroup']
     new_list.append('ParentExplanationMovementGroup')
     builder.setDeliveryCollectOrderList(new_list)
+    
+  def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
+    """Edit the current invoice, to trigger updateAppliedRule."""
+    invoice = sequence.get('invoice')
+    invoice.edit()
+
+    # call updateAppliedRule directly, don't rely on edit interactions
+    rule_id = 'default_invoice_rule'
+    self.failUnless(rule_id in
+                    self.getPortal().portal_rules.objectIds())
+    invoice.updateAppliedRule(rule_id=rule_id)
+
+  def stepCheckInvoiceRuleNotAppliedOnInvoiceEdit(self,
+                    sequence=None, sequence_list=None, **kw):
+    """If we call edit on the invoice, invoice rule should not be
+    applied on lines created by delivery builder."""
+    invoice = sequence.get('invoice')
+    # FIXME: empty applied rule should not be created
+    #self.assertEquals(len(invoice.getCausalityRelatedValueList(
+    #         portal_type=self.applied_rule_portal_type)), 0)
+    for invoice_mvt in invoice.getMovementList():
+      self.assertEquals(len(invoice_mvt.getOrderRelatedValueList(
+            portal_type=self.simulation_movement_portal_type)), 0)
+
+  def stepEditPackingList(self, sequence=None, sequence_list=None, **kw):
+    """Edit the current packing list, to trigger updateAppliedRule."""
+    packing_list = sequence.get('packing_list')
+    packing_list.edit()
+    
+    # call updateAppliedRule directly, don't rely on edit interactions
+    rule_id = 'default_delivery_rule'
+    self.failUnless(rule_id in
+                    self.getPortal().portal_rules.objectIds())
+    packing_list.updateAppliedRule(rule_id=rule_id)
+
+  def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
+                    sequence=None, sequence_list=None, **kw):
+    """If we call edit on the packing list, delivery rule should not be
+    applied on lines created by delivery builder."""
+    packing_list = sequence.get('packing_list')
+    # FIXME: empty applied rule should not be created
+    #self.assertEquals(len(packing_list.getCausalityRelatedValueList(
+    #         portal_type=self.applied_rule_portal_type)), 0)
+    for delivery_mvt in packing_list.getMovementList():
+      self.assertEquals(len(delivery_mvt.getOrderRelatedValueList(
+            portal_type=self.simulation_movement_portal_type)), 0)
     
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
@@ -742,6 +788,43 @@ class TestInvoice(TestAccountingRulesMixin,
         stepConfirmTwoInvoices
         stepTic
         stepCheckTwoInvoicesTransactionLines
+      """)
+
+  def test_InvoiceEditAndInvoiceRule(self, quiet=0, run=1):
+    """Invoice Rule should not be applied on invoice lines created from\
+    Packing List.
+
+    We went to prevent this from happening:
+      - Create a packing list
+      - An invoice is created from packing list
+      - Invoice is edited, updateAppliedRule is called
+      - A new Invoice Rule is created for this invoice, and accounting
+        movements for this invoice are present twice in the simulation.
+    """
+    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      self.playSequence(
+        base_sequence +
+      """
+        stepSetReadyPackingList
+        stepTic
+        stepStartPackingList
+        stepCheckInvoicingRule
+        stepTic
+        stepCheckInvoiceBuilding
+        stepEditInvoice
+        stepCheckInvoiceRuleNotAppliedOnInvoiceEdit
+      """)
+  
+  def test_PackingListEditAndInvoiceRule(self, quiet=0, run=1):
+    """Delivery Rule should not be applied on packing list lines created\
+    from Order.
+    """
+    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      self.playSequence(
+        base_sequence +
+      """
+        stepEditPackingList
+        stepCheckDeliveryRuleNotAppliedOnPackingListEdit
       """)
 
   def DISABLEDtest_InvoiceEditPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
