@@ -84,11 +84,12 @@
 #                         leurs encaisses. Attention : possibilit\xc3\xa9 de conflit (et donc de popup menu vide) si\n
 #                         utilis\xc3\xa9 en m\xc3\xaame temps que leaf_node\n
 # with_base = 1 : D\xc3\xa9finie si on renvoie la base categorie \'site\' dans la liste de valeur\n
+# all = 0 : Affiche aussi entrante/sortante, utile pour les inventaires\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
-    user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, site_list=None, with_base=1):\n
+    user_site=1, leaf_node=1, strict_membership=0, assignment_list=None, site_list=None, with_base=1, all=0):\n
 \n
   if vault_type is None:\n
     organisation_list = []\n
@@ -155,7 +156,7 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
     id_path_list    = vault_item[1].split(\'/\')[1:] # exclude the base category\n
     path_len      = len(id_path_list)\n
     # remove some uneeded part in path\n
-    if \'Entrante\' in title_path_list[-1] or "Sortante" in title_path_list[-1]:\n
+    if not all and (\'Entrante\' in title_path_list[-1] or "Sortante" in title_path_list[-1]):\n
       title_path_list = title_path_list[:-1]\n
       id_path_list = id_path_list[:-1]\n
       path_len = path_len - 1\n
@@ -214,12 +215,19 @@ else:\n
 \n
 if user_site == 1:\n
   site_list = context.Baobab_getUserAssignedSiteList()\n
+  # even if we are on a counter, we can see every thing in the same agency\n
+  new_site_list = []\n
+  for site in site_list:\n
+    if "guichet" in  site:\n
+      site = context.Baobab_getVaultSite(vault=site)\n
+    new_site_list.append(site.getRelativeUrl())\n
+  site_list = new_site_list\n
 else:\n
   site_list = [\'site\']\n
 \n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
-  assignment_list=assignment_list, site_list=site_list, with_base=with_base)\n
+  assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all)\n
 \n
 if current_url != None :\n
   if \'site\' not in current_url:\n
@@ -259,7 +267,7 @@ return [(\'\', \'\')] + list(vault_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1</string> </value>
+            <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -287,7 +295,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -300,6 +308,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>leaf_node</string>
                             <string>strict_membership</string>
                             <string>with_base</string>
+                            <string>all</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
                             <string>None</string>
@@ -308,11 +317,13 @@ return [(\'\', \'\')] + list(vault_list)\n
                             <string>context</string>
                             <string>assignment_list</string>
                             <string>site_list</string>
+                            <string>new_site_list</string>
+                            <string>_getiter_</string>
+                            <string>site</string>
                             <string>vault_list</string>
                             <string>current_category</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getiter_</string>
                             <string>x</string>
                             <string>_getitem_</string>
                             <string>list</string>
@@ -335,6 +346,7 @@ return [(\'\', \'\')] + list(vault_list)\n
                 <int>1</int>
                 <int>0</int>
                 <int>1</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
