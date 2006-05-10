@@ -16,5 +16,6 @@ External Folder | metadata
 External Folder | print
 External Folder | view
 Preference | subversion
+Template Tool | bt_svn_history
 Upload Module | list
 Upload Module | view

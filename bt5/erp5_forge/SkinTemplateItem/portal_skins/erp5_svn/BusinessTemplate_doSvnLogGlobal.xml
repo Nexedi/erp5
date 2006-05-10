@@ -71,8 +71,19 @@
 from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
+# get selected business templates\n
+p = context.getPortalObject()\n
+portal_selections = p.portal_selections\n
+selection_name = \'business_template_selection\' # harcoded because we can also get delete_selection\n
+uids = portal_selections.getSelectionCheckedUidsFor(selection_name)\n
+\n
+if len(uids) != 1:\n
+  raise \'TemplateConditionError\', \'You can select only one Business Template\'\n
+\n
+file = context.portal_catalog.getObject(uids[0]).getTitle()\n
+\n
 try:\n
-  log_list = context.getPortalObject()["portal_subversion"].log(file, context)\n
+  log_list = context.getPortalObject()["portal_subversion"].log(file, context.portal_catalog.getObject(uids[0]))\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\', file=file).BusinessTemplate_viewSvnSSLTrust()\n
@@ -92,7 +103,8 @@ for my_dict in log_list:\n
   object_list.append(temp_object)\n
 \n
 context.REQUEST.set(\'object_list\', object_list)\n
-return context.BusinessTemplate_viewSvnLog()\n
+context.REQUEST.set(\'file\', file)\n
+return context.asContext(context=context.portal_catalog.getObject(uids[0])).BusinessTemplate_viewSvnLog()\n
 
 
 ]]></string> </value>
@@ -105,11 +117,11 @@ return context.BusinessTemplate_viewSvnLog()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnLog</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_svn/BusinessTemplate_doSvnLogGlobal</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file,**kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,13 +141,12 @@ return context.BusinessTemplate_viewSvnLog()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>file</string>
                             <string>kw</string>
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
@@ -143,8 +154,14 @@ return context.BusinessTemplate_viewSvnLog()\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
                             <string>context</string>
+                            <string>p</string>
+                            <string>portal_selections</string>
+                            <string>selection_name</string>
+                            <string>uids</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>file</string>
                             <string>log_list</string>
                             <string>error</string>
                             <string>error1</string>
@@ -170,7 +187,7 @@ return context.BusinessTemplate_viewSvnLog()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_doSvnLog</string> </value>
+            <value> <string>BusinessTemplate_doSvnLogGlobal</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
