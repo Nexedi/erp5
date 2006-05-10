@@ -97,7 +97,15 @@ class ListGetter(Method):
 
     psyco.bind(__call__)
 
-SetGetter = ListGetter # Error XXX
+class SetGetter(ListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = ListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class DefaultIdGetter(Method):
     """
@@ -164,7 +172,14 @@ class IdListGetter(Method):
 
     psyco.bind(__call__)
 
-IdSetGetter = IdListGetter # XXX Error
+class IdSetGetter(IdListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = IdListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
 
 class DefaultTitleGetter(Method):
     """
@@ -229,7 +244,15 @@ class TitleListGetter(Method):
                                                    kw.get('strict', None))) # 'strict' is deprecated
     psyco.bind(__call__)
 
-TitleSetGetter = TitleListGetter # XXX Error
+class TitleSetGetter(TitleListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = TitleListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class DefaultPropertyGetter(Method):
     """
@@ -293,4 +316,12 @@ class PropertyListGetter(Method):
                                                    kw.get('strict', None))) # 'strict' is deprecated
     psyco.bind(__call__)
 
-PropertySetGetter = PropertyListGetter # Error XXX
+class PropertySetGetter(PropertyListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = PropertyListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+

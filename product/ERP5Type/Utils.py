@@ -2126,6 +2126,10 @@ def createCategoryAccessors(property_holder, id,
   setter_name = '_categorySet' + UpperCase(id) + 'Set'
   if not hasattr(property_holder, setter_name):
     setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+  setter_name = 'set' + UpperCase(id) + 'Set'
+  if not hasattr(property_holder, setter_name):
+    setattr(property_holder, setter_name, setter.dummy_copy(setter_name))
+    property_holder.security.declareProtected(write_permission, setter_name)
 
   setter_name = '_setDefault' + UpperCase(id)
   setter = Category.DefaultSetter(setter_name, id, reindex=0)

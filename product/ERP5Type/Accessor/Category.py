@@ -51,9 +51,9 @@ class Setter(Method):
 
     def __call__(self, instance, *args, **kw):
       instance._setCategoryMembership(self._key, args[0],
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                      spec=kw.get('spec',()),
+                                      filter=kw.get('filter', None),
+                                      portal_type=kw.get('portal_type',()))
       if self._reindex: instance.reindexObject()
 
 class DefaultSetter(Method):
@@ -114,9 +114,9 @@ class SetSetter(Method):
       else:
         new_list = args[0]
       instance._setCategoryMembership(self._key, new_list,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                      spec=kw.get('spec',()),
+                                      filter=kw.get('filter', None),
+                                      portal_type=kw.get('portal_type',()))
       if self._reindex: instance.reindexObject()
 
 
@@ -174,7 +174,15 @@ class ListGetter(Method):
       return instance._getAcquiredCategoryMembershipList(self._key, **kw)
     psyco.bind(__call__)
 
-SetGetter = ListGetter # XXX ERROR
+class SetGetter(ListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = ListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 # ItemList is outdated XXX -> ItemList
 

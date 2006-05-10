@@ -117,7 +117,15 @@ class ListGetter(Method):
     psyco.bind(__call__)
 
 
-SetGetter = ListGetter # Error XXX
+class SetGetter(ListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = ListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class DefaultTitleGetter(Method):
     """
@@ -175,7 +183,15 @@ class TitleListGetter(Method):
 
     psyco.bind(__call__)
 
-TitleSetGetter = TitleListGetter # Error XXX
+class TitleSetGetter(TitleListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = TitleListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class DefaultTranslatedTitleGetter(Method):
     """
@@ -233,7 +249,16 @@ class TranslatedTitleListGetter(Method):
 
     psyco.bind(__call__)
 
-TranslatedTitleSetGetter = TranslatedTitleListGetter # Error XXX
+class TranslatedTitleSetGetter(TranslatedTitleListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = TranslatedTitleListGetter.__call__(
+           self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class DefaultReferenceGetter(Method):
     """
@@ -291,7 +316,16 @@ class ReferenceListGetter(Method):
 
     psyco.bind(__call__)
 
-ReferenceSetGetter = ReferenceListGetter # Error XXX
+class ReferenceSetGetter(ReferenceListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = ReferenceListGetter.__call__(
+           self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class DefaultUidGetter(Method):
     """
@@ -352,7 +386,16 @@ class UidListGetter(Method):
 
     psyco.bind(__call__)
 
-UidSetGetter = UidListGetter # Error XXX
+class UidSetGetter(UidListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = UidListGetter.__call__(
+           self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class UidSetter(Method):
     """
@@ -496,7 +539,16 @@ class IdListGetter(Method):
 
     psyco.bind(__call__)
 
-IdSetGetter = IdListGetter # Error XXX
+class IdSetGetter(IdListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = IdListGetter.__call__(
+           self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class LogicalPathListGetter(Method):
     """
@@ -523,7 +575,16 @@ class LogicalPathListGetter(Method):
                                                  portal_type=kw.get('portal_type',()))
                                                   ]
 
-LogicalPathSetGetter = LogicalPathListGetter # Error XXX
+class LogicalPathSetGetter(LogicalPathListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = LogicalPathListGetter.__call__(
+           self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+
 
 class DefaultPropertyGetter(Method):
     """
@@ -584,4 +645,13 @@ class PropertyListGetter(Method):
 
     psyco.bind(__call__)
 
-PropertySetGetter = PropertyListGetter # Error XXX
+class PropertySetGetter(PropertyListGetter):
+    """
+    Gets a category value set
+    """
+    def __call__(self, instance, *args, **kw):
+      result_list = PropertyListGetter.__call__(
+           self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
+

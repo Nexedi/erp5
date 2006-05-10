@@ -110,7 +110,7 @@ class Setter(DefaultSetter):
       if not self._reindex:
         # Modify the property
         if value in self._null:
-          setattr(instance, self._storage_id, None)
+          setattr(instance, self._storage_id, ())
         elif self._is_tales_type:
           setattr(instance, self._storage_id, str(value))
         else:
@@ -179,20 +179,35 @@ class SetSetter(Method):
           if len(value) > 0:
             list_value = getattr(instance, self._storage_id, None)
             if list_value is None: list_value = []
+
+            
+
+#             if len(list_value) > 0:
+#               my_dict = {}
+#               default_value = list_value[0]
+#               for v in value:
+#                 my_dict[v] = 0
+#               if my_dict.has_key(default_value):
+#                 del my_dict[default_value]
+#               # If we change the set, the default value must be in the new set
+#               if default_value in value:
+#                 new_list_value = [default_value] + my_dict.keys()
+#               else:
+#                 new_list_value = my_dict.keys()
+#             else:
+#               new_list_value = value
+
             if len(list_value) > 0:
-              my_dict = {}
               default_value = list_value[0]
-              for v in value:
-                my_dict[v] = 0
-              if my_dict.has_key(default_value):
-                del my_dict[default_value]
-              # If we change the set, the default value must be in the new set
+              my_dict = dict((x, 0) for x in value if x!=default_value)
+              new_list_value = my_dict.keys()
+              # If we change the set, 
+              # the default value must be in the new set
               if default_value in value:
-                new_list_value = [default_value] + my_dict.keys()
-              else:
-                new_list_value = my_dict.keys()
+                new_list_value.insert(0, default_value)
             else:
               new_list_value = value
+
           else:
             # The list has no default property -> it is empty
             new_list_value = []
@@ -294,6 +309,15 @@ class ListGetter(Method):
 
     psyco.bind(__call__)
 
-SetGetter = ListGetter
+class SetGetter(ListGetter):
+    """
+      Gets an attribute value. A default value can be
+      provided if needed
+    """
+
+    def __call__(self, instance, *args, **kw):
+      result_list = ListGetter.__call__(self, instance, *args, **kw)
+      result_set = dict([(x, 0) for x in result_list]).keys()
+      return result_set
 
 Tester = Base.Tester
