@@ -1364,8 +1364,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     acceptable_key_map = self.getColumnMap()
     acceptable_keys = acceptable_key_map.keys()
-    full_text_search_keys = self.sql_catalog_full_text_search_keys
-    keyword_search_keys = self.sql_catalog_keyword_search_keys
+    full_text_search_keys = list(self.sql_catalog_full_text_search_keys)
+    keyword_search_keys = list(self.sql_catalog_keyword_search_keys)
     topic_search_keys = self.sql_catalog_topic_search_keys
     multivalue_keys = self.sql_catalog_multivalue_keys
 
@@ -1531,7 +1531,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               if not related_methods.has_key((table_list,method_id)):
                 related_methods[(table_list,method_id)] = 1
               # Prepend renamed table name
+              base_key = key
               key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key])
+              if base_key in keyword_search_keys:
+                keyword_search_keys.append(key)
+              if base_key in full_text_search_keys:
+                full_text_search_keys.append(key)
             elif key_is_acceptable:
               if key.find('.') < 0:
                 # if the key is only used by one table, just append its name
