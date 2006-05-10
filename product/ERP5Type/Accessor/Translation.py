@@ -26,23 +26,11 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, ATTRIBUTE_PREFIX, Method, evaluateTales
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
-from string import lower
 from Acquisition import aq_base
-from Products.ERP5Type.Cache import CachingMethod
 from Products.CMFCore.utils import getToolByName
-
-from Products.CMFCore.Expression import Expression
-def _evaluateTales(instance=None, value=None):
-  from Products.ERP5Type.Utils import createExpressionContext
-  expression = Expression(value)
-  econtext = createExpressionContext(instance)
-  return expression(econtext)
-
-evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_duration=300)
-
 
 class TranslatedPropertyGetter(Method):
   """
@@ -60,19 +48,20 @@ class TranslatedPropertyGetter(Method):
     self._id = id
     self.__name__ = id
     self._key = key
+    self._original_key = key.replace('translated_', '')
     self._warning = warning
 
   def __call__(self, instance, *args, **kw):
     if self._warning:
       LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-    prop = self._id[13:]
-    domain_getter_name = "get%sTranslationDomain" %(prop)
-    domain_getter = getattr(instance, domain_getter_name)
-    domain = domain_getter()
+    domain = instance.getProperty('%s_translation_domain' %
+                                  self._original_key)
     if domain == '':
       return instance.getTitle()
     localizer = getToolByName(instance, 'Localizer')
-    return localizer[domain].gettext(unicode(instance.getTitle(), 'utf8')).encode('utf8')      
+    return localizer[domain].gettext(
+                  unicode(instance.getTitle(), 'utf8')
+            ).encode('utf8')
 
   psyco.bind(__call__)
 
@@ -93,6 +82,7 @@ class PropertyTranslationDomainGetter(Method):
     self._id = id
     self.__name__ = id
     self._key = key
+    self._original_key = key.replace('_translation_domain', '')
     self._property_type = property_type
     self._default = default
     if storage_id is None:
@@ -105,14 +95,16 @@ class PropertyTranslationDomainGetter(Method):
       default = args[0]
     else:
       default = self._default
-    value = getattr(aq_base(instance), self._storage_id, None) # No acquisition on properties
+    # No acquisition on properties
+    value = getattr(aq_base(instance), self._storage_id, None)
     if value is None:
       # second try to get it from portal type
-      prop_name = self._id[3:-17]
       ptype_domain = None
       ptype = instance.getPortalType()
       ptypes_tool = instance.getPortalObject()['portal_types']
-      ptype_domain = ptypes_tool[ptype].getPropertyTranslationDomainDict()[lower(prop_name)].getDomainName()
+      ptype_domain = ptypes_tool[ptype]\
+                      .getPropertyTranslationDomainDict()\
+                      [self._original_key].getDomainName()
       if ptype_domain is '' and default is not None:
         # then get the default property defined on property sheet
         value = default
