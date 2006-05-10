@@ -114,6 +114,10 @@ else :\n
      (trade_condition.getDestinationPaymentValue() is not None) :\n
     categories += (\'destination_payment/\'+trade_condition.getDestinationPayment(),)\n
 \n
+  # source\n
+  if order.getSourceValue() is None :\n
+    if trade_condition.getSourceValue() is not None :\n
+      categories += (\'source/\'+trade_condition.getSource(),)  \n
   # source_section\n
   if order.getSourceSectionValue() is None :\n
     # if source_section is not defined on TradeCondition, use Order source\n
