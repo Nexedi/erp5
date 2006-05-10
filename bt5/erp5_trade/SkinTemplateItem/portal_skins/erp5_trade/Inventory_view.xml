@@ -110,7 +110,7 @@
                       <list>
                         <string>my_destination_title</string>
                         <string>my_destination_section_title</string>
-                        <string>state</string>
+                        <string>simulation_state</string>
                         <string>immobilisation_state</string>
                       </list>
                     </value>

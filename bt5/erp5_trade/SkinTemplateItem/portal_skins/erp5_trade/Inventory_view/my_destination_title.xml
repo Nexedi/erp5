@@ -345,7 +345,7 @@
               <dictionary>
                 <item>
                     <key> <string>allow_creation</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>allow_jump</string> </key>
@@ -365,7 +365,9 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>container_getter_id</string> </key>
@@ -377,7 +379,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
@@ -425,7 +429,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>jump_method</string> </key>
@@ -440,8 +446,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>parameter_list</string> </key>
+                    <key> <string>max_linelength</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -450,6 +466,10 @@
                         <tuple>
                           <string>Organisation</string>
                           <string>Organisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Category</string>
+                          <string>Category</string>
                         </tuple>
                       </list>
                     </value>
@@ -468,7 +488,9 @@
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
