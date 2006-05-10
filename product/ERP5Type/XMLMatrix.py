@@ -456,7 +456,8 @@ class XMLMatrix(Folder):
       self._renameCellRange(*kw, **kwd)
       self.reindexObject()
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellRange' )
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getCellRange')
     def getCellRange(self, base_id='cell'):
       """
           Returns the cell range as a list of index ids
@@ -469,7 +470,7 @@ class XMLMatrix(Folder):
       for i in range(0,len(cell_range.keys())):
         result_items = cell_range[i].items()
         result_items.sort(lambda x, y: x[1]-y[1])
-        result_items = map(lambda x:x[0], result_items)
+        result_items = [x[0] for x in result_items]
         result += [result_items]
       return result
 
