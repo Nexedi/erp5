@@ -49,7 +49,7 @@
  </chain>
  <chain>
   <type>Purchase Packing List</type>
-  <workflow>edit_workflow, packing_list_interaction_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
+  <workflow>edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow, packing_list_causality_workflow, packing_list_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Packing List Cell</type>
@@ -57,7 +57,7 @@
  </chain>
  <chain>
   <type>Purchase Packing List Line</type>
-  <workflow>edit_workflow, trade_matrix_workflow, packing_list_interaction_workflow</workflow>
+  <workflow>edit_workflow, trade_matrix_workflow, delivery_edit_workflow, packing_list_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply</type>
@@ -77,7 +77,7 @@
  </chain>
  <chain>
   <type>Sale Order</type>
-  <workflow>order_interaction_workflow, order_workflow, edit_workflow</workflow>
+  <workflow>order_workflow, order_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Line</type>
@@ -101,7 +101,7 @@
  </chain>
  <chain>
   <type>Sale Supply Line</type>
-  <workflow>supply_line_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Trade Condition</type>

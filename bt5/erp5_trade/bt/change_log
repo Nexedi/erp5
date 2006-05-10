@@ -1,3 +1,8 @@
+2006-05-10 Jerome
+* Copy Source from Purchase Trade Condition when applying it
+* Set updateAppliedRule on Purchase Line / Cell Edit
+* Add Person portal type to source/destination administration/decision
+
 2006-05-03 Romain
 * Remove useless field in PurchaseTradeCondition_viewProfile.
 
