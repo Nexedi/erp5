@@ -132,12 +132,8 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             invoice_line = my_invoice_line_simulation.getDeliveryValue()
             if invoice_line is not None :
               invoice = invoice_line.getExplanationValue()
-              if hasattr(invoice, 'getResource') and \
-                    invoice.getResource() is not None :
-                resource = invoice.getResource()
-              elif hasattr(invoice, 'getPriceCurrency') and \
-                    invoice.getPriceCurrency() is not None :
-                resource = invoice.getPriceCurrency()
+              resource = invoice.getProperty('resource',
+                         invoice.getProperty('price_currency', None))
             if resource is None :
               # search the resource on parents simulation movement's deliveries
               simulation_movement = applied_rule.getParentValue()
@@ -145,17 +141,13 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
               while resource is None and \
                           simulation_movement != portal_simulation :
                 delivery = simulation_movement.getDeliveryValue()
-                if hasattr(delivery, 'getPriceCurrency') and \
-                      delivery.getPriceCurrency() is not None :
-                  resource = delivery.getPriceCurrency()
+                resource = delivery.getProperty('price_currency', None)
                 if simulation_movement.getParentValue().getParentValue() \
                                           == portal_simulation :
                   # we are on the first simulation movement, we'll try
                   # to get the resource from it's order price currency.
                   order = simulation_movement.getOrderValue()
-                  if hasattr(order, 'getPriceCurrency') and \
-                      order.getPriceCurrency() is not None :
-                    resource = order.getPriceCurrency()
+                  resource = order.getProperty('price_currency', None)
                 simulation_movement = simulation_movement\
                                             .getParentValue().getParentValue()
                 
@@ -185,8 +177,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
     
-         # Matrix related
- 
+    # Matrix related
     security.declareProtected( Permissions.ModifyPortalContent,
                                 'newCellContent' )
     def newCellContent(self, id, **kw):
