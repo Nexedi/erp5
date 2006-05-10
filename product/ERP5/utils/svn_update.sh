@@ -20,9 +20,9 @@ for p in $PRODUCTS
     echo ""
     echo "----- Updating $p -----"
     if ls $ZOPE_PRODUCTS/$p > /dev/null 2>&1 /dev/null; then
-      svn update $p
+      svn --non-interactive update $p
     else
-      svn checkout https://svn.erp5.org/repos/public/erp5/trunk/products/$p
+      svn --non-interactive checkout https://svn.erp5.org/repos/public/erp5/trunk/products/$p
     fi
   done
 
