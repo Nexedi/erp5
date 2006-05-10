@@ -26,13 +26,10 @@
 #
 ##############################################################################
 
-from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Base import func_code, type_definition, list_types,\
+                 ATTRIBUTE_PREFIX, Method, evaluateTales
 from TypeDefinition import asList, identity
 import Base
-
-from Products.CMFCore.Expression import Expression
-from Products.ERP5Type.Utils import createExpressionContext
-from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.PsycoWrapper import psyco
 
 from zLOG import LOG
@@ -205,14 +202,6 @@ class SetSetter(Method):
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
       if self._reindex: instance.reindexObject()
-
-
-def _evaluateTales(instance=None, value=None):
-  expression = Expression(value)
-  econtext = createExpressionContext(instance)
-  return expression(econtext)
-
-evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_duration=300)
 
 class DefaultGetter(Method):
     """
