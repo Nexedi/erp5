@@ -963,7 +963,9 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       values = expected_values['values']
       for value in values:
         e_inventory = value['inventory']
-        self._testGetInventory(expected=e_inventory, resource_category=category, section=organisation_list[0].getRelativeUrl())
+        self._testGetInventory(expected=e_inventory,
+                               resource_category=category,
+                               section=organisation_list[0].getRelativeUrl())
         
         
   def _testGetInventory(self, expected, **kw):
@@ -975,9 +977,11 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     LOG('Testing inventory with args :', 0, kw)
     a_inventory = simulation.getInventory(**kw)
     if e_inventory != a_inventory:
-      LOG('TEST ERROR : Inventory differs between expected (%s) and real (%s) quantities' % (repr(e_inventory), repr(a_inventory)),0,'')
+      msg = 'Inventory differs between expected (%s) and real (%s) quantities'\
+             % (repr(e_inventory), repr(a_inventory))
+      LOG('TestInventory._testGetInventory', 0, msg)
       LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
-      self.assertEquals(e_inventory, a_inventory)
+      self.assertEquals(e_inventory, a_inventory, msg)
 
                
   def stepTestGetInventoryOnSimulationState(self, sequence=None, sequence_list=None, **kw):
@@ -1009,19 +1013,32 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     
     expected_values_list = [
      #( without omit_transit, with omit_transit)
-      ({'Current':  0.  , 'Available':  0.  , 'Future':  0.  }, {'Current':  0.  , 'Available':  0.  , 'Future':  0.  }),
-      ({'Current':  0.  , 'Available':280.5 , 'Future':280.5 }, {'Current':  0.  , 'Available':280.5 , 'Future':280.5 }),
-      ({'Current':  0.  , 'Available':280.5 , 'Future':280.5 }, {'Current':  0.  , 'Available':280.5 , 'Future':280.5 }),
-      ({'Current':  0.  , 'Available':426.5 , 'Future':426.5 }, {'Current':  0.  , 'Available':426.5 , 'Future':426.5 }),
-      ({'Current':280.5 , 'Available':426.5 , 'Future':426.5 }, {'Current':  0.  , 'Available':146.  , 'Future':146.  }),
-      ({'Current':280.5 , 'Available':308.  , 'Future':308.  }, {'Current':  0.  , 'Available': 27.5 , 'Future': 27.5 }),
-      ({'Current':280.5 , 'Available':308.  , 'Future':308.  }, {'Current':280.5 , 'Available':308.  , 'Future':308.  }),
-      ({'Current':280.5 , 'Available':308.  , 'Future':308.  }, {'Current':280.5 , 'Available':308.  , 'Future':308.  }),
-      ({'Current':162.  , 'Available':308.  , 'Future':308.  }, {'Current':162.  , 'Available':308.  , 'Future':308.  }),
-      ({'Current':162.  , 'Available':274.5 , 'Future':274.5 }, {'Current':162.  , 'Available':274.5 , 'Future':274.5 }),
-      ({'Current':162.  , 'Available':274.5 , 'Future':274.5 }, {'Current':162.  , 'Available':274.5 , 'Future':274.5 }),
-      ({'Current':128.5 , 'Available':274.5 , 'Future':274.5 }, {'Current':128.5 , 'Available':274.5 , 'Future':274.5 }),
-      ({'Current':128.5 , 'Available':274.5 , 'Future':274.5 }, {'Current':128.5 , 'Available':274.5 , 'Future':274.5 }),
+      ({'Current':  0.  , 'Available':  0.  , 'Future':  0.  },
+       {'Current':  0.  , 'Available':  0.  , 'Future':  0.  }),
+      ({'Current':  0.  , 'Available':280.5 , 'Future':280.5 },
+       {'Current':  0.  , 'Available':280.5 , 'Future':280.5 }),
+      ({'Current':  0.  , 'Available':280.5 , 'Future':280.5 },
+       {'Current':  0.  , 'Available':280.5 , 'Future':280.5 }),
+      ({'Current':  0.  , 'Available':426.5 , 'Future':426.5 },
+       {'Current':  0.  , 'Available':426.5 , 'Future':426.5 }),
+      ({'Current':280.5 , 'Available':426.5 , 'Future':426.5 },
+       {'Current':  0.  , 'Available':146.  , 'Future':146.  }),
+      ({'Current':280.5 , 'Available':308.  , 'Future':308.  },
+       {'Current':  0.  , 'Available': 27.5 , 'Future': 27.5 }),
+      ({'Current':280.5 , 'Available':308.  , 'Future':308.  },
+       {'Current':280.5 , 'Available':308.  , 'Future':308.  }),
+      ({'Current':280.5 , 'Available':308.  , 'Future':308.  },
+       {'Current':280.5 , 'Available':308.  , 'Future':308.  }),
+      ({'Current':162.  , 'Available':308.  , 'Future':308.  },
+       {'Current':162.  , 'Available':308.  , 'Future':308.  }),
+      ({'Current':162.  , 'Available':274.5 , 'Future':274.5 },
+       {'Current':162.  , 'Available':274.5 , 'Future':274.5 }),
+      ({'Current':162.  , 'Available':274.5 , 'Future':274.5 },
+       {'Current':162.  , 'Available':274.5 , 'Future':274.5 }),
+      ({'Current':128.5 , 'Available':274.5 , 'Future':274.5 },
+       {'Current':128.5 , 'Available':274.5 , 'Future':274.5 }),
+      ({'Current':128.5 , 'Available':274.5 , 'Future':274.5 },
+       {'Current':128.5 , 'Available':274.5 , 'Future':274.5 }),
     ]
  
     organisation_list = sequence.get('organisation_list')
@@ -1032,7 +1049,8 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       # Get current workflow states to add it to the log
       state_list = []
       for packing_list in packing_list_list:
-        state_list.append(workflow_tool.getStatusOf(packing_list_workflow, packing_list)[state_variable])
+        state_list.append(workflow_tool.getStatusOf(
+                packing_list_workflow, packing_list)[state_variable])
       
       LOG('Testing with these workflow states :', 0, state_list)
       for name, e_inventory in expected_values.items():
