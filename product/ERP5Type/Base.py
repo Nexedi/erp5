@@ -1598,7 +1598,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     return self._getCategoryTool().isAcquiredMemberOf(self, category)
 
   # Aliases
-  security.declareProtected(Permissions.View, 'getTitleOrId')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getTitleOrId')
   def getTitleOrId(self):
     """
       Returns the title or the id if the id is empty
