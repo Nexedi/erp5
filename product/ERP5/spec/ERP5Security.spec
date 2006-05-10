@@ -1,6 +1,6 @@
 %define product ERP5Security
 %define version 0.12
-%define release 1
+%define release 2
 
 %define zope_home %{_prefix}/lib/zope
 %define software_home %{zope_home}/lib/python
@@ -57,6 +57,9 @@ fi
 
 #----------------------------------------------------------------------
 %changelog
+* Fri May 05 2006 Kevin Deldycke <kevin@nexedi.com> 0.12-2mdk
+- New build from the SVN repository
+
 * Tue May 02 2006 Kevin Deldycke <kevin@nexedi.com> 0.12-1mdk
 - New build from the SVN repository
 
