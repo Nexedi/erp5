@@ -14,7 +14,7 @@ Internal Packing List | internal_packing_list_workflow
 Inventory Line | edit_workflow
 Inventory Line | trade_matrix_workflow
 Inventory | edit_workflow
-Inventory | validation_workflow
+Inventory | inventory_workflow
 Payment Condition | edit_workflow
 Purchase Order Line | edit_workflow
 Purchase Order Line | trade_matrix_workflow

@@ -60,13 +60,6 @@ class Inventory(Delivery):
                       , PropertySheet.FlowCapacity
                       )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
-    def getSimulationState(self, id_only=1):
-      """
-        Returns the current state in simulation
-      """
-      return 'delivered' # For now, consider that Inventory has no workflow XXX
-
     security.declarePublic('alternateReindexObject')
     def alternateReindexObject(self, **kw):
       """This method is called when an inventory object is included in a group of catalogged objects.

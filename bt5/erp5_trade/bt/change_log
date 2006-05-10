@@ -1,4 +1,6 @@
 2006-05-10 Jerome
+* Added inventory_workflow
+* Hide Price & Inventory tabs if no cells on Inventory Line.
 * Copy Source from Purchase Trade Condition when applying it
 * Set updateAppliedRule on Purchase Line / Cell Edit
 * Add Person portal type to source/destination administration/decision

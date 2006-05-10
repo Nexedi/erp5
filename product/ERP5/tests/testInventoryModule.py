@@ -92,6 +92,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     inventory = self.getInventoryModule().newContent()
     inventory.edit(start_date=start_date,
                    destination_value=organisation)
+    inventory.deliver()
     inventory_list = sequence.get('inventory_list',[])
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)

@@ -29,7 +29,7 @@
  </chain>
  <chain>
   <type>Inventory</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>inventory_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Inventory Line</type>
@@ -57,7 +57,7 @@
  </chain>
  <chain>
   <type>Purchase Packing List Line</type>
-  <workflow>edit_workflow, trade_matrix_workflow, delivery_edit_workflow, packing_list_interaction_workflow</workflow>
+  <workflow>trade_matrix_workflow, edit_workflow, delivery_edit_workflow, packing_list_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply</type>
