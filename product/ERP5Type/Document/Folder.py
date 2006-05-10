@@ -721,12 +721,13 @@ be a problem)."""
         parent.manage_delObjects(from_object.getId())
     return corrected_list
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'objectValues' )
-  def objectValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, sort_order=None, **kw):
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'objectValues' )
+  def objectValues(self, spec=None, meta_type=None, portal_type=None,
+                   sort_on=None, sort_order=None, **kw):
     """
     Returns a list containing object contained in this folder.
     """
-    #LOG('objectValues', 0, 'spec = %r, kw = %r' % (spec, kw))
     if meta_type is not None:
       spec = meta_type
     object_list = CMFBTreeFolder.objectValues(self, spec=spec)
@@ -737,21 +738,20 @@ be a problem)."""
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'contentValues' )
-  def contentValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, sort_order=None, **kw):
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'contentValues' )
+  def contentValues(self, spec=None, meta_type=None, portal_type=None,
+                    sort_on=None, sort_order=None, **kw):
     """
     Returns a list containing object contained in this folder.
-    Filter objects with appropriate permissions (as in contentValues
+    Filter objects with appropriate permissions (as in contentValues)
     """
-    #LOG('contentValues', 0, 'spec = %r, kw = %r' % (spec, kw))
     if meta_type is not None:
       spec = meta_type
-    if portal_type is not None: kw['portal_type'] = portal_type
-    object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter = kw)
     if portal_type is not None:
-      if type(portal_type) == type(''):
-        portal_type = (portal_type,)
-      object_list = filter(lambda x: x.getPortalType() in portal_type, object_list)
+      kw['portal_type'] = portal_type
+    kw.update(kw.get('filter', {}))
+    object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
 
