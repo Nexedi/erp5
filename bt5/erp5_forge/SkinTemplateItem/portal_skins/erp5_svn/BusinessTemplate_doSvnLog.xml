@@ -75,10 +75,10 @@ try:\n
   log_list = context.getPortalObject()["portal_subversion"].log(file, context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\').BusinessTemplate_viewSvnSSLTrust()\n
+  return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\', file=file).BusinessTemplate_viewSvnSSLTrust()\n
 except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'log\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(caller=\'log\', file=file, realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
 if not log_list:\n
   return []\n
@@ -91,7 +91,12 @@ for my_dict in log_list:\n
   temp_object.edit(**my_dict)\n
   object_list.append(temp_object)\n
 \n
-return object_list\n
+#return object_list\n
+context.REQUEST.set(\'object_list\', object_list)\n
+return context.BusinessTemplate_viewSvnLog()\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url()+\'/BusinessTemplate_viewSvnLog\')\n
+return context.asContext(object_list=object_list).BusinessTemplate_viewSvnLog() # Working "here.object_list"\n
+#return context.BusinessTemplate_viewSvnLog()\n
 
 
 ]]></string> </value>

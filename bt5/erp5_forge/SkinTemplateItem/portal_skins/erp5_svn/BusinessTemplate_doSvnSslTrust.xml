@@ -86,7 +86,7 @@ elif caller == \'commit\':\n
 elif caller == \'ls\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLs?file=\'+context.REQUEST[\'file\'].replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
 elif caller == \'log\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?file=\'+files.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?file=\'+context.REQUEST[\'file\'].replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
 elif caller == \'info\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnInfo\')\n
 else:\n
@@ -146,7 +146,6 @@ else:\n
                             <string>key</string>
                             <string>_write_</string>
                             <string>True</string>
-                            <string>files</string>
                           </tuple>
                         </value>
                     </item>

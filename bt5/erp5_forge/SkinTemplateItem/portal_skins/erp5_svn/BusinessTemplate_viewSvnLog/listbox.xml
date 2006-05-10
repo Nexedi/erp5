@@ -427,7 +427,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>BusinessTemplate_viewSvnLog</string> </value>
+                    <value> <string>manage_main</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -561,7 +561,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>BusinessTemplate_doSvnLog</string> </value>
+            <value> <string>BusinessTemplate_LogListMethod</string> </value>
         </item>
       </dictionary>
     </pickle>
