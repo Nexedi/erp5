@@ -427,7 +427,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>manage_main</string> </value>
+                    <value> <string>BusinessTemplate_viewSvnLog</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

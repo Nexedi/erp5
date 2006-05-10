@@ -76,7 +76,6 @@
 <input type=\'hidden\' name=\'modified\' value=\'\'>\n
 <input type=\'hidden\' name=\'files\' value=\'\'>\n
 <!-- End Hidden -->\n
-\n
 <div id="menudiv" style="position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
 <table width=82 cellspacing=1 cellpadding=0 bgcolor=lightgray>\n
   <tr><td>\n

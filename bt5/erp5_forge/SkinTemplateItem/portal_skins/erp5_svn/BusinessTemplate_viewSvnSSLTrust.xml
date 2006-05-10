@@ -81,6 +81,7 @@
                         <string>my_valid_from</string>
                         <string>my_issuer_name</string>
                         <string>my_failures</string>
+                        <string>my_file</string>
                       </list>
                     </value>
                 </item>

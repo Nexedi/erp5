@@ -72,10 +72,10 @@ try:\n
   infos_list = context.getPortalObject()["portal_subversion"].ls(file, context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(trust_dict = error.getTrustDict(), caller=\'ls\').BusinessTemplate_viewSvnSSLTrust()\n
+  return context.asContext(trust_dict = error.getTrustDict(), file=file, caller=\'ls\').BusinessTemplate_viewSvnSSLTrust()\n
 except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'ls\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(caller=\'ls\', file=file, realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 if infos_list:\n
   return context.asContext(infos_dict=infos_list[0], file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
 else:\n
