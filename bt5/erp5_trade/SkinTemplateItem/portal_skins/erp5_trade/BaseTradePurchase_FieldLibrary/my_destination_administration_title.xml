@@ -293,6 +293,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>parameter_list</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -379,7 +387,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
@@ -444,6 +454,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
@@ -460,6 +478,10 @@
                         <tuple>
                           <string>Category</string>
                           <string>Category</string>
+                        </tuple>
+                        <tuple>
+                          <string>Person</string>
+                          <string>Person</string>
                         </tuple>
                       </list>
                     </value>

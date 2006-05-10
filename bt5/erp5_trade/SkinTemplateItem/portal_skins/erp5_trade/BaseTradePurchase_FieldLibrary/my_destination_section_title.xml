@@ -293,12 +293,22 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>parameter_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>
@@ -379,7 +389,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
@@ -444,6 +456,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
@@ -454,16 +474,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
-                        </tuple>
-                        <tuple>
-                          <string>Category</string>
-                          <string>Category</string>
-                        </tuple>
-                        <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
+                          <string>Node Group</string>
+                          <string>Node Group</string>
                         </tuple>
                       </list>
                     </value>
@@ -508,6 +520,25 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [[x, x] for x in here.getPortalNodeTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
