@@ -162,7 +162,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
   MenuToolBar.Add(\'imgs/expandoff.png\', \'imgs/expandon.png\', \'Expand / Collapse\', \'#\', \'expandCollapse();\');\n
   MenuToolBar.Add(\'imgs/diffoff.png\', \'imgs/diffon.png\', \'View Diff\', \'#\', \'viewDiff(0,document.main_form);\');\n
   MenuToolBar.Add(\'imgs/execoff.png\', \'imgs/execon.png\', \'Commit Changes\', \'#\', \'commit(0,document.main_form);\');\n
-  MenuToolBar.Add(\'imgs/trashoff.png\', \'imgs/trashon.png\', \'Revert Changes\', \'#\', \'revert(0,document.main_form);\');\n
+  MenuToolBar.Add(\'imgs/revertoff.png\', \'imgs/reverton.png\', \'Revert Changes\', \'#\', \'revert(0,document.main_form);\');\n
   // Menu Display\n
   MenuToolBar.Display();\n
 </script>\n
