@@ -31,10 +31,6 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5Banking.BaobabMixin import BaobabMixin
 
-in_portal_type_list = ('Cash Exchange Line In', 'Cash To Currency Sale Line In','Cash To Currency Purchase Line In', 'Cash Incident Line In')
-out_portal_type_list = ('Cash Exchange Line Out', 'Cash To Currency Sale Line Out','Cash To Currency Purchase Line Out','Cash Incident Line Out')
-
-
 class CashDeliveryLine(BaobabMixin, DeliveryLine):
   """
     A Cash DeliveryLine object allows to implement lines
@@ -79,10 +75,6 @@ class CashDeliveryLine(BaobabMixin, DeliveryLine):
     script = self._getTypeBasedMethod('getBaobabSource')
     if script is not None:
       return script(self)      
-    if self.portal_type in out_portal_type_list:
-      return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('sortante').getRelativeUrl()
-    elif self.portal_type in in_portal_type_list:
-      return None
     return self.getSource()
 
   security.declareProtected(Permissions.View, 'getBaobabDestination')
@@ -93,9 +85,24 @@ class CashDeliveryLine(BaobabMixin, DeliveryLine):
     script = self._getTypeBasedMethod('getBaobabDestination')
     if script is not None:
       return script(self)
-    if self.portal_type in in_portal_type_list:
-      return self.portal_categories.resolveCategory(self.getSource()).unrestrictedTraverse('entrante').getUid()
-    elif self.portal_type in out_portal_type_list :
-      return None
     return self.getDestination()
 
+  security.declareProtected(Permissions.View, 'getBaobabSourceVariationText')
+  def getBaobabSourceVariationText(self):
+    """
+      Returns a calculated source variation text
+    """
+    script = self._getTypeBasedMethod('getBaobabSourceVariationText')
+    if script is not None:
+      return script(self)      
+    return self.getVariationText()
+
+  security.declareProtected(Permissions.View, 'getBaobabDestinationVariationText')
+  def getBaobabDestinationVariationText(self):
+    """
+      Returns a calculated destination variation text
+    """
+    script = self._getTypeBasedMethod('getBaobabDestinationVariationText')
+    if script is not None:
+      return script(self)
+    return self.getVariationText()

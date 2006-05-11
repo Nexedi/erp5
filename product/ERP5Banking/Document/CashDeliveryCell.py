@@ -130,3 +130,21 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
     """
     """
     return self.aq_parent.getBaobabDestinationProject(**kw)
+
+  security.declareProtected(Permissions.View, 'getBaobabSourceVariationText')
+  def getBaobabSourceVariationText(self, **kw):
+    """
+    """
+    script = self._getTypeBasedMethod('getBaobabSourceVariationText')
+    if script is not None:
+      return script(self)      
+    return self.aq_parent.getBaobabSourceVariationText(**kw)
+
+  security.declareProtected(Permissions.View, 'getBaobabDestinationVariationText')
+  def getBaobabDestinationVariationText(self, **kw):
+    """
+    """
+    script = self._getTypeBasedMethod('getBaobabDestinationVariationText')
+    if script is not None:
+      return script(self)      
+    return self.aq_parent.getBaobabDestinationVariationText(**kw)

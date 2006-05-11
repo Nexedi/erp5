@@ -112,7 +112,8 @@ for category in ('source', 'destination',
                  'source_section', 'destination_section',
                  'source_payment', 'destination_payment',
                  'source_function', 'destination_function',
-                 'source_project', 'destination_project'):
+                 'source_project', 'destination_project',
+                 'source_variation_text', 'destination_variation_text',):
   getter_id = 'getBaobab%s' % (convertToUpperCase(category))
   original_getter_id = 'get%s' % (convertToUpperCase(category))
   method = BaobabGetter(getter_id, original_getter_id)
