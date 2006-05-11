@@ -750,7 +750,8 @@ be a problem)."""
       spec = meta_type
     if portal_type is not None:
       kw['portal_type'] = portal_type
-    kw.update(kw.get('filter', {}))
+    filter = kw.pop('filter', {}) or {}
+    kw.update(filter)
     object_list = CMFBTreeFolder.contentValues(self, spec=spec, filter=kw)
     object_list = sortValueList(object_list, sort_on, sort_order, **kw)
     return object_list
