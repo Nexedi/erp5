@@ -180,6 +180,7 @@
   </tr>
 </table>
 </form>
+Connection String syntax: <code>database[@host] user passwd</code>
 
 <dtml-if manage_page_footer>
   <dtml-var manage_page_footer>
