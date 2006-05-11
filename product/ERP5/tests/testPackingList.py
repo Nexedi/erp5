@@ -147,6 +147,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
+    self.failUnless('Site Error' not in packing_list.view())
     self.assertEquals('diverged', packing_list.getCausalityState())
 
   def stepCheckNewPackingListIsDivergent(self, sequence=None, sequence_list=None, **kw):
@@ -154,6 +155,7 @@ class TestPackingListMixin(TestOrderMixin):
       Test if packing list is divergent
     """
     packing_list = sequence.get('new_packing_list')
+    self.failUnless('Site Error' not in packing_list.view())
     self.stepCheckPackingListIsDivergent(packing_list=packing_list,sequence=sequence)
 
   def stepCheckPackingListIsCalculating(self, sequence=None, sequence_list=None, **kw):
@@ -518,12 +520,6 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('new_packing_list')
     self.stepCheckPackingListIsPacked(sequence=sequence,
                                       packing_list=packing_list)
-
-  def stepCommit(self, sequence=None, sequence_list=None, **kw):
-    """
-    Commit transaction
-    """
-    get_transaction().commit()
 
 
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :

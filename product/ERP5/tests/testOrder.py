@@ -767,6 +767,7 @@ class TestOrderMixin:
                 source_section_value = organisation1,
                 destination_value = organisation2,
                 destination_section_value = organisation2 )
+    self.failUnless('Site Error' not in order.view())
 
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
     """

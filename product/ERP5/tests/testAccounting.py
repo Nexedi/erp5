@@ -291,6 +291,7 @@ class TestAccounting(ERP5TypeTestCase):
 
     for account in account_list :
       account.validate()
+      self.failUnless('Site Error' not in account.view())
       self.assertEquals(account.getValidationState(), 'validated')
       
     sequence.edit( receivable_account = receivable,
@@ -606,6 +607,7 @@ class TestAccounting(ERP5TypeTestCase):
     
     portal = self.getPortal()
     accounting_module = portal.accounting_module
+    self.failUnless('Site Error' not in accounting_module.view())
     self.assertNotEquals(
           len(portal.getPortalAccountingMovementTypeList()), 0)
     self.assertNotEquals(
@@ -617,6 +619,7 @@ class TestAccounting(ERP5TypeTestCase):
             source_section_value = source_section_value,
             destination_section_value = destination_section_value,
             resource_value = resource_value )
+      self.failUnless('Site Error' not in accounting_transaction.view())
       self.assertEquals( accounting_transaction.getSourceSectionValue(),
                          source_section_value )
       self.assertEquals( accounting_transaction.getDestinationSectionValue(),
@@ -632,6 +635,7 @@ class TestAccounting(ERP5TypeTestCase):
         if line_portal_type in allowed_content_types :
           line = accounting_transaction.newContent(
             portal_type = line_portal_type, )
+          self.failUnless('Site Error' not in line.view())
           # section and resource is acquired from parent transaction.
           self.assertEquals( line.getDestinationSectionValue(),
                              destination_section_value )
