@@ -330,6 +330,7 @@ def setupERP5Workflow(wf):
     wf.variables.addVariable(v)
   for perm in (Permissions.AccessContentsInformation,
                Permissions.View,
+               Permissions.AddPortalContent,
                Permissions.ModifyPortalContent ):
     wf.addManagedPermission(perm)
 
