@@ -186,6 +186,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     inventory_line.edit(resource_value = resource,
                         inventory = 12., # Arbitrary inventory ; it should be never accessed while aggregating items
                         aggregate_value_list = aggregate_value_list)
+    inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list = inventory_list)
                         
@@ -207,6 +208,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     inventory_line.edit(resource_value = sequence.get('resource'),
                         inventory = 24.
                        )
+    inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
                         
