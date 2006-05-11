@@ -497,6 +497,14 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         if target_realm == realm:
           return user, password
     return None, None
+      
+  def getHeader(self, bt, file):
+    file = self.relativeToAbsolute(file, bt)
+    header = "<b><a href='BusinessTemplate_viewSvnShowFile?file="+file+"'>" + file + "</a></b>"
+    edit_path = self.editPath(bt, file)
+    if edit_path != '#':
+      header += "&nbsp;&nbsp;<a href='"+self.editPath(bt, file)+"'><img src='imgs/edit.png' border='0'></a>"
+    return header
 
   def _encodeSSLTrust(self, trust_dict, permanent=False):
     # Encode login information.
