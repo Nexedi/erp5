@@ -5,6 +5,7 @@ Delivery Cell
 Delivery Rule
 Discount
 Internal Packing List
+Internal Packing List Cell
 Internal Packing List Line
 Internal Packing List Module
 Inventory
@@ -14,6 +15,7 @@ Inventory Module
 Order Rule
 Payment Condition
 Purchase Order
+Purchase Order Cell
 Purchase Order Line
 Purchase Order Module
 Purchase Packing List
@@ -31,6 +33,7 @@ Returned Sale Packing List Cell
 Returned Sale Packing List Line
 Returned Sale Packing List Module
 Sale Order
+Sale Order Cell
 Sale Order Line
 Sale Order Module
 Sale Packing List

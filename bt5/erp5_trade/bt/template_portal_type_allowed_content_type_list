@@ -1,13 +1,13 @@
 Container Line | Container Cell
 Container | Container
 Container | Container Line
-Internal Packing List Line | Delivery Cell
+Internal Packing List Line | Internal Packing List Cell
 Internal Packing List Module | Internal Packing List
 Internal Packing List | Internal Packing List Line
 Inventory Line | Inventory Cell
 Inventory Module | Inventory
 Inventory | Inventory Line
-Purchase Order Line | Delivery Cell
+Purchase Order Line | Purchase Order Cell
 Purchase Order Module | Purchase Order
 Purchase Order | Discount
 Purchase Order | Payment Condition
@@ -28,7 +28,7 @@ Returned Sale Packing List | Container
 Returned Sale Packing List | Returned Sale Packing List Line
 Rule Tool | Delivery Rule
 Rule Tool | Order Rule
-Sale Order Line | Delivery Cell
+Sale Order Line | Sale Order Cell
 Sale Order Module | Sale Order
 Sale Order | Discount
 Sale Order | Payment Condition

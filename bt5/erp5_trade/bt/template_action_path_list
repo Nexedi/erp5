@@ -22,6 +22,10 @@ Discount | history
 Discount | metadata
 Discount | print
 Discount | view
+Internal Packing List Cell | history
+Internal Packing List Cell | metadata
+Internal Packing List Cell | print
+Internal Packing List Cell | view
 Internal Packing List Line | history
 Internal Packing List Line | metadata
 Internal Packing List Line | print
@@ -71,6 +75,10 @@ Person | jump_to_purchase_order
 Person | jump_to_purchase_packing_list
 Person | jump_to_sale_order
 Person | jump_to_sale_packing_list
+Purchase Order Cell | history
+Purchase Order Cell | metadata
+Purchase Order Cell | print
+Purchase Order Cell | view
 Purchase Order Line | history
 Purchase Order Line | metadata
 Purchase Order Line | price_view
@@ -183,6 +191,10 @@ Returned Sale Packing List | jump_related_sale_invoice
 Returned Sale Packing List | metadata
 Returned Sale Packing List | print
 Returned Sale Packing List | view
+Sale Order Cell | history
+Sale Order Cell | metadata
+Sale Order Cell | print
+Sale Order Cell | view
 Sale Order Line | history
 Sale Order Line | metadata
 Sale Order Line | price_view

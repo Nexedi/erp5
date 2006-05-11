@@ -10,7 +10,7 @@
   <item>Internal Packing List Line</item>
  </portal_type>
  <portal_type id="Internal Packing List Line">
-  <item>Delivery Cell</item>
+  <item>Internal Packing List Cell</item>
  </portal_type>
  <portal_type id="Internal Packing List Module">
   <item>Internal Packing List</item>
@@ -30,7 +30,7 @@
   <item>Discount</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
-  <item>Delivery Cell</item>
+  <item>Purchase Order Cell</item>
  </portal_type>
  <portal_type id="Purchase Order Module">
   <item>Purchase Order</item>
@@ -81,7 +81,7 @@
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Order Line">
-  <item>Delivery Cell</item>
+  <item>Sale Order Cell</item>
  </portal_type>
  <portal_type id="Sale Order Module">
   <item>Sale Order</item>

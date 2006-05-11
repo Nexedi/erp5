@@ -1,3 +1,5 @@
+2006-05-11 Alex
+* Stop using Delivery Cell on Orders and Internal Packing List (workflows are still a dumb copy of Delivery Cell's and might need to be adapted)
 2006-05-10 Jerome
 * Added inventory_workflow
 * Hide Price & Inventory tabs if no cells on Inventory Line.

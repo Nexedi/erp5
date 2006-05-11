@@ -7,6 +7,8 @@ Container | edit_workflow
 Delivery Cell | delivery_edit_workflow
 Delivery Cell | packing_list_interaction_workflow
 Discount | edit_workflow
+Internal Packing List Cell | delivery_edit_workflow
+Internal Packing List Cell | packing_list_interaction_workflow
 Internal Packing List Line | edit_workflow
 Internal Packing List Line | trade_matrix_workflow
 Internal Packing List | edit_workflow
@@ -16,6 +18,8 @@ Inventory Line | trade_matrix_workflow
 Inventory | edit_workflow
 Inventory | inventory_workflow
 Payment Condition | edit_workflow
+Purchase Order Cell | delivery_edit_workflow
+Purchase Order Cell | packing_list_interaction_workflow
 Purchase Order Line | edit_workflow
 Purchase Order Line | trade_matrix_workflow
 Purchase Order | edit_workflow
@@ -37,6 +41,8 @@ Purchase Supply | edit_workflow
 Purchase Trade Condition | edit_workflow
 Returned Sale Packing List | edit_workflow
 Returned Sale Packing List | packing_list_workflow
+Sale Order Cell | delivery_edit_workflow
+Sale Order Cell | packing_list_interaction_workflow
 Sale Order Line | edit_workflow
 Sale Order Line | trade_matrix_workflow
 Sale Order | edit_workflow

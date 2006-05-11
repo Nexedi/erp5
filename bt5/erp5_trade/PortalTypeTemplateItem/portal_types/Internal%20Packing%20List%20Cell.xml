@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>order_line_icon.gif</string> </value>
+            <value> <string>document.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -62,7 +62,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Une ligne tarifaire.</string> </value>
+            <value> <string>      A DeliveryCell allows to define specific quantities\n
+      for each variation of a resource in a delivery line.\n
+    </string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -88,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Purchase Packing List Cell</string> </value>
+            <value> <string>Internal Packing List Cell</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -102,7 +104,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Purchase Packing List Cell</string> </value>
+            <value> <string>Internal Packing List Cell</string> </value>
         </item>
       </dictionary>
     </pickle>
