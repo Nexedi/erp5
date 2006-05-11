@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>BusinessTemplate_doSvnSslTrust</string> </value>
+            <value> <string>BusinessTemplate_doSvnSwitch</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -74,14 +74,6 @@
                     <key>                 <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>my_valid_until</string>
-                        <string>my_hostname</string>
-                        <string>my_realm</string>
-                        <string>my_fingerprint</string>
-                        <string>my_valid_from</string>
-                        <string>my_issuer_name</string>
-                        <string>my_failures</string>
-                        <string>my_file</string>
                         <string>my_repos_url</string>
                       </list>
                     </value>
@@ -89,21 +81,7 @@
                 <item>
                     <key>                 <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>my_valid_until_hidden</string>
-                        <string>my_valid_from_hidden</string>
-                        <string>my_realm_hidden</string>
-                        <string>my_hostname_hidden</string>
-                        <string>my_failures_hidden</string>
-                        <string>my_files</string>
-                        <string>my_changelog</string>
-                        <string>my_finger_print_hidden</string>
-                        <string>my_issuer_dname_hidden</string>
-                        <string>my_caller</string>
-                        <string>my_added</string>
-                        <string>my_modified</string>
-                        <string>my_removed</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -111,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_viewSvnSSLTrust</string> </value>
+            <value> <string>BusinessTemplate_viewSvnNewRepos</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,7 +97,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BusinessTemplate_viewSvnSSLTrust</string> </value>
+            <value> <string>svn_new_repo</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -135,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Accept</string> </value>
+            <value> <string>Switch</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

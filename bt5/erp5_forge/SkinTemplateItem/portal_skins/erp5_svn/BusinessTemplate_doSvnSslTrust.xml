@@ -71,6 +71,7 @@ modified = context.REQUEST["modified"]\n
 removed = context.REQUEST["removed"]\n
 caller = context.REQUEST["caller"]\n
 changelog = context.REQUEST["changelog"]\n
+repos_url = context.REQUEST["repos_url"]\n
 \n
 dict_keys=(\'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\',)\n
 trust_dict={}\n
@@ -89,6 +90,8 @@ elif caller == \'log\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?file=\'+context.REQUEST[\'file\'].replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
 elif caller == \'info\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnInfo\')\n
+elif caller == \'switch\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnSwitch(repos_url)\')\n
 else:\n
   return \'Error: Caller \'+ caller + \'is unknown\'\n
 </string> </value>
@@ -140,6 +143,7 @@ else:\n
                             <string>removed</string>
                             <string>caller</string>
                             <string>changelog</string>
+                            <string>repos_url</string>
                             <string>dict_keys</string>
                             <string>trust_dict</string>
                             <string>_getiter_</string>
