@@ -63,7 +63,7 @@ class TestOrderMixin:
   resource_portal_type = 'Apparel Model'
   order_portal_type = 'Sale Order'
   order_line_portal_type = 'Sale Order Line'
-  cell_portal_type = 'Delivery Cell'
+  order_cell_portal_type = 'Sale Order Cell'
   applied_rule_portal_type = 'Applied Rule'
   datetime = DateTime()
   packing_list_portal_type = 'Sale Packing List'
@@ -261,7 +261,7 @@ class TestOrderMixin:
     base_id = 'movement'
 #     vcl = list(order_line.getVariationCategoryList())
 #     cell_key_list = order_line.getCellKeyList(base_id=base_id)
-    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
 #     self.failIfDifferentSet( vcl , [] ) 
 #     self.failIfDifferentSet( cell_key_list , [] )
     self.failIfDifferentSet( cell_list , [] )
@@ -287,7 +287,7 @@ class TestOrderMixin:
       Delete the current order line matrix
     """
     order_line = sequence.get('order_line')
-    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
     order_line.deleteContent( map(lambda x: x.getId(), cell_list) )
 
   def stepSetOrderLineEmptyVCL(self,sequence=None, sequence_list=None, **kw):
@@ -369,7 +369,7 @@ class TestOrderMixin:
     quantity = 200
     for cell_key in cell_key_list:
       cell = order_line.newCell(base_id=base_id, \
-                                portal_type=self.cell_portal_type, *cell_key)
+                                portal_type=self.order_cell_portal_type, *cell_key)
       cell.edit(mapped_value_property_list=['price','quantity'],
                 price=price, quantity=quantity,
                 predicate_category_list=cell_key,
@@ -386,14 +386,14 @@ class TestOrderMixin:
     base_id = 'movement'
     cell_key_list = list(order_line.getCellKeyList(base_id=base_id))
     cell_key_list.sort()
-    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
     self.assertEquals(len(cell_list), len(cell_key_list))
     price = 100
     quantity = 200
     for cell_key in cell_key_list:
       self.failUnless(order_line.hasCell(base_id=base_id, *cell_key))
       cell = order_line.getCell(base_id=base_id, *cell_key)
-      self.assertEquals(self.cell_portal_type, cell.getPortalType())
+      self.assertEquals(self.order_cell_portal_type, cell.getPortalType())
       # XXX How can I check the cell content ?
 #       self.assertEquals(price , cell.getProperty('price'))
 #       self.assertEquals(quantity, cell.getProperty('quantity'))
@@ -577,7 +577,7 @@ class TestOrderMixin:
     """
     order = sequence.get('order')
     order_line = sequence.get('order_line')
-    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
     for cell in cell_list:
       self.assertEquals(order.getSimulationState(), cell.getSimulationState())
 
@@ -672,7 +672,7 @@ class TestOrderMixin:
           movement_list.append(order_line)
         else:
           cell_list = order_line.objectValues( \
-                                 portal_type=self.cell_portal_type)
+                                 portal_type=self.order_cell_portal_type)
           movement_list.extend(map(lambda x: x.getObject(), cell_list))
       # Check if number of movement is equal to number of simulation movement
       self.assertEquals(len(movement_list), len(simulation_movement_list))
@@ -881,7 +881,7 @@ class TestOrderMixin:
       Modify order cell start date
     """
     order_line = sequence.get('order_line')
-    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
     if len(cell_list) > 0:
       order_cell = cell_list[0].getObject()
     order_cell.setStartDate(self.datetime + 99)

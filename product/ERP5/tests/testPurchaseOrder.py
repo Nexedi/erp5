@@ -51,7 +51,7 @@ class TestPurchaseOrder(TestOrder):
   run_all_test = 1
   order_portal_type = 'Purchase Order'
   order_line_portal_type = 'Purchase Order Line'
-  cell_portal_type = 'Delivery Cell'
+  order_cell_portal_type = 'Purchase Order Cell'
   packing_list_portal_type = 'Purchase Packing List'
   packing_list_line_portal_type = 'Purchase Packing List Line'
   packing_list_cell_portal_type = 'Purchase Packing List Cell'
