@@ -47,6 +47,7 @@ from shutil import copy
 from zLOG import LOG
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.BusinessTemplate import removeAll
+from xml.sax.saxutils import escape
 
 
 try:
@@ -172,18 +173,6 @@ class DiffFile:
           tmp.append(line)
     self.children.append(CodeBlock(os.linesep.join(tmp)))
     
-
-  def _escape(self, data):
-    """
-      Escape &, <, and > in a string of data.
-      This is a copy of the xml.sax.saxutils.escape function.
-    """
-    if data:
-      #data = data.replace("&", "&amp;")
-      data = data.replace(">", "&gt;")
-      data = data.replace("<", "&lt;")
-      return data
-    
   def toHTML(self):
     # Adding header of the table
     if self.binary:
@@ -219,7 +208,7 @@ class DiffFile:
         <td style="background-color: %s">%s</td>
         <td style="background-color: black;" width="2"></td>
         <td style="background-color: %s">%s</td>
-        </tr>'''%(old_line_tuple[1], self._escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], self._escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
+        </tr>'''%(old_line_tuple[1], escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
     html += '''  </tbody>
 </table><br><br>'''
     return html
