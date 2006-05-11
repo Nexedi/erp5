@@ -570,9 +570,6 @@
    <name>Manage currencies</name>
   </permission>
   <permission>
-   <name>Manage extensions</name>
-  </permission>
-  <permission>
    <name>Manage languages</name>
    <role>Manager</role>
   </permission>
