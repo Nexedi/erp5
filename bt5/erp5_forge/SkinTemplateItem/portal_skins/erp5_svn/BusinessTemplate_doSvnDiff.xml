@@ -81,22 +81,31 @@ tab_Removed=removed.split(\',\')\n
 if modified != \'none\':\n
   for f in tab_Modified:\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)    \n
-    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
-    print \'<hr></font></b>\'\n
+    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
+    if(edit_path != \'#\'):\n
+      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"\n
+    print \'<br><hr></font></b>\'\n
     print context.getPortalObject()["portal_subversion"].diffHTML(f, context)\n
 \n
 if added != \'none\':\n
   for f in tab_Added:\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
-    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
-    print \'<hr></font></b>\'\n
+    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
+    if(edit_path != \'#\'):\n
+      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"\n
+    print \'<br><hr></font></b>\'\n
     print "<font color=\'green\'>File Added</font><br><br>"\n
 \n
 if removed != \'none\':\n
   for f in tab_Removed:\n
     f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
-    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>  <a href=\'"+context.getPortalObject()["portal_subversion"].editPath(context, f)+"\'><img src=\'imgs/edit.png\' border=\'0\'></a><br>"\n
-    print \'<hr></font></b>\'\n
+    print "<b><font color=\'black\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
+    if(edit_path != \'#\'):\n
+      print "<a href=\'"+edit_path+"\'><img src=\'imgs/edit.png\' border=\'0\'></a>"\n
+    print \'<br><hr></font></b>\'\n
     print "<font color=\'red\'>File Removed</font><br><br>"\n
 \n
 print \'</font>\'\n
@@ -156,6 +165,7 @@ return printed\n
                             <string>tab_Removed</string>
                             <string>_getiter_</string>
                             <string>f</string>
+                            <string>edit_path</string>
                           </tuple>
                         </value>
                     </item>
