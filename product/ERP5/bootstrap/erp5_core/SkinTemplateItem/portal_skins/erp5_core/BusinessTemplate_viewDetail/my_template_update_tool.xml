@@ -193,7 +193,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getTemplateUpdateTool()</string> </value>
+            <value> <string>python: here.getTemplateUpdateTool(0)</string> </value>
         </item>
       </dictionary>
     </pickle>
