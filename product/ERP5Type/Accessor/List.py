@@ -199,7 +199,7 @@ class SetSetter(Method):
 
             if len(list_value) > 0:
               default_value = list_value[0]
-              my_dict = dict((x, 0) for x in value if x!=default_value)
+              my_dict = dict([(x, 0) for x in value if x!=default_value])
               new_list_value = my_dict.keys()
               # If we change the set, 
               # the default value must be in the new set
@@ -317,6 +317,7 @@ class SetGetter(ListGetter):
 
     def __call__(self, instance, *args, **kw):
       result_list = ListGetter.__call__(self, instance, *args, **kw)
+#       import pdb; pdb.set_trace()
       result_set = dict([(x, 0) for x in result_list]).keys()
       return result_set
 
