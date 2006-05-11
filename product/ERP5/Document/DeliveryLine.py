@@ -38,7 +38,8 @@ from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
 
 from zLOG import LOG
 
-class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated, ImmobilisationMovement):
+class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated, 
+                   ImmobilisationMovement):
     """
       A DeliveryLine object allows to implement lines in
       Deliveries (packing list, order, invoice, etc.)
@@ -113,7 +114,8 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated, ImmobilisationMovem
     def edit(self, REQUEST=None, force_update = 0, reindex_object=1, **kw):
       return self._edit(REQUEST=REQUEST, force_update=force_update, reindex_object=reindex_object, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'isAccountable')
     def isAccountable(self):
       """
         Returns 1 if this needs to be accounted
