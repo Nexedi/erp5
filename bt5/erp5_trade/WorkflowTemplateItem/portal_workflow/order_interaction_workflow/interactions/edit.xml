@@ -70,7 +70,6 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>Production Order</string>
                 <string>Purchase Order</string>
                 <string>Sale Order</string>
               </list>

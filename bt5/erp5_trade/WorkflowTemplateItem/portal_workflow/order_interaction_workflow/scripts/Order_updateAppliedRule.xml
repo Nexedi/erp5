@@ -69,7 +69,7 @@
             <value> <string>order = state_change.object\n
 \n
 if order.getSimulationState() in order.getPortalPlannedOrderStateList():\n
-  order.updateAppliedRule( rule_id = \'order_rule\' )\n
+  order.updateAppliedRule( rule_id = \'default_order_rule\' )\n
 </string> </value>
         </item>
         <item>
