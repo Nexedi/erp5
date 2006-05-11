@@ -1,3 +1,6 @@
+2006-05-11 aurel
+* update catalog method to take getBaobabSource/DestinationVariationText into account
+
 2006-05-8 aurel
 * choose counter we want to open when opening counter date
 
