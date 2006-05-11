@@ -37,6 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.PythonScripts.Utility import allow_class
 from tempfile import mktemp
+from Products.ERP5.Document.BusinessTemplate import removeAll
 
 try:
   import pysvn
@@ -152,7 +153,6 @@ try:
     klass.security.declareObjectPublic()
     for attr in klass.attribute_list:
       name = 'get' + convertToUpperCase(attr)
-      print name
       setattr(klass, name, Getter(attr))
       klass.security.declarePublic(name)
     InitializeClass(klass)
@@ -244,13 +244,13 @@ try:
     
     def diff(self, path, revision1, revision2):
       tmp = mktemp()
-      os.system('mkdir -p %s'%tmp)
+      os.makedirs(tmp)
       if not revision1 or not revision2:
         diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False)
       else:
         diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False, revision1=pysvn.Revision(pysvn.opt_revision_kind.number,revision1), revision2=pysvn.Revision(pysvn.opt_revision_kind.number,revision2))
       # clean up temp dir
-      os.system('rm -rf %s'%tmp)
+      removeAll(tmp)
       return diff
     
     def revert(self, path, recurse=False):

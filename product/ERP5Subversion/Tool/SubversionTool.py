@@ -46,6 +46,7 @@ from tempfile import mktemp
 from shutil import copy
 from zLOG import LOG
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5.Document.BusinessTemplate import removeAll
 
 
 try:
@@ -71,27 +72,6 @@ class SubversionUnknownBusinessTemplateError(Exception):
   """The base exception class when business template is unknown.
   """
   pass
-
-def removeAll(entry):
-  '''
-    Remove all files and directories under 'entry'.
-    XXX: This is defined here, because os.removedirs() is buggy.
-  '''
-  try:
-    if os.path.isdir(entry) and not os.path.islink(entry):
-      pwd = os.getcwd()
-      os.chmod(entry, 0755)
-      os.chdir(entry)
-      for e in os.listdir(os.curdir):
-        removeAll(e)
-      os.chdir(pwd)
-      os.rmdir(entry)
-    else:
-      if not os.path.islink(entry):
-        os.chmod(entry, 0644)
-      os.remove(entry)
-  except OSError:
-    pass
       
 def copytree(src, dst, symlinks=False):
     """Recursively copy a directory tree using copy().
