@@ -141,7 +141,8 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
               while resource is None and \
                           simulation_movement != portal_simulation :
                 delivery = simulation_movement.getDeliveryValue()
-                resource = delivery.getProperty('price_currency', None)
+                if delivery is not None:
+                  resource = delivery.getProperty('price_currency', None)
                 if simulation_movement.getParentValue().getParentValue() \
                                           == portal_simulation :
                   # we are on the first simulation movement, we'll try
