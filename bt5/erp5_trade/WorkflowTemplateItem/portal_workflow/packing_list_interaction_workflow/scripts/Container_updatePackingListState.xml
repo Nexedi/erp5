@@ -70,7 +70,7 @@
 \n
 #packing_list_content.immediateReindexObject()\n
 #packing_list_content.getExplanationValue().edit()\n
-packing_list_content.getExplanationValue().activate().edit()\n
+packing_list_content.getExplanationValue().activate(after_path=packing_list_content.getPath()).edit()\n
 </string> </value>
         </item>
         <item>
