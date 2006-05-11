@@ -48,7 +48,15 @@ ZopeTestCase.installProduct('MailHost')
 ZopeTestCase.installProduct('PageTemplates')
 ZopeTestCase.installProduct('PythonScripts')
 ZopeTestCase.installProduct('ExternalMethod')
-ZopeTestCase.installProduct('iHotfix')
+try:
+  ZopeTestCase.installProduct('iHotfix')
+  from Products import iHotfix
+  from StringIO import StringIO
+  # revert monkey patchs from iHotfix
+  iHotfix.get_request = get_request
+  iHotfix.iHotfixStringIO = StringIO
+except ImportError:
+  pass
 ZopeTestCase.installProduct('Localizer')
 ZopeTestCase.installProduct('TimerService')
 
