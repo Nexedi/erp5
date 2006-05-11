@@ -272,6 +272,7 @@ class TestERP5BankingMixin:
     self.cash_status_valid = self.cash_status_base_category.newContent(id='valid', portal_type='Category')
     self.cash_status_to_sort = self.cash_status_base_category.newContent(id='to_sort', portal_type='Category')
     self.cash_status_cancelled = self.cash_status_base_category.newContent(id='cancelled', portal_type='Category')
+    self.cash_status_not_defined = self.cash_status_base_category.newContent(id='not_defined', portal_type='Category')
 
     self.emission_letter_base_category = getattr(self.category_tool, 'emission_letter')
     # add the category k in emission letter that will be used fo banknotes and coins
@@ -361,6 +362,8 @@ class TestERP5BankingMixin:
       caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
       for s in ['auxiliaire', 'reserve', 'externes']:
         s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+        if s.getId() == 'auxiliaire':
+          ss =  s.newContent(id='encaisse_des_billets_a_ventiler_et_a_detruire', portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
         for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 'encaisse_des_billets_recus_pour_ventilation']:
           ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
           if 'ventilation' in ss.getId():
