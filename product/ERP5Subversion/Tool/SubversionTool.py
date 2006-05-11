@@ -627,6 +627,15 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # Import in zodb
     return self.importBT(bt)
 
+  security.declareProtected('Import/Export objects', 'switch')
+  def switch(self, bt, url):
+    """switch SVN repository for a working copy.
+    """
+    path = self.getSubversionPath(bt)
+    client = self._getClient()
+    # Update from SVN
+    client.switch(path, url)
+  
   security.declareProtected('Import/Export objects', 'add')
   # path can be a list or not (relative or absolute)
   def add(self, path, bt=None):
