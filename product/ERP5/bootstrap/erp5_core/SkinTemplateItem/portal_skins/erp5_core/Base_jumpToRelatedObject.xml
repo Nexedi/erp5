@@ -70,10 +70,15 @@
 N_ = context.Base_translateString\n
 checkPerm = context.portal_membership.checkPermission\n
 \n
-search_method = getattr(context, \'get%sRelatedList\' %\n
+if related:\n
+  search_method = getattr(context, \'get%sRelatedList\' %\n
           string.join([string.capitalize(x) for x in base_category.split(\'_\')], \'\'))\n
+else:\n
+  search_method = getattr(context, \'get%sList\' %\n
+          string.join([string.capitalize(x) for x in base_category.split(\'_\')], \'\'))\n
+\n
 related_list = search_method(portal_type = portal_type)\n
-    \n
+\n
 if same_type(portal_type, \'\'):\n
   portal_type = [portal_type]\n
 \n
@@ -120,7 +125,7 @@ else :\n
                       uids=selection_uid_list, REQUEST=request)\n
 \n
 redirect_url = \'%s/%s?%s\' % (url, \'view\', make_query({\'portal_status_message\': message}))\n
-context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
+return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
 </string> </value>
         </item>
         <item>
@@ -141,7 +146,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category, portal_type=()</string> </value>
+            <value> <string>base_category, portal_type=(), related=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -161,7 +166,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -169,6 +174,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                           <tuple>
                             <string>base_category</string>
                             <string>portal_type</string>
+                            <string>related</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
                             <string>_getattr_</string>
@@ -211,6 +217,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
             <value>
               <tuple>
                 <tuple/>
+                <int>1</int>
               </tuple>
             </value>
         </item>
