@@ -128,8 +128,6 @@ class DeliveryBuilder(OrderBuilder):
       select_method = getattr(self.getPortalObject(), self.simulation_select_method_id)
       movement_list = select_method(**kw)
     # XXX Use buildSQLQuery will be better
-    movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
-                           movement_list)
     movement_list = [x for x in movement_list if \
                      x.getDeliveryRelatedValueList()==[]]
     # XXX  Add predicate test
