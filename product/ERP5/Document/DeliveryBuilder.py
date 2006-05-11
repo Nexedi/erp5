@@ -130,6 +130,8 @@ class DeliveryBuilder(OrderBuilder):
     # XXX Use buildSQLQuery will be better
     movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
                            movement_list)
+    movement_list = [x for x in movement_list if \
+                     x.getDeliveryRelatedValueList()==[]]
     # XXX  Add predicate test
     # XXX FIXME Check that there is no double in the list
     # Because we can't trust simulation_select_method
