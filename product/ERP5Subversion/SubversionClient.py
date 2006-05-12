@@ -29,7 +29,7 @@
 
 from Acquisition import Implicit
 
-import time, os, time
+import time, os
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Globals import InitializeClass

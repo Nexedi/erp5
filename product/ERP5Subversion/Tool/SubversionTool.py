@@ -705,6 +705,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """
     client = self._getClient()
     object_to_update = {}
+    # Transform params to list if they are not already lists
     if not added_files :
       added_files = []
     if not other_files :
@@ -875,7 +876,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   def extractBT(self, bt):
     bt.build()
     svn_path = self.getSubversionPath(bt) + os.sep
-    path = mktemp()  +os.sep
+    path = mktemp() + os.sep
     bt.export(path=path, local=1)
     # svn del deleted files
     self.deleteOldFiles(svn_path, path, bt)
