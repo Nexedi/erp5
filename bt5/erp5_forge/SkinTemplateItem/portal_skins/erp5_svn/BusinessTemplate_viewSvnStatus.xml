@@ -143,7 +143,8 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
   <p><font color="green">Added files</font><br />\n
   <font color="orange">Modified files</font><br />\n
   <font color="red">Removed files</font><br />\n
-  <font color="grey">conflicted files</font><br />\n
+  <font color="grey">Conflicted files</font><br />\n
+  <font color=\'black\'>Unmodified files</font><br />\n
   </p>\n
   </div>\n
 </div>\n
@@ -154,7 +155,9 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
     winList[\'captionWindow\'].open();\n
   }\n
 </script>\n
-\n
+</center>\n
+<input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"> <font color=\'black\'>Show unmodified files</font>\n
+<center>\n
 <script>\n
   // Menu Customization\n
   var MenuToolBar=new CreateToolBarMenu(\'#dae6e6\', \'#FFFFFF\', \'#B1BBBB\', \'#6699FF\', \'font-family:verdana;font-size:11px;color:black;font-weight:bold\', 16, 16)\n
@@ -175,6 +178,15 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
           var splash = document.splashScreen;\n
         } else if(ie4) {\n
           var splash = document.all.splashScreen;\n
+        }\n
+\n
+        function showObject() {\n
+\t  if (ns4) {\n
+\t    splash.visibility = "visible";\n
+\t  }\n
+\t  if (ie4 || upLevel) {\n
+\t    splash.style.visibility = "visible";\n
+          }\n
         }\n
 \n
         function hideObject() {\n

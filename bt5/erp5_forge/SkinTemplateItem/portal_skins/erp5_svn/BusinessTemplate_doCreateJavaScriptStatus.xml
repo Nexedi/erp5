@@ -78,6 +78,7 @@ print \'\'\'\n
     var tree = null;\n
     var business_template;\n
     var is_expanded=false;\n
+    var is_showing_unmodified=false;\n
     var ie  = document.all\n
     var ns6 = document.getElementById&&!document.all\n
     var isMenu  = false ;\n
@@ -123,6 +124,19 @@ print \'\'\'\n
         tree.closeAllItems(0);\n
         is_expanded=false;\n
       }\n
+    }\n
+\n
+    function showNormalFiles(){\n
+      showObject();\n
+      is_expanded = false;\n
+      if(!is_showing_unmodified){\n
+        tree.loadXML(\'tree.xml?bt_id=%s&show_unmodified=True&do_extract=False\', hideObject);\n
+        is_showing_unmodified = true;\n
+      }else{\n
+        tree.loadXML(\'tree.xml?bt_id=%s&do_extract=False\', hideObject);\n
+        is_showing_unmodified = false;\n
+      }\n
+      tree.refreshItem(0);\n
     }\n
         \n
     function commit(popup, form){\n
@@ -371,7 +385,7 @@ print \'\'\'\n
       open(\'%s/BusinessTemplate_doSvnLs?file=\'+tree.getSelectedItemId(), \'_self\');\n
     }\n
   </script>\n
-\'\'\'% (context.getId(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url())\n
+\'\'\'% (context.getId(), context.getId(), context.getId(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url())\n
 \n
 return printed\n
 
