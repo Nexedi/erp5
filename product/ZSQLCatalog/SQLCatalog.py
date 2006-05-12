@@ -599,7 +599,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except ConflictError:
         raise
       except:
-        LOG('SQLCatalog', WARNING, 'could not clear catalog with %s' % method_name, error=sys.exc_info())
+        LOG('SQLCatalog', WARNING, 
+            'could not clear catalog with %s' % method_name, error=sys.exc_info())
         pass
 
     # Reserved uids have been removed.
@@ -624,7 +625,15 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     method_id = self.sql_catalog_clear_reserved
     method = getattr(self, method_id)
-    method()
+    try:
+      method()
+    except ConflictError:
+      raise
+    except:
+      LOG('SQLCatalog', WARNING, 
+          'could not clear reserved catalog with %s' % \
+              method_id, error=sys.exc_info())
+      raise
     self._last_clear_reserved_time += 1
 
   def __getitem__(self, uid):
@@ -899,19 +908,22 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                      'Total time: %s<br>'
                      'Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
-  def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
+  def manage_catalogClear(self, REQUEST=None, RESPONSE=None, 
+                          URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
     self.clear()
 
     if RESPONSE and URL1:
-      RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Catalog%20Cleared')
+      RESPONSE.redirect('%s/manage_catalogAdvanced?' \
+                        'manage_tabs_message=Catalog%20Cleared' % URL1)
 
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ clears the whole enchilada """
     self.clearReserved()
 
     if RESPONSE and URL1:
-      RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Catalog%20Cleared')
+      RESPONSE.redirect('%s/manage_catalogAdvanced?' \
+                        'manage_tabs_message=Catalog%20Cleared' % URL1)
 
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,
                  obj_metatypes=None,
