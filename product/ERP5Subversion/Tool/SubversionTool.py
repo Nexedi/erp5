@@ -175,7 +175,7 @@ class DiffFile:
   def toHTML(self):
     # Adding header of the table
     if self.binary:
-      return '<b>Binary File or no changes!</b><br><br><br>'
+      return '<b>Folder or binary file or just no changes!</b><br><br><br>'
     
     html = '''
     <table style="text-align: left; width: 100%%;" border="0" cellpadding="0" cellspacing="0">
