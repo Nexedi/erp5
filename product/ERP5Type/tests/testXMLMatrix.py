@@ -91,7 +91,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
 
     i = 0
     for place in cartesianProduct(cell_range):
-      cell = matrix.newCell(portal_type="Delivery Cell",
+      cell = matrix.newCell(portal_type="Purchase Order Cell",
                             *place, **kwd)
       cell.test_id = i
       i += 1
@@ -161,7 +161,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
 
     i = 0
     for place in cartesianProduct(cell_range):
-      cell = matrix.newCell(portal_type="Delivery Cell",
+      cell = matrix.newCell(portal_type="Purchase Order Cell",
                             *place, **kwd)
       cell.test_id = i
       i += 1
@@ -200,7 +200,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
 
     for place in cartesianProduct(cell_range):
-      cell = matrix.newCell(portal_type="Delivery Cell",
+      cell = matrix.newCell(portal_type="Purchase Order Cell",
                             *place, **kwd)
     get_transaction().commit()
     self.tic()
