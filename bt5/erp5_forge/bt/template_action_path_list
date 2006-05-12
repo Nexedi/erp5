@@ -5,18 +5,9 @@ Bug | history
 Bug | metadata
 Bug | print
 Bug | view
-Business Template | commit
-Business Template | svn_cleanup_locks
-Business Template | svn_conflicted_files
-Business Template | svn_unversioned_files
-Business Template | switch_svn_repos
-Business Template | update_svn_wc
-Business Template | view_svn_repos_infos
 External Folder | history
 External Folder | metadata
 External Folder | print
 External Folder | view
-Preference | subversion
-Template Tool | bt_svn_history
 Upload Module | list
 Upload Module | view

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -68,7 +68,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-bug = state_change.object\n
+bug = state_change[\'object\']\n
 portal = bug.getPortalObject()\n
 from_name = portal.getProperty(\'email_from_name\', \'ERP5\')\n
 from_address = portal.getProperty(\'email_from_address\', \'postmaster@localhost\')\n
@@ -117,11 +117,17 @@ portal.MailHost.send(text)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_workflow/bug_workflow/scripts/sendNotification</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_workflow/bug_workflow/scripts/sendNotification</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -148,8 +154,9 @@ portal.MailHost.send(text)\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
+                            <string>_getitem_</string>
                             <string>bug</string>
+                            <string>_getattr_</string>
                             <string>portal</string>
                             <string>from_name</string>
                             <string>from_address</string>

@@ -15,16 +15,7 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>chrisERP</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
+              <none/>
             </value>
         </item>
         <item>
@@ -60,26 +51,14 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-                            <string>table_0</string>
-                            <string>table_1</string>
+<string>table_0</string>
+<string>table_1</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <tuple>
-                <list>
-                  <string>erp5</string>
-                  <string>acl_users</string>
-                </list>
-<string>chrisERP</string>
-              </tuple>
             </value>
         </item>
         <item>

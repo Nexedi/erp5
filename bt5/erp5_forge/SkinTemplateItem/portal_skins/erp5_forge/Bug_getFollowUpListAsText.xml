@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -117,7 +117,7 @@ return \'\\n\\n\'.join(follow_up_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_forge/Bug_getFollowUpListAsText</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_forge/Bug_getFollowUpListAsText</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -148,7 +148,7 @@ return \'\\n\\n\'.join(follow_up_list)\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-                            <string>context</string>
+<string>context</string>
                             <string>history</string>
                             <string>None</string>
                             <string>bug_history</string>
