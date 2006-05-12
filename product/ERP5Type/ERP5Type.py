@@ -242,6 +242,24 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
     def getGroupList( self ):
         return self.defined_group_list
 
+    security.declareProtected( ERP5Permissions.AccessContentsInformation, 'getInstancePropertyMap' )
+    def getInstancePropertyMap(self):
+      """
+      Returns the list of properties which are specific to the portal type.
+
+      We do this by creating a temp object at the root of the portal
+      and invoking propertyMap
+      """
+      from Products.ERP5Type import Document
+      # Access the factory method
+      factory_method = getattr(Document, "newTemp%s" % self.id) # Fix
+      id = "some_very_unlikely_temp_object_id_which_should_not_exist"
+      portal = self.portal_url.getPortalObject()
+      portal_ids = portal.objectIds()
+      while id in portal_ids:
+        id = id + "d"
+      return factory_method(portal, id).propertyMap()
+
     security.declareProtected(ERP5Permissions.ModifyPortalContent,
                               'assignRoleToSecurityGroup')
     def assignRoleToSecurityGroup(self, object, user_name = None):
@@ -265,7 +283,20 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       # Retrieve applicable roles
       role_mapping = self.getFilteredRoleListFor(object=object) # kw provided in order to take any appropriate action
       #LOG('ERP5TypeInformation', 0, 'role_mapping = %r, object = %r' % (role_mapping, object))
+
+      # Create an empty local Role Definition dict
       role_category_list_dict = {}
+
+      # Fill it with explicit local roles defined as subobjects of current object
+      if getattr(aq_base(object), 'isPrincipiaFolderish', 0):
+        for roledef in object.objectValues(spec = 'ERP5 Role Definition'):
+          role_category_list_dict.setdefault(roledef.getRoleName(), []).append(
+                            {
+                                'category_order'  : ['agent'],
+                                'agent'           : roledef.getAgentList()
+                            })
+
+      # Then parse role mapping
       for role_text, definition_list in role_mapping.items():
         # For each role definition, we look for the base_category_script
         # and try to use it to retrieve the values for the base_category list
