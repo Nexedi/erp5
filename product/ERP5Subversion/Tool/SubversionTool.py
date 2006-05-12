@@ -111,7 +111,7 @@ class File :
   def __init__(self, full_path, msg_status) :
     self.full_path = full_path
     self.msg_status = msg_status
-    self.name = full_path.split(os.sep)[-1]
+    self.name = os.path.basename(full_path)
 ## End of File Class
 
 class Dir :
@@ -119,7 +119,7 @@ class Dir :
   def __init__(self, full_path, msg_status) :
     self.full_path = full_path
     self.msg_status = msg_status
-    self.name = full_path.split(os.sep)[-1]
+    self.name = os.path.basename(full_path)
     self.sub_dirs = [] # list of sub directories
 
   # return a list of sub directories' names
