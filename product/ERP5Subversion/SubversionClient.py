@@ -39,31 +39,29 @@ from Products.PythonScripts.Utility import allow_class
 from tempfile import mktemp
 from Products.ERP5.Document.BusinessTemplate import removeAll
 
+class SubversionError(Exception):
+  """The base exception class for the Subversion interface.
+  """
+  pass
+  
+class SubversionInstallationError(SubversionError):
+  """Raised when an installation is broken.
+  """
+  pass
+  
+class SubversionTimeoutError(SubversionError):
+  """Raised when a Subversion transaction is too long.
+  """
+  pass
+    
 try:
   import pysvn
-  
-
-  class SubversionError(Exception):
-    """The base exception class for the Subversion interface.
-    """
-    pass
-    
-  class SubversionInstallationError(SubversionError):
-    """Raised when an installation is broken.
-    """
-    pass
-    
-  class SubversionTimeoutError(SubversionError):
-    """Raised when a Subversion transaction is too long.
-    """
-    pass
   
   class SubversionLoginError(SubversionError):
     """Raised when an authentication is required.
     """
     # Declarative Security
     security = ClassSecurityInfo()
-    
     def __init__(self, realm = None):
       self._realm = realm
   
@@ -341,4 +339,4 @@ except ImportError:
   LOG('SubversionTool', WARNING,
       'could not import pysvn; until pysvn is installed properly, this tool will not work.')
   def newSubversionClient(container, **kw):
-    raise SubversionInstallationError, 'pysvn is not installed'
+    raise SubversionInstallationError, 'pysvn library is not installed'
