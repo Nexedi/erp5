@@ -1,9 +1,22 @@
-2006-05-12 yo
-* Define maintainers.
-* Add "Tested?" into Bug_view.
+2006-05-10 chris
+* some bug fixes / optimizations
+* can now show unmodified files
 
-2006-03-15 Seb
-* added workflow chaing for bug
+2006-05-10 chris
+* Lot of bug fixes
+
+2006-04-25 chris
+* Added update business from SVN repository function
+
+2006-04-24 chris
+* Subversion should be stable
+
+2006-04-21 chris
+* added subversion support for several
+working copies
+
+2006-04-10 chris
+* added Subversion Tool integration
 
 2006-01-27
 * display "difficulty" column in bug tracker
