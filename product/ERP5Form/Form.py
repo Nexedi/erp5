@@ -343,7 +343,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Special Settings
     settings_form = create_settings_form()
 
-    def __init__(self, id, title, unicode_mode=0, encoding='UTF-8', stored_encoding='UTF-8'):
+    def __init__(self, id, title, unicode_mode=0, encoding='UTF-8', 
+                 stored_encoding='UTF-8'):
         """Initialize form.
         id    -- id of form
         title -- the title of the form
