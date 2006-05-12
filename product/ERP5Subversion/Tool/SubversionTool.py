@@ -426,10 +426,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       # not in zodb 
       return '#'
     # remove file extension
-    tmp = re.search('\\.[\w]+$', edit_path)
-    if tmp:
-      extension = tmp.string[tmp.start():tmp.end()].strip()
-      edit_path = edit_path[:-len(extension)]
+    edit_path = os.path.splitext(edit_path)[0]
+    # Add beginning and end of url
     edit_path = os.path.join(bt.REQUEST["BASE2"], edit_path, 'manage_main')
     return edit_path
     
@@ -517,7 +515,6 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       filename = file_path.split(os.sep)[-1]
       tmp_path = os.sep.join(file_path.split(os.sep)[:-1])
       tmp_path = os.path.join(tmp_path,'.svn','text-base',filename+'.svn-base')
-      LOG('path_HD', 1, tmp_path)
       if os.path.exists(tmp_path):
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
         text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%tmp_path)
@@ -723,10 +720,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         if len(path_list) > 2 :
           tmp = os.sep.join(path_list[2:])
           # Remove file extension
-          tmp2 = re.search('\\.[\w]+$', tmp)
-          if tmp2:
-            extension = tmp2.string[tmp2.start():tmp2.end()].strip()
-            tmp=tmp[:-len(extension)]
+          tmp = os.path.splitext(tmp)[0]
           object_to_update[tmp] = 'install'
     path_added_list = []
     # remove added files
@@ -736,11 +730,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         if len(path_list) > 2 :
           tmp = os.sep.join(path_list[2:])
           # Remove file extension
-          tmp2 = re.search('\\.[\w]+$', tmp)
-          if tmp2:
-            extension = tmp2.string[tmp2.start():tmp2.end()].strip()
-            tmp=tmp[:-len(extension)]
-            path_added_list.append(tmp)
+          tmp = os.path.splitext(tmp)[0]
+          path_added_list.append(tmp)
     ## hack to remove objects
     # Create a temporary bt with objects to delete
     tmp_bt = getToolByName(bt, 'portal_templates').newContent(portal_type="Business Template")
