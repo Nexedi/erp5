@@ -518,6 +518,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       if os.path.exists(tmp_path):
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
         text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%tmp_path)
+        # remove heading & trailing useless stuff
         text = head + os.linesep.join(text.split(os.linesep)[10:-4])
       else : # does not exist
         text = "<b>"+file_path+"</b><hr>"
@@ -574,9 +575,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       wc_list = self.getPortalObject().portal_preferences.default_site_preference.getPreferredSubversionWorkingCopyList()
       if not wc_list:
         raise SubversionPreferencesError, 'Please set at least one Subversion Working Copy in preferences first.'
-    bt_name = bt.getTitle()
     if len(wc_list) == 0 :
       raise SubversionPreferencesError, 'Please set at least one Subversion Working Copy in preferences first.'
+    bt_name = bt.getTitle()
     for wc in wc_list:
       if bt_name in os.listdir(wc) :
         wc_path = os.path.join(wc, bt_name)
@@ -593,7 +594,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """
     path = self.getSubversionPath(bt)
     client = self._getClient()
-    # Revert first to import a "pure" BT after update
+    # Revert local changes in working copy first to import a "pure" BT after update
     self.revert(path=path, recurse=True)
     # Update from SVN
     client.update(path)
