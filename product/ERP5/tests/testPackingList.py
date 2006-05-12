@@ -702,8 +702,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if not run: return
     sequence_list = SequenceList()
 
-    # Test with a simply order without cell
-    sequence_string = self.default_sequence + '\
+    # Test with a order with cells
+    sequence_string = self.variated_default_sequence + '\
                       AddPackingListContainer \
                       AddPackingListContainerLine \
                       SetContainerLineSmallQuantity \
