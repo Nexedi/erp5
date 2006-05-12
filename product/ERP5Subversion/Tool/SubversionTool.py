@@ -454,7 +454,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     if tmp:
       extension = tmp.string[tmp.start():tmp.end()].strip()
       edit_path = edit_path[:-len(extension)]
-    edit_path = bt.REQUEST["BASE2"] + '/' + edit_path + '/manage_main'
+    edit_path = os.path.join(bt.REQUEST["BASE2"], edit_path, 'manage_main')
     return edit_path
     
   def _encodeLogin(self, realm, user, password):
