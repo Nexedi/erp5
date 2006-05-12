@@ -44,7 +44,6 @@ from OFS.Image import manage_addFile
 from cStringIO import StringIO
 from tempfile import mktemp
 from shutil import copy
-from zLOG import LOG
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.BusinessTemplate import removeAll
 from xml.sax.saxutils import escape
