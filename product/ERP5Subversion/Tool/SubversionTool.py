@@ -832,7 +832,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     for file in list:
       removeAll(file)
     
-  def getModifiedTree(self, bt) :
+  def getModifiedTree(self, bt, show_unmodified=False) :
     # Remove trailing slash if it's present
     path = self.getSubversionPath(bt)
     root = Dir(path, "normal")
@@ -841,7 +841,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     for statusObj in self.status(path) :
       # can be (normal, added, modified, deleted, conflicted, unversioned)
       msg_status = statusObj.getTextStatus()
-      if str(msg_status) != "normal" and str(msg_status) != "unversioned":
+      if (show_unmodified or str(msg_status) != "normal") and str(msg_status) != "unversioned":
         somethingModified = True
         full_path = statusObj.getPath()
         full_path_list = full_path.split(os.sep)[1:]
