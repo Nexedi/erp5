@@ -368,7 +368,6 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
 
   login_cookie_name = 'erp5_subversion_login'
   ssl_trust_cookie_name = 'erp5_subversion_ssl_trust'
-  top_working_path = os.path.join(getConfiguration().instancehome, 'svn')
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -400,29 +399,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
           if meta_type['name'] in self.allowed_types:
               meta_types.append(meta_type)
       return meta_types
-
-  def getTopWorkingPath(self):
-    return self.top_working_path
-
-  def _getWorkingPath(self, path):
-    path = os.path.abspath(path)
-    if not path.startswith(self.top_working_path):
-      raise Unauthorized, 'unauthorized access to path %s' % path
-    return path
     
-  def setWorkingDirectory(self, path):
-    self.workingDirectory = path
-    os.chdir(path)
-
-  def getDefaultUserName(self):
-    """Return a default user name.
-    """
-    name = self.portal_preferences.getPreferredSubversionUserName()
-    if not name:
-      name = self.portal_membership.getAuthenticatedMember().getUserName()
-    return name
-    
-  
   # path is the path in svn working copy
   # return edit_path in zodb to edit it
   # return '#' if no zodb path is found
