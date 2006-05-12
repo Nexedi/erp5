@@ -415,14 +415,14 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     if not os.path.exists(path):
       return '#'
     svn_path = self.getSubversionPath(bt).replace('\\', '/')
-    edit_path = path.replace(svn_path, '')
-    if edit_path.strip() == '':
+    edit_path = path.replace(svn_path, '').strip()
+    if edit_path == '':
       # not in zodb 
       return '#'
     if edit_path[0] == '/':
       edit_path = edit_path[1:]
-    edit_path = '/'.join(edit_path.split('/')[1:])
-    if edit_path.strip() == '':
+    edit_path = '/'.join(edit_path.split('/')[1:]).strip()
+    if edit_path == '':
       # not in zodb 
       return '#'
     # remove file extension
@@ -496,7 +496,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     raw_diff = self.diff(file_path, bt, revision1, revision2)
     return DiffFile(raw_diff).toHTML()
   
-  # Display a file content in HTML
+  # Display a file content in HTML with syntax highlighting
   def fileHTML(self, bt, file_path):
     file_path = self.relativeToAbsolute(file_path, bt)
     if os.path.exists(file_path):
