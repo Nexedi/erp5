@@ -633,8 +633,10 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """
     path = self.getSubversionPath(bt)
     client = self._getClient()
+    if url[-1] == '/' :
+      url = url[:-1]
     # Update from SVN
-    client.switch(path, url)
+    client.switch(path=path, url=url)
   
   security.declareProtected('Import/Export objects', 'add')
   # path can be a list or not (relative or absolute)

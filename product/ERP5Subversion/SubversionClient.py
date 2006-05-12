@@ -242,6 +242,12 @@ try:
       # Since plain Python classes are not convenient in Zope, convert the objects.
       return [Status(x) for x in self.client.status(path, **kw)]
     
+    def removeAllInList(self, list):
+      """Remove all files and folders in list
+      """
+      for file in list:
+        removeAll(file)
+      
     def diff(self, path, revision1, revision2):
       tmp = mktemp()
       os.makedirs(tmp)
@@ -250,7 +256,7 @@ try:
       else:
         diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False, revision1=pysvn.Revision(pysvn.opt_revision_kind.number,revision1), revision2=pysvn.Revision(pysvn.opt_revision_kind.number,revision2))
       # clean up temp dir
-      removeAll(tmp)
+      self.activate().removeAllInList([tmp,])
       return diff
     
     def revert(self, path, recurse=False):
