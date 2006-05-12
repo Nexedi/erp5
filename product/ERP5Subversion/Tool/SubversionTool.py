@@ -35,7 +35,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, commands, time, exceptions, thread
+import os, re, commands, time, exceptions
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
