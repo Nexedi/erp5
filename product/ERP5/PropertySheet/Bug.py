@@ -31,4 +31,11 @@ class Bug:
     Bug properties
   """
 
+  _properties = (
+    { 'id'          : 'tested',
+      'description' : 'if a bug is tested or not',
+      'type'        : 'boolean',
+      'mode'        : 'w' },
+  )
+
   _categories = ( 'bug_type', 'bug_priority', 'bug_severity', 'bug_group', 'bug_difficulty',)
