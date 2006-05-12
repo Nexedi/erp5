@@ -845,22 +845,22 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         somethingModified = True
         full_path = statusObj.getPath()
         full_path_list = full_path.split(os.sep)[1:]
-        relative_path = full_path[len(path)+1:]
-        relative_path_list = relative_path.split(os.sep)
+        relative_path_list = full_path[len(path)+1:].split(os.sep)
         # Processing entry
         filename = relative_path_list[-1]
         # Needed or files will be both File & Dir objects
         relative_path_list = relative_path_list[:-1]
         parent = root
-        i = len(path.split(os.sep))-1
+        i = len(path.split(os.sep))
         
         for d in relative_path_list :
-          i += 1
           if d :
             full_pathOfd = os.sep+os.sep.join(full_path_list[:i]).strip()
             if d not in parent.getSubDirs() :
               parent.sub_dirs.append(Dir(full_pathOfd, "normal"))
             parent = parent.getDir(d)
+          i += 1
+            
         if os.path.isdir(full_path) :
           if full_path == parent.full_path :
             parent.msg_status = str(msg_status)
