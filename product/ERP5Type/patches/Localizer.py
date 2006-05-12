@@ -63,7 +63,7 @@ def Localizer_translate(self, domain, msgid, mapping=None, *args, **kw):
     translated_str = catalog_obj.gettext(msgid, **params)
 
     # Map the translated string with given parameters
-    if type(mapping) is type({}):
+    if type(mapping) is type({}) and len(mapping):
       unicode_mapping = {}
       if not isinstance(translated_str, unicode):
         translated_str = translated_str.decode('utf8')
