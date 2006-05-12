@@ -251,8 +251,12 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase, Translation
       and invoking propertyMap
       """
       from Products.ERP5Type import Document
-      # Access the factory method
-      factory_method = getattr(Document, "newTemp%s" % self.id) # Fix
+      # Access the factory method for temp object by guessing it
+      # according to ERP5 naming conventions (not very nice)
+      factory_method_id = self.factory.replace('add', 'newTemp')
+      if not factory_method_id.startswith('newTemp'):
+        raise
+      factory_method = getattr(Document, factory_method_id)
       id = "some_very_unlikely_temp_object_id_which_should_not_exist"
       portal = self.portal_url.getPortalObject()
       portal_ids = portal.objectIds()
