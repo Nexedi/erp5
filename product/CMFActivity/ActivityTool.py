@@ -36,7 +36,7 @@ import re
 
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Document.Folder import Folder
-from Products.ERP5Type.Error import Error
+from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
@@ -155,14 +155,14 @@ class Message:
   def activateResult(self, activity_tool, result, object):
     if self.active_process is not None:
       active_process = activity_tool.unrestrictedTraverse(self.active_process)
-      if isinstance(result,Error):
+      if isinstance(result,ActiveResult):
         result.edit(object_path=object)
         result.edit(method_id=self.method_id)
         # XXX Allow other method_id in future
         active_process.activateResult(result)
       else:
         active_process.activateResult(
-                    Error(object_path=object,
+                    ActiveResult(object_path=object,
                           method_id=self.method_id,
                           result=result)) # XXX Allow other method_id in future
   
