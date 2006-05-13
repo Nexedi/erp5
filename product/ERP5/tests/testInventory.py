@@ -56,7 +56,6 @@ from AccessControl.SecurityManagement import newSecurityManager, \
 from DateTime import DateTime
 from Acquisition import aq_base, aq_inner
 from zLOG import LOG
-from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from Products.ERP5Type.DateUtils import addToDate
 import time
@@ -67,9 +66,9 @@ from testOrder import TestOrderMixin
 
 from Products.ERP5Form.Selection import DomainSelection
 
-class TestInventory(TestOrderMixin,ERP5TypeTestCase):
+class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   """
-    Test Transformations
+    Test Inventory API
   """
   run_all_test = 1
   packing_list_portal_type = 'Sale Packing List'
@@ -85,44 +84,26 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Business Templates required for this test.
     """
-    return ('erp5_base','erp5_pdm','erp5_trade', 'erp5_apparel',)
-  # TODO: install erp5_accounting to make sure we have invoicing rules
-  #     'erp5_accounting')
-  # actually we should test with and without invoicing system
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',)
+#            'erp5_accounting')
 
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
-    portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
-    portal_catalog = self.getCatalogTool()
     self.createCategories()
     # Patch PackingList.asPacked so that we do not need
-    # to manage containers here, this not the job of this
-    # test
+    # to manage containers here, this not the job of this test
     def isPacked(self):
       return 1
     from Products.ERP5Type.Document.PackingList import PackingList
     PackingList.isPacked = isPacked
 
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   def createCategory(self, parent, id_list):
       last_category = None
       for category_id in id_list:
         if type(category_id) == type('a'):
-          last_category = parent.newContent(portal_type = 'Category', id=category_id)
+          last_category = parent.newContent(portal_type='Category',
+                                            id=category_id)
         else:
           self.createCategory(last_category, category_id)
           
@@ -1089,8 +1070,8 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       LOG("Transiting '%s' on packing list %s" % (action, transition_step['id']), 0, '')
       workflow_tool.doActionFor(transited_pl, action, packing_list_workflow)
       transited_pl.recursiveImmediateReindexObject() # XXX
-      self.stepTic()
       get_transaction().commit()
+      self.stepTic()
       
       for omit_transit in (0,1):
         values = expected_values[omit_transit]
@@ -1519,24 +1500,31 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     get_transaction().commit()
     
     # Then test the next negative date
-    next_date = simulation.getNextNegativeInventoryDate(resource=resource_value.getRelativeUrl(),
-                                                        node = organisation_list[node].getRelativeUrl(),
-                                                        variation_category = variation_categories)
+    next_date = simulation.getNextNegativeInventoryDate(
+                      resource=resource_value.getRelativeUrl(),
+                      node=organisation_list[node].getRelativeUrl(),
+                      variation_category=variation_categories)
+
     if type(next_date) == type(''):
       next_date = DateTime(next_date)
     next_date = next_date.strftime('%Y-%m-%d %H:%M:%S')
-    expected_negative_date = '%.4d-%.2d-%.2d %.2d:%.2d:%.2d' % (expected_negative_date.year(),
-                                                      expected_negative_date.month(),
-                                                      expected_negative_date.day(),
-                                                      expected_negative_date.hour(),
-                                                      expected_negative_date.minute(),
-                                                      expected_negative_date.second())
+    expected_negative_date = '%.4d-%.2d-%.2d %.2d:%.2d:%.2d' % (
+                            expected_negative_date.year(),
+                            expected_negative_date.month(),
+                            expected_negative_date.day(),
+                            expected_negative_date.hour(),
+                            expected_negative_date.minute(),
+                            expected_negative_date.second())
     if next_date != expected_negative_date:
-      LOG('TEST ERROR : Next negative date is not the expected one.', 0, 'calculated : %s, expected : %s' % (repr(next_date), repr(expected_negative_date)))
-      LOG('SQL Query was ', 0, simulation.getNextNegativeInventoryDate(resource=resource_value.getRelativeUrl(),
-                                                        node = organisation_list[node].getRelativeUrl(),
-                                                        variation_category = variation_categories, src__=1))
-      self.assertEquals(next_date, expected_negative_date)
+      LOG('TEST ERROR : Next negative date is not the expected one.', 0,
+          'calculated : %s, expected : %s' % (
+           repr(next_date), repr(expected_negative_date)))
+      LOG('SQL Query was ', 0,
+          simulation.getNextNegativeInventoryDate(
+                    resource=resource_value.getRelativeUrl(),
+                    node=organisation_list[node].getRelativeUrl(),
+                    variation_category=variation_categories, src__=1))
+    self.assertEquals(next_date, expected_negative_date)
       
   def stepTestInventoryModule(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1553,10 +1541,11 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
                     node=sequence.get('node').getRelativeUrl(),
                     at_date=inventory_list[expected[step][1]].getStartDate()
                 )
-    if inventory != expected[step][0]:
-      LOG('TEST ERROR : quantity differs between expected (%s) and real (%s) inventories.' % (repr(expected[step][0]), repr(inventory)),     0, 'section=%s, node=%s' % (sequence.get('section').getRelativeUrl(), sequence.get('node').getRelativeUrl()))
-      self.assertEquals(inventory, expected[step][0])
-    step+=1
+    self.assertEquals(inventory, expected[step][0],
+                    'section=%s, node=%s' % (
+                    sequence.get('section').getRelativeUrl(),
+                    sequence.get('node').getRelativeUrl()))
+    step += 1
     sequence.edit(step=step)
     
   def stepModifyFirstInventory(self, sequence=None, sequence_list=None, **kw):
@@ -1566,7 +1555,8 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     inventory = sequence.get('inventory_list')[0]
     inventory_line = inventory['1']
     item_list = sequence.get('item_list')
-    inventory_line.edit(aggregate_value_list = [item_list[0], item_list[1], item_list[4]])
+    inventory_line.edit(
+        aggregate_value_list = [item_list[0],item_list[1], item_list[4]])
                   
                 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
@@ -1576,38 +1566,38 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
 
-    get_inventory_test_sequence= 'TestGetInventoryOnNode \
-                                   TestGetInventoryOnVariationCategory \
-                                   TestGetInventoryOnPayment \
-                                   TestGetInventoryOnSection \
-                                   TestGetInventoryOnMirrorSection \
-                                   TestGetInventoryOnResource \
-                                   TestGetInventoryWithOmitInput \
-                                   TestGetInventoryWithOmitOutput \
-                                   TestGetInventoryOnSimulationState \
-                                   TestGetInventoryOnSectionCategory \
-                                   TestGetInventoryOnPaymentCategory \
-                                   TestGetInventoryOnNodeCategory \
-                                   TestGetInventoryOnMirrorSectionCategory \
-                                   TestGetInventoryOnResourceCategory \
-                                   TestGetInventoryOnVariationText \
+    get_inventory_test_sequence= 'stepTestGetInventoryOnNode \
+                                   stepTestGetInventoryOnVariationCategory \
+                                   stepTestGetInventoryOnPayment \
+                                   stepTestGetInventoryOnSection \
+                                   stepTestGetInventoryOnMirrorSection \
+                                   stepTestGetInventoryOnResource \
+                                   stepTestGetInventoryWithOmitInput \
+                                   stepTestGetInventoryWithOmitOutput \
+                                   stepTestGetInventoryOnSimulationState \
+                                   stepTestGetInventoryOnSectionCategory \
+                                   stepTestGetInventoryOnPaymentCategory \
+                                   stepTestGetInventoryOnNodeCategory \
+                                   stepTestGetInventoryOnMirrorSectionCategory \
+                                   stepTestGetInventoryOnResourceCategory \
+                                   stepTestGetInventoryOnVariationText \
                                    '
                                    #TestGetInventoryWithSelectionReport \
-    get_inventory_test_sequence += 'TestGetInventoryListOnSection \
-                                   TestGetInventoryListOnNode \
-                                   TestGetInventoryListWithOmitInput \
-                                   TestGetInventoryListWithOmitOutput \
-                                   TestGetInventoryListWithGroupBy \
-                                   TestGetNextNegativeInventoryDate \
+    get_inventory_test_sequence += 'stepTestGetInventoryListOnSection \
+                                   stepTestGetInventoryListOnNode \
+                                   stepTestGetInventoryListWithOmitInput \
+                                   stepTestGetInventoryListWithOmitOutput \
+                                   stepTestGetInventoryListWithGroupBy \
+                                   stepTestGetNextNegativeInventoryDate \
                                   '
 
-    sequence_string = 'CreateOrganisationList \
-                       CreateOrder \
-                       CreateVariatedResourceList \
-                       CreatePackingListList \
-                       Tic \
-                       CreateTestingCategories \
-                       Tic \
+    sequence_string = 'stepCreateOrganisationList \
+                       stepCreateOrder \
+                       stepCreateVariatedResourceList \
+                       stepCreatePackingListList \
+                       stepTic \
+                       stepCreateTestingCategories \
+                       stepTic \
                        ' + get_inventory_test_sequence
     sequence_list.addSequenceString(sequence_string)
 
@@ -1621,26 +1611,25 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
 
-    sequence_string = 'CreateOrganisationsForModule \
-                       CreateVariatedResource \
-                       CreateItemList \
-                       CreatePackingListForModule \
-                       Tic \
-                       CreateAggregatingInventory \
-                       Tic \
-                       TestInventoryModule \
-                       CreateSingleInventory \
-                       Tic \
-                       TestInventoryModule \
-                       ModifyFirstInventory \
-                       Tic \
-                       TestInventoryModule \
+    sequence_string = 'stepCreateOrganisationsForModule \
+                       stepCreateVariatedResource \
+                       stepCreateItemList \
+                       stepCreatePackingListForModule \
+                       stepTic \
+                       stepCreateAggregatingInventory \
+                       stepTic \
+                       stepTestInventoryModule \
+                       stepCreateSingleInventory \
+                       stepTic \
+                       stepTestInventoryModule \
+                       stepModifyFirstInventory \
+                       stepTic \
+                       stepTestInventoryModule \
                        '
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
 
-    
 if __name__ == '__main__':
     framework()
 else:
