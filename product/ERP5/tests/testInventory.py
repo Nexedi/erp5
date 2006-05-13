@@ -84,8 +84,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Business Templates required for this test.
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',)
-#            'erp5_accounting')
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',
+            'erp5_accounting')
 
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
@@ -1464,10 +1464,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
             ['morphology/' + x.getRelativeUrl() for x in resource_value.objectValues(portal_type='Apparel Model Morphology Variation')]
 
         packing_list_line.edit(
-            resource_value = resource_value,
-            default_resource_value = resource_value,
-            categories = category_list + [x for x in variation_category_list if x not in category_list]
-            )
+            resource_value=resource_value,
+            default_resource_value=resource_value,
+            categories=category_list,
+            variation_category_list=variation_category_list,
+        )
         
         # Set cell range
         packing_list_line.updateCellRange(base_id='quantity')
