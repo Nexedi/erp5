@@ -416,7 +416,7 @@ class ActivityTool (Folder, UniqueObject):
     security.declarePublic('manage_setDistributingNode')
     def manage_setDistributingNode(self, distributingNode, REQUEST=None):
         """ set the distributing node """   
-        if self._isValidNodeName(distributingNode):
+        if not distributingNode or self._isValidNodeName(distributingNode):
           self.distributingNode = distributingNode
           if REQUEST is not None:
               REQUEST.RESPONSE.redirect(
