@@ -84,7 +84,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Business Templates required for this test.
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',)
             'erp5_accounting')
 
   def afterSetUp(self, quiet=1, run=run_all_test):
@@ -452,8 +452,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         packing_list_line.edit(
             resource_value = resource_value,
             default_resource_value = resource_value,
-            categories = category_list + [x for x in variation_category_list if x not in category_list]
-            )
+            categories = category_list,
+            variation_category_list=variation_category_list
+        )
         
         # Set cell range
         packing_list_line.updateCellRange(base_id='quantity')
@@ -769,10 +770,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       for value in values:
         date = value['date']
         e_inventory = value['inventory']
-        self._testGetInventory(expected=e_inventory, at_date=date, variation_category=category_list, section=organisation_url)
+        self._testGetInventory(expected=e_inventory,
+                               at_date=date,
+                               variation_category=category_list,
+                               section=organisation_url)
         
         
-  def stepTestGetInventoryWithOmitOutput(self, sequence=None, sequence_list=None, **kw):
+  def stepTestGetInventoryWithOmitOutput(self, sequence=None,
+                                         sequence_list=None, **kw):
     """
       Test getInventory on each node with omit_output
     """
@@ -807,7 +812,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       for value in values:
         date = value['date']
         e_inventory = value['inventory']
-        self._testGetInventory(expected=e_inventory, at_date=date, node=url, omit_output=1)
+        self._testGetInventory(expected=e_inventory,
+                               at_date=date,
+                               node=url,
+                               omit_output=1)
         
         
   def stepTestGetInventoryWithOmitInput(self, sequence=None, sequence_list=None, **kw):
@@ -845,10 +853,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       for value in values:
         date = value['date']
         e_inventory = value['inventory']
-        self._testGetInventory(expected=e_inventory, at_date=date, node=url, omit_input=1)
+        self._testGetInventory(expected=e_inventory,
+                               at_date=date,
+                               node=url,
+                               omit_input=1)
                 
 
-  def stepTestGetInventoryOnSectionCategory(self, sequence=None, sequence_list=None, **kw):
+  def stepTestGetInventoryOnSectionCategory(self, sequence=None,
+                                            sequence_list=None, **kw):
     """
       Test getInventory with a section_category argument
     """
@@ -865,10 +877,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       values = expected_values['values']
       for value in values:
         e_inventory = value['inventory']
-        self._testGetInventory(expected=e_inventory, section_category=category)
+        self._testGetInventory(expected=e_inventory,
+                               section_category=category)
         
         
-  def stepTestGetInventoryOnPaymentCategory(self, sequence=None, sequence_list=None, **kw):
+  def stepTestGetInventoryOnPaymentCategory(self, sequence=None,
+                                            sequence_list=None, **kw):
     """
       Test getInventory with a payment_category argument
     """
@@ -885,10 +899,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       values = expected_values['values']
       for value in values:
         e_inventory = value['inventory']
-        self._testGetInventory(expected=e_inventory, payment_category=category)
+        self._testGetInventory(expected=e_inventory,
+                               payment_category=category)
         
         
-  def stepTestGetInventoryOnNodeCategory(self, sequence=None, sequence_list=None, **kw):
+  def stepTestGetInventoryOnNodeCategory(self, sequence=None,
+                                         sequence_list=None, **kw):
     """
       Test getInventory with a node_category argument
     """
@@ -967,7 +983,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       self.assertEquals(e_inventory, a_inventory, msg)
 
                
-  def stepTestGetInventoryOnSimulationState(self, sequence=None, sequence_list=None, **kw):
+  def stepTestGetInventoryOnSimulationState(self, sequence=None,
+                                            sequence_list=None, **kw):
     """
       Test getInventory with some simulation states, by using
       methods getCurrentInventory, getAvailableInventory and getFutureInventory
@@ -1040,7 +1057,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         method_name = 'get%sInventory' % name
         method = getattr(simulation, method_name, None)
         if method is None:
-          LOG('TEST ERROR : Simulation Tool has no %s method' % method_name, 0, '')
+          LOG('TEST ERROR : Simulation Tool has no %s method'
+              % method_name, 0, '')
           self.failUnless(0)
         a_inventory = method(section=organisation_url, 
                              omit_transit=omit_transit,
