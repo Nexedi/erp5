@@ -62,6 +62,16 @@ class InvoicingRule(Rule):
                       , PropertySheet.DublinCore
                       )
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
+    def isAccountable(self, movement):
+      """Tells wether generated movement needs to be accounted or not.
+
+      Invoice movement are never accountable, so simulation movement for
+      invoice movements should not be accountable either.
+      """
+      return 0
+
     security.declareProtected(Permissions.AccessContentsInformation, 'test')
     def test(self, movement):
       """
@@ -126,18 +136,16 @@ class InvoicingRule(Rule):
           start_date = my_context_movement.getStartDate(),
           stop_date = my_context_movement.getStopDate(),
           source = my_context_movement.getSource(),
-          source_section = my_context_movement.getSourceSection(),
+          source_section = source_section,
           destination = my_context_movement.getDestination(),
-          destination_section = my_context_movement.getDestinationSection(),
+          destination_section = destination_section,
           # We do need to collect invoice lines to build invoices
-          deliverable = 1   
+          deliverable = 1,
         )
+      
       # Create one submovement which sources the transformation
       Rule.expand(self, applied_rule, **kw)
 
     def isDeliverable(self, m):
-      resource = m.getResource()
-      if m.getResource() is None:
-        return 0
-      else:
-        return 1
+      return m.getResource() is not None
+

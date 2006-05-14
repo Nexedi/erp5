@@ -100,6 +100,12 @@ class AppliedRule(XMLObject):
       if rule is not None:
         rule.reset(self)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
+    def isAccountable(self, movement):
+      """Tells wether generated movement needs to be accounted or not."""
+      return self.getSpecialiseValue().isAccountable(movement)
+    
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, **kw):
       """

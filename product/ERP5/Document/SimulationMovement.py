@@ -173,10 +173,11 @@ class SimulationMovement(Movement):
   def isAccountable(self):
     """
       Returns 1 if this needs to be accounted
-      Only account movements which are not associated to a delivery
-      Whenever delivery is there, delivery has priority
+      Some Simulation movement corresponds to non accountable movements,
+      the parent applied rule decide wether this movement is accountable
+      or not.
     """
-    return (self.getDeliveryValue() is None)
+    return self.getParentValue().isAccountable(self)
 
   # Ordering / Delivering
   security.declareProtected( Permissions.AccessContentsInformation,

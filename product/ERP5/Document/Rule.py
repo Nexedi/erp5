@@ -81,9 +81,19 @@ class Rule(XMLObject, Predicate):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       )
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
+    def isAccountable(self, movement):
+      """Tells wether generated movement needs to be accounted or not.
+      
+      Only account movements which are not associated to a delivery;
+      Whenever delivery is there, delivery has priority
+      """
+      return movement.getDeliveryValue() is None
 
-    # Instanciation as an appl
-    security.declareProtected(Permissions.ModifyPortalContent, 'constructNewAppliedRule')
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'constructNewAppliedRule')
     def constructNewAppliedRule(self, context, id=None,**kw):
       """
         Creates a new applied rule which points to self
@@ -92,28 +102,17 @@ class Rule(XMLObject, Predicate):
       if id is None:
         id = context.generateNewId()
       if getattr(aq_base(context), id, None) is None:
-        context.newContent(id=id, portal_type='Applied Rule', specialise_value=self,**kw)
+        context.newContent(id=id,
+                           portal_type='Applied Rule',
+                           specialise_value=self,
+                           **kw)
       return context.get(id)
 
     # Simulation workflow
-    security.declareProtected(Permissions.ModifyPortalContent, 'reset')
-    def reset(self, applied_rule):
-      """
-        DO WE NEED IT ?
-
-        -> this does either a diverge or a reset depending
-        on the position in the tree
-
-        if it is in root position, it is a solve
-        if it is in non root position, it is a diverse
-      """
-
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, **kw):
       """
         Expands the current movement downward.
-
-        -> new status -> expanded
 
         An applied rule can be expanded only if its parent movement
         is expanded.

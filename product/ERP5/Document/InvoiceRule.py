@@ -60,8 +60,17 @@ class InvoiceRule(DeliveryRule):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       )
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
+    def isAccountable(self, movement):
+      """Tells wether generated movement needs to be accounted or not.
 
-    # Simulation workflow
+      Invoice movement are never accountable, so simulation movement for
+      invoice movements should not be accountable either.
+      """
+      return 0
+
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, 
                movement_type_method='getPortalInvoiceMovementTypeList', **kw):
