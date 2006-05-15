@@ -1,3 +1,6 @@
+2006-05-15 Romain
+* Update maintainers.
+
 2006-04-27 yo
 * Generate ids for table data in form_list_ui, to ease functional testing.
 
