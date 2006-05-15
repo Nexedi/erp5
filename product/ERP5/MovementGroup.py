@@ -1020,3 +1020,35 @@ class ParentExplanationCausalityMovementGroup(ParentExplanationMovementGroup):
     )
 
 allow_class(ParentExplanationCausalityMovementGroup)
+
+class PropertyMovementGroup(RootMovementGroup):
+  """Abstract movement group for movement that share the same value for
+  a property.
+  """
+  _property = [] # Subclasses must override this
+
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    if self._property is PropertyMovementGroup._property :
+      raise ValueError, 'PropertyMovementGroup: property not defined'
+    assert isinstance(self._property, str)
+    prop_value = movement.getProperty(self._property)
+    self._property_dict = { self._property : prop_value }
+    self.setGroupEdit(
+        **self._property_dict
+    )
+
+  def test(self, movement) :
+    return self._property_dict[self._property] == \
+            movement.getProperty(self._property)
+
+class SourceMovementGroup(PropertyMovementGroup):
+  """Group movements having the same source."""
+  _property = 'source'
+allow_class(SourceMovementGroup)
+
+class DestinationMovementGroup(PropertyMovementGroup):
+  """Group movements having the same destination."""
+  _property = 'destination'
+allow_class(DestinationMovementGroup)
+
