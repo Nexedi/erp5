@@ -103,7 +103,48 @@ def copytree(src, dst, symlinks=False):
             errors.append((srcname, dstname, 'Error: ' + str(why.strerror)))
     if errors:
         raise Error, errors
-
+    
+def colorizeTag(tag):
+  "Return html colored item"
+  text = tag.group()
+  if text.startswith('#') :
+    color = 'grey'
+  elif text.startswith('\"') :
+    color = 'red'
+  elif 'string' in text:
+    color = 'green'
+  elif 'tuple' in text:
+    color = 'orange'
+  elif 'dictionary' in text:
+    color = 'brown'
+  elif 'item' in text:
+    color = '#A1559A' #light purple
+  elif 'value' in text:
+    color = 'purple'
+  elif 'key' in text:
+    color = '#0C4F0C'#dark green
+  else:
+    color='blue'
+  return "<font color='%s'>%s</font>"%(color,text,)
+    
+def colorize(text):
+  """Return HTML Code with syntax hightlighting
+  """
+  # Escape xml before adding html tags
+  html = escape(text)
+  html = html.replace(' ', '&nbsp;&nbsp;')
+  html = html.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+  # Colorize comments
+  p = re.compile(r'#.*')
+  html = p.sub(colorizeTag, html)
+  # Colorize tags
+  p = re.compile(r'&lt;.*?&gt;')
+  html = p.sub(colorizeTag, html)
+  # Colorize strings
+  p = re.compile(r'\".*?\"')
+  html = p.sub(colorizeTag, html)
+  html = html.replace(os.linesep, os.linesep+"<br>")
+  return html
   
 class File :
   # Constructor
@@ -499,15 +540,14 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   # Display a file content in HTML with syntax highlighting
   def fileHTML(self, bt, file_path):
     file_path = self.relativeToAbsolute(file_path, bt)
+    file = open(file_path, 'r')
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
         text = "<b>"+file_path+"</b><hr>"
         text += file_path +" is a folder!"
       else:
         head = "<b>"+file_path+"</b>  <a href='"+self.editPath(bt, file_path)+"'><img src='imgs/edit.png' border='0'></a><hr>"
-        text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%file_path)
-        text = head + os.linesep.join(text.split(os.linesep)[10:-4])
-      return text
+        text = head + colorize(file.read())
     else:
       # see if tmp file is here (svn deleted file)
       if file_path[-1]==os.sep:
@@ -517,13 +557,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       tmp_path = os.path.join(tmp_path,'.svn','text-base',filename+'.svn-base')
       if os.path.exists(tmp_path):
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
-        text = commands.getoutput('enscript -B --color --line-numbers --highlight=html --language=html -o - %s'%tmp_path)
-        # remove heading & trailing useless stuff
-        text = head + os.linesep.join(text.split(os.linesep)[10:-4])
+        text = head + colorize(file.read())
       else : # does not exist
         text = "<b>"+file_path+"</b><hr>"
         text += file_path +" does not exist!"
-      return text
+    file.close()
+    return text
       
   security.declareProtected(Permissions.ManagePortal, 'acceptSSLServer')
   def acceptSSLServer(self, trust_dict, permanent=False):
