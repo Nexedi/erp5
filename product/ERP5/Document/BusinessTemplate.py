@@ -3758,7 +3758,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # if reinstall business template, must compare to object in ZODB
       # and not to those in the installed Business Template because it is itself.
-      # same if we make a diff and selected only one business template
+      # same if we make a diff and select only one business template
       reinstall = 0
       if installed_bt == self:
         reinstall = 1
