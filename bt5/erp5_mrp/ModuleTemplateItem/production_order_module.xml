@@ -578,10 +578,6 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Manage extensions</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Manage languages</name>
    <role>Manager</role>
   </permission>
