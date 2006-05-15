@@ -61,6 +61,7 @@ class TestPackingListMixin(TestOrderMixin):
   """
   container_type = 'Container'
   container_line_type = 'Container Line'
+  container_cell_type = 'Container Cell'
 
   default_sequence = 'CreateOrganisation1 \
                       CreateOrganisation2 \
@@ -491,6 +492,47 @@ class TestPackingListMixin(TestOrderMixin):
     container_line.edit(quantity=quantity)
     container_line.immediateReindexObject()
 
+  def stepSetContainerFullQuantity(self,sequence=None, sequence_list=None, 
+                                       quantity=None,**kw):
+    """
+      Really fills the container
+    """
+    packing_list = sequence.get('packing_list')
+    container = sequence.get('container')
+    #empty container
+    container.deleteContent(container.contentIds())
+    for line in packing_list.objectValues(
+        portal_type=self.packing_list_line_portal_type):
+      resource = line.getResourceValue()
+      tmp_kw={'movement.resource_uid':resource.getUid()}
+      container_line = \
+          container.newContent(portal_type=self.container_line_type)
+      container_line.setResourceValue(resource)
+      # without variation
+      if not line.hasCellContent():
+        quantity = line.getQuantity()
+        container_line.edit(quantity=quantity)
+        container_line.immediateReindexObject()
+      # with variation
+      elif line.hasCellContent():
+        vcl = line.getVariationCategoryList()
+        vcl.sort()
+        base_id = 'movement'
+        container_line.setVariationCategoryList(vcl)
+        cell_key_list = list(line.getCellKeyList(base_id=base_id))
+        cell_key_list.sort()
+        for cell_key in cell_key_list:
+          if line.hasCell(base_id=base_id, *cell_key):
+            old_cell = line.getCell(base_id=base_id, *cell_key)
+            cell = container_line.newCell(base_id=base_id,
+                portal_type=self.container_cell_type, *cell_key)
+            cell.edit(mapped_value_property_list=['price', 'quantity'],
+                price=old_cell.getPrice(),
+                quantity=old_cell.getQuantity(),
+                predicate_category_list=cell_key,
+                variation_category_list=cell_key)
+            cell.immediateReindexObject()
+
   def stepCheckPackingListIsNotPacked(self,sequence=None, sequence_list=None, **kw):
     """
       Check that the number of objects in containers are
@@ -686,7 +728,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       AddPackingListContainerLine \
                       SetContainerLineSmallQuantity \
                       CheckPackingListIsNotPacked \
-                      SetContainerLineFullQuantity \
+                      SetContainerFullQuantity \
                       Tic \
                       CheckPackingListIsPacked \
                       '
@@ -708,7 +750,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       AddPackingListContainerLine \
                       SetContainerLineSmallQuantity \
                       CheckPackingListIsNotPacked \
-                      SetContainerLineFullQuantity \
+                      SetContainerFullQuantity \
                       Tic \
                       CheckPackingListIsPacked \
                       '
