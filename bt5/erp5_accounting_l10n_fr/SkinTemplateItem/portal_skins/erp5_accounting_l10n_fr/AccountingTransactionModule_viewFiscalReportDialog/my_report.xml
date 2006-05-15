@@ -238,7 +238,40 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>2006-2033-A</string>
+                          <string>2006-2033-A</string>
+                        </tuple>
+                        <tuple>
+                          <string>2006-2033-B</string>
+                          <string>2006-2033-B</string>
+                        </tuple>
+                        <tuple>
+                          <string>2006-2033-C</string>
+                          <string>2006-2033-C</string>
+                        </tuple>
+                        <tuple>
+                          <string>2006-2033-D</string>
+                          <string>2006-2033-D</string>
+                        </tuple>
+                        <tuple>
+                          <string>2006-2033-E</string>
+                          <string>2006-2033-E</string>
+                        </tuple>
+                        <tuple>
+                          <string>2006-2033-F</string>
+                          <string>2006-2033-F</string>
+                        </tuple>
+                        <tuple>
+                          <string>2006-2033-G</string>
+                          <string>2006-2033-G</string>
+                        </tuple>
+                        <tuple>
+                          <string>2006-2065</string>
+                          <string>2006-2065</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

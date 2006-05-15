@@ -423,7 +423,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -431,7 +433,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Region</unicode> </value>
+            <value> <string>Region</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

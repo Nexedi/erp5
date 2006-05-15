@@ -75,7 +75,7 @@ fiscal_report_list = []\n
 \n
 for folder in skin_folders:\n
   folder_id = folder.id\n
-  if folder_id.startswith(\'erp5_accounting_l10n_\'):\n
+  if folder_id.startswith(\'erp5_accounting_l10n_\') or folder_id.startswith(\'custom\'):\n
     # Assume all PDFForm in the folder are Fiscal Reports\n
     for object in folder.objectValues():\n
       if object.meta_type == \'ERP5 PDF Form\':\n
@@ -133,7 +133,7 @@ return fiscal_report_list\n
                           <tuple>
                             <string>Products.CMFCore.utils</string>
                             <string>getToolByName</string>
-<string>context</string>
+                            <string>context</string>
                             <string>tool</string>
                             <string>_getattr_</string>
                             <string>skin_folders</string>
