@@ -20,6 +20,7 @@ Product | price_view
 Product | print
 Product | view
 Product | view_stock
+Service Module | print
 Service Module | view
 Service | history
 Service | metadata
