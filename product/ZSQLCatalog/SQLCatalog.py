@@ -1355,7 +1355,15 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     This method can be overidden in order to implement 
     dynamic generation of some related keys.
     """
-    dynamic_list = self.getDynamicRelatedKeyList(**kw)
+    # Do not generate dynamic related key for acceptable_keys
+    dynamic_key_list = kw.keys()
+    dynamic_key_list = [k for k in dynamic_key_list \
+        if k not in self.getColumnMap().keys()]
+    dynamic_kw = {}
+    for key in dynamic_key_list:
+      dynamic_kw[key] = kw[key]
+
+    dynamic_list = self.getDynamicRelatedKeyList(**dynamic_kw)
     full_list = list(dynamic_list) + list(self.sql_catalog_related_keys)
     return full_list
 
@@ -1555,7 +1563,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if len(acceptable_key_map[key]) == 1 :
                   key = acceptable_key_map[key][0] + '.' + key
                 # query_table specifies what table name should be used by default
-                elif query_table:
+                elif query_table and \
+                    '%s.%s' % (query_table, key) in acceptable_keys:
                   key = query_table + '.' + key
                 elif key == 'uid':
                   # uid is always ambiguous so we can only change it here
