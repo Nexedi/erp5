@@ -401,9 +401,6 @@
    <name>Manage Transient Object Container</name>
   </permission>
   <permission>
-   <name>Manage Translation Services</name>
-  </permission>
-  <permission>
    <name>Manage Vocabulary</name>
   </permission>
   <permission>
@@ -420,9 +417,6 @@
   </permission>
   <permission>
    <name>Manage currencies</name>
-  </permission>
-  <permission>
-   <name>Manage extensions</name>
   </permission>
   <permission>
    <name>Manage languages</name>

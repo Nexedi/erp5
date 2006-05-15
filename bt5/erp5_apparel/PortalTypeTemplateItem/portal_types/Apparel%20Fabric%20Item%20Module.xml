@@ -31,6 +31,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_roles</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>allowed_action_list</string> </key>
             <value>
               <tuple/>
