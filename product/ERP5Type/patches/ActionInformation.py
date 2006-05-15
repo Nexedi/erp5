@@ -32,7 +32,6 @@ if 1:
                 , visible=1
                 , action=''
                 , icon=''
-                , optional=0
                 ):
         """ Set up an instance.
         """
@@ -55,8 +54,6 @@ if 1:
         self.visible = visible
         self.setActionExpression(action)
         self.setIconExpression(icon)
-        self.optional = optional
-
 
     def getAction( self, ec ):
 
@@ -76,7 +73,6 @@ if 1:
         info['permissions'] = self.getPermissions()
         info['category'] = self.getCategory()
         info['visible'] = self.getVisibility()
-        info['optional'] = self.getOption()
         info['priority'] = self.getPriority()
         return info
 
@@ -111,19 +107,11 @@ if 1:
                 icon = Expression( icon )
         self.icon = icon
 
-
-    security.declarePublic( 'getOption' )
-    def getOption( self ):
-
-        """ Return whether the action should be optional in the Business Template.
-        """
-        return getattr( self, 'optional', 0 )
-
     def getPriority( self ):
         """
         Return the priority of the action
         """
-        return getattr(self, 'priority', 1.0)    
+        return getattr(self, 'priority', 1.0)
 
     def clone( self ):
 
@@ -139,7 +127,6 @@ if 1:
                              , visible=self.visible
                              , action=self.getActionExpression()
                              , icon=self.getIconExpression()
-                             , optional=self.getOption()
                              )
 
     def getMapping(self):
@@ -154,7 +141,6 @@ if 1:
                  'permissions': self.permissions,
                  'visible': bool(self.visible),
                  'action': self.getActionExpression(),
-                 'optional': self.getOption(),
                  'icon': self.getIconExpression(),
                  'priority': self.getPriority() }
 
@@ -164,7 +150,6 @@ ActionInformation.getAction = getAction
 ActionInformation._getIconObject = _getIconObject
 ActionInformation.getIconExpression = getIconExpression
 ActionInformation.setIconExpression = setIconExpression
-ActionInformation.getOption = getOption
 ActionInformation.getPriority = getPriority
 ActionInformation.clone = clone
 ActionInformation.getMapping = getMapping

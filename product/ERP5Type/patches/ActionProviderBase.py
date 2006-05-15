@@ -41,8 +41,6 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
           a1['priority'] = a.getPriority()
         if hasattr(a, 'getIconExpression') :
           a1['icon'] = a.getIconExpression()
-        if hasattr(a, 'getOption') :
-          a1['optional'] = a.getOption()
         actions.append(a1)
 
     # possible_permissions is in AccessControl.Role.RoleManager.
@@ -65,7 +63,6 @@ def ActionProviderBase_addAction( self
               , category
               , icon=None
               , visible=1
-              , optional=0
               , priority=1.0
               , REQUEST=None
               ):
@@ -91,7 +88,6 @@ def ActionProviderBase_addAction( self
                                   , permissions=permission
                                   , category=str(category)
                                   , visible=int(visible)
-                                  , optional=int(optional)
                                   , priority=float(priority)
                                   )
 
@@ -114,7 +110,6 @@ def ActionProviderBase_extractAction( self, properties, index ):
     condition   = str( properties.get( 'condition_%d'   % index, '' ) )
     category    = str( properties.get( 'category_%d'    % index, '' ))
     visible     =      properties.get( 'visible_%d'     % index, 0  )
-    optional    =      properties.get( 'optional_%d'    % index, 0  )
     permissions =      properties.get( 'permission_%d'  % index, () )
     priority    = float( properties.get( 'priority_%d'    % index, 1.0 ))
 
@@ -139,12 +134,6 @@ def ActionProviderBase_extractAction( self, properties, index ):
         except TypeError:
             visible = 0
 
-    if type( optional ) is not type( 0 ):
-        try:
-            optional = int( optional )
-        except TypeError:
-            optional = 0
-
     if type( permissions ) is type( '' ):
         permissions = ( permissions, )
 
@@ -159,7 +148,6 @@ def ActionProviderBase_extractAction( self, properties, index ):
                             , permissions=permissions
                             , category=category
                             , visible=visible
-                            , optional=optional
                             , priority=priority
                             )
 

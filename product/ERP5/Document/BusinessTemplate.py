@@ -1798,8 +1798,8 @@ class ActionTemplateItem(ObjectTemplateItem):
                       , permission = action.permissions
                       , category = action.category
                       , visible = action.visible
-                      , icon = getattr(action, 'icon', None) and action.icon.text or ''
-                      , optional = getattr(action, 'optional', 0)
+                      , icon = getattr(action, 'icon', None)\
+                                and action.icon.text or ''
                       , priority = action.priority
                     )
           # sort action based on the priority define on it
@@ -1833,8 +1833,8 @@ class ActionTemplateItem(ObjectTemplateItem):
                     , permission = action.permissions
                     , category = action.category
                     , visible = action.visible
-                    , icon = getattr(action, 'icon', None) and action.icon.text or ''
-                    , optional = getattr(action, 'optional', 0)
+                    , icon = getattr(action, 'icon', None) \
+                                      and action.icon.text or ''
                     )
         new_priority = action.priority
         action_list = obj.listActions()
