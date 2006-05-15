@@ -312,7 +312,7 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepCheckSimulationDestinationUpdated(self,sequence=None, sequence_list=None, **kw):
     """
-      Create a empty organisation
+      XXX
     """
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
@@ -323,14 +323,14 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepChangePackingListStartDate(self, sequence=None, sequence_list=None, **kw):
     """
-      Test if packing list is divergent
+      XXX
     """
     packing_list = sequence.get('packing_list')
     packing_list.edit(start_date=self.datetime + 15)
 
   def stepCheckSimulationStartDateUpdated(self,sequence=None, sequence_list=None, **kw):
     """
-      Create a empty organisation
+      XXX
     """
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
@@ -338,13 +338,33 @@ class TestPackingListMixin(TestOrderMixin):
     for simulation_line in simulation_line_list:
       self.assertEquals(simulation_line.getStartDate(),self.datetime + 15)
 
+  def stepEditPackingListLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Edits a Packing List Line
+    """
+    packing_list_line = sequence.get('packing_list_line')
+    packing_list_line.edit(description='This line was edited!')
+
   def stepDeletePackingListLine(self,sequence=None, sequence_list=None, **kw):
     """
-      Create a empty organisation
+      Deletes a Packing List Line
     """
     packing_list = sequence.get('packing_list')
     packing_list_line_id = sequence.get('packing_list_line').getId()
     packing_list.manage_delObjects([packing_list_line_id])
+
+  def stepAddPackingListLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Adds a Packing List Line
+    """
+    packing_list = sequence.get('packing_list')
+    packing_list_line = packing_list.newContent(
+        portal_type=self.packing_list_line_portal_type)
+    self.stepCreateNotVariatedResource(sequence=sequence,
+        sequence_list=sequence_list, **kw)
+    resource = sequence.get('resource')
+    packing_list_line.setResourceValue(resource)
+    packing_list_line.edit(price=100, quantity=200)
 
   def stepCheckSimulationConnected(self,sequence=None, sequence_list=None, **kw):
     """

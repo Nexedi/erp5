@@ -26,7 +26,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
-
 """
   Tests invoice creation from simulation.
 
@@ -35,24 +34,35 @@ TODO:
   * check divergence 
   
 """
+
+from random import randint
+
 import os, sys
 if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
+    execfile(os.path.join(sys.path[0], 'framework.py'))
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
+from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager, \
+                                             noSecurityManager
 from DateTime import DateTime
+from Acquisition import aq_base, aq_inner
 from zLOG import LOG
-from testPackingList import TestPackingListMixin
+from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+import time
+import os
+from Products.ERP5Type import product_path
+from Products.CMFCore.utils import getToolByName
+from testPackingList import TestPackingListMixin
 from testAccountingRules import TestAccountingRulesMixin
 
-class TestInvoice(TestAccountingRulesMixin,
-                  TestPackingListMixin,
+class TestInvoice(TestPackingListMixin,
+                  TestAccountingRulesMixin,
                   ERP5TypeTestCase):
   """Test invoice are created from orders then packing lists. """
   
@@ -115,12 +125,16 @@ class TestInvoice(TestAccountingRulesMixin,
   def stepCreateEntities(self, sequence, **kw) :
     """Create a vendor and a client. """
     self.stepCreateOrganisation1(sequence, **kw)
-    sequence.edit(client = sequence.get('organisation'))
     self.stepCreateOrganisation2(sequence, **kw)
-    vendor = sequence.get('organisation')
-    vendor.setRegion(self.default_region)
-    self.assertNotEquals(vendor.getRegionValue(), None)
-    sequence.edit(vendor = vendor)
+    self.stepCreateOrganisation3(sequence, **kw)
+    sequence.edit(vendor=sequence.get('organisation1'))
+    client1 = sequence.get('organisation2')
+    client1.setRegion(self.default_region)
+    self.assertNotEquals(client1.getRegionValue(), None)
+    sequence.edit(client1=client1)
+    client2 = sequence.get('organisation3')
+    self.assertEquals(client2.getRegionValue(), None)
+    sequence.edit(client2=client2)
   
   def stepCreateCurrency(self, sequence, **kw) :
     """Create a default currency. """
@@ -148,23 +162,17 @@ class TestInvoice(TestAccountingRulesMixin,
 
     portal = self.getPortal()
     account_module = self.getAccountModule()
-    if not 'receivable_vat' in account_module.objectIds():
-      vat_account = account_module.newContent(id='receivable_vat')
-      vat_account.setGap(self.vat_gap)
-      portal.portal_workflow.doActionFor(vat_account,
-          'validate_action', wf_id='account_workflow')
+    for account_id, account_gap in (('receivable_vat', self.vat_gap),
+                                    ('sale', self.sale_gap),
+                                    ('customer', self.customer_gap)):
+      if not account_id in account_module.objectIds():
+        account = account_module.newContent(id=account_id)
+        account.setGap(account_gap)
+        portal.portal_workflow.doActionFor(account,
+            'validate_action', wf_id='account_workflow')
+
     vat_account = account_module['receivable_vat']
-    if not 'sale' in account_module.objectIds():
-      sale_account = account_module.newContent(id='sale')
-      sale_account.setGap(self.sale_gap)
-      portal.portal_workflow.doActionFor(sale_account,
-          'validate_action', wf_id='account_workflow')
     sale_account = account_module['sale']
-    if not 'customer' in account_module.objectIds():
-      customer_account = account_module.newContent(id='customer')
-      customer_account.setGap(self.customer_gap)
-      portal.portal_workflow.doActionFor(customer_account,
-          'validate_action', wf_id='account_workflow')
     customer_account = account_module['customer']
     
     invoice_rule = self.getPortal().portal_rules\
@@ -194,19 +202,16 @@ class TestInvoice(TestAccountingRulesMixin,
     cell_list = invoice_rule.getCellValueList(base_id='movement')
     self.assertEquals(len(cell_list),1)
     cell = cell_list[0]
-    income = cell.newContent(id='income',
-            portal_type=self.sale_invoice_transaction_portal_type)
-    income.setQuantity(1.0)
-    income.setSourceValue(sale_account)
-    receivable = cell.newContent(id='receivable',
-            portal_type=self.sale_invoice_transaction_portal_type)
-    receivable.setQuantity(-1.196)
-    receivable.setSourceValue(customer_account)
-    collected_vat = cell.newContent(id='collected_vat',
-            portal_type=self.sale_invoice_transaction_portal_type)
-    collected_vat.setQuantity(self.vat_rate)
-    collected_vat.setSourceValue(vat_account)
-    
+
+    for line_id, line_source, line_ratio in (('income', sale_account, 1.0),
+        ('receivable', customer_account, -1.0 - self.vat_rate),
+        ('collected_vat', vat_account, self.vat_rate)):
+
+      line = cell.newContent(id=line_id,
+          portal_type=self.sale_invoice_transaction_portal_type)
+      line.setQuantity(line_ratio)
+      line.setSourceValue(line_source)
+
   def modifyPackingListState(self, transition_name,
                              sequence,packing_list=None):
     """ calls the workflow for the packing list """
@@ -437,11 +442,11 @@ class TestInvoice(TestAccountingRulesMixin,
         simulation_movement_list = invoicing_rule.objectValues()
         self.assertNotEquals(len(simulation_movement_list), 0)
         for simulation_movement in simulation_movement_list :
-          resource = sequence.get('resource')
+          resource_list = sequence.get('resource_list')
           self.assertEquals(simulation_movement.getPortalType(),
                             'Simulation Movement')
-          self.assertEquals(simulation_movement.getResourceValue(),
-                            resource)
+          self.assertTrue(simulation_movement.getResourceValue() in
+              resource_list)
           # TODO: What is the invoice dates supposed to be ?
           # is this done through profiles ?
           self.assertEquals(simulation_movement.getStartDate(),
@@ -711,6 +716,40 @@ class TestInvoice(TestAccountingRulesMixin,
       stepCheckPackingListIsPacked
     """
       
+  # default sequence for two lines of not varianted resource.
+  PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE = """
+      stepCreateSaleInvoiceTransactionRule
+      stepCreateEntities
+      stepCreateCurrency
+      stepCreateOrder
+      stepSetOrderProfile
+      stepSetOrderPriceCurrency
+      stepCreateNotVariatedResource
+      stepTic
+      stepCreateOrderLine
+      stepSetOrderLineResource
+      stepSetOrderLineDefaultValues
+      stepCreateNotVariatedResource
+      stepTic
+      stepCreateOrderLine
+      stepSetOrderLineResource
+      stepSetOrderLineDefaultValues
+      stepOrderOrder
+      stepTic
+      stepCheckDeliveryBuilding
+      stepConfirmOrder
+      stepTic
+      stepCheckOrderRule
+      stepCheckOrderSimulation
+      stepCheckDeliveryBuilding
+      stepAddPackingListContainer
+      stepAddPackingListContainerLine
+      stepTic
+      stepSetContainerFullQuantity
+      stepTic
+      stepCheckPackingListIsPacked
+    """
+      
   # default sequence for one line of not varianted resource.
   TWO_PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
@@ -732,12 +771,12 @@ class TestInvoice(TestAccountingRulesMixin,
       stepCheckOrderRule
       stepCheckOrderSimulation
       stepCheckDeliveryBuilding
-      DecreasePackingListLineQuantity 
-      CheckPackingListIsCalculating 
-      SplitAndDeferPackingList 
-      Tic 
-      CheckPackingListIsSolved 
-      CheckPackingListSplitted
+      stepDecreasePackingListLineQuantity 
+      stepCheckPackingListIsCalculating 
+      stepSplitAndDeferPackingList 
+      stepTic 
+      stepCheckPackingListIsSolved 
+      stepCheckPackingListSplitted
       stepAddPackingListContainer
       stepAddPackingListContainerLine
       stepSetContainerLineFullQuantity
@@ -748,8 +787,9 @@ class TestInvoice(TestAccountingRulesMixin,
       stepCheckNewPackingListIsPacked
     """
 
-  def test_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_01_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
     """Checks that a Simple Invoice is created from a Packing List"""
+    if not run: return
     for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
@@ -763,7 +803,7 @@ class TestInvoice(TestAccountingRulesMixin,
         stepRebuildAndCheckNothingIsCreated
       """)
 
-  def test_TwoInvoicesFromTwoPackingList(self, quiet=0, run=1):
+  def test_02_TwoInvoicesFromTwoPackingList(self, quiet=0, run=RUN_ALL_TESTS):
     """ This test was created for the following bug:
         - an order is created and confirmed
         - the packing list is split
@@ -773,6 +813,7 @@ class TestInvoice(TestAccountingRulesMixin,
           so we have an invoice with twice the number of accounting rules
           and an invoice with no accounting rules. both invoices are wrong
     """
+    if not run: return
     for base_sequence in (TestInvoice.TWO_PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
@@ -790,17 +831,18 @@ class TestInvoice(TestAccountingRulesMixin,
         stepCheckTwoInvoicesTransactionLines
       """)
 
-  def test_InvoiceEditAndInvoiceRule(self, quiet=0, run=1):
+  def test_03_InvoiceEditAndInvoiceRule(self, quiet=0, run=RUN_ALL_TESTS):
     """Invoice Rule should not be applied on invoice lines created from\
     Packing List.
 
-    We went to prevent this from happening:
+    We want to prevent this from happening:
       - Create a packing list
       - An invoice is created from packing list
       - Invoice is edited, updateAppliedRule is called
       - A new Invoice Rule is created for this invoice, and accounting
         movements for this invoice are present twice in the simulation.
     """
+    if not run: return
     for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
@@ -815,10 +857,11 @@ class TestInvoice(TestAccountingRulesMixin,
         stepCheckInvoiceRuleNotAppliedOnInvoiceEdit
       """)
   
-  def test_PackingListEditAndInvoiceRule(self, quiet=0, run=1):
+  def test_04_PackingListEditAndInvoiceRule(self, quiet=0, run=RUN_ALL_TESTS):
     """Delivery Rule should not be applied on packing list lines created\
     from Order.
     """
+    if not run: return
     for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
@@ -827,9 +870,10 @@ class TestInvoice(TestAccountingRulesMixin,
         stepCheckDeliveryRuleNotAppliedOnPackingListEdit
       """)
 
-  def DISABLEDtest_InvoiceEditPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_05_InvoiceEditPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
     """Checks that editing a Packing List Line still creates a correct
       Invoice"""
+    if not run: return
     for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
@@ -844,12 +888,12 @@ class TestInvoice(TestAccountingRulesMixin,
       stepRebuildAndCheckNothingIsCreated
     """)
 
-  def DISABLEDtest_InvoiceDeletePackingListLine(self, quiet=0,
-                                                run=RUN_ALL_TESTS):
+  def test_06_InvoiceDeletePackingListLine(self, quiet=0,
+      run=RUN_ALL_TESTS):
     """Checks that deleting a Packing List Line still creates a correct
     Invoice"""
-    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
-                # XXX use another sequence that creates 2 lines
+    if not run: return
+    for base_sequence in (TestInvoice.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
     """
@@ -863,15 +907,19 @@ class TestInvoice(TestAccountingRulesMixin,
       stepRebuildAndCheckNothingIsCreated
     """)
 
-  def DISABLEDtest_InvoiceAddPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_07_InvoiceAddPackingListLine(self, quiet=0, run=RUN_ALL_TESTS):
     """Checks that adding a Packing List Line still creates a correct
     Invoice"""
-    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+    if not run: return
+    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE,
+        TestInvoice.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE) :
                 # XXX use another sequence that creates 2 lines
       self.playSequence(
         base_sequence +
     """
       stepAddPackingListLine
+      stepSetContainerFullQuantity
+      stepTic
       stepSetReadyPackingList
       stepTic
       stepStartPackingList

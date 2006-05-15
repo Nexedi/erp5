@@ -82,13 +82,13 @@ class TestOrderMixin:
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',)
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager', 'Member'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
-  def afterSetUp(self, quiet=1, run=run_all_test):
+  def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
