@@ -29,11 +29,9 @@
 ##############################################################################
 
 """
-Define in this class all classes intended to group every kind of movement
+Define in this file all classes intended to group every kind of movement
 """
 
-from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile
 from zLOG import LOG
 from Products.PythonScripts.Utility import allow_class
 
@@ -127,10 +125,7 @@ class RootMovementGroup:
     """
       Get property dict for the futur created object 
     """
-    if hasattr(self, '_property_dict'):
-      return self._property_dict
-    else:
-      return {}
+    return getattr(self, '_property_dict', {})
 
   def getMovementList(self):
     """
@@ -259,13 +254,9 @@ class OrderMovementGroup(RootMovementGroup):
       # get the id of the enclosing delivery
       # for this cell or line
       order_relative_url = order_value.getRelativeUrl()
-    if order_relative_url == self.order:
-      return 1
-    else :
-      return 0
+    return order_relative_url == self.order
 
 allow_class(OrderMovementGroup)
-
 
 class CausalityMovementGroup(RootMovementGroup):
   """ Groups movement that comes from simulation movement that shares the
@@ -315,7 +306,8 @@ class RootAppliedRuleCausalityMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     explanation_relative_url = self._getExplanationRelativeUrl(movement)
     self.explanation = explanation_relative_url
-    explanation_value = movement.getPortalObject().restrictedTraverse(explanation_relative_url)
+    explanation_value = movement.getPortalObject().restrictedTraverse(
+                                        explanation_relative_url)
     self.setGroupEdit(
       root_causality_value_list = [explanation_value]
     )
@@ -493,18 +485,15 @@ allow_class(CriterionMovementGroup)
 
 class ResourceMovementGroup(RootMovementGroup):
 
-  def __init__(self,movement,**kw):
+  def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.resource = movement.getResource()
     self.setGroupEdit(
         resource_value=movement.getResourceValue()
     )
 
-  def test(self,movement):
-    if movement.getResource() == self.resource :
-      return 1
-    else :
-      return 0
+  def test(self, movement):
+    return movement.getResource() == self.resource
 
 allow_class(ResourceMovementGroup)
 
@@ -514,16 +503,13 @@ class BaseVariantMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.base_category_list = movement.getVariationBaseCategoryList()
     if self.base_category_list is None:
-      #LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.base_category_list = []
 
   def test(self,movement):
     # we must have the same number of categories
     categories_identity = 0
-    #LOG('BaseVariantGroup', 0, 'self.base_category_list = %s, movement = %s, movement.getVariationBaseCategoryList() = %s' % (repr(self.base_category_list), repr(movement), repr(movement.getVariationBaseCategoryList())))
     movement_base_category_list = movement.getVariationBaseCategoryList()
     if movement_base_category_list is None:
-      #LOG('BaseVariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       movement_base_category_list = []
     if len(self.base_category_list) == len(movement_base_category_list):
       for category in movement_base_category_list:
@@ -541,7 +527,6 @@ class VariantMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.category_list = movement.getVariationCategoryList()
     if self.category_list is None:
-      #LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.category_list = []
     self.setGroupEdit(
         variation_category_list=self.category_list
@@ -552,7 +537,6 @@ class VariantMovementGroup(RootMovementGroup):
     categories_identity = 0
     movement_category_list = movement.getVariationCategoryList()
     if movement_category_list is None:
-      #LOG('VariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       movement_category_list = []
     if len(self.category_list) == len(movement_category_list):
       for category in movement_category_list:
@@ -564,9 +548,7 @@ class VariantMovementGroup(RootMovementGroup):
 
 allow_class(VariantMovementGroup)
 
-from copy import copy
-
-class CategoryMovementGroup(RootMovementGroup):  
+class CategoryMovementGroup(RootMovementGroup):
   """
     This seems to be a useless class
   """
@@ -594,8 +576,8 @@ class OptionMovementGroup(RootMovementGroup):
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    self.option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
-    #LOG('OptionMovementGroup.__init__, option_category_list',0,self.option_category_list)
+    self.option_category_list = movement.getVariationCategoryList(
+                                  base_category_list=option_base_category_list)
     if self.option_category_list is None:
       self.option_category_list = []
     # XXX This is very bad, but no choice today.
@@ -605,8 +587,8 @@ class OptionMovementGroup(RootMovementGroup):
     # we must have the same number of categories
     categories_identity = 0
     option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    movement_option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
-    #LOG('OptionMovementGroup.test, option_category_list',0,movement_option_category_list)
+    movement_option_category_list = movement.getVariationCategoryList(
+                              base_category_list=option_base_category_list)
     if movement_option_category_list is None:
       movement_option_category_list = []
     if len(self.option_category_list) == len(movement_option_category_list):
@@ -664,6 +646,7 @@ class FakeMovement:
     by DeliveryBuilder.
     It contents a list a real ERP5 Movement and can modify them.
   """
+
   def __init__(self, movement_list):
     """
       Create a fake movement and store the list of real movement
@@ -870,7 +853,7 @@ class FakeMovement:
         self.setDeliveryValue(kw[key])
       else:
         raise FakeMovementError,\
-              "Could not call edit on Fakeovement with parameters: %r" % key
+              "Could not call edit on Fakemovement with parameters: %r" % key
 
 class TitleMovementGroup(RootMovementGroup):
 
@@ -893,10 +876,7 @@ class TitleMovementGroup(RootMovementGroup):
     )
 
   def test(self,movement):
-    if self.getTitle(movement) == self.title :
-      return 1
-    else :
-      return 0
+    return self.getTitle(movement) == self.title
 
 # XXX This should not be here
 # I (seb) have commited this because movement groups are not
@@ -922,10 +902,7 @@ class IntIndexMovementGroup(RootMovementGroup):
     )
 
   def test(self,movement):
-    if self.getIntIndex(movement) == self.int_index :
-      return 1
-    else :
-      return 0
+    return self.getIntIndex(movement) == self.int_index
 
 allow_class(IntIndexMovementGroup)
 
@@ -946,10 +923,7 @@ class DecisionMovementGroup(RootMovementGroup):
     )
 
   def test(self,movement):
-    if self.getDecision(movement) == self.decision :
-      return 1
-    else :
-      return 0
+    return self.getDecision(movement) == self.decision
 
 allow_class(DecisionMovementGroup)
 
@@ -970,10 +944,7 @@ class BrandMovementGroup(RootMovementGroup):
     )
 
   def test(self,movement):
-    if self.getBrand(movement) == self.brand :
-      return 1
-    else :
-      return 0
+    return self.getBrand(movement) == self.brand
 
 allow_class(BrandMovementGroup)
 
