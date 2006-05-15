@@ -3464,7 +3464,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
 class BusinessTemplate(XMLObject):
     """
     A business template allows to construct ERP5 modules
-    in part or completely. Each object are separated from its
+    in part or completely. Each object is separated from its
     subobjects and exported in xml format.
     It may include:
 
@@ -3475,8 +3475,8 @@ class BusinessTemplate(XMLObject):
         - filter definition
 
     - portal_types definition
-      - object without optinal actions
-      - list of relation between portal type and worklfow
+      - object without optimal actions
+      - list of relation between portal type and workflow
 
     - module definition
       - id
