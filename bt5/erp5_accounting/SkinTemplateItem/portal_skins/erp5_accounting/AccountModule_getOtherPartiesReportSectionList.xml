@@ -137,24 +137,18 @@ if not params[\'hide_grouping\']  :\n
 \n
 for party in context.Account_zDistinctSectionList():\n
   o = party.getObject()\n
-  if role_filter_list and hasattr(o, \'getRole\') and \\\n
-            o.getRole() not in role_filter_list :\n
+  if role_filter_list and o.getProperty(\'role\', []) not in role_filter_list:\n
     continue\n
-  if hasattr(o, \'getGroup\') and o.getGroup() :\n
-    group = \'group/%s\'%o.getGroup()\n
-  else :\n
-    group = ""\n
-  if group != transaction_section_category :\n
-        # don\'t show entities belonging to the group we are reporting\n
 \n
+  if o.getPortalType() == \'Person\' or not o.isMemberOf(transaction_section_category):\n
+        # don\'t show entities belonging to the group we are reporting\n
     if omit_balanced_accounts and (simulation_tool.getInventoryAssetPrice(\n
                     mirror_section_uid=o.uid, node_uid = valid_node_uids, **params) == 0) :\n
       pass\n
     else :\n
-      if hasattr(o, \'getRole\') and o.getRole() :\n
-        title = \'%s (%s)\'%(o.getTitle(), o.getRole())\n
-      else :\n
-        title = o.getTitle()\n
+      title = o.getTitle()\n
+      if o.getProperty(\'role\', None):\n
+        title += \' (%s)\' % o.getRoleTitle()\n
       result.append(\n
                  ReportSection(title=title,\n
                                level=2,\n
@@ -247,8 +241,6 @@ return result\n
                             <string>account</string>
                             <string>party</string>
                             <string>o</string>
-                            <string>hasattr</string>
-                            <string>group</string>
                             <string>_apply_</string>
                             <string>title</string>
                           </tuple>
