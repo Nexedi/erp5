@@ -1571,7 +1571,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 if section_name != '':
                   section_char = '-'
                 list_body_append(
-  """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
+  """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s %s</a></td>
   """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('erp5_content', section_name, default=section_name.decode('utf-8'))))
 
                 if render_format == 'list':
@@ -1590,7 +1590,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 if section_name != '':
                   section_char = '+'
                 list_body_append(
-  """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
+  """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s %s</a></td>
   """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('erp5_content', section_name, default=section_name.decode('utf-8'))))
 
                 if render_format == 'list':
