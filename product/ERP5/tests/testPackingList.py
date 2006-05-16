@@ -314,7 +314,7 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepCheckSimulationDestinationUpdated(self,sequence=None, sequence_list=None, **kw):
     """
-      XXX
+      Test if the destination of the simulation movement was changed
     """
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
@@ -325,14 +325,14 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepChangePackingListStartDate(self, sequence=None, sequence_list=None, **kw):
     """
-      XXX
+      Change the start_date of the packing_list.
     """
     packing_list = sequence.get('packing_list')
     packing_list.edit(start_date=self.datetime + 15)
 
   def stepCheckSimulationStartDateUpdated(self,sequence=None, sequence_list=None, **kw):
     """
-      XXX
+      Test if the start_date of the simulation movement was changed
     """
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
