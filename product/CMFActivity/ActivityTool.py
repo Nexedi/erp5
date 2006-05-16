@@ -609,7 +609,7 @@ class ActivityTool (Folder, UniqueObject):
       global is_initialized
       if not is_initialized: self.initialize()
       if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer()
+        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
       return ActiveWrapper(object, activity, active_process, **kw)
 
     def deferredQueueMessage(self, activity, message):
@@ -617,7 +617,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def deferredDeleteMessage(self, activity, message):
       if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer()
+        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
       self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
 
     def getRegisteredMessageList(self, activity):
@@ -636,7 +636,7 @@ class ActivityTool (Folder, UniqueObject):
       global is_initialized
       if not is_initialized: self.initialize()
       if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer()
+        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
       if type(object) is TupleType:
         object_path = object
       else:
@@ -763,7 +763,7 @@ class ActivityTool (Folder, UniqueObject):
       global is_initialized
       if not is_initialized: self.initialize()
       if getattr(self, '_v_activity_buffer', None) is None:
-        self._v_activity_buffer = ActivityBuffer()
+        self._v_activity_buffer = ActivityBuffer(activity_tool=self)
       activity_dict[activity].queueMessage(self,
         Message(path, active_process, activity_kw, method_id, args, kw))
 

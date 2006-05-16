@@ -36,13 +36,15 @@ class ActivityBuffer(TM):
 
     _p_oid=_p_changed=_registered=None
 
-    def __init__(self):
+    def __init__(self, activity_tool=None):
         from thread import allocate_lock
         self._use_TM = self._transactions = 1
         if self._use_TM:
             self._tlock = allocate_lock()
             self._tthread = None
         self._lock = allocate_lock()
+        if activity_tool is not None:
+          self._activity_tool = activity_tool
 
     # Keeps a list of messages to add and remove
     # at end of transaction
