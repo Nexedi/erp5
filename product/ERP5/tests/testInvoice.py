@@ -84,12 +84,6 @@ class TestInvoice(TestPackingListMixin,
     user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
   
-  def stepLoginAsAssignee(self, sequence=None, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('assignee', '', ['Assignee', 'Author' ], [])
-    user = uf.getUserById('assignee').__of__(uf)
-    newSecurityManager(None, user)
-  
   def createCategories(self):
     """Create the categories for our test. """
     TestPackingListMixin.createCategories(self)
@@ -660,7 +654,6 @@ class TestInvoice(TestPackingListMixin,
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
-      stepLoginAsAssignee
       stepCreateEntities
       stepCreateCurrency
       stepCreateOrder
@@ -723,7 +716,6 @@ class TestInvoice(TestPackingListMixin,
   # default sequence for one line of not varianted resource.
   TWO_PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
-      stepLoginAsAssignee
       stepCreateEntities
       stepCreateCurrency
       stepCreateOrder
