@@ -59,70 +59,70 @@ class TestPackingListMixin(TestOrderMixin):
   """
     Test business template erp5_trade 
   """
-  container_type = 'Container'
-  container_line_type = 'Container Line'
-  container_cell_type = 'Container Cell'
+  container_portal_type = 'Container'
+  container_line_portal_type = 'Container Line'
+  container_cell_portal_type = 'Container Cell'
 
-  default_sequence = 'CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrganisation3 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      OrderOrder \
-                      Tic \
-                      ConfirmOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      CheckDeliveryBuilding \
-                      CheckPackingListIsNotDivergent '
+  default_sequence = 'stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrganisation3 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCheckDeliveryBuilding \
+                      stepCheckPackingListIsNotDivergent '
 
-  default_sequence_with_two_lines = 'CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrganisation3 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      OrderOrder \
-                      Tic \
-                      ConfirmOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      CheckDeliveryBuilding \
-                      CheckPackingListIsNotDivergent '
+  default_sequence_with_two_lines = 'stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrganisation3 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCheckDeliveryBuilding \
+                      stepCheckPackingListIsNotDivergent '
 
-  variated_default_sequence = 'CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrganisation3 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      SetOrderLineFullVCL \
-                      CompleteOrderLineMatrix \
-                      OrderOrder \
-                      Tic \
-                      ConfirmOrder \
-                      Tic \
-                      CheckOrderSimulation \
-                      CheckDeliveryBuilding \
-                      CheckPackingListIsNotDivergent '
+  variated_default_sequence = 'stepCreateOrganisation1 \
+                      stepCreateOrganisation2 \
+                      stepCreateOrganisation3 \
+                      stepCreateOrder \
+                      stepSetOrderProfile \
+                      stepCreateVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepSetOrderLineFullVCL \
+                      stepCompleteOrderLineMatrix \
+                      stepOrderOrder \
+                      stepTic \
+                      stepConfirmOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      stepCheckDeliveryBuilding \
+                      stepCheckPackingListIsNotDivergent '
 
   def getTitle(self):
     return "Packing List"
@@ -148,27 +148,27 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    self.failUnless('Site Error' not in packing_list.view())
-    self.assertEquals('diverged', packing_list.getCausalityState())
+    self.failIf('Site Error' in packing_list.view())
+    self.assertTrue(packing_list.isDivergent())
 
   def stepCheckNewPackingListIsDivergent(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list is divergent
     """
     packing_list = sequence.get('new_packing_list')
-    self.failUnless('Site Error' not in packing_list.view())
+    self.failIf('Site Error' in packing_list.view())
     self.stepCheckPackingListIsDivergent(packing_list=packing_list,sequence=sequence)
 
   def stepCheckPackingListIsCalculating(self, sequence=None, sequence_list=None, **kw):
     """
-      Test if packing list is divergent
+      Test if packing list is calculating
     """
     packing_list = sequence.get('packing_list')
     self.assertEquals('calculating',packing_list.getCausalityState())
 
   def stepCheckPackingListIsSolved(self, sequence=None, sequence_list=None, **kw):
     """
-      Test if packing list is divergent
+      Test if packing list is solved
     """
     packing_list = sequence.get('packing_list')
     self.assertEquals('solved',packing_list.getCausalityState())
@@ -185,7 +185,7 @@ class TestPackingListMixin(TestOrderMixin):
       Test if packing list is not divergent
     """
     packing_list = sequence.get('packing_list')
-    self.assertEquals(False,packing_list.isDivergent())
+    self.assertFalse(packing_list.isDivergent())
 
   def stepChangePackingListLineResource(self, sequence=None, 
                                         sequence_list=None, **kw):
@@ -198,25 +198,27 @@ class TestPackingListMixin(TestOrderMixin):
                              portal_type=self.packing_list_line_portal_type):
       packing_list_line.edit(resource_value=resource)
 
-  def stepDecreasePackingListLineQuantity(self, sequence=None, sequence_list=None, **kw):
+  def stepDecreasePackingListLineQuantity(self, sequence=None,
+      sequence_list=None, **kw):
     """
-      Test if packing list is divergent
+    Set a decreased quantity on packing list lines
     """
     packing_list = sequence.get('packing_list')
     quantity = sequence.get('line_quantity',default=self.default_quantity)
     quantity = quantity -1
     sequence.edit(line_quantity=quantity)
     for packing_list_line in packing_list.objectValues(
-                             portal_type=self.packing_list_line_portal_type):
+        portal_type=self.packing_list_line_portal_type):
       packing_list_line.edit(quantity=quantity)
 
-  def stepIncreasePackingListLineQuantity(self, sequence=None, sequence_list=None, **kw):
+  def stepIncreasePackingListLineQuantity(self, sequence=None,
+      sequence_list=None, **kw):
     """
-      Test if packing list is divergent
+    Set a increased quantity on packing list lines
     """
     packing_list = sequence.get('packing_list')
     for packing_list_line in packing_list.objectValues(
-                             portal_type=self.packing_list_line_portal_type):
+        portal_type=self.packing_list_line_portal_type):
       packing_list_line.edit(quantity=self.default_quantity+1)
 
   def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
@@ -231,7 +233,7 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepCheckPackingListSplitted(self, sequence=None, sequence_list=None, **kw):
     """
-      Test if packing list is divergent
+      Test if packing list was splitted
     """
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
@@ -472,7 +474,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    container = packing_list.newContent(portal_type=self.container_type)
+    container = packing_list.newContent(portal_type=self.container_portal_type)
     sequence.edit(container=container)
 
   def stepDefineNewPackingListContainer(self,sequence=None, sequence_list=None, **kw):
@@ -489,7 +491,7 @@ class TestPackingListMixin(TestOrderMixin):
       Check if simulation movement are disconnected
     """
     container = sequence.get('container')
-    container_line = container.newContent(portal_type=self.container_line_type)
+    container_line = container.newContent(portal_type=self.container_line_portal_type)
     sequence.edit(container_line=container_line)
     resource = sequence.get('resource')
     container_line.edit(resource_value=resource)
@@ -526,7 +528,7 @@ class TestPackingListMixin(TestOrderMixin):
       resource = line.getResourceValue()
       tmp_kw={'movement.resource_uid':resource.getUid()}
       container_line = \
-          container.newContent(portal_type=self.container_line_type)
+          container.newContent(portal_type=self.container_line_portal_type)
       container_line.setResourceValue(resource)
       # without variation
       if not line.hasCellContent():
@@ -545,7 +547,7 @@ class TestPackingListMixin(TestOrderMixin):
           if line.hasCell(base_id=base_id, *cell_key):
             old_cell = line.getCell(base_id=base_id, *cell_key)
             cell = container_line.newCell(base_id=base_id,
-                portal_type=self.container_cell_type, *cell_key)
+                portal_type=self.container_cell_portal_type, *cell_key)
             cell.edit(mapped_value_property_list=['price', 'quantity'],
                 price=old_cell.getPrice(),
                 quantity=old_cell.getQuantity(),
@@ -598,12 +600,12 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      DecreasePackingListLineQuantity \
-                      CheckPackingListIsCalculating \
-                      SplitAndDeferPackingList \
-                      Tic \
-                      CheckPackingListIsSolved \
-                      CheckPackingListSplitted \
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepSplitAndDeferPackingList \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListSplitted \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -618,10 +620,10 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      ChangePackingListDestination \
-                      CheckPackingListIsDivergent \
-                      Tic \
-                      CheckSimulationDestinationUpdated \
+                      stepChangePackingListDestination \
+                      stepCheckPackingListIsDivergent \
+                      stepTic \
+                      stepCheckSimulationDestinationUpdated \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -636,13 +638,13 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      ChangePackingListStartDate \
-                      CheckPackingListIsCalculating \
-                      AcceptDecision \
-                      Tic \
-                      CheckPackingListIsSolved \
-                      CheckPackingListIsNotDivergent \
-                      CheckSimulationStartDateUpdated \
+                      stepChangePackingListStartDate \
+                      stepCheckPackingListIsCalculating \
+                      stepAcceptDecision \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckSimulationStartDateUpdated \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -657,11 +659,11 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      CheckSimulationConnected \
-                      DeletePackingListLine \
-                      CheckPackingListIsNotDivergent \
-                      Tic \
-                      CheckSimulationDisconnected \
+                      stepCheckSimulationConnected \
+                      stepDeletePackingListLine \
+                      stepCheckPackingListIsNotDivergent \
+                      stepTic \
+                      stepCheckSimulationDisconnected \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -676,14 +678,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      ModifySimulationLineQuantity \
-                      Tic \
-                      CheckPackingListIsDiverged \
-                      AdoptPrevision \
-                      Tic \
-                      CheckPackingListIsNotDivergent \
-                      CheckPackingListIsSolved \
-                      CheckPackingListLineWithNewQuantityPrevision \
+                      stepModifySimulationLineQuantity \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAdoptPrevision \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListLineWithNewQuantityPrevision \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -698,13 +700,13 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      ModifySimulationLineStartDate \
-                      Tic \
-                      CheckPackingListIsDiverged \
-                      AdoptPrevision \
-                      Tic \
-                      CheckPackingListIsSolved \
-                      CheckNewPackingListAfterStartDateAdopt \
+                      stepModifySimulationLineStartDate \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAdoptPrevision \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckNewPackingListAfterStartDateAdopt \
                       '
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
@@ -720,15 +722,15 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence_with_two_lines + '\
-                      ModifySimulationLineStartDate \
-                      Tic \
-                      CheckPackingListIsDiverged \
-                      CheckPackingListIsDivergent \
-                      AdoptPrevision \
-                      Tic \
-                      CheckPackingListIsNotDivergent \
-                      CheckPackingListIsSolved \
-                      CheckNewPackingListAfterStartDateAdopt \
+                      stepModifySimulationLineStartDate \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepCheckPackingListIsDivergent \
+                      stepAdoptPrevision \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckNewPackingListAfterStartDateAdopt \
                       '
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
@@ -744,13 +746,13 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      AddPackingListContainer \
-                      AddPackingListContainerLine \
-                      SetContainerLineSmallQuantity \
-                      CheckPackingListIsNotPacked \
-                      SetContainerFullQuantity \
-                      Tic \
-                      CheckPackingListIsPacked \
+                      stepAddPackingListContainer \
+                      stepAddPackingListContainerLine \
+                      stepSetContainerLineSmallQuantity \
+                      stepCheckPackingListIsNotPacked \
+                      stepSetContainerFullQuantity \
+                      stepTic \
+                      stepCheckPackingListIsPacked \
                       '
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
@@ -766,13 +768,13 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a order with cells
     sequence_string = self.variated_default_sequence + '\
-                      AddPackingListContainer \
-                      AddPackingListContainerLine \
-                      SetContainerLineSmallQuantity \
-                      CheckPackingListIsNotPacked \
-                      SetContainerFullQuantity \
-                      Tic \
-                      CheckPackingListIsPacked \
+                      stepAddPackingListContainer \
+                      stepAddPackingListContainerLine \
+                      stepSetContainerLineSmallQuantity \
+                      stepCheckPackingListIsNotPacked \
+                      stepSetContainerFullQuantity \
+                      stepTic \
+                      stepCheckPackingListIsPacked \
                       '
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
@@ -790,12 +792,12 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      IncreasePackingListLineQuantity \
-                      CheckPackingListIsCalculating \
-                      SplitAndDeferPackingList \
-                      Tic \
-                      CheckPackingListIsSolved \
-                      CheckPackingListNotSplitted \
+                      stepIncreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepSplitAndDeferPackingList \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListNotSplitted \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -813,21 +815,21 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      DecreasePackingListLineQuantity \
-                      CheckPackingListIsCalculating \
-                      SplitAndDeferPackingList \
-                      Tic \
-                      CheckPackingListIsSolved \
-                      CheckPackingListSplitted \
-                      DecreasePackingListLineQuantity \
-                      CheckPackingListIsCalculating \
-                      SplitAndDeferPackingList \
-                      Tic \
-                      CheckNewPackingListIsDivergent \
-                      NewPackingListAdoptPrevision \
-                      Tic \
-                      CheckPackingListIsSolved \
-                      CheckPackingListSplittedTwoTimes \
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepSplitAndDeferPackingList \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListSplitted \
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepSplitAndDeferPackingList \
+                      stepTic \
+                      stepCheckNewPackingListIsDivergent \
+                      stepNewPackingListAdoptPrevision \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListSplittedTwoTimes \
                       '
     sequence_list.addSequenceString(sequence_string)
 
@@ -842,11 +844,11 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
-                      CreateNotVariatedResource \
-                      ChangePackingListLineResource \
-                      CheckPackingListIsCalculating \
-                      Tic \
-                      CheckPackingListIsDivergent \
+                      stepCreateNotVariatedResource \
+                      stepChangePackingListLineResource \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDivergent \
                       '
     sequence_list.addSequenceString(sequence_string)
 
