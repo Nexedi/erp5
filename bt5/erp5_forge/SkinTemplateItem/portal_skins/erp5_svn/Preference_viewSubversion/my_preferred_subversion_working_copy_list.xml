@@ -223,7 +223,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -271,7 +273,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>my_preferred_subversion_working_copy_list</string> </value>
+                    <value> <string>Subversion Working Copy List</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,8 +283,7 @@
                     <key> <string>view_separator</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<br />\n
-
+<br />
 
 ]]></string> </value>
                 </item>
