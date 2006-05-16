@@ -74,6 +74,11 @@ class TestInvoice(TestPackingListMixin,
   sale_gap = 'fr/pcg/7/70/707/7071/70712'
   customer_gap = 'fr/pcg/4/41/411'
 
+  invoice_portal_type = 'Sale Invoice Transaction'
+  invoice_line_portal_type = 'Invoice Line'
+  invoice_cell_portal_type = 'Invoice Cell'
+  invoice_transaction_line_portal_type = 'Sale Invoice Transaction Line'
+
   def getTitle(self):
     return "Invoices"
   
@@ -651,6 +656,96 @@ class TestInvoice(TestPackingListMixin,
       self.assertEquals(len(delivery_mvt.getOrderRelatedValueList(
             portal_type=self.simulation_movement_portal_type)), 0)
     
+  def stepDecreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Set a decreased quantity on invoice lines
+    """
+    invoice = sequence.get('invoice')
+    quantity = sequence.get('line_quantity',default=self.default_quantity)
+    quantity = quantity -1
+    sequence.edit(line_quantity=quantity)
+    for invoice_line in invoice.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      invoice_line.edit(quantity=quantity)
+
+  def stepCheckInvoiceIsCalculating(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is calculating
+    """
+    invoice = sequence.get('invoice')
+    self.assertEquals('calculating',invoice.getCausalityState())
+
+  def stepCheckInvoiceIsDiverged(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is diverged
+    """
+    invoice = sequence.get('invoice')
+    self.assertEquals('diverged',invoice.getCausalityState())
+
+  def stepCheckInvoiceIsSolved(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is solved
+    """
+    invoice = sequence.get('invoice')
+    self.assertEquals('solved',invoice.getCausalityState())
+
+  def stepCheckInvoiceIsDivergent(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is divergent
+    """
+    invoice = sequence.get('invoice')
+    self.assertTrue(invoice.isDivergent())
+
+  def stepCheckInvoiceIsNotDivergent(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Test if invoice is not divergent
+    """
+    invoice = sequence.get('invoice')
+    self.assertFalse(invoice.isDivergent())
+
+  def stepSplitAndDifferInvoice(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    split and differ at the invoice level
+    """
+    invoice = sequence.get('invoice')
+    invoice.portal_workflow.doActionFor(invoice,'split_prevision_action',
+        wf_id='invoice_causality_workflow', start_date=self.datetime +
+        15, stop_date=self.datetime + 25)
+
+  def stepCheckInvoiceSplitted(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test if invoice was splitted
+    """
+    packing_list = sequence.get('packing_list')
+    invoice_list = packing_list.getCausalityRelatedValueList(
+        portal_type=self.invoice_portal_type)
+    self.assertEquals(2,len(invoice_list))
+    invoice1 = None
+    invoice2 = None
+    for invoice in invoice_list:
+      if invoice.getUid() == sequence.get('invoice').getUid():
+        invoice1 = invoice
+      else:
+        invoice2 = invoice
+    sequence.edit(new_invoice=invoice2)
+    for line in invoice1.objectValues(
+          portal_type=self.invoice_line_portal_type):
+      self.assertEquals(self.default_quantity-1,line.getQuantity())
+    for line in invoice2.objectValues(
+          portal_type=self.invoice_line_portal_type):
+      self.assertEquals(1,line.getQuantity())
+
+
+
+
+
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
@@ -753,7 +848,7 @@ class TestInvoice(TestPackingListMixin,
   def test_01_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
     """Checks that a Simple Invoice is created from a Packing List"""
     if not run: return
-    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
       """
@@ -777,7 +872,7 @@ class TestInvoice(TestPackingListMixin,
           and an invoice with no accounting rules. both invoices are wrong
     """
     if not run: return
-    for base_sequence in (TestInvoice.TWO_PACKING_LIST_DEFAULT_SEQUENCE, ) :
+    for base_sequence in (self.TWO_PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
       """
@@ -806,7 +901,7 @@ class TestInvoice(TestPackingListMixin,
         movements for this invoice are present twice in the simulation.
     """
     if not run: return
-    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
       """
@@ -825,7 +920,7 @@ class TestInvoice(TestPackingListMixin,
     from Order.
     """
     if not run: return
-    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
       """
@@ -837,7 +932,7 @@ class TestInvoice(TestPackingListMixin,
     """Checks that editing a Packing List Line still creates a correct
       Invoice"""
     if not run: return
-    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
     """
@@ -856,7 +951,7 @@ class TestInvoice(TestPackingListMixin,
     """Checks that deleting a Packing List Line still creates a correct
     Invoice"""
     if not run: return
-    for base_sequence in (TestInvoice.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE, ) :
+    for base_sequence in (self.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE, ) :
       self.playSequence(
         base_sequence +
     """
@@ -874,9 +969,8 @@ class TestInvoice(TestPackingListMixin,
     """Checks that adding a Packing List Line still creates a correct
     Invoice"""
     if not run: return
-    for base_sequence in (TestInvoice.PACKING_LIST_DEFAULT_SEQUENCE,
-        TestInvoice.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE) :
-                # XXX use another sequence that creates 2 lines
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE,
+        self.PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE) :
       self.playSequence(
         base_sequence +
     """
@@ -891,6 +985,34 @@ class TestInvoice(TestPackingListMixin,
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
     """)
+
+  #def test_08_InvoiceDecreaseQuantity(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_08_InvoiceDecreaseQuantity(self, quiet=0, run=1):
+    """Change the quantity of a Invoice Line,
+    check that the packing list is divergent,
+    then split and differ"""
+    if not run: return
+    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+    """
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepTic
+    stepCheckInvoiceBuilding
+
+    stepDecreaseInvoiceLineQuantity
+    stepCheckInvoiceIsCalculating
+    stepSplitAndDifferInvoice
+    stepTic
+    stepCheckInvoiceIsSolved
+    stepCheckInvoiceSplitted
+    stepCheckPackingListIsDivergent
+    stepCheckPackingListIsDiverged
+
+    stepRebuildAndCheckNothingIsCreated
+    """
+    self.playSequence(sequence)
     
 if __name__ == '__main__':
   framework()
