@@ -73,10 +73,6 @@ class TestOrderMixin:
   order_workflow_id='order_workflow'
   size_list = ['Baby','Child/32','Child/34','Man','Woman'] 
 
-  def stepCommit(self,**kw):
-    get_transaction().commit()
-
-
   def getBusinessTemplateList(self):
     """
     """
@@ -325,6 +321,7 @@ class TestOrderMixin:
                            str(self.splitList(resource_vcl)[0]))
       order_line_vcl.extend(self.splitList(resource_vcl)[0])
     order_line.setVariationCategoryList(order_line_vcl)
+    self.failUnless(order_line.hasCellContent())
 
   def stepSetOrderLineFullVCL(self,sequence=None, sequence_list=None, **kw):
     """
@@ -336,6 +333,7 @@ class TestOrderMixin:
                                    omit_individual_variation=0))
     resource_vcl.sort()
     order_line.setVariationCategoryList(resource_vcl)
+    self.failUnless(order_line.hasCellContent())
 
   def stepCheckOrderLineRange(self,sequence=None, sequence_list=None, **kw):
     """
@@ -1727,7 +1725,6 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       ConfirmOrder \
                       Tic \
                       Tic \
-                      Commit \
                       CheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
