@@ -102,6 +102,15 @@ class TemplateTool (BaseTool):
         if bt.getInstallationState() == 'installed' and bt.getTitle() == title:
           return bt
       return None
+        
+    def getInstalledBusinessTemplatesList(self):
+      """Get list of installed business templates
+      """
+      installed_bts = []
+      for bt in self.contentValues(filter={'portal_type':'Business Template'}):
+        if bt.getInstallationState() == 'installed':
+          installed_bts.append(bt)
+      return installed_bts
 
     def updateLocalConfiguration(self, template, **kw):
       """

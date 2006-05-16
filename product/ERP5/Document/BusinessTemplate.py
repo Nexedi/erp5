@@ -356,6 +356,9 @@ class BaseTemplateItem(Implicit, Persistent):
   def export(self, context, bta, **kw):
     pass
 
+  def getKeys(self):
+    return self._objects.keys()
+  
   def importFile(self, bta, **kw):
     bta.importFiles(klass=self)
 
@@ -4278,6 +4281,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
 
+    #By christophe Dumez <christophe@nexedi.com>
+    def getItemsList(self):
+      """Return list of items in business template
+      """
+      items_list = []
+      for item_name in self._item_name_list:
+        item = getattr(self, item_name)
+        items_list.extend(item.getKeys())
+      return items_list
 
     def diffObject(self, REQUEST, **kw):
       """

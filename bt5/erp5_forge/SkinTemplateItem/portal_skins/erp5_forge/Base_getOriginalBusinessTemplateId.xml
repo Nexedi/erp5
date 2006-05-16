@@ -69,7 +69,7 @@
             <value> <string>installed_bts = context.getPortalObject()[\'portal_templates\'].getInstalledBusinessTemplatesList()\n
 for bt in installed_bts:\n
   if file in bt.getItemsList():\n
-    return [bt.getTitle(), bt.getId()]\n
+    return bt.getId()\n
 return None\n
 </string> </value>
         </item>
