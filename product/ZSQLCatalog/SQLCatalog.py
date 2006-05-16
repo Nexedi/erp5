@@ -29,7 +29,7 @@ from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
-from zLOG import LOG, WARNING, INFO
+from zLOG import LOG, WARNING, INFO, TRACE
 from ZODB.POSException import ConflictError
 from DocumentTemplate.DT_Var import sql_quote
 
@@ -994,7 +994,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
       XXX: For now newUid is used to allocated UIDs. Is this good? Is it better to INSERT then SELECT?
     """
-    LOG('SQLCatalog', INFO, 'catalogging %d objects' % len(object_list))
+    LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_list))
     #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
 
     if withCMF:
