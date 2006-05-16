@@ -42,7 +42,7 @@ try:
 except ImportError:
   pass
 
-from zLOG import LOG
+from zLOG import LOG, TRACE
 
 MAX_PRIORITY = 5
 MAX_GROUPED_OBJECTS = 500
@@ -283,15 +283,16 @@ class SQLDict(RAMDict):
                   if count >= MAX_GROUPED_OBJECTS:
                     break
                 
-          get_transaction().commit() # Release locks before starting a potentially long calculation
+          # Release locks before starting a potentially long calculation
+          get_transaction().commit()
           # Try to invoke
           if group_method_id is not None:
-            LOG('SQLDict', 0, 'invoking a group method %s with %d objects (%d objects in expanded form)' % (group_method_id, len(message_list), count))
-            #for m in message_list:
-            #  LOG('SQLDict', 0, '%r has objects %r' % (m, m.getObjectList(activity_tool)))
+            LOG('SQLDict', TRACE,
+                'invoking a group method %s with %d objects '\
+                ' (%d objects in expanded form)' % (
+                group_method_id, len(message_list), count))
             activity_tool.invokeGroup(group_method_id, message_list)
           else:
-            #LOG('SQLDict dequeueMessage', 0, 'invoke %s on %s' % (message_list[0].method_id, message_list[0].object_path))
             activity_tool.invoke(message_list[0]) 
 
           # Check if messages are executed successfully.
@@ -303,7 +304,7 @@ class SQLDict(RAMDict):
           for m in message_list:
             if m.is_executed:
               break
-          else:            
+          else:
             get_transaction().abort()
             
           for i in xrange(len(message_list)):
