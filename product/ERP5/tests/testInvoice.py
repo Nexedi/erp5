@@ -79,10 +79,15 @@ class TestInvoice(TestPackingListMixin,
   
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
-    # FIXME: unittest user should not have the Manager role
     uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('alex').__of__(uf)
+    newSecurityManager(None, user)
+  
+  def stepLoginAsAssignee(self, sequence=None, **kw):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('assignee', '', ['Assignee', 'Author' ], [])
+    user = uf.getUserById('assignee').__of__(uf)
     newSecurityManager(None, user)
   
   def createCategories(self):
@@ -318,7 +323,7 @@ class TestInvoice(TestPackingListMixin,
                               startswith(invoice_relative_url))
 
       # Then, test if each Invoice movement is equals to the sum of somes
-      # Simulation Movemen
+      # Simulation Movements
       for invoice_movement in invoice.getMovementList(portal_type = [
                           self.sale_invoice_cell_portal_type,
                           self.sale_invoice_line_portal_type]) :
@@ -390,6 +395,7 @@ class TestInvoice(TestPackingListMixin,
     order_line.setResourceValue(product)
     order_line.setQuantity(10)
     order_line.setPrice(100)
+    self.assertEquals(len(order.checkConsistency()), 0)
     sequence.edit(
       order = order,
       order_line = order_line,
@@ -397,6 +403,7 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(order_line.getTotalPrice(), 10*100)
 
   def stepCheckOrderRule(self, sequence=None, sequence_list=None, **kw):
+    """Check we have a related Order Rule"""
     order = sequence.get('order')
     simulation_tool = self.getSimulationTool()
     # Check that there is an applied rule for our packing list
@@ -404,25 +411,9 @@ class TestInvoice(TestPackingListMixin,
                             if x.getCausalityValue()==order]
     self.assertNotEquals(len(rule_list), 0)
     sequence.edit(order_rule_list = rule_list)
-    # TODO
-    return 
-    """
-    rule_line_list = order_rule.objectValues()
-    order_line_list = order.objectValues()
-    self.assertEquals(len(order_line_list), len(rule_line_list))
-    self.assertEquals(1, len(rule_line_list))
-    rule_line = rule_line_list[0]
-    sequence.edit(order_rule_line=rule_line)
-    order_line = order_line_list[0]
-    self.assertEquals(rule_line.getQuantity(), 10)
-    self.assertEquals(rule_line.getPrice(), 100)
-    self.assertEquals(rule_line.getOrderValue(), order_line)
-    self.assertEquals(rule_line.getStartDate(), order_line.getStartDate())
-    self.assertEquals(rule_line.getStopDate(), order_line.getStopDate())
-    self.assertEquals(rule_line.getPortalType(), 'Simulation Movement')
-    self.assertEquals(rule_line.getResourceValue(),
-                      order_line.getResourceValue())
-    """
+
+    self.assertEquals(len(order.getMovementList()),
+                  sum([len(rule.objectIds()) for rule in rule_list]))
     
   def stepCheckInvoicingRule(self, sequence=None, sequence_list=None, **kw):
     """ Checks that the invoicing rule is applied and its values are
@@ -458,7 +449,8 @@ class TestInvoice(TestPackingListMixin,
                       self, sequence=None, sequence_list=None, **kw):
     """ Checks that a delivery rule has been created when we took 'split
         and defer' decision on the divergeant Packing List. """
-  
+    # TODO
+
   def stepCheckDeliveryRuleIsEmpty(
                       self, sequence=None, sequence_list=None, **kw):
     """ Checks that an empty delivery rule is created for the
@@ -518,28 +510,6 @@ class TestInvoice(TestPackingListMixin,
                       self.total_price1)
     sequence.edit(packing_list = sale_packing_list)
 
-  def stepCheckInvoice(self,sequence=None, sequence_list=None, **kw):
-    """ checks invoice properties are well set. """
-    # XXX need to clear the accounting module.
-    accounting_module = self.getAccountingModule()
-    sale_invoice_transaction_list = accounting_module.objectValues()
-    self.assertEquals(len(sale_invoice_transaction_list),1)
-    packing_list = sequence.get("packing_list")
-    
-    sale_invoice = sale_invoice_transaction_list[0]
-    sequence.edit(invoice=sale_invoice)
-    sale_invoice_line_list = sale_invoice.contentValues(
-                filter={'portal_type':'Invoice Line'})
-    self.assertEquals(len(sale_invoice_line_list),1)
-    sale_invoice_line = sale_invoice_line_list[0]
-    sequence.edit(invoice_line=sale_invoice_line)
-    product = sequence.get('resource')
-    self.assertEquals(sale_invoice_line.getResourceValue(), product)
-    self.assertEquals(sale_invoice_line.getPrice(), self.price1)
-    self.assertEquals(sale_invoice_line.getQuantity(), self.quantity1)
-    self.assertEquals(sale_invoice_line.getTotalPrice(), self.total_price1)
-    self.assertEquals(sale_invoice.getCausalityValue(), packing_list)
-    
   def stepCheckTwoInvoices(self,sequence=None, sequence_list=None, **kw):
     """ checks invoice properties are well set. """
     # New we will check that we have two invoices
@@ -621,8 +591,7 @@ class TestInvoice(TestPackingListMixin,
 
   def stepModifyInvoicesDate(self, sequence=None,
                                            sequence_list=None, **kw):
-    """Rebuilds with sale_invoice_builder and checks nothing more is
-    created. """
+    """Change invoice date"""
     invoice = sequence.get('invoice')
     new_invoice = sequence.get('new_invoice')
     invoice.edit(start_date=self.datetime,
@@ -691,6 +660,7 @@ class TestInvoice(TestPackingListMixin,
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
+      stepLoginAsAssignee
       stepCreateEntities
       stepCreateCurrency
       stepCreateOrder
@@ -753,6 +723,7 @@ class TestInvoice(TestPackingListMixin,
   # default sequence for one line of not varianted resource.
   TWO_PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateSaleInvoiceTransactionRule
+      stepLoginAsAssignee
       stepCreateEntities
       stepCreateCurrency
       stepCreateOrder
