@@ -165,7 +165,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
               self.params[key] = params[key]
         if kw is not None:
           for k,v in kw.items():
-            if k in ('domain', 'report', 'domain_path', 'report_path') or v is not None:
+            if k in ('domain', 'report', 'domain_path', 'report_path', 'domain_list', 'report_list') or v is not None:
               # XXX Because method_path is an URI, it must be in ASCII.
               #     Shouldn't Zope automatically does this conversion? -yo
               if k == 'method_path' and type(v) is type(u'a'):

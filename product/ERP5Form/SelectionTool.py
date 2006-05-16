@@ -334,9 +334,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if selection is not None:
         selection.edit(invert_mode=0, params={}, checked_uids=[])
         if reset_domain_tree:
-          selection.edit(domain=None, domain_path=None, domain_list=())
+          selection.edit(domain=None, domain_path=None, domain_list=None)
         if reset_report_tree:
-          selection.edit(report=None, report_path=None, report_list=())
+          selection.edit(report=None, report_path=None, report_list=None)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionSortOrder')
     def setSelectionSortOrder(self, selection_name, sort_on, REQUEST=None):
