@@ -915,7 +915,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     if RESPONSE and URL1:
       RESPONSE.redirect('%s/manage_catalogAdvanced?' \
-                        'manage_tabs_message=Catalog%20Cleared' % URL1)
+                        'manage_tabs_message=Catalog%%20Cleared' % URL1)
 
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ clears the whole enchilada """
