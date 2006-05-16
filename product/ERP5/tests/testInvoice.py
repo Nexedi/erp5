@@ -669,6 +669,13 @@ class TestInvoice(TestPackingListMixin,
         portal_type=self.invoice_line_portal_type):
       invoice_line.edit(quantity=quantity)
 
+  def stepChangeInvoiceStartDate(self, sequence=None, sequence_list=None, **kw):
+    """
+      Change the start_date of the invoice.
+    """
+    invoice = sequence.get('invoice')
+    invoice.edit(start_date=self.datetime + 15)
+
   def stepCheckInvoiceIsCalculating(self, sequence=None, sequence_list=None,
       **kw):
     """
@@ -719,6 +726,14 @@ class TestInvoice(TestPackingListMixin,
         wf_id='invoice_causality_workflow', start_date=self.datetime +
         15, stop_date=self.datetime + 25)
 
+  def stepAcceptDecisionInvoice(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    accept decision at the invoice level
+    """
+    invoice = sequence.get('invoice')
+    invoice.portal_workflow.doActionFor(invoice,'accept_decision_action')
+
   def stepCheckInvoiceSplitted(self, sequence=None, sequence_list=None, **kw):
     """
     Test if invoice was splitted
@@ -742,9 +757,21 @@ class TestInvoice(TestPackingListMixin,
           portal_type=self.invoice_line_portal_type):
       self.assertEquals(1,line.getQuantity())
 
-
-
-
+  def stepCheckInvoiceNotSplitted(self, sequence=None, sequence_list=None, **kw):
+    """
+    Test if invoice was not splitted
+    """
+    packing_list = sequence.get('packing_list')
+    invoice_list = packing_list.getCausalityRelatedValueList(
+        portal_type=self.invoice_portal_type)
+    self.assertEquals(1,len(invoice_list))
+    invoice1 = None
+    for invoice in invoice_list:
+      if invoice.getUid() == sequence.get('invoice').getUid():
+        invoice1 = invoice
+    for line in invoice1.objectValues(
+        portal_type=self.invoice_line_portal_type):
+      self.assertEquals(self.default_quantity, line.getQuantity())
 
   # default sequence for one line of not varianted resource.
   PACKING_LIST_DEFAULT_SEQUENCE = """
@@ -986,8 +1013,7 @@ class TestInvoice(TestPackingListMixin,
       stepRebuildAndCheckNothingIsCreated
     """)
 
-  #def test_08_InvoiceDecreaseQuantity(self, quiet=0, run=RUN_ALL_TESTS):
-  def test_08_InvoiceDecreaseQuantity(self, quiet=0, run=1):
+  def test_08_InvoiceDecreaseQuantity(self, quiet=0, run=RUN_ALL_TESTS):
     """Change the quantity of a Invoice Line,
     check that the packing list is divergent,
     then split and differ"""
@@ -1009,6 +1035,34 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceSplitted
     stepCheckPackingListIsDivergent
     stepCheckPackingListIsDiverged
+
+    stepRebuildAndCheckNothingIsCreated
+    """
+    self.playSequence(sequence)
+    
+  def test_09_InvoiceChangeStartDate(self, quiet=0, run=RUN_ALL_TESTS):
+    """Change the start_date of a Invoice Line,
+    check that the packing list is divergent,
+    then acceptDecision"""
+    if not run: return
+    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+    """
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepTic
+    stepCheckInvoiceBuilding
+
+    stepChangeInvoiceStartDate
+    stepCheckInvoiceIsCalculating
+    stepAcceptDecisionInvoice
+    stepTic
+    stepCheckInvoiceIsSolved
+    stepCheckInvoiceNotSplitted
+    stepCheckPackingListIsDivergent
+    stepCheckPackingListIsDiverged
+    stepCheckSimulationStartDateUpdated
 
     stepRebuildAndCheckNothingIsCreated
     """
