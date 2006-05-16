@@ -152,6 +152,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     # in such a case the update process of the activity is canceled
     warning_activity_list = []
     error_block_list = []
+    error_info_dict = {}
 
 
     ##################################################
@@ -220,6 +221,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         # group of the current area).
         # adding current block to error_list
         error_block_list.append(block_moved['name'])
+        error_info_dict[block_moved['name']] = 'out of bounds on main axis'
         # adding if necessary current activity to warning_list
         if final_block['activity_origin'].name not in warning_activity_list:
           warning_activity_list.append(final_block['activity_origin'].name)
@@ -234,6 +236,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
         # current area limits)
         if block_moved['name'] not in error_block_list:
           error_block_list.append(block_moved['name'])
+          error_info_dict[block_moved['name']] = 'out of bounds on sec axis'
           if final_block['activity_origin'].name not in warning_activity_list:
             warning_activity_list.append(final_block['activity_origin'].name)
 
@@ -309,7 +312,11 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
       # apply a special treatment.
       REQUEST.set('warning_activity_list',warning_activity_list)
       REQUEST.set('error_block_list',error_block_list)
-      # now raise error => automatically call 
+      REQUEST.set('error_info_dict',error_info_dict)
+      # now raise error => automatically called
+      # parameters are :
+      # -list of errors
+      # - dict with error results
       raise FormValidationError(errors_list, {} )
 
 
@@ -504,11 +511,11 @@ class PlanningBoxWidget(Widget.Widget):
   property_names = Widget.Widget.property_names +\
   ['representation_type','main_axis_groups','size_header_height', 'size_border_width_left',
    'size_planning_width', 'size_y_axis_width','size_y_axis_space','size_planning_height','size_x_axis_height',
-   'size_x_axis_space', 'delimiter',
+   'size_x_axis_space', 'y_axis_position', 'x_axis_position', 'delimiter',
    'list_method','report_root_list','selection_name',
    'portal_types','sort','title_line','x_start_bloc','x_stop_bloc',
-   'y_axis_method','constraint_method','color_script','round_script','sec_axis_script',
-   'info_center',
+   'y_axis_method','constraint_method','split_method','color_script',
+   'round_script','sec_axis_script','info_center',
    'info_topleft','info_topright','info_backleft','info_backright',
    'security_index']
 
@@ -592,9 +599,22 @@ class PlanningBoxWidget(Widget.Widget):
   size_x_axis_space = fields.IntegerField('size_x_axis_space',
       title='X axis space:',
       description=(
-      'space between X axis and PLaning content '),
+      'space between X axis and Planning content '),
       default=10,
       required=1)
+
+
+  y_axis_position = fields.StringField('y_axis_position',
+      title='Y axis position, (left or right) :',
+      description=('position of Y axis over the planning content'),
+      default = 'left',
+      required = 1)
+
+  x_axis_position = fields.StringField('x_axis_position',
+      title='X axis position, (top or bottom) :',
+      description=('position or X axis over the planning content'),
+      default = 'bottom',
+      required = 1)
 
 
 
@@ -608,8 +628,8 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   delimiter = fields.IntegerField('delimiter',
-      title='number of delimiters over the secondary axis:',
-      description=("number of delimitations over the sec axis, required"),
+      title='min number of delimiters over the secondary axis:',
+      description=("min number of delimitations over the sec axis, required"),
       default = 5,
       required=1)
 
@@ -656,24 +676,15 @@ class PlanningBoxWidget(Widget.Widget):
 
 
 
-
-  x_axis_script_id = fields.StringField('x_axis_script_id',
-      title='script for building the X-Axis:',
-      description=('script for building the X-Axis'),
-      default='',
-      required=0)	
-
   x_start_bloc = fields.StringField('x_start_bloc',
-      title='specific property which fetches the data for the beginning\
-      of a block:',
+      title='specific property to get start of blocks (ex. start_date)',
       description=('Property for building X-Axis such as start_date\
       objects'),
       default='start_date',
       required=0)
 
   x_stop_bloc = fields.StringField('x_stop_bloc',
-      title='specific property which fetches the data for the end of\
-      each block',
+      title='specific property to get stop of blocks (ex. stop_date)',
       description=('Property for building X-Axis such as stop_date\
       objects'),
       default='stop_date',
@@ -685,17 +696,18 @@ class PlanningBoxWidget(Widget.Widget):
       default='',
       required=0) 
 
-  max_y  = fields.StringField('max_y',
-      title='specific method of data type for creating Y-Axis',
-      description=('Method for building Y-Axis objects'),
-      default='',
-      required=0)
 
   constraint_method = fields.StringField('constraint_method',
       title='name of constraint method between blocks',
       description=('Constraint method between blocks objects'),
       default='SET_DHTML',
       required=1)
+
+  split_method = fields.StringField('split_method',
+      title='Method to split activities into blocks',
+      description=("Method used to split activities into multiple blocks"),
+      default='',
+      required=0)
 
   color_script = fields.StringField('color_script',
       title='name of script which allow to colorize blocks',
@@ -704,16 +716,16 @@ class PlanningBoxWidget(Widget.Widget):
       required=0)
 
   round_script = fields.StringField('round_script',
-      title='name of script which allow to round block bounds when validating',
+      title='name of script rounding block bounds when validating (ex. planning_roundBoundToDay)',
       description=('script for block bounds rounding when validating'),
-      default='Planning_roundBoundToDay',
+      default='',
       required=0)
 
   sec_axis_script = fields.StringField('sec_axis_script',
-      title='name of script which allow to build secondary axis',
+      title='name of script building secondary axis (ex. planning_generateAxis)',
       description=('script for building secondary axis'),
-      default='Planning_generateDateAxis',
-      required=0)
+      default='planning_generateAxis',
+      required=1)
 
   info_center = fields.StringField('info_center',
       title='specific method of data called for inserting info in\
@@ -810,7 +822,7 @@ class PlanningBoxWidget(Widget.Widget):
     # recover structure
     structure = REQUEST.get('structure')
 
-
+    #pdb.set_trace()
     # getting HTML rendering Page Template
     planning_html_method = getattr(REQUEST['here'],'planning_content')
 
@@ -831,6 +843,8 @@ class PlanningBoxWidget(Widget.Widget):
 
     # DATA DEFINITION
 
+
+    
 
     # recovering usefull planning properties
     form = field.aq_parent # getting form
@@ -922,8 +936,6 @@ class BasicStructure:
     self.secondary_axis_occurence = []
     self.render_format = '' # 'list' in case output is a list containing the
                             # full planning structure without any selection
-
-
     self.main_axis_info = {}
     self.secondary_axis_info = {}
 
@@ -964,6 +976,7 @@ class BasicStructure:
     # In report tree mode, need to remember if the items have to be displayed
     is_report_opened = self.REQUEST.get('is_report_opened',\
                                     self.selection.isReportOpened())
+    self.selection.edit(report_opened=is_report_opened)
     portal_categories = getattr(self.form,'portal_categories',None)
     portal_domains = getattr(self.form,'portal_domains',None)
 
@@ -1037,7 +1050,7 @@ class BasicStructure:
 
     # testing report_depth value
     if report_depth is not None:
-      selection_report_curent = ()
+      selection_report_current = ()
     else:
       selection_report_current = self.selection.getReportList()
 
@@ -1048,12 +1061,8 @@ class BasicStructure:
      report_depth=report_depth,is_report_opened=is_report_opened,
      sort_on=self.selection.sort_on,form_id=self.form.id)
 
-    # update report list if report_depth was specified
-    if report_depth is not None:
-      report_list = map(lambda s:s[0].getRelativeUrl(), report_tree_list)
-      self.selection.edit(report_list=report_list)
-
-
+    #report_list = map(lambda s:s.getObject().getRelativeUrl(), report_tree_list)
+    #self.selection.edit(report_list=report_list)
 
     ##################################################
     ########### BUILDING REPORT_GROUPS ###############
@@ -1105,6 +1114,8 @@ class BasicStructure:
         self.report_groups += [object_tree_line]
         self.nbr_groups = self.nbr_groups + 1
 
+        # resetting original value
+        self.selection.edit(report = None)
       else:
         # object_tree_line is not pure summary : it has activities
         # prepare query
@@ -1134,6 +1145,7 @@ class BasicStructure:
               new_object_list.append(selected_object)
           object_list = new_object_list
 
+
         #object_list = []
         add=1
         new_list = [x.getObject() for x in object_list]
@@ -1146,8 +1158,7 @@ class BasicStructure:
         already_in_list = 0
         for object in self.report_groups:
           if getattr(object_tree_line.getObject(),'uid') == \
-           getattr(object.getObject(),'uid') and \
-           not(object_tree_line.getIsPureSummary()):
+           getattr(object.getObject(),'uid'): #and not(object_tree_line.getIsPureSummary()):
             # object already present, flag <= 0 to prevent new add
             already_in_list = 1
             #add=0
@@ -1169,9 +1180,24 @@ class BasicStructure:
           # dictionnary
           self.report_activity_dict[object_tree_line.getObject().getTitle()] = object_list 
 
+
+        # resetting original value
+        self.selection.edit(report = None)
+
     self.selection.edit(report=None)
+    self.selection.edit(report_list=None)
     LOG('self.report_activity_dict',0,self.report_activity_dict)
 
+
+    pdb.set_trace()
+    # update report list if report_depth was specified
+    if report_depth is not None:
+      unfolded_list = []
+      for report_line in self.report_groups:
+        if report_line.depth < report_depth:
+          # depth of current report_line is inferior to the current report_depth
+          unfolded_list.append(report_line.getObject().getRelativeUrl())
+      self.selection.edit(report_list=unfolded_list)
 
     ##################################################
     ########### GETTING MAIN AXIS BOUNDS #############
@@ -1405,7 +1431,6 @@ class BasicStructure:
       report_group_objects returned from the ERP5 request.
       """
       position = 0
-      
 
       # iterating each element
       for report_group_object in self.report_groups:
@@ -1485,7 +1510,7 @@ class BasicGroup:
     + update secondary_axis_occurence
     """
 
-    
+
 
     # specific begin & stop property names for secondary axis
     object_property_begin = self.field.get_value('x_start_bloc')
@@ -1517,7 +1542,7 @@ class BasicGroup:
     if info_backright_method!=None: info['info_backright']=str(info_backright_method())
 
 
-    
+
 
     #if method_begin == None and activity_list not in ([],None):
     if activity_list not in ([],None):
@@ -1540,7 +1565,7 @@ class BasicGroup:
           block_begin = activity_content.getObject().getProperty(object_property_begin)
         else:
           block_begin = None
-  
+
         if object_property_end != None:
           block_end = activity_content.getObject().getProperty(object_property_end)
         else:
@@ -1751,7 +1776,6 @@ class PlanningStructure:
     #self.render_format = 'YX'
 
 
-
     # declaring main axis
     self.main_axis = Axis(title='main axis', name='axis',
                      unit='', axis_order=1,axis_group=[])
@@ -1814,7 +1838,10 @@ class PlanningStructure:
     # just need to pass start, stop, and the minimum number of delimiter wanted.
     # a structure is returned : list of delimiters, each delimiter defined by a
     # list [ relative position, title, tooltip , delimiter_type]
+
     delimiter_list = axis_script(axis_start,axis_stop,delimiter_min_number)
+
+
 
     axis_stop = int(axis_stop)
     axis_start = int(axis_start)
@@ -1944,6 +1971,7 @@ class PlanningStructure:
     # recover activity and block error lists
     warning_activity_list = REQUEST.get('warning_activity_list',[])
     error_block_list = REQUEST.get('error_block_list',[])
+    error_info_dict = REQUEST.get('error_info_dict',{})
 
     
     try:
@@ -1954,7 +1982,7 @@ class PlanningStructure:
               warning = 1
             else:
               warning = 0
-            activity.addBlocs(main_axis_start=0, main_axis_stop=self.main_axis.size, secondary_axis_start=self.secondary_axis.start, secondary_axis_stop=self.secondary_axis.stop,planning=self, warning=warning, error_block_list=error_block_list)
+            activity.addBlocs(main_axis_start=0, main_axis_stop=self.main_axis.size, secondary_axis_start=self.secondary_axis.start, secondary_axis_stop=self.secondary_axis.stop,planning=self, warning=warning, error_block_list=error_block_list, error_info_dict=error_info_dict)
     except TypeError:
       pass
 
@@ -2011,7 +2039,7 @@ class Activity:
       return 2
 
 
-  def addBlocs(self, main_axis_start=None, main_axis_stop=None, secondary_axis_start=None, secondary_axis_stop=None,planning=None, warning=0, error_block_list=[]):
+  def addBlocs(self, main_axis_start=None, main_axis_stop=None, secondary_axis_start=None, secondary_axis_stop=None,planning=None, warning=0, error_block_list=[], error_info_dict={}):
     """
     define list of (begin & stop) values for blocs representing the actual
     activity (can have several blocs if necessary).
@@ -2020,6 +2048,10 @@ class Activity:
     # recover list of bounds
     if self.secondary_axis_start != None or self.secondary_axis_stop != None:
       secondary_block_bounds = self.splitActivity()
+    #split_method_name = field.get_value('split_method',None)
+    #split_method = getattr(self.object,split_method_name, None)
+    #if split_method != None:
+    #  secondary_block_bounds = split_method(self.secondary_axis_start, self.secondary_axis_stop)
     else:
       secondary_block_bounds = [[self.secondary_axis_start,self.secondary_axis_stop]]
 
@@ -2028,17 +2060,18 @@ class Activity:
     for (start,stop) in secondary_block_bounds:
 
       block_number += 1
-      
+
       block_name = self.name + '_Block_' + str(block_number)
       # create new block instance
-      
+
       if block_name in error_block_list:
         error = 1
+        error_text= error_info_dict[block_name]
       else:
         error = 0
-      
-      
-      new_block = Bloc(name= block_name,color=self.color,link=self.link, number = block_number, render_format=self.render_format, parent_activity=self, warning=warning, error=error)
+        error_text=''
+
+      new_block = Bloc(name= block_name,color=self.color,link=self.link, number = block_number, render_format=self.render_format, parent_activity=self, warning=warning, error=error, error_text=error_text)
 
 
       new_block.buildInfoDict(info_dict = self.info)
@@ -2115,7 +2148,9 @@ class Bloc:
 
   def __init__ (self, name=None, types=None,
                 color=None, info=None, link=None, number=0,
-                constraints=None, secondary_start=None, secondary_stop=None, render_format='YX', parent_activity = None, warning=0, error=0):
+                constraints=None, secondary_start=None, secondary_stop=None,
+                render_format='YX', parent_activity = None, warning=0, error=0,
+                error_text=''):
     """
     creates a Bloc object
     """
@@ -2132,6 +2167,7 @@ class Bloc:
     # have not been validated
     self.warning = warning
     self.error = error
+    self.error_text = error_text
     # list of all the groups the bloc belongs to (reportTree)
     #self.container_axis_group = container_AxisGroup
     # integer pointing to the AxisElement containing the bloc (multitasking)
@@ -2145,7 +2181,7 @@ class Bloc:
       self.position_y = self.position_secondary
       self.position_x = self.position_main
     self.render_dict = None
-    
+
   def buildInfoDict (self, info_dict=[]):
     """
     create Info objects to display text & images, then link them to the current object
@@ -2161,6 +2197,10 @@ class Bloc:
     title_list.append(self.buildInfo(info_dict=info_dict, area='info_botright'))
     # updating title
     self.title = " | ".join(title_list)
+    if self.error != 0:
+      # field has error
+      # adding text_error
+      self.info['info_error'] = Info(info=self.error_text, link='')
 
   def buildInfo(self,info_dict=[],area=None):
     if area in info_dict:
@@ -2236,6 +2276,8 @@ class AxisGroup:
                 axis_element_list=None, axis_element_number=0, delimiter_type = 0, is_open=0, is_pure_summary=1,depth=0, url=None, axis_element_already_insered= 0, secondary_axis_start=None, secondary_axis_stop=None):
     self.name = name
     self.title = title
+    self.link = None # link to fold or unfold current report in report-tree mode
+    self.info_title = Info(info=self.title, link=self.link, title=self.title)
     self.tooltip = '' # tooltip used when cursor pass over the group
     self.object = object # physical object related to the current group (used to validate modifications)
     self.axis_group_list = axis_group_list # ReportTree
@@ -2252,8 +2294,8 @@ class AxisGroup:
     self.is_open = is_open
     self.is_pure_summary = is_pure_summary
     self.depth = depth
-    self.url = url
-    self.link = None # link to fold or unfold current report in report-tree mode
+    self.url = url # url of the object corresponding to the current axis_group (person, projetc line, etc.)
+
     self.position_main = Position()
     self.position_secondary = Position()
     self.position_x = None
@@ -2264,6 +2306,11 @@ class AxisGroup:
     self.secondary_axis_stop = secondary_axis_stop
 
 
+  security = ClassSecurityInfo()
+  security.declarePublic('setTitle')
+  def setTitle(self,new_title = None):
+    self.title = new_title
+
   def fixProperties(self, form_id=None, selection_name=None):
     """
     using actual AxisGroup properties to define some special comportement that
@@ -2271,13 +2318,19 @@ class AxisGroup:
     """
     if self.is_open:
       # current report is unfold, action 'fold'
-      self.link = 'portal_selections/foldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
-      self.title = '[-] ' + self.title
+      self.info_title.link = 'portal_selections/foldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
+      self.info_title.info = '[-] ' + self.info_title.info
     else:
       # current report is fold, action 'unfold'
-      self.link = 'portal_selections/unfoldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
-      self.title = '[+] ' + self.title
-    
+      self.info_title.link = 'portal_selections/unfoldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
+      self.info_title.info = '[+] ' + self.info_title.info
+
+
+    #for i in range(self.depth):
+    #  self.title = '| ' + self.title
+
+    self.info_title.title = self.info_title.info
+
 
   def addActivity(self, activity=None, axis_element_already_insered= 0):
     """
@@ -2291,12 +2344,12 @@ class AxisGroup:
     try:
       # iterating each axis_element of the axis_group
       for axis_element in self.axis_element_list:
-  
+
         can_add = 1
         # recovering all activity properties of the actual axis_element and
         # iterating through them to check if one of them crosses the new one
         for activity_statement in axis_element.activity_list:
-  
+
           if activity_statement.isValidPosition(activity.secondary_axis_begin, activity.secondary_axis_end) != 0:
             # isValidPosition returned 1 or 2, this means the activity already
             # present does prevent from adding the new activity as there is
@@ -2304,35 +2357,35 @@ class AxisGroup:
             # stop iterating actual axis_element and try with the next one
             can_add = 0
             break
-  
+
         if can_add:
           # the whole activity_statements in actual axis have been succesfully
           # tested without problem.
           # can add new activity to the actual axis_element
           added = 1
           axis_element.activity_list.append(activity)
-  
+
           # updating activity properties
           activity.parent_axis_element = axis_element
-          
+
           # no need to check the next axis_elements to know if they can hold the
           # new activity as it is already added to an axis_element
           break
-  
+
       if not added:
         # all axis_elements of the current group have been tested and no one can
         # contain the new activity.
         self.axis_element_number += 1
         # Need to create a new axis_element to hold the new activity
         new_axis_element = AxisElement(name='Group_' + str(self.axis_group_number) + '_AxisElement_' + str(self.axis_element_number), relative_number=self.axis_element_number, absolute_number=axis_element_already_insered  + self.axis_element_number)
-  
+
         # add new activity to this brand new axis_element
         new_axis_element.activity_list = []
         new_axis_element.activity_list.append(activity)
-  
+
         # updating activity properties
         activity.parent_axis_element = new_axis_element
-  
+
         # register the axis_element to the actual group.
         self.axis_element_list.append(new_axis_element)
     except TypeError:
