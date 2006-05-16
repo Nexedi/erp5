@@ -66,6 +66,7 @@ class SplitAndDefer(CopyToTarget):
                         order=simulation_movement.getOrder(),
                         deliverable=simulation_movement.isDeliverable(),
                         quantity=movement_quantity-new_movement_quantity,
+                        price = simulation_movement.getPrice(),
                         source = simulation_movement.getSource(),
                         destination = simulation_movement.getDestination(),
                         source_section = simulation_movement.getSourceSection(),
