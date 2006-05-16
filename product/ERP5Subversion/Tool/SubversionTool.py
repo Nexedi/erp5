@@ -72,6 +72,11 @@ class SubversionUnknownBusinessTemplateError(Exception):
   """The base exception class when business template is unknown.
   """
   pass
+
+class SubversionNotAWorkingCopyError(Exception):
+  """The base exception class when business template is unknown.
+  """
+  pass
       
 def copytree(src, dst, symlinks=False):
     """Recursively copy a directory tree using copy().
@@ -618,6 +623,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       raise SubversionPreferencesError, 'Please set at least one Subversion Working Copy in preferences first.'
     bt_name = bt.getTitle()
     for wc in wc_list:
+      if not os.path.exists(os.path.join(wc, '.svn')):
+        raise SubversionNotAWorkingCopyError, "You must check out working copies in this directory: "+wc+" or choose another path in portal preferences."
       if bt_name in os.listdir(wc) :
         wc_path = os.path.join(wc, bt_name)
         if os.path.isdir(wc_path):
