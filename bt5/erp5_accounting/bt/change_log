@@ -1,3 +1,7 @@
+2006-05-16 jerome
+* Fix AccountingTransaction_is*CurrencyConvertible
+to return False if resource is not defined on the transaction
+
 2006-05-12 yo
 * Specify maintainers.
 

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -68,12 +68,14 @@
             <key> <string>_body</string> </key>
             <value> <string>section_value = context.getSourceSectionValue()\n
 \n
-if section_value is None or section_value.getProperty(\'price_currency\', None) is None:\n
+if section_value is None or \\\n
+   section_value.getProperty(\'price_currency\', None) is None:\n
   # If no section defined, no way to convert currencies\n
   return 0\n
 \n
 transaction_currency = context.getResource()\n
-return transaction_currency != section_value.getProperty(\'price_currency\', None)\n
+return transaction_currency is not None and\\\n
+   transaction_currency != section_value.getProperty(\'price_currency\', None)\n
 </string> </value>
         </item>
         <item>
