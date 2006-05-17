@@ -1,3 +1,6 @@
+2006-05-17 chris
+* added search engine for orphan objects : Base_viewOrphanObjects
+
 2006-05-10 chris
 * some bug fixes / optimizations
 * can now show unmodified files
