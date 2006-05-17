@@ -103,13 +103,23 @@ def runUnitTestList(test_list) :
   sys.path.insert(0, tests_framework_home)
 
   for test in test_list:
-    if test.endswith('.py'):
-      test = test[:-3]
-    m = __import__(test)
+    if ':' in test:
+      test_module = test.split(':')[0]
+      if test_module.endswith('.py'):
+        test_module = test_module[:-3]
+      test_class_list = test.split(':')[1:]
+    else:
+      if test.endswith('.py'):
+        test = test[:-3]
+      test_module = test
+      test_class_list = None
+    m = __import__(test_module)
     for attr_name in dir(m) :
       attr = getattr(m, attr_name)
-      if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and (attr.__module__ == test) :
-        suite.addTest(unittest.makeSuite(attr))
+      if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and \
+          (attr.__module__ == test_module) :
+        if test_class_list is not None and attr.__name__ in test_class_list:
+          suite.addTest(unittest.makeSuite(attr))
 
   return TestRunner().run(suite)
 
@@ -117,7 +127,7 @@ if __name__ == '__main__' :
   test_list = sys.argv[1:]
   if len(test_list) == 0 :
     print "No test to run, exiting immediately."
-    print "Usage : %s UnitTest1 UnitTest2 ..." % sys.argv[0]
+    print "Usage : %s UnitTest1[:TestClass1[:TestClass2]...] UnitTest2 ..." % sys.argv[0]
     sys.exit(1)
   result = runUnitTestList(test_list=test_list)
   if len(result.failures) or len(result.errors) :
