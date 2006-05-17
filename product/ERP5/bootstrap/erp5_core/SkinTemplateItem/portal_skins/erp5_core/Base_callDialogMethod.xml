@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -156,10 +156,7 @@ try:\n
   for k, v in kw.items() :\n
     if v is not None :\n
       cleanedup_kw[k] = v\n
-\n
-  # If url is too long, we do not redirecting\n
-  # to avoir crash <christophe@nexedi.com>\n
-  if len(make_query(cleanedup_kw)) > 8119:\n
+  if make_query(cleanedup_kw) > 2000 :\n
     cannot_redirect = 1\n
 \n
   # if we cannot redirect, then call the form directly.\n
@@ -208,7 +205,7 @@ except FormValidationError, validation_errors:\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_erp5/Base_callDialogMethod</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_core/Base_callDialogMethod</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
