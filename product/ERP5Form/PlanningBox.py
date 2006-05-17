@@ -1189,7 +1189,7 @@ class BasicStructure:
     LOG('self.report_activity_dict',0,self.report_activity_dict)
 
 
-    pdb.set_trace()
+    #pdb.set_trace()
     # update report list if report_depth was specified
     if report_depth is not None:
       unfolded_list = []
