@@ -951,7 +951,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   
   def extractBT(self, bt):
     # first update working copy
-    self.updatewc(bt)
+    #self.updatewc(bt)
     bt.build()
     svn_path = self._getWorkingPath(self.getSubversionPath(bt) + os.sep)
     path = mktemp() + os.sep
