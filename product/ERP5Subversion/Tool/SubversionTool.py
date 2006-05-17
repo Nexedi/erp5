@@ -752,7 +752,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """
     client = self._getClient()
     if not isinstance(path, list) :
-      path = [self._getWorkingPath(self.relativeToAbsolute(path))]
+      path = [self._getWorkingPath(self.relativeToAbsolute(path, bt))]
     if bt is not None:
       path = [self._getWorkingPath(self.relativeToAbsolute(x, bt)) for x in path]
     client.revert(path, recurse)
