@@ -827,6 +827,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     else:
       path = self._getWorkingPath(self.relativeToAbsolute(path, bt))
     return client.resolved(path)
+    
+  security.declareProtected('Import/Export objects', 'export')
+  def export(self, src, dest):
+    """Export an unversioned copy of the working copy
+    """
+    client = self._getClient()
+    return client.export(src, dest)
 
   def relativeToAbsolute(self, path, bt) :
     if path[0] == os.sep:

@@ -226,6 +226,9 @@ try:
         else:
           raise error
 
+    def export(self, src, dest):
+        return self.client.update(src_url_or_path=src, dest_path=dest)
+        
     def update(self, path):
       try:
         return self.client.update(path)
