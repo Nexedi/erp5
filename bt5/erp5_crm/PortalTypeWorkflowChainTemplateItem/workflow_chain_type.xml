@@ -1,0 +1,26 @@
+<workflow_chain>
+ <chain>
+  <type>Incoming Fax</type>
+  <workflow>edit_workflow, event_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Incoming Letter</type>
+  <workflow>edit_workflow, event_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Mail Message</type>
+  <workflow>edit_workflow, event_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Phone Call</type>
+  <workflow>event_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Opportunity</type>
+  <workflow>edit_workflow, sale_opportunity_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Support Request</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>

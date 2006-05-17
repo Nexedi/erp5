@@ -1,3 +1,13 @@
+2006-05-17 Romain
+* Remove catalog method z_related_translated_event_state
+* Remove related key translated_event_state_title | translation/translated_message/z_related_translated_event_state
+
+2006-05-15 Alex
+* Update maintainers.
+
+2006-03-27 kevin
+* Don't encode MailMessage_view body, it's done automatticaly now.
+
 2006-03-03 kevin
 * Display an encoded UTF-8 body for Mail Message.
 
