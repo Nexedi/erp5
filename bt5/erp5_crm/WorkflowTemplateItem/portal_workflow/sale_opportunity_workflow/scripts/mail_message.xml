@@ -85,13 +85,7 @@ state_change.object.MailHost.send(message, mto=email_list, mfrom="info@nexedi.co
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/sale_opportunity_workflow/scripts/mail_message</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/sale_opportunity_workflow/scripts/mail_message</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

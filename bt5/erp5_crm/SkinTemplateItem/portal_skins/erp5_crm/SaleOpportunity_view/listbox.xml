@@ -323,7 +323,7 @@
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
-                          <string>Type</string>
+                          <string>Portal Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>

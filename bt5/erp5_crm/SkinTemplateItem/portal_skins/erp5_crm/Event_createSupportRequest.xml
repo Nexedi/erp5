@@ -98,7 +98,7 @@ current_object.setFollowUpValueList([new_object])\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_crm/Event_createSupportRequest</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_crm/Event_createSupportRequest</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -129,7 +129,7 @@ current_object.setFollowUpValueList([new_object])\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>current_object</string>
                             <string>module</string>
                             <string>str</string>

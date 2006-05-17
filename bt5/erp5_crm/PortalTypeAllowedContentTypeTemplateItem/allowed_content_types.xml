@@ -1,33 +1,38 @@
 <allowed_content_type_list>
  <portal_type id="Event Module">
-  <item>Incoming Fax</item>
-  <item>Incoming Letter</item>
   <item>Phone Call</item>
   <item>Mail Message</item>
+  <item>Incoming Letter</item>
+  <item>Incoming Fax</item>
+ </portal_type>
+ <portal_type id="Incoming Fax">
+  <item>Image</item>
+  <item>File</item>
+ </portal_type>
+ <portal_type id="Incoming Letter">
+  <item>Image</item>
+  <item>File</item>
  </portal_type>
  <portal_type id="Mail Message">
+  <item>Document</item>
+  <item>Link</item>
   <item>File</item>
   <item>Image</item>
-  <item>Document</item>
-  <item>News Item</item>
-  <item>Link</item>
  </portal_type>
  <portal_type id="Sale Opportunity">
-  <item>Image</item>
-  <item>Document</item>
   <item>Link</item>
+  <item>Image</item>
   <item>File</item>
+  <item>Document</item>
  </portal_type>
  <portal_type id="Sale Opportunity Module">
   <item>Sale Opportunity</item>
  </portal_type>
  <portal_type id="Support Request">
   <item>Image</item>
-  <item>Document</item>
-  <item>Link</item>
   <item>File</item>
-  <item>Value Predicate</item>
-  <item>Predicate Group</item>
+  <item>Link</item>
+  <item>Document</item>
  </portal_type>
  <portal_type id="Support Request Module">
   <item>Support Request</item>

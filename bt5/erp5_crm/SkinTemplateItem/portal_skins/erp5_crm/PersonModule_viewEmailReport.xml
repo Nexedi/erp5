@@ -68,7 +68,8 @@
             <key> <string>_body</string> </key>
             <value> <string>uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)\n
 if len(uids) == 0:\n
-  uids = map(lambda x:x.uid, context.portal_selections.callSelectionFor(selection_name))\n
+#   uids = map(lambda x:x.uid, context.portal_selections.callSelectionFor(selection_name))\n
+  uids = [x.uid for x in context.portal_selections.callSelectionFor(selection_name)]\n
 object_list =  list(context.portal_catalog(parent_uid=uids, portal_type = "Email"))\n
 for o in object_list:\n
   o_value = o.getObject()\n
@@ -86,7 +87,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_crm/PersonModule_viewEmailReport</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_crm/PersonModule_viewEmailReport</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -123,10 +124,12 @@ return printed\n
                             <string>context</string>
                             <string>uids</string>
                             <string>len</string>
-                            <string>map</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                             <string>list</string>
                             <string>object_list</string>
-                            <string>_getiter_</string>
                             <string>o</string>
                             <string>o_value</string>
                             <string>None</string>

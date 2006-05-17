@@ -73,7 +73,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>bottom</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>listbox</string>
@@ -81,7 +81,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>center</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
@@ -89,23 +89,22 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>left</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
-                        <string>my_target_price</string>
                         <string>my_price</string>
-                        <string>my_translated_opportunity_state_title</string>
+                        <string>my_target_price</string>
+                        <string>simulation_state</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>right</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_client_person_title_list</string>
-                        <string>my_client_organisation_title_list</string>
+                        <string>my_source_title</string>
+                        <string>my_destination_title_list</string>
                       </list>
                     </value>
                 </item>

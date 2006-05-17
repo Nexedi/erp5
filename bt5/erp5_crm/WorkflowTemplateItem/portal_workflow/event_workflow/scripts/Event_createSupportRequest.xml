@@ -80,13 +80,7 @@ object.Event_createSupportRequest()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/event_workflow/scripts/Event_createSupportRequest</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/event_workflow/scripts/Event_createSupportRequest</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

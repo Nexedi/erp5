@@ -1,3 +1,10 @@
+2006-04-25 Romain
+* Remove News Item
+* Again, change state variable to simulation_state for event_workflow and sale_opportunity_workflow.
+* Add subcategories in portal_categories/resource.
+* Modify all forms.
+* Event and Ticket are now subclasses of Movement.
+
 2006-05-17 Romain
 * Remove catalog method z_related_translated_event_state
 * Remove related key translated_event_state_title | translation/translated_message/z_related_translated_event_state

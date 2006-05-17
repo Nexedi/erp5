@@ -25,6 +25,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_aliases</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
             <key> <string>_owner</string> </key>
             <value>
               <none/>
@@ -35,6 +41,10 @@
             <value>
               <list/>
             </value>
+        </item>
+        <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>allowed_content_types</string> </key>
@@ -70,6 +80,14 @@ an event.</string> </value>
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>event</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
               <tuple/>
@@ -78,6 +96,10 @@ an event.</string> </value>
         <item>
             <key> <string>id</string> </key>
             <value> <string>Mail Message</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value> <string>Event_init</string> </value>
         </item>
         <item>
             <key> <string>property_sheet_list</string> </key>

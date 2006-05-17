@@ -81,6 +81,10 @@ method()\n
             </value>
         </item>
         <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_workflow/event_workflow/scripts/validate_user_action</string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

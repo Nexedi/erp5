@@ -21,6 +21,6 @@
  </chain>
  <chain>
   <type>Support Request</type>
-  <workflow>validation_workflow, edit_workflow</workflow>
+  <workflow>ticket_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

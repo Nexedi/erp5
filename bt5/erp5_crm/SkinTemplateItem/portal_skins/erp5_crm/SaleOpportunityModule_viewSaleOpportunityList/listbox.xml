@@ -326,7 +326,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>translated_opportunity_state_title</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -347,6 +347,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -355,7 +359,7 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>translated_opportunity_state_title</string>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>

@@ -79,7 +79,6 @@ Base_viewSearchResultList?opportunity_state=enquired&local_roles=%(local_roles)s
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Manager</string>
                 <string>Assignor</string>
                 <string>Assignee</string>
               </tuple>

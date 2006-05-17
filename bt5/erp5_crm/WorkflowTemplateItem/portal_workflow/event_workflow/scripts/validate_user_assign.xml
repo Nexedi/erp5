@@ -95,10 +95,8 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_workflow/event_workflow/scripts/validate_user_assign</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

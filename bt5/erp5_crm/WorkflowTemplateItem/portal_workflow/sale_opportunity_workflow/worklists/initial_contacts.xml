@@ -79,7 +79,6 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Manager</string>
                 <string>Assignor</string>
                 <string>Assignee</string>
               </tuple>

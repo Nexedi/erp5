@@ -69,109 +69,98 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from ZODB.POSException import ConflictError\n
+from DateTime import DateTime\n
 \n
-import string # XXX string module is deprecated\n
+def strip_punctuation(text):\n
+  mapping = string.maketrans(text, text)\n
+  return text.translate(mapping,\n
+                        string.punctuation+string.whitespace)\n
 \n
 mail_message = None\n
+# Get some headers\n
+headers = theMail[\'headers\']\n
+id = strip_punctuation(theMail[\'headers\'][\'message-id\'])\n
 \n
-try:\n
-  id = container.strip_punctuation(theMail[\'headers\'][\'message-id\'])\n
-  subject = theMail[\'headers\'].get(\'subject\')\n
-  attachments = theMail[\'attachments\']\n
-  if subject.find(\'PhoneCall:\') >= 0 or subject.find(\'j2 Voice Message\') >= 0:\n
-    message_portal_type = \'Phone Call\'\n
-  elif subject.find(\'Letter:\') >= 0:\n
-    message_portal_type = \'Incoming Letter\'\n
-  elif subject.find(\'j2 Fax\') >= 0 or subject.find(\'fax from\') >= 0:\n
-    message_portal_type = \'Incoming Fax\'\n
+# Generate portal type\n
+message_portal_type = \'Mail Message\'\n
+# Create content\n
+mail_message = context.event_module.newContent(\n
+                         portal_type=message_portal_type,\n
+                         id=id)\n
+mail_message.edit(\n
+  title = headers.get(\'subject\'),\n
+  start_date = DateTime(headers.get(\'date\')),\n
+  to = headers.get(\'to\'),\n
+  sender = headers.get(\'from\'),\n
+#   reply_to = headers.get(\'replyto\'),\n
+  body = theMail[\'body\'],\n
+  original = theMail[\'__original__\'],\n
+)\n
+\n
+# Save attachments\n
+attachment_list = theMail[\'attachment_list\']\n
+for attachment_id, attachment_type, attachment_data in attachment_list:\n
+  # Choose the portal type\n
+#   if attachment_type.startswith(\'image/\'):\n
+#     portal_type = \'Image\'\n
+#   else:\n
+#     portal_type = \'File\'\n
+  portal_type = \'File\'\n
+  if attachment_id is not None:\n
+    id = attachment_id.replace(\'/\', \'_\')\n
+    new_file = mail_message.newContent(portal_type=portal_type,\n
+                                       id=id,\n
+                                       file=attachment_data,\n
+                                       description=attachment_type)\n
   else:\n
-    message_portal_type = \'Mail Message\'\n
-  # XXX hardcoded value\n
-  mail_message = context.event_module.newContent(portal_type=message_portal_type,\n
-                                          id=id)\n
+    new_file = mail_message.newContent(portal_type=portal_type,\n
+                                       file=attachment_data,\n
+                                       description=attachment_type)\n
 \n
-  subject=str(string.join(theMail[\'headers\'].get(\'subject\')))\n
+# # We should now try to guess the user who sent it\n
+# # Guess the mail address:\n
+# mail_from = headers.get(\'from\')\n
+# at_place = mail_from.find(\'@\')\n
+# mail_address = None\n
+# if at_place != -1:\n
+#   begin = max(mail_from.rfind(\'<\',0,at_place),mail_from.rfind(\' \',0,at_place))\n
+#   end = min(mail_from.rfind(\'>\',at_place),mail_from.rfind(\' \',at_place),len(mail_from))\n
+#   mail_address = mail_from[begin+1:end]\n
+# # find the person with this mail\n
+# if mail_address is not None:\n
+#   kw = {\'portal_type\':\'Email\',\n
+#         \'query\':"SearchableText LIKE \'%%%s%%\'" % mail_address }\n
+#   result = context.portal_catalog.searchResults(**kw)\n
+#   for object in result:\n
+#     object = object.getObject()\n
+#     parent = object.aq_parent\n
+#     if parent.getPortalType() == \'Person\':\n
+#       organisation = parent.getSubordinationValue()\n
+#       if organisation is None:\n
+#         mail_message.setSourceValue(parent)\n
+#       else:\n
+#         mail_message.setSourceValueList([parent, organisation])\n
+#     elif parent.getPortalType() == \'Organisation\':\n
+#       mail_message.setSourceValue(parent)\n
+#     break\n
 \n
-  mail_message.edit(\n
-                  title = theMail[\'headers\'].get(\'subject\'),\n
-                  date = theMail[\'headers\'].get(\'date\'),\n
-                  to = theMail[\'headers\'].get(\'to\'),\n
-                  sender = theMail[\'headers\'].get(\'from\'),\n
-                  reply_to = theMail[\'headers\'].get(\'replyto\'),\n
-                  body = theMail[\'body\'],\n
-                  header = theMail[\'headers\'],\n
-                  other_info = theMail[\'localpart\'],\n
-                 )\n
+# # We should look if there\'s already a sale opportunity\n
+# # or a support which can corresponds to this email\n
+# subject = mail_message.getTitle()\n
+# if subject != \'\' and subject is not None:\n
+#   if subject.find(\'Re: \')==0:\n
+#     subject = subject[len(\'Re: \'):]\n
+#   kw = {\'portal_type\':\'Sale Opportunity\',\n
+#         \'query\':"SearchableText LIKE \'%%%s%%\'" % subject }\n
+#   result = context.portal_catalog.searchResults(**kw)\n
+#   for object in result:\n
+#     object = object.getObject()\n
+#     # Check if this sale opportunity corresponds to this client\n
+#     # If so, then we can assign this mail to the sale opportunity\n
+#     if mail_message.getSourceValue() in object.getClientValueList():\n
+#       mail_message.setFollowUpValue(object)\n
+#       mail_message.assign()\n
 \n
-  for key, attachment_data in attachments.items():\n
-    try:\n
-      #portal_type = context.content_type_registry.findTypeName(key, \'//\', attachment_data)\n
-      portal_type = \'File\'\n
-      new_file = mail_message.newContent(portal_type = portal_type , id=key.replace(\'/\',\'_\'), file=attachment_data)  \n
-    except ConflictError: \n
-      raise\n
-    except:\n
-      mail_message.setDescription(\'Error in creating attachments\')\n
-     \n
-\n
-  # We should now try to guess the user who sent it\n
-  # Guess the mail address:\n
-  mail_from = theMail[\'headers\'].get(\'from\')\n
-  at_place = mail_from.find(\'@\')\n
-  mail_address = None\n
-  if at_place != -1:\n
-    begin = max(mail_from.rfind(\'<\',0,at_place),mail_from.rfind(\' \',0,at_place))\n
-    end = min(mail_from.rfind(\'>\',at_place),mail_from.rfind(\' \',at_place),len(mail_from))\n
-    mail_address = mail_from[begin+1:end]\n
-  # find the person with this mail\n
-  if mail_address is not None:\n
-    kw = {\'portal_type\':\'Email\',\n
-          \'query\':"SearchableText LIKE \'%%%s%%\'" % mail_address }\n
-    result = context.portal_catalog.searchResults(**kw)\n
-    for object in result:\n
-      object = object.getObject()\n
-      parent = object.aq_parent\n
-      if parent.getPortalType() == \'Person\':\n
-        organisation = parent.getSubordinationValue()\n
-        if organisation is None:\n
-          mail_message.setSourceValue(parent)\n
-        else:\n
-          mail_message.setSourceValueList([parent, organisation])\n
-      elif parent.getPortalType() == \'Organisation\':\n
-        mail_message.setSourceValue(parent)\n
-      break\n
-\n
-  # We should look if there\'s already a sale opportunity\n
-  # or a support wich can corresponds to this email\n
-  subject = mail_message.getTitle()\n
-  if subject != \'\' and subject is not None:\n
-    if subject.find(\'Re: \')==0:\n
-      subject = subject[len(\'Re: \'):]\n
-    kw = {\'portal_type\':\'Sale Opportunity\',\n
-          \'query\':"SearchableText LIKE \'%%%s%%\'" % subject }\n
-    result = context.portal_catalog.searchResults(**kw)\n
-    for object in result:\n
-      object = object.getObject()\n
-      # Check if this sale opportunity corresponds to this client\n
-      # If so, then we can assign this mail to the sale opportunity\n
-      if mail_message.getSourceValue() in object.getClientValueList():\n
-        mail_message.setFollowUpValue(object)\n
-        mail_message.assign()\n
-\n
-except ConflictError: \n
-  raise  \n
-except:\n
-  try:\n
-    if mail_message is not None and hasattr(mail_message, \'edit\'):\n
-      mail_message.edit(title=\'Bad mail message received\')\n
-  except ConflictError: \n
-    raise\n
-  except:\n
-    pass\n
-\n
-# the return of None indicates a success\n
-# The return of anything else assumes that you are returning an error message\n
-# and most MTA\'s will bounce that error message back to the mail sender\n
 return None\n
 
 
@@ -184,8 +173,14 @@ return None\n
             </value>
         </item>
         <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/local_crm/EventModule_createEventFromMail</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_crm/EventModule_createEventFromMail</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -218,38 +213,23 @@ return None\n
                             <string>theMail</string>
                             <string>ZODB.POSException</string>
                             <string>ConflictError</string>
-                            <string>string</string>
+                            <string>DateTime</string>
+                            <string>strip_punctuation</string>
                             <string>None</string>
                             <string>mail_message</string>
-                            <string>_getattr_</string>
-                            <string>container</string>
                             <string>_getitem_</string>
+                            <string>headers</string>
                             <string>id</string>
-                            <string>subject</string>
-                            <string>attachments</string>
                             <string>message_portal_type</string>
+                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>str</string>
+                            <string>attachment_list</string>
                             <string>_getiter_</string>
-                            <string>key</string>
+                            <string>attachment_id</string>
+                            <string>attachment_type</string>
                             <string>attachment_data</string>
                             <string>portal_type</string>
                             <string>new_file</string>
-                            <string>mail_from</string>
-                            <string>at_place</string>
-                            <string>mail_address</string>
-                            <string>max</string>
-                            <string>begin</string>
-                            <string>min</string>
-                            <string>len</string>
-                            <string>end</string>
-                            <string>kw</string>
-                            <string>_apply_</string>
-                            <string>result</string>
-                            <string>object</string>
-                            <string>parent</string>
-                            <string>organisation</string>
-                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
@@ -272,6 +252,27 @@ return None\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

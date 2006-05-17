@@ -335,22 +335,26 @@
                       <list>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Type</string>
+                          <string>Portal Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>getDate</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>source_organisation_title</string>
-                          <string>Organisation</string>
+                          <string>source_title</string>
+                          <string>Source</string>
                         </tuple>
                         <tuple>
-                          <string>translated_event_state_title</string>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>
@@ -397,24 +401,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>date</string>
-                          <string>date</string>
-                        </tuple>
-                        <tuple>
-                          <string>event_state</string>
-                          <string>event_state</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -498,18 +485,22 @@
                       <list>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Type</string>
+                          <string>Portal Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_organisation_title</string>
-                          <string>Organisation</string>
+                          <string>source_title</string>
+                          <string>Source</string>
                         </tuple>
                         <tuple>
-                          <string>translated_event_state_title</string>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>

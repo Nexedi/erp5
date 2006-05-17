@@ -80,7 +80,7 @@ object.Event_createSaleOpportunity()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/event_workflow/scripts/Event_createSaleOpportunity</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/event_workflow/scripts/Event_createSaleOpportunity</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
