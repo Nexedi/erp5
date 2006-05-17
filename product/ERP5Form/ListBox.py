@@ -299,31 +299,19 @@ class ListBoxWidget(Widget.Widget):
 
         - sort_order -- the order of sorting
     """
-    property_names = Widget.Widget.property_names +\
-                     ['lines', 'columns', 'all_columns', 'search_columns', 'sort_columns', 'sort',
-                      'editable_columns', 'all_editable_columns',
-                      'stat_columns', 'url_columns', 'global_attributes',
-                      'list_method', 'count_method', 'stat_method', 'selection_name',
-                      'meta_types', 'portal_types', 'default_params',
-                      'search', 'select',
-                      'domain_tree', 'domain_root_list',
-                      'report_tree', 'report_root_list',
-                      'list_action' ]
+    # Define Properties for ListBoxWidget.
+    property_names = list(Widget.Widget.property_names)
 
-    default = fields.TextAreaField('default',
-                                   title='Default',
-                                   description=(
-        "Default value of the text in the widget."),
-                                   default="",
-                                   width=20, height=3,
-                                   required=0)
+    # Default has no meaning in ListBox.
+    property_names.remove('default')
 
     lines = fields.IntegerField('lines',
                                 title='Lines',
                                 description=(
         "The number of lines of this list. Required."),
-                                default=10,
+                                default=20,
                                 required=1)
+    property_names.append('lines')
 
     columns = fields.ListTextAreaField('columns',
                                  title="Columns",
@@ -331,6 +319,7 @@ class ListBoxWidget(Widget.Widget):
         "A list of attributes names to display. Required."),
                                  default=[],
                                  required=1)
+    property_names.append('columns')
 
     all_columns = fields.ListTextAreaField('all_columns',
                                  title="More Columns",
@@ -338,6 +327,7 @@ class ListBoxWidget(Widget.Widget):
         "An optional list of attributes names to display."),
                                  default=[],
                                  required=0)
+    property_names.append('all_columns')
 
     search_columns = fields.ListTextAreaField('search_columns',
                                  title="Searchable Columns",
@@ -345,6 +335,7 @@ class ListBoxWidget(Widget.Widget):
         "An optional list of columns to search."),
                                  default=[],
                                  required=0)
+    property_names.append('search_columns')
 
     sort_columns = fields.ListTextAreaField('sort_columns',
                                  title="Sortable Columns",
@@ -352,12 +343,14 @@ class ListBoxWidget(Widget.Widget):
         "An optional list of columns to sort."),
                                  default=[],
                                  required=0)
+    property_names.append('sort_columns')
 
     sort = fields.ListTextAreaField('sort',
                                  title='Default Sort',
                                  description=('The default sort keys and order'),
                                  default=[],
                                  required=0)
+    property_names.append('sort')
 
     list_method = fields.MethodField('list_method',
                                  title='List Method',
@@ -365,6 +358,7 @@ class ListBoxWidget(Widget.Widget):
                                               'objects'),
                                  default='',
                                  required=0)
+    property_names.append('list_method')
 
     count_method = fields.MethodField('count_method',
                                  title='Count Method',
@@ -372,6 +366,7 @@ class ListBoxWidget(Widget.Widget):
                                               'objects'),
                                  default='',
                                  required=0)
+    property_names.append('count_method')
 
     stat_method = fields.MethodField('stat_method',
                                  title='Stat Method',
@@ -379,6 +374,7 @@ class ListBoxWidget(Widget.Widget):
                                               'objects'),
                                  default='',
                                  required=0)
+    property_names.append('stat_method')
 
     selection_name = fields.StringField('selection_name',
                                  title='Selection Name',
@@ -386,6 +382,7 @@ class ListBoxWidget(Widget.Widget):
                                               'params of selection'),
                                  default='',
                                  required=0)
+    property_names.append('selection_name')
 
     meta_types = fields.ListTextAreaField('meta_types',
                                  title="Meta Types",
@@ -393,6 +390,7 @@ class ListBoxWidget(Widget.Widget):
         "Meta Types of objects to list. Required."),
                                  default=[],
                                  required=0)
+    property_names.append('meta_types')
 
     portal_types = fields.ListTextAreaField('portal_types',
                                  title="Portal Types",
@@ -400,25 +398,30 @@ class ListBoxWidget(Widget.Widget):
         "Portal Types of objects to list. Required."),
                                  default=[],
                                  required=0)
+    property_names.append('portal_types')
 
+    # XXX Do we still need this?
     default_params = fields.ListTextAreaField('default_params',
                                  title="Default Parameters",
                                  description=(
         "Default Parameters for the List Method."),
                                  default=[],
                                  required=0)
+    property_names.append('default_params')
 
     search = fields.CheckBoxField('search',
                                  title='Search Row',
                                  description=('Search Row'),
                                  default='',
                                  required=0)
+    property_names.append('search')
 
     select = fields.CheckBoxField('select',
                                  title='Select Column',
                                  description=('Select Column'),
                                  default='',
                                  required=0)
+    property_names.append('select')
 
     editable_columns = fields.ListTextAreaField('editable_columns',
                                  title="Editable Columns",
@@ -426,13 +429,7 @@ class ListBoxWidget(Widget.Widget):
         "An optional list of columns which can be modified."),
                                  default=[],
                                  required=0)
-
-    all_editable_columns = fields.ListTextAreaField('all_editable_columns',
-                                 title="All Editable Columns",
-                                 description=(
-        "An optional list of columns which can be modified."),
-                                 default=[],
-                                 required=0)
+    property_names.append('editable_columns')
 
     stat_columns = fields.ListTextAreaField('stat_columns',
                                  title="Stat Columns",
@@ -440,6 +437,7 @@ class ListBoxWidget(Widget.Widget):
         "An optional list of columns which can be used for statistics."),
                                  default=[],
                                  required=0)
+    property_names.append('stat_columns')
 
     url_columns = fields.ListTextAreaField('url_columns',
                                  title="URL Columns",
@@ -447,19 +445,23 @@ class ListBoxWidget(Widget.Widget):
         "An optional list of columns which can provide a custom URL."),
                                  default=[],
                                  required=0)
+    property_names.append('url_columns')
 
+    # XXX do we still need this?
     global_attributes = fields.ListTextAreaField('global_attributes',
                                  title="Global Attributes",
                                  description=(
         "An optional list of attributes which are set by hidden fields and which are applied to each editable column."),
                                  default=[],
                                  required=0)
+    property_names.append('global_attributes')
 
     domain_tree = fields.CheckBoxField('domain_tree',
                                  title='Domain Tree',
                                  description=('Selection Tree'),
                                  default='',
                                  required=0)
+    property_names.append('domain_tree')
 
     domain_root_list = fields.ListTextAreaField('domain_root_list',
                                  title="Domain Root",
@@ -467,14 +469,14 @@ class ListBoxWidget(Widget.Widget):
         "A list of domains which define the possible root."),
                                  default=[],
                                  required=0)
+    property_names.append('domain_root_list')
 
     report_tree = fields.CheckBoxField('report_tree',
                                  title='Report Tree',
                                  description=('Report Tree'),
                                  default='',
                                  required=0)
-
-
+    property_names.append('report_tree')
 
     report_root_list = fields.ListTextAreaField('report_root_list',
                                  title="Report Root",
@@ -482,13 +484,15 @@ class ListBoxWidget(Widget.Widget):
         "A list of domains which define the possible root."),
                                  default=[],
                                  required=0)
+    property_names.append('report_root_list')
 
     list_action = fields.StringField('list_action',
                                  title='List Action',
                                  description=('The id of the object action'
                                               'to display the current list'),
-                                 default='',
+                                 default='list',
                                  required=1)
+    property_names.append('list_action')
 
     def render_view(self, field, value, REQUEST=None, render_format='html', key='listbox'):
         """
