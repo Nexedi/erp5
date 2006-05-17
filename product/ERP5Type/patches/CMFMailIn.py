@@ -83,17 +83,18 @@ def MailInTool_postUTF8MailMessage(self, file=None):
       # Keep the content type
       theMail['attachment_list'].append((file_name, content_type, 
                                          payload))
-  try:
-    portal_url = self.portal_url.getPortalPath()
-    if portal_url[-1]!='/': portal_url=portal_url+'/'
-  except:
-    portal_url = ''
+  portal_url = self.portal_url.getPortalPath()
+  if (portal_url != '') and (portal_url[-1] != '/'): 
+    portal_url = portal_url+'/'
       
   if self.method:
     try:
       return self.restrictedTraverse(portal_url+self.method)\
                                                     (theMail=theMail)
     except:
+      # It's needed to catch all exceptions, as we need to return
+      # a value to the MTA in this case.
+
       # Generate log message
       fp = StringIO.StringIO()
       traceback.print_exc(file=fp)
