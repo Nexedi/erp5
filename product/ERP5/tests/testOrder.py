@@ -321,7 +321,6 @@ class TestOrderMixin:
                            str(self.splitList(resource_vcl)[0]))
       order_line_vcl.extend(self.splitList(resource_vcl)[0])
     order_line.setVariationCategoryList(order_line_vcl)
-    self.failUnless(order_line.hasCellContent())
 
   def stepSetOrderLineFullVCL(self,sequence=None, sequence_list=None, **kw):
     """
@@ -333,7 +332,6 @@ class TestOrderMixin:
                                    omit_individual_variation=0))
     resource_vcl.sort()
     order_line.setVariationCategoryList(resource_vcl)
-    self.failUnless(order_line.hasCellContent())
 
   def stepCheckOrderLineRange(self,sequence=None, sequence_list=None, **kw):
     """
