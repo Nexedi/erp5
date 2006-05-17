@@ -660,6 +660,15 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     client.update(path)
     # Import in zodb
     return self.importBT(bt)
+  
+    security.declareProtected('Import/Export objects', 'updatewc')
+  def updatewc(self, bt):
+    """Update a working copy.
+    """
+    path = self._getWorkingPath(self.getSubversionPath(bt))
+    client = self._getClient()
+    # Update from SVN
+    client.update(path)
 
   security.declareProtected('Import/Export objects', 'switch')
   def switch(self, bt, url):
@@ -941,6 +950,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     return somethingModified and root
   
   def extractBT(self, bt):
+    # first update working copy
+    self.updatewc(bt)
     bt.build()
     svn_path = self._getWorkingPath(self.getSubversionPath(bt) + os.sep)
     path = mktemp() + os.sep
@@ -954,8 +965,16 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     self.activate().removeAllInList([path,])
     
   def importBT(self, bt):
-    return bt.download(self._getWorkingPath(self.getSubversionPath(bt)))
-  
+    # Do svn export before importing to get rid of .svn stuff
+    # and unversioned files.
+    tmp_path = mktemp() + os.sep
+    self.export(self._getWorkingPath(self.getSubversionPath(bt)), tmp_path)
+    # Import 
+    id = bt.download(tmp_path)
+    # Clean up
+    self.activate().removeAllInList([tmp_path,])
+    return id
+    
   # Get a list of files and keep only parents
   # Necessary before recursively commit removals
   def cleanChildrenInList(self, list):
