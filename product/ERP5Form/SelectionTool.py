@@ -1062,7 +1062,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
          # Empty the selection (uid)
         REQUEST.form = kw # New request form
         # Define new HTTP_REFERER
-        REQUEST.HTTP_REFERER = '%s/Base_viewRelatedObjectList' % o.absolute_url()
+        REQUEST.HTTP_REFERER = '%s/%s' % (o.absolute_url(),
+                                          redirect_form_id)
         # Return the search dialog
         return getattr(o, redirect_form_id)(REQUEST=REQUEST)
 
