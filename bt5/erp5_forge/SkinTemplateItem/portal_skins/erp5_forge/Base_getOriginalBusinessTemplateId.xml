@@ -70,6 +70,12 @@
 for bt in installed_bts:\n
   if file in bt.getItemsList():\n
     return bt.getId()\n
+\n
+built_bts = context.getPortalObject()[\'portal_templates\'].getBuiltBusinessTemplatesList()\n
+for bt in built_bts:\n
+  if file in bt.getItemsList():\n
+    return bt.getId()\n
+\n
 return None\n
 </string> </value>
         </item>
@@ -119,6 +125,7 @@ return None\n
                             <string>installed_bts</string>
                             <string>_getiter_</string>
                             <string>bt</string>
+                            <string>built_bts</string>
                             <string>None</string>
                           </tuple>
                         </value>

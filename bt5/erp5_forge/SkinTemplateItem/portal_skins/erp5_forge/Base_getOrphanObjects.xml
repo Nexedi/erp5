@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">bfINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Document import newTempBase\n
+\n
+## Stuff that is ignored\n
+#- everything that is not in a portal_*\n
+#- portal_trash, portal_categories, portal_templates, portal_preferences\n
+#- objects whose meta-type is \'External Method\' or \'Filesystem*\'\n
+#- \'portal_skins/external_method\' & \'portal_skins/custom\'\n
+#- \'portal_workflow/business_template_building_workflow\' & \'portal_workflow/business_template_installation_workflow\'\n
+#- \'portal_catalog/erp5_mysql\' & \'portal_catalog/cps3_mysql\' & \'portal_types/Business Template\'\n
+##\n
+\n
+portals_scanned = [\'portal_actions\', \'portal_memberdata\', \'portal_skins\', \'portal_types\', \'portal_undo\', \'portal_url\', \'portal_workflow\', \'portal_discussion\', \'portal_membership\', \'portal_registration\', \'portal_properties\', \'portal_metadata\', \'portal_syndication\', \'portal_uidannotation\', \'portal_uidgenerator\', \'portal_uidhandler\', \'portal_report\', \'portal_rules\', \'portal_ids\', \'portal_simulation\', \'portal_alarms\', \'portal_domains\', \'portal_deliveries\', \'portal_orders\', \'portal_classes\', \'portal_catalog\', \'portal_selections\', \'portal_synchronizations\', \'portal_activities\', \'portal_subversion\']\n
+orphans_list = []\n
+if object is None:\n
+  object = context\n
+objects = object.objectValues()\n
+for o in objects:\n
+  object_path = \'/\'.join(o.getPhysicalPath()[2:])\n
+  if \'portal_skins/external_method\' in object_path or \\\n
+     \'portal_skins/custom\' in object_path or \\\n
+     \'portal_workflow/business_template_building_workflow\' in object_path or \\\n
+     \'portal_workflow/business_template_installation_workflow\' in object_path or \\\n
+     \'portal_catalog/erp5_mysql\' in object_path or \\\n
+     \'portal_catalog/cps3_mysql\' in object_path or\\\n
+     \'portal_types/Business Template\' in object_path:\n
+    continue\n
+  if (object is not context) or (object_path.split(\'/\')[0] in portals_scanned):\n
+    if not o.meta_type.startswith(\'Filesystem\') and o.meta_type != \'External Method\':\n
+      context.log("lol", object_path)\n
+      if not context.getPortalObject().Base_getOriginalBusinessTemplateId(file=object_path):\n
+        if object_path not in portals_scanned:\n
+          # orphan object\n
+          orphans_list.append(object_path)\n
+      # Recursively check children\n
+      orphans_list.extend([x.uid for x in context.Base_getOrphanObjects(object=o)])\n
+\n
+object_list = []\n
+for orphan in orphans_list:\n
+  my_dict = {}\n
+  my_dict[\'uid\'] = orphan\n
+  temp_object = newTempBase(folder=context.getPortalObject(), id=\'1234\')\n
+  temp_object.edit(**my_dict)\n
+  object_list.append(temp_object)\n
+\n
+return object_list\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_forge/Base_getOrphanObjects</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>object=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>object</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>portals_scanned</string>
+                            <string>orphans_list</string>
+                            <string>None</string>
+                            <string>context</string>
+                            <string>_getattr_</string>
+                            <string>objects</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>_getitem_</string>
+                            <string>object_path</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>object_list</string>
+                            <string>orphan</string>
+                            <string>my_dict</string>
+                            <string>_write_</string>
+                            <string>temp_object</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getOrphanObjects</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
