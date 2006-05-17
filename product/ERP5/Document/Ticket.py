@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -30,25 +30,20 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Movement import Movement
-from Products.CMFCore.utils import getToolByName
 
-class Event(Movement):
+class Ticket(Movement):
     """
-      Event is the base class for all events in ERP5.
-
-      Event objects include emails, phone calls,
-
-      The purpose of an Event object is to keep track
-      of the interface between the ERP and third parties.
-
-      Events have a start and stop date.
+    A Ticket allows to track a sales process involving
+    multilple Person and Organisations. It is a placeholder for
+    documents, events, etc.
     """
 
-    meta_type = 'ERP5 Event'
-    portal_type = 'Event'
+    meta_type = 'ERP5 Ticket'
+    portal_type = 'Ticket'
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
-    
+
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -58,12 +53,15 @@ class Event(Movement):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.Task
+                      # Useless, replace by Arrow
+                      , PropertySheet.SaleOpportunity  
                       , PropertySheet.Arrow
+                      , PropertySheet.Price
                       , PropertySheet.Movement
-                      , PropertySheet.Event
                       )
 
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'isAccountable')
     def isAccountable(self):
       """
         Returns 1 if this needs to be accounted

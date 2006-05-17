@@ -29,23 +29,18 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Core.MetaNode import MetaNode
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.Document.Ticket import Ticket
 
-class SaleOpportunity(MetaNode, XMLObject):
+class SaleOpportunity(Ticket):
     """
-      A SalesOpportunity allows to track a sales process involving
-      multilple Person and Organisations. It is a placeholder for
-      documents, events, etc.
+    A SalesOpportunity allows to track a sales process involving
+    multilple Person and Organisations. It is a placeholder for
+    documents, events, etc.
 
-      SalesOpportunity objects can be synchronized accross
-      multiple sites
+    SalesOpportunity objects can be synchronized accross
+    multiple sites
 
-      It can be considered as a MetaNode in the ERP5 UBM model since
-      it may be necessary to account the investment in a given sales
-      opportunity.
-      
-      XXX Must be renamed to Opportunity
+    XXX Must be renamed to Opportunity
     """
 
     meta_type = 'ERP5 Sale Opportunity'
@@ -63,53 +58,9 @@ class SaleOpportunity(MetaNode, XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.SaleOpportunity  # Useless, replace by Arrow
+                      # Useless, replace by Arrow
+                      , PropertySheet.SaleOpportunity  
                       , PropertySheet.Arrow
                       , PropertySheet.Price
+                      , PropertySheet.Movement
                       )
-
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-A SalesOpportunity allows to track a sales process involving
-multilple Person and Organisations. It is a placeholder for
-documents, events, etc."""
-         , 'icon'           : 'sale_opportunity_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addSaleOpportunity'
-         , 'immediate_view' : 'sale_opportunity_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'sale_opportunity_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'sale_opportunity_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_edit'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-

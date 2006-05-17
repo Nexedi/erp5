@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,50 +28,18 @@
 ##############################################################################
 
 
-class MailMessage:
+class Event:
     """
-    MailMessage properties and categories
+    Event properties and categories
     """
 
     _properties = (
-        {   'id'          : 'to',
-            'description' : 'Destination email address, extracted from header.',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'reply_to',
-            'description' : 'Reply to email address, extracted from header.',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'sender',
-            'description' : 'Sender email address, extracted from header.',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'body',
-            'description' : 'Mail body.',
-            'type'        : 'text',
-            'mode'        : 'w' },
-        {   'id'          : 'header',
-            'description' : 'Mail header as received.',
-            'type'        : 'text',
-            'mode'        : 'w' },
-        {   'id'          : 'other_info',
-            'description' : '',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'original',
-            'description' : 'Save raw mail received from MTA',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        # Kept for compatibility
-        {   'id'          : 'date',
-            'description' : 'Mail send date, extracted from header.',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'subject',
-            'description' : 'Mail subject, extracted from header.',
-            'type'        : 'string',
-            'default'     : '',
-            'mode'        : 'w' },
+        # XXX Copy/Paste from ERP5/PropertySheet/Order.py
+        { 'id'          : 'received_date',
+          'description' : 'Received date',
+          'type'        : 'date',
+          'mode'        : 'w' },
+       # Source properties
         { 'id'          : 'organisation_title',
           'description' : 'The organisations this persons works for',
           'type'        : 'string',
@@ -82,8 +51,9 @@ class MailMessage:
           'acquisition_accessor_id'   : 'getTitle',
           'acquisition_depends'       : None,
           'mode'        : 'w' },
+        # Source properties
         { 'id'          : 'person_title',
-          'description' : 'The person this mail come from',
+          'description' : 'The person this event come from',
           'type'        : 'string',
           'acquisition_base_category' : ('source',),
           'acquisition_portal_type'   : ('Person',),
@@ -94,3 +64,6 @@ class MailMessage:
           'acquisition_depends'       : None,
           'mode'        : 'w' },
         )
+
+    # XXX Source, Destination are duplicated...
+    _categories = ('source', 'destination', 'subordination', 'follow_up')

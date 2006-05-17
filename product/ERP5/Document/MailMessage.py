@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 
 from Products.CMFMailIn.MailMessage import MailMessage as CMFMailInMessage
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 
 from Products.ERP5.Document.Event import Event
@@ -63,7 +62,7 @@ supported_decoding = {
   }
 
 
-class MailMessage(XMLObject, Event, CMFMailInMessage):
+class MailMessage(Event, CMFMailInMessage):
   """
     MailMessage subclasses Event objects to implement Email Events.
   """
@@ -84,6 +83,8 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
                     , PropertySheet.DublinCore
                     , PropertySheet.Task
                     , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Event
                     , PropertySheet.MailMessage
                     )
 
@@ -97,7 +98,7 @@ class MailMessage(XMLObject, Event, CMFMailInMessage):
 #     self.attachments = attachments
 
   def _edit(self, *args, **kw):
-    XMLObject._edit(self, *args, **kw)
+    Event._edit(self, *args, **kw)
     self.cleanMessage()
 
   def cleanMessage(self):
