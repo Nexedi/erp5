@@ -890,7 +890,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """Remove all files and folders in list
     """
     for file in list:
-      removeAll(self._getWorkingPath(file))
+      removeAll(file)
     
   def getModifiedTree(self, bt, show_unmodified=False) :
     # Remove trailing slash if it's present
