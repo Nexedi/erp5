@@ -16,6 +16,7 @@ import mimetypes
 import email
 from email.Header import decode_header
 from email.Utils import parseaddr
+from ZODB.POSException import ConflictError
 
 import traceback
 import StringIO
@@ -91,6 +92,10 @@ def MailInTool_postUTF8MailMessage(self, file=None):
     try:
       return self.restrictedTraverse(portal_url+self.method)\
                                                     (theMail=theMail)
+    except ConflictError:
+      # XXX Warning: if exception is raised, the MTA will
+      # not return the mail to the sender
+      raise
     except:
       # It's needed to catch all exceptions, as we need to return
       # a value to the MTA in this case.
