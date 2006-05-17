@@ -50,7 +50,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, \
                                              noSecurityManager
 from DateTime import DateTime
-from Acquisition import aq_base, aq_inner
+from Acquisition import aq_base, aq_inner, aq_parent
 from zLOG import LOG
 from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
@@ -73,6 +73,19 @@ class TestInvoice(TestPackingListMixin,
   vat_rate = 0.196
   sale_gap = 'fr/pcg/7/70/707/7071/70712'
   customer_gap = 'fr/pcg/4/41/411'
+
+  # (account_id, account_gap)
+  account_definition_list = (
+      ('receivable_vat', vat_gap),
+      ('sale', sale_gap),
+      ('customer', customer_gap),
+      )
+  # (line_id, source_account_id, line_quantity)
+  transaction_line_definition_list = (
+      ('income', 'sale', 1.0),
+      ('receivable', 'customer', -1.0 - vat_rate),
+      ('collected_vat', 'receivable_vat', vat_rate),
+      )
 
   invoice_portal_type = 'Sale Invoice Transaction'
   invoice_line_portal_type = 'Invoice Line'
@@ -166,19 +179,12 @@ class TestInvoice(TestPackingListMixin,
 
     portal = self.getPortal()
     account_module = self.getAccountModule()
-    for account_id, account_gap in (('receivable_vat', self.vat_gap),
-                                    ('sale', self.sale_gap),
-                                    ('customer', self.customer_gap)):
+    for account_id, account_gap in self.account_definition_list:
       if not account_id in account_module.objectIds():
         account = account_module.newContent(id=account_id)
         account.setGap(account_gap)
         portal.portal_workflow.doActionFor(account,
             'validate_action', wf_id='account_workflow')
-
-    vat_account = account_module['receivable_vat']
-    sale_account = account_module['sale']
-    customer_account = account_module['customer']
-    
     invoice_rule = self.getPortal().portal_rules\
                           .default_invoice_transaction_rule
     invoice_rule.deleteContent([x.getId()
@@ -207,14 +213,12 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(len(cell_list),1)
     cell = cell_list[0]
 
-    for line_id, line_source, line_ratio in (('income', sale_account, 1.0),
-        ('receivable', customer_account, -1.0 - self.vat_rate),
-        ('collected_vat', vat_account, self.vat_rate)):
-
+    for line_id, line_source_id, line_ratio in \
+        self.transaction_line_definition_list:
       line = cell.newContent(id=line_id,
           portal_type=self.sale_invoice_transaction_portal_type)
       line.setQuantity(line_ratio)
-      line.setSourceValue(line_source)
+      line.setSourceValue(account_module[line_source_id])
 
   def modifyPackingListState(self, transition_name,
                              sequence,packing_list=None):
@@ -418,31 +422,61 @@ class TestInvoice(TestPackingListMixin,
     """ Checks that the invoicing rule is applied and its values are
         correct. """
     order_rule_list = sequence.get('order_rule_list')
+    invoicing_rule_list = []
+    invoice_transaction_rule_list = []
     for order_rule in order_rule_list :
       for order_simulation_movement in order_rule.objectValues() :
-        invoicing_rule_list = order_simulation_movement.objectValues()
-        self.assertEquals(len(invoicing_rule_list), 1)
-        invoicing_rule = invoicing_rule_list[0]
-        sequence.edit(invoicing_rule = invoicing_rule)
-        self.assertEquals(invoicing_rule.getSpecialiseId(),
-                         'default_invoicing_rule')
-        self.assertEquals(invoicing_rule.getPortalType(),
-                         'Applied Rule')
-    
-        simulation_movement_list = invoicing_rule.objectValues()
-        self.assertNotEquals(len(simulation_movement_list), 0)
-        for simulation_movement in simulation_movement_list :
-          resource_list = sequence.get('resource_list')
-          self.assertEquals(simulation_movement.getPortalType(),
-                            'Simulation Movement')
-          self.assertTrue(simulation_movement.getResourceValue() in
-              resource_list)
-          # TODO: What is the invoice dates supposed to be ?
-          # is this done through profiles ?
-          self.assertEquals(simulation_movement.getStartDate(),
-                     sequence.get('order').getStartDate())
-          self.assertEquals(simulation_movement.getStopDate(),
-                      sequence.get('order').getStopDate())
+        temp_invoicing_rule_list = order_simulation_movement.objectValues()
+        self.assertEquals(len(temp_invoicing_rule_list), 1)
+        invoicing_rule_list.extend(order_simulation_movement.objectValues())
+    sequence.edit(invoicing_rule_list=invoicing_rule_list)
+    invoicing_rule = invoicing_rule_list[0]
+    sequence.edit(invoicing_rule = invoicing_rule)
+    for invoicing_rule in invoicing_rule_list:
+      self.assertEquals(invoicing_rule.getSpecialiseId(),
+          'default_invoicing_rule')
+      self.assertEquals(invoicing_rule.getPortalType(),
+          'Applied Rule')
+      simulation_movement_list = invoicing_rule.objectValues()
+      self.assertNotEquals(len(simulation_movement_list), 0)
+      for simulation_movement in simulation_movement_list :
+        invoice_transaction_rule_list.extend(simulation_movement.objectValues())
+        resource_list = sequence.get('resource_list')
+        self.assertEquals(simulation_movement.getPortalType(),
+                          'Simulation Movement')
+        self.assertTrue(simulation_movement.getResourceValue() in
+            resource_list)
+        self.assertTrue(simulation_movement.isConvergent())
+        # TODO: What is the invoice dates supposed to be ?
+        # is this done through profiles ?
+        self.assertEquals(simulation_movement.getStartDate(),
+                   sequence.get('order').getStartDate())
+        self.assertEquals(simulation_movement.getStopDate(),
+                    sequence.get('order').getStopDate())
+    sequence.edit(invoice_transaction_rule_list=invoice_transaction_rule_list)
+
+  def stepCheckInvoiceTransactionRule(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+    Checks that the invoice_transaction_rule is expanded and its movements are
+    consistent with its parent movement
+    """
+    invoice_transaction_rule_list = \
+        sequence.get('invoice_transaction_rule_list')
+    for invoice_transaction_rule in invoice_transaction_rule_list:
+      parent_movement = aq_parent(invoice_transaction_rule)
+      self.assertEquals(3, len(invoice_transaction_rule.objectValues()))
+      for line_id, line_source_id, line_ratio in \
+          self.transaction_line_definition_list:
+        movement = getattr(invoice_transaction_rule, line_id, None)
+        self.assertTrue(movement is not None)
+        self.assertEquals(movement.getQuantity(), parent_movement.getPrice() *
+            parent_movement.getQuantity() * line_ratio)
+        self.assertEquals(movement.getSourceId(), line_source_id)
+        self.assertEquals(movement.getStartDate(),
+            parent_movement.getStartDate())
+        self.assertEquals(movement.getStopDate(),
+            parent_movement.getStopDate())
 
   def stepCheckDeliveryRuleForDeferred(
                       self, sequence=None, sequence_list=None, **kw):
@@ -545,9 +579,6 @@ class TestInvoice(TestPackingListMixin,
     self.assertEquals(3,len(new_invoice.objectValues(
         portal_type=self.sale_invoice_transaction_line_portal_type)))
     account_module = self.getAccountModule()
-    vat_account=account_module['receivable_vat']
-    sale_account=account_module['sale']
-    customer_account=account_module['customer']
     found_dict = {}
     for line in invoice.objectValues(
         portal_type=self.sale_invoice_transaction_line_portal_type):
@@ -1024,6 +1055,7 @@ class TestInvoice(TestPackingListMixin,
     stepTic
     stepStartPackingList
     stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
     stepTic
     stepCheckInvoiceBuilding
 
@@ -1035,6 +1067,7 @@ class TestInvoice(TestPackingListMixin,
     stepCheckInvoiceSplitted
     stepCheckPackingListIsDivergent
     stepCheckPackingListIsDiverged
+    stepCheckInvoiceTransactionRule
 
     stepRebuildAndCheckNothingIsCreated
     """
@@ -1051,6 +1084,7 @@ class TestInvoice(TestPackingListMixin,
     stepTic
     stepStartPackingList
     stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
     stepTic
     stepCheckInvoiceBuilding
 
@@ -1063,7 +1097,8 @@ class TestInvoice(TestPackingListMixin,
     stepCheckPackingListIsDivergent
     stepCheckPackingListIsDiverged
     stepCheckSimulationStartDateUpdated
-
+    stepCheckInvoiceTransactionRule
+    
     stepRebuildAndCheckNothingIsCreated
     """
     self.playSequence(sequence)
