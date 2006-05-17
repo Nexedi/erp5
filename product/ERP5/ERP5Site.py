@@ -677,6 +677,22 @@ class ERP5Site ( FolderMixIn, CMFSite ):
           self._getPortalConfiguration('portal_assignment_base_category_list')
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalTicketTypeList')
+    def getPortalTicketTypeList(self):
+      """
+      Return ticket types.
+      """
+      return self._getPortalGroupedTypeList('ticket')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalEventTypeList')
+    def getPortalEventTypeList(self):
+      """
+      Return event types.
+      """
+      return self._getPortalGroupedTypeList('event')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
       """
