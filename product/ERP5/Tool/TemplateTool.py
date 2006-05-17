@@ -103,6 +103,7 @@ class TemplateTool (BaseTool):
           return bt
       return None
         
+    # Christophe Dumez <christophe@nexedi.com>
     def getInstalledBusinessTemplatesList(self):
       """Get list of installed business templates
       """
@@ -111,6 +112,16 @@ class TemplateTool (BaseTool):
         if bt.getInstallationState() == 'installed':
           installed_bts.append(bt)
       return installed_bts
+        
+    # Christophe Dumez <christophe@nexedi.com>
+    def getBuiltBusinessTemplatesList(self):
+      """Get list of built and not_installed business templates
+      """
+      built_bts = []
+      for bt in self.contentValues(filter={'portal_type':'Business Template'}):
+        if bt.getInstallationState() == 'not_installed' and bt.getBuildingState() == 'built':
+          built_bts.append(bt)
+      return built_bts
 
     def updateLocalConfiguration(self, template, **kw):
       """
