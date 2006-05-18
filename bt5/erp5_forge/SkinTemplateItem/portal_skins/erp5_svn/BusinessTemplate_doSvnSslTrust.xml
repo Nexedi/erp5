@@ -81,7 +81,9 @@ for key in dict_keys:\n
 context.getPortalObject()["portal_subversion"].acceptSSLServer(trust_dict, True)\n
 \n
 if caller == \'update\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/svn_update\')\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdate\')\n
+elif caller == \'updatewc\':\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnUpdatewc\')\n
 elif caller == \'commit\':\n
   return context.BusinessTemplate_doSvnCommit(changelog=changelog,added=added,removed=removed,modified=modified)\n
 elif caller == \'ls\':\n

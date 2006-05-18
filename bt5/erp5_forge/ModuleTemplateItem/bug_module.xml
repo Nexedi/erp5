@@ -41,6 +41,10 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>AccessContentsInformation</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
    <name>Add Accelerated HTTP Cache Managers</name>
    <role>Manager</role>
   </permission>
@@ -240,6 +244,9 @@
    <name>Add Plugin Registrys</name>
   </permission>
   <permission>
+   <name>Add Portal ZSyncer Tools</name>
+  </permission>
+  <permission>
    <name>Add Python Scripts</name>
    <role>Manager</role>
   </permission>
@@ -292,6 +299,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add Z MySQL Database Deferred Connections</name>
+  </permission>
+  <permission>
    <name>Add ZCatalogs</name>
    <role>Manager</role>
   </permission>
@@ -306,6 +316,9 @@
   <permission>
    <name>Add ZODB Mount Points</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add ZSyncers</name>
   </permission>
   <permission>
    <name>Add Zope Tutorials</name>
@@ -685,6 +698,17 @@
   </permission>
   <permission>
    <name>WebDAV access</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>ZSyncer: Use ZSyncer</name>
+  </permission>
+  <permission>
+   <name>ZopeProfiler: manage</name>
+   <role>Manager</role>
+  </permission>
+  <permission>
+   <name>ZopeProfiler: view</name>
    <role>Manager</role>
   </permission>
  </permission_list>

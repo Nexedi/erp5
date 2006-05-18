@@ -66,47 +66,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>history = context.Base_getWorkflowHistory()\n
-bug_history = history.get(\'bug_workflow\', None)\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-follow_up_list = []\n
-\n
-if bug_history is not None:\n
-  title_list = bug_history[\'title_list\']\n
-  item_list = bug_history[\'item_list\']\n
-  index_dict = {}\n
-\n
-  for i in range(len(title_list)):\n
-    index_dict[title_list[i]] = i\n
-\n
-  for item in item_list:\n
-    action = item[index_dict[\'Action\']]\n
-    comment = item[index_dict[\'Comment\']]\n
-    time = item[index_dict[\'Time\']]\n
-    actor = item[index_dict[\'Actor\']]\n
-\n
-    if action is not None and action.endswith(\'_action\'):\n
-      if action.startswith(\'open\'):\n
-        # I guess nobody wants to enter a comment to open a bug.\n
-        continue\n
-      if not comment:\n
-        comment = \'\'\n
-      else:\n
-        comment = comment.strip()\n
-      if not actor:\n
-        actor = \'unknown\'\n
-      if not time:\n
-        time = \'unknown\'\n
-      else:\n
-        time = time.ISO()\n
-      follow_up_list.append(\'%s by %s at %s:\\n%s\' % (action[:-7], actor, time, comment))\n
-\n
-comment_id = len(follow_up_list)\n
-for i in range(len(follow_up_list)):\n
-  follow_up_list[i] = (\'Comment #%d: \' % comment_id) + follow_up_list[i]\n
-  comment_id -= 1\n
-\n
-return \'\\n\\n\'.join(follow_up_list)\n
+bug = state_change[\'object\']\n
+if not bug.getTested():\n
+  raise ValidationFailed, \'This bug is not tested, so you cannot close it\'\n
 </string> </value>
         </item>
         <item>
@@ -117,11 +81,11 @@ return \'\\n\\n\'.join(follow_up_list)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_forge/Bug_getFollowUpListAsText</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_workflow/bug_workflow/scripts/confirmTested</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,33 +105,18 @@ return \'\\n\\n\'.join(follow_up_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-<string>context</string>
-                            <string>history</string>
-                            <string>None</string>
-                            <string>bug_history</string>
-                            <string>follow_up_list</string>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>_getitem_</string>
-                            <string>title_list</string>
-                            <string>item_list</string>
-                            <string>index_dict</string>
-                            <string>_getiter_</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>i</string>
-                            <string>_write_</string>
-                            <string>item</string>
-                            <string>action</string>
-                            <string>comment</string>
-                            <string>time</string>
-                            <string>actor</string>
-                            <string>comment_id</string>
+                            <string>bug</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
@@ -184,7 +133,7 @@ return \'\\n\\n\'.join(follow_up_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Bug_getFollowUpListAsText</string> </value>
+            <value> <string>confirmTested</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

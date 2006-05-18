@@ -207,12 +207,12 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
           else if (parseInt(navigator.appVersion)>=5&&navigator.\n
           appName=="Netscape") {\n
             if(document.getElementById(\'treebox1\').innerHTML.indexOf(\'folder.png\') == -1){\n
-              document.getElementById(\'treebox1\').innerHTML = sText;\n
+              //document.getElementById(\'treebox1\').innerHTML = sText;\n
             }\n
           }\n
           else if (document.all){\n
             if(document.all[\'treebox1\'].innerHTML.indexOf(\'folder.png\') == -1){\n
-              document.all[\'treebox1\'].innerHTML = sText\n
+              //document.all[\'treebox1\'].innerHTML = sText\n
             }\n
           }\n
 \t}\n
