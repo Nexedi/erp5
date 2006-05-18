@@ -540,6 +540,15 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     trust_item_list, permanent = loads(b64decode(trust))
     return dict(trust_item_list), permanent
   
+  def getPreferredUsername(self):
+    """return username in preferences if set of the current username
+    """
+    username = self.getPortalObject().portal_preferences.getPreferredSubversionUserName()
+    if username is None or username.strip() == "":
+      # not set in preferences, then we get the current username in zope
+      username = self.portal_membership.getAuthenticatedMember().getUserName()
+    return username
+  
   def diffHTML(self, file_path, bt, revision1=None, revision2=None):
     raw_diff = self.diff(file_path, bt, revision1, revision2)
     return DiffFile(raw_diff).toHTML()
