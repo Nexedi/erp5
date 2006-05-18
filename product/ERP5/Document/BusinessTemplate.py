@@ -358,7 +358,7 @@ class BaseTemplateItem(Implicit, Persistent):
 
   def getKeys(self):
     return self._objects.keys()
-  
+
   def importFile(self, bta, **kw):
     bta.importFiles(klass=self)
 
@@ -376,6 +376,8 @@ class BaseTemplateItem(Implicit, Persistent):
     if getattr(obj, 'meta_type', None) == 'Script (Python)':
       if hasattr(aq_base(obj), '_code'):
         obj._code = None
+      if hasattr(aq_base(obj), 'Python_magic'):
+        obj.Python_magic = None
     elif getattr(obj, 'meta_type', None) == 'ERP5 PDF Form' :
       if not obj.getProperty('business_template_include_content', 1) :
         obj.deletePdfContent()
@@ -723,7 +725,7 @@ class PathTemplateItem(ObjectTemplateItem):
       try:
         obj = folder._getOb(id)
       except AttributeError:
-        # XXX FIXME 
+        # XXX FIXME
         LOG("WARNING!", 100,
             "Can not resolve '%s' during business template installation." % id)
         return []
@@ -1416,22 +1418,22 @@ class PortalTypeBaseCategoryTemplateItem(PortalTypeAllowedContentTypeTemplateIte
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
   """Template Item for catalog methods.
-  
+
     This template item stores catalog method and install them in the
     default catalog.
     The use Catalog makes for methods is saved as well and recreated on
     installation.
   """
-  
+
   def __init__(self, id_list, tool_id='portal_catalog', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
-    # a mapping to store properties of methods. 
+    # a mapping to store properties of methods.
     # the mapping contains an entry for each method, and this entry is
     # another mapping having the id of the catalog property as key and a
     # boolean value to say wether the method is part of this catalog
     # configuration property.
     self._method_properties = PersistentMapping()
-    
+
     self._is_filtered_archive = PersistentMapping()
     self._filter_expression_archive = PersistentMapping()
     self._filter_expression_instance_archive = PersistentMapping()
@@ -1460,11 +1462,11 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     if catalog is None:
       LOG('BusinessTemplate build', 0, 'catalog not found')
       return
-    
+
     # upgrade old
     if not hasattr(self, '_method_properties'):
       self._method_properties = PersistentMapping()
-      
+
     for obj in self._objects.values():
       method_id = obj.id
       self._method_properties[method_id] = self._extractMethodProperties(
@@ -1501,14 +1503,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
       f = open(object_path, 'wt')
       xml_data = '<catalog_method>'
-      
+
       for method_property, value in self._method_properties[method_id].items():
         xml_data += os.linesep+' <item key="%s" type="int">' %(method_property,)
         xml_data += os.linesep+'  <value>%s</value>' %(value,)
         xml_data += os.linesep+' </item>'
-      
+
       if catalog.filter_dict.has_key(method_id):
-        xml_data += os.linesep+' <item key="_is_filtered_archive" type="int">' 
+        xml_data += os.linesep+' <item key="_is_filtered_archive" type="int">'
         xml_data += os.linesep+'  <value>1</value>'
         xml_data += os.linesep+' </item>'
         for method in catalog_method_filter_list:
@@ -1526,7 +1528,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       xml_data += os.linesep+'</catalog_method>'
       f.write(xml_data)
       f.close()
-      
+
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
     obj = self._objects[path]
@@ -1579,7 +1581,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     for obj in values:
       method_id = obj.id
-     
+
       # Restore catalog properties for methods
       if hasattr(self, '_method_properties'):
         for key in self._method_properties.get(method_id, {}).keys():
@@ -1591,7 +1593,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
               new_value = list(old_value) + [method_id]
               new_value.sort()
               setattr(catalog, key, tuple(new_value))
-      
+
       # Restore filter
       if self._is_filtered_archive.get(method_id, 0):
         expression = self._filter_expression_archive[method_id]
@@ -1634,14 +1636,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           sql_clear_catalog.append(method_id)
         elif not is_clear_method and method_id in sql_clear_catalog:
           sql_clear_catalog.remove(method_id)
-    
+
         sql_catalog_object_list.sort()
         catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
         sql_uncatalog_object.sort()
         catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
         sql_clear_catalog.sort()
         catalog.sql_clear_catalog = tuple(sql_clear_catalog)
-      
+
   def uninstall(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
@@ -1675,10 +1677,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
             new_value = list(old_value)
             new_value.remove(method_id)
             setattr(catalog, catalog_prop['id'], new_value)
-          
+
       if catalog.filter_dict.has_key(method_id):
         del catalog.filter_dict[method_id]
-    
+
     # uninstall objects
     ObjectTemplateItem.uninstall(self, context, **kw)
 
@@ -1721,7 +1723,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         else:
           # new style key
           self._method_properties.setdefault(id, PersistentMapping())[key] = 1
-          
+
 class ActionTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, **kw):
@@ -3862,7 +3864,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           item = getattr(self, item_name, None)
           if item is not None:
             item.install(local_configuration, force=force, object_to_update=object_to_update, trashbin=trashbin)
-      
+
       # update catalog if necessary
       update_catalog=0
       catalog_method = getattr(self, '_catalog_method_item', None)
@@ -4334,7 +4336,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       object_id = REQUEST.object_id
       object_class = REQUEST.object_class
-      
+
       # Get objects
       item_name = class_name_dict[object_class]
 
@@ -4367,14 +4369,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       new_object = new_item._objects[object_id]
       installed_object = installed_item._objects[object_id]
       diff_msg = ''
-      
+
       # Real Zope Objects (can be exported into XML directly by Zope)
       item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item',
                      '_skin_item', '_action_item',]
-      
+
       # Not considered as objects by Zope (will be exported into XML manually)
       item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item', '_catalog_keyword_key_item', '_catalog_full_text_key_item', '_catalog_request_key_item', '_catalog_multivalue_key_item', '_catalog_topic_key_item', '_portal_type_allowed_content_type_item', '_portal_type_hidden_content_type_item', '_portal_type_property_sheet_item', '_portal_type_roles_item', '_portal_type_base_category_item', '_local_roles_item', '_portal_type_workflow_chain_item',]
-      
+
       # Text objects (no need to export them into XML)
       item_list_3 = ['_document_item', '_property_sheet_item', '_constraint_item', '_extension_item', '_test_item', '_message_translation_item',]
 
@@ -4394,7 +4396,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         new_ob_xml_lines = new_obj_xml.splitlines()
         installed_ob_xml_lines = installed_obj_xml.splitlines()
         # End of XML export
-        
+
         # Diff between XML objects
         diff_list = list(unified_diff(installed_ob_xml_lines, new_ob_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
@@ -4410,7 +4412,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         new_obj_xml_lines = new_obj_xml.splitlines()
         installed_obj_xml_lines = installed_obj_xml.splitlines()
         # End of XML Code Generation
-        
+
         # Diff between XML objects
         diff_list = list(unified_diff(installed_obj_xml_lines, new_obj_xml_lines, tofile=new_bt.getId(), fromfile=installed_bt.getId(), lineterm=''))
         if len(diff_list) != 0:
@@ -4437,7 +4439,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         self.portal_templates.manage_delObjects(ids=['installed_bt_for_diff'])
 
       return diff_msg
-      
+
 
     def getPortalTypesProperties(self, **kw):
       """
