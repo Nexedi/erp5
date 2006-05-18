@@ -80,7 +80,7 @@ except SubversionLoginError, error1 :\n
   return context.asContext(caller=\'update\', realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Working Copy updated successfully.\')\n
-return new_bt.REQUEST.RESPONSE.redirect(new_bt.REQUEST[\'BASE3\']+\'/\'+new_bt.getId()+\'/\'+\'BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=\'+context.getId())\n
+return new_bt.REQUEST.RESPONSE.redirect(new_bt.REQUEST[\'BASE3\']+\'/\'+new_bt.getId()+\'/\'+\'BusinessTemplate_viewInstallationDialog?workflow_action=install_action&form_id=\'+new_bt.getId())\n
 
 
 ]]></string> </value>
