@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -76,7 +79,7 @@ order.applyToOrderRelatedMovement(method_id=\'expand\')\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5-2/portal_workflow/task_workflow/scripts/Order_appliedToRelatedMovement</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/task_workflow/scripts/Order_appliedToRelatedMovement</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

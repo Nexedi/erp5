@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="MultiRelationStringField" module="Products.ERP5Form.MultiRelationField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5Form.MultiRelationField</string>
+          <string>MultiRelationStringField</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>my_requirement_logical_path_list</string> </value>

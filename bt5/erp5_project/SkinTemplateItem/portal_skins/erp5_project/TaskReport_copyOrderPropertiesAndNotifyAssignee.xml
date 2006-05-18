@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -113,20 +116,8 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5-2/portal_skins/erp5_project/TaskReport_copyOrderPropertiesAndNotifyAssignee</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/TaskReport_copyOrderPropertiesAndNotifyAssignee</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -188,24 +179,6 @@ packing_list.activate(after_method_id=(\'immediateReindexObject\',\'recursiveImm
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

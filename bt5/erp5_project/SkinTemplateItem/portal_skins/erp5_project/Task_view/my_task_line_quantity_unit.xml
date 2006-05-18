@@ -3,18 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ListField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.StandardFields</string>
+          <string>ListField</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>my_task_line_quantity_unit</string> </value>

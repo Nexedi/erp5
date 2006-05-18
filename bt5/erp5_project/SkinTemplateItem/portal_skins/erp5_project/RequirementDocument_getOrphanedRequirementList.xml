@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -75,7 +78,7 @@ return context.portal_catalog(**kw)\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5-2/portal_skins/erp5_project/RequirementDocument_getOrphanedRequirementList</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/RequirementDocument_getOrphanedRequirementList</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -107,7 +110,7 @@ return context.portal_catalog(**kw)\n
                           <tuple>
                             <string>kw</string>
                             <string>_getattr_</string>
-<string>context</string>
+                            <string>context</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>

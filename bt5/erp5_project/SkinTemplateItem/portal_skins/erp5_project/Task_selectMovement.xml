@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -84,32 +87,12 @@ else:\n
             </value>
         </item>
         <item>
-            <key> <string>_dav_writelocks</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5-2/portal_skins/erp5_project/Task_selectMovement</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/Task_selectMovement</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>src__=0, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -167,31 +150,9 @@ else:\n
             <value> <string>Task_selectMovement</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
       </dictionary>

@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PageTemplates.ZopePageTemplate</string>
+          <string>ZopePageTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

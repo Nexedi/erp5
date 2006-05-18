@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5OOo.OOoTemplate</string>
+          <string>OOoTemplate</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

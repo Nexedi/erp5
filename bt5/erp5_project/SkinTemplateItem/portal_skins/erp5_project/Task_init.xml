@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -74,13 +77,7 @@
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5-2/portal_skins/erp5_project/Task_init</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/Task_init</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

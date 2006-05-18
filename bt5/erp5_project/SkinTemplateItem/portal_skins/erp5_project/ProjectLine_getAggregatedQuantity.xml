@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -84,7 +87,7 @@ return context.getQuantity()\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5-2/portal_skins/erp5_project/ProjectLine_getAggregatedQuantity</string> </value>
+            <value> <string>Script (Python):/erp5/portal_skins/erp5_project/ProjectLine_getAggregatedQuantity</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

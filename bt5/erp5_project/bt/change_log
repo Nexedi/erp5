@@ -1,9 +1,12 @@
-2006-01-21 JPS
-* Initial refactoring
+2006-05-18 Fabien
+* Sync with JPS' branch
+
+2006-02-06 Kevin
+* Update license and copyright metadata.
 
 2005-11-11 Romain
 * Correct naming convention.
 
-2005-09-24 - JPS
+2005-09-24 JPS
 * Renamed modules
 * Removed service module (it should be part of another template)

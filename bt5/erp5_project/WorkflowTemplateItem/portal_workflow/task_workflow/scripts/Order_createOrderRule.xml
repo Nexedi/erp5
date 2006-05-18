@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -78,7 +81,7 @@ order.activate(tag=tag).updateAppliedRule(rule_id = \'default_order_rule\',activ
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5-2/portal_workflow/task_workflow/scripts/Order_createOrderRule</string> </value>
+            <value> <string>Script (Python):/erp5/portal_workflow/task_workflow/scripts/Order_createOrderRule</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

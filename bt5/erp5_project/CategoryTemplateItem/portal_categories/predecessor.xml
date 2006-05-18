@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="BaseCategory" module="Products.ERP5Type.Document.BaseCategory"/>
-        <tuple/>
+        <tuple>
+          <string>Products.ERP5Type.Document.BaseCategory</string>
+          <string>BaseCategory</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
