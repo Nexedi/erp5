@@ -100,15 +100,18 @@ class CopyToTarget(TargetSolver):
       parent_movement = None
     return parent_movement, value_delta_dict
 
-  def _recursivelySolve(self, simulation_movement, **value_delta_dict):
+  def _recursivelySolve(self, simulation_movement, is_last_movement=1, **value_delta_dict):
     """
       Update value of the current simulation movement, and update
       his parent movement.
     """
     value_dict = self._generateValueDict(simulation_movement, **value_delta_dict)
     simulation_movement.edit(**value_dict)
+    if is_last_movement:
+      delivery_quantity = simulation_movement.getDeliveryValue().getQuantity()
+      simulation_movement.setDeliveryError(delivery_quantity - value_dict['quantity'])
     parent_movement, parent_value_delta_dict = \
                 self._getParentParameters(simulation_movement, **value_delta_dict)
     if parent_movement is not None:
       # Modify the parent movement
-      self._recursivelySolve(parent_movement, **parent_value_delta_dict)
+      self._recursivelySolve(parent_movement, is_last_movement=0, **parent_value_delta_dict)
