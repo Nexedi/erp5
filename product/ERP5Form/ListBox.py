@@ -2232,11 +2232,13 @@ class ListBox(ZMIField):
 
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
-      if (id == 'default') and \
-         (kw.get('render_format') in ('list', )):
+      if (id == 'default'):
+        if (kw.get('render_format') in ('list', )):
           return self.widget.render(self, self.generate_field_key(), None, 
                                     kw.get('REQUEST'), 
                                     render_format=kw.get('render_format'))
+        else:
+          return None
       else:
         # Try an ERP5-style accessor, if available.
         method_id = 'get' + convertToUpperCase(id)
