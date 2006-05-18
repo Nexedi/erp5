@@ -477,7 +477,7 @@ resource_current_inventory</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Movement List</string> </value>
+                    <value> <string>Movements</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

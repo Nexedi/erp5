@@ -4,20 +4,14 @@
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.CMFCore.ActionInformation</string>
-          <string>ActionInformation</string>
+          <string>Products.ERP5Type.patches.ActionInformation</string>
+          <string>PatchedActionInformation</string>
         </tuple>
         <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>action</string> </key>
             <value>
