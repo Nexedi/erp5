@@ -506,7 +506,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     response = request.RESPONSE
     login_list.append(self._encodeLogin(realm, user, password))
     value = ','.join(login_list)
-    expires = (DateTime() + 7).toZone('GMT').rfc822()
+    expires = (DateTime() + 1).toZone('GMT').rfc822()
     request.set(self.login_cookie_name, value)
     response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
 
@@ -594,7 +594,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     response = request.RESPONSE
     trust_list.append(self._encodeSSLTrust(trust_dict, permanent))
     value = ','.join(trust_list)
-    expires = (DateTime() + 7).toZone('GMT').rfc822()
+    expires = (DateTime() + 1).toZone('GMT').rfc822()
     request.set(self.ssl_trust_cookie_name, value)
     response.setCookie(self.ssl_trust_cookie_name, value, path = '/', expires = expires)
     
