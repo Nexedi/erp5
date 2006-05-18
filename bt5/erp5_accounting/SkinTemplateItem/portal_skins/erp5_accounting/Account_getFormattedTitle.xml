@@ -66,8 +66,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>gap_id = item.getGapId()\n
-title  = item.getTitle()\n
+            <value> <string>gap_id = account.Account_getGapId()\n
+title  = account.getTitle()\n
 \n
 if gap_id.isdigit():\n
   title = "%s - %s"%(gap_id, title)\n
@@ -93,7 +93,7 @@ return title\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>item</string> </value>
+            <value> <string>account</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,7 +119,7 @@ return title\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>item</string>
+                            <string>account</string>
                             <string>_getattr_</string>
                             <string>gap_id</string>
                             <string>title</string>
@@ -142,7 +142,7 @@ return title\n
             <value> <string>Account_getFormattedTitle</string> </value>
         </item>
         <item>
-            <key>                             <string>title</string> </key>
+            <key> <string>title</string> </key>
             <value> <string>Format the title of an account properly</string> </value>
         </item>
         <item>
