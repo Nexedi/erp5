@@ -245,7 +245,7 @@
                     <key> <string>title</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<b>Orphan Objects (objects not included in a built and not replaced business template)</b>
+<b>Orphan Objects (objects not included in a business template)</b>
 
 ]]></string> </value>
                 </item>
