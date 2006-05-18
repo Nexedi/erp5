@@ -2,10 +2,10 @@
  <portal_type id="Bank Account Inventory">
   <item>Base</item>
   <item>DublinCore</item>
-  <item>XMLObject</item>
   <item>Document</item>
   <item>Arrow</item>
   <item>Inventory</item>
+  <item>XMLObject</item>
   <item>Folder</item>
  </portal_type>
  <portal_type id="Bank Account Inventory Line">
@@ -27,40 +27,20 @@
  </portal_type>
  <portal_type id="Cash Inventory">
   <item>Arrow</item>
-  <item>XMLObject</item>
-  <item>Document</item>
-  <item>DublinCore</item>
-  <item>Base</item>
-  <item>Inventory</item>
   <item>Folder</item>
- </portal_type>
- <portal_type id="Cash Inventory Cell">
+  <item>XMLObject</item>
+  <item>Document</item>
   <item>Base</item>
   <item>DublinCore</item>
-  <item>Price</item>
-  <item>ItemAggregation</item>
-  <item>Document</item>
-  <item>Predicate</item>
-  <item>XMLObject</item>
-  <item>MappedValue</item>
+  <item>Inventory</item>
  </portal_type>
  <portal_type id="Cash Inventory Group">
+  <item>Arrow</item>
   <item>Task</item>
-  <item>Arrow</item>
- </portal_type>
- <portal_type id="Cash Inventory Line">
-  <item>XMLObject</item>
-  <item>Arrow</item>
-  <item>Amount</item>
-  <item>Folder</item>
-  <item>InventoryLine</item>
-  <item>DublinCore</item>
-  <item>Document</item>
-  <item>Base</item>
  </portal_type>
  <portal_type id="Cash Inventory Module">
-  <item>DublinCore</item>
   <item>Base</item>
+  <item>DublinCore</item>
   <item>Document</item>
   <item>XMLObject</item>
   <item>Folder</item>

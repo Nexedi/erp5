@@ -64,15 +64,15 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Inventory Line</string> </value>
+            <value> <string>BAOBAB Cash Inventory Line</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Une ligne tarifaire.</string> </value>
+            <value> <string>An inventory line for cash</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addInventoryLine</string> </value>
+            <value> <string>addCashInventoryLine</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>

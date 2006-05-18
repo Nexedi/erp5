@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Inventory Cell</string> </value>
+            <value> <string>BAOBAB Cash Inventory Cell</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addInventoryCell</string> </value>
+            <value> <string>addCashInventoryCell</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>

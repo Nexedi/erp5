@@ -1,5 +1,8 @@
+2006-05-18 aurel
+* modify cash inventory line/cell portal type to use our own class
+
 2006-02-14 aurel
 * Uptade permissions on module
 
 2006-02-13 yo
-* Update the portal type properties.
+* Update the portal type properties.seb
