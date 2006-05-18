@@ -241,7 +241,10 @@ try:
         
     def status(self, path, **kw):
       # Since plain Python classes are not convenient in Zope, convert the objects.
-      return [Status(x) for x in self.client.status(path, **kw)]
+      status_list = [Status(x) for x in self.client.status(path, **kw)]
+      # XXX: seems that pysvn return a list that is upside-down, we reverse it...
+      status_list.reverse()
+      return status_list
     
     def removeAllInList(self, list):
       """Remove all files and folders in list
