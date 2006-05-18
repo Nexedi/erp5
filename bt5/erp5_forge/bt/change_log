@@ -1,6 +1,7 @@
 2006-05-18 chris
 * fixed some bugs in sslTrust / login
 * added action to update local working copy
+* get current zope username if preferred username is not set
 
 2006-05-17 chris
 * added search engine for orphan objects : Base_viewOrphanObjects

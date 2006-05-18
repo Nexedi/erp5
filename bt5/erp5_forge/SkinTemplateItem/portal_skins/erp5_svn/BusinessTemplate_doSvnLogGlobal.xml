@@ -89,7 +89,7 @@ except SubversionSSLTrustError, error:\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\', file=file).BusinessTemplate_viewSvnSSLTrust()\n
 except SubversionLoginError, error1 :\n
   context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'log\', file=file, realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(caller=\'log\', file=file, realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
 \n
 if not log_list:\n
   return []\n
