@@ -118,7 +118,7 @@ def runUnitTestList(test_list) :
       attr = getattr(m, attr_name)
       if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and \
           (attr.__module__ == test_module) :
-        if test_class_list is not None and attr.__name__ in test_class_list:
+        if test_class_list is None or attr.__name__ in test_class_list:
           suite.addTest(unittest.makeSuite(attr))
 
   return TestRunner().run(suite)
