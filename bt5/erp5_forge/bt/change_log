@@ -1,3 +1,7 @@
+2006-05-18 chris
+* fixed some bugs in sslTrust / login
+* added action to update local working copy
+
 2006-05-17 chris
 * added search engine for orphan objects : Base_viewOrphanObjects
 

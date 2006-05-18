@@ -78,7 +78,7 @@ except SubversionLoginError, error1 :\n
   return context.asContext(caller=\'updatewc\', realm = error1.getRealm(), username = context.getPortalObject().portal_preferences.getPreference(\'preferred_subversion_user_name\')).BusinessTemplate_viewSvnLogin()\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Working Copy updated successfully.\')\n
-return context.BusinessTemplate_viewSvnStatus()\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_viewSvnStatus\')\n
 </string> </value>
         </item>
         <item>
