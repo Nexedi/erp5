@@ -76,7 +76,6 @@ def createPreferenceMethods(portal) :
       for attribute_name in attr_list:
         method = PreferenceMethod(attribute_name)
         setattr(PreferenceTool, attribute_name, method)
-  LOG('PreferenceTool', INFO, 'Preference methods generated')
 
 class PreferenceMethod(Method) :
   """ A method object that lookup the attribute on preferences. """
