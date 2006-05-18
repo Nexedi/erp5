@@ -278,12 +278,18 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>default_module</string> </key>
@@ -348,6 +354,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
@@ -388,7 +402,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Vendor</string> </value>
+                    <value> <string>Customer</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
