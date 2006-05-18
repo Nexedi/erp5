@@ -875,6 +875,24 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     client = self._getClient()
     return client.checkin(path, log_message, recurse)
 
+  security.declareProtected('Import/Export objects', 'getLastChangelog')
+  def getLastChangelog(self, bt):
+    """Return last changelog of a business template
+    """
+    bt_path = self._getWorkingPath(self.getSubversionPath(bt))
+    changelog_path = bt_path + os.sep + 'bt' + os.sep + 'change_log'
+    changelog=""
+    if os.path.exists(changelog_path):
+      changelog_file = open(changelog_path, 'r')
+      changelog_lines = changelog_file.readlines()
+      changelog_file.close()
+      for line in changelog_lines:
+        if line.strip() == '':
+          break
+        changelog+=line
+    return changelog
+    
+
   security.declareProtected('Import/Export objects', 'status')
   def status(self, path, **kw):
     """Get status.
