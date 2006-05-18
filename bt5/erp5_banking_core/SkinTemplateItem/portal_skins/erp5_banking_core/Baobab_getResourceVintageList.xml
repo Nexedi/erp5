@@ -70,9 +70,9 @@
 \n
 def getResourceVintageList(banknote=0, coin=0):\n
     variation_list = {}\n
-    if banknote:\n
+    if banknote and not coin:\n
      portal_type_list = ["Banknote",]\n
-    elif coin:\n
+    elif coin and not banknote:\n
      portal_type_list = ["Coin",]\n
     else:\n
       portal_type_list = ["Banknote", "Coin"]\n

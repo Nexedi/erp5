@@ -161,13 +161,13 @@ if import_type == \'create_category\' :\n
   for e_list in line_list :\n
     if len(e_list) > 0 :\n
       e = e_list[0]\n
-      try :\n
-        print \'trying to create %s ...\' % lowerCase(e),\n
-        create_category(e)\n
-        print \'done\'\n
-      except :\n
-        print \'Failed\'\n
-        return printed\n
+      #try :\n
+      print \'trying to create %s ...\' % lowerCase(e),\n
+      create_category(e)\n
+      print \'done\'\n
+#       except AttributeError:\n
+#         print \'Failed\'\n
+#         return printed\n
 \n
 \n
 elif import_type == \'assign_codification\' :\n
@@ -180,13 +180,13 @@ elif import_type == \'assign_codification\' :\n
         # Automatically assign code for some subcategories\n
         context.log(\'e_list[0]\',e_list[0])\n
         if e_list[0].startswith(\'site\'):\n
-          vault_code = {\'banque_interne\':\'BI\',\'operations_diverses\':\'OD\',\'gros_paiement\':\'GP\',\'gros_versement\':\'GV\',\n
+          acquired_vault_code = {\'banque_interne\':\'BI\',\'operations_diverses\':\'OD\',\'gros_paiement\':\'GP\',\'gros_versement\':\'GV\',\n
                         \'guichet_1\':\'G1\',\'guichet_2\':\'G2\',\'guichet_3\':\'G3\'}\n
           context.log(\'category\',category.getPath())\n
           for sub_cat in category.getCategoryChildValueList(sort_id=\'path\'):\n
-            if sub_cat.getId() in vault_code.keys():\n
+            if sub_cat.getId() in acquired_vault_code.keys():\n
               parent_code = sub_cat.getParentValue().getCodification()\n
-              code = parent_code + vault_code[sub_cat.getId()]\n
+              code = parent_code + acquired_vault_code[sub_cat.getId()]\n
               sub_cat.setCodification(code)\n
         print \'done %s\' % repr(e_list)\n
       except KeyError:\n
@@ -261,7 +261,8 @@ elif import_type == \'create_subvaults\' :\n
               else:\n
                 #context.log(\'add encaisse des billets et monnaies\',counter_subvault)\n
                 subvault_dict[vault].append([\'%s/%s\' % (counter_subvault, c.getTitle()), None])\n
-        if subvault == \'Encaisse des Billets Recus pour Ventilation\' :\n
+        if subvault in (\'Encaisse des Billets Recus pour Ventilation Venant de\',\'Encaisse des Billets en Transit Allant a\',\n
+                        \'Encaisse des Billets Neufs Non Emis en Transit Allant a\') :\n
           for c in context.portal_categories.site.agence.principale.objectIds() :\n
             if counter_name in two_way_counter_list:\n
               #context.log(\'add ventilation E/S\', counter_subvault)\n
@@ -282,7 +283,10 @@ elif import_type == \'create_subvaults\' :\n
   context.log("vault_type_dict :",subvault_dict)\n
 \n
   # parse the for site category tree and add sub categories if required\n
+  #for c in context.portal_categories.site.getCategoryChildValueList() :\n
+  #for c in context.portal_categories.site.agence.principale.lome.getCategoryChildValueList() :\n
   for c in context.portal_categories.site.getCategoryChildValueList() :\n
+    context.log(\'c.getPath()\',c.getPath())\n
     for vault_type in vault_type_list :\n
       context.log("c = %s, vault_type = %s" %(c, vault_type), "c.getvaultType = %s" %(c.getVaultType()))\n
       if context.portal_categories.isMemberOf(c, vault_type, strict=1) :\n
@@ -290,17 +294,20 @@ elif import_type == \'create_subvaults\' :\n
         for subvault_data in subvault_dict[vault_type] :\n
           subvault_path = subvault_data[0]\n
           subvault_code = subvault_data[1]\n
-          if \'Encaisse des Billets Recus pour Ventilation\' in subvault_path or \'Encaisse des Billets Restitues par Tiers a Detruire\' in subvault_path :\n
+          if \'Encaisse des Billets Recus pour Ventilation Venant de\' in subvault_path or \'Encaisse des Billets Restitues par Tiers a Detruire\' in subvault_path \\\n
+                or \'Encaisse des Billets en Transit Allant a\' in subvault_path or \'Encaisse des Billets Neufs Non Emis en Transit Allant a\' in subvault_path:\n
             if not context.portal_categories.isMemberOf(c, \'site/agence/principale\', strict=0) :\n
-              #print \'XXXXXXXX is not principale, not creating\', subvault_path\n
+              print \'XXXXXXXX is not principale, not creating\', subvault_path\n
               pass\n
             elif subvault_path.find(\'/\') > 0 and lowerCase(subvault_path).split(\'/\')[1] in c.getRelativeUrl() :\n
-              #print \'XXXXXXXX is itself, not creating\', subvault_path\n
+              print \'XXXXXXXX is itself, not creating\', subvault_path\n
               pass\n
             else :\n
               print \'  creating\', subvault_path\n
               if \'guichet\' in subvault_path:\n
                 subcat_vault_type = \'%s/guichet\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
+              elif \'transit\' in subvault_path.lower():\n
+                subcat_vault_type = \'%s/transit\' %(\'/\'.join(vault_type.split(\'/\')[1:]),)\n
               else:\n
                 subcat_vault_type = \'/\'.join(vault_type.split(\'/\')[1:])\n
               new_category_obj = create_category(cat = \'%s/%s\' % (c.getRelativeUrl(), subvault_path), vault_type = subcat_vault_type)\n
@@ -407,7 +414,7 @@ return printed\n
                             <string>len</string>
                             <string>e</string>
                             <string>category</string>
-                            <string>vault_code</string>
+                            <string>acquired_vault_code</string>
                             <string>sub_cat</string>
                             <string>parent_code</string>
                             <string>code</string>

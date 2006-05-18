@@ -1,3 +1,6 @@
+2006-05-18 aurel
+* update Delivery_getVaultItemList to take new categories into account and fix   Baobab_getResourceVintageList
+
 2006-05-11 aurel
 * update catalog method to take getBaobabSource/DestinationVariationText into account
 

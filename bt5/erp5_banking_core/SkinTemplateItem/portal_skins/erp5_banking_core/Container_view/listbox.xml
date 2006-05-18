@@ -351,6 +351,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -431,8 +435,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Cash Container Line</string>
-                          <string>Cash Container Line</string>
+                          <string>Container Line</string>
+                          <string>Container Line</string>
                         </tuple>
                       </list>
                     </value>

@@ -188,6 +188,10 @@ def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
       for i in xrange(path_len):\n
         if i%2 == 0 and i != 0:\n
           new_title_list.append(title_path_list[i])\n
+        elif \'Ventilation\' in title_path_list[i]:\n
+          new_title_list.append(\'Ventilation\')\n
+        elif \'Transit\' in title_path_list[i]:\n
+          new_title_list.append(\'Transit\')\n
       if id not in new_title_list: # ie last part of path\n
         new_title_list.append(id)\n
     # put back the counter name into the list\n
@@ -220,7 +224,9 @@ if user_site == 1:\n
   for site in site_list:\n
     if "guichet" in  site:\n
       site = context.Baobab_getVaultSite(vault=site)\n
-    new_site_list.append(site.getRelativeUrl())\n
+      new_site_list.append(site.getRelativeUrl())\n
+    else:\n
+      new_site_list.append(site)\n
   site_list = new_site_list\n
 else:\n
   site_list = [\'site\']\n

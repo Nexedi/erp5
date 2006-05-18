@@ -66,25 +66,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># return counter list for a given site and a given vault type\n
+            <value> <string># return site of the user and possible counter on wich user can be assigned\n
+if context.getDestination() is None:\n
+  # must have an organisation defined to limit site diplayed\n
+  return [[\'\', \'\']]\n
 \n
-if vault_type is None:\n
-  vault_type = (\'site/surface/banque_interne\', \'site/surface/gros_paiement\', \'site/surface/gros_versement\', \'site/surface/operations_diverses\')\n
+dest_site_title = context.getDestinationValue().getSiteTitle()\n
 \n
+site_list = context.Delivery_getVaultItemList(user_site=0, vault_type=("site", "site/surface/banque_interne/guichet", "site/surface/gros_paiement/guichet", "site/surface/gros_versement/guichet"), strict_membership=1, leaf_node=0)\n
+site_dict = {}\n
+for site in site_list:\n
+  site_split = site[0].split(\'/\')\n
+  if dest_site_title in site_split:\n
+    if len(site_split) == 4:\n
+      # case of counter\n
+      counter = "/".join(site_split[:-1])\n
+      if not site_dict.has_key(counter):\n
+        if not \'siege\' in site[1]:\n
+          site_dict[counter] = \'/\'.join(site[1].split("/")[:6])\n
+        else:\n
+          site_dict[counter] = \'/\'.join(site[1].split("/")[:5])\n
+    else:\n
+      site_dict[site[0]] = site[1]\n
 \n
-vault_list = context.Delivery_getVaultItemList(vault_type=vault_type, strict_membership = 0, leaf_node=0, user_site=1, with_base=0)\n
-counter_dict = {}\n
-for vault in vault_list:\n
-  if len(vault[0].split("/")) == 4:\n
-    counter = \'/\'.join(vault[0].split("/")[:3])\n
-    if not counter_dict.has_key(counter):\n
-      if not \'siege\' in vault[1]:\n
-        counter_dict[counter] = \'/\'.join(vault[1].split("/")[:6])\n
-      else:\n
-        counter_dict[counter] = \'/\'.join(vault[1].split("/")[:5])\n
-             \n
-\n
-list = counter_dict.items()\n
+list = site_dict.items()\n
 list.sort()\n
 return list\n
 </string> </value>
@@ -103,7 +108,7 @@ return list\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getCounterList</string> </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_core/Baobab_getPossibleUserAssignmentSiteList</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -113,7 +118,7 @@ return list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault_type=None, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,23 +138,23 @@ return list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>vault_type</string>
-                            <string>kw</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>vault_list</string>
-                            <string>counter_dict</string>
+                            <string>None</string>
+                            <string>dest_site_title</string>
+                            <string>site_list</string>
+                            <string>site_dict</string>
                             <string>_getiter_</string>
-                            <string>vault</string>
-                            <string>len</string>
+                            <string>site</string>
                             <string>_getitem_</string>
+                            <string>site_split</string>
+                            <string>len</string>
                             <string>counter</string>
                             <string>_write_</string>
                             <string>list</string>
@@ -164,14 +169,12 @@ return list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getCounterList</string> </value>
+            <value> <string>Baobab_getPossibleUserAssignmentSiteList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
