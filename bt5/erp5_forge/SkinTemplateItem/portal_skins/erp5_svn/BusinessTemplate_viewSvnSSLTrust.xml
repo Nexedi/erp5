@@ -81,8 +81,6 @@
                         <string>my_valid_from</string>
                         <string>my_issuer_name</string>
                         <string>my_failures</string>
-                        <string>my_file</string>
-                        <string>my_repos_url</string>
                       </list>
                     </value>
                 </item>
@@ -95,7 +93,6 @@
                         <string>my_realm_hidden</string>
                         <string>my_hostname_hidden</string>
                         <string>my_failures_hidden</string>
-                        <string>my_files</string>
                         <string>my_changelog</string>
                         <string>my_finger_print_hidden</string>
                         <string>my_issuer_dname_hidden</string>

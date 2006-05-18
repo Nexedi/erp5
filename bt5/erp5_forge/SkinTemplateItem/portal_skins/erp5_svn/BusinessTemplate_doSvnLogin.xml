@@ -74,7 +74,6 @@ modified = context.REQUEST["modified"]\n
 removed = context.REQUEST["removed"]\n
 caller = context.REQUEST["caller"]\n
 changelog = context.REQUEST["changelog"]\n
-repos_url = context.REQUEST["repos_url"]\n
 \n
 context.getPortalObject()["portal_subversion"].setLogin(svn_realm, svn_user, svn_password)\n
 \n
@@ -146,7 +145,6 @@ else:\n
                             <string>removed</string>
                             <string>caller</string>
                             <string>changelog</string>
-                            <string>repos_url</string>
                           </tuple>
                         </value>
                     </item>

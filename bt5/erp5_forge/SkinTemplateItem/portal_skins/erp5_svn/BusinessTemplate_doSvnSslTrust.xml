@@ -71,7 +71,6 @@ modified = context.REQUEST["modified"]\n
 removed = context.REQUEST["removed"]\n
 caller = context.REQUEST["caller"]\n
 changelog = context.REQUEST["changelog"]\n
-repos_url = context.REQUEST["repos_url"]\n
 \n
 dict_keys=(\'valid_until\', \'hostname\', \'realm\', \'finger_print\', \'valid_from\', \'issuer_dname\', \'failures\',)\n
 trust_dict={}\n
@@ -145,7 +144,6 @@ else:\n
                             <string>removed</string>
                             <string>caller</string>
                             <string>changelog</string>
-                            <string>repos_url</string>
                             <string>dict_keys</string>
                             <string>trust_dict</string>
                             <string>_getiter_</string>

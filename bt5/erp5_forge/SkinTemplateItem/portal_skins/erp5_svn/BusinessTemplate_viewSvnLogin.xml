@@ -90,8 +90,6 @@
                         <string>my_user</string>
                         <string>my_password</string>
                         <string>my_caller</string>
-                        <string>my_file</string>
-                        <string>my_repos_url</string>
                       </list>
                     </value>
                 </item>
