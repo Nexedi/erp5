@@ -66,20 +66,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
-\n
+            <value> <string>from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError\n
 try:\n
-  infos_list = context.getPortalObject()["portal_subversion"].ls(file, context)\n
+  infos_list = context.getPortalObject()["portal_subversion"].ls(added, context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(trust_dict = error.getTrustDict(), file=file, caller=\'ls\').BusinessTemplate_viewSvnSSLTrust()\n
-except SubversionLoginError, error1 :\n
-  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'ls\', file=file, realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(trust_dict = error.getTrustDict(), added=added, caller=\'ls\').BusinessTemplate_viewSvnSSLTrust()\n
 if infos_list:\n
-  return context.asContext(infos_dict=infos_list[0], file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
+  return context.asContext(infos_dict=infos_list[0], file=added, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, added)).BusinessTemplate_viewSvnInfosFile()\n
 else:\n
-  return context.asContext(infos_dict=False, file=file, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, file)).BusinessTemplate_viewSvnInfosFile()\n
+  return context.asContext(infos_dict=False, file=added, edit_path=context.getPortalObject()["portal_subversion"].editPath(context, added)).BusinessTemplate_viewSvnInfosFile()\n
 </string> </value>
         </item>
         <item>
@@ -94,7 +90,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file</string> </value>
+            <value> <string>added</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -120,16 +116,14 @@ else:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>file</string>
+                            <string>added</string>
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
-                            <string>SubversionLoginError</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>context</string>
                             <string>infos_list</string>
                             <string>error</string>
-                            <string>error1</string>
                             <string>False</string>
                           </tuple>
                         </value>

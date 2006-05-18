@@ -68,17 +68,14 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+from Products.ERP5Subversion.SubversionClient import SubversionSSLTrustError\n
 from Products.ERP5Type.Document import newTempBase\n
 \n
 try:\n
-  log_list = context.getPortalObject()["portal_subversion"].log(file, context)\n
+  log_list = context.getPortalObject()["portal_subversion"].log(added, context)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
-  return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\', file=file).BusinessTemplate_viewSvnSSLTrust()\n
-except SubversionLoginError, error1 :\n
-  context.REQUEST.set(\'portal_status_message\', \'Server needs authentication, no cookie found\')\n
-  return context.asContext(caller=\'log\', file=file, realm = error1.getRealm(), username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
+  return context.asContext(trust_dict = error.getTrustDict(), caller=\'log\', added=added).BusinessTemplate_viewSvnSSLTrust()\n
 \n
 if not log_list:\n
   return []\n
@@ -109,7 +106,7 @@ return context.BusinessTemplate_viewSvnLog()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file,**kw</string> </value>
+            <value> <string>added,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,11 +132,10 @@ return context.BusinessTemplate_viewSvnLog()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>file</string>
+                            <string>added</string>
                             <string>kw</string>
                             <string>Products.ERP5Subversion.SubversionClient</string>
                             <string>SubversionSSLTrustError</string>
-                            <string>SubversionLoginError</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>_getattr_</string>
@@ -147,7 +143,6 @@ return context.BusinessTemplate_viewSvnLog()\n
                             <string>context</string>
                             <string>log_list</string>
                             <string>error</string>
-                            <string>error1</string>
                             <string>object_list</string>
                             <string>_getiter_</string>
                             <string>my_dict</string>

@@ -86,9 +86,9 @@ elif caller == \'updatewc\':\n
 elif caller == \'commit\':\n
   return context.BusinessTemplate_doSvnCommit(changelog=changelog,added=added,removed=removed,modified=modified)\n
 elif caller == \'ls\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLs?file=\'+context.REQUEST[\'file\'].replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLs?added=\'+added.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
 elif caller == \'log\':\n
-  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?file=\'+context.REQUEST[\'file\'].replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
+  return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnLog?added=\'+added.replace(\'%20\',\'%2520\').replace(\' \',\'%20\'))\n
 elif caller == \'info\':\n
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + \'/BusinessTemplate_doSvnInfo\')\n
 elif caller == \'switch\':\n

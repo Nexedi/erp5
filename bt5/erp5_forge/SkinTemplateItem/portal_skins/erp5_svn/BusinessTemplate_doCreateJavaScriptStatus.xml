@@ -375,14 +375,13 @@ print \'\'\'\n
     function log(){\n
       //hide popup\n
       document.getElementById(\'menudiv\').style.display = "none";\n
-      open(\'%s/BusinessTemplate_doSvnLog?file=\'+tree.getSelectedItemId(), \'_self\');\n
-      //open(\'/BusinessTemplate_viewSvnLog?file=\'+tree.getSelectedItemId(), \'_self\');\n
+      open(\'%s/BusinessTemplate_doSvnLog?added=\'+tree.getSelectedItemId(), \'_self\');\n
     }\n
 \n
     function ls(){\n
       //hide popup\n
       document.getElementById(\'menudiv\').style.display = "none";\n
-      open(\'%s/BusinessTemplate_doSvnLs?file=\'+tree.getSelectedItemId(), \'_self\');\n
+      open(\'%s/BusinessTemplate_doSvnLs?added=\'+tree.getSelectedItemId(), \'_self\');\n
     }\n
   </script>\n
 \'\'\'% (context.getId(), context.getId(), context.getId(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url())\n

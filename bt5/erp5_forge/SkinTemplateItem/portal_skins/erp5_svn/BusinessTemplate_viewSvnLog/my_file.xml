@@ -283,7 +283,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.REQUEST[\'file\']</string> </value>
+            <value> <string>python:here.REQUEST[\'added\']</string> </value>
         </item>
       </dictionary>
     </pickle>
