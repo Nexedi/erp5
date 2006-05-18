@@ -545,7 +545,6 @@ class ListBoxWidget(Widget.Widget):
         select = field.get_value('select')
         sort = field.get_value('sort')
         editable_columns = field.get_value('editable_columns')
-        all_editable_columns = field.get_value('all_editable_columns')
         stat_columns = field.get_value('stat_columns')
         url_columns = field.get_value('url_columns')
         search_columns = field.get_value('search_columns')
@@ -696,7 +695,6 @@ class ListBoxWidget(Widget.Widget):
 
 
         editable_column_ids = map(lambda x: x[0], editable_columns)
-        all_editable_column_ids = map(lambda x: x[0], all_editable_columns)
 
         url = REQUEST.URL
 
@@ -2061,10 +2059,8 @@ class ListBoxValidator(Validator.Validator):
         here = getattr(form, 'aq_parent', REQUEST)
         columns = field.get_value('columns')
         editable_columns = field.get_value('editable_columns')
-        all_editable_columns = field.get_value('all_editable_columns')
         column_ids = map(lambda x: x[0], columns)
         editable_column_ids = map(lambda x: x[0], editable_columns)
-        all_editable_column_ids = map(lambda x: x[0], all_editable_columns)
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
@@ -2236,8 +2232,11 @@ class ListBox(ZMIField):
 
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
-      if id == 'default' and kw.get('render_format') in ('list', ):
-        return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=kw.get('render_format'))
+      if (id == 'default') and \
+         (kw.get('render_format') in ('list', )):
+          return self.widget.render(self, self.generate_field_key(), None, 
+                                    kw.get('REQUEST'), 
+                                    render_format=kw.get('render_format'))
       else:
         # Try an ERP5-style accessor, if available.
         method_id = 'get' + convertToUpperCase(id)
