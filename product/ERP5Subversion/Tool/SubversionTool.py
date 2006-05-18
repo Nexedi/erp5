@@ -965,15 +965,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     self.activate().removeAllInList([path,])
     
   def importBT(self, bt):
-    # Do svn export before importing to get rid of .svn stuff
-    # and unversioned files.
-    tmp_path = mktemp() + os.sep
-    self.export(self._getWorkingPath(self.getSubversionPath(bt)), tmp_path)
-    # Import 
-    id = bt.download(tmp_path)
-    # Clean up
-    self.activate().removeAllInList([tmp_path,])
-    return id
+    return bt.download(self._getWorkingPath(self.getSubversionPath(bt)))
     
   # Get a list of files and keep only parents
   # Necessary before recursively commit removals
