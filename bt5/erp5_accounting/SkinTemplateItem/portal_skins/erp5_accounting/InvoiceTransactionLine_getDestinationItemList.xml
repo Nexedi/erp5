@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -84,11 +84,10 @@ else:\n
   category = \'portal_categories/account_type\'\n
 \n
 display_dict = {}\n
+display_funct = context.Account_getFormattedTitle\n
+\n
 def display(x):\n
-  if x not in display_dict:\n
-    gap_id = x.getGapId()\n
-    account_title = x.getTitle()\n
-    display_dict[x] = "%s - %s" % (gap_id, account_title)\n
+  display_dict[x] = display_funct(x)\n
   return display_dict[x]\n
 \n
 def sort(x,y):\n
@@ -157,6 +156,7 @@ return getItemList(category=category, portal_path=portal_path)\n
                             <string>_getitem_</string>
                             <string>category</string>
                             <string>display_dict</string>
+                            <string>display_funct</string>
                             <string>display</string>
                             <string>sort</string>
                             <string>None</string>

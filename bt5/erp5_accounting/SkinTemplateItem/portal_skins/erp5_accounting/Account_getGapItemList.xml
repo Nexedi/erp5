@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value> <string encoding="base64">bfINCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -66,8 +66,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def display(x):\n
-  return "%s - %s" % (x.getId(), x.getTitle())\n
+            <value> <string>display = context.Account_getFormattedTitle\n
 \n
 def sort(x,y):\n
   return cmp(display(x), display(y))\n
@@ -128,10 +127,10 @@ return gap_item_list[:-1]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>display</string>
-                            <string>sort</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>display</string>
+                            <string>sort</string>
                             <string>gap_root</string>
                             <string>KeyError</string>
                             <string>getGapItemList</string>
