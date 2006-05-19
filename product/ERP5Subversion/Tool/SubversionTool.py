@@ -48,7 +48,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.BusinessTemplate import removeAll
 from xml.sax.saxutils import escape
 
-
 try:
   from base64 import b64encode, b64decode
 except ImportError:
@@ -59,6 +58,47 @@ try:
   set
 except NameError:
   from sets import Set as set
+  
+class File(object):
+  __slots__ = ('status','name')
+  # Constructor
+  def __init__(self, name, status) :
+    self.status = status
+    self.name = name
+## End of File Class
+
+class Dir(object):
+  __slots__ = ('status','name','sub_dirs','sub_files')
+  # Constructor
+  def __init__(self, name, status) :
+    self.status = status
+    self.name = name
+    self.sub_dirs = [] # list of sub directories
+    self.sub_files = [] # list of sub files
+
+  # return a list of sub directories' names
+  def getSubDirsNameList(self) :
+    return [d.name for d in self.sub_dirs]
+
+  # return directory in subdirs given its name
+  def getDirFromName(self, name):
+    for d in self.sub_dirs:
+      if d.name == name:
+        return d
+      
+  def getObjectFromName(self, name):
+    for d in self.sub_dirs:
+      if d.name == name:
+        return d
+    for f in self.sub_files:
+      if f.name == name:
+        return f
+      
+  def getContent(self):
+    content = self.sub_dirs
+    content.extend(self.sub_files)
+    return content
+## End of Dir Class
 
 class Error(exceptions.EnvironmentError):
     pass
@@ -150,33 +190,6 @@ def colorize(text):
   html = p.sub(colorizeTag, html)
   html = html.replace(os.linesep, os.linesep+"<br>")
   return html
-  
-class File :
-  # Constructor
-  def __init__(self, full_path, msg_status) :
-    self.full_path = full_path
-    self.msg_status = msg_status
-    self.name = os.path.basename(full_path)
-## End of File Class
-
-class Dir :
-  # Constructor
-  def __init__(self, full_path, msg_status) :
-    self.full_path = full_path
-    self.msg_status = msg_status
-    self.name = os.path.basename(full_path)
-    self.sub_dirs = [] # list of sub directories
-
-  # return a list of sub directories' names
-  def getSubDirs(self) :
-    return [d.name for d in self.sub_dirs]
-
-  # return directory in subdirs given its name
-  def getDir(self, name):
-    for d in self.sub_dirs:
-      if d.name == name:
-        return d
-## End of Dir Class
 
 class DiffFile:
   # Members :
@@ -936,44 +949,51 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       removeAll(file)
     
   def getModifiedTree(self, bt, show_unmodified=False) :
-    # Remove trailing slash if it's present
-    path = self._getWorkingPath(self.getSubversionPath(bt))
-    root = Dir(path, "normal")
+    # Get subversion path without business template name at the end
+    bt_path = self._getWorkingPath(self.getSubversionPath(bt, False))
+    if bt_path[-1] != '/':
+      bt_path += '/'
+    # Business template root directory is the root of the tree
+    root = Dir(bt.getTitle(), "normal")
     somethingModified = False
     
-    for statusObj in self.status(path) :
+    # We browse the files returned by svn status
+    for status_obj in self.status(os.path.join(bt_path, bt.getTitle())) :
       # can be (normal, added, modified, deleted, conflicted, unversioned)
-      msg_status = statusObj.getTextStatus()
-      if (show_unmodified or str(msg_status) != "normal") and str(msg_status) != "unversioned":
+      status = str(status_obj.getTextStatus())
+      if (show_unmodified or status != "normal") and status != "unversioned":
         somethingModified = True
-        full_path = statusObj.getPath()
-        full_path_list = full_path.split(os.sep)[1:]
-        relative_path_list = full_path[len(path)+1:].split(os.sep)
-        # Processing entry
-        filename = relative_path_list[-1]
-        # Needed or files will be both File & Dir objects
-        relative_path_list = relative_path_list[:-1]
+        # Get object path
+        full_path = status_obj.getPath()
+        relative_path = full_path.replace(bt_path, '')
+        filename = os.path.basename(relative_path)
+
+        # Always start from root
         parent = root
-        i = len(path.split(os.sep))
         
-        for d in relative_path_list :
+        # First we add the directories present in the path to the tree
+        # if it does not already exist
+        for d in relative_path.split(os.sep)[1:-1] :
           if d :
-            full_pathOfd = os.sep+os.sep.join(full_path_list[:i]).strip()
-            if d not in parent.getSubDirs() :
-              parent.sub_dirs.append(Dir(full_pathOfd, "normal"))
-            parent = parent.getDir(d)
-          i += 1
-            
+            if d not in parent.getSubDirsNameList() :
+              parent.sub_dirs.append(Dir(d, "normal"))
+            parent = parent.getDirFromName(d)
+        
+        # Consider the whole path which can be a folder or a file
+        # We add it the to the tree if it does not already exist
         if os.path.isdir(full_path) :
-          if full_path == parent.full_path :
-            parent.msg_status = str(msg_status)
-          elif filename not in parent.getSubDirs() :
-            parent.sub_dirs.append(Dir(filename, str(msg_status)))
+          if filename == parent.name :
+            parent.status = status
+          elif filename not in parent.getSubDirsNameList() :
+            # Add new dir to the tree
+            parent.sub_dirs.append(Dir(filename, str(status)))
           else :
-            tmp = parent.getDir(filename)
-            tmp.msg_status = str(msg_status)
+            # update msg status
+            tmp = parent.getDirFromName(filename)
+            tmp.status = str(status)
         else :
-          parent.sub_dirs.append(File(full_path, str(msg_status)))
+          # add new file to the tree
+          parent.sub_files.append(File(filename, str(status)))
     return somethingModified and root
   
   def extractBT(self, bt):
@@ -1083,51 +1103,41 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     self.add([os.path.join(old_dir, x[1]) for x in list])
   
   def treeToXML(self, item, bt) :
-    working_copy = self._getWorkingPath(self.getSubversionPath(bt, False) + os.sep)
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
     output += "<tree id='0'>" + os.linesep
-    output = self._treeToXML(item, working_copy, output, 1, True)
+    output = self._treeToXML(item, output, bt.getTitle(), True)
     output += "</tree>" + os.linesep
     return output
   
-  def _treeToXML(self, item, working_copy, output, ident, first) :
+  def _treeToXML(self, item, output, relative_path, first) :
     # Choosing a color coresponding to the status
-    itemStatus = item.msg_status
-    if itemStatus == 'added' :
-      itemColor='green'
-    elif itemStatus == 'modified' or  itemStatus == 'replaced' :
-      itemColor='orange'
-    elif itemStatus == 'deleted' :
-      itemColor='red'
-    elif itemStatus == 'conflicted' :
-      itemColor='grey'
+    status = item.status
+    if status == 'added' :
+      color = 'green'
+    elif status == 'modified' or  status == 'replaced' :
+      color = 'orange'
+    elif status == 'deleted' :
+      color = 'red'
+    elif status == 'conflicted' :
+      color = 'grey'
     else :
-      itemColor='black'
+      color = 'black'
     if isinstance(item, Dir) :
-      for i in range(ident) :
-        output += '\t'
       if first :
         output += '<item open="1" text="%s" id="%s" aCol="%s" '\
         'im0="folder.png" im1="folder_open.png" '\
-        'im2="folder.png">'%(item.name, item.full_path.replace(working_copy, ''), itemColor,) + os.linesep
+        'im2="folder.png">'%(item.name, relative_path, color) + os.linesep
         first = False
       else :
         output += '<item text="%s" id="%s" aCol="%s" im0="folder.png" ' \
-      'im1="folder_open.png" im2="folder.png">'%(item.name,
-item.full_path.replace(working_copy, ''), itemColor,) + os.linesep
-      for it in item.sub_dirs:
-        ident += 1
-        output = self._treeToXML(item.getDir(it.name), working_copy, output, ident,
-first)
-        ident -= 1
-      for i in range(ident) :
-        output += '\t'
+        'im1="folder_open.png" im2="folder.png">'%(item.name,
+        relative_path, color) + os.linesep
+      for it in item.getContent():
+        output = self._treeToXML(item.getObjectFromName(it.name), output, os.path.join(relative_path,it.name),first)
       output += '</item>' + os.linesep
     else :
-      for i in range(ident) :
-        output += '\t'
       output += '<item text="%s" id="%s" aCol="%s" im0="document.png"/>'\
-                %(item.name, item.full_path.replace(working_copy, ''), itemColor,) + os.linesep
+                %(item.name, relative_path, color) + os.linesep
     return output
     
 InitializeClass(SubversionTool)
