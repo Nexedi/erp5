@@ -47,6 +47,7 @@ from shutil import copy
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.BusinessTemplate import removeAll
 from xml.sax.saxutils import escape
+from dircache import listdir
 
 try:
   from base64 import b64encode, b64decode
@@ -129,7 +130,7 @@ def copytree(src, dst, symlinks=False):
     it is false, the contents of the files pointed to by symbolic
     links are copied.
     """
-    names = os.listdir(src)
+    names = listdir(src)
     errors = []
     for name in names:
         srcname = os.path.join(src, name)
@@ -148,6 +149,41 @@ def copytree(src, dst, symlinks=False):
             errors.append((srcname, dstname, 'Error: ' + str(why.strerror)))
     if errors:
         raise Error, errors
+    
+def cacheWalk(top, topdown=True, onerror=None):
+  """Directory tree generator.
+  """
+  # We may not have read permission for top, in which case we can't
+  # get a list of the files the directory contains.  os.path.walk
+  # always suppressed the exception then, rather than blow up for a
+  # minor reason when (say) a thousand readable directories are still
+  # left to visit.  That logic is copied here.
+  try:
+      # Note that listdir and error are globals in this module due
+      # to earlier import-*.
+      names = listdir(top)
+  except error, err:
+      if onerror is not None:
+          onerror(err)
+      return
+
+  dirs, nondirs = [], []
+  for name in names:
+      if os.path.isdir(os.path.join(top, name)):
+          dirs.append(name)
+      else:
+          nondirs.append(name)
+
+  if topdown:
+      yield top, dirs, nondirs
+  for name in dirs:
+      path = os.path.join(top, name)
+      if not os.path.islink(path):
+          for x in cacheWalk(path, topdown, onerror):
+            yield x
+  if not topdown:
+      yield top, dirs, nondirs
+
     
 def colorizeTag(tag):
   "Return html colored item"
@@ -650,7 +686,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       wc = self._getWorkingPath(wc)
       if not os.path.exists(os.path.join(wc, '.svn')):
         raise SubversionNotAWorkingCopyError, "You must check out working copies in this directory: "+wc+" or choose another path in portal preferences."
-      if bt_name in os.listdir(wc) :
+      if bt_name in listdir(wc) :
         wc_path = os.path.join(wc, bt_name)
         if os.path.isdir(wc_path):
           if with_name:
@@ -1025,7 +1061,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   # return a set with directories present in the directory
   def getSetDirsForDir(self, directory):
     dir_set = set()
-    for root, dirs, files in os.walk(directory):
+    for root, dirs, files in cacheWalk(directory):
       # don't visit SVN directories
       if '.svn' in dirs:
         dirs.remove('.svn')
@@ -1039,7 +1075,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   # return a set with files present in the directory
   def getSetFilesForDir(self, directory):
     dir_set = set()
-    for root, dirs, files in os.walk(directory):
+    for root, dirs, files in cacheWalk(directory):
       # don't visit SVN directories
       if '.svn' in dirs:
         dirs.remove('.svn')
