@@ -1,7 +1,10 @@
 <allowed_content_type_list>
+ <portal_type id="Cash Container">
+  <item>Container Line</item>
+ </portal_type>
  <portal_type id="Cash Sorting">
-  <item>Outgoing Cash Sorting Line</item>
   <item>Incoming Cash Sorting Line</item>
+  <item>Outgoing Cash Sorting Line</item>
  </portal_type>
  <portal_type id="Cash Sorting Module">
   <item>Cash Sorting</item>
@@ -13,11 +16,21 @@
  <portal_type id="Classification Survey Module">
   <item>Classification Survey</item>
  </portal_type>
+ <portal_type id="Container Line">
+  <item>Container Cell</item>
+ </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Incoming Classification Survey Line">
   <item>Cash Delivery Cell</item>
+ </portal_type>
+ <portal_type id="Monetary Reception">
+  <item>Cash Container</item>
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Monetary Reception Module">
+  <item>Monetary Reception</item>
  </portal_type>
  <portal_type id="Monetary Survey">
   <item>Cash Delivery Line</item>

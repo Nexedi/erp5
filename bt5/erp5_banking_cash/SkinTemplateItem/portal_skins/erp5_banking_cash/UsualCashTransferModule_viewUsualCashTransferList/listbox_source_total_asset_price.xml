@@ -162,9 +162,7 @@
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -235,7 +233,7 @@
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>2</int> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -270,25 +268,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>string:-1 234.5 | preferences/getPreferredMoneyQuantityStyle</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: cell.getResourceValue().getQuantityPrecision()</string> </value>
         </item>
       </dictionary>
     </pickle>

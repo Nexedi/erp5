@@ -1,3 +1,6 @@
+2006-05-19 aurel
+* add module for monetary reception
+
 2006-05-9 aurel
 * add module for monetary survey and classification survey
 
@@ -11,4 +14,4 @@
 * remove accounting event for cash classification
 
 2006-03-22 aurel
-* initial build
+* initial buildse

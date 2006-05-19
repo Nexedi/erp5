@@ -72,7 +72,7 @@
                     , \'emission_letter_list\'     : None\n
                     , \'variation_list\'           : context.Baobab_getResourceVintageList(banknote=1)\n
                     , \'currency_cash_portal_type\': \'Banknote\'\n
-                    , \'read_only\'                : True\n
+                    , \'read_only\'                : False\n
                     , \'column_base_category\'     : \'variation\'\n
 }\n
 \n
@@ -134,7 +134,7 @@ return context.CashDelivery_generateCashDetailInputDialog( listbox = None\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>None</string>
-                            <string>True</string>
+                            <string>False</string>
                             <string>cash_detail_dict</string>
                           </tuple>
                         </value>

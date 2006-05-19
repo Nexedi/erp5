@@ -90,7 +90,7 @@ cash_detail_dict = {\'line_portal_type\'           : \'Cash Delivery Line\'\n
                     , \'emission_letter_list\'     : emission_letter\n
                     , \'variation_list\'           : variation\n
                     , \'currency_cash_portal_type\': None\n
-                    , \'read_only\'                : True\n
+                    , \'read_only\'                : False\n
                     , \'column_base_category\'     : \'variation\'\n
                     }\n
 \n
@@ -159,7 +159,7 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>cash_status</string>
                             <string>emission_letter</string>
                             <string>variation</string>
-                            <string>True</string>
+                            <string>False</string>
                             <string>cash_detail_dict</string>
                           </tuple>
                         </value>

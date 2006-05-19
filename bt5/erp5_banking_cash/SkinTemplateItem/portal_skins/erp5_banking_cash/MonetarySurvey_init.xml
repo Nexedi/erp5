@@ -69,6 +69,7 @@
             <value> <string>site_list = context.Baobab_getUserAssignedSiteList()\n
 if len(site_list) == 0:\n
   context.log("MonetarySurvey_init", "unabled to determine site")\n
+  return\n
 \n
 site = site_list[0]\n
 \n

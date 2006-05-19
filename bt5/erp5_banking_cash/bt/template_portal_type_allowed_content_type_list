@@ -1,11 +1,16 @@
+Cash Container | Container Line
 Cash Sorting Module | Cash Sorting
 Cash Sorting | Incoming Cash Sorting Line
 Cash Sorting | Outgoing Cash Sorting Line
 Classification Survey Module | Classification Survey
 Classification Survey | Incoming Classification Survey Line
 Classification Survey | Outgoing Classification Survey Line
+Container Line | Container Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
+Monetary Reception Module | Monetary Reception
+Monetary Reception | Cash Container
+Monetary Reception | Cash Delivery Line
 Monetary Survey Module | Monetary Survey
 Monetary Survey | Cash Delivery Line
 Outgoing Cash Sorting Line | Outgoing Cash Sorting Cell

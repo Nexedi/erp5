@@ -2,11 +2,20 @@
  <portal_type id="Cash Sorting">
   <item>Price</item>
  </portal_type>
+ <portal_type id="Container Cell">
+  <item>CashContainer</item>
+ </portal_type>
+ <portal_type id="Container Line">
+  <item>CashContainer</item>
+ </portal_type>
  <portal_type id="Incoming Cash Sorting Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Incoming Classification Survey Line">
   <item>CashDeliveryLine</item>
+ </portal_type>
+ <portal_type id="Monetary Reception">
+  <item>CashContainer</item>
  </portal_type>
  <portal_type id="Monetary Survey">
   <item>Task</item>

@@ -8,6 +8,18 @@
   <workflow>edit_workflow, classification_survey_workflow</workflow>
  </chain>
  <chain>
+  <type>Container Cell</type>
+  <workflow>packing_list_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Container Line</type>
+  <workflow>packing_list_interaction_workflow, trade_matrix_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Monetary Reception</type>
+  <workflow>edit_workflow, monetary_reception_workflow</workflow>
+ </chain>
+ <chain>
   <type>Monetary Survey</type>
   <workflow>edit_workflow, monetary_survey_workflow</workflow>
  </chain>

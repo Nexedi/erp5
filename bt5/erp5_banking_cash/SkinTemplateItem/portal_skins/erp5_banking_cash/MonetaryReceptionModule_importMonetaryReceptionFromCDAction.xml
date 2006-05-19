@@ -1,0 +1,486 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">bfINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+message_dict = {\n
+     \'00\' : \'Fichier colisage charg\xc3\xa9...\'\n
+    ,\'01\' : \'Date colisage incorrecte\'\n
+    ,\'02\' : \'Num\xc3\xa9ro livraison du colisage inexistant\'\n
+    ,\'03\' : \'Num\xc3\xa9ro livraison exist d\xc3\xa9ja dans la base\'\n
+    ,\'04\' : \'Lettre du pays incorrect\'\n
+    ,\'05\' : \'Num\xc3\xa9ro caisse inexistant\'\n
+    ,\'06\' : \'doublon avec une autre ligne\'\n
+    ,\'07\' : \'Quantit\xc3\xa9 billet incorrecte\'\n
+    ,\'08\' : \'Livraison vide\'\n
+    ,\'09\' : \'Billet ou lettre non d\xc3\xa9fini\'\n
+    ,\'10\' : \'Mill\xc3\xa9sime incorrect\'\n
+    ,\'11\' : \'Montant billet ou pi\xc3\xa8ce incorrect\'\n
+    ,\'12\' : \'Billet ou pi\xc3\xa8ce correspondant au montant et \xc3\xa0 la mill\xc3\xa9sime n\'\'existe pas dans la base\'\n
+    ,\'13\' : \'L\'\'utilisateur connect\xc3\xa9 n\'\'est pas param\xc3\xaatr\xc3\xa9 pour ex\xc3\xa9cuter cette fonction\'\n
+               }\n
+\n
+def isSameSet(a, b):\n
+  for i in a:\n
+    if not(i in b) : return 0\n
+  for i in b:\n
+    if not(i in a): return 0\n
+  if len(a) != len(b) : return 0\n
+  return 1\n
+\n
+\n
+def create_movement(CD_head_dict, CD_line_list):\n
+##   context.log(\'CD_head_dict\',CD_head_dict)\n
+##   context.log(\'CD_line_list\',CD_line_list)\n
+##   context.log(\'create_movement on...\',context.getPath())\n
+  # Head creation\n
+  movement_head = context.newContent( portal_type       = \'Monetary Reception\'\n
+                                    , reindex_object    = 1\n
+                                    , reference         = CD_head_dict[\'reference\']\n
+                                    , resource         = CD_head_dict[\'currency\']\n
+                                    , start_date        = CD_head_dict[\'start_date\']\n
+                                    , emission_letter   = CD_head_dict[\'emission_letter\']\n
+                                    , cash_status       = CD_head_dict[\'cash_status\']\n
+                                    , destination       = CD_head_dict[\'destination\']\n
+                                    )\n
+  # Container Creation\n
+  base_list=(\'emission_letter\', \'variation\', \'cash_status\')\n
+  category_list =  (\'emission_letter/\' + CD_head_dict[\'emission_letter\'], \'variation/\' + CD_head_dict[\'variation\'], \'cash_status/\'+CD_head_dict[\'cash_status\'] )\n
+\n
+  resource_total_quantity = 0\n
+  for CD_line in CD_line_list:\n
+    # create cash container\n
+    movement_container = movement_head.newContent(portal_type          = \'Cash Container\'\n
+                                                  , reindex_object     = 1\n
+                                                  , reference                 = CD_line[\'reference\']\n
+                                                  , cash_number_range_start   = CD_line[\'range_start\']\n
+                                                  , cash_number_range_stop    = CD_line[\'range_stop\']\n
+                                                  )\n
+    # create a cash container line\n
+    container_line = movement_container.newContent(portal_type      = \'Container Line\'\n
+                                                   , reindex_object = 1\n
+                                                   , resource_value = CD_head_dict[\'resource\']\n
+                                                   , quantity       = CD_line[\'quantity\']\n
+                                                   )\n
+##     context.log(\'container_line.getPath()\',container_line.getPath() )\n
+##     context.log(\'base_list\',base_list)\n
+##     context.log(\'category_list\',category_list)\n
+\n
+    container_line.setResourceValue(CD_head_dict[\'resource\'])\n
+#    container_line.setVariationBaseCategoryList(base_list)\n
+    container_line.setVariationCategoryList(category_list)\n
+    container_line.updateCellRange(script_id=\'CashDetail_asCellRange\',base_id="movement")\n
+    for key in container_line.getCellKeyList(base_id=\'movement\'):\n
+      if isSameSet(key,category_list):\n
+        cell = container_line.newCell(*key)\n
+        cell.setCategoryList(category_list)\n
+        cell.setQuantity(CD_line[\'quantity\'])\n
+        cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
+        cell.setMembershipCriterionBaseCategoryList(base_list)\n
+        cell.setMembershipCriterionCategoryList(category_list)\n
+        cell.edit(force_update = 1,\n
+                  price = container_line.getResourceValue().getBasePrice())      \n
+\n
+\n
+    resource_total_quantity += CD_line[\'quantity\']\n
+\n
+  movement_line = movement_head.newContent(id               = "movement"\n
+                                           , portal_type    = \'Cash Delivery Line\'\n
+                                           , resource_value = CD_head_dict[\'resource\']\n
+                                           , quantity_unit_value = context.portal_categories.quantity_unit.unit\n
+                                           )\n
+  #context.log(\'base_list\',base_list)\n
+  #context.log(\'category_list\',category_list)\n
+  movement_line.setVariationBaseCategoryList(base_list)\n
+  movement_line.setVariationCategoryList(category_list)\n
+  movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")\n
+  for key in movement_line.getCellKeyList(base_id=\'movement\'):\n
+    if isSameSet(key,category_list):\n
+      cell = movement_line.newCell(*key)\n
+      cell.setCategoryList(category_list)\n
+      cell.setQuantity(resource_total_quantity)\n
+      cell.setMappedValuePropertyList([\'quantity\',\'price\'])\n
+      cell.setMembershipCriterionBaseCategoryList(base_list)\n
+      cell.setMembershipCriterionCategoryList(category_list)\n
+      cell.edit(force_update = 1,\n
+                price = movement_line.getResourceValue().getBasePrice())      \n
+  #    movement_line.setResourceValue(CD_head_dict[\'resource\'])\n
+##   context.log("movement cell = %r" %(list(movement_line.objectIds(),)), "")\n
+  #   cell = movement_line.getCell(category_list[0], category_list[1], category_list[2])\n
+  #   cell.setQuantity(resouce_total_quantity)\n
+\n
+  return {\'error\' : False, \'message\':message_dict[\'00\']+CD_head_dict[\'reference\']}\n
+\n
+\n
+def split_head(CD_file_line_list):\n
+\n
+  head_movement_id   = CD_file_line_list[14][55:61]\n
+  head_start_date_string = CD_file_line_list[7][35:43]\n
+  head_resource_string  = CD_file_line_list[11][32:56]\n
+  head_emission_letter = CD_file_line_list[14][25:26]\n
+  context.log(\'head_resource_string\',head_resource_string)\n
+\n
+  # find letter in the emission_letter category\n
+  default_emissionLetter_list = [x[1] for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()[1:]]\n
+  head_emission_letter = string.lower(head_emission_letter)\n
+  if not head_emission_letter in default_emissionLetter_list :\n
+    return {\'error\':True, \'message\':message_dict[\'04\'], \'head_dict\':{}}\n
+\n
+  # Movement ID verification\n
+  # Verify if Movement Id exist\n
+  head_movement_id = (head_movement_id or \'\').strip()\n
+  if head_movement_id  == \'\':\n
+    return {\'error\':True, \'message\':message_dict[\'02\'], \'head_dict\':{}}\n
+\n
+  # Verify if Movement Id is not already exist in the database\n
+  head_movement_id = head_movement_id+\'_\'+head_emission_letter\n
+  movement_list = context.portal_catalog(portal_type = "Monetary Reception",reference = head_movement_id)\n
+  if len(movement_list) > 0:\n
+    return {\'error\':True, \'message\':message_dict[\'03\'], \'head_dict\':{}}\n
+\n
+  # date verification\n
+  try:\n
+    head_start_date_string = \'20\' + head_start_date_string[6:8] + \\\n
+                             \'/\' + head_start_date_string[3:5] + \\\n
+                             \'/\' + head_start_date_string[0:2] + \' 0:0am\'\n
+    head_start_date = DateTime(head_start_date_string )\n
+  except:\n
+    return {\'error\':True, \'message\':"message_dict[\'01\']", \'head_dict\':{}}\n
+  #\n
+\n
+  head_resource_string = (head_resource_string  or \'\').strip()\n
+  head_resource_string = string.replace(head_resource_string,\' \',\'\')\n
+  if head_resource_string  == \'\':\n
+    return {\'error\':True, \'message\':message_dict[\'09\'], \'head_dict\':{}}\n
+\n
+  try:\n
+    head_resource_variation_string = head_resource_string[-4:]\n
+    head_resource_variation = int(head_resource_variation_string)\n
+    if head_resource_variation <= 0 :\n
+      return {\'error\':True, \'message\':message_dict[\'10\'], \'head_dict\':{}}\n
+  except:\n
+    return {\'error\':True, \'message\':message_dict[\'10\'], \'head_dict\':{}}\n
+  head_variation = str(head_resource_variation)\n
+\n
+  try:\n
+    column_end_price = head_resource_string.find(\'F\')\n
+    if column_end_price < 0:\n
+      return {\'error\':True, \'message\':message_dict[\'11\'], \'head_dict\':{}}\n
+    head_resource_price = int(head_resource_string[:column_end_price ])\n
+    if head_resource_price <= 0 :\n
+      return {\'error\':True, \'message\':message_dict[\'11\'], \'head_dict\':{}}\n
+  except:\n
+    return {\'error\':True, \'message\':message_dict[\'11\'], \'head_dict\':{}}\n
+\n
+\n
+  head_resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\'))\n
+\n
+  head_resource = None\n
+  test = []\n
+  for i_resource in head_resource_list:\n
+    resource_object = i_resource.getObject()\n
+    context.log(\'i_resource.getTitle\',resource_object.getTitle())\n
+    context.log(\'i_resource.getPath\',resource_object.getPath())\n
+\n
+    if      (resource_object.getPriceCurrency() == \'currency_module/XOF\')   \\\n
+           and (resource_object.getBasePrice() == head_resource_price)  \\\n
+           and (head_variation in resource_object.getVariationList()) :\n
+\n
+      head_resource = resource_object\n
+      break\n
+  context.log(\'head_resource\',head_resource)\n
+\n
+\n
+#  raise \'kha\', repr((head_resource, head_resource_price,head_resource_variation ,test))\n
+\n
+  if head_resource is None:\n
+    return {\'error\':True, \'message\':message_dict[\'12\'], \'head_dict\':{}}\n
+\n
+  # Destination search\n
+  user_site_list = context.Baobab_getUserAssignedSiteList ()\n
+  if user_site_list is None:\n
+    return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
+\n
+  head_destination  = user_site_list[0] +\'/caveau/serre/encaisse_des_billets_neufs_non_emis\'\n
+\n
+  CD_head_dict = {\'reference\'       : head_movement_id\n
+                 ,\'start_date\'      : head_start_date\n
+                 ,\'resource\'        : head_resource\n
+                 ,\'currency\'        : head_resource.getPriceCurrency()\n
+                 ,\'emission_letter\' : head_emission_letter\n
+                 ,\'variation\'       : head_variation\n
+                 ,\'cash_status\'     : \'new_not_emitted\'\n
+                 ,\'destination\'     : head_destination\n
+                 }\n
+\n
+  return {\'error\':False, \'message\':None, \'head_dict\':CD_head_dict}\n
+\n
+\n
+def split_lines(CD_file_line_list):\n
+  CD_line_list = []\n
+  treated_container_list = []\n
+  line_number = 0\n
+  for CD_line in CD_file_line_list:\n
+    line_number += 1\n
+    new_CD_line = string.replace(CD_line, \'\\n\', \'\')\n
+    new_CD_line = string.replace(new_CD_line, \'\\r\', \'\')\n
+    line_container_id = new_CD_line[:7]\n
+    line_range_start  = new_CD_line[34:46]\n
+    line_range_stop   = new_CD_line[49:61]\n
+    line_quantity_string     = new_CD_line[64:70]\n
+\n
+    line_container_id = (line_container_id or \'\').strip()\n
+    if line_container_id  == \'\':\n
+       return {\'error\':True, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'05\'],\'lines_dict\':{}}\n
+    if line_container_id  in treated_container_list :\n
+       return {\'error\':True, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'06\'],\'lines_dict\':{}}\n
+\n
+    line_quantity_string = (line_quantity_string  or \'\').strip()\n
+    line_quantity_string = string.replace(line_quantity_string,\' \',\'\')\n
+    try:\n
+       line_quantity = int(line_quantity_string)\n
+       if line_quantity <= 0 :\n
+          return {\'error\':True, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'07\'],\'lines_dict\':{}}\n
+    except:\n
+       return {\'error\':True, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'07\'],\'lines_dict\':{}}\n
+    treated_container_list.append(line_container_id)\n
+\n
+    CD_line_list.append({\'reference\'   : line_container_id\n
+                        ,\'range_start\' : line_range_start\n
+                        ,\'range_stop\'  : line_range_stop\n
+                        ,\'quantity\'    : line_quantity}\n
+                       )\n
+\n
+  if line_number > 0:\n
+     return  {\'error\':False, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'00\'],\'lines_dict\' : CD_line_list}\n
+  else:\n
+     return {\'error\':True, \'message\':\'Ligne \' + str(line_number) + \' : \' + message_dict[\'08\'],\'lines_dict\':{}}\n
+\n
+\n
+def url_redirection(error_message):\n
+   redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=\' + error_message)\n
+   request[ \'RESPONSE\' ].redirect( redirect_url )\n
+\n
+\n
+\n
+\n
+request  = context.REQUEST\n
+CD_file_line_list = import_file.readlines()\n
+\n
+# analyse the container head and split it into dictionnary\n
+\n
+split_head_result_dict = split_head(CD_file_line_list[:20])\n
+if split_head_result_dict[\'error\']:\n
+   return url_redirection(split_head_result_dict[\'message\'])\n
+\n
+\n
+# analyse the container lines and split it into dictionnary\n
+split_line_result_dict = split_lines(CD_file_line_list[20:])\n
+if split_line_result_dict[\'error\']:\n
+   return url_redirection(split_line_result_dict[\'message\'])\n
+\n
+\n
+# raise  \'KHADIM TEST\', repr((split_head_result_dict[\'head_dict\'],\'<P>\',  split_line_result_dict[\'lines_dict\'] ))\n
+\n
+\n
+\n
+message_dict = create_movement(CD_head_dict = split_head_result_dict[\'head_dict\'], CD_line_list = split_line_result_dict[\'lines_dict\'] )\n
+\n
+\n
+\n
+if message_dict[\'error\'] :\n
+   None # Annuler les transactions\n
+\n
+return url_redirection(message_dict[\'message\' ])\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/MonetaryReceptionModule_importMonetaryReceptionFromCDAction</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>import_file, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>import_file</string>
+                            <string>kw</string>
+                            <string>message_dict</string>
+                            <string>isSameSet</string>
+                            <string>create_movement</string>
+                            <string>split_head</string>
+                            <string>split_lines</string>
+                            <string>request</string>
+                            <string>url_redirection</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>CD_file_line_list</string>
+                            <string>_getitem_</string>
+                            <string>split_head_result_dict</string>
+                            <string>split_line_result_dict</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>MonetaryReceptionModule_importMonetaryReceptionFromCDAction</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

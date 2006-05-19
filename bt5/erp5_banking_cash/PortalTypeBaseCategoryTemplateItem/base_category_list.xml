@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Container Cell">
+  <item>variation</item>
+ </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">
   <item>variation</item>
  </portal_type>

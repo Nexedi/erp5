@@ -1,6 +1,9 @@
 Cash Sorting | Price
+Container Cell | CashContainer
+Container Line | CashContainer
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
+Monetary Reception | CashContainer
 Monetary Survey | Amount
 Monetary Survey | Task
 Outgoing Cash Sorting Cell | CashDeliveryLine

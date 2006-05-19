@@ -1,3 +1,5 @@
+Cash Container | metadata
+Cash Container | view
 Cash Sorting Module | list
 Cash Sorting Module | list_ui
 Cash Sorting Module | sort_on
@@ -21,10 +23,24 @@ Classification Survey | print
 Classification Survey | result
 Classification Survey | supply
 Classification Survey | view
+Container Cell | metadata
+Container Cell | view
+Container Line | metadata
+Container Line | view
 Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
 Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
+Monetary Reception Module | import
+Monetary Reception Module | list_ui
+Monetary Reception Module | print_pdf
+Monetary Reception Module | sort_on
+Monetary Reception Module | view
+Monetary Reception | cahs_container
+Monetary Reception | history
+Monetary Reception | metadata
+Monetary Reception | print_pdf
+Monetary Reception | view
 Monetary Survey Module | list
 Monetary Survey Module | list_ui
 Monetary Survey Module | sort_on
