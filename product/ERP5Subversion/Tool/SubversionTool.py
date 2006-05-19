@@ -129,6 +129,8 @@ def copytree(src, dst, symlinks=False):
     source tree result in symbolic links in the destination tree; if
     it is false, the contents of the files pointed to by symbolic
     links are copied.
+    
+    Copyright (c) 2001, 2002, 2003, 2004 Python Software Foundation; All Rights Reserved
     """
     names = listdir(src)
     errors = []
@@ -152,9 +154,12 @@ def copytree(src, dst, symlinks=False):
     
 def cacheWalk(top, topdown=True, onerror=None):
   """Directory tree generator.
+
+  modification of os.path.walk to use dircache.listdir
+  instead of os.path.listdir
+  
+  Copyright (c) 2001, 2002, 2003, 2004 Python Software Foundation; All Rights Reserved
   """
-  # modification of os.path.walk to use dircache.listdir
-  # instead of os.path.listdir
   try:
       # Note that listdir and error are globals in this module due
       # to earlier import-*.
