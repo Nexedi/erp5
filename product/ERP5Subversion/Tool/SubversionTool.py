@@ -153,11 +153,8 @@ def copytree(src, dst, symlinks=False):
 def cacheWalk(top, topdown=True, onerror=None):
   """Directory tree generator.
   """
-  # We may not have read permission for top, in which case we can't
-  # get a list of the files the directory contains.  os.path.walk
-  # always suppressed the exception then, rather than blow up for a
-  # minor reason when (say) a thousand readable directories are still
-  # left to visit.  That logic is copied here.
+  # modification of os.path.walk to use dircache.listdir
+  # instead of os.path.listdir
   try:
       # Note that listdir and error are globals in this module due
       # to earlier import-*.
