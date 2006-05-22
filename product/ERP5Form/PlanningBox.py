@@ -512,8 +512,11 @@ class PlanningBoxWidget(Widget.Widget):
   ['representation_type','main_axis_groups','size_header_height', 'size_border_width_left',
    'size_planning_width', 'size_y_axis_width','size_y_axis_space','size_planning_height','size_x_axis_height',
    'size_x_axis_space', 'y_axis_position', 'x_axis_position', 'delimiter',
-   'list_method','report_root_list','selection_name',
-   'portal_types','sort','title_line','x_start_bloc','x_stop_bloc',
+   'report_root_list','selection_name',
+   'portal_types','sort',
+   'list_method',
+   'stat_method',
+   'title_line','x_start_bloc','x_stop_bloc',
    'y_axis_method','constraint_method','split_method','color_script',
    'round_script','sec_axis_script','info_center',
    'info_topleft','info_topright','info_backleft','info_backright',
@@ -667,6 +670,12 @@ class PlanningBoxWidget(Widget.Widget):
       default='',
       required=0)
 
+  stat_method = fields.StringField('stat_method',
+      title="specific method used to generate statistics:",
+      description=("specific method for statistics"),
+      default='',
+      required=0)
+
   title_line = fields.StringField('title_line',
       title="specific method which fetches the title of each line: ",
       description=("specific method for inserting title in line"),
@@ -688,13 +697,13 @@ class PlanningBoxWidget(Widget.Widget):
       description=('Property for building X-Axis such as stop_date\
       objects'),
       default='stop_date',
-      required=0)	
+      required=0)
 
   y_axis_method = fields.StringField('y_axis_method',
       title='specific method of data type for creating height of blocks',
       description=('Method for building height of blocks objects'),
       default='',
-      required=0) 
+      required=0)
 
 
   constraint_method = fields.StringField('constraint_method',
@@ -733,7 +742,7 @@ class PlanningBoxWidget(Widget.Widget):
       description=('Method for displaying info in the center of a\
       block object'),
       default='',
-      required=0) 
+      required=0)
 
   info_topright = fields.StringField('info_topright',
       title='specific method of data called for inserting info in\
@@ -843,8 +852,6 @@ class PlanningBoxWidget(Widget.Widget):
 
     # DATA DEFINITION
 
-
-    
 
     # recovering usefull planning properties
     form = field.aq_parent # getting form
@@ -1029,6 +1036,35 @@ class BasicStructure:
       self.list_method = None
 
 
+    ##################################################
+    ############## DEFINING STAT METHOD ##############
+    ##################################################
+    # XXX implementing this new functionality
+    #pdb.set_trace()
+    stat_method = self.field.get_value('stat_method')
+
+    if hasattr(stat_method, 'method_name'):
+      if stat_method.method_name == 'objectValues':
+        stat_method = None # Nothing to do in this case
+        show_stat = 0
+      elif stat_method.method_name == 'portal_catalog':
+        # We use the catalog count results
+        stat_method = here.portal_catalog.countResults
+        show_stat = 1
+      else:
+        # Try to get the method through acquisition
+        try:
+          stat_method = getattr(here, stat_method.method_name)
+          show_stat = 1
+        except (AttributeError, KeyError):
+          show_stat = 0
+          pass
+    else:
+      # No stat method defined means no statistics displayed
+      stat_method = None
+      show_stat = 0
+
+
 
     ##################################################
     ############ BUILDING REPORT_TREE ################
@@ -1061,6 +1097,8 @@ class BasicStructure:
      report_depth=report_depth,is_report_opened=is_report_opened,
      sort_on=self.selection.sort_on,form_id=self.form.id)
 
+    # XXX fixing bug with make tree-list, unfolding reports to the 'n+1' level.
+    # report_list is now built from the report_group list.
     #report_list = map(lambda s:s.getObject().getRelativeUrl(), report_tree_list)
     #self.selection.edit(report_list=report_list)
 
@@ -1087,24 +1125,36 @@ class BasicStructure:
     select_expression = ''
 
 
+
+    #pdb.set_trace()
     # now iterating through object_tree_list
+
+
+    """
     for object_tree_line in report_tree_list:
       # prepare query by defining selection report object
       self.selection.edit(report = object_tree_line.getSelectDomainDict())
 
-      if object_tree_line.getIsPureSummary():
+      #if object_tree_line.getIsPureSummary():
+
+
+      if (object_tree_line.getIsPureSummary() and \
+         selection_report_path=='parent'):
+
+
         # push new select_expression
         original_select_expression = kw.get('select_expression')
         kw['select_expression'] = select_expression
         self.selection.edit(params = kw)
+        # XXX recovering statistics (will use them afterwards if necessary)
+        #stat_temp = self.selection(method = stat_method, context=self.here, REQUEST=self.REQUEST)
         # pop new select_expression
         if original_select_expression is None:
           del kw['select_expression']
         else:
           kw['select_expression'] = original_select_expression
 
-      if (object_tree_line.getIsPureSummary() and \
-         selection_report_path=='parent'):
+
         # object_tree_line is Pure summary : does not have any activity
         stat_result = {}
         index=1
@@ -1114,8 +1164,9 @@ class BasicStructure:
         self.report_groups += [object_tree_line]
         self.nbr_groups = self.nbr_groups + 1
 
+
         # resetting original value
-        self.selection.edit(report = None)
+        #self.selection.edit(report = None)
       else:
         # object_tree_line is not pure summary : it has activities
         # prepare query
@@ -1127,7 +1178,7 @@ class BasicStructure:
           self.selection.edit(exception_uid_list= \
              object_tree_line.getExceptionUidList())
           object_list = self.selection(method = self.list_method,
-             context=self.here, REQUEST=self.REQUEST)    
+             context=self.here, REQUEST=self.REQUEST)
         else:
           # no list_method found
           object_list = self.here.portal_selections.getSelectionValueList(
@@ -1183,19 +1234,130 @@ class BasicStructure:
 
         # resetting original value
         self.selection.edit(report = None)
+    """
 
-    self.selection.edit(report=None)
+    # XXX just for testing
+    show_stat = 0
+
+    for object_tree_line in report_tree_list:
+      # prepare query by defining selection report object
+      self.selection.edit(report = object_tree_line.getSelectDomainDict())
+
+      # defining info_dict, holding all information about the current object.
+      info_dict = None
+      info_dict = {}
+
+      if object_tree_line.getIsPureSummary() and show_stat:
+
+        info_dict['stat'] = 1
+
+        # push new select_expression
+        original_select_expression = kw.get('select_expression')
+        kw['select_expression'] = select_expression
+        self.selection.edit(params = kw)
+        # XXX recovering statistics
+        # need to recover a list of temporary objects
+        # should be improved to take several more parameters into account
+        #stat_list = self.selection(method = stat_method, context=self.here, REQUEST=self.REQUEST)
+        stat_list = self.stat_method(selection= self.selection, report_tree_list=report_tree_list, object_tree_line= object_tree_line, context=self.here, REQUEST=self.REQUEST)
+        # pop new select_expression
+        if original_select_expression is None:
+          del kw['select_expression']
+        else:
+          kw['select_expression'] = original_select_expression
+
+        # adding current line to report_section where
+        # line is pure Summary
+        self.report_groups += [(object_tree_line,stat_list,info_dict)]
+        self.nbr_groups += 1
+
+      else:
+        info_dict['stat'] = 0
+
+        # processing all cases
+        self.selection.edit(params = kw)
+
+        # recovering object list
+        if self.list_method not in (None,''):
+          # valid list_method has been found
+          self.selection.edit(exception_uid_list= \
+             object_tree_line.getExceptionUidList())
+          object_list = self.selection(method = self.list_method,
+             context=self.here, REQUEST=self.REQUEST)
+        else:
+          # no list_method found
+          object_list = self.here.portal_selections.getSelectionValueList(
+            self.selection_name, context=self.here, REQUEST=self.REQUEST)
+
+        # recovering exeption_uid_list
+        exception_uid_list = object_tree_line.getExceptionUidList()
+        if exception_uid_list not in (None,()):
+          # Filter folders if parent tree :
+          # build new object_list for current line
+          # (list of relative elements)
+          new_object_list = []
+          for selected_object in object_list:
+            if selected_object.getUid() not in exception_uid_list:
+              new_object_list.append(selected_object)
+          object_list = new_object_list
+
+        if not object_tree_line.getIsPureSummary():
+          # Object is not pure summary
+          if show_stat:
+            # this represents the second duplicated object
+            # display object content in report tree with stat
+            # stats are displayed in the first object present
+            #
+            self.report_groups += [(object_tree_line,object_list, info_dict)]
+            self.nbr_groups += 1
+          else:
+            # do nothing
+            # case of parent tree unfolded (second object and no stats)
+            pass
+        else:
+          # object is pure summary !
+
+          # XXX useless as properties are recovered while creating AxisGroup
+          # recovering object_line properties to display good link
+          #stat_context = object_tree_line.getObject().asContext()
+          #stat_context.absolute_url = object_tree_line.getObject().absolute_url()
+          #stat_context.domain_url = object_tree_line.getObject().getRelativeUrl()
+
+          if len(object_list) and object_tree_line.is_open:
+            # pure summary, open, and has object_list
+            # case = ?!?
+            self.report_groups += [(object_tree_line, object_list, info_dict)]
+            self.nbr_groups += 1
+          else:
+            if exception_uid_list is not None:
+              # case of parent tree mode (first/unique object).
+              # beware object_list is not null in case folded sons exists so
+              # do not export voluntary object_list to prevent bad interpretation
+              self.report_groups += [(object_tree_line, [], info_dict)]
+              self.nbr_groups += 1
+            else:
+              # case of report_tree mode
+              # saving information in report_groups
+              self.report_groups += [(object_tree_line,object_list,info_dict)]
+              self.nbr_groups += 1
+
+
+
+    # reset to original value
+    self.selection.edit(report = None)
+
     self.selection.edit(report_list=None)
-    LOG('self.report_activity_dict',0,self.report_activity_dict)
+    #LOG('self.report_activity_dict',0,self.report_activity_dict)
 
 
     #pdb.set_trace()
     # update report list if report_depth was specified
     if report_depth is not None:
       unfolded_list = []
-      for report_line in self.report_groups:
-        if report_line.depth < report_depth:
+      for (report_line, object_list, info_dict) in self.report_groups:
+        if report_line.depth < report_depth and not info_dict['stat'] :
           # depth of current report_line is inferior to the current report_depth
+          # and current report_line is not stat line. saving information
           unfolded_list.append(report_line.getObject().getRelativeUrl())
       self.selection.edit(report_list=unfolded_list)
 
@@ -1259,6 +1421,46 @@ class BasicStructure:
     return 1
 
 
+  def stat_method(self, selection=None, report_tree_list = None, object_tree_line=None, context=None, REQUEST=None):
+    """
+    XXX temporary function to recover statistics when needed
+    returns a list with temporary objects
+    """
+    from Products.ERP5Type.Document import newTempBase
+
+
+    # first recovering methods to apply on tasks
+    start_property_id = self.field.get_value('x_start_bloc')
+    stop_property_id= self.field.get_value('x_stop_bloc')
+
+    # XXX need to find a way to get all related objects with their sub-objects
+    # this list of objects must be stored in a list
+    # for now considering applying statistics on object_list
+    self.selection.edit(exception_uid_list= object_tree_line.getExceptionUidList())
+    input_object_list = self.selection(method = self.list_method,context=self.here,
+                                      REQUEST=self.REQUEST)
+
+
+    temp_object_list = []
+    temp_object_id = 0
+    # now applying statictic rule.
+    # for now statistic rules are static
+    for input_object in input_object_list:
+      # recovering input_object attributes
+      block_begin = input_object.getObject().getProperty(start_property_id)
+      block_end = input_object.getObject().getProperty(stop_property_id)
+      # creating new object
+      temp_object = newTempBase(context.getPortalObject(),temp_object_id)
+      # editing object with new values
+      setattr(temp_object,start_property_id,block_begin)
+      setattr(temp_object,stop_property_id, block_end)
+      # adding new object to list
+      temp_object_list.append(temp_object)
+      temp_object_id += 1
+
+    return temp_object_list
+
+
   def getSecondaryAxisOccurence(self):
     """
     get secondary_axis occurences in order to define begin and end bounds
@@ -1268,37 +1470,48 @@ class BasicStructure:
     # specific start & stop methods name for secondary axis
     start_property_id = self.field.get_value('x_start_bloc')
     stop_property_id= self.field.get_value('x_stop_bloc')
-    for object_tree_group in self.report_groups:
+    for (object_tree_group, object_list, info_dict) in self.report_groups:
       # recover method to et begin and end limits
-      
 
-      try:
-        child_activity_list = self.report_activity_dict[object_tree_group.getObject().getTitle()]
-      except (AttributeError, KeyError):
-        child_activity_list = None
+
+      #try:
+      #  child_activity_list = self.report_activity_dict[object_tree_group.getObject().getTitle()]
+      #except (AttributeError, KeyError):
+      #  child_activity_list = None
 
       #if method_start == None and child_activity_list != None:
-      if child_activity_list not in (None, [], {}):
-        # can not recover method from object_tree_group itself, trying
-        # over the activity list
-        # XXX in fact can not fail to recover method from object_tree_group
-        # get : <bound method ImplicitAcquirerWrapper.(?) of <Project at /erp5/project_module/planning>>
-        # so just trying if children exist
-        for child_activity in child_activity_list:
-          
-          if start_property_id != None:
-            block_begin = child_activity.getObject().getProperty(start_property_id)
-          else:
-            block_begin = None
+      if object_list not in (None, [], {}) :
+        if not info_dict['stat']:
+          for object_request in object_list:
 
-          if stop_property_id != None:
-            block_stop = child_activity.getObject().getProperty(stop_property_id)
-          else:
-            block_stop = None
+            if start_property_id != None:
+              block_begin = object_request.getObject().getProperty(start_property_id)
+            else:
+              block_begin = None
 
-          secondary_axis_occurence.append([block_begin,block_stop])
+            if stop_property_id != None:
+              block_stop = object_request.getObject().getProperty(stop_property_id)
+            else:
+              block_stop = None
+            secondary_axis_occurence.append([block_begin,block_stop])
+        else:
+          # in case stat line
+          for temp_object in object_list:
+
+            if start_property_id != None:
+              block_begin = getattr(temp_object.getObject(),start_property_id)
+            else:
+              block_begin = None
+
+            if stop_property_id != None:
+              block_stop = getattr(temp_object.getObject(),stop_property_id)
+            else:
+              block_stop = None
+            secondary_axis_occurence.append([block_begin,block_stop])
 
       else:
+
+      #elif not info_dict['stat'] :
         # method sucessfully recovered
         # getting values
         if start_property_id != None:
@@ -1313,6 +1526,8 @@ class BasicStructure:
 
         secondary_axis_occurence.append([block_begin,block_stop])
 
+
+
     return secondary_axis_occurence
 
 
@@ -1323,9 +1538,6 @@ class BasicStructure:
     it is now possible to recover begin and end value of the planning and then
     apply selection informations to get start and stop.
     """
-
-    
-
 
     axis_dict['zoom_start'] = int(self.params.get('zoom_start',0))
     axis_dict['zoom_level'] = float(self.params.get('zoom_level',1))
@@ -1375,7 +1587,7 @@ class BasicStructure:
     example).
     """
 
-    
+
     axis_dict['bound_axis_groups'] = self.field.get_value('main_axis_groups')
     if axis_dict['bound_axis_groups'] == None:
       #XXX raise exception : no group defined
@@ -1433,7 +1645,7 @@ class BasicStructure:
       position = 0
 
       # iterating each element
-      for report_group_object in self.report_groups:
+      for (report_group_object, object_list, property_dict) in self.report_groups:
 
         stat_result = {}
         stat_context = report_group_object.getObject().asContext(**stat_result)
@@ -1446,20 +1658,21 @@ class BasicStructure:
         title = report_group_object.getObject().getTitle()
         name = report_group_object.getObject().getTitle()
         depth = report_group_object.getDepth()
-        is_open = report_group_object.is_open
-        is_pure_summary = report_group_object.is_pure_summary
+        is_open = report_group_object.getIsOpen()
+        is_pure_summary = report_group_object.getIsPureSummary()
 
         # creating new group_object with all the informations collected
-        child_group = BasicGroup( title=title, name=name, url=url, constraints=None, depth=depth, position=position, field =self.field, object=report_group_object, is_open=is_open, is_pure_summary=is_pure_summary)
+        child_group = BasicGroup( title=title, name=name, url=url, constraints=None, depth=depth, position=position, field =self.field, object=report_group_object, is_open=is_open, is_pure_summary=is_pure_summary, property_dict = property_dict)
 
         # creating activities related to the new group
         # first recovering activity list if exists
-        report_activity_list = []
-        if title in self.report_activity_dict.keys():
-          report_activity_list = self.report_activity_dict[title]
+        #report_activity_list = []
+        #if title in self.report_activity_dict.keys():
+        #  report_activity_list = self.report_activity_dict[title]
         # linking activities to the bloc. the parameter is a list of elements
         # to link to the child_group object.
-        child_group.setBasicActivities(report_activity_list,self.list_error,self.secondary_axis_info)
+        if object_list != None:
+          child_group.setBasicActivities(object_list,self.list_error,self.secondary_axis_info)
 
         try:
           self.basic_group_list.append(child_group)
@@ -1480,7 +1693,7 @@ class BasicGroup:
   ReportTree mode to handle child groups.
   """
 
-  def __init__ (self, title='', name='',url='', constraints='', depth=0, position=0, field = None, object = None, is_open=0, is_pure_summary=1):
+  def __init__ (self, title='', name='',url='', constraints='', depth=0, position=0, field = None, object = None, is_open=0, is_pure_summary=1, property_dict = {}):
     self.title = title
     self.name = name
     self.url = url
@@ -1498,6 +1711,10 @@ class BasicGroup:
     # in case of calendar mode
     self.start = None
     self.stop = None
+
+    # property_dict holds all information about the current axis_group
+    # type of group, stat, etc.
+    self.property_dict = property_dict
 
 
   def setBasicActivities(self,activity_list, list_error,secondary_axis_info):
@@ -1572,7 +1789,7 @@ class BasicGroup:
           block_end = None
 
 
-        # ahndling case where activity bound is not defined
+        # handling case where activity bound is not defined
         if block_begin == None:
           block_begin = secondary_axis_info['bound_start']
           current_color='#E4CCE1'
@@ -2053,11 +2270,12 @@ class Activity:
     #if split_method != None:
     #  secondary_block_bounds = split_method(self.secondary_axis_start, self.secondary_axis_stop)
     else:
-      secondary_block_bounds = [[self.secondary_axis_start,self.secondary_axis_stop]]
+      secondary_block_bounds = [[self.secondary_axis_start,self.secondary_axis_stop,1]]
 
     block_number = 0
     # iterating resulting list
-    for (start,stop) in secondary_block_bounds:
+    #pdb.set_trace()
+    for (start,stop,zone) in secondary_block_bounds:
 
       block_number += 1
 
@@ -2071,7 +2289,13 @@ class Activity:
         error = 0
         error_text=''
 
-      new_block = Bloc(name= block_name,color=self.color,link=self.link, number = block_number, render_format=self.render_format, parent_activity=self, warning=warning, error=error, error_text=error_text)
+      if zone == 1:
+        block_color = ''
+        block_link = self.link
+      else:
+        block_color = '#D1E8FF'
+        block_link = ''
+      new_block = Bloc(name= block_name,color=block_color,link=block_link, number = block_number, render_format=self.render_format, parent_activity=self, warning=warning, error=error, error_text=error_text,zone=zone)
 
 
       new_block.buildInfoDict(info_dict = self.info)
@@ -2131,7 +2355,64 @@ class Activity:
            will use an external script to do so.
     """
     # XXX not implemented yet
-    return [(self.secondary_axis_start,self.secondary_axis_stop)]
+    return [(self.secondary_axis_start,self.secondary_axis_stop,1)]
+
+    #XXX current script cuts activities into several blocks representing the worked days
+
+
+    returned_list = []
+
+
+    start_date = self.secondary_axis_start
+    stop_date = self.secondary_axis_stop
+
+    temp_start = start_date
+    temp_stop  = temp_start
+
+    # defining usefull list of data
+    break_list = ['Saturday','Sunday']
+    worked_list = ['Monday','Tuesday','Wednesday','Thursday','Friday']
+    switch_list = ['Monday','Saturday']
+
+    if temp_start.Day() in break_list:
+      # temp_start is in weekend,
+      # getting first worked day
+      while temp_start.Day() in break_list and temp_start < stop_date:
+        temp_start += 1
+      returned_list.append([temp_stop,temp_start,0])
+    else:
+      # temp_stop is in week, getting first weekend
+      while temp_stop.Day() in worked_list and temp_stop < stop_date:
+        temp_stop += 1
+      if temp_stop > stop_date:
+        temp_stop = stop_date
+
+    # testing if current activity is not too small to create blocks
+    while temp_start < stop_date:
+      returned_list.append([temp_start,temp_stop,1])
+
+      temp_start = temp_stop
+      # going to next start_date
+      while temp_start.Day() in break_list and temp_start < stop_date:
+        temp_start += 1
+
+      # adding new start date to list
+      if temp_start >= stop_date:
+        returned_list.append([temp_stop,stop_date,0])
+      elif temp_start != temp_stop:
+        returned_list.append([temp_stop,temp_start,0])
+      # next temp_start has been found
+      # now processing new temp_stop
+      temp_stop = temp_start
+      while temp_stop.Day() in worked_list and temp_stop < stop_date:
+        temp_stop += 1
+      if temp_stop > stop_date:
+        temp_stop = stop_date
+
+    # return new list
+    return returned_list
+
+
 
 
 
@@ -2150,7 +2431,7 @@ class Bloc:
                 color=None, info=None, link=None, number=0,
                 constraints=None, secondary_start=None, secondary_stop=None,
                 render_format='YX', parent_activity = None, warning=0, error=0,
-                error_text=''):
+                error_text='', zone=1):
     """
     creates a Bloc object
     """
@@ -2161,6 +2442,7 @@ class Bloc:
     self.link = link # on clic link
     self.number = number
     self.title=''
+    self.zone = zone
     self.parent_activity = parent_activity
     self.constraints = constraints
     # setting warning and error flags in case parent_activity or block itself
@@ -2316,6 +2598,7 @@ class AxisGroup:
     using actual AxisGroup properties to define some special comportement that
     the axisGroup should have, especially in case of report-tree
     """
+
     if self.is_open:
       # current report is unfold, action 'fold'
       self.info_title.link = 'portal_selections/foldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
@@ -2325,11 +2608,11 @@ class AxisGroup:
       self.info_title.link = 'portal_selections/unfoldReport?report_url=' + self.url + '&form_id='+ form_id + '&list_selection_name=' + selection_name
       self.info_title.info = '[+] ' + self.info_title.info
 
-
     #for i in range(self.depth):
     #  self.title = '| ' + self.title
-
     self.info_title.title = self.info_title.info
+    
+    self.tooltip = self.info_title.info
 
 
   def addActivity(self, activity=None, axis_element_already_insered= 0):
