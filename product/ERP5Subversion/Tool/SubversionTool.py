@@ -35,7 +35,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, commands, time, exceptions
+import os, re, commands, time, exceptions, pysvn
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
@@ -45,7 +45,8 @@ from cStringIO import StringIO
 from tempfile import mktemp
 from shutil import copy
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5.Document.BusinessTemplate import removeAll, TemplateConditionError
+from Products.ERP5.Document.BusinessTemplate import removeAll
+from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
 from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
@@ -60,8 +61,13 @@ try:
   set
 except NameError:
   from sets import Set as set
-  
+
+NBSP = '&nbsp;'
+NBSP_TAB = NBSP*8
+
 class File(object):
+  """ Class that represents a file in memory
+  """
   __slots__ = ('status','name')
   # Constructor
   def __init__(self, name, status) :
@@ -70,7 +76,9 @@ class File(object):
 ## End of File Class
 
 class Dir(object):
-  __slots__ = ('status','name','sub_dirs','sub_files')
+  """ Class that reprensents a folder in memory
+  """
+  __slots__ = ('status', 'name', 'sub_dirs', 'sub_files')
   # Constructor
   def __init__(self, name, status) :
     self.status = status
@@ -78,32 +86,40 @@ class Dir(object):
     self.sub_dirs = [] # list of sub directories
     self.sub_files = [] # list of sub files
 
-  # return a list of sub directories' names
   def getSubDirsNameList(self) :
+    """ return a list of sub directories' names
+    """
     return [d.name for d in self.sub_dirs]
 
-  # return directory in subdirs given its name
   def getDirFromName(self, name):
-    for d in self.sub_dirs:
-      if d.name == name:
-        return d
+    """ return directory in subdirs given its name
+    """
+    for directory in self.sub_dirs:
+      if directory.name == name:
+        return directory
       
   def getObjectFromName(self, name):
-    for d in self.sub_dirs:
-      if d.name == name:
-        return d
-    for f in self.sub_files:
-      if f.name == name:
-        return f
+    """ return dir object given its name
+    """
+    for directory in self.sub_dirs:
+      if directory.name == name:
+        return directory
+    for sub_file in self.sub_files:
+      if sub_file.name == name:
+        return sub_file
       
   def getContent(self):
+    """ return content for directory
+    """
     content = self.sub_dirs
     content.extend(self.sub_files)
     return content
 ## End of Dir Class
 
 class Error(exceptions.EnvironmentError):
-    pass
+  """ Simple Exception
+  """
+  pass
 
 class SubversionPreferencesError(Exception):
   """The base exception class for the Subversion preferences.
@@ -121,37 +137,37 @@ class SubversionNotAWorkingCopyError(Exception):
   pass
       
 def copytree(src, dst, symlinks=False):
-    """Recursively copy a directory tree using copy().
+  """Recursively copy a directory tree using copy().
 
-    If exception(s) occur, an Error is raised with a list of reasons.
-    dst dir must exist
+  If exception(s) occur, an Error is raised with a list of reasons.
+  dst dir must exist
 
-    If the optional symlinks flag is true, symbolic links in the
-    source tree result in symbolic links in the destination tree; if
-    it is false, the contents of the files pointed to by symbolic
-    links are copied.
-    
-    Copyright (c) 2001, 2002, 2003, 2004 Python Software Foundation; All Rights Reserved
-    """
-    names = listdir(src)
-    errors = []
-    for name in names:
-        srcname = os.path.join(src, name)
-        dstname = os.path.join(dst, name)
-        try:
-            if symlinks and os.path.islink(srcname):
-                linkto = os.readlink(srcname)
-                os.symlink(linkto, dstname)
-            elif os.path.isdir(srcname):
-                if not os.path.exists(dstname):
-                  os.makedirs(dstname)
-                copytree(srcname, dstname, symlinks)
-            else:
-                copy(srcname, dstname)
-        except (IOError, os.error), why:
-            errors.append((srcname, dstname, 'Error: ' + str(why.strerror)))
-    if errors:
-        raise Error, errors
+  If the optional symlinks flag is true, symbolic links in the
+  source tree result in symbolic links in the destination tree; if
+  it is false, the contents of the files pointed to by symbolic
+  links are copied.
+  
+  Copyright (c) 2001, 2002, 2003, 2004 Python Software Foundation; All Rights Reserved
+  """
+  names = listdir(src)
+  errors = []
+  for name in names:
+    srcname = os.path.join(src, name)
+    dstname = os.path.join(dst, name)
+    try:
+      if symlinks and os.path.islink(srcname):
+        linkto = os.readlink(srcname)
+        os.symlink(linkto, dstname)
+      elif os.path.isdir(srcname):
+        if not os.path.exists(dstname):
+          os.makedirs(dstname)
+        copytree(srcname, dstname, symlinks)
+      else:
+        copy(srcname, dstname)
+    except (IOError, os.error), why:
+      errors.append((srcname, dstname, 'Error: ' + str(why.strerror)))
+  if errors:
+    raise Error, errors
     
 def cacheWalk(top, topdown=True, onerror=None):
   """Directory tree generator.
@@ -162,30 +178,30 @@ def cacheWalk(top, topdown=True, onerror=None):
   Copyright (c) 2001, 2002, 2003, 2004 Python Software Foundation; All Rights Reserved
   """
   try:
-      # Note that listdir and error are globals in this module due
-      # to earlier import-*.
-      names = listdir(top)
-  except error, err:
-      if onerror is not None:
-          onerror(err)
-      return
+    # Note that listdir and error are globals in this module due
+    # to earlier import-*.
+    names = listdir(top)
+  except os.error, err:
+    if onerror is not None:
+      onerror(err)
+    return
 
   dirs, nondirs = [], []
   for name in names:
-      if os.path.isdir(os.path.join(top, name)):
-          dirs.append(name)
-      else:
-          nondirs.append(name)
+    if os.path.isdir(os.path.join(top, name)):
+      dirs.append(name)
+    else:
+      nondirs.append(name)
 
   if topdown:
-      yield top, dirs, nondirs
+    yield top, dirs, nondirs
   for name in dirs:
-      path = os.path.join(top, name)
-      if not os.path.islink(path):
-          for x in cacheWalk(path, topdown, onerror):
-            yield x
+    path = os.path.join(top, name)
+    if not os.path.islink(path):
+      for elem in cacheWalk(path, topdown, onerror):
+        yield elem
   if not topdown:
-      yield top, dirs, nondirs
+    yield top, dirs, nondirs
 
     
 def colorizeTag(tag):
@@ -208,41 +224,43 @@ def colorizeTag(tag):
   elif 'key' in text:
     color = '#0C4F0C'#dark green
   else:
-    color='blue'
-  return "<font color='%s'>%s</font>"%(color,text,)
+    color = 'blue'
+  return "<font color='%s'>%s</font>" % (color, text, )
     
 def colorize(text):
   """Return HTML Code with syntax hightlighting
   """
   # Escape xml before adding html tags
   html = escape(text)
-  html = html.replace(' ', '&nbsp;&nbsp;')
-  html = html.replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;')
+  html = html.replace(' ', NBSP)
+  html = html.replace('\t', NBSP_TAB)
   # Colorize comments
-  p = re.compile(r'#.*')
-  html = p.sub(colorizeTag, html)
+  pattern = re.compile(r'#.*')
+  html = pattern.sub(colorizeTag, html)
   # Colorize tags
-  p = re.compile(r'&lt;.*?&gt;')
-  html = p.sub(colorizeTag, html)
+  pattern = re.compile(r'&lt;.*?&gt;')
+  html = pattern.sub(colorizeTag, html)
   # Colorize strings
-  p = re.compile(r'\".*?\"')
-  html = p.sub(colorizeTag, html)
+  pattern = re.compile(r'\".*?\"')
+  html = pattern.sub(colorizeTag, html)
   html = html.replace(os.linesep, os.linesep+"<br>")
   return html
 
 class DiffFile:
+  """
   # Members :
-  # - path : path of the modified file
-  # - children : sub codes modified
-  # - old_revision
-  # - new_revision
+   - path : path of the modified file
+   - children : sub codes modified
+   - old_revision
+   - new_revision
+  """
 
   def __init__(self, raw_diff):
     if '@@' not in raw_diff:
-      self.binary=True
+      self.binary = True
       return
     else:
-      self.binary=False
+      self.binary = False
     self.header = raw_diff.split('@@')[0][:-1]
     # Getting file path in header
     self.path = self.header.split('====')[0][:-1].strip()
@@ -264,63 +282,74 @@ class DiffFile:
       if line:
         if line.startswith('@@') and not first:
           self.children.append(CodeBlock(os.linesep.join(tmp)))
-          tmp = [line,]
+          tmp = [line, ]
         else:
           first = False
           tmp.append(line)
     self.children.append(CodeBlock(os.linesep.join(tmp)))
     
   def toHTML(self):
+    """ return HTML diff
+    """
     # Adding header of the table
     if self.binary:
       return '<b>Folder or binary file or just no changes!</b><br><br><br>'
     
-    html = '''
+    html_list = []
+    html_list.append('''
     <table style="text-align: left; width: 100%%;" border="0" cellpadding="0" cellspacing="0">
   <tbody>
     <tr height="18px">
       <td style="background-color: grey"><b><center>%s</center></b></td>
       <td style="background-color: black;" width="2"></td>
       <td style="background-color: grey"><b><center>%s</center></b></td>
-    </tr>'''%(self.old_revision, self.new_revision)
+    </tr>''' % (self.old_revision, self.new_revision))
     header_color = 'grey'
+    child_html_text = '''<tr height="18px"><td style="background-color: %s">
+    &nbsp;</td><td style="background-color: black;" width="2"></td>
+    <td style="background-color: %s">&nbsp;</td></tr><tr height="18px">
+    <td style="background-color: rgb(68, 132, 255);"><b>Line %%s</b></td>
+    <td style="background-color: black;" width="2"></td>
+    <td style="background-color: rgb(68, 132, 255);"><b>Line %%s</b></td>
+    </tr>''' % (header_color, header_color)
     for child in self.children:
       # Adding line number of the modification
-      html += '''<tr height="18px"><td style="background-color: %s">&nbsp;</td><td style="background-color: black;" width="2"></td><td style="background-color: %s">&nbsp;</td></tr>    <tr height="18px">
-      <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
-      <td style="background-color: black;" width="2"></td>
-      <td style="background-color: rgb(68, 132, 255);"><b>Line %s</b></td>
-      </tr>'''%(header_color, header_color, child.old_line, child.new_line)
+      html_list.append( child_html_text % (child.old_line, child.new_line) )
       header_color = 'white'
       # Adding diff of the modification
       old_code_list = child.getOldCodeList()
       new_code_list = child.getNewCodeList()
-      i=0
+      i = 0
       for old_line_tuple in old_code_list:
         new_line_tuple = new_code_list[i]
         new_line = new_line_tuple[0] or ' '
         old_line = old_line_tuple[0] or ' '
-        i+=1
-        html += '''    <tr height="18px">
+        i += 1
+        html_list.append( '''<tr height="18px">
         <td style="background-color: %s">%s</td>
         <td style="background-color: black;" width="2"></td>
         <td style="background-color: %s">%s</td>
-        </tr>'''%(old_line_tuple[1], escape(old_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), new_line_tuple[1], escape(new_line).replace(' ', '&nbsp;').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'))
-    html += '''  </tbody>
-</table><br><br>'''
-    return html
+        </tr>'''%(old_line_tuple[1],
+        escape(old_line).replace(' ', NBSP).replace('\t', NBSP_TAB),
+        new_line_tuple[1],
+        escape(new_line).replace(' ', NBSP).replace('\t', NBSP_TAB))
+        )
+    html_list.append('''  </tbody></table><br/><br/>''')
+    return '\n'.join(html_list)
       
 
-# A code block contains several SubCodeBlocks
 class CodeBlock:
-  # Members :
-  # - old_line : line in old code (before modif)
-  # - new line : line in new code (after modif)
-  #
-  # Methods :
-  # - getOldCodeList() : return code before modif
-  # - getNewCodeList() : return code after modif
-  # Note: the code returned is a list of tuples (code line, background color)
+  """
+   A code block contains several SubCodeBlocks
+   Members :
+   - old_line : line in old code (before modif)
+   - new line : line in new code (after modif)
+  
+   Methods :
+   - getOldCodeList() : return code before modif
+   - getNewCodeList() : return code after modif
+   Note: the code returned is a list of tuples (code line, background color)
+  """
 
   def __init__(self, raw_diff):
     # Splitting body and header
@@ -334,7 +363,7 @@ class CodeBlock:
     # Splitting modifications in SubCodeBlocks
     in_modif = False
     self.children = []
-    tmp=[]
+    tmp = []
     for line in self.body.split(os.linesep):
       if line:
         if (line.startswith('+') or line.startswith('-')):
@@ -342,33 +371,36 @@ class CodeBlock:
             tmp.append(line)
           else:
             self.children.append(SubCodeBlock(os.linesep.join(tmp)))
-            tmp = [line,]
+            tmp = [line, ]
             in_modif = True
         else:
-            if in_modif:
-              self.children.append(SubCodeBlock(os.linesep.join(tmp)))
-              tmp = [line,]
-              in_modif = False
-            else:
-              tmp.append(line)
+          if in_modif:
+            self.children.append(SubCodeBlock(os.linesep.join(tmp)))
+            tmp = [line, ]
+            in_modif = False
+          else:
+            tmp.append(line)
     self.children.append(SubCodeBlock(os.linesep.join(tmp)))
     
-  # Return code before modification
   def getOldCodeList(self):
+    """ Return code before modification
+    """
     tmp = []
     for child in self.children:
       tmp.extend(child.getOldCodeList())
     return tmp
     
-  # Return code after modification
   def getNewCodeList(self):
+    """ Return code after modification
+    """
     tmp = []
     for child in self.children:
       tmp.extend(child.getNewCodeList())
     return tmp
     
-# a SubCodeBlock contain 0 or 1 modification (not more)
 class SubCodeBlock:
+  """ a SubCodeBlock contain 0 or 1 modification (not more)
+  """
   def __init__(self, code):
     self.body = code
     self.modification = self._getModif()
@@ -385,75 +417,92 @@ class SubCodeBlock:
       self.color = 'rgb(83, 253, 74);'#light green
     
   def _getModif(self):
+    """ Return type of modification :
+        addition, deletion, none
+    """
     nb_plus = 0
     nb_minus = 0
     for line in self.body.split(os.linesep):
       if line.startswith("-"):
-        nb_minus-=1
+        nb_minus -= 1
       elif line.startswith("+"):
-        nb_plus+=1
-    if (nb_plus==0 and nb_minus==0):
+        nb_plus += 1
+    if (nb_plus == 0 and nb_minus == 0):
       return 'none'
-    if (nb_minus==0):
+    if (nb_minus == 0):
       return 'addition'
-    if (nb_plus==0):
+    if (nb_plus == 0):
       return 'deletion'
     return 'change'
       
   def _getOldCodeLength(self):
+    """ Private function to return old code length
+    """
     nb_lines = 0
     for line in self.body.split(os.linesep):
       if not line.startswith("+"):
-        nb_lines+=1
+        nb_lines += 1
     return nb_lines
       
   def _getNewCodeLength(self):
+    """ Private function to return new code length
+    """
     nb_lines = 0
     for line in self.body.split(os.linesep):
       if not line.startswith("-"):
-        nb_lines+=1
+        nb_lines += 1
     return nb_lines
   
-  # Return code before modification
   def getOldCodeList(self):
-    if self.modification=='none':
+    """ Return code before modification
+    """
+    if self.modification == 'none':
       old_code = [(x, 'white') for x in self.body.split(os.linesep)]
-    elif self.modification=='change':
-      old_code = [self._getOldCodeList(x) for x in self.body.split(os.linesep) if self._getOldCodeList(x)[0]]
+    elif self.modification == 'change':
+      old_code = [self._getOldCodeList(x) for x in self.body.split(os.linesep) \
+      if self._getOldCodeList(x)[0]]
       # we want old_code_list and new_code_list to have the same length
       if(self.old_code_length < self.new_code_length):
-        filling = [(None, self.color)]*(self.new_code_length-self.old_code_length)
+        filling = [(None, self.color)] * (self.new_code_length - \
+        self.old_code_length)
         old_code.extend(filling)
     else: # deletion or addition
       old_code = [self._getOldCodeList(x) for x in self.body.split(os.linesep)]
     return old_code
   
   def _getOldCodeList(self, line):
+    """ Private function to return code before modification
+    """
     if line.startswith('+'):
       return (None, self.color)
     if line.startswith('-'):
-      return (' '+line[1:], self.color)
+      return (' ' + line[1:], self.color)
     return (line, self.color)
   
-  # Return code after modification
   def getNewCodeList(self):
-    if self.modification=='none':
+    """ Return code after modification
+    """
+    if self.modification == 'none':
       new_code = [(x, 'white') for x in self.body.split(os.linesep)]
-    elif self.modification=='change':
-      new_code = [self._getNewCodeList(x) for x in self.body.split(os.linesep) if self._getNewCodeList(x)[0]]
+    elif self.modification == 'change':
+      new_code = [self._getNewCodeList(x) for x in self.body.split(os.linesep) \
+      if self._getNewCodeList(x)[0]]
       # we want old_code_list and new_code_list to have the same length
       if(self.new_code_length < self.old_code_length):
-        filling = [(None, self.color)]*(self.old_code_length-self.new_code_length)
+        filling = [(None, self.color)] * (self.old_code_length - \
+        self.new_code_length)
         new_code.extend(filling)
     else: # deletion or addition
       new_code = [self._getNewCodeList(x) for x in self.body.split(os.linesep)]
     return new_code
   
   def _getNewCodeList(self, line):
+    """ Private function to return code after modification
+    """
     if line.startswith('-'):
       return (None, self.color)
     if line.startswith('+'):
-      return (' '+line[1:], self.color)
+      return (' ' + line[1:], self.color)
     return (line, self.color)
   
 class SubversionTool(BaseTool, UniqueObject, Folder):
@@ -488,33 +537,36 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
 
   # Filter content (ZMI))
   def __init__(self):
-      return Folder.__init__(self, SubversionTool.id)
+    return Folder.__init__(self, SubversionTool.id)
 
-  # Filter content (ZMI))
+
   def filtered_meta_types(self, user=None):
-      # Filters the list of available meta types.
-      all = SubversionTool.inheritedAttribute('filtered_meta_types')(self)
-      meta_types = []
-      for meta_type in self.all_meta_types():
-          if meta_type['name'] in self.allowed_types:
-              meta_types.append(meta_type)
-      return meta_types
+    """
+     Filter content (ZMI))
+     Filters the list of available meta types.
+    """
+    all = SubversionTool.inheritedAttribute('filtered_meta_types')(self)
+    meta_types = []
+    for meta_type in self.all_meta_types():
+      if meta_type['name'] in self.allowed_types:
+        meta_types.append(meta_type)
+    return meta_types
     
   # path is the path in svn working copy
   # return edit_path in zodb to edit it
   # return '#' if no zodb path is found
-  def editPath(self, bt, path):
+  def editPath(self, business_template, path):
     """Return path to edit file
        path can be relative or absolute
     """
-    path = self.relativeToAbsolute(path, bt).replace('\\', '/')
+    path = self.relativeToAbsolute(path, business_template).replace('\\', '/')
     if 'bt' in path.split('/'):
       # not in zodb
       return '#'
     # if file have been deleted then not in zodb
     if not os.path.exists(path):
       return '#'
-    svn_path = self.getSubversionPath(bt).replace('\\', '/')
+    svn_path = self.getSubversionPath(business_template).replace('\\', '/')
     edit_path = path.replace(svn_path, '').strip()
     if edit_path == '':
       # not in zodb 
@@ -528,20 +580,25 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # remove file extension
     edit_path = os.path.splitext(edit_path)[0]
     # Add beginning and end of url
-    edit_path = os.path.join(bt.REQUEST["BASE2"], edit_path, 'manage_main')
+    edit_path = os.path.join(business_template.REQUEST["BASE2"], \
+    edit_path, 'manage_main')
     return edit_path
     
   def _encodeLogin(self, realm, user, password):
-    # Encode login information.
+    """ Encode login information.
+    """
     return b64encode(dumps((realm, user, password)))
 
   def _decodeLogin(self, login):
-    # Decode login information.
+    """ Decode login information.
+    """
     return loads(b64decode(login))
   
-  def goToWorkingCopy(self, bt):
-      working_path = self.getSubversionPath(bt)
-      os.chdir(working_path)
+  def goToWorkingCopy(self, business_template):
+    """ Change to business template directory
+    """
+    working_path = self.getSubversionPath(business_template)
+    os.chdir(working_path)
     
   def setLogin(self, realm, user, password):
     """Set login information.
@@ -560,7 +617,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     value = ','.join(login_list)
     expires = (DateTime() + 1).toZone('GMT').rfc822()
     request.set(self.login_cookie_name, value)
-    response.setCookie(self.login_cookie_name, value, path = '/', expires = expires)
+    response.setCookie(self.login_cookie_name, value, path = '/', \
+    expires = expires)
 
   def _getLogin(self, target_realm):
     request = self.REQUEST
@@ -572,12 +630,14 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
           return user, password
     return None, None
       
-  def getHeader(self, bt, file):
-    file = self.relativeToAbsolute(file, bt)
-    header = "<b><a href='BusinessTemplate_viewSvnShowFile?file="+file+"'>" + file + "</a></b>"
-    edit_path = self.editPath(bt, file)
+  def getHeader(self, business_template, file_path):
+    file_path = self.relativeToAbsolute(file_path, business_template)
+    header = "<b><a href='BusinessTemplate_viewSvnShowFile?file=" + \
+    file_path + "'>" + file_path + "</a></b>"
+    edit_path = self.editPath(business_template, file_path)
     if edit_path != '#':
-      header += "&nbsp;&nbsp;<a href='"+self.editPath(bt, file)+"'><img src='imgs/edit.png' border='0'></a>"
+      header += "&nbsp;&nbsp;<a href='"+self.editPath(business_template, \
+      file_path) + "'><img src='imgs/edit.png' border='0'></a>"
     return header
 
   def _encodeSSLTrust(self, trust_dict, permanent=False):
@@ -595,41 +655,49 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   def getPreferredUsername(self):
     """return username in preferences if set of the current username
     """
-    username = self.getPortalObject().portal_preferences.getPreferredSubversionUserName()
+    username = self.getPortalObject().portal_preferences\
+    .getPreferredSubversionUserName()
     if username is None or username.strip() == "":
       # not set in preferences, then we get the current username in zope
       username = self.portal_membership.getAuthenticatedMember().getUserName()
     return username
   
-  def diffHTML(self, file_path, bt, revision1=None, revision2=None):
-    raw_diff = self.diff(file_path, bt, revision1, revision2)
+  def diffHTML(self, file_path, business_template, revision1=None, \
+  revision2=None):
+    """ Return HTML diff
+    """
+    raw_diff = self.diff(file_path, business_template, revision1, revision2)
     return DiffFile(raw_diff).toHTML()
   
-  # Display a file content in HTML with syntax highlighting
-  def fileHTML(self, bt, file_path):
-    file_path = self.relativeToAbsolute(file_path, bt)
-    file = open(file_path, 'r')
+  def fileHTML(self, business_template, file_path):
+    """ Display a file content in HTML with syntax highlighting
+    """
+    file_path = self.relativeToAbsolute(file_path, business_template)
+    input_file = open(file_path, 'r')
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
         text = "<b>"+file_path+"</b><hr>"
         text += file_path +" is a folder!"
       else:
-        head = "<b>"+file_path+"</b>  <a href='"+self.editPath(bt, file_path)+"'><img src='imgs/edit.png' border='0'></a><hr>"
-        text = head + colorize(file.read())
+        head = "<b>"+file_path+"</b>  <a href='" + \
+        self.editPath(business_template, file_path) + \
+        "'><img src='imgs/edit.png' border='0'></a><hr>"
+        text = head + colorize(input_file.read())
     else:
       # see if tmp file is here (svn deleted file)
-      if file_path[-1]==os.sep:
-        file_path=file_path[:-1]
+      if file_path[-1] == os.sep:
+        file_path = file_path[:-1]
       filename = file_path.split(os.sep)[-1]
       tmp_path = os.sep.join(file_path.split(os.sep)[:-1])
-      tmp_path = os.path.join(tmp_path,'.svn','text-base',filename+'.svn-base')
+      tmp_path = os.path.join(tmp_path, '.svn', 'text-base', \
+      filename+'.svn-base')
       if os.path.exists(tmp_path):
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
-        text = head + colorize(file.read())
+        text = head + colorize(input_file.read())
       else : # does not exist
         text = "<b>"+file_path+"</b><hr>"
         text += file_path +" does not exist!"
-    file.close()
+    input_file.close()
     return text
       
   security.declareProtected(Permissions.ManagePortal, 'acceptSSLServer')
@@ -648,9 +716,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     value = ','.join(trust_list)
     expires = (DateTime() + 1).toZone('GMT').rfc822()
     request.set(self.ssl_trust_cookie_name, value)
-    response.setCookie(self.ssl_trust_cookie_name, value, path = '/', expires = expires)
+    response.setCookie(self.ssl_trust_cookie_name, value, path = '/', \
+    expires = expires)
     
   def acceptSSLPerm(self, trust_dict):
+    """ Accept SSL server permanently
+    """
     self.acceptSSLServer(self, trust_dict, True)
 
   def _trustSSLServer(self, target_trust_dict):
@@ -671,71 +742,78 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     return newSubversionClient(self, **kw)
   
   security.declareProtected('Import/Export objects', 'getSubversionPath')
-  # with_name : with business template name at the end of the path
-  def getSubversionPath(self, bt, with_name=True):
-    # return the working copy path corresponding to
-    # the given business template browsing
-    # working copy list in preferences (looking
-    # only at first level of directories)
-    wc_list = self.getPortalObject().portal_preferences.getPreferredSubversionWorkingCopyList()
+  def getSubversionPath(self, business_template, with_name=True):
+    """
+     return the working copy path corresponding to
+     the given business template browsing
+     working copy list in preferences (looking
+     only at first level of directories)
+     
+     with_name : with business template name at the end of the path
+    """
+    wc_list = self.getPortalObject().portal_preferences\
+    .getPreferredSubversionWorkingCopyList()
     if not wc_list:
-      wc_list = self.getPortalObject().portal_preferences.default_site_preference.getPreferredSubversionWorkingCopyList()
+      wc_list = self.getPortalObject().portal_preferences.\
+      default_site_preference.getPreferredSubversionWorkingCopyList()
       if not wc_list:
-        raise SubversionPreferencesError, 'Please set at least one Subversion Working Copy in preferences first.'
+        raise SubversionPreferencesError, \
+        'Please set at least one Subversion Working Copy in preferences first.'
     if len(wc_list) == 0 :
-      raise SubversionPreferencesError, 'Please set at least one Subversion Working Copy in preferences first.'
-    bt_name = bt.getTitle()
-    for wc in wc_list:
-      wc = self._getWorkingPath(wc)
-      if not os.path.exists(os.path.join(wc, '.svn')):
-        raise SubversionNotAWorkingCopyError, "You must check out working copies in this directory: "+wc+" or choose another path in portal preferences."
-      if bt_name in listdir(wc) :
-        wc_path = os.path.join(wc, bt_name)
+      raise SubversionPreferencesError, \
+      'Please set at least one Subversion Working Copy in preferences first.'
+    bt_name = business_template.getTitle()
+    for working_copy in wc_list:
+      working_copy = self._getWorkingPath(working_copy)
+      if not os.path.exists(os.path.join(working_copy, '.svn')):
+        raise SubversionNotAWorkingCopyError, \
+        "You must check out working copies in this directory: " + \
+        working_copy + " or choose another path in portal preferences."
+      if bt_name in listdir(working_copy) :
+        wc_path = os.path.join(working_copy, bt_name)
         if os.path.isdir(wc_path):
           if with_name:
             return wc_path
           else:
             return os.sep.join(wc_path.split(os.sep)[:-1])
-    raise SubversionUnknownBusinessTemplateError, "Could not find '"+bt_name+"' at first level of working copies."
-    
-  def getTopWorkingPath(self):
-    return self.top_working_path
+    raise SubversionUnknownBusinessTemplateError, "Could not find '"+\
+    bt_name+"' at first level of working copies."
 
   def _getWorkingPath(self, path):
-    #if path[0] != '/':
-    #  path = os.path.join(self.top_working_path, path)
-    #path = os.path.abspath(path)
+    """ Check if the given path is reachable (allowed)
+    """
     if not path.startswith(self.top_working_path):
       raise Unauthorized, 'unauthorized access to path %s' % path
     return path
     
   security.declareProtected('Import/Export objects', 'update')
-  def update(self, bt):
+  def update(self, business_template):
     """Update a working copy.
     """
-    path = self._getWorkingPath(self.getSubversionPath(bt))
+    path = self._getWorkingPath(self.getSubversionPath(business_template))
     client = self._getClient()
-    # Revert local changes in working copy first to import a "pure" BT after update
+    # Revert local changes in working copy first 
+    # to import a "pure" BT after update
     self.revert(path=path, recurse=True)
     # Update from SVN
     client.update(path)
     # Import in zodb
-    return self.importBT(bt)
+    return self.importBT(business_template)
   
-    security.declareProtected('Import/Export objects', 'updatewc')
-  def updatewc(self, bt):
+  security.declareProtected('Import/Export objects', 'updatewc')
+  def updatewc(self, business_template):
     """Update a working copy.
     """
-    path = self._getWorkingPath(self.getSubversionPath(bt))
+    path = self._getWorkingPath(self.getSubversionPath(business_template))
     client = self._getClient()
     # Update from SVN
     client.update(path)
 
   security.declareProtected('Import/Export objects', 'switch')
-  def switch(self, bt, url):
+  def switch(self, business_template, url):
     """switch SVN repository for a working copy.
     """
-    path = self._getWorkingPath(self.getSubversionPath(bt))
+    path = self._getWorkingPath(self.getSubversionPath(business_template))
     client = self._getClient()
     if url[-1] == '/' :
       url = url[:-1]
@@ -744,51 +822,58 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   
   security.declareProtected('Import/Export objects', 'add')
   # path can be a list or not (relative or absolute)
-  def add(self, path, bt=None):
+  def add(self, path, business_template=None):
     """Add a file or a directory.
     """
-    if bt is not None:
+    if business_template is not None:
       if isinstance(path, list) :
-        path = [self._getWorkingPath(self.relativeToAbsolute(x, bt)) for x in path]
+        path = [self._getWorkingPath(self.relativeToAbsolute(x, \
+        business_template)) for x in path]
       else:
-        path = self._getWorkingPath(self.relativeToAbsolute(path, bt))
+        path = self._getWorkingPath(self.relativeToAbsolute(path, \
+        business_template))
     client = self._getClient()
     return client.add(path)
 
   security.declareProtected('Import/Export objects', 'info')
-  def info(self, bt):
+  def info(self, business_template):
     """return info of working copy
     """
-    working_copy = self._getWorkingPath(self.getSubversionPath(bt))
+    working_copy = self._getWorkingPath(self\
+    .getSubversionPath(business_template))
     client = self._getClient()
     return client.info(working_copy)
   
   security.declareProtected('Import/Export objects', 'log')
   # path can be absolute or relative
-  def log(self, path, bt):
+  def log(self, path, business_template):
     """return log of a file or dir
     """
     client = self._getClient()
-    return client.log(self._getWorkingPath(self.relativeToAbsolute(path, bt)))
+    return client.log(self._getWorkingPath(self\
+    .relativeToAbsolute(path, business_template)))
   
   security.declareProtected('Import/Export objects', 'cleanup')
-  def cleanup(self, bt):
+  def cleanup(self, business_template):
     """remove svn locks in working copy
     """
-    working_copy = self._getWorkingPath(self.getSubversionPath(bt))
+    working_copy = self._getWorkingPath(self\
+    .getSubversionPath(business_template))
     client = self._getClient()
     return client.cleanup(working_copy)
 
   security.declareProtected('Import/Export objects', 'remove')
   # path can be a list or not (relative or absolute)
-  def remove(self, path, bt=None):
+  def remove(self, path, business_template=None):
     """Remove a file or a directory.
     """
-    if bt is not None:
+    if business_template is not None:
       if isinstance(path, list) :
-        path = [self._getWorkingPath(self.relativeToAbsolute(x, bt)) for x in path]
+        path = [self._getWorkingPath(self\
+        .relativeToAbsolute(x, business_template)) for x in path]
       else:
-        path = self._getWorkingPath(self.relativeToAbsolute(path, bt))
+        path = self._getWorkingPath(self.relativeToAbsolute(path, \
+        business_template))
     client = self._getClient()
     return client.remove(path)
 
@@ -801,35 +886,40 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
 
   security.declareProtected('Import/Export objects', 'ls')
   # path can be relative or absolute
-  def ls(self, path, bt):
+  def ls(self, path, business_template):
     """Display infos about a file.
     """
     client = self._getClient()
-    return client.ls(self._getWorkingPath(self.relativeToAbsolute(path, bt)))
+    return client.ls(self._getWorkingPath(self\
+    .relativeToAbsolute(path, business_template)))
 
   security.declareProtected('Import/Export objects', 'diff')
   # path can be relative or absolute
-  def diff(self, path, bt, revision1=None, revision2=None):
+  def diff(self, path, business_template, revision1=None, revision2=None):
     """Make a diff for a file or a directory.
     """
     client = self._getClient()
-    return client.diff(self._getWorkingPath(self.relativeToAbsolute(path, bt)), revision1, revision2)
+    return client.diff(self._getWorkingPath(self.relativeToAbsolute(path, \
+    business_template)), revision1, revision2)
   
   security.declareProtected('Import/Export objects', 'revert')
   # path can be absolute or relative
-  def revert(self, path, bt=None, recurse=False):
+  def revert(self, path, business_template=None, recurse=False):
     """Revert local changes in a file or a directory.
     """
     client = self._getClient()
     if not isinstance(path, list) :
-      path = [self._getWorkingPath(self.relativeToAbsolute(path, bt))]
-    if bt is not None:
-      path = [self._getWorkingPath(self.relativeToAbsolute(x, bt)) for x in path]
+      path = [self._getWorkingPath(self.relativeToAbsolute(path, \
+      business_template))]
+    if business_template is not None:
+      path = [self._getWorkingPath(self.relativeToAbsolute(x, \
+      business_template)) for x in path]
     client.revert(path, recurse)
 
   security.declareProtected('Import/Export objects', 'revertZODB')
   # path can be absolute or relative
-  def revertZODB(self, bt, added_files=None, other_files=None, recurse=False):
+  def revertZODB(self, business_template, added_files=None, \
+  other_files=None, recurse=False):
     """Revert local changes in a file or a directory
        in ZODB and on hard drive
     """
@@ -841,13 +931,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     if not other_files :
       other_files = []
     if not isinstance(added_files, list) :
-      added_files=[added_files]
+      added_files = [added_files]
     if not isinstance(other_files, list) :
-      other_files=[other_files]
+      other_files = [other_files]
     
     # Reinstall removed or modified files
-    for p in other_files :
-      path_list = self._getWorkingPath(p).split(os.sep)
+    for path in other_files :
+      path_list = self._getWorkingPath(path).split(os.sep)
       if 'bt' not in path_list:
         if len(path_list) > 2 :
           tmp = os.sep.join(path_list[2:])
@@ -856,8 +946,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
           object_to_update[tmp] = 'install'
     path_added_list = []
     # remove added files
-    for p in added_files :
-      path_list = self._getWorkingPath(p).split(os.sep)
+    for path in added_files :
+      path_list = self._getWorkingPath(path).split(os.sep)
       if 'bt' not in path_list:
         if len(path_list) > 2 :
           tmp = os.sep.join(path_list[2:])
@@ -866,7 +956,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
           path_added_list.append(tmp)
     ## hack to remove objects
     # Create a temporary bt with objects to delete
-    tmp_bt = getToolByName(bt, 'portal_templates').newContent(portal_type="Business Template")
+    tmp_bt = getToolByName(business_template, 'portal_templates')\
+    .newContent(portal_type="Business Template")
     tmp_bt.setTemplatePathList(path_added_list)
     tmp_bt.setTitle('tmp_bt_revert')
     # Build bt
@@ -876,57 +967,67 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     tmp_bt.install()
     tmp_bt.uninstall()
     # Remove it from portal template
-    bt.portal_templates.manage_delObjects(ids=tmp_bt.getId())
+    business_template.portal_templates.manage_delObjects(ids=tmp_bt.getId())
     #revert changes
     added_files.extend(other_files)
-    to_revert = [self.relativeToAbsolute(x, bt) for x in added_files]
+    to_revert = [self.relativeToAbsolute(x, business_template) \
+    for x in added_files]
     if len(to_revert) != 0 :
       client.revert(to_revert, recurse)
       # Partially reinstall installed bt
-      installed_bt = bt.portal_templates.getInstalledBusinessTemplate(                                                          bt.getTitle())
+      installed_bt = business_template.portal_templates\
+      .getInstalledBusinessTemplate(business_template.getTitle())
       installed_bt.reinstall(object_to_update=object_to_update, force=0)
     
   security.declareProtected('Import/Export objects', 'resolved')
   # path can be absolute or relative
-  def resolved(self, path, bt):
+  def resolved(self, path, business_template):
     """remove conflicted status
     """
     client = self._getClient()
     if isinstance(path, list) :
-      path = [self._getWorkingPath(self.relativeToAbsolute(x, bt)) for x in path]
+      path = [self._getWorkingPath(self.relativeToAbsolute(x, \
+      business_template)) for x in path]
     else:
-      path = self._getWorkingPath(self.relativeToAbsolute(path, bt))
+      path = self._getWorkingPath(self.relativeToAbsolute(path, \
+      business_template))
     return client.resolved(path)
 
-  def relativeToAbsolute(self, path, bt) :
+  def relativeToAbsolute(self, path, business_template):
+    """ Return an absolute path given the absolute one
+        and the business template
+    """
     if path[0] == os.sep:
       # already absolute
       return path
     # relative path
-    if path.split(os.sep)[0] == bt.getTitle():
-      return os.path.join(self.getSubversionPath(bt, False), path)
+    if path.split(os.sep)[0] == business_template.getTitle():
+      return os.path.join(self.getSubversionPath(business_template, \
+      False), path)
     else:
-      return os.path.join(self.getSubversionPath(bt), path)
+      return os.path.join(self.getSubversionPath(business_template), path)
 
   security.declareProtected('Import/Export objects', 'checkin')
   # path can be relative or absolute (can be a list of paths too)
-  def checkin(self, path, bt, log_message=None, recurse=True):
+  def checkin(self, path, business_template, log_message=None, recurse=True):
     """Commit local changes.
     """
     if isinstance(path, list) :
-      path = [self._getWorkingPath(self.relativeToAbsolute(x, bt)) for x in path]
+      path = [self._getWorkingPath(self.relativeToAbsolute(x, \
+      business_template)) for x in path]
     else:
-      path = self._getWorkingPath(self.relativeToAbsolute(path, bt))
+      path = self._getWorkingPath(self.relativeToAbsolute(path, \
+      business_template))
     client = self._getClient()
     return client.checkin(path, log_message, recurse)
 
   security.declareProtected('Import/Export objects', 'getLastChangelog')
-  def getLastChangelog(self, bt):
+  def getLastChangelog(self, business_template):
     """Return last changelog of a business template
     """
-    bt_path = self._getWorkingPath(self.getSubversionPath(bt))
+    bt_path = self._getWorkingPath(self.getSubversionPath(business_template))
     changelog_path = bt_path + os.sep + 'bt' + os.sep + 'change_log'
-    changelog=""
+    changelog = ""
     if os.path.exists(changelog_path):
       changelog_file = open(changelog_path, 'r')
       changelog_lines = changelog_file.readlines()
@@ -934,7 +1035,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       for line in changelog_lines:
         if line.strip() == '':
           break
-        changelog+=line
+        changelog += line
     return changelog
     
 
@@ -952,10 +1053,10 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     client = self._getClient()
     status_list = client.status(self._getWorkingPath(path), **kw)
     unversioned_list = []
-    for statusObj in status_list:
-      if str(statusObj.getTextStatus()) == "unversioned":
+    for status_obj in status_list:
+      if str(status_obj.getTextStatus()) == "unversioned":
         my_dict = {}
-        my_dict['uid'] = statusObj.getPath()
+        my_dict['uid'] = status_obj.getPath()
         unversioned_list.append(my_dict)
     return unversioned_list
       
@@ -966,35 +1067,39 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     client = self._getClient()
     status_list = client.status(self._getWorkingPath(path), **kw)
     conflicted_list = []
-    for statusObj in status_list:
-      if str(statusObj.getTextStatus()) == "conflicted":
+    for status_obj in status_list:
+      if str(status_obj.getTextStatus()) == "conflicted":
         my_dict = {}
-        my_dict['uid'] = statusObj.getPath()
+        my_dict['uid'] = status_obj.getPath()
         conflicted_list.append(my_dict)
     return conflicted_list
 
   security.declareProtected('Import/Export objects', 'removeAllInList')
-  def removeAllInList(self, list):
+  def removeAllInList(self, path_list):
     """Remove all files and folders in list
     """
-    for file in list:
-      removeAll(file)
+    for file_path in path_list:
+      removeAll(file_path)
     
-  def getModifiedTree(self, bt, show_unmodified=False) :
+  def getModifiedTree(self, business_template, show_unmodified=False) :
+    """ Return tree of files returned by svn status
+    """
     # Get subversion path without business template name at the end
-    bt_path = self._getWorkingPath(self.getSubversionPath(bt, False))
+    bt_path = self._getWorkingPath(self.getSubversionPath(business_template, \
+    False))
     if bt_path[-1] != '/':
       bt_path += '/'
     # Business template root directory is the root of the tree
-    root = Dir(bt.getTitle(), "normal")
-    somethingModified = False
+    root = Dir(business_template.getTitle(), "normal")
+    something_modified = False
     
     # We browse the files returned by svn status
-    for status_obj in self.status(os.path.join(bt_path, bt.getTitle())) :
+    for status_obj in self.status(os.path.join(bt_path, \
+    business_template.getTitle())) :
       # can be (normal, added, modified, deleted, conflicted, unversioned)
       status = str(status_obj.getTextStatus())
       if (show_unmodified or status != "normal") and status != "unversioned":
-        somethingModified = True
+        something_modified = True
         # Get object path
         full_path = status_obj.getPath()
         relative_path = full_path.replace(bt_path, '')
@@ -1005,11 +1110,11 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         
         # First we add the directories present in the path to the tree
         # if it does not already exist
-        for d in relative_path.split(os.sep)[1:-1] :
-          if d :
-            if d not in parent.getSubDirsNameList() :
-              parent.sub_dirs.append(Dir(d, "normal"))
-            parent = parent.getDirFromName(d)
+        for directory in relative_path.split(os.sep)[1:-1] :
+          if directory :
+            if directory not in parent.getSubDirsNameList() :
+              parent.sub_dirs.append(Dir(directory, "normal"))
+            parent = parent.getDirFromName(directory)
         
         # Consider the whole path which can be a folder or a file
         # We add it the to the tree if it does not already exist
@@ -1026,51 +1131,65 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         else :
           # add new file to the tree
           parent.sub_files.append(File(filename, str(status)))
-    return somethingModified and root
+    return something_modified and root
   
-  def extractBT(self, bt):
-    # first update working copy
-    #self.updatewc(bt)
-    bt.build()
-    svn_path = self._getWorkingPath(self.getSubversionPath(bt) + os.sep)
+  def extractBT(self, business_template):
+    """ 
+     Extract business template to hard drive
+     and do svn add/del stuff comparing it
+     to local working copy
+    """
+    business_template.build()
+    svn_path = self._getWorkingPath(self.getSubversionPath(business_template) \
+    + os.sep)
     path = mktemp() + os.sep
     try:
-      bt.export(path=path, local=1)
+      business_template.export(path=path, local=1)
       # svn del deleted files
-      self.deleteOldFiles(svn_path, path, bt)
+      self.deleteOldFiles(svn_path, path)
       # add new files and copy
-      self.addNewFiles(svn_path, path, bt)
-      self.goToWorkingCopy(bt)
-    except (pysvn.ClientError, NotFound, AttributeError, AttributeError, Error), error:
+      self.addNewFiles(svn_path, path)
+      self.goToWorkingCopy(business_template)
+    except (pysvn.ClientError, NotFound, AttributeError, \
+    AttributeError, Error), error:
       # Clean up
       removeAll(path)
       raise error
     # Clean up
-    self.activate().removeAllInList([path,])
+    self.activate().removeAllInList([path, ])
     
-  def importBT(self, bt):
-    return bt.download(self._getWorkingPath(self.getSubversionPath(bt)))
+  def importBT(self, business_template):
+    """
+     Import business template from local
+     working copy
+    """
+    return business_template.download(self._getWorkingPath(self\
+    .getSubversionPath(business_template)))
     
   # Get a list of files and keep only parents
   # Necessary before recursively commit removals
-  def cleanChildrenInList(self, list):
-    res = list
-    for file in list:
-      res = [x for x in res if file == x or file not in x]
+  def cleanChildrenInList(self, path_list):
+    """
+     Get a list of files and keep only parents
+     Necessary before recursively commit removals
+    """
+    res = path_list
+    for file_path in path_list:
+      res = [x for x in res if file_path == x or file_path not in x]
     return res
 
   # return a set with directories present in the directory
   def getSetDirsForDir(self, directory):
     dir_set = set()
-    for root, dirs, files in cacheWalk(directory):
+    for root, dirs, _ in cacheWalk(directory):
       # don't visit SVN directories
       if '.svn' in dirs:
         dirs.remove('.svn')
       # get Directories
       for name in dirs:
         i = root.replace(directory, '').count(os.sep)
-        f = os.path.join(root, name)
-        dir_set.add((i, f.replace(directory,'')))
+        path = os.path.join(root, name)
+        dir_set.add((i, path.replace(directory,'')))
     return dir_set
       
   # return a set with files present in the directory
@@ -1083,8 +1202,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       # get Files
       for name in files:
         i = root.replace(directory, '').count(os.sep)
-        f = os.path.join(root, name)
-        dir_set.add((i, f.replace(directory,'')))
+        path = os.path.join(root, name)
+        dir_set.add((i, path.replace(directory,'')))
     return dir_set
   
   # return files present in new_dir but not in old_dir
@@ -1109,22 +1228,24 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     new_set = self.getSetDirsForDir(new_dir)
     return new_set.difference(old_set)
     
-  # svn del files that have been removed in new dir
-  def deleteOldFiles(self, old_dir, new_dir, bt):
+  def deleteOldFiles(self, old_dir, new_dir):
+    """ svn del files that have been removed in new dir
+    """
     # detect removed files
     files_set = self.getNewFiles(new_dir, old_dir)
     # detect removed directories
     dirs_set = self.getNewDirs(new_dir, old_dir)
     # svn del
-    list = [x for x in files_set]
-    list.sort()
-    self.remove([os.path.join(old_dir, x[1]) for x in list])
-    list = [x for x in dirs_set]
-    list.sort()
-    self.remove([os.path.join(old_dir, x[1]) for x in list])
+    path_list = [x for x in files_set]
+    path_list.sort()
+    self.remove([os.path.join(old_dir, x[1]) for x in path_list])
+    path_list = [x for x in dirs_set]
+    path_list.sort()
+    self.remove([os.path.join(old_dir, x[1]) for x in path_list])
   
-  # copy files and add new files
-  def addNewFiles(self, old_dir, new_dir, bt):
+  def addNewFiles(self, old_dir, new_dir):
+    """ copy files and add new files
+    """
     # detect created files
     files_set = self.getNewFiles(old_dir, new_dir)
     # detect created directories
@@ -1132,21 +1253,27 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     # Copy files
     copytree(new_dir, old_dir)
     # svn add
-    list = [x for x in dirs_set]
-    list.sort()
-    self.add([os.path.join(old_dir, x[1]) for x in list])
-    list = [x for x in files_set]
-    list.sort()
-    self.add([os.path.join(old_dir, x[1]) for x in list])
+    path_list = [x for x in dirs_set]
+    path_list.sort()
+    self.add([os.path.join(old_dir, x[1]) for x in path_list])
+    path_list = [x for x in files_set]
+    path_list.sort()
+    self.add([os.path.join(old_dir, x[1]) for x in path_list])
   
-  def treeToXML(self, item, bt) :
+  def treeToXML(self, item, business_template) :
+    """ Convert tree in memory to XML
+    """
     output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
     output += "<tree id='0'>" + os.linesep
-    output = self._treeToXML(item, output, bt.getTitle(), True)
+    output = self._treeToXML(item, output, business_template.getTitle(), True)
     output += "</tree>" + os.linesep
     return output
   
   def _treeToXML(self, item, output, relative_path, first) :
+    """
+     Private function to convert recursively tree 
+     in memory to XML
+    """
     # Choosing a color coresponding to the status
     status = item.status
     if status == 'added' :
@@ -1170,7 +1297,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
         'im1="folder_open.png" im2="folder.png">'%(item.name,
         relative_path, color) + os.linesep
       for it in item.getContent():
-        output = self._treeToXML(item.getObjectFromName(it.name), output, os.path.join(relative_path,it.name),first)
+        output = self._treeToXML(item.getObjectFromName(it.name), output, \
+        os.path.join(relative_path,it.name),first)
       output += '</item>' + os.linesep
     else :
       output += '<item text="%s" id="%s" aCol="%s" im0="document.png"/>'\

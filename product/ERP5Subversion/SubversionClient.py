@@ -34,7 +34,6 @@ from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
 from Products.PythonScripts.Utility import allow_class
 from tempfile import mktemp
 from Products.ERP5.Document.BusinessTemplate import removeAll
@@ -129,7 +128,8 @@ try:
       # 0x8 means that the CA is unknown.
       return True, 0x8, permanent
 
-  # Wrap objects defined in pysvn so that skins have access to attributes in the ERP5 way.
+  # Wrap objects defined in pysvn so that skins
+  # have access to attributes in the ERP5 way.
   class Getter(Method):
     def __init__(self, key):
       self._key = key
@@ -164,15 +164,18 @@ try:
   class Status(ObjectWrapper):
     # XXX Big Hack to fix a bug
     __allow_access_to_unprotected_subobjects__ = 1
-    attribute_list = ('path', 'entry', 'is_versioned', 'is_locked', 'is_copied', 'is_switched', 'prop_status', 'text_status', 'repos_prop_status', 'repos_text_status')
+    attribute_list = ('path', 'entry', 'is_versioned', 'is_locked', \
+    'is_copied', 'is_switched', 'prop_status', 'text_status', \
+    'repos_prop_status', 'repos_text_status')
   initializeAccessors(Status)
   
   class Entry(ObjectWrapper):
-    attribute_list = ('checksum', 'commit_author', 'commit_revision', 'commit_time',
-                      'conflict_new', 'conflict_old', 'conflict_work', 'copy_from_revision',
-                      'copy_from_url', 'is_absent', 'is_copied', 'is_deleted', 'is_valid',
-                      'kind', 'name', 'properties_time', 'property_reject_file', 'repos',
-                      'revision', 'schedule', 'text_time', 'url', 'uuid')
+    attribute_list = ('checksum', 'commit_author', 'commit_revision', \
+    'commit_time', 'conflict_new', 'conflict_old', 'conflict_work', \
+    'copy_from_revision', 'copy_from_url', 'is_absent', 'is_copied', \
+    'is_deleted', 'is_valid', 'kind', 'name', 'properties_time', \
+    'property_reject_file', 'repos', 'revision', 'schedule', \
+    'text_time', 'url', 'uuid')
 
   class Revision(ObjectWrapper):
     attribute_list = ('kind', 'date', 'number')
@@ -193,9 +196,10 @@ try:
       self.client.callback_get_log_message = GetLogMessageCallback(obj)
       self.client.callback_get_login = GetLoginCallback(obj)
       self.client.callback_notify = NotifyCallback(obj)
-      self.client.callback_ssl_server_trust_prompt = SSLServerTrustPromptCallback(obj)
+      self.client.callback_ssl_server_trust_prompt = \
+      SSLServerTrustPromptCallback(obj)
       self.creation_time = time.time()
-      self.__dict__.update(kw)
+      self.__dict__.update(**kw)
       self.exception = None
 
     def getLogMessage(self):
@@ -218,7 +222,8 @@ try:
     
     def checkin(self, path, log_message, recurse):
       try:
-        return self.client.checkin(path, log_message=log_message or 'none', recurse=recurse)
+        return self.client.checkin(path, log_message=log_message \
+        or 'none', recurse=recurse)
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
@@ -237,17 +242,19 @@ try:
           raise error
         
     def status(self, path, **kw):
-      # Since plain Python classes are not convenient in Zope, convert the objects.
+      # Since plain Python classes are not convenient in 
+      # Zope, convert the objects.
       status_list = [Status(x) for x in self.client.status(path, **kw)]
-      # XXX: seems that pysvn return a list that is upside-down, we reverse it...
+      # XXX: seems that pysvn return a list that is 
+      # upside-down, we reverse it...
       status_list.reverse()
       return status_list
     
-    def removeAllInList(self, list):
+    def removeAllInList(self, path_list):
       """Remove all files and folders in list
       """
-      for file in list:
-        removeAll(file)
+      for file_path in path_list:
+        removeAll(file_path)
       
     def diff(self, path, revision1, revision2):
       tmp = mktemp()
@@ -255,9 +262,12 @@ try:
       if not revision1 or not revision2:
         diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False)
       else:
-        diff = self.client.diff(tmp_path=tmp, url_or_path=path, recurse=False, revision1=pysvn.Revision(pysvn.opt_revision_kind.number,revision1), revision2=pysvn.Revision(pysvn.opt_revision_kind.number,revision2))
+        diff = self.client.diff(tmp_path=tmp, url_or_path=path, \
+        recurse=False, revision1 = pysvn.Revision(pysvn.opt_revision_kind\
+        .number,revision1), revision2=pysvn.Revision(pysvn\
+        .opt_revision_kind.number,revision2))
       # clean up temp dir
-      self.activate().removeAllInList([tmp,])
+      self.activate().removeAllInList([tmp, ])
       return diff
     
     def revert(self, path, recurse=False):
@@ -299,8 +309,10 @@ try:
         else:
           raise error
       # transform entry to dict to make it more usable in zope
-      members_tuple=('url', 'uuid', 'revision', 'kind', 'commit_author', 'commit_revision', 'commit_time',)
-      entry_dict = dict([(member,getattr(entry,member)) for member in members_tuple])
+      members_tuple = ('url', 'uuid', 'revision', 'kind', \
+      'commit_author', 'commit_revision', 'commit_time',)
+      entry_dict = dict([(member, getattr(entry, member)) \
+      for member in members_tuple])
       entry_dict['revision'] = entry_dict['revision'].number
       entry_dict['commit_revision'] = entry_dict['commit_revision'].number
       entry_dict['commit_time'] = time.ctime(entry_dict['commit_time'])
@@ -318,9 +330,9 @@ try:
         else:
           raise error
        #Modify the list to make it more usable in zope
-      for dict in dict_list:
-        dict['created_rev']=dict['created_rev'].number
-        dict['time']=time.ctime(dict['time'])
+      for dictionary in dict_list:
+        dictionary['created_rev'] = dictionary['created_rev'].number
+        dictionary['time'] = time.ctime(dictionary['time'])
       return dict_list
 
     def cleanup(self, path):
