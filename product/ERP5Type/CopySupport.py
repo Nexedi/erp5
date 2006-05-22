@@ -29,7 +29,6 @@ from Products.ERP5Type.Utils import get_request
 from Products.CMFCore.WorkflowCore import WorkflowException
 
 from zLOG import LOG
-import re
 
 class CopyContainer:
   """
@@ -176,25 +175,6 @@ class CopyContainer:
           del uids[-1]
       if REQUEST is not None:
               return self.manage_main(self, REQUEST, update_menu=1)
-
-  copy_re=re.compile('^copy[0-9]*_of_')
-
-  def _get_id(self, id):
-      # Allow containers to override the generation of
-      # object copy id by attempting to call its _get_id
-      # method, if it exists.
-      copy_match=self.copy_re.match(id)
-      if (copy_match) and (copy_match.end() < len(id)):
-          n=1
-          orig_id=self.copy_re.sub('', id)
-      else:
-          n=0
-          orig_id=id
-      while 1:
-          if self._getOb(id, None) is None:
-              return id
-          id='copy%s_of_%s' % (n and n+1 or '', orig_id)
-          n=n+1
 
   # Copy and paste support
   def manage_afterClone(self, item):
