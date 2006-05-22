@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>portaltype.png</string> </value>
+            <value> <string>translate_tooltip.png</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -34,13 +34,20 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAY0lEQVQ4y+2SQQoAIAgE1/7/Z7sU
-ZGkqdMuBUKm20AUAHmuFt1yr+XJeJNFo5SK2pSDYePsHU9i7REq7rNYJYU0k80PyHnrKPmUteq4I
-9SjjjpRw1MchV2SHQ6+ErbkURfEHHTRZMeKPvvyaAAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAB20lEQVQoz5WSPU9TYQCFn/tJbym2
+9rYWijZoqKbGUIhxUdxMdDLxB5AQFn8AWzcGo3/AxKSDi6iDMTHGiaBIUr8IqGFB2wa5FFJoIynX
+cnv79Tq01pmzPzknJ48ECI4ZFaDVyiLLEkIInE/rNBZX0SZv0C7sUH3xBP+jOTyDJgCSNIoEiJm7
+7zHDKup+iVTtJfrsLHosRsNtUPqwRk0pcu72ZA9SAawiuIrO2egwykASLZ2GZBIlk8GX3eLVnZtU
+HqSZmLjwf154yEswbBB3NlDsHZpTU0iGQf3yFY4+f+fn8gILayukUj86bYB483EPVYHzBxsEnz1G
+abVQxsaoff1GZbdM3gzgX17kdanM3D/odyKBqmkwPo48PY3HcZA2N3EiUbZbXuyH9zBXviBcl1HR
+hYq5HLJtYywt4Zl/SsWyqFLHcOs04wmObglMax37XZ3Ydhdy+zy4kQh7I34KeYtmuE30mg/zuol0
+6EEbEZx0LdqlA5SZRueIrbfz6CE/gcJzgr/y+M+cQomEYSAAkoKwD2mVTyC7NaALxa8mAXD3a/QF
+deg3wOvDbvvYLUWR9UtogyFUbRW435knRA4Ap1qlnM3QaP6hLfdjhC4ydHoYWZZ7CvWMOK57fwGB
+orZD1qiTeAAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>13</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -48,7 +55,7 @@ ZGkqdMuBUKm20AUAHmuFt1yr+XJeJNFo5SK2pSDYePsHU9i7REq7rNYJYU0k80PyHnrKPmUteq4I
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>156</int> </value>
+            <value> <int>532</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -56,7 +63,7 @@ ZGkqdMuBUKm20AUAHmuFt1yr+XJeJNFo5SK2pSDYePsHU9i7REq7rNYJYU0k80PyHnrKPmUteq4I
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>13</int> </value>
         </item>
       </dictionary>
     </pickle>
