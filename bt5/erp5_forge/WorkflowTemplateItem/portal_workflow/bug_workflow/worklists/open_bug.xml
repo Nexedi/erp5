@@ -82,14 +82,6 @@ bug_module?validation_state=open&portal_type=Bug&local_roles=%(local_roles)s&res
                     </value>
                 </item>
                 <item>
-                    <key> <string>simulation_state</string> </key>
-                    <value>
-                      <tuple>
-                        <string>draft</string>
-                      </tuple>
-                    </value>
-                </item>
-                <item>
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
