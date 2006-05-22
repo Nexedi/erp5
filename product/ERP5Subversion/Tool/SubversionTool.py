@@ -43,13 +43,13 @@ from zExceptions import Unauthorized
 from OFS.Image import manage_addFile
 from cStringIO import StringIO
 from tempfile import mktemp
-from shutil import copy
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.BusinessTemplate import removeAll
 from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
 from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
+from Products.ERP5Type.copyTree import copytree
 
 try:
   from base64 import b64encode, b64decode
@@ -135,39 +135,6 @@ class SubversionNotAWorkingCopyError(Exception):
   """The base exception class when business template is unknown.
   """
   pass
-      
-def copytree(src, dst, symlinks=False):
-  """Recursively copy a directory tree using copy().
-
-  If exception(s) occur, an Error is raised with a list of reasons.
-  dst dir must exist
-
-  If the optional symlinks flag is true, symbolic links in the
-  source tree result in symbolic links in the destination tree; if
-  it is false, the contents of the files pointed to by symbolic
-  links are copied.
-  
-  Copyright (c) 2001, 2002, 2003, 2004 Python Software Foundation; All Rights Reserved
-  """
-  names = listdir(src)
-  errors = []
-  for name in names:
-    srcname = os.path.join(src, name)
-    dstname = os.path.join(dst, name)
-    try:
-      if symlinks and os.path.islink(srcname):
-        linkto = os.readlink(srcname)
-        os.symlink(linkto, dstname)
-      elif os.path.isdir(srcname):
-        if not os.path.exists(dstname):
-          os.makedirs(dstname)
-        copytree(srcname, dstname, symlinks)
-      else:
-        copy(srcname, dstname)
-    except (IOError, os.error), why:
-      errors.append((srcname, dstname, 'Error: ' + str(why.strerror)))
-  if errors:
-    raise Error, errors
     
 def cacheWalk(top, topdown=True, onerror=None):
   """Directory tree generator.
