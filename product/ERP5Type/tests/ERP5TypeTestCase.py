@@ -245,6 +245,13 @@ class ERP5TypeTestCase(PortalTestCase):
         """
         return ()
 
+    def logMessage(self):
+        """
+	  Shortcut function to log a message
+	"""
+	ZopeTestCase._print('\n%s ' % message)
+	LOG('Testing ... ',0,message)
+
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
         return getToolByName(self.getPortal(), 'portal_templates', None)
