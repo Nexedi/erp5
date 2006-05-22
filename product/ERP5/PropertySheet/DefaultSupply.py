@@ -37,13 +37,15 @@ class DefaultSupply:
             'storage_id'  : 'default_supply_line',
             'description' : '',
             'type'        : 'content',
-            'portal_type' : 'Supply Line',
-            'acquired_property_id' : ('base_price','id','priced_quantity','price_currency',
-                                      'source','destination','quantity_step','priced_quantity',
-                                      'start_date','stop_date','start_date_range_max',
-                                      'start_date_range_min'),
+            'portal_type' : ('Supply Line',),
+            'acquired_property_id' : ('base_price', 'id', 'priced_quantity',
+                                  'price_currency', 'source', 'destination',
+                                  'quantity_step', 'priced_quantity',
+                                  'start_date', 'stop_date',
+                                  'start_date_range_max',
+                                  'start_date_range_min'),
             'mode'        : 'w' },
        )
 
-    _categories = () 
+    _categories = ()
 
