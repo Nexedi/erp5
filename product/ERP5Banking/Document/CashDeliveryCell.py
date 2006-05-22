@@ -138,7 +138,7 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
     script = self._getTypeBasedMethod('getBaobabSourceVariationText')
     if script is not None:
       return script(self)      
-    return self.aq_parent.getBaobabSourceVariationText(**kw)
+    return self.getVariationText()
 
   security.declareProtected(Permissions.View, 'getBaobabDestinationVariationText')
   def getBaobabDestinationVariationText(self, **kw):
@@ -147,4 +147,4 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
     script = self._getTypeBasedMethod('getBaobabDestinationVariationText')
     if script is not None:
       return script(self)      
-    return self.aq_parent.getBaobabDestinationVariationText(**kw)
+    return self.getVariationText()
