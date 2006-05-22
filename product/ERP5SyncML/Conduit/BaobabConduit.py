@@ -75,77 +75,77 @@ class BaobabConduit(ERP5Conduit):
     # For example, in the sql export, we use for the first name of a person the 
     # property 'nom', in ERP5 we use the property first_name
     'nom':[{
-        , 'erp5_property': 'first_name'
+          'erp5_property': 'first_name'
         , 'conditions'   : {'erp5_portal_type':'Person'}
         }
       , { 
-        , 'erp5_property': 'title'
+         'erp5_property': 'title'
         , 'conditions'   : {'erp5_portal_type':'Organisation'}
         }],
     # For example, in the sql export, we use for the name of an organisation the 
     # property 'nom', in ERP5 we use the property title
     'adresse': [{
-      , 'erp5_property': 'default_address_street_address'
+        'erp5_property': 'default_address_street_address'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
       }],
     'zone_residence': [{
-      , 'erp5_property': 'default_address_region'
+        'erp5_property': 'default_address_region'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
       }],
     'titre': [{
-      , 'erp5_property': 'prefix'
+        'erp5_property': 'prefix'
       , 'conditions'   : {'erp5_portal_type':'Person'}
       }],
     'telephone': [{
-      , 'erp5_property': 'default_telephone_number'
+        'erp5_property': 'default_telephone_number'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
       }],
     'telex': [{
-      , 'erp5_property': 'default_fax_number'
+        'erp5_property': 'default_fax_number'
       , 'conditions'   : [{'erp5_portal_type':'Organisation'}
                          ,{'erp5_portal_type':'Person'}]
       }],
     'prenom': [{
-      , 'erp5_property': 'last_name'
+        'erp5_property': 'last_name'
       , 'conditions'   : {'erp5_portal_type':'Person'}
       }],
     'date_naissance': [{
-      , 'erp5_property': 'birthday'
+        'erp5_property': 'birthday'
       , 'conditions'   : {'erp5_portal_type':'Person'}
       }],
     'code_bic': [{
-      , 'erp5_property': 'bic_code'
+        'erp5_property': 'bic_code'
       , 'conditions'   : {'erp5_portal_type':'Organisation'}
       }],
     'intitule': [{
-      , 'erp5_property': 'title'
+        'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Bank Account'}
       }],
     'montant_maxi': [{
-      , 'erp5_property': 'operation_upper_limit'
+        'erp5_property': 'operation_upper_limit'
       , 'conditions'   : {'erp5_portal_type':'Agent Privilege'}
       }],
     'description': [{
-      , 'erp5_property': 'description'
+        'erp5_property': 'description'
       , 'conditions'   : {'erp5_portal_type':'Agent Privilege'}
       }],
     'inventory_title': [{
-      , 'erp5_property': 'title'
+        'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Cash Inventory Group'}
       }],
     'title': [{
-      , 'erp5_property': 'title'
+        'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory'}
       }],
     'amount': [{
-      , 'erp5_property': 'inventory'
+        'erp5_property': 'inventory'
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory Line'}
       }],
     'cle': [{
-      , 'erp5_property': 'bank_account_key'
+        'erp5_property': 'bank_account_key'
       , 'conditions'   : {'erp5_portal_type':'Bank Account'}
       }],
     }
@@ -176,14 +176,15 @@ class BaobabConduit(ERP5Conduit):
       , 'erp5_property': 'first_name'
       , 'conditions'   : {'erp5_portal_type':'Person'} }
     """
-    for item in property_map[xml_property_name]:
-      c = item['conditions']
-      if type(c) == type([]):
-        if conditions in c:
-          return item
-      else:
-        if conditions == c:
-          return item
+    if property_map.has_key(xml_property_name):
+      for item in property_map[xml_property_name]:
+        c = item['conditions']
+        if type(c) == type([]):
+          if conditions in c:
+            return item
+        else:
+          if conditions == c:
+            return item
     return None
 
 
@@ -680,6 +681,10 @@ class BaobabConduit(ERP5Conduit):
          , 'a non-Person client can\'t have a marital status'
          )
 
+  def editClientCode(self, document, value):
+    pass
+ 
+	
 
 
   ### BankAccount-related-properties functions
@@ -970,3 +975,4 @@ class BaobabConduit(ERP5Conduit):
       year  = date_items[2]
       date  = '/'.join([year, month, day])
     document.setStopDate(date)
+
