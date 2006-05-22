@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_html_style_developper_mode</string> </value>
+            <value> <string>my_preferred_html_style_translator_mode</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -165,7 +165,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Developper mode</string> </value>
+                    <value> <string>Translator mode</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -187,7 +187,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getPreferredHtmlStyleDevelopperMode</string> </value>
+            <value> <string>here/getPreferredHtmlStyleTranslatorMode</string> </value>
         </item>
       </dictionary>
     </pickle>
