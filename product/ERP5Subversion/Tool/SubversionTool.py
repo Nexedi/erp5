@@ -1043,7 +1043,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       self.goToWorkingCopy(bt)
     except (pysvn.ClientError, NotFound, AttributeError, AttributeError, Error), error:
       # Clean up
-      self.activate().removeAllInList([path,])
+      removeAll(path)
       raise error
     # Clean up
     self.activate().removeAllInList([path,])
