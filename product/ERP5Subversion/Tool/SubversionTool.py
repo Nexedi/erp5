@@ -45,9 +45,10 @@ from cStringIO import StringIO
 from tempfile import mktemp
 from shutil import copy
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5.Document.BusinessTemplate import removeAll
+from Products.ERP5.Document.BusinessTemplate import removeAll, TemplateConditionError
 from xml.sax.saxutils import escape
 from dircache import listdir
+from OFS.Traversable import NotFound
 
 try:
   from base64 import b64encode, b64decode
@@ -1040,12 +1041,17 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     bt.build()
     svn_path = self._getWorkingPath(self.getSubversionPath(bt) + os.sep)
     path = mktemp() + os.sep
-    bt.export(path=path, local=1)
-    # svn del deleted files
-    self.deleteOldFiles(svn_path, path, bt)
-    # add new files and copy
-    self.addNewFiles(svn_path, path, bt)
-    self.goToWorkingCopy(bt)
+    try:
+      bt.export(path=path, local=1)
+      # svn del deleted files
+      self.deleteOldFiles(svn_path, path, bt)
+      # add new files and copy
+      self.addNewFiles(svn_path, path, bt)
+      self.goToWorkingCopy(bt)
+    except (pysvn.ClientError, NotFound, AttributeError, AttributeError, Error), error:
+      # Clean up
+      self.activate().removeAllInList([path,])
+      raise error
     # Clean up
     self.activate().removeAllInList([path,])
     
