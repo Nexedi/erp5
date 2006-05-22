@@ -50,6 +50,7 @@ from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
 from Products.ERP5Type.copyTree import copytree
+from Products.ERP5Type.cacheWalk import cacheWalk
 
 try:
   from base64 import b64encode, b64decode
@@ -135,40 +136,6 @@ class SubversionNotAWorkingCopyError(Exception):
   """The base exception class when business template is unknown.
   """
   pass
-    
-def cacheWalk(top, topdown=True, onerror=None):
-  """Directory tree generator.
-
-  modification of os.path.walk to use dircache.listdir
-  instead of os.path.listdir
-  
-  Copyright (c) 2001, 2002, 2003, 2004 Python Software Foundation; All Rights Reserved
-  """
-  try:
-    # Note that listdir and error are globals in this module due
-    # to earlier import-*.
-    names = listdir(top)
-  except os.error, err:
-    if onerror is not None:
-      onerror(err)
-    return
-
-  dirs, nondirs = [], []
-  for name in names:
-    if os.path.isdir(os.path.join(top, name)):
-      dirs.append(name)
-    else:
-      nondirs.append(name)
-
-  if topdown:
-    yield top, dirs, nondirs
-  for name in dirs:
-    path = os.path.join(top, name)
-    if not os.path.islink(path):
-      for elem in cacheWalk(path, topdown, onerror):
-        yield elem
-  if not topdown:
-    yield top, dirs, nondirs
 
     
 def colorizeTag(tag):
