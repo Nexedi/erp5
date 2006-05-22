@@ -158,23 +158,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
              alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>\n
            </td>\n
           </tal:block>\n
-          <td nowrap class="On" align="center" valign="bottom"\n
-             tal:condition="is_action_selected"\n
+          <td nowrap align="center" valign="bottom"\n
+             tal:attributes="class python: is_action_selected and \'On\' or \'Off\'"\n
              tal:define="url action/url">\n
-           <a tal:content="action/name" href="toto"\n
+           <a tal:content="action/name"\n
              i18n:translate="" i18n:domain="ui"\n
              tal:attributes="href python:url + (\'?\' in url and \'&\' or \'?\') + \'selection_index=%s&selection_name=%s&ignore_layout:int=%s\' % (selection_index, selection_name, ignore_layout);" >\n
-            Info.G&eacute;n&eacute;rales\n
            </a>\n
-          </td>\n
-          <td  nowrap class="Off" valign="bottom" align="center"\n
-             tal:condition="not:is_action_selected"\n
-             tal:define="url action/url">\n
-           <a tal:content="action/name" href="toto"\n
-             i18n:translate="" i18n:domain="ui"\n
-             tal:attributes="href python:url + (\'?\' in url and \'&\' or \'?\') + \'selection_index=%s&selection_name=%s&ignore_layout:int=%s\' % (selection_index, selection_name, ignore_layout);" >\n
-            Info.G&eacute;n&eacute;rales\n
-           </a>\n
+           <tal:block tal:define="info python: \'Translate this action name\';\n
+                                  message action/name;\n
+                                  image python: \'translate.png\'">\n
+             <tal:block metal:use-macro="context/form_developper_buttons/macros/translate_link"/>\n
+           </tal:block>\n
           </td>\n
           <tal:block tal:condition="is_action_selected">\n
            <td valign="bottom" width="17"\n

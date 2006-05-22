@@ -142,7 +142,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <td align="right"\n
               tal:condition="python: not here.portal_membership.isAnonymousUser()">\n
             &nbsp;\n
-            <a href="undo_form" i18n:translate="" i18n:domain="ui">Logged In as </a> :\n
+            <a href="undo_form" i18n:translate="" i18n:domain="ui">Logged In as </a>\n
+            <tal:block tal:define="info python: \'Translate this\';\n
+                                   message python: \'Logged In as\'">\n
+              <tal:block metal:use-macro="context/form_developper_buttons/macros/translate_link"/>\n
+            </tal:block> :\n
             <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />\n
           </td>\n
           <td align="right"\n

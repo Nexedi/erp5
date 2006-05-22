@@ -90,6 +90,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       <br/>\n
       <h2 align="center" i18n:translate="" i18n:domain="ui">\n
         Welcome to ERP5\n
+        <tal:block tal:define="info python: \'Translate ERP5 title\';\n
+                               message python: \'Welcome to ERP5\';\n
+                               image python: \'translate.png\'">\n
+          <tal:block metal:use-macro="context/form_developper_buttons/macros/translate_link"/>\n
+        </tal:block>\n
       </h2>\n
       <table border="1" align="center">\n
         <tr tal:define="module_list python:here.ERP5Site_getModuleItemList();\n
@@ -103,11 +108,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <td valign="top" class="ModuleShortcut">\n
               <tal:block tal:repeat="module python:module_list[col_size*col_no:min(col_size*(col_no+1),module_len)] ">\n
                 <p>\n
-                  <a href="person"\n
-                    tal:content="python: module[0]"\n
+                  <a tal:content="python: module[0]"\n
                     tal:attributes="href python: module[1] + \'/view\'">\n
-                    Person\n
                   </a>\n
+                  <tal:block tal:define="info python: \'Translate this module title\';\n
+                                         message python: module[0];\n
+                                         image python: \'translate.png\'">\n
+                    <tal:block metal:use-macro="context/form_developper_buttons/macros/translate_link"/>\n
+                  </tal:block>\n
                 </p>\n
               </tal:block>\n
             </td>\n
