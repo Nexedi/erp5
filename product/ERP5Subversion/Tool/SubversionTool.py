@@ -49,8 +49,8 @@ from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
 from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
-from Products.ERP5Type.copyTree import copytree
-from Products.ERP5Type.cacheWalk import cacheWalk
+from Products.ERP5Type.patches.copyTree import copytree
+from Products.ERP5Type.patches.cacheWalk import cacheWalk
 
 try:
   from base64 import b64encode, b64decode
