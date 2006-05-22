@@ -144,6 +144,10 @@ class BaobabConduit(ERP5Conduit):
       , 'erp5_property': 'inventory'
       , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory Line'}
       }],
+    'cle': [{
+      , 'erp5_property': 'bank_account_key'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account'}
+      }],
     }
 
 
