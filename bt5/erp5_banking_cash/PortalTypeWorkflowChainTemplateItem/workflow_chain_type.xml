@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Container Line</type>
-  <workflow>packing_list_interaction_workflow, trade_matrix_workflow, edit_workflow</workflow>
+  <workflow>packing_list_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Reception</type>
