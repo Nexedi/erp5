@@ -2014,6 +2014,7 @@ class PlanningStructure:
     self.X.name = 'axis_x'
     self.Y.name = 'axis_y'
 
+    pdb.set_trace()
 
     # recovering secondary_axis_ bounds
     self.secondary_axis.start = basic_structure.secondary_axis_info['bound_start']
@@ -2289,12 +2290,13 @@ class Activity:
         error = 0
         error_text=''
 
-      if zone == 1:
-        block_color = ''
-        block_link = self.link
-      else:
-        block_color = '#D1E8FF'
-        block_link = ''
+
+      #if zone == 1:
+      #  block_color = ''
+      #  block_link = self.link
+      #else:
+      #  block_color = '#D1E8FF'
+      #  block_link = ''
       new_block = Bloc(name= block_name,color=block_color,link=block_link, number = block_number, render_format=self.render_format, parent_activity=self, warning=warning, error=error, error_text=error_text,zone=zone)
 
 
