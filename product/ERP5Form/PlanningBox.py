@@ -2292,6 +2292,7 @@ class Activity:
 
 
       block_color = self.color
+      block_link = self.link
       #if zone == 1:
       #  block_color = ''
       #  block_link = self.link
