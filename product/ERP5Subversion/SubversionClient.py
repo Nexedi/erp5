@@ -294,7 +294,7 @@ try:
       return log_list
         
     def add(self, path):
-      return self.client.add(path=path, force=True)
+      self.client.add(path=path, force=True)
 
     def resolved(self, path):
       return self.client.resolved(path=path)
@@ -339,7 +339,7 @@ try:
       return self.client.cleanup(path=path)
 
     def remove(self, path):
-      return self.client.remove(url_or_path=path, force=True)
+      self.client.remove(url_or_path=path, force=True)
 
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)

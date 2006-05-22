@@ -727,6 +727,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """Update a working copy.
     """
     path = self._getWorkingPath(self.getSubversionPath(business_template))
+    # First remove unversioned in working copy that could conflict
+    self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
     client = self._getClient()
     # Revert local changes in working copy first 
     # to import a "pure" BT after update
@@ -741,6 +743,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """Update a working copy.
     """
     path = self._getWorkingPath(self.getSubversionPath(business_template))
+    # First remove unversioned in working copy that could conflict
+    self.removeAllInList(x['uid'] for x in self.unversionedFiles(path))
     client = self._getClient()
     # Update from SVN
     client.update(path)
