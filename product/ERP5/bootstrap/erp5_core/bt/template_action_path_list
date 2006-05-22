@@ -74,9 +74,6 @@ Mapped Value | history
 Mapped Value | metadata
 Mapped Value | print
 Mapped Value | view
-News Item | history
-News Item | metadata
-News Item | view
 Order Builder | history_view
 Order Builder | metadata
 Order Builder | print
@@ -95,8 +92,8 @@ Preference Tool | localroles
 Preference Tool | metadata
 Preference Tool | syndication
 Preference Tool | view
-Preference | acconting_preferences
 Preference | history
+Preference | html_style_preferences
 Preference | metadata
 Preference | print
 Preference | view
