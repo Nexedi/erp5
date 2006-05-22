@@ -243,7 +243,7 @@ def colorize(text):
   # Colorize strings
   pattern = re.compile(r'\".*?\"')
   html = pattern.sub(colorizeTag, html)
-  html = html.replace(os.linesep, os.linesep+"<br>")
+  html = html.replace(os.linesep, os.linesep+"<br/>")
   return html
 
 class DiffFile:
@@ -293,7 +293,7 @@ class DiffFile:
     """
     # Adding header of the table
     if self.binary:
-      return '<b>Folder or binary file or just no changes!</b><br><br><br>'
+      return '<b>Folder or binary file or just no changes!</b><br/><br/><br/>'
     
     html_list = []
     html_list.append('''
