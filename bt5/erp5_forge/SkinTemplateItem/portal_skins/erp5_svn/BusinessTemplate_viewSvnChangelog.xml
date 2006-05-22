@@ -75,6 +75,10 @@
                     <value>
                       <list>
                         <string>my_changelog</string>
+                        <string>reminder</string>
+                        <string>added_files</string>
+                        <string>modified_files</string>
+                        <string>removed_files</string>
                       </list>
                     </value>
                 </item>
