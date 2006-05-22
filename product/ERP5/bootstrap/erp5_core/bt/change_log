@@ -1,3 +1,6 @@
+2006-05-22 jerome
+* Add missing error_message variable to validation_workflow
+
 2006-05-22 Vincent
 * Add "developer mode" (preference page & common scripts).
 
