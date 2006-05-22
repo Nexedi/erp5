@@ -12,9 +12,17 @@ Order Builder | Predicate
 Order Tool | Order Builder
 Predicate | Value Predicate
 Preference Tool | Preference
+Preference | Accounting Transaction
+Preference | Pay Sheet Transaction
+Preference | Payment Transaction
+Preference | Purchase Invoice Transaction
+Preference | Sale Invoice Transaction
 Rule Tool | Delivery Rule
 Rule Tool | Invoice Rule
 Rule Tool | Invoice Transaction Rule
+Rule Tool | Invoicing Rule
+Rule Tool | Order Rule
+Rule Tool | Payment Rule
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
 Template Tool | Business Template

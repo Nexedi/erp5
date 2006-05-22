@@ -68,13 +68,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># controls the visibility of "developper mode" links in ERP5 web interface\n
-# (edit form, edit field, edit portal type, ...) for object\n
-\n
-if object is None:\n
- object = context\n
-\n
-return context.portal_preferences.getPreferredHtmlStyleDevelopperMode() and context.portal_membership.checkPermission(\'View management screens\', object)\n
+            <value> <string>if context.REQUEST.has_key(\'workflow_action\'): # We are on a workflow transition\n
+  help = \'%s#%s\' % (getattr(getattr(context, form_id), \'form_action\'),context.REQUEST[\'workflow_action\'])\n
+elif action is not None:\n
+  help = \'%s#%s\' % (context.getPortalType(), action)\n
+elif form_id is not None:\n
+  help = \'%s_%s\' % (context.getPortalType(), form_id)\n
+else:\n
+  help = context.getPortalType()\n
+return \'%s/%s\' % (context.portal_preferences.getPreferredHtmlStyleDocumentationBaseUrl(), help)\n
 </string> </value>
         </item>
         <item>
@@ -85,7 +87,7 @@ return context.portal_preferences.getPreferredHtmlStyleDevelopperMode() and cont
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_getSourceVisibility</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_core/Base_getHelpUrl</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -95,7 +97,7 @@ return context.portal_preferences.getPreferredHtmlStyleDevelopperMode() and cont
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>object=None</string> </value>
+            <value> <string>form_id = None, action = None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,16 +117,20 @@ return context.portal_preferences.getPreferredHtmlStyleDevelopperMode() and cont
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>object</string>
-                            <string>None</string>
-                            <string>context</string>
+                            <string>form_id</string>
+                            <string>action</string>
                             <string>_getattr_</string>
+<string>context</string>
+                            <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>help</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,12 +144,13 @@ return context.portal_preferences.getPreferredHtmlStyleDevelopperMode() and cont
             <value>
               <tuple>
                 <none/>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getSourceVisibility</string> </value>
+            <value> <string>Base_getHelpUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
