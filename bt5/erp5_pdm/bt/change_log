@@ -1,3 +1,6 @@
+2006-05-22 Romain
+* Remove Transformation Rule, Transformation Sourcing Rule, which are defined in erp5_mrp.
+
 2006-05-15 Alex
 * Update maintainers.
 
