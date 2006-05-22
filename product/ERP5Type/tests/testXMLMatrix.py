@@ -50,6 +50,9 @@ except ImportError:
   pass
 
 class TestXMLMatrix(ERP5TypeTestCase):
+  """
+  Tests the Cell API
+  """
 
   # Some helper methods
 
@@ -57,14 +60,20 @@ class TestXMLMatrix(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """
-      Return the list of business templates.
+    Return the list of business templates.
     """
-    return ('erp5_trade',)
+    return ('erp5_base', 'erp5_trade',)
 
   def getTitle(self):
+    """
+    Returns the title of the test
+    """
     return "XMLMatrix"
 
   def afterSetUp(self, quiet=1, run=1):
+    """
+    Some pre-configuration
+    """
     LOG('afterSetUp', 0, 'Called')
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', '', ['Manager'], [])
@@ -76,8 +85,10 @@ class TestXMLMatrix(ERP5TypeTestCase):
       order = module.newContent(id='1', portal_type='Purchase Order')
 
   def test_01_RenameCellRange(self):
+    """
+    tests renameCellRange behaviour
+    """
     ZopeTestCase._print('\nTest Rename Cell Range ')
-    # Test if renameCellRange works in XMLMatrix.
     portal = self.getPortal()
     module = portal.purchase_order_module
     order = module._getOb('1')
@@ -181,7 +192,9 @@ class TestXMLMatrix(ERP5TypeTestCase):
       i += 1
 
   def checkSetCellRangeAndCatalog(self,active=1):
-    # Test if set Cell range do well catalog and uncatalog
+    """
+    Tests if set Cell range do well catalog and uncatalog
+    """
     portal = self.getPortal()
     if not active:
       portal._delObject('portal_activities')
@@ -250,10 +263,17 @@ class TestXMLMatrix(ERP5TypeTestCase):
       self.assertEquals(catalog.hasPath(cell_path),False)
 
   def test_02_SetCellRangeAndCatalogWithActivities(self):
+    """
+    Tests if set Cell range do well catalog and uncatalog, using activities
+    """
     ZopeTestCase._print('\nTest Set Cell Range And Catalog With Activities ')
     self.checkSetCellRangeAndCatalog(active=1)
 
   def test_03_SetCellRangeAndCatalogWithoutActivities(self):
+    """
+    Tests if set Cell range do well catalog and uncatalog, not using
+    activities
+    """
     ZopeTestCase._print('\nTest Set Cell Range And Catalog Without Activities ')
     self.checkSetCellRangeAndCatalog(active=0)
 
