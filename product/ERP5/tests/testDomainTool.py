@@ -84,10 +84,6 @@ class TestDomainTool(ERP5TypeTestCase):
   def getResourceModule(self):
     return getattr(self.getPortal(), self.resource_module, None)
 
-  def logMessage(self,message):
-    ZopeTestCase._print('\n%s ' % message)
-    LOG('Testing... ',0,message)
-
   def afterSetUp(self):
     self.login()
 

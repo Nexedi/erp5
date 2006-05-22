@@ -64,10 +64,6 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     """
     return "Interaction Workflow"
 
-  def logMessage(self,message):
-    ZopeTestCase._print('\n%s ' % message)
-    LOG('Testing... ',0,message)
-
   def getBusinessTemplateList(self):
     return ('erp5_base',)
 

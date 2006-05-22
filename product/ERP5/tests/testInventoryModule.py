@@ -69,10 +69,6 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
   view_stock_date = '2005/12/31' # The day where we are looking for stock
   size_list = ['Child/32','Child/34'] 
 
-  def logMessage(self,message):
-    ZopeTestCase._print('\n%s' % message)
-    LOG('Testing... ',0,message)
-
   def getTitle(self):
     return "Inventory Module"
 

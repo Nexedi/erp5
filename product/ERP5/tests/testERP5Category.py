@@ -87,10 +87,6 @@ class TestERP5Category(ERP5TypeTestCase):
   def getPortalId(self):
     return self.getPortal().getId()
 
-  def logMessage(self,message):
-    ZopeTestCase._print('\n%s ' % message)
-    LOG('Testing... ',0,message)
-
   def getOrderLine(self):
     return self.getSaleOrderModule()['1']['1']
 

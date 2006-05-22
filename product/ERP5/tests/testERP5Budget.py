@@ -90,10 +90,6 @@ class TestBudget(ERP5TypeTestCase):
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
-  def logMessage(self,message):
-    ZopeTestCase._print('\n%s ' % message)
-    LOG('Testing ... ',0,message)
-
   def stepCheckBudgetTransactionDrafted(self,budget_transaction, sequence=None, sequence_list=None, **kw):
     self.assertEquals('draft', budget_transaction.getSimulationState())
 
