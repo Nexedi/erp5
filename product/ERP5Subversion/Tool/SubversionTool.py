@@ -673,16 +673,17 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """ Display a file content in HTML with syntax highlighting
     """
     file_path = self.relativeToAbsolute(file_path, business_template)
-    input_file = open(file_path, 'r')
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
         text = "<b>"+file_path+"</b><hr>"
         text += file_path +" is a folder!"
       else:
+        input_file = open(file_path, 'r')
         head = "<b>"+file_path+"</b>  <a href='" + \
         self.editPath(business_template, file_path) + \
         "'><img src='imgs/edit.png' border='0'></a><hr>"
         text = head + colorize(input_file.read())
+        input_file.close()
     else:
       # see if tmp file is here (svn deleted file)
       if file_path[-1] == os.sep:
@@ -692,12 +693,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       tmp_path = os.path.join(tmp_path, '.svn', 'text-base', \
       filename+'.svn-base')
       if os.path.exists(tmp_path):
+        input_file = open(tmp_path, 'r')
         head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
         text = head + colorize(input_file.read())
+        input_file.close()
       else : # does not exist
         text = "<b>"+file_path+"</b><hr>"
         text += file_path +" does not exist!"
-    input_file.close()
     return text
       
   security.declareProtected(Permissions.ManagePortal, 'acceptSSLServer')
