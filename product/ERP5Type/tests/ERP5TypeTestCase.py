@@ -245,7 +245,7 @@ class ERP5TypeTestCase(PortalTestCase):
         """
         return ()
 
-    def logMessage(self):
+    def logMessage(self, message):
         """
 	  Shortcut function to log a message
 	"""
