@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_total_price</string> </value>
+            <value> <string>my_total_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -162,7 +162,9 @@
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -233,7 +235,7 @@
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -268,6 +270,25 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>string:-1 234.5 | preferences/getPreferredMoneyQuantityStyle</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getResourceValue().getQuantityPrecision()</string> </value>
         </item>
       </dictionary>
     </pickle>
