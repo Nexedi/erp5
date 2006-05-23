@@ -116,36 +116,29 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                         tal:condition="python: field_errors.has_key(field.id)\n
                                        and not field.is_required()"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="error">\n
-                    </td>\n
+                        class="error"/>\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: (not field_errors.has_key(field.id))\n
                                        and not field.is_required()"\n
-                        i18n:translate="" i18n:domain="ui">\n
-                    </td>\n
+                        i18n:translate="" i18n:domain="ui"/>\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: field_errors.has_key(field.id)\n
                                        and field.is_required()"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="reqerror">\n
-                    </td>\n
+                        class="reqerror"/>\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: (not field_errors.has_key(field.id))\n
                                        and field.is_required()"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="required">\n
-                    </td>\n
-                    <td tal:define="value python:request.get(field.id,None)">\n
-                      <span tal:replace="structure python:field.render(value,request)" />\n
-                    </td>\n
+                        class="required"/>\n
+                    <td tal:define="value python:request.get(field.id,None)"\n
+                        tal:content="structure python:field.render(value,request)"/>\n
                   </tr>\n
                   <tr tal:condition="python: field_errors.has_key(field.id)">\n
-                    <td>\n
-                    </td>\n
+                    <td></td>\n
                     <td tal:content="python:field_errors[field.id].error_text"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="error">\n
-                    </td>\n
+                        class="error"/>\n
                   </tr>\n
                 </tal:block>\n
               </table>\n
@@ -158,36 +151,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                         tal:condition="python: field_errors.has_key(field.id)\n
                                 and not field.is_required()"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="error">\n
-                    </td>\n
+                        class="error"/>\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: (not field_errors.has_key(field.id))\n
                                 and not field.is_required()"\n
-                        i18n:translate="" i18n:domain="ui">\n
-                    </td>\n
+                        i18n:translate="" i18n:domain="ui"/>\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: field_errors.has_key(field.id)\n
                                 and field.is_required()"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="reqerror">\n
-                    </td>\n
+                        class="reqerror"/>\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: (not field_errors.has_key(field.id))\n
                                 and field.is_required()"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="required">\n
-                    </td>\n
-                    <td tal:define="value python:request.get(field.id,None)">\n
-                      <tal:block tal:replace="structure python:field.render(value,request)" />\n
-                    </td>\n
+                        class="required"/>\n
+                    <td tal:define="value python:request.get(field.id,None)"\n
+                        tal:content="structure python:field.render(value,request)"/>\n
                   </tr>\n
                   <tr tal:condition="python: field_errors.has_key(field.id)">\n
                     <td>\n
                     </td>\n
                     <td tal:content="python: field_errors[field.id].error_text"\n
                         i18n:translate="" i18n:domain="ui"\n
-                        class="error">\n
-                    </td>\n
+                        class="error"/>\n
                   </tr>\n
                 </tal:block>\n
               </table>\n
@@ -200,36 +187,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <tr tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
               <td tal:content="structure field/title"\n
                   tal:condition="python: field_errors.has_key(field.id)\n
-                                and not field.is_required()"\n
+                                         and not field.is_required()"\n
                   i18n:translate="" i18n:domain="ui"\n
-                  class="error">\n
-              </td>\n
+                  class="error"/>\n
               <td tal:content="structure field/title"\n
                   tal:condition="python: (not field_errors.has_key(field.id))\n
-                                and not field.is_required()"\n
-                  i18n:translate="" i18n:domain="ui">\n
-              </td>\n
+                                         and not field.is_required()"\n
+                  i18n:translate="" i18n:domain="ui"/>\n
               <td tal:content="structure field/title"\n
                   tal:condition="python: field_errors.has_key(field.id)\n
-                                and field.is_required()"\n
+                                         and field.is_required()"\n
                   i18n:translate="" i18n:domain="ui"\n
-                  class="reqerror">\n
-              </td>\n
+                  class="reqerror"/>\n
               <td tal:content="structure field/title"\n
                   tal:condition="python: (not field_errors.has_key(field.id))\n
                                 and field.is_required()"\n
                   i18n:translate="" i18n:domain="ui"\n
-                  class="required">\n
-              </td>\n
-              <td tal:define="value python:request.get(field.id,None)">\n
-                <tal:block tal:replace="structure python:field.render(value,request)"/>\n
-              </td>\n
+                  class="required"/>\n
+              <td tal:define="value python:request.get(field.id,None)"\n
+                  tal:content="structure python:field.render(value,request)"/>\n
             </tr>\n
             <tr tal:condition="python: field_errors.has_key(field.id)">\n
               <td tal:content="python: field_errors[field.id].error_text"\n
                   i18n:translate="" i18n:domain="ui"\n
-                  class="error">\n
-              </td>\n
+                  class="error"/>\n
             </tr>\n
           </tal:block>\n
         </table>\n
