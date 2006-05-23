@@ -701,10 +701,6 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     bt_name = business_template.getTitle()
     for working_copy in wc_list:
       working_copy = self._getWorkingPath(working_copy)
-      if not os.path.exists(os.path.join(working_copy, '.svn')):
-        raise SubversionNotAWorkingCopyError, \
-        "You must check out working copies in this directory: " + \
-        working_copy + " or choose another path in portal preferences."
       if bt_name in listdir(working_copy) :
         wc_path = os.path.join(working_copy, bt_name)
         if os.path.isdir(wc_path):
