@@ -80,7 +80,7 @@ if not root:\n
   return \'\'\'<?xml version=\'1.0\' encoding=\'iso-8859-1\'?>\n
 <tree id=\'0\'></tree>\'\'\'\n
 \n
-return context.getPortalObject().portal_subversion.treeToXML(root, context).strip()\n
+return context.getPortalObject().portal_subversion.treeToXML(root, context)\n
 
 
 ]]></string> </value>
