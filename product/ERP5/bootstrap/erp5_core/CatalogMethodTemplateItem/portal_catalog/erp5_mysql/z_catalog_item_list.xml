@@ -57,6 +57,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>getSimulationState</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getStopDate</string> </key>
                                 <value>
                                   <dictionary/>
@@ -101,6 +107,7 @@
 <string>getDestinationSectionUid</string>
 <string>getResourceUid</string>
 <string>getVariationText</string>
+<string>getSimulationState</string>
 <string>getAggregateUidList</string>
                           </list>
                         </value>
@@ -118,14 +125,15 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>isMovement\n
-isAccountable\n
-uid\n
-getStopDate\n
-getDestinationUid\n
-getDestinationSectionUid\n
-getResourceUid\n
-getVariationText\n
+            <value> <string>isMovement\r\n
+isAccountable\r\n
+uid\r\n
+getStopDate\r\n
+getDestinationUid\r\n
+getDestinationSectionUid\r\n
+getResourceUid\r\n
+getVariationText\r\n
+getSimulationState\r\n
 getAggregateUidList</string> </value>
         </item>
         <item>
@@ -195,7 +203,8 @@ VALUES\n
   <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar sequence-item type="int" optional>,\n
-  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>\n
 )\n
         <dtml-if sequence-end><dtml-else>,</dtml-if>\n
       </dtml-in>\n
@@ -271,7 +280,8 @@ VALUES\n
   <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,\n
   <dtml-sqlvar sequence-item type="int" optional>,\n
-  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>\n
 )\n
         <dtml-if sequence-end><dtml-else>,</dtml-if>\n
       </dtml-in>\n

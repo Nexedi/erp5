@@ -103,6 +103,7 @@ CREATE TABLE `item` (\n
   `resource_uid` BIGINT UNSIGNED default \'0\',\n
   `aggregate_uid` BIGINT UNSIGNED default \'0\',\n
   `variation_text` VARCHAR(255),\n
+  `simulation_state` VARCHAR(255) default \'\',\n
   KEY `uid` (`uid`),\n
   KEY `node_uid` (`node_uid`),\n
   KEY `section_uid` (`section_uid`),\n
@@ -156,6 +157,7 @@ CREATE TABLE `item` (\n
   `resource_uid` BIGINT UNSIGNED default \'0\',\n
   `aggregate_uid` BIGINT UNSIGNED default \'0\',\n
   `variation_text` VARCHAR(255),\n
+  `simulation_state` VARCHAR(255) default \'\',\n
   KEY `uid` (`uid`),\n
   KEY `node_uid` (`node_uid`),\n
   KEY `section_uid` (`section_uid`),\n

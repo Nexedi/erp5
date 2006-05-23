@@ -112,6 +112,17 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>simulation_state_list</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>to_date</string> </key>
                                 <value>
                                   <dictionary/>
@@ -143,6 +154,7 @@
 <string>group_by_expression</string>
 <string>join_on_item</string>
 <string>date_condition_in_join</string>
+<string>simulation_state_list</string>
                           </list>
                         </value>
                     </item>
@@ -340,7 +352,8 @@ selection_report\r\n
 order_by_expression\r\n
 group_by_expression\r\n
 join_on_item\r\n
-date_condition_in_join</string> </value>
+date_condition_in_join\r\n
+simulation_state_list:list</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -414,6 +427,17 @@ FROM\n
     <dtml-else>\n
       next_item.date > item.date\n
     </dtml-if>\n
+  <dtml-if simulation_state_list>\n
+   AND (\n
+    <dtml-in simulation_state_list>\n
+      next_item.simulation_state =  <dtml-sqlvar sequence-item type="string"> \n
+      <dtml-if sequence-end>\n
+      <dtml-else>\n
+        OR  \n
+      </dtml-if>\n
+    </dtml-in>\n
+    )\n
+  </dtml-if>\n
   )\n
 </dtml-if>\n
 \n
@@ -522,6 +546,17 @@ FROM\n
     <dtml-else>\n
       next_item.date > item.date\n
     </dtml-if>\n
+  <dtml-if simulation_state_list>\n
+   AND (\n
+    <dtml-in simulation_state_list>\n
+      next_item.simulation_state =  <dtml-sqlvar sequence-item type="string"> \n
+      <dtml-if sequence-end>\n
+      <dtml-else>\n
+        OR  \n
+      </dtml-if>\n
+    </dtml-in>\n
+    )\n
+  </dtml-if>\n
   )\n
 </dtml-if>\n
 \n
