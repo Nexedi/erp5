@@ -271,7 +271,12 @@
 
 from dircache import listdir
 from shutil import copy
-import os
+import os, exceptions
+
+class Error(exceptions.EnvironmentError):
+  """ Simple Exception
+  """
+  pass
 
 def copytree(src, dst, symlinks=False):
   """Recursively copy a directory tree using copy().
@@ -303,6 +308,6 @@ def copytree(src, dst, symlinks=False):
       else:
         copy(srcname, dstname)
     except (IOError, os.error), why:
-      errors.append((srcname, dstname, 'Error: ' + str(why.strerror)))
+      errors.append((srcname, dstname, str(why)))
   if errors:
     raise Error, errors
