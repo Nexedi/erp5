@@ -133,7 +133,7 @@ class SubversionUnknownBusinessTemplateError(Exception):
   pass
 
 class SubversionNotAWorkingCopyError(Exception):
-  """The base exception class when business template is unknown.
+  """The base exception class when directory is not a working copy
   """
   pass
 
@@ -713,8 +713,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
             return wc_path
           else:
             return os.sep.join(wc_path.split(os.sep)[:-1])
-    raise SubversionUnknownBusinessTemplateError, "Could not find '"+\
-    bt_name+"' at first level of working copies."
+    if os.path.isdir(os.path.join(working_copy, '.svn')):
+      raise SubversionUnknownBusinessTemplateError, "Could not find '"+\
+      bt_name+"' at first level of working copies."
+    else:
+      raise SubversionNotAWorkingCopyError, \
+      "You must do a clean checkout first. It seems that at least one \
+      of the paths given in preferences is not a SVN working copy"
 
   def _getWorkingPath(self, path):
     """ Check if the given path is reachable (allowed)
