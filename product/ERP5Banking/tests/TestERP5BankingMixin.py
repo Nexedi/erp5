@@ -363,7 +363,8 @@ class TestERP5BankingMixin:
       for s in ['auxiliaire', 'reserve', 'externes']:
         s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
         if s.getId() == 'auxiliaire':
-          ss =  s.newContent(id='encaisse_des_billets_a_ventiler_et_a_detruire', portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+          for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
+            s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
         for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 'encaisse_des_billets_recus_pour_ventilation']:
           ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
           if 'ventilation' in ss.getId():
