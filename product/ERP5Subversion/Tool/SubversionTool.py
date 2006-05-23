@@ -137,6 +137,11 @@ class SubversionNotAWorkingCopyError(Exception):
   """
   pass
 
+class UnauthorizedAccessToPath(Exception):
+  """ When path is not in zope home instance
+  """
+  pass
+
     
 def colorizeTag(tag):
   "Return html colored item"
@@ -715,7 +720,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     """ Check if the given path is reachable (allowed)
     """
     if not path.startswith(self.top_working_path):
-      raise Unauthorized, 'unauthorized access to path %s' % path
+      raise UnauthorizedAccessToPath, 'Unauthorized access to path %s. It is NOT in your Zope home instance.' % path
     return path
     
   security.declareProtected('Import/Export objects', 'update')
