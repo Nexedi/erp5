@@ -1,6 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2006 Nexedi SARL and Contributors. All Rights Reserved.
+#               Aurelien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -64,3 +65,23 @@ class CashContainer(Container):
                     , PropertySheet.CashContainer
                     , PropertySheet.Reference
                     )
+
+  security.declareProtected(Permissions.View, 'getBaobabSource')
+  def getBaobabSource(self):
+    """
+      Returns a calculated source
+    """
+    script = self._getTypeBasedMethod('getBaobabSource')
+    if script is not None:
+      return script(self)      
+    return self.getSource()
+
+  security.declareProtected(Permissions.View, 'getBaobabDestination')
+  def getBaobabDestination(self):
+    """
+      Returns a calculated destination
+    """
+    script = self._getTypeBasedMethod('getBaobabDestination')
+    if script is not None:
+      return script(self)
+    return self.getDestination()
