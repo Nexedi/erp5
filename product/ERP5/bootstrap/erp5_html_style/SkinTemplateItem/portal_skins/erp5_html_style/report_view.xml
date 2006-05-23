@@ -69,9 +69,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
- "DTD/xhtml1-strict.dtd">\n
-\n
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
 <tal:block tal:replace="nothing">\n
 <!--\n
 Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.\n
@@ -93,6 +91,7 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
+\n
 <tal:block tal:define="layout_form_id here/getApplicableLayout | nothing;\n
                        ignore_layout request/ignore_layout | nothing;\n
                        editable_mode request/editable_mode | nothing;\n
@@ -242,24 +241,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 \n
       </tal:block>\n
 \n
-      <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
-        <tal:block tal:repeat="report_item python:report_method()">\n
-          <tal:block tal:define="here python:report_item.getObject(portal_object);\n
-                                  dummy python:report_item.pushReport(portal_object)">\n
-            <tal:block tal:condition="report_item/getFormId">\n
-              <tal:block tal:define="form python:getattr(here,report_item.getFormId())" >\n
-                <tal:block tal:condition="python:form.pt == \'form_view\'">\n
-                  <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
-                </tal:block>\n
-                <tal:block tal:condition="python:form.pt == \'form_list\'">\n
-                  <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
-                </tal:block>\n
-              </tal:block>\n
+      <tal:block tal:define="portal_object here/portal_url/getPortalObject"\n
+                 tal:repeat="report_item python:report_method()">\n
+        <tal:block tal:define="here  python:report_item.getObject(portal_object);\n
+                               dummy python:report_item.pushReport(portal_object)">\n
+          <tal:block tal:condition="report_item/getFormId"\n
+                     tal:define="form python:getattr(here,report_item.getFormId())">\n
+            <tal:block tal:condition="python:form.pt == \'form_view\'">\n
+              <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
             </tal:block>\n
-            <tal:block tal:define="dummy python:report_item.popReport(portal_object)"/>\n
+            <tal:block tal:condition="python:form.pt == \'form_list\'">\n
+              <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
+            </tal:block>\n
           </tal:block>\n
+          <tal:block tal:define="dummy python:report_item.popReport(portal_object)"/>\n
         </tal:block>\n
       </tal:block>\n
+\n
     </div>\n
   </tal:block>\n
 </tal:block>\n
