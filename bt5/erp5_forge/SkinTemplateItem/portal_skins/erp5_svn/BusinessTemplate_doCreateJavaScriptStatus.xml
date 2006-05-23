@@ -70,6 +70,11 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+if \'do_extract\' not in context.REQUEST.keys():\n
+  do_extract = \'True\'\n
+else:\n
+  do_extract = context.REQUEST[\'do_extract\']\n
+\n
 if "files" in context.REQUEST.keys():\n
   files = context.REQUEST["files"]\n
 else:\n
@@ -114,7 +119,7 @@ print \'\'\'\n
       tree.enableCheckBoxes(true)\n
       tree.enableThreeStateCheckboxes(true);\n
       tree.enableDragAndDrop(false)\n
-      tree.loadXML(\'tree.xml?bt_id=%s\', hideObject)\n
+      tree.loadXML(\'tree.xml?bt_id=%(btId)s&do_extract=%(extract)s\', hideObject)\n
       tree.setOnClickHandler(showMenu)\n
     }\n
         \n
@@ -132,10 +137,10 @@ print \'\'\'\n
       showObject();\n
       is_expanded = false;\n
       if(!is_showing_unmodified){\n
-        tree.loadXML(\'tree.xml?bt_id=%s&show_unmodified=True&do_extract=False\', hideObject);\n
+        tree.loadXML(\'tree.xml?bt_id=%(btId)s&show_unmodified=True&do_extract=False\', hideObject);\n
         is_showing_unmodified = true;\n
       }else{\n
-        tree.loadXML(\'tree.xml?bt_id=%s&do_extract=False\', hideObject);\n
+        tree.loadXML(\'tree.xml?bt_id=%(btId)s&do_extract=False\', hideObject);\n
         is_showing_unmodified = false;\n
       }\n
       tree.refreshItem(0);\n
@@ -204,7 +209,7 @@ print \'\'\'\n
       if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
         alert(\'Nothing to commit !\');\n
       } else {\n
-        submitAction(form,\'%s/BusinessTemplate_doSvnCommit\');\n
+        submitAction(form,\'%(absURL)s/BusinessTemplate_doSvnCommit\');\n
       }\n
     }\n
 \n
@@ -258,7 +263,7 @@ print \'\'\'\n
         alert("Nothing to revert !");\n
       } else {\n
         if(confirm(\'Are you sure you want to revert changes?\')){\n
-          submitAction(form,\'%s/BusinessTemplate_doSvnRevert\');\n
+          submitAction(form,\'%(absURL)s/BusinessTemplate_doSvnRevert\');\n
         }\n
       }\n
     }\n
@@ -311,7 +316,7 @@ print \'\'\'\n
       if (nbRemoved==0 && nbAdded==0 && nbModified==0) {\n
         alert(\'Nothing to diff !\');\n
       } else {\n
-        submitAction(form,\'%s/BusinessTemplate_viewSvnDiff\');\n
+        submitAction(form,\'%(absURL)s/BusinessTemplate_viewSvnDiff\');\n
       }\n
     }\n
 \n
@@ -363,30 +368,30 @@ print \'\'\'\n
     document.onmousemove = getMouse;\n
 \n
     function update(){\n
-      open(\'%s/BusinessTemplate_doSvnUpdate\', \'_self\');\n
+      open(\'%(absURL)s/BusinessTemplate_doSvnUpdate\', \'_self\');\n
     }\n
 \n
     function infos(){\n
-      open(\'%s/BusinessTemplate_doSvnInfo\', \'_self\');\n
+      open(\'%(absURL)s/BusinessTemplate_doSvnInfo\', \'_self\');\n
     }\n
 \n
     function cleanup(){\n
-      open(\'%s/BusinessTemplate_doSvnCleanup\', \'_self\');\n
+      open(\'%(absURL)s/BusinessTemplate_doSvnCleanup\', \'_self\');\n
     }\n
 \n
     function log(){\n
       //hide popup\n
       document.getElementById(\'menudiv\').style.display = "none";\n
-      open(\'%s/BusinessTemplate_doSvnLog?added=\'+tree.getSelectedItemId(), \'_self\');\n
+      open(\'%(absURL)s/BusinessTemplate_doSvnLog?added=\'+tree.getSelectedItemId(), \'_self\');\n
     }\n
 \n
     function ls(){\n
       //hide popup\n
       document.getElementById(\'menudiv\').style.display = "none";\n
-      open(\'%s/BusinessTemplate_doSvnLs?added=\'+tree.getSelectedItemId(), \'_self\');\n
+      open(\'%(absURL)s/BusinessTemplate_doSvnLs?added=\'+tree.getSelectedItemId(), \'_self\');\n
     }\n
   </script>\n
-\'\'\'% (context.getId(), context.getId(), context.getId(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url(), context.absolute_url())\n
+\'\'\'% {\'btId\' : context.getId(), \'absURL\' : context.absolute_url(), \'extract\' : do_extract}\n
 \n
 return printed\n
 
@@ -435,6 +440,7 @@ return printed\n
                             <string>_print</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>do_extract</string>
                             <string>_getitem_</string>
                             <string>files</string>
                             <string>None</string>

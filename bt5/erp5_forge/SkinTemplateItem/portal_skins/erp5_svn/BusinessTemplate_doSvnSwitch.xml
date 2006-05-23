@@ -84,7 +84,7 @@ if not repos_url :\n
   return context.BusinessTemplate_viewSvnNewRepos()\n
 \n
 try:\n
-    context.getPortalObject()["portal_subversion"].switch(bt=context, url=repos_url)\n
+    context.getPortalObject()["portal_subversion"].switch(business_template=context, url=repos_url)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(trust_dict = error.getTrustDict(), caller=\'switch\',repos_url=repos_url).BusinessTemplate_viewSvnSSLTrust()\n

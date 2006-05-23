@@ -73,13 +73,13 @@
 return \'\'\'<script>\n
 \n
   function doCommit(form){\n
-      submitAction(form,\'%s/BusinessTemplate_doSvnCommit\');\n
+      submitAction(form,\'%(absURL)s/BusinessTemplate_doSvnCommit\');\n
   }\n
 \n
   function goBack(){\n
-    open(\'%s/BusinessTemplate_viewSvnStatus\', \'_self\');\n
+    open(\'%(absURL)s/BusinessTemplate_viewSvnStatus?do_extract=False\', \'_self\');\n
   }  \n
-</script>\'\'\'% (context.absolute_url(), context.absolute_url())\n
+</script>\'\'\'% {\'absURL\' : context.absolute_url(), }\n
 
 
 ]]></string> </value>

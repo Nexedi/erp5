@@ -1,3 +1,6 @@
+2006-05-23 chris
+* do not extract business template anymore when going back from diff
+
 2006-05-22 chris
 * display reminder when committing
 

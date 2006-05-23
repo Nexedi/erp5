@@ -70,7 +70,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-if do_extract==True:\n
+if do_extract == \'True\':\n
   context.getPortalObject().portal_subversion.extractBT(context)\n
 \n
 context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml;; charset=utf-8\')\n
@@ -97,7 +97,7 @@ return context.getPortalObject().portal_subversion.treeToXML(root, context).stri
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_unmodified=False, do_extract=True</string> </value>
+            <value> <string>show_unmodified=False, do_extract=\'True\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -125,7 +125,6 @@ return context.getPortalObject().portal_subversion.treeToXML(root, context).stri
                           <tuple>
                             <string>show_unmodified</string>
                             <string>do_extract</string>
-                            <string>True</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>root</string>
@@ -142,7 +141,7 @@ return context.getPortalObject().portal_subversion.treeToXML(root, context).stri
             <value>
               <tuple>
                 <int>0</int>
-                <int>1</int>
+                <string>True</string>
               </tuple>
             </value>
         </item>

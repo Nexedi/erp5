@@ -63,7 +63,7 @@
 here/BusinessTemplate_doCreateJavaScriptDiff">JavaScript here</tal:js>\n
 <tal:py replace="structure \n
 here/BusinessTemplate_doSvnDiff">diff here</tal:py>\n
-<center><button onclick="history.back()" value="Back" name="Back" type="button">Back</button>\n
+<center><button onclick="goBack()" value="Back" name="Back" type="button">Back</button>\n
 <button onclick="doCommit(this.form)" value="commit" name="commit Changes" type="button">Commit Changes</button></center>\n
 </tal:block>\n
 </tal:block>\n

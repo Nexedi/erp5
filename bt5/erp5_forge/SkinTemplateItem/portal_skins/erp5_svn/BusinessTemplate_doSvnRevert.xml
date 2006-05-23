@@ -87,7 +87,7 @@ if not added_files and not other_files:\n
   context.REQUEST.set(\'portal_status_message\', \'Nothing to revert.\')\n
   return context.BusinessTemplate_viewSvnStatus()\n
 \n
-context.getPortalObject()["portal_subversion"].revertZODB(bt=context, added_files=added_files, other_files=other_files)\n
+context.getPortalObject()["portal_subversion"].revertZODB(business_template=context, added_files=added_files, other_files=other_files)\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Changes reverted successfully.\')\n
 return context.BusinessTemplate_viewSvnStatus()\n

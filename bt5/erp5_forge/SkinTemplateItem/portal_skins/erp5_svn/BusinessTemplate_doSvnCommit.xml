@@ -100,9 +100,9 @@ if not changelog :\n
 \n
 try:\n
   if commit_non_recurs != \'none\' and commit_non_recurs != \'\':\n
-    context.getPortalObject()["portal_subversion"].checkin(path=commit_non_recurs, bt=context, recurse=False, log_message=changelog)\n
+    context.getPortalObject()["portal_subversion"].checkin(path=commit_non_recurs, business_template=context, recurse=False, log_message=changelog)\n
   if commit_recurs != \'none\' and commit_recurs != \'\':\n
-    context.getPortalObject()["portal_subversion"].checkin(path=commit_recurs, bt=context, recurse=True, log_message=changelog)\n
+    context.getPortalObject()["portal_subversion"].checkin(path=commit_recurs, business_template=context, recurse=True, log_message=changelog)\n
 except SubversionSSLTrustError, error:\n
   context.REQUEST.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   return context.asContext(added=added, modified=modified, removed=removed, trust_dict = error.getTrustDict(), caller=\'commit\', changelog=changelog).BusinessTemplate_viewSvnSSLTrust()\n
