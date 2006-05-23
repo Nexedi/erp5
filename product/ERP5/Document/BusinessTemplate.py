@@ -429,9 +429,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       if hasattr(aq_base(obj), 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
         groups = deepcopy(obj.groups)
-      if len(id_list) > 0:
+      if id_list:
         self.build_sub_objects(context, id_list, relative_url)
-        obj.manage_delObjects(list(id_list))
+        for id_ in id_list:
+          obj._delObject(id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
       self._objects[relative_url] = obj
@@ -451,7 +452,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
-        obj.manage_delObjects(list(id_list))
+        for id_ in id_list:
+          obj._delObject(id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
       self._objects[relative_url] = obj
@@ -757,7 +759,8 @@ class PathTemplateItem(ObjectTemplateItem):
         if len(id_list) > 0:
           if include_subobjects:
             self.build_sub_objects(context, id_list, relative_url)
-          obj.manage_delObjects(list(id_list))
+          for id_ in id_list:
+            obj._delObject(id_)
         if hasattr(aq_base(obj), 'groups'):
           obj.groups = groups
         self._objects[relative_url] = obj
@@ -776,9 +779,10 @@ class CategoryTemplateItem(ObjectTemplateItem):
       obj = obj._getCopy(context)
       obj = self.removeProperties(obj)
       id_list = obj.objectIds()
-      if len(id_list) > 0:
+      if id_list:
         self.build_sub_objects(context, id_list, relative_url)
-        obj.manage_delObjects(list(id_list))
+        for id_ in id_list:
+          obj._delObject(id_)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
@@ -793,9 +797,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
         self.build_sub_objects(context, id_list, relative_url)
-        obj.manage_delObjects(list(id_list))
+        for id_ in id_list:
+          obj._delObject(id_)
       else:
-        obj.manage_delObjects(list(id_list))
+        for id_ in id_list:
+          obj._delObject(id_)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
 
