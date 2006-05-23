@@ -72,15 +72,18 @@ source = context.getSource()\n
 baobab_source = None\n
 # Get the history of the workflow\n
 user_id=\'None\'\n
-for workflow_item in context.Base_getWorkflowHistoryItemList(\'check_payment_workflow\'):\n
-  if workfow_item[\'action\']==\'deliver\':\n
-    user_id=workflow_item[\'actor\']\n
+context.log(\'workflow_item_list:\',context.Base_getWorkflowHistoryItemList(\'check_payment_workflow\',display=0))\n
+for workflow_item in context.Base_getWorkflowHistoryItemList(\'check_payment_workflow\',display=0):\n
+  context.log(\'workflow_item.getProperty(action)\',workflow_item.getProperty(\'action\'))\n
+  if workflow_item.getProperty(\'action\')==\'deliver_action\':\n
+    user_id=workflow_item.getProperty(\'actor\')\n
+context.log(\'user_id\',user_id)\n
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)\n
 context.log(\'CheckPayment_getBaobabSource site_list\',site_list)\n
 for site in site_list:\n
   site_value = context.portal_categories.getCategoryValue(site)\n
-  if site_value.getVault().endswith(\'guichet\') and source in site:\n
-    baobab_source = site\n
+  if site_value.getVaultType().endswith(\'guichet\') and source in site:\n
+    baobab_source = site + \'/encaisse_des_billets_et_monnaies/sortante\'\n
     break\n
 return baobab_source\n
 </string> </value>
@@ -89,6 +92,12 @@ return baobab_source\n
             <key> <string>_code</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -138,8 +147,6 @@ return baobab_source\n
                             <string>user_id</string>
                             <string>_getiter_</string>
                             <string>workflow_item</string>
-                            <string>_getitem_</string>
-                            <string>workfow_item</string>
                             <string>site_list</string>
                             <string>site</string>
                             <string>site_value</string>
@@ -165,6 +172,27 @@ return baobab_source\n
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
