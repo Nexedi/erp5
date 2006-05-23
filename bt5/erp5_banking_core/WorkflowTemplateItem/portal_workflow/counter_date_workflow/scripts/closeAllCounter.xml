@@ -67,6 +67,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># put all counter in closing state for the given site\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import Message\n
+\n
 transaction = state_change.object\n
 \n
 site = transaction.getSiteValue()\n
@@ -151,14 +154,16 @@ for counter in counter_list:\n
                             <string>state_change</string>
                             <string>args</string>
                             <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
                             <string>_getattr_</string>
                             <string>transaction</string>
                             <string>site</string>
                             <string>True</string>
                             <string>hasattr</string>
-                            <string>Message</string>
                             <string>msg</string>
-                            <string>ValidationFailed</string>
                             <string>current_date</string>
                             <string>append</string>
                             <string>$append0</string>
