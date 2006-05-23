@@ -35,7 +35,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, commands, time, exceptions, pysvn
+import os, re, commands, time, pysvn
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
@@ -49,7 +49,7 @@ from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
 from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
-from Products.ERP5Type.patches.copyTree import copytree
+from Products.ERP5Type.patches.copyTree import copytree, Error
 from Products.ERP5Type.patches.cacheWalk import cacheWalk
 
 try:
@@ -116,11 +116,6 @@ class Dir(object):
     content.extend(self.sub_files)
     return content
 ## End of Dir Class
-
-class Error(exceptions.EnvironmentError):
-  """ Simple Exception
-  """
-  pass
 
 class SubversionPreferencesError(Exception):
   """The base exception class for the Subversion preferences.
