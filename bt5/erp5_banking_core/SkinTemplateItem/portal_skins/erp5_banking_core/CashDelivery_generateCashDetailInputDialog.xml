@@ -198,7 +198,6 @@ if listbox is None:\n
   for currency_cash in currency_cash_list:\n
     # Search if the current object contains a line with a given portal type.\n
     cash_delivery_line = context.CashDelivery_searchLineByResource(currency_cash.getId(), line_portal_type)\n
-    #context.log("cash_delivery_line", str((cash_delivery_line, currency_cash.getTitle())))\n
     # This variable counts the number of lines added for this currency cash.\n
     line_number = 0\n
 \n
@@ -328,10 +327,11 @@ else :\n
   listbox_line_count = len(listbox)\n
   if listbox_line_count > 0:\n
     listbox_line_count_plus_1 = listbox_line_count+1\n
-  else:\n
+  else: # XXX when this can happen ?\n
     listbox_line_count_plus_1 = listbox_line_count\n
 \n
   last_row = False\n
+  context.log("listbox", listbox)\n
   #   for x in listbox :\n
   for i_listbox in xrange(0,listbox_line_count_plus_1) :    # Element of ListBox\n
     if i_listbox < listbox_line_count:\n
@@ -340,9 +340,10 @@ else :\n
     else:\n
       last_row = True\n
 \n
-    if preview_listbox_line is None :\n
+    if preview_listbox_line is None :  # first line\n
       preview_listbox_line = listbox_line.copy()\n
-    elif last_row or preview_listbox_line[\'resource_id\'] <> listbox_line[\'resource_id\'] :\n
+    elif last_row or preview_listbox_line[\'resource_id\'] <> listbox_line[\'resource_id\']:\n
+      # last line or line of different resource\n
       if number_line_to_add > (max_lines - number_same_line) :\n
         number_line_to_add = max_lines - number_same_line\n
       if number_line_to_add > 0:\n

@@ -370,7 +370,7 @@
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
-                          <string>variation_text</string>
+                          <string>variation_text_title</string>
                           <string>Variation</string>
                         </tuple>
                         <tuple>

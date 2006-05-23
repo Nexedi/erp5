@@ -106,11 +106,11 @@ for line in line_list :\n
   if line.hasCellContent() :\n
     for cell in line.objectValues() :\n
       variation_text = cell.getVariationText()\n
- #     context.log(\'check cell : \', str((source_counter, line_resource, variation_text)))\n
+      context.log(\'check cell : \', str((source_counter, line_resource, variation_text)))\n
       inventory_value = context.portal_simulation.getFutureInventory(node=source_counter, resource = line_resource,\n
           variation_text = variation_text)\n
-  #    context.log(\'cell quantity\', cell.getQuantity())\n
-  #    context.log(\'inventory value\', inventory_value)\n
+      context.log(\'cell quantity\', cell.getQuantity())\n
+      context.log(\'inventory value\', inventory_value)\n
       if inventory_value - cell.getQuantity() < 0:\n
         return 1\n
 \n
@@ -195,6 +195,7 @@ return 0\n
                             <string>line_resource</string>
                             <string>cell</string>
                             <string>variation_text</string>
+                            <string>str</string>
                             <string>inventory_value</string>
                           </tuple>
                         </value>

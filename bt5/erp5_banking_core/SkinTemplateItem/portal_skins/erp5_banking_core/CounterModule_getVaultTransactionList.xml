@@ -81,15 +81,20 @@ vault_inventory_dict = {}\n
 vault_url = vault\n
 vault_dict[vault_url] = 1\n
 vault_inventory_dict[vault_url] = {}\n
+inventory_kw = {}\n
+inventory_kw[\'group_by_variation\'] = 1\n
+if vault_report_type==\'inventory\':\n
+  inventory_kw[\'group_by_resource\'] = 1\n
 vault_inventory_list = context.portal_simulation.getInventoryList( node_category=vault\n
                                                                  #, resource_category=\'currency/\' + context.Baobab_getPortalReferenceCurrencyID()\n
                                                                  , ignore_variation=0\n
+                                                                 ,**inventory_kw\n
                                                                  )\n
 context.log(\'len(vault_inventory_list:\',len(vault_inventory_list))\n
 for vault_inventory in vault_inventory_list:\n
   context.log(\'vault_inventory total_quantity\',vault_inventory.total_quantity)\n
   context.log(\'vault_inventory total_price\',vault_inventory.total_price)\n
-  resource = (vault_inventory.resource_uid, tuple(getVariationTitleList(vault_inventory.resource_relative_url)))\n
+  resource = (vault_inventory.resource_uid, vault_inventory.variation_text or \'\')\n
   if not vault_inventory_dict[vault_url].has_key(resource):\n
     vault_inventory_dict[vault_url][resource] = {\'quantity\':vault_inventory.total_quantity, \'total_price\':vault_inventory.total_price}\n
 \n
@@ -113,8 +118,22 @@ context.log(\'resource_dict\',resource_dict)\n
 context.log(\'vault_inventory_dict\',vault_inventory_dict)\n
 \n
 i = 0\n
-for resource in context.Baobab_sortResourceTitleList(resource_dict.keys()):\n
-  tmp_dict = {\'resource\':resource[0], \'variation_text\':resource[1]}\n
+#for resource in context.Baobab_sortResourceTitleList(resource_dict.keys()):\n
+for resource in resource_dict.keys():\n
+  variation_text = resource[1]\n
+  tmp_dict = {\'resource\':resource[0], \'variation_text\':variation_text}\n
+  for variation in variation_text.split(\'/n\'):\n
+    if variation.startswith(\'cash_status\'):\n
+      tmp_dict[\'cash_status\'] = variation\n
+    elif variation.startswith(\'emission_letter\'):\n
+      tmp_dict[\'emission_letter\'] = variation\n
+    elif variation.startswith(\'variation\'):\n
+      tmp_dict[\'variation\'] = variation\n
+  tmp_dict[\'variation_title\'] = \' \'.join(getVariationTitleList(resource[1]))\n
+  #resource = (vault_inventory.resource_uid, tuple(getVariationTitleList(vault_inventory.variation_text or \'\')))\n
+  resource_value = context.portal_catalog.getObject(resource[0])\n
+  tmp_dict[\'base_price\'] = resource_value.getBasePrice()\n
+  tmp_dict[\'resource_title\'] = resource_value.getTitle()\n
   general_total_price = 0\n
   for vault in vault_dict.keys():\n
     try:\n
@@ -127,7 +146,15 @@ for resource in context.Baobab_sortResourceTitleList(resource_dict.keys()):\n
   tmp_dict[\'general_total_price\'] = general_total_price\n
   total_inventory_list.append(newTempBase(context, "new_%3i" % i, **tmp_dict))\n
   i += 1\n
+\n
+def sort_base_price(a,b):\n
+  return -cmp(a.base_price,b.base_price)\n
+\n
+total_inventory_list.sort(sort_base_price)\n
+\n
 return total_inventory_list\n
+\n
+\n
 return repr([x for x in total_inventory_list])\n
 </string> </value>
         </item>
@@ -155,7 +182,7 @@ return repr([x for x in total_inventory_list])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>vault=None,column_names=0, **kw</string> </value>
+            <value> <string>vault=None,vault_report_type=None,column_names=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -175,13 +202,14 @@ return repr([x for x in total_inventory_list])\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>vault</string>
+                            <string>vault_report_type</string>
                             <string>column_names</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
@@ -193,23 +221,27 @@ return repr([x for x in total_inventory_list])\n
                             <string>vault_inventory_dict</string>
                             <string>vault_url</string>
                             <string>_write_</string>
+                            <string>inventory_kw</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>vault_inventory_list</string>
                             <string>len</string>
                             <string>_getiter_</string>
                             <string>vault_inventory</string>
-                            <string>tuple</string>
                             <string>resource</string>
                             <string>_getitem_</string>
                             <string>column_list</string>
                             <string>total_inventory_list</string>
                             <string>i</string>
+                            <string>variation_text</string>
                             <string>tmp_dict</string>
+                            <string>variation</string>
+                            <string>resource_value</string>
                             <string>general_total_price</string>
                             <string>resource_in_vault</string>
                             <string>KeyError</string>
-                            <string>_apply_</string>
+                            <string>sort_base_price</string>
                             <string>repr</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -226,6 +258,7 @@ return repr([x for x in total_inventory_list])\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <int>0</int>
               </tuple>

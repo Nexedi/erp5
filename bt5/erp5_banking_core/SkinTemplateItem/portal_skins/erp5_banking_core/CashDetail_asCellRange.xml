@@ -68,7 +68,7 @@
             <key> <string>_body</string> </key>
             <value> <string>#if context.getPortalType() == \'Container Line\' :\n
 #   category_list = ((\'variation\',),)\n
-context.log(context.getPath(), base_category)\n
+#context.log(context.getPath(), base_category)\n
 if base_category != None and base_category in context.getVariationBaseCategoryList():\n
   variation_list = []\n
   for category_item in context.getVariationCategoryItemList():\n
@@ -85,7 +85,7 @@ variation_category_list = context.getVariationCategoryList()  #(\'emission/lette
 cash_line_list = []\n
 for base_category in base_category_list :\n
   cash_line_list.append([x for x in context.OrderLine_getMatrixItemList(base_category) if x in variation_category_list])\n
-context.log("cash line list", str((cash_line_list, base_category_list, variation_category_list, context.OrderLine_getMatrixItemList(base_category))))\n
+#context.log("cash line list", str((cash_line_list, base_category_list, variation_category_list, context.OrderLine_getMatrixItemList(base_category))))\n
 return cash_line_list\n
 </string> </value>
         </item>
@@ -142,9 +142,9 @@ return cash_line_list\n
                             <string>base_category</string>
                             <string>base_id</string>
                             <string>matrixbox</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>None</string>
                             <string>variation_list</string>
                             <string>_getiter_</string>
                             <string>category_item</string>
@@ -158,7 +158,6 @@ return cash_line_list\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
-                            <string>str</string>
                           </tuple>
                         </value>
                     </item>

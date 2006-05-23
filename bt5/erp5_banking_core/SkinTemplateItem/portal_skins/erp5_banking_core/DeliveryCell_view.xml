@@ -105,7 +105,7 @@
                     <value>
                       <list>
                         <string>my_variation_title</string>
-                        <string>my_cash_status_title</string>
+                        <string>my_cash_status_translated_title</string>
                         <string>my_emission_letter_title</string>
                       </list>
                     </value>
