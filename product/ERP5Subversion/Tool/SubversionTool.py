@@ -35,17 +35,13 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, commands, time, pysvn
+import os, re, pysvn
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
-from zExceptions import Unauthorized
-from OFS.Image import manage_addFile
-from cStringIO import StringIO
 from tempfile import mktemp
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.BusinessTemplate import removeAll
-from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
 from xml.sax.saxutils import escape
 from dircache import listdir
 from OFS.Traversable import NotFound
