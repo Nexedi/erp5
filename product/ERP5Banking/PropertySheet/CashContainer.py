@@ -1,6 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2006 Nexedi SARL and Contributors. All Rights Reserved.
+#               Aurelien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -44,5 +45,3 @@ class CashContainer:
                        'mode'        : 'w'
                    }
                 )
-                
-  _categories = ( 'emission_letter','cash_status','variation')
