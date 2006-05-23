@@ -8,8 +8,8 @@ Container Line | Container Cell
 Incoming Cash Sorting Line | Cash Delivery Cell
 Incoming Classification Survey Line | Cash Delivery Cell
 Monetary Issue Container | Container Line
-Monetary Issue | Cash Delivery Line
 Monetary Issue | Monetary Issue Container
+Monetary Issue | Monetary Issue Line
 Monetary Reception Module | Monetary Reception
 Monetary Reception | Cash Container
 Monetary Reception | Cash Container Item

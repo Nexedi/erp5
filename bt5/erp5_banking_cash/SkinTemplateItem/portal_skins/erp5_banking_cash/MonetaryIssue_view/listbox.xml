@@ -450,8 +450,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Cash Delivery Line</string>
-                          <string>Cash Delivery Line</string>
+                          <string>Monetary Issue Line</string>
+                          <string>Monetary Issue Line</string>
                         </tuple>
                         <tuple>
                           <string>Cash Delivery Cell</string>

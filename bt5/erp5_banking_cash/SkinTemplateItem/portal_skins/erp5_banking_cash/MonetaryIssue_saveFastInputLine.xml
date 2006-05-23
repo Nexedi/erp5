@@ -82,7 +82,7 @@ def isSameSet(a, b):\n
   return 1\n
 \n
 # remove existing lines\n
-old_line = [x.getObject() for x in context.searchFolder(portal_type=[\'Monetary Issue Container\', \'Cash Delivery Line\'])]\n
+old_line = [x.getObject() for x in context.searchFolder(portal_type=[\'Monetary Issue Container\', \'Monetary Issue Line\'])]\n
 if len(old_line)>0:\n
   for object_list in old_line:\n
     context.deleteContent(object_list.getId())\n
@@ -146,7 +146,7 @@ for cash_container in cash_container_item_dict.keys():\n
     resource_total_quantity += container_dict[\'quantity\']\n
 \n
 movement_line = context.newContent(id               = "movement"\n
-                                         , portal_type    = \'Cash Delivery Line\'\n
+                                         , portal_type    = \'Monetary Issue Line\'\n
                                          , resource_value = container_dict[\'resource\']\n
                                          , quantity_unit_value = context.portal_categories.quantity_unit.unit\n
                                          )\n

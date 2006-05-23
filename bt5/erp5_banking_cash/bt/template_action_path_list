@@ -35,6 +35,9 @@ Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
 Monetary Issue Container | metadata
 Monetary Issue Container | view
+Monetary Issue Line | metadata
+Monetary Issue Line | print
+Monetary Issue Line | view
 Monetary Issue Module | list_ui
 Monetary Issue Module | sort_on
 Monetary Issue Module | view

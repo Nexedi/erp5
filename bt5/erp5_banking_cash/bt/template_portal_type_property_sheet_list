@@ -3,6 +3,7 @@ Container Cell | CashContainer
 Container Line | CashContainer
 Incoming Cash Sorting Line | CashDeliveryLine
 Incoming Classification Survey Line | CashDeliveryLine
+Monetary Issue Line | CashDeliveryLine
 Monetary Issue | Amount
 Monetary Issue | Price
 Monetary Reception | CashContainer

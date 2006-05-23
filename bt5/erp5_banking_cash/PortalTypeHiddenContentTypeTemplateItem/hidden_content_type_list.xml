@@ -23,8 +23,8 @@
   <item>Cash Delivery Cell</item>
  </portal_type>
  <portal_type id="Monetary Issue">
-  <item>Cash Delivery Line</item>
   <item>Monetary Issue Container</item>
+  <item>Monetary Issue Line</item>
  </portal_type>
  <portal_type id="Monetary Issue Container">
   <item>Container Line</item>

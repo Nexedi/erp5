@@ -18,6 +18,9 @@
   <item>Amount</item>
   <item>Price</item>
  </portal_type>
+ <portal_type id="Monetary Issue Line">
+  <item>CashDeliveryLine</item>
+ </portal_type>
  <portal_type id="Monetary Reception">
   <item>CashContainer</item>
  </portal_type>
