@@ -27,6 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from MethodObject import Method
 from Globals import InitializeClass, DTMLFile
 from zLOG import LOG, INFO, PROBLEM
 
@@ -40,7 +41,6 @@ from Products.ERP5Form.Document.Preference import Preference
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Document.Preference import Priority
 
-from MethodObject import Method
 
 class func_code: pass
 
@@ -89,6 +89,7 @@ class PreferenceMethod(Method) :
     self._preference_name = attribute
 
   def __call__(self, instance, *args, **kw) :
+    # FIXME: Preference method doesn't support default parameter
     def _getPreference(user_name="") :
       found = 0
       MARKER = []
@@ -133,27 +134,10 @@ class PreferenceTool(BaseTool):
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
   security.declareProtected(Permissions.View, "getPreference")
-  def getPreference(self, pref_name) :
+  def getPreference(self, pref_name, default=None) :
     """ get the preference on the most appopriate Preference object. """
-    LOG("PreferenceTool", PROBLEM, 'calling getPreference directly on the '+
-                                   'tool is deprecated, no caching happens !')
-    def _getPreference(pref_name="") :
-      found = 0
-      MARKER = []
-      for pref in self._getSortedPreferenceList() :
-        attr = getattr(pref, pref_name, MARKER)
-        if attr is not MARKER :
-          found = 1
-          # test the attr is set
-          if callable(attr) :
-            value = attr()
-          else :
-            value = attr
-          if value not in (None, '', (), []) :
-            return attr
-      if found :
-        return value
-    return _getPreference(pref_name=pref_name)
+    return getattr(self, 'get%s' %
+        convertToUpperCase(pref_name))(default=default)
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :
