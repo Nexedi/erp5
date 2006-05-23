@@ -1,3 +1,6 @@
+2006-05-23 Romain
+* Remove Transformation Rule, Transformation Sourcing Rule actions, which are defined in erp5_mrp.
+
 2006-05-22 Romain
 * Remove Transformation Rule, Transformation Sourcing Rule, which are defined in erp5_mrp.
 
