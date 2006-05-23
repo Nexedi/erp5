@@ -1,3 +1,6 @@
+2006-05-23 aurel
+* add simulation_state column in item and fix Resource_zGetTrackingList
+
 2006-05-22 jerome
 * Add missing error_message variable to validation_workflow
 
