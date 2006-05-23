@@ -100,9 +100,9 @@ class TestERP5BankingMixin:
       # Create the Assignment.
       assignment = person.newContent( portal_type       = 'Assignment'
                                     , destination_value = user_data[1]
-                                    , function          = user_data[2]
-                                    , group             = user_data[3]
-                                    , site              = user_data[4]
+                                    , function          = "function/%s" %user_data[2]
+                                    , group             = "group/%s" %user_data[3]
+                                    , site              = "site/%s" %user_data[4]
                                     , start_date        = '01/01/1900'
                                     , stop_date         = '01/01/2900'
                                     )
