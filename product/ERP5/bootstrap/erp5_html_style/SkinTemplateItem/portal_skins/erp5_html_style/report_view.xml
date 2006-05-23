@@ -15,7 +15,16 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <none/>
+              <dictionary>
+                <item>
+                    <key> <string>kevin</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -42,6 +51,18 @@
                   </dictionary>
                 </state>
               </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+                <string>kevin</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -78,18 +99,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                        global layout_form python:(not layout_form_id or ignore_layout) or getattr(here, layout_form_id, None);\n
                        default_layout string:view_master;\n
                        layout_id layout_form/pt | default_layout;">\n
-<tal:block metal:use-macro="python:getattr(here,layout_id).macros[\'master\']">\n
+\n
+<tal:block metal:use-macro="python: getattr(here,layout_id).macros[\'master\']">\n
   <tal:block metal:fill-slot="main">\n
     <div class="Main">\n
-      <span tal:define="groups python: form.get_groups(include_empty=1);\n
-                        field_errors python: request.get(\'field_errors\',{});\n
-                        dummy python: request.set(\'here\',here)">\n
-        <table class="Border" width="100%" tal:condition="python:len(form.get_fields_in_group(groups[0])) > 0\n
+      <tal:block tal:define="groups       python: form.get_groups(include_empty=1);\n
+                             field_errors python: request.get(\'field_errors\',{});\n
+                             dummy        python: request.set(\'here\',here)">\n
+        <table class="Border" width="100%" tal:condition="python: len(form.get_fields_in_group(groups[0])) > 0\n
                                                           or len(form.get_fields_in_group(groups[1])) > 0">\n
           <tr>\n
             <td valign="top">\n
               <table>\n
-                <span tal:repeat="field python:form.get_fields_in_group(groups[0])">\n
+                <tal:block tal:repeat="field python:form.get_fields_in_group(groups[0])">\n
                   <tr tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: field_errors.has_key(field.id)\n
@@ -126,12 +148,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                         class="error">\n
                     </td>\n
                   </tr>\n
-                </span>\n
+                </tal:block>\n
               </table>\n
             </td>\n
             <td valign="top" tal:condition="python: len(groups)>1">\n
               <table>\n
-                <span tal:repeat="field python:form.get_fields_in_group(groups[1])">\n
+                <tal:block tal:repeat="field python:form.get_fields_in_group(groups[1])">\n
                   <tr tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
                     <td tal:content="structure field/title"\n
                         tal:condition="python: field_errors.has_key(field.id)\n
@@ -168,62 +190,58 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                         class="error">\n
                     </td>\n
                   </tr>\n
-                </span>\n
+                </tal:block>\n
               </table>\n
             </td>\n
           </tr>\n
         </table>\n
-        <span tal:condition="python: len(groups)>2">\n
-          <table class="Border" tal:condition="python:len(form.get_fields_in_group(groups[2])) > 0">\n
-            <td>\n
-              <table>\n
-                <span tal:repeat="field python:form.get_fields_in_group(groups[2])">\n
-                  <tr tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
-                    <td tal:content="structure field/title"\n
-                        tal:condition="python: field_errors.has_key(field.id)\n
-                                      and not field.is_required()"\n
-                        i18n:translate="" i18n:domain="ui"\n
-                        class="error">\n
-                    </td>\n
-                    <td tal:content="structure field/title"\n
-                        tal:condition="python: (not field_errors.has_key(field.id))\n
-                                      and not field.is_required()"\n
-                        i18n:translate="" i18n:domain="ui">\n
-                    </td>\n
-                    <td tal:content="structure field/title"\n
-                        tal:condition="python: field_errors.has_key(field.id)\n
-                                      and field.is_required()"\n
-                        i18n:translate="" i18n:domain="ui"\n
-                        class="reqerror">\n
-                    </td>\n
-                    <td tal:content="structure field/title"\n
-                        tal:condition="python: (not field_errors.has_key(field.id))\n
-                                      and field.is_required()"\n
-                        i18n:translate="" i18n:domain="ui"\n
-                        class="required">\n
-                    </td>\n
-                    <td tal:define="value python:request.get(field.id,None)">\n
-                      <tal:block tal:replace="structure python:field.render(value,request)"/>\n
-                    </td>\n
-                  </tr>\n
-                  <tr tal:condition="python: field_errors.has_key(field.id)">\n
-                    <td tal:content="python: field_errors[field.id].error_text"\n
-                        i18n:translate="" i18n:domain="ui"\n
-                        class="error">\n
-                    </td>\n
-                  </tr>\n
-                </span>\n
-              </table>\n
-            </td>\n
-          </table>\n
-        </span>\n
-        <span tal:condition="python: len(groups)>3">\n
-          <span tal:repeat="field python:form.get_fields_in_group(groups[3])">\n
-            <span tal:define="value python:request.get(field.id,None)"\n
-                  tal:replace="structure python:field.render(value,request)" />\n
-          </span>\n
-        </span>\n
-      </span>\n
+\n
+        <table class="Border" tal:condition="python: len(groups) > 2 and len(form.get_fields_in_group(groups[2])) > 0">\n
+          <tal:block tal:repeat="field python:form.get_fields_in_group(groups[2])">\n
+            <tr tal:condition="python:field.meta_type != \'HiddenStringField\'">\n
+              <td tal:content="structure field/title"\n
+                  tal:condition="python: field_errors.has_key(field.id)\n
+                                and not field.is_required()"\n
+                  i18n:translate="" i18n:domain="ui"\n
+                  class="error">\n
+              </td>\n
+              <td tal:content="structure field/title"\n
+                  tal:condition="python: (not field_errors.has_key(field.id))\n
+                                and not field.is_required()"\n
+                  i18n:translate="" i18n:domain="ui">\n
+              </td>\n
+              <td tal:content="structure field/title"\n
+                  tal:condition="python: field_errors.has_key(field.id)\n
+                                and field.is_required()"\n
+                  i18n:translate="" i18n:domain="ui"\n
+                  class="reqerror">\n
+              </td>\n
+              <td tal:content="structure field/title"\n
+                  tal:condition="python: (not field_errors.has_key(field.id))\n
+                                and field.is_required()"\n
+                  i18n:translate="" i18n:domain="ui"\n
+                  class="required">\n
+              </td>\n
+              <td tal:define="value python:request.get(field.id,None)">\n
+                <tal:block tal:replace="structure python:field.render(value,request)"/>\n
+              </td>\n
+            </tr>\n
+            <tr tal:condition="python: field_errors.has_key(field.id)">\n
+              <td tal:content="python: field_errors[field.id].error_text"\n
+                  i18n:translate="" i18n:domain="ui"\n
+                  class="error">\n
+              </td>\n
+            </tr>\n
+          </tal:block>\n
+        </table>\n
+\n
+        <tal:block tal:condition="python: len(groups) > 3"\n
+                   tal:repeat="field python: form.get_fields_in_group(groups[3])">\n
+          <tal:block tal:replace="structure python: field.render(request.get(field.id, None), request)"/>\n
+        </tal:block>\n
+\n
+      </tal:block>\n
+\n
       <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
         <tal:block tal:repeat="report_item python:report_method()">\n
           <tal:block tal:define="here python:report_item.getObject(portal_object);\n
