@@ -155,9 +155,10 @@ class PreferenceTool(BaseTool):
     #                  or better solution
     user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
     user_is_manager = 'Manager' in user.getRolesInContext(self)
-    for pref in self.searchFolder(spec=('ERP5 Preference', )) :
+    for pref in self.searchFolder(portal_type='Preference') :
       pref = pref.getObject()
-      if pref is not None and pref.getPreferenceState() == 'enabled' :
+      if pref is not None and pref.getProperty('preference_state',
+                                               'broken') == 'enabled' :
         # XXX quick workaround so that manager only see user preference
         # they actually own.
         if user_is_manager and pref.getPriority() == Priority.USER :
