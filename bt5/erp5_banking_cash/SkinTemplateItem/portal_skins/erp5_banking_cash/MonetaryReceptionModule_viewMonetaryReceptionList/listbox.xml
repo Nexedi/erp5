@@ -314,6 +314,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>
                         </tuple>
@@ -350,6 +354,10 @@
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
                         <tuple>
                           <string>source_reference</string>
                           <string>Reference</string>

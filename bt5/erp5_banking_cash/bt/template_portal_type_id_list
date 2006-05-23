@@ -1,4 +1,5 @@
 Cash Container
+Cash Container Item
 Cash Sorting
 Cash Sorting Module
 Classification Survey
@@ -7,6 +8,9 @@ Container Cell
 Container Line
 Incoming Cash Sorting Line
 Incoming Classification Survey Line
+Monetary Issue
+Monetary Issue Container
+Monetary Issue Module
 Monetary Reception
 Monetary Reception Module
 Monetary Survey

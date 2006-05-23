@@ -110,8 +110,8 @@
                     <value>
                       <list>
                         <string>my_source_reference</string>
-                        <string>my_destination_logical_path</string>
                         <string>my_resource_title</string>
+                        <string>my_destination</string>
                       </list>
                     </value>
                 </item>

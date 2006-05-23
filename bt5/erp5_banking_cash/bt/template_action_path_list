@@ -1,3 +1,5 @@
+Cash Container Item | metadata
+Cash Container Item | view
 Cash Container | metadata
 Cash Container | view
 Cash Sorting Module | list
@@ -31,6 +33,16 @@ Incoming Cash Sorting Line | metadata
 Incoming Cash Sorting Line | view
 Incoming Classification Survey Line | metadata
 Incoming Classification Survey Line | view
+Monetary Issue Container | metadata
+Monetary Issue Container | view
+Monetary Issue Module | list_ui
+Monetary Issue Module | sort_on
+Monetary Issue Module | view
+Monetary Issue | container
+Monetary Issue | fastInput
+Monetary Issue | history
+Monetary Issue | metadata
+Monetary Issue | view
 Monetary Reception Module | import
 Monetary Reception Module | list_ui
 Monetary Reception Module | print_pdf

@@ -1,5 +1,15 @@
 <base_category_list>
+ <portal_type id="Cash Container Item">
+  <item>aggregate</item>
+ </portal_type>
  <portal_type id="Container Cell">
+  <item>cash_status</item>
+  <item>emission_letter</item>
+  <item>variation</item>
+ </portal_type>
+ <portal_type id="Container Line">
+  <item>emission_letter</item>
+  <item>cash_status</item>
   <item>variation</item>
  </portal_type>
  <portal_type id="Outgoing Cash Sorting Cell">

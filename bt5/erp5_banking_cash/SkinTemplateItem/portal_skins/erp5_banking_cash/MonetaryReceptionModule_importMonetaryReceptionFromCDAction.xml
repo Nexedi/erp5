@@ -106,7 +106,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
                                     , start_date        = CD_head_dict[\'start_date\']\n
                                     , emission_letter   = CD_head_dict[\'emission_letter\']\n
                                     , cash_status       = CD_head_dict[\'cash_status\']\n
-                                    , destination       = CD_head_dict[\'destination\']\n
+#                                    , destination       = CD_head_dict[\'destination\']\n
                                     )\n
   # Container Creation\n
   base_list=(\'emission_letter\', \'variation\', \'cash_status\')\n
@@ -115,7 +115,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
   resource_total_quantity = 0\n
   for CD_line in CD_line_list:\n
     # create cash container\n
-    movement_container = movement_head.newContent(portal_type          = \'Cash Container\'\n
+    movement_container = movement_head.newContent(portal_type          = \'Cash Container Item\'\n
                                                   , reindex_object     = 1\n
                                                   , reference                 = CD_line[\'reference\']\n
                                                   , cash_number_range_start   = CD_line[\'range_start\']\n
@@ -144,7 +144,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
         cell.setMembershipCriterionBaseCategoryList(base_list)\n
         cell.setMembershipCriterionCategoryList(category_list)\n
         cell.edit(force_update = 1,\n
-                  price = container_line.getResourceValue().getBasePrice())      \n
+                  price = container_line.getResourceValue().getBasePrice())\n
 \n
 \n
     resource_total_quantity += CD_line[\'quantity\']\n
@@ -168,7 +168,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
       cell.setMembershipCriterionBaseCategoryList(base_list)\n
       cell.setMembershipCriterionCategoryList(category_list)\n
       cell.edit(force_update = 1,\n
-                price = movement_line.getResourceValue().getBasePrice())      \n
+                price = movement_line.getResourceValue().getBasePrice())\n
   #    movement_line.setResourceValue(CD_head_dict[\'resource\'])\n
 ##   context.log("movement cell = %r" %(list(movement_line.objectIds(),)), "")\n
   #   cell = movement_line.getCell(category_list[0], category_list[1], category_list[2])\n
@@ -261,12 +261,12 @@ def split_head(CD_file_line_list):\n
   if head_resource is None:\n
     return {\'error\':True, \'message\':message_dict[\'12\'], \'head_dict\':{}}\n
 \n
-  # Destination search\n
-  user_site_list = context.Baobab_getUserAssignedSiteList ()\n
-  if user_site_list is None:\n
-    return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
+#   # Destination search\n
+#   user_site_list = context.Baobab_getUserAssignedSiteList ()\n
+#   if user_site_list is None:\n
+#     return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
 \n
-  head_destination  = user_site_list[0] +\'/caveau/serre/encaisse_des_billets_neufs_non_emis\'\n
+#   head_destination  = user_site_list[0] +\'/caveau/serre/encaisse_des_billets_neufs_non_emis\'\n
 \n
   CD_head_dict = {\'reference\'       : head_movement_id\n
                  ,\'start_date\'      : head_start_date\n
@@ -275,7 +275,7 @@ def split_head(CD_file_line_list):\n
                  ,\'emission_letter\' : head_emission_letter\n
                  ,\'variation\'       : head_variation\n
                  ,\'cash_status\'     : \'new_not_emitted\'\n
-                 ,\'destination\'     : head_destination\n
+#                  ,\'destination\'     : head_destination\n
                  }\n
 \n
   return {\'error\':False, \'message\':None, \'head_dict\':CD_head_dict}\n

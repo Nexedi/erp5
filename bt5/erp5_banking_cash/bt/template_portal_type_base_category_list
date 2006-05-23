@@ -1,3 +1,9 @@
+Cash Container Item | aggregate
+Container Cell | cash_status
+Container Cell | emission_letter
 Container Cell | variation
+Container Line | cash_status
+Container Line | emission_letter
+Container Line | variation
 Outgoing Cash Sorting Cell | variation
 Outgoing Classification Survey Cell | variation

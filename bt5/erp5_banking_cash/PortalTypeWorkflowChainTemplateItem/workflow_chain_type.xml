@@ -16,8 +16,12 @@
   <workflow>packing_list_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Monetary Issue</type>
+  <workflow>monetary_issue_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Monetary Reception</type>
-  <workflow>edit_workflow, monetary_reception_workflow</workflow>
+  <workflow>monetary_reception_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Monetary Survey</type>
