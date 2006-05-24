@@ -77,7 +77,7 @@ context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml;; charset=utf-8\
 \n
 root = context.getPortalObject().portal_subversion.getModifiedTree(context, show_unmodified)\n
 if not root:\n
-  return \'\'\'<?xml version=\'1.0\' encoding=\'iso-8859-1\'?>\n
+  return \'\'\'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
 <tree id=\'0\'></tree>\'\'\'\n
 \n
 return context.getPortalObject().portal_subversion.treeToXML(root, context)\n

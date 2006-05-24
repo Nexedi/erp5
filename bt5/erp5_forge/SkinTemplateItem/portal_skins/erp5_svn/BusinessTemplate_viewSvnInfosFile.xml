@@ -48,20 +48,18 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
- "DTD/xhtml1-strict.dtd">\n
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
 \n
 <tal:block metal:use-macro="here/view_master/macros/master">\n
 <tal:block metal:fill-slot="main">\n
 \n
-<tal:block tal:define="path context/file;\n
-                       infos_dict context/infos_dict">\n
+<tal:block tal:define="path context/file; infos_dict context/infos_dict">\n
 \n
-<font color=\'black\'>\n
-<br><a tal:attributes="href python:\'BusinessTemplate_viewSvnShowFile?file=\'+str(path)"><b tal:content="python:context.getPortalObject()[\'portal_subversion\'].relativeToAbsolute(path,context)"></b></a>\n
+<font color="black">\n
+<br/><a tal:attributes="href python:\'BusinessTemplate_viewSvnShowFile?file=\'+str(path)"><b tal:content="python:context.getPortalObject()[\'portal_subversion\'].relativeToAbsolute(path,context)"></b></a>\n
 <span tal:condition="python:context.edit_path!=\'#\'"><a tal:attributes="href context/edit_path"><img src=\'imgs/edit.png\' border=\'0\'></a></span>\n
-<hr><br>\n
+<hr/><br/>\n
 <span tal:condition="infos_dict">\n
       <table width=60%% border=1>\n
       <tr height="18px"><td style=\'background-color: rgb(204, 204, 255);\'><b>Name</b></td><td style=\'background-color: white;\' tal:content="python:path.split(\'/\')[-1]">filename</td></tr>\n
@@ -75,7 +73,7 @@
   No informations for this file since it\'s not yet committed to the repository !\n
 </span>\n
 </font>\n
-<br><br>\n
+<br/><br/>\n
 <center><button onclick="history.back()" value="back" name="back" type="button">Back</button>\n
 </center>\n
 </tal:block>\n

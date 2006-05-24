@@ -48,18 +48,17 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
- "DTD/xhtml1-strict.dtd">\n
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
 \n
 <tal:block metal:use-macro="here/view_master/macros/master">\n
 <tal:block metal:fill-slot="main">\n
 \n
 <tal:block tal:define="dict context/entry_dict">\n
-<font color=\'black\'>\n
-<br>\n
-<center><h1>Working Copy Informations</h1></center><br>\n
-    <center><table width=\'60%%\' border=\'1\'>\n
+<font color="black">\n
+<br/>\n
+<center><h1>Working Copy Informations</h1></center><br/>\n
+    <center><table width="60%%" border="1">\n
     <tr height="18px"><td><b>Repository URL</b></td><td tal:content="python:dict[\'url\']">url</td></tr>\n
     <tr height="18px"><td><b>Repository UUID</b></td><td tal:content="python:dict[\'uuid\']">uuid</td></tr>\n
     <tr height="18px"><td><b>Revision</b></td><td tal:content="python:dict[\'revision\']">revision</td></tr>\n
@@ -69,7 +68,7 @@
     <tr height="18px"><td><b>Last Commit Time</b></td><td tal:content="python:dict[\'commit_time\']">last time</td></tr>\n
     </table></center>\n
 </font>\n
-<br><br>\n
+<br/><br/>\n
 <center><button onclick="history.back()" value="back" name="back" type="button">Back</button>\n
 </center>\n
 </tal:block>\n

@@ -98,7 +98,7 @@ if not log_list:\n
 \n
 object_list = []\n
 for my_dict in log_list:\n
-  my_dict[\'message\']=\'<br>\'.join(my_dict[\'message\'].split(\'\\n\'))\n
+  my_dict[\'message\']=\'<br/>\'.join(my_dict[\'message\'].split(\'\\n\'))\n
   my_dict[\'uid\']=my_dict[\'revision\']\n
   temp_object = newTempBase(folder=context.getPortalObject(), id=\'1234\')\n
   temp_object.edit(**my_dict)\n

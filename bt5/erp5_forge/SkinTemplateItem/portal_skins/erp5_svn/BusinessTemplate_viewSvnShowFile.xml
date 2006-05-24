@@ -48,22 +48,18 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
- "DTD/xhtml1-strict.dtd">\n
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
 <tal:block metal:use-macro="here/view_master/macros/master">\n
 <tal:block metal:fill-slot="main">\n
-<br>\n
-<font color=\'black\'>\n
-<!-- file content -->\n
+<br/>\n
+<font color="black">\n
 <p style="line-height:18px">\n
 <span tal:content="structure python: context.getPortalObject()[\'portal_subversion\'].fileHTML(context,context.REQUEST[\'file\'])">file content</span>\n
 </p>\n
 </font>\n
-<br><br>\n
-<center><button onclick="history.back()" value="back" name="back" type="button">Back</button>\n
-\n
-</center>\n
+<br/><br/>\n
+<center><button onclick="history.back()" value="back" name="back" type="button">Back</button></center>\n
 </tal:block>\n
 </tal:block>\n
 

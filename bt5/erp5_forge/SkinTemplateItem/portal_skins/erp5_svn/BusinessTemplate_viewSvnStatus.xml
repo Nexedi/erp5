@@ -48,8 +48,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
- "DTD/xhtml1-strict.dtd">\n
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">\n
 <?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>\n
 <tal:block tal:define="layout_form_id here/getApplicableLayout |  nothing;\n
                        editable_mode request/editable_mode | nothing;\n
@@ -68,33 +67,33 @@
 <script  src="js/menuico.js"></script>\n
 <script  src="js/movableMenu.js"></script>\n
 <noscript>\n
-<font color=\'red\'>Please activate javascript in your web browser or this module won\'t work.</font>\n
+<font color="red">Please activate javascript in your web browser or this module won\'t work.</font>\n
 </noscript>\n
 <!-- Form Hidden : Selected files -->\n
-<input type=\'hidden\' name=\'removed\' value=\'\'>\n
-<input type=\'hidden\' name=\'added\' value=\'\'>\n
-<input type=\'hidden\' name=\'modified\' value=\'\'>\n
-<input type=\'hidden\' name=\'files\' value=\'\'>\n
+<input type="hidden" name="removed" value=""/>\n
+<input type="hidden" name="added" value=""/>\n
+<input type="hidden" name="modified" value=""/>\n
+<input type="hidden" name="files" value=""/>\n
 <!-- End Hidden -->\n
 \n
 <div id="menudiv" style="position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">\n
-<table width=82 cellspacing=1 cellpadding=0 bgcolor=lightgray>\n
+<table width="82" cellspacing="1" cellpadding="0" bgcolor="lightgray">\n
   <tr><td>\n
-    <table width=80 cellspacing=0 cellpadding=0>\n
+    <table width="80" cellspacing="0" cellpadding="0">\n
       <tr>\n
-        <td id="item1" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'ls()\'><center>Infos</center></td>\n
+        <td id="item1" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="ls()"><center>Infos</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item2" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'viewDiff(1,document.main_form)\'><center>Diff</center></td>\n
+        <td id="item2" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="viewDiff(1,document.main_form)"><center>Diff</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item3" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'log()\'>  <center>History</center></td>\n
+        <td id="item3" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="log()">  <center>History</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item4" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'commit(1,document.main_form)\'>  <center>Commit</center></td>\n
+        <td id="item4" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="commit(1,document.main_form)">  <center>Commit</center></td>\n
       </tr>\n
       <tr>\n
-        <td id="item5" bgcolor="#FFFFFF" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#EFEFEF\'" onMouseOut="this.style.backgroundColor=\'#FFFFFF\'" onClick=\'revert(1,document.main_form)\'>  <center>Revert</center></td>\n
+        <td id="item5" bgcolor="#ffffff" width="80" height="16" onMouseOver="this.style.backgroundColor=\'#efefef\'" onMouseOut="this.style.backgroundColor=\'#ffffff\'" onClick="revert(1,document.main_form)">  <center>Revert</center></td>\n
       </tr>\n
     </table>\n
   </td></tr>\n
@@ -102,25 +101,24 @@
 </div>\n
 \n
 <tal:js replace="structure \n
-here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
+here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br/>\n
 <span tal:define="repos_url python:context.getPortalObject()[\'portal_subversion\'].info(context)[\'url\']">\n
-  <font color=\'black\'><b>Repository URL :</b> <a tal:attributes="href repos_url"><b tal:content="repos_url">repository url</b>\n
+  <font color="black"><b>Repository URL :</b> <a tal:attributes="href repos_url"><b tal:content="repos_url">repository url</b>\n
   </a></font>\n
 </span>\n
 <center><table width="100%" height="300">\n
 \t<tr>\n
 \t\t<td height="300">\n
-                <DIV ID="splashScreen" STYLE="position:absolute;z-index:5;top:40%;left:35%;">\n
-\t\t\t<TABLE BGCOLOR="#000000" BORDER=1 BORDERCOLOR="#000000" CELLPADDING=0 CELLSPACING=0 HEIGHT=200 WIDTH=300>\n
-\t\t\t\t<TR>\n
-\t\t\t\t\t<TD WIDTH="100%" HEIGHT="100%" BGCOLOR="#CCCCCC" ALIGN="CENTER" VALIGN="MIDDLE">\n
-\t\t\t\t\t\t<FONT FACE="Helvetica,Verdana,Arial" SIZE=3 COLOR="#000066"><B><center>Checking for changes.</center><br> <center>Please wait...</center></B></FONT> \n
-\t\t\t\t\t\t&nbsp; &nbsp; <BR> \n
-\t\t\t\t\t\t<!-- <IMG SRC="imgs/wait.gif" BORDER=1 WIDTH=75 HEIGHT=15><BR> -->\n
-\t\t\t\t\t</TD>\n
-\t\t\t\t</TR>\n
-\t\t\t</TABLE>\n
-\t\t</DIV>\n
+                <div id="splashScreen" style="position:absolute;z-index:5;top:40%;left:35%;">\n
+\t\t\t<table bgcolor="#000000" border="1" bordercolor="#000000" cellpadding="0" cellspacing="0" height="200" width="300">\n
+\t\t\t\t<tr>\n
+\t\t\t\t\t<td width="100%" height="100%" bgcolor="#cccccc" align="center" valign="middle">\n
+\t\t\t\t\t\t<font face="Helvetica,Verdana,Arial" size="3" color="#000066"><b><center>Checking for changes.</center><br/> <center>Please wait...</center></b></font> \n
+\t\t\t\t\t\t&nbsp; &nbsp; <br/> \n
+\t\t\t\t\t</td>\n
+\t\t\t\t</tr>\n
+\t\t\t</table>\n
+\t\t</div>\n
 \t\t<div \n
 \t\t\tid="treebox1" \n
 \t\t\tstyle="width:98%; height:98%;background-color:#f5f5f5;border :1px solid Silver;overflow:auto;">\n
@@ -128,7 +126,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
 \t\t</td>\n
 \t</tr>\n
 </table>\n
-<div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#EBF8F8 #C0CACA #C0CACA #C0CACA;">\n
+<div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
   <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
     <span class="titleBarText">Caption -- SVN</span>\n
     <img class="titleBarButtons" alt="" src="imgs/altbuttons.gif" longdesc="imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
@@ -138,13 +136,13 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
       <area shape="rect" coords="34,0,49,13" href="" alt="" title="Close"    onclick="this.parentWindow.close();return false;" />\n
     </map>\n
   </div>\n
-  <div class="clientArea" style="height:100px; background-color:#FFFDFD;color:#806040;border-color:#C0CACA #C0CACA #C0CACA #C0CACA;scrollbar-base-color:#dae6e6;">\n
-  <b><font color=\'black\'><center>Caption</center></font></b><hr>\n
-  <p><font color="green">Added files</font><br />\n
-  <font color="orange">Modified files</font><br />\n
-  <font color="red">Removed files</font><br />\n
-  <font color="grey">Conflicted files</font><br />\n
-  <font color=\'black\'>Unmodified files</font><br />\n
+  <div class="clientArea" style="height:100px; background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;scrollbar-base-color:#dae6e6;">\n
+  <b><font color="black"><center>Caption</center></font></b><hr/>\n
+  <p><font color="green">Added files</font><br/>\n
+  <font color="orange">Modified files</font><br/>\n
+  <font color="red">Removed files</font><br/>\n
+  <font color="grey">Conflicted files</font><br/>\n
+  <font color=\'black\'>Unmodified files</font><br/>\n
   </p>\n
   </div>\n
 </div>\n
@@ -156,16 +154,16 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
   }\n
 </script>\n
 </center>\n
-<input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"> <font color=\'black\'>Show unmodified files</font>\n
+<input name="showUnmodified" value="showUnmodified" type="checkbox" onclick="showNormalFiles()"/> <font color="black">Show unmodified files</font>\n
 <center>\n
 <script>\n
   // Menu Customization\n
-  var MenuToolBar=new CreateToolBarMenu(\'#dae6e6\', \'#FFFFFF\', \'#B1BBBB\', \'#6699FF\', \'font-family:verdana;font-size:11px;color:black;font-weight:bold\', 16, 16)\n
-  MenuToolBar.Add(\'imgs/captionoff.png\', \'imgs/captionon.png\', \'Show Caption\', \'#\', "winList[\'captionWindow\'].open();");\n
-  MenuToolBar.Add(\'imgs/expandoff.png\', \'imgs/expandon.png\', \'Expand / Collapse\', \'#\', \'expandCollapse();\');\n
-  MenuToolBar.Add(\'imgs/diffoff.png\', \'imgs/diffon.png\', \'View Diff\', \'#\', \'viewDiff(0,document.main_form);\');\n
-  MenuToolBar.Add(\'imgs/execoff.png\', \'imgs/execon.png\', \'Commit Changes\', \'#\', \'commit(0,document.main_form);\');\n
-  MenuToolBar.Add(\'imgs/revertoff.png\', \'imgs/reverton.png\', \'Revert Changes\', \'#\', \'revert(0,document.main_form);\');\n
+  var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
+  MenuToolBar.Add("imgs/captionoff.png", "imgs/captionon.png", "Show Caption", "#", "winList[\'captionWindow\'].open();");\n
+  MenuToolBar.Add("imgs/expandoff.png", "imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");\n
+  MenuToolBar.Add("imgs/diffoff.png", "imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.main_form);");\n
+  MenuToolBar.Add("imgs/execoff.png", "imgs/execon.png", "Commit Changes", "#", "commit(0,document.main_form);");\n
+  MenuToolBar.Add("imgs/revertoff.png", "imgs/reverton.png", "Revert Changes", "#", "revert(0,document.main_form);");\n
   // Menu Display\n
   MenuToolBar.Display();\n
 </script>\n
@@ -196,28 +194,9 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br>\n
 \t  if (ie4 || upLevel) {\n
 \t    splash.style.visibility = "hidden";\n
           }\n
-          var sText = "<br><h2><b><font color=\'black\'>No changes detected.<font/><b/><h2/>";\n
-           if (document.layers) {\n
-            //var oLayer;\n
-            //oLayer = document.layers[\'treebox1\'].document;\n
-            //oLayer.open();\n
-            //oLayer.write(sText);\n
-            //oLayer.close();\n
-          }\n
-          else if (parseInt(navigator.appVersion)>=5&&navigator.\n
-          appName=="Netscape") {\n
-            if(document.getElementById(\'treebox1\').innerHTML.indexOf(\'folder.png\') == -1){\n
-              //document.getElementById(\'treebox1\').innerHTML = sText;\n
-            }\n
-          }\n
-          else if (document.all){\n
-            if(document.all[\'treebox1\'].innerHTML.indexOf(\'folder.png\') == -1){\n
-              //document.all[\'treebox1\'].innerHTML = sText\n
-            }\n
-          }\n
 \t}\n
 \n
-        doOnLoad()\n
+        doOnLoad();\n
 </script>\n
 </tal:block>\n
 </tal:block>\n
