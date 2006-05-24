@@ -4,7 +4,7 @@
   <workflow>inventory_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Cash Inventory Group</type>
+  <type>Cash Inventory</type>
   <workflow>inventory_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
