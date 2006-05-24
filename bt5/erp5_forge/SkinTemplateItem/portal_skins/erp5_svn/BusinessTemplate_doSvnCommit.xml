@@ -111,7 +111,7 @@ except SubversionLoginError, error1 :\n
   return context.asContext(added=added, modified=modified, removed=removed, caller=\'commit\', realm = error1.getRealm(), changelog=changelog, username = context.getPortalObject()["portal_subversion"].getPreferredUsername()).BusinessTemplate_viewSvnLogin()\n
 \n
 context.REQUEST.set(\'portal_status_message\', \'Files commited successfully.\')\n
-return context.BusinessTemplate_viewSvnStatus()\n
+return context.BusinessTemplate_viewSvnStatus(do_extract=\'False\')\n
 </string> </value>
         </item>
         <item>
