@@ -383,20 +383,25 @@ class CategoryTool( UniqueObject, Folder, Base ):
        display_none_category=display_none_category,display_id='getTitle', sort_id=sort_id)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                                                      'getCategoryChildIdItemList')
+                              'getCategoryChildIdItemList')
     def getCategoryChildIdItemList(self, base_category=None,
               recursive=1, base=0, display_none_category=0, sort_id=None):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
-      return self.getCategoryChildItemList(base_category=base_category, recursive = recursive,base=base,
-         display_none_category=display_none_category,display_id='getId', sort_id=sort_id)
+      return self.getCategoryChildItemList(
+                          base_category=base_category,
+                          recursive = recursive,
+                          base=base,
+                          display_none_category=display_none_category,
+                          display_id='getId',
+                          sort_id=sort_id )
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                                                      'getCategoryChildItemList')
+                              'getCategoryChildItemList')
     def getCategoryChildItemList(self, base_category=None, display_id = None,
-            recursive=1, base=0, display_none_category=1, sort_id=None):
+          recursive=1, base=0, display_none_category=1, sort_id=None, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
@@ -415,14 +420,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
       display_id -- method called to build the couple
 
       recursive -- if set to 0 do not apply recursively
+
+      See Category.getCategoryChildItemList for extra accepted arguments
       """
-      if type(base_category) == type('a'):
+      if isinstance(base_category, str):
         base_category_list = [base_category]
       elif base_category is None:
         base_category_list = self.getBaseCategoryList()
       else:
         base_category_list = base_category
-      #LOG('getCategoryChildItemList', 0, str(base_category_list))
       if display_none_category:
         result = [('', '')]
       else:
@@ -430,14 +436,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
       for base_category in base_category_list:
         category = self[base_category]
         if category is not None:
-          result += category.getCategoryChildItemList(base=base,recursive=recursive,
-                                                            display_id=display_id)
-      #if sort_id is not None:
-      #  result.sort()
-
+          result += category.getCategoryChildItemList(
+                               base=base,
+                               recursive=recursive,
+                               display_id=display_id,
+                               **kw )
       return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseItemList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getBaseItemList')
     getBaseItemList = getCategoryChildItemList
 
     # Category to Tuple Conversion
