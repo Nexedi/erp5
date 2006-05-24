@@ -1,5 +1,6 @@
 erp5_mysql/z_catalog_item_list
 erp5_mysql/z_catalog_movement_list
+erp5_mysql/z_catalog_object_list
 erp5_mysql/z_catalog_stock_list
 erp5_mysql/z_create_catalog
 erp5_mysql/z_create_item
