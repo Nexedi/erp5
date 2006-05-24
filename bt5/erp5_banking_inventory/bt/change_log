@@ -1,3 +1,6 @@
+2006-05-24 aurel
+* add a minimal workflow for inventory
+
 2006-05-18 aurel
 * modify cash inventory line/cell portal type to use our own class
 
