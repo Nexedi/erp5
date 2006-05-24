@@ -32,10 +32,11 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from App.config import getConfiguration
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import os
 
 from Products.ERP5Type import Permissions
-from Products.ERP5Type import _dtmldir
+from Products.ERP5Type import _dtmldir, _wwwdir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Document.Folder import Folder
 
@@ -50,11 +51,24 @@ from Products.ERP5Type.Base import _aq_reset
 
 from Products.ERP5Type import allowClassTool
 
+from zLOG import LOG
+
+"""
+  ClassTool allows to create classes from the ZMI using code templates.
+  ZMI-created classes can then be edited again.
+  All classes can also be reloaded from the ZMI to avoid restarting zope.
+
+  ClassTool is a high potential security risk for a website, it is hence
+  disabled by default by using a dummy ClassTool.
+  See Products.ERP5Type.allowClassTool for the way to enable full-featured
+  ClassTool.
+"""
+
 if allowClassTool():
 
   class ClassTool(BaseTool):
       """
-      A tool to edit code through the web
+        This is the full-featured version of ClassTool.
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Class Tool'
@@ -129,8 +143,13 @@ if allowClassTool():
       security.declareProtected( Permissions.ManagePortal, 'manage_viewProductGeneration' )
       manage_viewProductGeneration = DTMLFile( 'viewProductGeneration', _dtmldir )
 
-      # Clears the cache of all databases
+      security.declareProtected( Permissions.ManagePortal, 'manage_viewFileDocumentation' )
+      manage_viewFileDocumentation = PageTemplateFile( 'viewFileDocumentation', _wwwdir )
+
       def _clearCache(self):
+        """
+          Clears the cache of all databases
+        """
         database = self.Control_Panel.Database
         for name in database.getDatabaseNames():
           from zLOG import LOG
@@ -732,11 +751,110 @@ def initialize( context ):
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_viewProductGeneration?message=New+Product+Saved+In+%s' % (self.absolute_url(), base_path))
 
+      security.declareProtected( Permissions.ManagePortal,
+                                 'asDocumentationHelper')
+      def asDocumentationHelper(self, class_id):
+        """
+          This funciton generates a TempDocumentationHelper for a class of a
+          given name.
+
+          XXX: this code is (almost) duplicated from ERP5Types/Base.py:asDocumentationHelper
+        """
+        from Products.ERP5Type import Document # XXX : Move to top
+        import inspect # XXX: Move to top
+        from pprint import pformat # XXX: move at top
+
+        my_class = getattr(getattr(Document, class_id), class_id)
+        method_list = []
+        property_list = []
+        dochelper = newTempDocumentationHelper(self.getPortalObject(), class_id, title=class_id,
+                      type=my_class.__class__.__name__,
+                      description=inspect.getdoc(my_class))
+        try:
+          dochelper.setSourcePath(inspect.getsourcefile(my_class))
+        except (IOError, TypeError), err:
+          pass
+        if getattr(my_class, '__bases__', None) is not None:
+          dochelper.setInheritanceList([type(x) for x in my_class.__bases__])
+        #dochelper.my_security =
+        for k, v in my_class.__dict__.items():
+          subdochelper = newTempDocumentationHelper(dochelper, k, title=k,
+                           description=inspect.getdoc(v),
+                           security=pformat(getattr(my_class,
+                                                 '%s__roles__' % (k,),
+                                                 None)))
+          try:
+            subdochelper.setType(v.__class__.__name__)
+          except AttributeError:
+            pass
+          try:
+            subdochelper.setSourcePath(inspect.getsourcefile(v))
+          except (IOError, TypeError), err:
+            pass
+          try:
+            subdochelper.setSourceCode(inspect.getsource(v))
+          except (IOError, TypeError), err:
+            pass
+          try:
+            subdochelper.setArgumentList(inspect.getargspec(v))
+          except (IOError, TypeError), err:
+            pass
+          if subdochelper.getType() in ('function',):
+            method_list.append(subdochelper)
+          elif subdochelper.getType() in ('int', 'float', 'long', 'str', 'tuple', 'dict', 'list') \
+           and not subdochelper.getTitle().startswith('__') :
+            subdochelper.setContent(pformat(v))
+            property_list.append(subdochelper)
+        method_list.sort()
+        dochelper.setStaticMethodList(method_list)
+        property_list.sort()
+        dochelper.setStaticPropertyList(property_list)
+        return dochelper
+
+  from Products.ERP5Type.Base import TempBase
+  from Products.ERP5Type import PropertySheet
+
+  def newTempDocumentationHelper(folder, id, REQUEST=None, **kw):
+    o = TempDocumentationHelper(id)
+    o = o.__of__(folder)
+    if kw is not None:
+      o._edit(force_update=1, **kw)
+    return o
+
+  class TempDocumentationHelper(TempBase):
+    """
+      Contains information about a documentable item.
+      Documentable item can be any python type, instanciated or not.
+    """
+
+    meta_type = "ERP5 Documentation Helper"
+    portal_type = "Documentation Helper"
+
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.DublinCore
+                      , PropertySheet.DocHelper
+                      , )
+
+    def _funcname_cmp_prepare(self, funcname):
+      for pos in range(len(funcname)):
+        if funcname[pos] != '_':
+          break
+      return '%s%s' % (funcname[pos:], funcname[:pos])
+
+    def __cmp__(self, dochelper):
+      my_title = self._funcname_cmp_prepare(self.getTitle())
+      his_title = self._funcname_cmp_prepare(dochelper.getTitle())
+      if my_title < his_title:
+        return -1
+      if my_title > his_title:
+        return 1
+      return 0
+
 else:
 
   class ClassTool(BaseTool):
       """
-      A tool to edit code through the web
+        Dummy version of ClassTool.
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Dummy Class Tool'
@@ -745,6 +863,6 @@ else:
       security = ClassSecurityInfo()
 
       security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-      manage_overview = DTMLFile( 'explainDummyClassTool', _dtmldir )        
+      manage_overview = DTMLFile( 'explainDummyClassTool', _dtmldir )
 
 InitializeClass(ClassTool)
