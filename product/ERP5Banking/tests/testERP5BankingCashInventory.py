@@ -53,7 +53,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     Here are the following step that will be done in the test :
 
     XXX to be completed
-    
+
   """
 
   login = PortalTestCase.login
@@ -96,7 +96,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.createFunctionGroupSiteCategory()
     self.createBanknotesAndCoins()
     # do everything as manager, as no roles are defined for inventory
-  
+
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -126,7 +126,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.billet_5000.getPriceCurrency(), 'currency_module/EUR')
     # check years  of billet_5000
     self.assertEqual(self.billet_5000.getVariationList(), ['1992', '2003'])
-    
+
     # check portal type of piece_200
     self.assertEqual(self.piece_200.getPortalType(), 'Coin')
     # check value of piece_200
@@ -241,7 +241,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
         # check the quantity of banknote for year 2003 is 3
         self.assertEqual(cell.getQuantity(), 3.0)
       else:
-        self.fail('Wrong cell created : %s' % cell.getId())        
+        self.fail('Wrong cell created : %s' % cell.getId())
 
   def stepCheckSubTotal1(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -252,17 +252,9 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     # Check quantity of banknotes (2 for 1992 and 3 for 2003)
     self.assertEqual(self.cash_inventory.getTotalQuantity(), 5.0)
     # Check the total price
-    self.assertEqual(self.cash_inventory.getTotalPrice(), 10000 * 5.0)  
+    self.assertEqual(self.cash_inventory.getTotalPrice(), 10000 * 5.0)
 
-    
-  def stepCheckInventoryForLine1(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
-    """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
 
-    
   def stepCreateInventoryLine2(self, sequence=None, sequence_list=None, **kwd):
     """
     Create the cash inventory line 2 wiht coins of 200 and check it has been well created
@@ -306,7 +298,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
         self.assertEqual(cell.getQuantity(), 7.0)
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
-      
+
 
   def stepCheckSubTotal2(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -318,14 +310,6 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_inventory.getTotalQuantity(), 5.0 + 12.0)
     # check the total price
     self.assertEqual(self.cash_inventory.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
-
-
-  def stepCheckInventoryForLine2(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
-    """
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
 
   def stepCreateInventoryLine3(self, sequence=None, sequence_list=None, **kwd):
@@ -374,6 +358,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
+
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     Check the total after the creation of the two cash inventory lines
@@ -386,13 +371,33 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.cash_inventory.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
 
+  def stepDeliverInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Deliver the inventory
+    """
+    state = self.cash_inventory_group.cash_inventory.getSimulationState()
+    # check that state is draft
+    self.assertEqual(state, 'draft')
+    self.workflow_tool.doActionFor(self.cash_inventory_group.cash_inventory, 'deliver_action', wf_id='inventory_workflow')
+    # execute tic
+    self.stepTic()
+    # get state of cash sorting
+    state = self.cash_inventory_group.cash_inventory.getSimulationState()
+    # check that state is delivered
+    self.assertEqual(state, 'delivered')
+    # get workflow history
+    workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_inventory_group.cash_inventory, name='history', wf_id='inventory_workflow')
+    # check len of len workflow history is 6
+    self.assertEqual(len(workflow_history), 3)
+
+
   def stepCheckInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
     """
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
-    
+
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.paris.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
@@ -412,10 +417,10 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
                     + 'CreateCashInventoryGroup CreateCashInventory ' \
-                    + 'CreateInventoryLine1 CheckSubTotal1 CheckInventoryForLine1 ' \
-                    + 'CreateInventoryLine2 CheckSubTotal2 CheckInventoryForLine2 ' \
+                    + 'CreateInventoryLine1 CheckSubTotal1 ' \
+                    + 'CreateInventoryLine2 CheckSubTotal2 ' \
                     + 'CreateInventoryLine3 CheckTotal ' \
-                    + 'CheckInventory'
+                    + 'DeliverInventory Tic CheckInventory'
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
