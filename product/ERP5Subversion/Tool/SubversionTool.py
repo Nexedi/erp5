@@ -148,14 +148,14 @@ def colorizeTag(tag):
   elif 'dictionary' in text:
     color = 'brown'
   elif 'item' in text:
-    color = '#A1559A' #light purple
+    color = '#a1559a' #light purple
   elif 'value' in text:
     color = 'purple'
   elif 'key' in text:
-    color = '#0C4F0C'#dark green
+    color = '#0c4f0c'#dark green
   else:
     color = 'blue'
-  return "<font color='%s'>%s</font>" % (color, text, )
+  return '<font color="%s">%s</font>' % (color, text, )
     
 def colorize(text):
   """Return HTML Code with syntax hightlighting
@@ -264,7 +264,7 @@ class DiffFile:
         new_line_tuple[1],
         escape(new_line).replace(' ', NBSP).replace('\t', NBSP_TAB))
         )
-    html_list.append('''  </tbody></table><br/><br/>''')
+    html_list.append('''</tbody></table><br/><br/>''')
     return '\n'.join(html_list)
       
 
@@ -562,12 +562,12 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       
   def getHeader(self, business_template, file_path):
     file_path = self.relativeToAbsolute(file_path, business_template)
-    header = "<b><a href='BusinessTemplate_viewSvnShowFile?file=" + \
-    file_path + "'>" + file_path + "</a></b>"
+    header = '<b><a href="BusinessTemplate_viewSvnShowFile?file=' + \
+    file_path + '">' + file_path + '</a></b>'
     edit_path = self.editPath(business_template, file_path)
     if edit_path != '#':
-      header += "&nbsp;&nbsp;<a href='"+self.editPath(business_template, \
-      file_path) + "'><img src='imgs/edit.png' border='0'></a>"
+      header += '&nbsp;&nbsp;<a href="'+self.editPath(business_template, \
+      file_path) + '"><img src="imgs/edit.png" border="0"></a>'
     return header
 
   def _encodeSSLTrust(self, trust_dict, permanent=False):
@@ -605,13 +605,13 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     file_path = self.relativeToAbsolute(file_path, business_template)
     if os.path.exists(file_path):
       if os.path.isdir(file_path):
-        text = "<b>"+file_path+"</b><hr>"
+        text = "<b>"+file_path+"</b><hr/>"
         text += file_path +" is a folder!"
       else:
         input_file = open(file_path, 'r')
-        head = "<b>"+file_path+"</b>  <a href='" + \
+        head = '<b>'+file_path+'</b>  <a href="' + \
         self.editPath(business_template, file_path) + \
-        "'><img src='imgs/edit.png' border='0'></a><hr>"
+        '"><img src="imgs/edit.png" border="0"></a><hr/>'
         text = head + colorize(input_file.read())
         input_file.close()
     else:
@@ -624,11 +624,11 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       filename+'.svn-base')
       if os.path.exists(tmp_path):
         input_file = open(tmp_path, 'r')
-        head = "<b>"+tmp_path+"</b> (svn temporary file)<hr>"
+        head = "<b>"+tmp_path+"</b> (svn temporary file)<hr/>"
         text = head + colorize(input_file.read())
         input_file.close()
       else : # does not exist
-        text = "<b>"+file_path+"</b><hr>"
+        text = "<b>"+file_path+"</b><hr/>"
         text += file_path +" does not exist!"
     return text
       
@@ -1200,10 +1200,10 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   def treeToXML(self, item, business_template) :
     """ Convert tree in memory to XML
     """
-    output = "<?xml version='1.0' encoding='iso-8859-1'?>"+ os.linesep
+    output = '<?xml version="1.0" encoding="UTF-8"?>'+ os.linesep
     output += "<tree id='0'>" + os.linesep
     output = self._treeToXML(item, output, business_template.getTitle(), True)
-    output += "</tree>" + os.linesep
+    output += '</tree>' + os.linesep
     return output
   
   def _treeToXML(self, item, output, relative_path, first) :
