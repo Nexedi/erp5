@@ -1479,14 +1479,15 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
                                                           catalog, method_id)
       self._is_filtered_archive[method_id] = 0
       if catalog.filter_dict.has_key(method_id):
-        self._is_filtered_archive[method_id] = \
-                    catalog.filter_dict[method_id]['filtered']
-        self._filter_expression_archive[method_id] = \
-                    catalog.filter_dict[method_id]['expression']
-        self._filter_expression_instance_archive[method_id] = \
-                    catalog.filter_dict[method_id]['expression_instance']
-        self._filter_type_archive[method_id] = \
-                    catalog.filter_dict[method_id]['type']
+        if catalog.filter_dict[method_id]['filtered']:
+          self._is_filtered_archive[method_id] = \
+                      catalog.filter_dict[method_id]['filtered']
+          self._filter_expression_archive[method_id] = \
+                      catalog.filter_dict[method_id]['expression']
+          self._filter_expression_instance_archive[method_id] = \
+                      catalog.filter_dict[method_id]['expression_instance']
+          self._filter_type_archive[method_id] = \
+                      catalog.filter_dict[method_id]['type']
 
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
@@ -1516,21 +1517,22 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         xml_data += os.linesep+' </item>'
 
       if catalog.filter_dict.has_key(method_id):
-        xml_data += os.linesep+' <item key="_is_filtered_archive" type="int">'
-        xml_data += os.linesep+'  <value>1</value>'
-        xml_data += os.linesep+' </item>'
-        for method in catalog_method_filter_list:
-          value = getattr(self, method, '')[method_id]
-          if method != '_filter_expression_instance_archive':
-            if type(value) in (type(''), type(u'')):
-              xml_data += os.linesep+' <item key="%s" type="str">' %(method,)
-              xml_data += os.linesep+'  <value>%s</value>' %(str(value))
-              xml_data += os.linesep+' </item>'
-            elif type(value) in (type(()), type([])):
-              xml_data += os.linesep+' <item key="%s" type="tuple">'%(method)
-              for item in value:
-                xml_data += os.linesep+'  <value>%s</value>' %(str(item))
-              xml_data += os.linesep+' </item>'
+        if catalog.filter_dict[method_id]['filtered']:
+          xml_data += os.linesep+' <item key="_is_filtered_archive" type="int">'
+          xml_data += os.linesep+'  <value>1</value>'
+          xml_data += os.linesep+' </item>'
+          for method in catalog_method_filter_list:
+            value = getattr(self, method, '')[method_id]
+            if method != '_filter_expression_instance_archive':
+              if type(value) in (type(''), type(u'')):
+                xml_data += os.linesep+' <item key="%s" type="str">' %(method,)
+                xml_data += os.linesep+'  <value>%s</value>' %(str(value))
+                xml_data += os.linesep+' </item>'
+              elif type(value) in (type(()), type([])):
+                xml_data += os.linesep+' <item key="%s" type="tuple">'%(method)
+                for item in value:
+                  xml_data += os.linesep+'  <value>%s</value>' %(str(item))
+                xml_data += os.linesep+' </item>'
       xml_data += os.linesep+'</catalog_method>'
       f.write(xml_data)
       f.close()
