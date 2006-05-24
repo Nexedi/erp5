@@ -36,7 +36,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import os
 
 from Products.ERP5Type import Permissions
-from Products.ERP5Type import _dtmldir, _wwwdir
+from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Document.Folder import Folder
 
@@ -142,9 +142,6 @@ if allowClassTool():
 
       security.declareProtected( Permissions.ManagePortal, 'manage_viewProductGeneration' )
       manage_viewProductGeneration = DTMLFile( 'viewProductGeneration', _dtmldir )
-
-      security.declareProtected( Permissions.ManagePortal, 'manage_viewFileDocumentation' )
-      manage_viewFileDocumentation = PageTemplateFile( 'viewFileDocumentation', _wwwdir )
 
       def _clearCache(self):
         """
