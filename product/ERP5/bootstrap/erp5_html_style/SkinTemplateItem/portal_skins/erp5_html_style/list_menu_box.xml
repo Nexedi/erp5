@@ -100,16 +100,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
               tal:attributes="value list_method_id" tal:condition="list_method_id">\n
           <img src="/images/erp5_html_style/images/sepacla.png" alt="|"\n
                tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;\n
-          <input type="image" src="/images/erp5_html_style/images/editcopy.png" title="Copy"\n
-               width="22" height="22"\n
-               name="Folder_copy:method" alt="Copy"\n
-               i18n:attributes="title" i18n:domain="ui"\n
-               tal:attributes="src string:$portal_url/images/editcopy.png"/>&nbsp;\n
           <input type="image" src="/images/erp5_html_style/images/editcut.png" title="Cut"\n
                width="22" height="22"\n
                name="Folder_cut:method" alt="Cut"\n
                i18n:attributes="title" i18n:domain="ui"\n
                tal:attributes="src string:$portal_url/images/editcut.png"/>&nbsp;\n
+          <input type="image" src="/images/erp5_html_style/images/editcopy.png" title="Copy"\n
+               width="22" height="22"\n
+               name="Folder_copy:method" alt="Copy"\n
+               i18n:attributes="title" i18n:domain="ui"\n
+               tal:attributes="src string:$portal_url/images/editcopy.png"/>&nbsp;\n
           <input type="image" src="/images/erp5_html_style/images/editpaste.png" title="Paste"\n
                width="22" height="22"\n
                name="Folder_paste:method" alt="Paste"\n
