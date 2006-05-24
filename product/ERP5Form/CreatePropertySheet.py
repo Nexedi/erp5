@@ -119,12 +119,9 @@ class %(class_name)s :
     }
       
     string = self.copyright_text + """
-from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Utils import assertAttributePortalType
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Core.Node import Node
-from Products.ERP5.Document.Entity import Entity
     
 class %(class_name)s(Node, XMLObject):
   \"\"\"An %(portal_type_name)s object holds the information about 
