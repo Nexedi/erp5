@@ -41,6 +41,7 @@ Monetary Issue Line | view
 Monetary Issue Module | list_ui
 Monetary Issue Module | sort_on
 Monetary Issue Module | view
+Monetary Issue | coin_fastinput
 Monetary Issue | container
 Monetary Issue | fastInput
 Monetary Issue | history
@@ -52,6 +53,7 @@ Monetary Reception Module | print_pdf
 Monetary Reception Module | sort_on
 Monetary Reception Module | view
 Monetary Reception | cahs_container
+Monetary Reception | fastinput
 Monetary Reception | history
 Monetary Reception | metadata
 Monetary Reception | print_pdf

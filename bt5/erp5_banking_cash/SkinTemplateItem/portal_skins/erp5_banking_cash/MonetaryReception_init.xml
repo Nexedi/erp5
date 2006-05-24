@@ -66,32 +66,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-transaction = state_change.object\n
-\n
-vault = transaction.getSource()\n
-resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Monetary Issue Line\')\n
-\n
-# Get price and total_price.\n
-amount = transaction.getSourceTotalAssetPrice()\n
-total_price = transaction.getTotalPrice(portal_type=\'Cash Delivery Cell\')\n
-\n
-if resource == 2:\n
-  msg = Message(domain="ui", message="No Resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif amount != total_price:\n
-  msg = Message(domain="ui", message="Amount differ from total price.")\n
-  raise ValidationFailed, (msg,)\n
-elif resource <> 0 :\n
-  msg = Message(domain="ui", message="Insufficient Balance.")\n
-  raise ValidationFailed, (msg,)\n
-
-
-]]></string> </value>
+            <value> <string>currency = context.Baobab_getPortalReferenceCurrencyID()\n
+currency_object = context.restrictedTraverse(\'currency_module/%s\' %(currency,))\n
+context.setResourceValue(currency_object)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -101,17 +79,11 @@ elif resource <> 0 :\n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/baobab/portal_workflow/monetary_issue_workflow/scripts/validateVaultBalance</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Script (Python):/baobab/portal_skins/erp5_banking_cash/MonetaryReception_init</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>*args, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,24 +103,18 @@ elif resource <> 0 :\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
+                            <string>args</string>
+                            <string>kwd</string>
                             <string>_getattr_</string>
-                            <string>transaction</string>
-                            <string>vault</string>
-                            <string>resource</string>
-                            <string>amount</string>
-                            <string>total_price</string>
-                            <string>msg</string>
+                            <string>context</string>
+                            <string>currency</string>
+                            <string>currency_object</string>
                           </tuple>
                         </value>
                     </item>
@@ -165,7 +131,7 @@ elif resource <> 0 :\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validateVaultBalance</string> </value>
+            <value> <string>MonetaryReception_init</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

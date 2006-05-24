@@ -101,11 +101,11 @@ def create_movement(CD_head_dict, CD_line_list):\n
   # Head creation\n
   movement_head = context.newContent( portal_type       = \'Monetary Reception\'\n
                                     , reindex_object    = 1\n
-                                    , reference         = CD_head_dict[\'reference\']\n
-                                    , resource         = CD_head_dict[\'currency\']\n
+#                                    , reference         = CD_head_dict[\'reference\']\n
+#                                    , resource         = CD_head_dict[\'currency\'] # done by init script\n
                                     , start_date        = CD_head_dict[\'start_date\']\n
-                                    , emission_letter   = CD_head_dict[\'emission_letter\']\n
-                                    , cash_status       = CD_head_dict[\'cash_status\']\n
+#                                    , emission_letter   = CD_head_dict[\'emission_letter\']\n
+#                                    , cash_status       = CD_head_dict[\'cash_status\']\n
 #                                    , destination       = CD_head_dict[\'destination\']\n
                                     )\n
   # Container Creation\n
