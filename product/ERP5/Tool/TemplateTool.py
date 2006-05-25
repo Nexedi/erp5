@@ -53,6 +53,8 @@ try:
   from base64 import b64encode, b64decode
 except ImportError:
   from base64 import encodestring as b64encode, decodestring as b64decode
+from Products.ERP5Type.Message import Message
+N_ = lambda msgid, **kw: Message('ui', msgid, **kw)
 
 class LocalConfiguration(Implicit):
   """
@@ -160,9 +162,11 @@ class TemplateTool (BaseTool):
       path = pathname2url(path)
       business_template.export(path=path, local=1)
       if REQUEST is not None:
-        ret_url = '%s/%s?portal_status_message=Saved+in+%s+.' % \
+        psm = N_('Saved+in+${path}+.',
+                  mapping={'path': pathname2url(path)})
+        ret_url = '%s/%s?portal_status_message=%s' % \
                   (business_template.absolute_url(),
-                   REQUEST.get('form_id', 'view'), pathname2url(path))
+                   REQUEST.get('form_id', 'view'), psm)
         if RESPONSE is None:
           RESPONSE = REQUEST.RESPONSE
         return REQUEST.RESPONSE.redirect( ret_url )
@@ -275,13 +279,13 @@ class TemplateTool (BaseTool):
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
 
-      self.download(url, id=id)
+      bt = self.download(url, id=id)
             
       if REQUEST is not None:
-        ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+" \
-                                  "Templates+Downloaded+Successfully"
-                                  % ret_url)
+        ret_url = bt.absolute_url() + '/view'
+        psm = N_("Business+Template+Downloaded+Successfully")
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s" 
+                                    % (ret_url, psm))
 
     security.declareProtected( 'Import/Export objects', 'download' )
     def download(self, url, id=None, REQUEST=None):
@@ -292,6 +296,9 @@ class TemplateTool (BaseTool):
       # come from the management interface.
       if REQUEST is not None:
         return self.manage_download(url, id=id, REQUEST=REQUEST)
+      
+      if id is None:
+        id = self.generateNewId()
 
       urltype, name = splittype(url)
       if os.path.isdir(name): # new version of business template in plain
@@ -348,12 +355,15 @@ class TemplateTool (BaseTool):
       """
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
-        
-      if (import_file is None) or (len(import_file.read()) == 0) :
-        if REQUEST is not None :
-          REQUEST.RESPONSE.redirect("%s?portal_status_message=No+file+or+an+" \
-                                    "empty+file+was+specified"
-                                    % self.absolute_url())
+      
+      if id is None:
+        id = self.generateNewId()
+
+      if (import_file is None) or (len(import_file.read()) == 0):
+        if REQUEST is not None:
+          psm = N_('No+file+or+an+empty+file+was+specified')
+          REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+                                    % (self.absolute_url(), psm))
           return
         else :
           raise RuntimeError, 'No file or an empty file was specified'
@@ -374,10 +384,10 @@ class TemplateTool (BaseTool):
       bt.reindexObject()
 
       if REQUEST is not None:
-        ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+" \
-                                  "Templates+Imported+Successfully"
-                                  % ret_url)
+        ret_url = bt.absolute_url() + '/view'
+        psm = N_("Business+Templates+Imported+Successfully")
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+                                  % (ret_url, psm))
 
     def runUnitTestList(self, test_list=[], **kwd):
       """
@@ -464,9 +474,9 @@ class TemplateTool (BaseTool):
         
       if REQUEST is not None:
         ret_url = self.absolute_url() + '/' + REQUEST.get('form_id', 'view')
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+" \
-                                  "Templates+Updated+Successfully"
-                                  % ret_url)
+        psm = N_("Business+Templates+Updated+Successfully")
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+                                  % (ret_url, psm))
                 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryList' )

@@ -73,7 +73,6 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
-                        <string>your_id</string>
                         <string>your_import_file</string>
                       </list>
                     </value>
