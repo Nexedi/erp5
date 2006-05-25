@@ -437,11 +437,13 @@ class Predicate(Folder):
     return new_self
 
   # Predicate handling
-  security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
-  def asPredicate(self,script_id=None):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asPredicate')
+  def asPredicate(self, script_id=None):
     """
       This method tries to convert the current Document into a predicate
-      looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
+      looking up methods named ${PortalType}_asPredicate,
+      ${MetaType}_asPredicate, ${Class}_asPredicate     
     """
     script = self._getTypeBasedMethod('asPredicate', script_id=script_id)
     if script is not None:
