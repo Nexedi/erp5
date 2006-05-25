@@ -156,7 +156,10 @@ try:\n
   for k, v in kw.items() :\n
     if v is not None :\n
       cleanedup_kw[k] = v\n
-  if make_query(cleanedup_kw) > 2000 :\n
+\n
+  # If url is too long, we do not redirecting\n
+  # to avoir crash <christophe@nexedi.com>\n
+  if len(make_query(cleanedup_kw)) > 2000:\n
     cannot_redirect = 1\n
 \n
   # if we cannot redirect, then call the form directly.\n
