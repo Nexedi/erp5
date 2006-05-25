@@ -152,42 +152,53 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(group.getPreferenceState(),   'enabled')
     self.assertEquals(site.getPreferenceState(),    'enabled')
     person1.setPreferredAccountingTransactionSimulationState([])
-    self.assertEquals(person1.getPreferredAccountingTransactionSimulationState(), None)
+    self.assertEquals(
+      person1.getPreferredAccountingTransactionSimulationState(), None)
     group.setPreferredAccountingTransactionSimulationState([])
-    self.assertEquals(group.getPreferredAccountingTransactionSimulationState(), None)
+    self.assertEquals(
+      group.getPreferredAccountingTransactionSimulationState(), None)
     site.setPreferredAccountingTransactionSimulationState([])
-    self.assertEquals(site.getPreferredAccountingTransactionSimulationState(), None)
+    self.assertEquals(
+      site.getPreferredAccountingTransactionSimulationState(), None)
 
     from Products.ERP5Type.Cache import clearCache
     clearCache()
     self.assertEquals(len(pref_tool.getPreference(
-      'preferred_accounting_transaction_simulation_state')), 0)
+      'preferred_accounting_transaction_simulation_state_list')), 0)
     
     site.setPreferredAccountingTransactionSimulationStateList(
             ['stopped', 'delivered'])
-    clearCache()
+    clearCache() # FIXME: the cache should be cleared automatically
     self.assertEquals(list(pref_tool.getPreference(
-      'preferred_accounting_transaction_simulation_state')),
+      'preferred_accounting_transaction_simulation_state_list')),
       list(site.getPreferredAccountingTransactionSimulationStateList()))
+    
+    # getPreference on the tool has the same behaviour as getProperty
+    # on the preference (unless property is unset on this pref)
+    for prop in ['preferred_accounting_transaction_simulation_state',
+            'preferred_accounting_transaction_simulation_state_list']:
+
+      self.assertEquals(pref_tool.getPreference(prop),
+                        site.getProperty(prop))
     
     group.setPreferredAccountingTransactionSimulationStateList(['draft'])
     clearCache()
     self.assertEquals(list(pref_tool.getPreference(
-      'preferred_accounting_transaction_simulation_state')),
+      'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
     
     person1.setPreferredAccountingTransactionSimulationStateList(
               ['cancelled'])
     clearCache()
     self.assertEquals(list(pref_tool.getPreference(
-      'preferred_accounting_transaction_simulation_state')),
+      'preferred_accounting_transaction_simulation_state_list')),
       list(person1.getPreferredAccountingTransactionSimulationStateList()))
     # disable person -> group is selected
     self.getWorkflowTool().doActionFor(person1,
             'disable_action', wf_id='preference_workflow')
     clearCache()
     self.assertEquals(list(pref_tool.getPreference(
-      'preferred_accounting_transaction_simulation_state')),
+      'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
 
   def test_GetAttr(self, quiet=quiet, run=run_all_tests) :
@@ -218,14 +229,14 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(
       list(pref_tool.getPreferredAccountingTransactionSimulationStateList()),
       list(pref_tool.getPreference(
-            'preferred_accounting_transaction_simulation_state')))
+         'preferred_accounting_transaction_simulation_state_list')))
     # standards attributes must not be looked up on Preferences
     self.assertNotEquals(pref_tool.getTitleOrId(), group.getTitleOrId())
     self.assertNotEquals(pref_tool.objectValues(), group.objectValues())
     self.assertNotEquals(pref_tool.aq_parent, group.aq_parent)
     try :
       pref_tool.getPreferredNotExistingPreference()
-      self.assertNotEquals(1, 2)
+      self.fail('Attribute error should be raised for dummy methods')
     except AttributeError :
       pass
   
