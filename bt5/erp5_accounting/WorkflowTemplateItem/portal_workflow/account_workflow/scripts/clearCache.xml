@@ -68,14 +68,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-\n
-account = sci[\'object\']\n
-N_ = lambda msgid: Message(\'erp5_uid\', msgid)\n
-\n
-if account.getGap() in (None, \'\') : \n
-  raise ValidationFailed(N_("GAP is unset."))\n
+            <value> <string>"""Clear the cache when validating a new account, for scripts showing a cached\n
+list of accounts.\n
+"""\n
+from Products.ERP5Type.Cache import clearCache\n
+clearCache()\n
 </string> </value>
         </item>
         <item>
@@ -86,7 +83,7 @@ if account.getGap() in (None, \'\') : \n
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/hopital/portal_workflow/account_validation_workflow/scripts/Account_Validate</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_workflow/account_workflow/scripts/clearCache</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -117,15 +114,8 @@ if account.getGap() in (None, \'\') : \n
                         <value>
                           <tuple>
                             <string>sci</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>account</string>
-                            <string>N_</string>
-                            <string>_getattr_</string>
-                            <string>None</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>clearCache</string>
                           </tuple>
                         </value>
                     </item>
@@ -142,7 +132,7 @@ if account.getGap() in (None, \'\') : \n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Account_Validate</string> </value>
+            <value> <string>clearCache</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
