@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -66,23 +68,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>display = context.Account_getFormattedTitle\n
+            <value> <string>display_cache = {}\n
+\n
+def display(x):\n
+  if x not in display_cache:\n
+    gap_id = x.getId()\n
+    if gap_id.isdigit():\n
+      display_cache[x] = "%s - %s" % (gap_id, x.getTitle())\n
+    else:\n
+      display_cache[x] = x.getTitle()\n
+  return display_cache[x]\n
 \n
 def sort(x,y):\n
   return cmp(display(x), display(y))\n
 \n
-try :\n
-  gap_root = context.portal_preferences.getPreferredAccountingTransactionGap() \n
-except KeyError :\n
-  raise\n
-  gap_root = context.getPortalDefaultGapRoot()\n
+gap_root = context.portal_preferences.getPreferredAccountingTransactionGap() \n
+if gap_root is None:\n
+  return [(\'\', \'Set Preferred GAP In preferences !\')]\n
 \n
 def getGapItemList(gap_root, portal_path): \n
   obj = context.portal_categories.resolveCategory(gap_root)\n
-  return  obj.getCategoryChildItemList(base=0, display_method=display, sort_method=sort)\n
+  return obj.getCategoryChildItemList(base=0, display_method=display, sort_method=sort)\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
-getGapItemList = CachingMethod(getGapItemList, id=\'Account.getGapItemList\')\n
+getGapItemList = CachingMethod(getGapItemList, id=\'Account_getGapItemList\')\n
 gap_item_list  = getGapItemList(gap_root=gap_root, portal_path=context.portal_url())\n
 \n
 # Don\'t return the last item, which is the gap_root (like "fr/pcg")\n
@@ -127,12 +136,13 @@ return gap_item_list[:-1]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
+                            <string>display_cache</string>
                             <string>display</string>
                             <string>sort</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>gap_root</string>
-                            <string>KeyError</string>
+                            <string>None</string>
                             <string>getGapItemList</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
