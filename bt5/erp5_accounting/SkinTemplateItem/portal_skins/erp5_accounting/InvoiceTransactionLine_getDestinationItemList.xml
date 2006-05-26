@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -66,42 +68,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
+            <value> <string>category_dict = {\n
+  \'income\': \'account_type/expense\',\n
+  \'expense\': \'account_type/income\',\n
+  \'payable\': \'account_type/asset/receivable\',\n
+  \'receivable\': \'account_type/liability/payable\',\n
+  \'collected_vat\': \'account_type/asset/receivable/refundable_vat\',\n
+  \'refundable_vat\': \'account_type/liability/payable/collected_vat\',\n
+  \'bank\': \'account_type/asset/cash\',\n
+  \'cash\': \'account_type/asset/cash\',\n
+}\n
 \n
-category_dict = {\'income\': \'portal_categories/account_type/expense\',\n
-                 \'expense\': \'portal_categories/account_type/income\',\n
-                 \'payable\': \'portal_categories/account_type/asset/receivable\',\n
-                 \'receivable\': \'portal_categories/account_type/liability/payable\',\n
-                 \'collected_vat\': \'portal_categories/account_type/asset/receivable/refundable_vat\',\n
-                 \'refundable_vat\': \'portal_categories/account_type/liability/payable/collected_vat\',\n
-                 \'bank\': \'portal_categories/account_type/asset/cash\',\n
-                 \'cash\': \'portal_categories/account_type/asset/cash\',\n
-                 }\n
-\n
-if context.id in category_dict:\n
-  category = category_dict[context.id]\n
-else:\n
-  category = \'portal_categories/account_type\'\n
-\n
-display_dict = {}\n
-display_funct = context.Account_getFormattedTitle\n
-\n
-def display(x):\n
-  display_dict[x] = display_funct(x)\n
-  return display_dict[x]\n
-\n
-def sort(x,y):\n
-  return cmp(display(x), display(y))\n
-\n
-def getItemList(category=None, portal_path=None):\n
-  obj = context.restrictedTraverse(category)\n
-  item_list = obj.getCategoryMemberItemList(portal_type=\'Account\', base=0,\n
-                                            display_method=display, sort_method=sort)\n
-  return item_list\n
-\n
-getItemList = CachingMethod(getItemList, id=(\'getInvoiceTransactionLineItemList\', \'getItemList\'))\n
-portal_path = context.getPortalObject().getPhysicalPath()\n
-return getItemList(category=category, portal_path=portal_path)\n
+return context.InvoiceTransactionLine_getSourceItemList(\n
+     category_dict=category_dict,\n
+     caching_method_id=\'InvoiceTransactionLine_getDestinationItemList\' )\n
 </string> </value>
         </item>
         <item>
@@ -148,20 +128,9 @@ return getItemList(category=category, portal_path=portal_path)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
                             <string>category_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getitem_</string>
-                            <string>category</string>
-                            <string>display_dict</string>
-                            <string>display_funct</string>
-                            <string>display</string>
-                            <string>sort</string>
-                            <string>None</string>
-                            <string>getItemList</string>
-                            <string>portal_path</string>
                           </tuple>
                         </value>
                     </item>

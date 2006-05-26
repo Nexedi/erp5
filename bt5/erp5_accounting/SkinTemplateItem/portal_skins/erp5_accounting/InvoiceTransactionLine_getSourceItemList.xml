@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -68,42 +70,55 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
-category_dict = {\'income\': \'account_type/income\',\n
-                 \'expense\': \'account_type/expense\',\n
-                 \'payable\': \'account_type/liability/payable\',\n
-                 \'receivable\': \'account_type/asset/receivable\',\n
-                 \'collected_vat\': \'account_type/liability/payable/collected_vat\',\n
-                 \'refundable_vat\': \'account_type/asset/receivable/refundable_vat\',\n
-                 \'bank\': \'account_type/asset/cash\',\n
-                 }\n
-category = category_dict.get(context.id, \'account_type\')\n
+if category_dict is None:\n
+  # this code is shared by InvoiceTransactionLine_getSourceItemList, \n
+  # which provides it\'s own dict\n
+  category_dict = {\n
+    \'income\': \'account_type/income\',\n
+    \'expense\': \'account_type/expense\',\n
+    \'payable\': \'account_type/liability/payable\',\n
+    \'receivable\': \'account_type/asset/receivable\',\n
+    \'collected_vat\': \'account_type/liability/payable/collected_vat\',\n
+    \'refundable_vat\': \'account_type/asset/receivable/refundable_vat\',\n
+    \'bank\': \'account_type/asset/cash\',\n
+  }\n
+category = category_dict.get(context.getId(), \'account_type\')\n
 \n
-display_dict = {}\n
+\n
+display_cache = {}\n
 display_funct = context.Account_getFormattedTitle\n
 \n
 def display(x):\n
-  display_dict[x] = display_funct(x)\n
-  return display_dict[x]\n
+  if x not in display_cache:\n
+    display_cache[x] = display_funct(x)\n
+  return display_cache[x]\n
 \n
 def sort(x,y):\n
   return cmp(display(x), display(y))\n
 \n
-def getItemList(category=None, portal_path=None, user_name = None, simulation_state = None):\n
+def getItemList(category=None, portal_path=None, user_name=None, simulation_state=None):\n
+  """Returns a list of Account path items. """\n
   cat = context.portal_categories.resolveCategory(category)\n
   filter_dict = {}\n
-  # we don\'t filter in "old" transactions or report / search dialogs\n
+\n
+  # we don\'t filter in existing transactions or report / search dialogs\n
   if simulation_state not in (\'delivered\', \'cancelled\', \'no_simulation_state\') :\n
-      filter_dict[\'validation_state\'] = (\'draft\', \'validated\')\n
+    filter_dict[\'validation_state\'] = (\'draft\', \'validated\')\n
+  \n
   item_list = cat.getCategoryMemberItemList(portal_type=\'Account\', base=0,\n
-                                            display_method=display, sort_method=sort, filter=filter_dict)\n
+                      display_method=display, sort_method=sort, filter=filter_dict)\n
   return item_list\n
 \n
-getItemList = CachingMethod(getItemList, id=(\'getInvoiceTransactionLineItemList\', \'getItemList\'))\n
-portal_path = context.getPortalObject().getPhysicalPath()\n
+# wrap the previous method in a cache\n
+getItemList = CachingMethod(getItemList, id=caching_method_id)\n
 \n
-return getItemList( category=category, portal_path=portal_path, \n
-                                user_name=context.REQUEST.AUTHENTICATED_USER,\n
-                                simulation_state = context.getProperty(\'simulation_state\', \'no_simulation_state\') )\n
+# the cache vary with the simulation state of the current transaction,\n
+# to display all accounts when the transaction is already delivered.\n
+return getItemList( category=category,\n
+                    portal_path=context.getPortalObject().getPhysicalPath(), \n
+                    user_name=context.REQUEST.AUTHENTICATED_USER,\n
+                    simulation_state=context.getProperty(\n
+                          \'simulation_state\', \'no_simulation_state\') )\n
 </string> </value>
         </item>
         <item>
@@ -124,7 +139,7 @@ return getItemList( category=category, portal_path=portal_path, \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>category_dict=None, caching_method_id=\'InvoiceTransactionLine_getSourceItemList\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,25 +159,25 @@ return getItemList( category=category, portal_path=portal_path, \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>category_dict</string>
+                            <string>caching_method_id</string>
                             <string>Products.ERP5Type.Cache</string>
                             <string>CachingMethod</string>
-                            <string>category_dict</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>category</string>
-                            <string>display_dict</string>
+                            <string>display_cache</string>
                             <string>display_funct</string>
                             <string>display</string>
                             <string>sort</string>
-                            <string>None</string>
                             <string>getItemList</string>
-                            <string>portal_path</string>
                           </tuple>
                         </value>
                     </item>
@@ -174,7 +189,10 @@ return getItemList( category=category, portal_path=portal_path, \n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <string>InvoiceTransactionLine_getSourceItemList</string>
+              </tuple>
             </value>
         </item>
         <item>
