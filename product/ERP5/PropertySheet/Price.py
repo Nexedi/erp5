@@ -87,5 +87,5 @@ class Price:
             'mode'        : 'w' },
     )
 
-  _categories = ( 'price_currency', )
+    _categories = ( 'price_currency', )
 
