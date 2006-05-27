@@ -35,7 +35,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5Subversion import _dtmldir
 from Products.ERP5Subversion.SubversionClient import newSubversionClient
-import os, re, pysvn
+import os, re
 from DateTime import DateTime
 from cPickle import dumps, loads
 from App.config import getConfiguration
@@ -47,6 +47,11 @@ from dircache import listdir
 from OFS.Traversable import NotFound
 from Products.ERP5Type.patches.copyTree import copytree, Error
 from Products.ERP5Type.patches.cacheWalk import cacheWalk
+
+try:
+  import pysvn
+except ImportError:
+  pysvn = None
 
 try:
   from base64 import b64encode, b64decode
