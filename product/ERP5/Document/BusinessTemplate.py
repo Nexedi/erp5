@@ -431,7 +431,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         groups = deepcopy(obj.groups)
       if id_list:
         self.build_sub_objects(context, id_list, relative_url)
-        for id_ in id_list:
+        for id_ in list(id_list):
           obj._delObject(id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
@@ -452,7 +452,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         groups = deepcopy(obj.groups)
       if len(id_list) > 0:
         self.build_sub_objects(context, id_list, relative_url)
-        for id_ in id_list:
+        for id_ in list(id_list):
           obj._delObject(id_)
       if hasattr(aq_base(obj), 'groups'):
         obj.groups = groups
@@ -759,7 +759,7 @@ class PathTemplateItem(ObjectTemplateItem):
         if len(id_list) > 0:
           if include_subobjects:
             self.build_sub_objects(context, id_list, relative_url)
-          for id_ in id_list:
+          for id_ in list(id_list):
             obj._delObject(id_)
         if hasattr(aq_base(obj), 'groups'):
           obj.groups = groups
@@ -781,7 +781,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       id_list = obj.objectIds()
       if id_list:
         self.build_sub_objects(context, id_list, relative_url)
-        for id_ in id_list:
+        for id_ in list(id_list):
           obj._delObject(id_)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
@@ -797,10 +797,10 @@ class CategoryTemplateItem(ObjectTemplateItem):
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
         self.build_sub_objects(context, id_list, relative_url)
-        for id_ in id_list:
+        for id_ in list(id_list):
           obj._delObject(id_)
       else:
-        for id_ in id_list:
+        for id_ in list(id_list):
           obj._delObject(id_)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()

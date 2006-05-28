@@ -1496,7 +1496,19 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     Check presence of trash tool
     """
     self.failUnless(self.getSimulationTool() is not None)
-          
+  
+  def stepCheckSubobjectsNotIncluded(self, sequence=None,
+                                     sequence_list=None, **kw):
+    """Check subobjects are not included in the base category.
+    """
+    base_category_id = sequence.get('bc_id')
+    bt = sequence.get('current_bt')
+    # XXX maybe too low level
+    base_category_obj = bt._category_item._objects.get(
+        'portal_categories/%s' % base_category_id)
+    self.failUnless(base_category_obj is not None)
+    self.assertEquals(len(base_category_obj.objectIds()), 0)
+
   # tests
   def test_01_checkNewSite(self, quiet=0, run=run_all_test):
     if not run: return
@@ -2640,7 +2652,31 @@ class TestBusinessTemplate(ERP5TypeTestCase):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)      
+    sequence_list.play(self)
+  
+  
+  def test_21_CategoryIncludeSubobjects(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Category includes subobjects'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateBaseCategory \
+                       CreateCategories \
+                       CreateSubCategories \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddBaseCategoryToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckSubobjectsNotIncluded \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 if __name__ == '__main__':
   framework()
