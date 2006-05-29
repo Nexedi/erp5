@@ -1,3 +1,6 @@
+2006-05-29 jerome
+* Set acquisition on price_currency category
+
 2006-05-15 jerome
 * removed 'transactions' view from Bank Account ptype. It is part of erp5_accounting.
 

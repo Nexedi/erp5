@@ -43,8 +43,16 @@
             </value>
         </item>
         <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>parent</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalSupplyTypeList() + portal.getPortalSupplyPathTypeList() + (\'Currency\', ))</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -52,6 +60,12 @@
               <tuple>
                 <string>price_currency</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
