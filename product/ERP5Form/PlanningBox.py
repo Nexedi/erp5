@@ -509,19 +509,36 @@ class PlanningBoxWidget(Widget.Widget):
 
 
   property_names = Widget.Widget.property_names +\
-  ['representation_type','main_axis_groups','size_header_height', 'size_border_width_left',
-   'size_planning_width', 'size_y_axis_width','size_y_axis_space','size_planning_height','size_x_axis_height',
-   'size_x_axis_space', 'y_axis_position', 'x_axis_position', 'delimiter',
+  [# kind of display : YX or XY
+   'representation_type',
+   # number of groups over the main axis
+   'main_axis_groups',
+   # width properties
+   'size_border_width_left','size_planning_width','size_y_axis_space','size_y_axis_width',
+   # height properties
+   'size_header_height', 'size_planning_height','size_x_axis_space','size_x_axis_height',
+   # axis position
+   'y_axis_position', 'x_axis_position',
    'report_root_list','selection_name',
    'portal_types','sort',
    'list_method',
-   'stat_method',
-   'title_line','x_start_bloc','x_stop_bloc',
-   'y_axis_method','constraint_method','split_method','color_script',
-   'round_script','sec_axis_script','info_center',
-   'info_topleft','info_topright','info_backleft','info_backright',
-   'security_index']
+   # method used to get title of each line
+   'title_line',
+   # specific block properties
+   'x_start_bloc','x_stop_bloc', 'y_size_block',
+   # name of scripts 
+   'stat_method','split_method','color_script','round_script','sec_axis_script',
+   # number of delimitations over the secondary axis
+   'delimiter',
+   # specific methods for inserting info block
+   'info_center', 'info_topleft','info_topright','info_backleft','info_backright'
+   ]
 
+  """
+  'security_index'
+  # constraint method between block
+  'constraint_method',
+  """
   # Planning properties (accessed through Zope Management Interface)
 
 
@@ -620,7 +637,6 @@ class PlanningBoxWidget(Widget.Widget):
       required = 1)
 
 
-
   default = fields.TextAreaField('default',
       title='Default',
       description=(
@@ -637,13 +653,11 @@ class PlanningBoxWidget(Widget.Widget):
       required=1)
 
 
-
   report_root_list = fields.ListTextAreaField('report_root_list',
       title="Report Root",
       description=("A list of domains which define the possible root."),
       default=[],
       required=0)
-
 
 
   selection_name = fields.StringField('selection_name',
@@ -652,11 +666,13 @@ class PlanningBoxWidget(Widget.Widget):
       default='',
       required=0)
 
+
   portal_types = fields.ListTextAreaField('portal_types',
       title="Portal Types",
       description=("Portal Types of objects to list. Required."),
       default=[],
       required=0)
+
 
   sort = fields.ListTextAreaField('sort',
       title='Default Sort',
@@ -664,17 +680,13 @@ class PlanningBoxWidget(Widget.Widget):
       default=[],
       required=0)
 
+
   list_method = fields.MethodField('list_method',
       title='List Method',
       description=("Method to use to list objects"),
       default='',
       required=0)
 
-  stat_method = fields.StringField('stat_method',
-      title="specific method used to generate statistics:",
-      description=("specific method for statistics"),
-      default='',
-      required=0)
 
   title_line = fields.StringField('title_line',
       title="specific method which fetches the title of each line: ",
@@ -699,10 +711,10 @@ class PlanningBoxWidget(Widget.Widget):
       default='stop_date',
       required=0)
 
-  y_axis_method = fields.StringField('y_axis_method',
-      title='specific method of data type for creating height of blocks',
+  y_size_block = fields.StringField('y_size_block',
+      title='specific property to get height of blocks (ex.quantity)',
       description=('Method for building height of blocks objects'),
-      default='',
+      default='quantity',
       required=0)
 
 
@@ -712,29 +724,37 @@ class PlanningBoxWidget(Widget.Widget):
       default='SET_DHTML',
       required=1)
 
+  stat_method = fields.StringField('stat_method',
+      title="name of script generating statistics:",
+      description=("script for statistics"),
+      default='',
+      required=0)
+
   split_method = fields.StringField('split_method',
-      title='Method to split activities into blocks',
-      description=("Method used to split activities into multiple blocks"),
+      title='name of script splitting activities into blocks',
+      description=("script for splitting activities into multiple blocks"),
       default='',
       required=0)
 
   color_script = fields.StringField('color_script',
-      title='name of script which allow to colorize blocks',
+      title='name of script colorizing blocks',
       description=('script for block colors object'),
       default='',
       required=0)
 
   round_script = fields.StringField('round_script',
-      title='name of script rounding block bounds when validating (ex. planning_roundBoundToDay)',
+      title='name of script rounding blocks during validation (ex. Planning_roundBoundToDay)',
       description=('script for block bounds rounding when validating'),
       default='',
       required=0)
 
+
   sec_axis_script = fields.StringField('sec_axis_script',
-      title='name of script building secondary axis (ex. planning_generateAxis)',
+      title='name of script building secondary axis (ex. Planning_generateAxis)',
       description=('script for building secondary axis'),
-      default='planning_generateAxis',
+      default='Planning_generateAxis',
       required=1)
+
 
   info_center = fields.StringField('info_center',
       title='specific method of data called for inserting info in\
@@ -831,14 +851,17 @@ class PlanningBoxWidget(Widget.Widget):
     # recover structure
     structure = REQUEST.get('structure')
 
-    #pdb.set_trace()
-    # getting HTML rendering Page Template
-    planning_html_method = getattr(REQUEST['here'],'planning_content')
+    if structure != None:
+      #pdb.set_trace()
+      # getting HTML rendering Page Template
+      planning_html_method = getattr(REQUEST['here'],'planning_content')
 
-    # recovering HTML data by calling Page Template document
-    HTML_data = planning_html_method(struct=structure)
+      # recovering HTML data by calling Page Template document
+      HTML_data = planning_html_method(struct=structure)
 
-    return HTML_data
+      return HTML_data
+    else:
+      return 'error'
 
 
   def render_structure(self, field, key, value, REQUEST, here):
@@ -885,7 +908,6 @@ class PlanningBoxWidget(Widget.Widget):
 
     #if selection.has_attribute('getParams'):
     #  params = selection.getParams()
-
     # CALL CLASS METHODS TO BUILD BASIC STRUCTURE
     # creating BasicStructure instance (and initializing its internal values)
     self.basic = BasicStructure(here=here,form=form, field=field, REQUEST=REQUEST, list_method=list_method, selection=selection, params = params, selection_name=selection_name, report_root_list=report_root_list, portal_types=portal_types, sort=sort, list_error=list_error)
@@ -1040,29 +1062,15 @@ class BasicStructure:
     ############## DEFINING STAT METHOD ##############
     ##################################################
     # XXX implementing this new functionality
-    #pdb.set_trace()
     stat_method = self.field.get_value('stat_method')
+    #stat_method = getattr(self.REQUEST['here'],stat_method)
+    stat_method = getattr(self.here,stat_method, None)
 
-    if hasattr(stat_method, 'method_name'):
-      if stat_method.method_name == 'objectValues':
-        stat_method = None # Nothing to do in this case
-        show_stat = 0
-      elif stat_method.method_name == 'portal_catalog':
-        # We use the catalog count results
-        stat_method = here.portal_catalog.countResults
-        show_stat = 1
-      else:
-        # Try to get the method through acquisition
-        try:
-          stat_method = getattr(here, stat_method.method_name)
-          show_stat = 1
-        except (AttributeError, KeyError):
-          show_stat = 0
-          pass
-    else:
-      # No stat method defined means no statistics displayed
-      stat_method = None
+
+    if stat_method == None:
       show_stat = 0
+    else:
+      show_stat = 1
 
 
 
@@ -1097,11 +1105,6 @@ class BasicStructure:
      report_depth=report_depth,is_report_opened=is_report_opened,
      sort_on=self.selection.sort_on,form_id=self.form.id)
 
-    # XXX fixing bug with make tree-list, unfolding reports to the 'n+1' level.
-    # report_list is now built from the report_group list.
-    #report_list = map(lambda s:s.getObject().getRelativeUrl(), report_tree_list)
-    #self.selection.edit(report_list=report_list)
-
     ##################################################
     ########### BUILDING REPORT_GROUPS ###############
     ##################################################
@@ -1126,119 +1129,8 @@ class BasicStructure:
 
 
 
-    #pdb.set_trace()
-    # now iterating through object_tree_list
 
-
-    """
-    for object_tree_line in report_tree_list:
-      # prepare query by defining selection report object
-      self.selection.edit(report = object_tree_line.getSelectDomainDict())
-
-      #if object_tree_line.getIsPureSummary():
-
-
-      if (object_tree_line.getIsPureSummary() and \
-         selection_report_path=='parent'):
-
-
-        # push new select_expression
-        original_select_expression = kw.get('select_expression')
-        kw['select_expression'] = select_expression
-        self.selection.edit(params = kw)
-        # XXX recovering statistics (will use them afterwards if necessary)
-        #stat_temp = self.selection(method = stat_method, context=self.here, REQUEST=self.REQUEST)
-        # pop new select_expression
-        if original_select_expression is None:
-          del kw['select_expression']
-        else:
-          kw['select_expression'] = original_select_expression
-
-
-        # object_tree_line is Pure summary : does not have any activity
-        stat_result = {}
-        index=1
-
-        # adding current line to report_section where
-        # line is pure Summary
-        self.report_groups += [object_tree_line]
-        self.nbr_groups = self.nbr_groups + 1
-
-
-        # resetting original value
-        #self.selection.edit(report = None)
-      else:
-        # object_tree_line is not pure summary : it has activities
-        # prepare query
-        self.selection.edit(params = kw)
-
-
-        if self.list_method not in (None,''):
-          # valid list_method has been found
-          self.selection.edit(exception_uid_list= \
-             object_tree_line.getExceptionUidList())
-          object_list = self.selection(method = self.list_method,
-             context=self.here, REQUEST=self.REQUEST)
-        else:
-          # no list_method found
-          object_list = self.here.portal_selections.getSelectionValueList(
-            self.selection_name, context=self.here, REQUEST=self.REQUEST)
-
-
-        exception_uid_list = object_tree_line.getExceptionUidList()
-        if exception_uid_list is not None:
-          # Filter folders if parent tree :
-          # build new object_list for current line
-          # (list of relative elements)
-          new_object_list = []
-          for selected_object in object_list:
-            if selected_object.getUid() not in exception_uid_list:
-              new_object_list.append(selected_object)
-          object_list = new_object_list
-
-
-        #object_list = []
-        add=1
-        new_list = [x.getObject() for x in object_list]
-        object_list = new_list
-
-        # comparing report_groups'object with object_tree_line to check
-        # if the object is already present.
-        # this has to be done as there seems to be a 'bug' with make_tree_list
-        # returning two times the same object...
-        already_in_list = 0
-        for object in self.report_groups:
-          if getattr(object_tree_line.getObject(),'uid') == \
-           getattr(object.getObject(),'uid'): #and not(object_tree_line.getIsPureSummary()):
-            # object already present, flag <= 0 to prevent new add
-            already_in_list = 1
-            #add=0
-            break
-
-        if add == 1: # testing : object not present, can add it
-          # adding current line to report_section where
-          # line is report_tree
-          if already_in_list:
-            pass
-            #self.report_groups = self.report_groups[:-1]
-          else:
-            self.report_groups += [object_tree_line]
-          self.nbr_groups += 1
-          #for p_object in object_list:
-            #iterating and adding each object to current_list
-          #  object_list.append(p_object)
-          # XXX This not a good idea at all to use the title as a key of the
-          # dictionnary
-          self.report_activity_dict[object_tree_line.getObject().getTitle()] = object_list 
-
-
-        # resetting original value
-        self.selection.edit(report = None)
-    """
-
-    # XXX just for testing
-    show_stat = 0
-
+    # now iterating through report_tree_list
     for object_tree_line in report_tree_list:
       # prepare query by defining selection report object
       self.selection.edit(report = object_tree_line.getSelectDomainDict())
@@ -1255,12 +1147,10 @@ class BasicStructure:
         original_select_expression = kw.get('select_expression')
         kw['select_expression'] = select_expression
         self.selection.edit(params = kw)
-        # XXX recovering statistics
-        # need to recover a list of temporary objects
-        # should be improved to take several more parameters into account
-        #stat_list = self.selection(method = stat_method, context=self.here, REQUEST=self.REQUEST)
-        stat_list = self.stat_method(selection= self.selection, report_tree_list=report_tree_list, object_tree_line= object_tree_line, context=self.here, REQUEST=self.REQUEST)
-        # pop new select_expression
+        # recovering statistics if needed
+        # getting list of statistic blocks
+        stat_list = stat_method(selection=self.selection, list_method=self.list_method, selection_context=self.here, report_tree_list=report_tree_list, object_tree_line=object_tree_line, REQUEST=self.REQUEST, field=self.field)
+
         if original_select_expression is None:
           del kw['select_expression']
         else:
@@ -1316,13 +1206,6 @@ class BasicStructure:
             pass
         else:
           # object is pure summary !
-
-          # XXX useless as properties are recovered while creating AxisGroup
-          # recovering object_line properties to display good link
-          #stat_context = object_tree_line.getObject().asContext()
-          #stat_context.absolute_url = object_tree_line.getObject().absolute_url()
-          #stat_context.domain_url = object_tree_line.getObject().getRelativeUrl()
-
           if len(object_list) and object_tree_line.is_open:
             # pure summary, open, and has object_list
             # case = ?!?
@@ -1347,10 +1230,7 @@ class BasicStructure:
     self.selection.edit(report = None)
 
     self.selection.edit(report_list=None)
-    #LOG('self.report_activity_dict',0,self.report_activity_dict)
 
-
-    #pdb.set_trace()
     # update report list if report_depth was specified
     if report_depth is not None:
       unfolded_list = []
@@ -1368,6 +1248,8 @@ class BasicStructure:
     # for main to be able to generate a 'smart' structure taking into account
     # only the area that need to be rendered. This prevents from useless processing
 
+
+    
     # calculating main axis bounds
     self.getMainAxisInfo(self.main_axis_info)
 
@@ -1397,7 +1279,6 @@ class BasicStructure:
     self.getSecondaryAxisInfo(self.secondary_axis_info)
 
 
-
     ##################################################
     ####### SAVING NEW PROPERTIES INTO REQUEST #######
     ##################################################
@@ -1421,45 +1302,6 @@ class BasicStructure:
     return 1
 
 
-  def stat_method(self, selection=None, report_tree_list = None, object_tree_line=None, context=None, REQUEST=None):
-    """
-    XXX temporary function to recover statistics when needed
-    returns a list with temporary objects
-    """
-    from Products.ERP5Type.Document import newTempBase
-
-
-    # first recovering methods to apply on tasks
-    start_property_id = self.field.get_value('x_start_bloc')
-    stop_property_id= self.field.get_value('x_stop_bloc')
-
-    # XXX need to find a way to get all related objects with their sub-objects
-    # this list of objects must be stored in a list
-    # for now considering applying statistics on object_list
-    self.selection.edit(exception_uid_list= object_tree_line.getExceptionUidList())
-    input_object_list = self.selection(method = self.list_method,context=self.here,
-                                      REQUEST=self.REQUEST)
-
-
-    temp_object_list = []
-    temp_object_id = 0
-    # now applying statictic rule.
-    # for now statistic rules are static
-    for input_object in input_object_list:
-      # recovering input_object attributes
-      block_begin = input_object.getObject().getProperty(start_property_id)
-      block_end = input_object.getObject().getProperty(stop_property_id)
-      # creating new object
-      temp_object = newTempBase(context.getPortalObject(),temp_object_id)
-      # editing object with new values
-      setattr(temp_object,start_property_id,block_begin)
-      setattr(temp_object,stop_property_id, block_end)
-      # adding new object to list
-      temp_object_list.append(temp_object)
-      temp_object_id += 1
-
-    return temp_object_list
-
 
   def getSecondaryAxisOccurence(self):
     """
@@ -1471,49 +1313,23 @@ class BasicStructure:
     start_property_id = self.field.get_value('x_start_bloc')
     stop_property_id= self.field.get_value('x_stop_bloc')
     for (object_tree_group, object_list, info_dict) in self.report_groups:
-      # recover method to et begin and end limits
-
-
-      #try:
-      #  child_activity_list = self.report_activity_dict[object_tree_group.getObject().getTitle()]
-      #except (AttributeError, KeyError):
-      #  child_activity_list = None
+      # recover method to get begin and end limits
 
       #if method_start == None and child_activity_list != None:
       if object_list not in (None, [], {}) :
-        if not info_dict['stat']:
-          for object_request in object_list:
+        for object_request in object_list:
 
-            if start_property_id != None:
-              block_begin = object_request.getObject().getProperty(start_property_id)
-            else:
-              block_begin = None
+          if start_property_id != None:
+            block_begin = object_request.getObject().getProperty(start_property_id)
+          else:
+            block_begin = None
 
-            if stop_property_id != None:
-              block_stop = object_request.getObject().getProperty(stop_property_id)
-            else:
-              block_stop = None
-            secondary_axis_occurence.append([block_begin,block_stop])
-        else:
-          # in case stat line
-          for temp_object in object_list:
-
-            if start_property_id != None:
-              block_begin = getattr(temp_object.getObject(),start_property_id)
-            else:
-              block_begin = None
-
-            if stop_property_id != None:
-              block_stop = getattr(temp_object.getObject(),stop_property_id)
-            else:
-              block_stop = None
-            secondary_axis_occurence.append([block_begin,block_stop])
-
+          if stop_property_id != None:
+            block_stop = object_request.getObject().getProperty(stop_property_id)
+          else:
+            block_stop = None
+          secondary_axis_occurence.append([block_begin,block_stop])
       else:
-
-      #elif not info_dict['stat'] :
-        # method sucessfully recovered
-        # getting values
         if start_property_id != None:
           block_begin = object_tree_group.object.getObject().getProperty(start_property_id)
         else:
@@ -1526,9 +1342,8 @@ class BasicStructure:
 
         secondary_axis_occurence.append([block_begin,block_stop])
 
-
-
     return secondary_axis_occurence
+
 
 
   def getSecondaryAxisInfo(self, axis_dict):
@@ -1538,7 +1353,6 @@ class BasicStructure:
     it is now possible to recover begin and end value of the planning and then
     apply selection informations to get start and stop.
     """
-
     axis_dict['zoom_start'] = int(self.params.get('zoom_start',0))
     axis_dict['zoom_level'] = float(self.params.get('zoom_level',1))
 
@@ -1550,6 +1364,12 @@ class BasicStructure:
         axis_dict['bound_begin'] = occurence[0]
       if (occurence[1] > axis_dict['bound_end'] or axis_dict['bound_end'] == None) and occurence[1] != None:
         axis_dict['bound_end'] = occurence[1]
+
+    if axis_dict['bound_end']==None or axis_dict['bound_begin']==None:
+      # XXX need to handle this kind of error :
+      # no bounds over the secondary axis have been defined
+      return PlanningError(error_name,error_message)
+
     axis_dict['bound_range'] = axis_dict['bound_end'] - axis_dict['bound_begin']
     # now start and stop have the extreme values of the second axis bound.
     # this represents in fact the size of the Planning
@@ -1577,6 +1397,7 @@ class BasicStructure:
     self.params['zoom_start'] = axis_dict['zoom_start']
 
 
+
   def getMainAxisInfo(self, axis_dict):
     """
     getting main axis properties (total pages, current page, groups per page)
@@ -1586,11 +1407,9 @@ class BasicStructure:
     case of report tree (if the first element is a sub group of a report for
     example).
     """
-
-
     axis_dict['bound_axis_groups'] = self.field.get_value('main_axis_groups')
     if axis_dict['bound_axis_groups'] == None:
-      #XXX raise exception : no group defined
+      #XXX raise exception : no group nb/page defined
       pass
 
 
@@ -1752,10 +1571,10 @@ class BasicGroup:
     info_backright_method = getattr(self.object.getObject(),info_backright,None)
 
     # if method recovered is not null, then updating
-    if info_center_method!=None: info['info_center']=str(info_center_method())
-    if info_topright_method!=None: info['info_topright']=str(info_topright_method())
-    if info_topleft_method!=None: info['info_topleft']=str(info_topleft_method())
-    if info_backleft_method!=None: info['info_backleft'] =str(info_backleft_method())
+    if info_center_method!=None: info['info_center']      =str(info_center_method())
+    if info_topright_method!=None: info['info_topright']  =str(info_topright_method())
+    if info_topleft_method!=None: info['info_topleft']    =str(info_topleft_method())
+    if info_backleft_method!=None: info['info_backleft']  =str(info_backleft_method())
     if info_backright_method!=None: info['info_backright']=str(info_backright_method())
 
 
@@ -1779,12 +1598,12 @@ class BasicGroup:
         block_begin = None
         block_end = None
         if object_property_begin !=None:
-          block_begin = activity_content.getObject().getProperty(object_property_begin)
+          block_begin = getattr(activity_content.getObject(),object_property_begin)
         else:
           block_begin = None
 
         if object_property_end != None:
-          block_end = activity_content.getObject().getProperty(object_property_end)
+          block_end = getattr(activity_content.getObject(),object_property_end)
         else:
           block_end = None
 
@@ -1814,43 +1633,68 @@ class BasicGroup:
             block_stop = block_end
 
           # defining name
-          name = "Activity_%s_%s" % (self.object.getObject().getTitle(),str(indic))
+          #name = "Activity_%s_%s" % (self.object.getObject().getTitle(),str(indic))
+          name = "Activity_%s" % (str(indic))
 
-          # getting info text from activity itself if exists
-          info_center_method = getattr(activity_content,info_center,None)
-          info_topright_method = getattr(activity_content,info_topright,None)
-          info_topleft_method = getattr(activity_content,info_topleft,None)
-          info_backleft_method = getattr(activity_content,info_backleft,None)
-          info_backright_method = getattr(activity_content,info_backright,None)
-
-          # if value recovered is not null, then updating 
-          if info_center_method!=None: info['info_center']=str(info_center_method())
-          if info_topright_method!=None: info['info_topright']=str(info_topright_method())
-          if info_topleft_method!=None: info['info_topleft']=str(info_topleft_method())
-          if info_backleft_method!=None: info['info_backleft'] =str(info_backleft_method())
-          if info_backright_method!=None: info['info_backright']=str(info_backright_method())
-
-          color_script = getattr(activity_content.getObject(), self.field.get_value('color_script'),None)
-          # calling color script if exists to set up activity_color
-          current_color=''
-          if color_script !=None:
-            current_color = color_script(activity_content.getObject())
-
-          # testing if some activities have errors
           error = 'false'
-          if list_error not in (None, []):
-            for activity_error in list_error:
-              if activity_error[0][0] == name:
-                error = 'true'
-                break
+          current_color=''
 
-          stat_result = {}
-          stat_context = activity_content.getObject().asContext(**stat_result)
-          stat_context.domain_url = activity_content.getObject().getRelativeUrl()
-          stat_context.absolute_url = lambda x: activity_content.getObject().absolute_url()
+          if self.property_dict['stat'] == 1:
+            info = None
+            info = {}
+            info['info_center'] = ''
+            info['info_topright'] = ''
+            info['info_topleft'] = ''
+            info['info_backleft'] = ''
+            info['info_backright'] = ''
+            title = ''
+            object = activity_content
+            url=''
+            object_property_height = self.field.get_value('y_size_block')
+            height = getattr(activity_content.getObject(),object_property_height)
+          else:
+            info = None
+            info = {}
+            # getting info text from activity itself if exists
+            info_center_method = getattr(activity_content,info_center,None)
+            info_topright_method = getattr(activity_content,info_topright,None)
+            info_topleft_method = getattr(activity_content,info_topleft,None)
+            info_backleft_method = getattr(activity_content,info_backleft,None)
+            info_backright_method = getattr(activity_content,info_backright,None)
+
+            # if value recovered is not null, then updating 
+            if info_center_method!=None: info['info_center']=str(info_center_method())
+            if info_topright_method!=None: info['info_topright']=str(info_topright_method())
+            if info_topleft_method!=None: info['info_topleft']=str(info_topleft_method())
+            if info_backleft_method!=None: info['info_backleft'] =str(info_backleft_method())
+            if info_backright_method!=None: info['info_backright']=str(info_backright_method())
+
+            title = info['info_center']
+
+            color_script = getattr(activity_content.getObject(), self.field.get_value('color_script'),None)
+            # calling color script if exists to set up activity_color
+            if color_script !=None:
+              current_color = color_script(activity_content.getObject())
+
+            # testing if some activities have errors
+            if list_error not in (None, []):
+              for activity_error in list_error:
+                if activity_error[0][0] == name:
+                  error = 'true'
+                  break
+
+            stat_result = {}
+            stat_context = activity_content.getObject().asContext(**stat_result)
+            stat_context.domain_url = activity_content.getObject().getRelativeUrl()
+            stat_context.absolute_url = lambda x: activity_content.getObject().absolute_url()
+            object = stat_context.getObject()
+            url = stat_context.getUrl()
+
+            # XXX should define height of block here
+            height = None
 
           # creating new activity instance
-          activity = BasicActivity(title=info['info_center'],name=name,object = stat_context.getObject(),  url=stat_context.getUrl(),absolute_begin=block_begin, absolute_end=block_end, absolute_start = block_start, absolute_stop = block_stop, color = current_color, info_dict=info, error=error)
+          activity = BasicActivity(title=title, name=name, object=object, url=url, absolute_begin=block_begin, absolute_end=block_end, absolute_start=block_start, absolute_stop=block_stop, height = height, color=current_color, info_dict=info, error=error, property_dict=self.property_dict)
 
 
           # adding new activity to personal group activity list
@@ -1863,8 +1707,6 @@ class BasicGroup:
           # group (used for Activity naming)
           indic += 1
 
-          info = None
-          info = {}
 
 
     else:
@@ -1924,8 +1766,11 @@ class BasicGroup:
         # defining name
         name = "Activity_%s" % (self.object.getObject().getTitle())
 
+        # height should be implemented here
+        height = None
+
         # creating new activity instance
-        activity = BasicActivity(title=info['info_center'], name=name, object = self.object.object, url=self.url, absolute_begin=block_begin, absolute_end=block_end, absolute_start=block_start, absolute_stop=block_stop,color = current_color, info_dict=info, error=error)
+        activity=BasicActivity(title=info['info_center'], name=name, object=self.object.object, url=self.url, absolute_begin=block_begin, absolute_end=block_end, absolute_start=block_start, absolute_stop=block_stop, height=height, color=current_color, info_dict=info, error=error, property_dict=self.property_dict)
 
         # adding new activity to personal group activity list
         try:
@@ -1943,7 +1788,7 @@ class BasicActivity:
       nothing about multitask rendering. """
 
   def __init__ (self, title='', name='',object = None, url='', absolute_begin=None,
-    absolute_end=None,absolute_start=None,absolute_stop=None, constraints='', color=None, error='false', info_dict= None):
+    absolute_end=None,absolute_start=None,absolute_stop=None, height=None, constraints='', color=None, error='false', info_dict= None, property_dict = {}):
     self.title = title
     self.name = name
     self.object = object
@@ -1953,10 +1798,12 @@ class BasicActivity:
     self.absolute_end = absolute_end
     self.absolute_start = absolute_start
     self.absolute_stop = absolute_stop
+    self.height = height
     self.constraints = constraints# constraints specific to the current Activity
     self.color = color
     self.info_dict = info_dict
     self.error = error
+    self.property_dict = property_dict # dict containing specific properties
 
 
 
@@ -1969,7 +1816,7 @@ class PlanningStructure:
       """
 
 
-  def __init__ (self,):
+  def __init__ (self):
     self.main_axis = ''
     self.secondary_axis = ''
     self.content = []
@@ -2056,10 +1903,7 @@ class PlanningStructure:
     # just need to pass start, stop, and the minimum number of delimiter wanted.
     # a structure is returned : list of delimiters, each delimiter defined by a
     # list [ relative position, title, tooltip , delimiter_type]
-
     delimiter_list = axis_script(axis_start,axis_stop,delimiter_min_number)
-
-
 
     axis_stop = int(axis_stop)
     axis_start = int(axis_start)
@@ -2131,10 +1975,11 @@ class PlanningStructure:
     build groups from activities saved in the structure groups.
     """
     axis_group_number = 0
+    #pdb.set_trace()
     axis_element_already_present=0
     for basic_group_object in basic_structure.basic_group_list:
       axis_group_number += 1
-      axis_group = AxisGroup(name='Group_' + str(axis_group_number), title=basic_group_object.title, object = basic_group_object.object, axis_group_number = axis_group_number, is_open=basic_group_object.is_open, is_pure_summary=basic_group_object.is_pure_summary, url = basic_group_object.url,depth = basic_group_object.depth, secondary_axis_start= self.secondary_axis.start, secondary_axis_stop= self.secondary_axis.stop)
+      axis_group = AxisGroup(name='Group_' + str(axis_group_number), title=basic_group_object.title, object = basic_group_object.object, axis_group_number = axis_group_number, is_open=basic_group_object.is_open, is_pure_summary=basic_group_object.is_pure_summary, url = basic_group_object.url,depth = basic_group_object.depth, secondary_axis_start= self.secondary_axis.start, secondary_axis_stop= self.secondary_axis.stop, property_dict = basic_group_object.property_dict)
       if self.render_format == 'YX':
         axis_group.position_y = axis_group.position_main
         axis_group.position_x = axis_group.position_secondary
@@ -2155,12 +2000,25 @@ class PlanningStructure:
       if basic_group_object.basic_activity_list != None:
         # need to check if activity list is not empty : possible in case zoom
         # selection is used over the secondary axis
-        for basic_activity_object in basic_group_object.basic_activity_list:
-          activity_number += 1
-          # create new activity in the PlanningStructure
-          activity = Activity(name='Group_' + str(axis_group_number) + '_Activity_' + str(activity_number), title=basic_activity_object.title, object=basic_activity_object.object, color=basic_activity_object.color, link=basic_activity_object.url, secondary_axis_begin=basic_activity_object.absolute_begin, secondary_axis_end=basic_activity_object.absolute_end, secondary_axis_start=basic_activity_object.absolute_start, secondary_axis_stop=basic_activity_object.absolute_stop, primary_axis_block=self, info=basic_activity_object.info_dict, render_format=self.render_format)
-          # adding activity to the current group
-          axis_group.addActivity(activity,axis_element_already_present)
+        if axis_group.property_dict['stat'] == 0:
+          # case group is task group. Using default method that
+          # generates automatically the necessary axis elements
+          for basic_activity_object in basic_group_object.basic_activity_list:
+            activity_number += 1
+            # create new activity in the PlanningStructure
+            activity = Activity(name='Group_' + str(axis_group_number) + '_Activity_' + str(activity_number), title=basic_activity_object.title, object=basic_activity_object.object, color=basic_activity_object.color, link=basic_activity_object.url, secondary_axis_begin=basic_activity_object.absolute_begin, secondary_axis_end=basic_activity_object.absolute_end, secondary_axis_start=basic_activity_object.absolute_start, secondary_axis_stop=basic_activity_object.absolute_stop, primary_axis_block=self, info=basic_activity_object.info_dict, render_format=self.render_format, property_dict = basic_group_object.property_dict)
+            # adding activity to the current group
+            axis_group.addActivity(activity,axis_element_already_present)
+        else:
+          # case group is stat group. Using special method that prevent
+          # from generating more than 1 axis element and divide tasks size if
+          # necessary
+          axis_group.addStatActivities(basic_activity_list=basic_group_object.basic_activity_list,
+               axis_group_number=axis_group_number,
+               axis_element_already_present  = axis_element_already_present,
+               render_format = self.render_format,
+               primary_axis_block=self,
+               property_dict = basic_group_object.property_dict)
       else:
         # basic_activity_list is empty : need to add a empty axis_element to
         # prevent bug or crash
@@ -2191,18 +2049,22 @@ class PlanningStructure:
     error_block_list = REQUEST.get('error_block_list',[])
     error_info_dict = REQUEST.get('error_info_dict',{})
 
-    
-    try:
-      for axis_group_object in self.main_axis.axis_group:
-        for axis_element_object in axis_group_object.axis_element_list:
-          for activity in axis_element_object.activity_list:
-            if activity.name in warning_activity_list:
-              warning = 1
-            else:
-              warning = 0
-            activity.addBlocs(main_axis_start=0, main_axis_stop=self.main_axis.size, secondary_axis_start=self.secondary_axis.start, secondary_axis_stop=self.secondary_axis.stop,planning=self, warning=warning, error_block_list=error_block_list, error_info_dict=error_info_dict)
-    except TypeError:
-      pass
+
+
+    for axis_group_object in self.main_axis.axis_group:
+      for axis_element_object in axis_group_object.axis_element_list:
+        for activity in axis_element_object.activity_list:
+          if activity.name in warning_activity_list:
+            warning = 1
+          else:
+            warning = 0
+          # generate activity_info
+          activity.addBlocs(main_axis_start=0, main_axis_stop=self.main_axis.size, secondary_axis_start=self.secondary_axis.start, secondary_axis_stop=self.secondary_axis.stop,planning=self, warning=warning, error_block_list=error_block_list, error_info_dict=error_info_dict)
+        if axis_group_object.property_dict['stat'] == 1:
+          # case stat group_object, need to update block size to display
+          # stats informations
+          axis_group_object.updateStatBlocks()
+
 
 
 
@@ -2216,7 +2078,7 @@ class Activity:
   structure is used for rebuilding tasks from bloc positions when
   validating the Planning.
   """
-  def __init__ (self,name=None, title=None, object=None, types=None, color=None, link=None, secondary_axis_begin=None, secondary_axis_end=None, secondary_axis_start=None, secondary_axis_stop=None, primary_axis_block=None, info=None, render_format='YX'):
+  def __init__ (self,name=None, title=None, object=None, types=None, color=None, link=None, height=None, secondary_axis_begin=None, secondary_axis_end=None, secondary_axis_start=None, secondary_axis_stop=None, primary_axis_block=None, info=None, render_format='YX', property_dict={} ):
     self.name = name # internal activity_name
     self.id = self.name
     self.title = title # displayed activity_name
@@ -2224,6 +2086,7 @@ class Activity:
     self.types = types # activity, activity_error, info
     self.color = color # color used to render all Blocs
     self.link = link # link to the ERP5 object
+    self.height = height
     # self.constraints = constraints
     self.block_list = None # contains all the blocs used to render the activity
     self.secondary_axis_begin =secondary_axis_begin
@@ -2235,11 +2098,12 @@ class Activity:
     self.info = info
     self.parent_axis_element = None
     self.render_format= render_format
+    self.property_dict = property_dict
 
 
   def get_error_message (self, Error):
     # need to update the error message
-    return 'et paf, à coté de la ligne !'
+    return 'task %s (%s)not validated' % (self.name, self.title)
 
 
   def isValidPosition(self, bound_begin, bound_end):
@@ -2255,7 +2119,6 @@ class Activity:
       return 1
     else:
       return 2
-
 
   def addBlocs(self, main_axis_start=None, main_axis_stop=None, secondary_axis_start=None, secondary_axis_stop=None,planning=None, warning=0, error_block_list=[], error_info_dict={}):
     """
@@ -2275,7 +2138,6 @@ class Activity:
 
     block_number = 0
     # iterating resulting list
-    #pdb.set_trace()
     for (start,stop,zone) in secondary_block_bounds:
 
       block_number += 1
@@ -2290,16 +2152,21 @@ class Activity:
         error = 0
         error_text=''
 
+      # zone property is used to check if block is a representative block or a
+      # display block. This value is associaded to each block returned through
+      # the splitActivity function.
+      # representative => standard block representing an active part of the task
+      # display => block representing a passive part of the task (week end, etc.)
+      if zone == 1:
+        # active
+        block_color = self.color
+        block_link = self.link
+      else:
+        # passive
+        block_color = '#D1E8FF'
+        block_link = ''
 
-      block_color = self.color
-      block_link = self.link
-      #if zone == 1:
-      #  block_color = ''
-      #  block_link = self.link
-      #else:
-      #  block_color = '#D1E8FF'
-      #  block_link = ''
-      new_block = Bloc(name= block_name,color=block_color,link=block_link, number = block_number, render_format=self.render_format, parent_activity=self, warning=warning, error=error, error_text=error_text,zone=zone)
+      new_block = Bloc(name= block_name,color=block_color,link=block_link, number = block_number, render_format=self.render_format, parent_activity=self, warning=warning, error=error, error_text=error_text,zone=zone, property_dict = self.property_dict)
 
 
       new_block.buildInfoDict(info_dict = self.info)
@@ -2376,7 +2243,6 @@ class Activity:
     # defining usefull list of data
     break_list = ['Saturday','Sunday']
     worked_list = ['Monday','Tuesday','Wednesday','Thursday','Friday']
-    switch_list = ['Monday','Saturday']
 
     if temp_start.Day() in break_list:
       # temp_start is in weekend,
@@ -2435,7 +2301,7 @@ class Bloc:
                 color=None, info=None, link=None, number=0,
                 constraints=None, secondary_start=None, secondary_stop=None,
                 render_format='YX', parent_activity = None, warning=0, error=0,
-                error_text='', zone=1):
+                error_text='', zone=1, property_dict ={} ):
     """
     creates a Bloc object
     """
@@ -2446,7 +2312,7 @@ class Bloc:
     self.link = link # on clic link
     self.number = number
     self.title=''
-    self.zone = zone
+    self.zone = zone # 1 = usefull area : 0 = useless one => splitting activities
     self.parent_activity = parent_activity
     self.constraints = constraints
     # setting warning and error flags in case parent_activity or block itself
@@ -2467,22 +2333,29 @@ class Bloc:
       self.position_y = self.position_secondary
       self.position_x = self.position_main
     self.render_dict = None
+    self.property_dict = property_dict # dict containing internal properties
 
   def buildInfoDict (self, info_dict=[]):
     """
     create Info objects to display text & images, then link them to the current object
     """
     #XXX /4
-    self.info = {}
-    title_list = []
 
-    title_list.append(self.buildInfo(info_dict=info_dict, area='info_topleft'))
-    title_list.append(self.buildInfo(info_dict=info_dict, area='info_topright'))
-    title_list.append(self.buildInfo(info_dict=info_dict, area='info_center'))
-    title_list.append(self.buildInfo(info_dict=info_dict, area='info_botleft'))
-    title_list.append(self.buildInfo(info_dict=info_dict, area='info_botright'))
     # updating title
-    self.title = " | ".join(title_list)
+    if self.property_dict['stat'] == 1:
+      self.title = str(self.parent_activity.height)
+      self.info = None
+    else:
+      self.info = {}
+      title_list = []
+      title_list.append(self.buildInfo(info_dict=info_dict, area='info_topleft'))
+      title_list.append(self.buildInfo(info_dict=info_dict, area='info_topright'))
+      title_list.append(self.buildInfo(info_dict=info_dict, area='info_center'))
+      title_list.append(self.buildInfo(info_dict=info_dict, area='info_botleft'))
+      title_list.append(self.buildInfo(info_dict=info_dict, area='info_botright'))
+      self.title = " | ".join(title_list)
+
+
     if self.error != 0:
       # field has error
       # adding text_error
@@ -2559,7 +2432,7 @@ class AxisGroup:
 
   def __init__ (self, name='', title='', object = None,
                 axis_group_list=None, axis_group_number=0,
-                axis_element_list=None, axis_element_number=0, delimiter_type = 0, is_open=0, is_pure_summary=1,depth=0, url=None, axis_element_already_insered= 0, secondary_axis_start=None, secondary_axis_stop=None):
+                axis_element_list=None, axis_element_number=0, delimiter_type = 0, is_open=0, is_pure_summary=1,depth=0, url=None, axis_element_already_insered= 0, secondary_axis_start=None, secondary_axis_stop=None, property_dict={}):
     self.name = name
     self.title = title
     self.link = None # link to fold or unfold current report in report-tree mode
@@ -2590,6 +2463,7 @@ class AxisGroup:
     # calendar output( were each axis_group has its own start and stop)
     self.secondary_axis_start = secondary_axis_start
     self.secondary_axis_stop = secondary_axis_stop
+    self.property_dict = property_dict
 
 
   security = ClassSecurityInfo()
@@ -2615,15 +2489,15 @@ class AxisGroup:
     #for i in range(self.depth):
     #  self.title = '| ' + self.title
     self.info_title.title = self.info_title.info
-    
+
     self.tooltip = self.info_title.info
 
 
   def addActivity(self, activity=None, axis_element_already_insered= 0):
     """
-    procedure that permits to add activity to the corresponding AxisElement.
-    can create new Axis Element in the actual Axisgroup if necessary.
-    Permits representation of MULTITASKING
+    procedure that permits to add activity to the corresponding AxisElement in
+    an AxisGroup. can create new Axis Element in the actual Axisgroup if
+    necessary. Permits representation of MULTITASKING
     """
 
     # declaring variable used to check if activity has already been added
@@ -2691,6 +2565,84 @@ class AxisGroup:
       # register the axis_element to the actual group.
       self.axis_element_list = []
       self.axis_element_list.append(new_axis_element)
+
+
+  def addStatActivities(self, basic_activity_list=None, axis_group_number=0, axis_element_already_present= 0, render_format=None, primary_axis_block=None, property_dict={}):
+    """
+    Permits to add stat block to the current AxisGroup. In this way use the
+    single AxisElement present to fit the blocks
+    """
+    # first adding axis_element to the current group
+    self.axis_element_number += 1
+    new_axis_element=AxisElement(name='Group_' + str(self.axis_group_number) + '_AxisElement_1', relative_number=self.axis_element_number, absolute_number=axis_element_already_present + self.axis_element_number, parent_axis_group=self)
+    new_axis_element.activity_list = []
+
+    self.axis_element_list = []
+    self.axis_element_list.append(new_axis_element)
+
+    activity_number = 0
+    # add all activities to the same axis_element
+    for basic_activity_object in basic_activity_list:
+
+      # defining Activity from basic_activity_object
+      activity = Activity(name= 'Group_%s_Activity_%s' %(str(axis_group_number),
+                                                         str(activity_number)),
+                          title=basic_activity_object.title,
+                          object=basic_activity_object.object,
+                          color=basic_activity_object.color,
+                          link=basic_activity_object.url,
+                          secondary_axis_begin=basic_activity_object.absolute_begin,
+                          secondary_axis_end=basic_activity_object.absolute_end,
+                          secondary_axis_start=basic_activity_object.absolute_start,
+                          secondary_axis_stop=basic_activity_object.absolute_stop,
+                          height=basic_activity_object.height,
+                          primary_axis_block=primary_axis_block,
+                          info=basic_activity_object.info_dict,
+                          render_format=render_format,
+                          property_dict = property_dict)
+      activity.parent_axis_element = new_axis_element
+
+      # append activity to current axis_element
+      new_axis_element.activity_list.append(activity)
+
+      activity_number +=1
+
+
+  def updateStatBlocks(self):
+    """
+    called once the blocks have been defined on all activities
+    if the current group is  stat group, then this method is called
+    process :
+      - find the largest element to display
+      - update size of all other elements
+    """
+    # usually should get only 1 axis_element : all stats are displayed on the
+    # same line.
+    max_activity_height = 0
+    for activity in self.axis_element_list[0].activity_list:
+      if activity.height > max_activity_height:
+        max_activity_height = activity.height
+
+    # now max height is known, just need to adapt size of all the blocks
+    # composing the activities
+    for activity in self.axis_element_list[0].activity_list:
+      if activity.height in (0,None):
+        relative_size = 1
+      else:
+        relative_size = float(activity.height) / max_activity_height
+      for block in activity.block_list:
+        # recovering original values
+        block_range = block.position_main.relative_range
+        block_begin = block.position_main.relative_begin
+        block_end   = block.position_main.relative_end
+        # calculating values
+        final_range = relative_size * block_range
+        final_loss = block_range - final_range
+        final_begin = block_begin + final_loss
+        # saving new values
+        block.position_main.relative_begin = final_begin
+        block.position_main.relative_range = final_range
+
 
 
 class AxisElement:
