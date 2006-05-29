@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">bfINCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -121,7 +123,7 @@ i = 0\n
 #for resource in context.Baobab_sortResourceTitleList(resource_dict.keys()):\n
 for resource in resource_dict.keys():\n
   variation_text = resource[1]\n
-  tmp_dict = {\'resource\':resource[0], \'variation_text\':variation_text}\n
+  tmp_dict = {\'resource_uid\':resource[0], \'variation_text\':variation_text}\n
   for variation in variation_text.split(\'/n\'):\n
     if variation.startswith(\'cash_status\'):\n
       tmp_dict[\'cash_status\'] = variation\n
