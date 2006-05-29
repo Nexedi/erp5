@@ -351,7 +351,10 @@ class TestERP5BankingMixin:
       for s in ['banque_interne', 'gros_versement', 'gros_payement']:
         s = surface.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
         for ss in ['guichet_1', 'guichet_2', 'guichet_3']:
-          ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s,))
+          ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s.getId(),))
+          for sss in ['encaisse_des_billets_et_monnaies',]:
+            sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s.getId(),))
+
       # create sort room
       salle_de_tri = surface.newContent(id='salle_de_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_de_tri')
       for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation']:
@@ -359,7 +362,7 @@ class TestERP5BankingMixin:
         if 'ventilation' in ss.getId():
           for country in ['France', 'Spain']:
             if country[0] != c.getCodification()[0]:
-              ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
+              ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
       # caveau
       caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
       for s in ['auxiliaire', 'reserve', 'externes', 'serre']:
@@ -372,7 +375,7 @@ class TestERP5BankingMixin:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         else:
           for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 'encaisse_des_billets_recus_pour_ventilation',]:
-          ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+            ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
           if 'ventilation' in ss.getId():
             for country in ['France', 'Spain']:
               if country[0] != c.getCodification()[0]:
