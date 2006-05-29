@@ -45,15 +45,16 @@ from Products.ERP5Type import Constraint
 from Products.ERP5Type import Interface
 from Products.ERP5Type import PropertySheet
 
-from zLOG import LOG, PROBLEM
+from zLOG import LOG, BLATHER, PROBLEM
 
 #####################################################
 # Global Switches
 #####################################################
 
-INITIALIZE_PRODUCT_RAD = 1 # If set to 0, product documents are not initialized
-                           # this will divide by two memory usage taken by getters and setters
-                           # 0 value is suggested for new ERP5 projetcs
+INITIALIZE_PRODUCT_RAD = 1 # If set to 0, product documents are not
+                           # initialized this will divide by two memory
+                           # usage taken by getters and setters 0 value
+                           # is suggested for new ERP5 projetcs
 
 #####################################################
 # Compatibility - XXX - BAD
@@ -81,7 +82,7 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
         if len(key) == 1:
           new_sort_on.append((key[0], reverse, None))
         elif len(key) == 2:
-          new_sort_on.append((key[0], 
+          new_sort_on.append((key[0],
                               key[1] in ('descending', 'reverse', 'DESC'),
                               None))
         else:
@@ -94,7 +95,7 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
           else:
             # XXX: For an unknown type, use a string.
             f=str
-          new_sort_on.append((key[0], 
+          new_sort_on.append((key[0],
                               key[1] in ('descending', 'reverse', 'DESC'),
                               f))
     sort_on = new_sort_on
@@ -117,7 +118,7 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
           break
       return result
 
-    if isinstance(value_list,LazyMap):
+    if isinstance(value_list, LazyMap):
       new_value_list = [x for x in value_list]
       value_list = new_value_list
     value_list.sort(sortValues)
@@ -174,6 +175,8 @@ def cartesianProduct(list_of_list):
 
 # Some list operations
 def keepIn(value_list, filter_list):
+  # XXX this is [x for x in value_list if x in filter_list]
+  warn()
   result = []
   for k in value_list:
     if k in filter_list:
@@ -181,6 +184,7 @@ def keepIn(value_list, filter_list):
   return result
 
 def rejectIn(value_list, filter_list):
+  # XXX this is [x for x in value_list if x not in filter_list]
   result = []
   for k in value_list:
     if not(k in filter_list):
@@ -210,19 +214,18 @@ def pathToUid(list):
 
 # Path
 def getPath(object_or_path, **kw):
-    """
-    Returns the absolute path of an object
-    """
-    if isinstance(object_or_path, (list, tuple)):
-      path = '/'.join(object_or_path)
-    elif isinstance(object_or_path, str):
-      path = object_or_path
-    else:
-      path = object_or_path.getPhysicalPath()
-      path = '/'.join(path)
-    if kw.get('tuple'):
-      return path.split('/')
-    return path
+  """Returns the absolute path of an object
+  """
+  if isinstance(object_or_path, (list, tuple)):
+    path = '/'.join(object_or_path)
+  elif isinstance(object_or_path, str):
+    path = object_or_path
+  else:
+    path = object_or_path.getPhysicalPath()
+    path = '/'.join(path)
+  if kw.get('tuple'):
+    return path.split('/')
+  return path
 
 
 #####################################################
@@ -247,11 +250,13 @@ def getModuleIdList(product_path, module_id):
           module_name = file_name[0:-3]
           module_name_list += [module_name]
   except:
-    LOG('ERP5Type:',0,'No PropertySheet directory in %s' % product_path)
+    LOG('ERP5Type:', BLATHER,
+        'No PropertySheet directory in %s' % product_path)
   return path, module_name_list
 
 # EPR5Type global modules update
-def updateGlobals( this_module, global_hook, permissions_module = None, is_erp5_type=0):
+def updateGlobals(this_module, global_hook,
+                  permissions_module=None, is_erp5_type=0):
   """
     This function does all the initialization steps required
     for a Zope / CMF Product
@@ -265,16 +270,12 @@ def updateGlobals( this_module, global_hook, permissions_module = None, is_erp5_
     # Update PropertySheet Registry
     for module_id in ('PropertySheet', 'Interface', 'Constraint', ):
       path, module_id_list = getModuleIdList(product_path, module_id)
-      #print path
-      #print module_id_list
       if module_id == 'PropertySheet':
         import_method = importLocalPropertySheet
       elif module_id == 'Interface':
         import_method = importLocalInterface
       elif module_id == 'Constraint':
         import_method = importLocalConstraint
-      else:
-        import_method = None
       for module_id in module_id_list:
         import_method(module_id, path=path)
 
@@ -319,17 +320,17 @@ class DocumentConstructor(Method):
     def __init__(self, klass):
       self.klass = klass
 
-    def __call__(self, folder, id, REQUEST=None, activate_kw=None, is_indexable=None, **kw):
+    def __call__(self, folder, id, REQUEST=None,
+                 activate_kw=None, is_indexable=None, **kw):
       o = self.klass(id)
       if activate_kw is not None:
         o._v_activate_kw = activate_kw
       if is_indexable is not None:
-        o.isIndexable=is_indexable
+        o.isIndexable = is_indexable
       folder._setObject(id, o)
       # if no activity tool, the object has already an uid
-      if getattr(aq_base(o),'uid',None) is None:
+      if getattr(aq_base(o),' uid', None) is None:
         o.uid = folder.portal_catalog.newUid()
-      #LOG('DocumentConstructor', 0, 'o = %r, kw = %r' % (o, kw))
       if kw: o.__of__(folder)._edit(force_update=1, **kw)
       if REQUEST is not None:
           REQUEST['RESPONSE'].redirect( 'manage_main' )
@@ -339,16 +340,19 @@ class TempDocumentConstructor(DocumentConstructor):
     def __call__(self, folder, id, REQUEST=None, **kw):
       o = self.klass(id)
       # Monkey patch TempBase specific arguments
-      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', 'setTitle', 'getTitle'):
+      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
+                'activate', 'setUid', 'setTitle', 'getTitle'):
         setattr(o, k, getattr(o,"_temp_%s" % k))
       o = o.__of__(folder)
-      if kw: o.__of__(folder)._edit(force_update=1, **kw)
+      if kw:
+        o.__of__(folder)._edit(force_update=1, **kw)
       return o
 
 python_file_parser = re.compile('^(.*)\.py$')
 
 def getLocalPropertySheetList():
-  if not getConfiguration: return []
+  if not getConfiguration:
+    return []
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
   file_list = os.listdir(path)
@@ -394,7 +398,6 @@ def importLocalPropertySheet(class_id, path = None):
   f = open(path)
   module = imp.load_source(class_id, path, f)
   setattr(PropertySheet, class_id, getattr(module, class_id))
-  #setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
   # Register base categories
   registerBaseCategories(getattr(module, class_id))
 
@@ -405,7 +408,6 @@ def registerBaseCategories(property_sheet):
   if isinstance(category_list, str):
     category_list = (category_list,)
   for bc in category_list :
-    #LOG('registerBaseCategories', 0, 'bc = %r in %s' % (bc, property_sheet))
     base_category_dict[bc] = 1
 
 def importLocalInterface(class_id, path = None):
@@ -429,7 +431,8 @@ def importLocalConstraint(class_id, path = None):
   setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
 
 def getLocalExtensionList():
-  if not getConfiguration: return []
+  if not getConfiguration:
+    return []
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
   file_list = os.listdir(path)
@@ -441,7 +444,8 @@ def getLocalExtensionList():
   return result
 
 def getLocalTestList():
-  if not getConfiguration: return []
+  if not getConfiguration:
+    return []
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "tests")
   file_list = os.listdir(path)
@@ -453,7 +457,8 @@ def getLocalTestList():
   return result
 
 def getLocalConstraintList():
-  if not getConfiguration: return []
+  if not getConfiguration:
+    return []
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Constraint")
   file_list = os.listdir(path)
@@ -576,6 +581,8 @@ def writeLocalDocument(class_id, text, create=1):
   f.write(text)
 
 def setDefaultClassProperties(property_holder):
+  """Initialize default properties for ERP5Type Documents.
+  """
   if not property_holder.__dict__.has_key('isPortalContent'):
     property_holder.isPortalContent = 1
   if not property_holder.__dict__.has_key('isRADContent'):
@@ -588,11 +595,13 @@ def setDefaultClassProperties(property_holder):
     property_holder.property_sheets = ()
   # Add default factory type information
   if not property_holder.__dict__.has_key('factory_type_information') and \
-         property_holder.__dict__.has_key('meta_type') and property_holder.__dict__.has_key('portal_type'):
+         property_holder.__dict__.has_key('meta_type') and \
+         property_holder.__dict__.has_key('portal_type'):
     property_holder.factory_type_information = \
       {    'id'             : property_holder.portal_type
          , 'meta_type'      : property_holder.meta_type
-         , 'description'    : getattr(property_holder, '__doc__', "Type generated by ERPType")
+         , 'description'    : getattr(property_holder, '__doc__',
+                                "Type generated by ERPType")
          , 'icon'           : 'document.gif'
          , 'product'        : 'ERP5Type'
          , 'factory'        : 'add%s' % property_holder.__name__
@@ -626,11 +635,9 @@ def setDefaultClassProperties(property_holder):
       }
 
 def importLocalDocument(class_id, document_path = None):
+  """Imports a document class and registers it in ERP5Type Document
+  repository ( Products.ERP5Type.Document )
   """
-    Imports a document class and registers it as
-  """
-
-  #__import__('Document.Test')
   import Products.ERP5Type.Document
   import Permissions
   import Products
@@ -640,21 +647,25 @@ def importLocalDocument(class_id, document_path = None):
   else:
     path = document_path
   path = os.path.join(path, "%s.py" % class_id)
+  
   # Import Document Class and Initialize it
   f = open(path)
-  document_module = imp.load_source('Products.ERP5Type.Document.%s' % class_id, path, f) # This is the right way
+  document_module = imp.load_source(
+          'Products.ERP5Type.Document.%s' % class_id, path, f)
   document_class = getattr(document_module, class_id)
   document_constructor = DocumentConstructor(document_class)
   document_constructor_name = "add%s" % class_id
   document_constructor.__name__ = document_constructor_name
   setattr(Products.ERP5Type.Document, class_id, document_module)
-  setattr(Products.ERP5Type.Document, document_constructor_name, document_constructor)
+  setattr(Products.ERP5Type.Document, document_constructor_name,
+                                      document_constructor)
   setDefaultClassProperties(document_class)
   from AccessControl import ModuleSecurityInfo
-  ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(Permissions.AddPortalContent,
-                                                                       document_constructor_name,)
+  ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(
+        Permissions.AddPortalContent, document_constructor_name,)
   InitializeClass(document_class)
   f.close()
+
   # Temp documents are created as standard classes with a different constructor
   # which patches some methods are the instance level to prevent reindexing
   from Products.ERP5Type import product_path as erp5_product_path
@@ -662,8 +673,11 @@ def importLocalDocument(class_id, document_path = None):
   temp_document_constructor = TempDocumentConstructor(document_class)
   temp_document_constructor_name = "newTemp%s" % class_id
   temp_document_constructor.__name__ = temp_document_constructor_name
-  setattr(Products.ERP5Type.Document, temp_document_constructor_name, temp_document_constructor)
-  ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic(temp_document_constructor_name,)
+  setattr(Products.ERP5Type.Document,
+          temp_document_constructor_name,
+          temp_document_constructor)
+  ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic(
+                      temp_document_constructor_name,)
 
   # Update Meta Types
   new_meta_types = []
@@ -675,7 +689,8 @@ def importLocalDocument(class_id, document_path = None):
       instance_class = None
       new_meta_types.append(
             { 'name': document_class.meta_type,
-              'action': ('manage_addProduct/%s/%s' % ('ERP5Type', document_constructor_name)),
+              'action': ('manage_addProduct/%s/%s' % (
+                         'ERP5Type', document_constructor_name)),
               'product': 'ERP5Type',
               'permission': document_class.add_permission,
               'visibility': 'Global',
@@ -690,7 +705,8 @@ def importLocalDocument(class_id, document_path = None):
     constructors = ( manage_addContentForm
                    , manage_addContent
                    , document_constructor
-                   , ('factory_type_information', document_class.factory_type_information) )
+                   , ('factory_type_information',
+                        document_class.factory_type_information) )
   else:
     constructors = ( manage_addContentForm
                    , manage_addContent
@@ -714,7 +730,7 @@ def importLocalDocument(class_id, document_path = None):
       m[name].append(method)
     m[name+'__roles__']=pr
 
-def initializeLocalRegistry(directory_name, import_local_method, 
+def initializeLocalRegistry(directory_name, import_local_method,
                             path_arg_name='path'):
   """
   Initialize local directory.
@@ -756,10 +772,15 @@ def initializeLocalConstraintRegistry():
 # Product initialization
 #####################################################
 
-def initializeProduct( context, this_module, global_hook,
-                           document_module = None,
-                           document_classes=None, object_classes=None, portal_tools=None,
-                           content_constructors=None, content_classes=None):
+def initializeProduct( context,
+                       this_module,
+                       global_hook,
+                       document_module=None,
+                       document_classes=None,
+                       object_classes=None,
+                       portal_tools=None,
+                       content_constructors=None,
+                       content_classes=None):
   """
     This function does all the initialization steps required
     for a Zope / CMF Product
@@ -772,7 +793,6 @@ def initializeProduct( context, this_module, global_hook,
   product_name = this_module.__name__.split('.')[-1]
 
   # Define content classes from document_classes
-  #LOG('Begin initializeProduct %s %s' % (document_module, document_classes),0,'')
   extra_content_classes = []
   #if document_module is not None:
   if 0:
@@ -797,9 +817,11 @@ def initializeProduct( context, this_module, global_hook,
   extra_content_constructors = []
   for content_class in extra_content_classes:
     if hasattr(content_class, 'add' + content_class.__name__):
-      extra_content_constructors += [getattr(content_class, 'add' + content_class.__name__)]
+      extra_content_constructors += [
+                getattr(content_class, 'add' + content_class.__name__)]
     else:
-      extra_content_constructors += [getattr(document_module, 'add' + content_class.__name__)]
+      extra_content_constructors += [
+                getattr(document_module, 'add' + content_class.__name__)]
 
   # Define FactoryTypeInformations for all content classes
   contentFactoryTypeInformations = []
@@ -812,7 +834,8 @@ def initializeProduct( context, this_module, global_hook,
 
   # Aggregate
   content_classes = list(content_classes) + list(extra_content_classes)
-  content_constructors = list(content_constructors) + list(extra_content_constructors)
+  content_constructors = list(content_constructors)\
+                          + list(extra_content_constructors)
 
   # Begin the initialization steps
   bases = tuple(content_classes)
@@ -824,11 +847,11 @@ def initializeProduct( context, this_module, global_hook,
   try:
     registerDirectory('skins', global_hook)
   except:
-    LOG("ERP5Type:",0,"No skins directory for %s" % product_name)
+    LOG("ERP5Type:", BLATHER, "No skins directory for %s" % product_name)
   try:
     registerDirectory('help', global_hook)
   except:
-    LOG("ERP5Type:",0,"No help directory for %s" % product_name)
+    LOG("ERP5Type:", BLATHER, "No help directory for %s" % product_name)
 
   # Finish the initialization
   utils.initializeBasesPhase2( z_bases, context )
@@ -837,7 +860,7 @@ def initializeProduct( context, this_module, global_hook,
   if len(tools) > 0:
     utils.ToolInit('%s Tool' % product_name,
                     tools=tools,
-                    product_name=product_name,
+                   # product_name=product_name,
                     icon='tool.png',
                     ).initialize( context )
 
@@ -848,12 +871,12 @@ def initializeProduct( context, this_module, global_hook,
     if hasattr(klass, 'permission_type'):
       klass_permission=klass.permission_type
 
-    utils.ContentInit(    klass.meta_type
-                        , content_types=[klass]
-                        , permission=klass_permission
-                        , extra_constructors=tuple(content_constructors)
-                        , fti=contentFactoryTypeInformations
-                        ).initialize( context )
+    utils.ContentInit( klass.meta_type,
+                       content_types=[klass],
+                       permission=klass_permission,
+                       extra_constructors=tuple(content_constructors),
+                       fti=contentFactoryTypeInformations,
+                      ).initialize( context )
 
   # Register Help
   context.registerHelp(directory='help')
@@ -885,7 +908,7 @@ def createConstraintList(property_holder, constraint_definition):
   try:
     consistency_class = getattr(Constraint, constraint_definition['type'])
   except AttributeError:
-    LOG("ERP5Type", 0, "Can not find Constraint: %s" % \
+    LOG("ERP5Type", PROBLEM, "Can not find Constraint: %s" % \
                        constraint_definition['type'])
     raise
   consistency_instance = consistency_class(**constraint_definition)
@@ -899,7 +922,8 @@ def initializeDefaultConstructors(klasses):
     for klass in klasses:
       if getattr(klass, 'isRADContent', 0) and hasattr(klass, 'security'):
         setDefaultConstructor(klass)
-        klass.security.declareProtected(Permissions.AddPortalContent, 'add' + klass.__name__)
+        klass.security.declareProtected(Permissions.AddPortalContent,
+                                        'add' + klass.__name__)
 
 def setDefaultConstructor(klass):
     """
@@ -991,12 +1015,15 @@ def setDefaultProperties(property_holder, object=None):
 
       - category accessors (ie. a membership of an object to a category)
 
-      - relation accessors (ie. a kind of membership where the category instance is content)
+      - relation accessors (ie. a kind of membership where the category
+                            instance is content)
 
-      - programmable acquisition acessors (ie. attribute accessors which are based on relations)
+      - programmable acquisition acessors (ie. attribute accessors which
+                                           are based on relations)
 
-      Consistency checkers are intended to check the content consistency (ex. ariry of a relation)
-      as well as fix content consistency through a default consistency fixing method.
+      Consistency checkers are intended to check the content consistency
+      (ex. ariry of a relation) as well as fix content consistency
+      through a default consistency fixing method.
 
     Set default attributes in current object for all properties in '_properties'
     """
@@ -1014,16 +1041,16 @@ def setDefaultProperties(property_holder, object=None):
     constraint_list = []  # a list of declarative consistency definitions (ie. constraints)
     constraint_list += property_holder.__dict__.get('_constraints',[]) # Do not consider superclass _constraints definition
     for base in property_holder.property_sheets:
-        for prop in base._properties:
-          # Copy the dict so that Expression objects are not overwritten.
-          prop_list.append(prop.copy())
-        if hasattr(base, '_categories'):
-          if isinstance(base._categories, (tuple, list)):
-            cat_list += base._categories
-          else:
-            cat_list += [base._categories]
-        if hasattr(base, '_constraints'):
-          constraint_list += base._constraints
+      for prop in base._properties:
+        # Copy the dict so that Expression objects are not overwritten.
+        prop_list.append(prop.copy())
+      if hasattr(base, '_categories'):
+        if isinstance(base._categories, (tuple, list)):
+          cat_list += base._categories
+        else:
+          cat_list += [base._categories]
+      if hasattr(base, '_constraints'):
+        constraint_list += base._constraints
 
     # Evaluate TALES expressions.
     for prop in prop_list:
@@ -1051,17 +1078,20 @@ def setDefaultProperties(property_holder, object=None):
     converted_prop_list = []
     converted_prop_keys = {}
     for prop in prop_list:
-      read_permission = prop.get('read_permission', Permissions.AccessContentsInformation)
+      read_permission = prop.get('read_permission',
+                                 Permissions.AccessContentsInformation)
       if isinstance(read_permission, Expression):
         read_permission = read_permission(econtext)
-      write_permission = prop.get('write_permission', Permissions.ModifyPortalContent)
+      write_permission = prop.get('write_permission',
+                                  Permissions.ModifyPortalContent)
       if isinstance(write_permission, Expression):
         write_permission = write_permission(econtext)
       if prop['type'] in legalTypes:
         if 'base_id' in prop:
           continue
         if not converted_prop_keys.has_key(prop['id']):
-          if prop['type'] != 'content': converted_prop_list += [prop]
+          if prop['type'] != 'content':
+            converted_prop_list += [prop]
           converted_prop_keys[prop['id']] = 1
 
         # Create range accessors, if this has a range.
@@ -1072,16 +1102,25 @@ def setDefaultProperties(property_holder, object=None):
             if 'storage_id' in range_prop:
               del range_prop['storage_id']
             if range_prop.get('acquisition_accessor_id', 0):
-              range_prop['acquisition_accessor_id'] = '%sRange%s' % (range_prop['acquisition_accessor_id'],  value.capitalize())
-            range_prop['alt_accessor_id'] = ('get' + convertToUpperCase(prop['id']),)
-            createDefaultAccessors(property_holder, '%s_range_%s' % (prop['id'], value), prop=range_prop,
-                read_permission=read_permission, write_permission=write_permission)
+              range_prop['acquisition_accessor_id'] = '%sRange%s' % (
+                   range_prop['acquisition_accessor_id'], value.capitalize())
+            range_prop['alt_accessor_id'] = (
+                                  'get' + convertToUpperCase(prop['id']),)
+            createDefaultAccessors(
+                        property_holder,
+                        '%s_range_%s' % (prop['id'], value),
+                        prop=range_prop,
+                        read_permission=read_permission,
+                        write_permission=write_permission)
 
         # Create translation accesor, if translatable is set
         if prop.get('translatable', 0):
           # make accesso like getTranslatedProperty
-          createTranslationAccessors(property_holder, 'translated_%s' % (prop['id']),
-                                 read_permission=read_permission, write_permission=write_permission)              
+          createTranslationAccessors(
+                    property_holder,
+                    'translated_%s' % (prop['id']),
+                    read_permission=read_permission,
+                    write_permission=write_permission)
           # make accessor to translation_domain
           # first create default one as a normal property
           txn_prop = {}
@@ -1090,17 +1129,29 @@ def setDefaultProperties(property_holder, object=None):
           txn_prop['id'] = 'translation_domain'
           txn_prop['type'] = 'string'          
           txn_prop['mode'] = 'w'
-          createDefaultAccessors(property_holder, '%s_%s' %(prop['id'], txn_prop['id']), prop=txn_prop,
-                                 read_permission=read_permission, write_permission=write_permission)
+          createDefaultAccessors(
+                    property_holder,
+                    '%s_%s' %(prop['id'], txn_prop['id']),
+                    prop=txn_prop,
+                    read_permission=read_permission,
+                    write_permission=write_permission)
           # then overload accesors getPropertyTranslationDomain
           if prop.has_key('translation_domain'):
             default = prop['translation_domain']
           else:
             default = ''
-          createTranslationAccessors(property_holder, '%s_translation_domain' % (prop['id']),
-                                     read_permission=read_permission, write_permission=write_permission, default=default)
-        createDefaultAccessors(property_holder, prop['id'], prop=prop,
-                               read_permission=read_permission, write_permission=write_permission)
+          createTranslationAccessors(
+                          property_holder,
+                          '%s_translation_domain' % (prop['id']),
+                          read_permission=read_permission,
+                          write_permission=write_permission,
+                          default=default)
+        createDefaultAccessors(
+                        property_holder,
+                        prop['id'],
+                        prop=prop,
+                        read_permission=read_permission,
+                        write_permission=write_permission)
       else:
         raise TypeError, '"%s" is illegal type for propertysheet' % \
                                             prop['type']
@@ -1118,9 +1169,12 @@ def setDefaultProperties(property_holder, object=None):
       if cat == 'group':        prop['storage_id'] = 'group'
       elif cat == 'site':
         prop['storage_id'] = 'location'
-      createDefaultAccessors(property_holder, prop['id'], prop=prop,
-                             read_permission=Permissions.AccessContentsInformation,
-                             write_permission=Permissions.ModifyPortalContent)
+      createDefaultAccessors(
+                        property_holder,
+                        prop['id'],
+                        prop=prop,
+                        read_permission=Permissions.AccessContentsInformation,
+                        write_permission=Permissions.ModifyPortalContent)
 
       # Get read and write permission
       if object is not None:
@@ -1128,10 +1182,14 @@ def setDefaultProperties(property_holder, object=None):
       else:
         cat_object = None
       if cat_object is not None:
-        read_permission = Permissions.__dict__.get(cat_object.getReadPermission(), Permissions.AccessContentsInformation)
+        read_permission = Permissions.__dict__.get(
+                                cat_object.getReadPermission(),
+                                Permissions.AccessContentsInformation)
         if isinstance(read_permission, Expression):
           read_permission = read_permission(econtext)
-        write_permission = Permissions.__dict__.get(cat_object.getWritePermission(), Permissions.ModifyPortalContent)
+        write_permission = Permissions.__dict__.get(
+                                cat_object.getWritePermission(),
+                                Permissions.ModifyPortalContent)
         if isinstance(write_permission, Expression):
           write_permission = write_permission(econtext)
       else:
@@ -1142,7 +1200,8 @@ def setDefaultProperties(property_holder, object=None):
         read_permission=read_permission, write_permission=write_permission)
       createValueAccessors(property_holder, cat,
         read_permission=read_permission, write_permission=write_permission)
-    if object is not None and property_holder.__name__ == "Base": # XXX use if possible is and real class
+    if object is not None and property_holder.__name__ == "Base":
+                            # XXX use if possible is and real class
       base_category_list = []
       for cat in base_category_dict.keys():
         if isinstance(cat, Expression):
@@ -1160,10 +1219,14 @@ def setDefaultProperties(property_holder, object=None):
         else:
           cat_object = None
         if cat_object is not None:
-          read_permission = Permissions.__dict__.get(cat_object.getReadPermission(), Permissions.AccessContentsInformation)
+          read_permission = Permissions.__dict__.get(
+                                  cat_object.getReadPermission(),
+                                  Permissions.AccessContentsInformation)
           if isinstance(read_permission, Expression):
             read_permission = read_permission(econtext)
-          write_permission = Permissions.__dict__.get(cat_object.getWritePermission(), Permissions.ModifyPortalContent)
+          write_permission = Permissions.__dict__.get(
+                                  cat_object.getWritePermission(),
+                                  Permissions.ModifyPortalContent)
           if isinstance(write_permission, Expression):
             write_permission = write_permission(econtext)
         else:
@@ -1175,13 +1238,15 @@ def setDefaultProperties(property_holder, object=None):
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
     # Create the constraint method list - always check type
-    property_holder.constraints = [ Constraint.PropertyTypeValidity(id='type_check',
-                                    description="Type Validity Check Error") ]
+    property_holder.constraints = [
+                  Constraint.PropertyTypeValidity(id='type_check',
+                  description="Type Validity Check Error") ]
     
     for const in constraint_list:
       createConstraintList(property_holder, constraint_definition=const)
     # ERP5 _properties and Zope _properties are somehow different
-    # The id is converted to the Zope standard - we keep the original id as base_id
+    # The id is converted to the Zope standard - we keep the original id
+    # as base_id
     new_converted_prop_list = []
     for prop in converted_prop_list:
       new_prop = prop.copy()
@@ -1190,11 +1255,11 @@ def setDefaultProperties(property_holder, object=None):
         if not prop.get('base_id', None):
           new_prop['base_id'] = prop['id']
           new_prop['id'] = prop['id'] + '_list'
-      if prop.has_key('acquisition_base_category') and not prop.get('acquisition_copy_value'):
+      if prop.has_key('acquisition_base_category')\
+              and not prop.get('acquisition_copy_value'):
         # Set acquisition values as read only if no value is copied
         new_prop['mode'] = 'r'
       new_converted_prop_list += [new_prop]
-    #LOG('setDefaultProperties', 0, 'property_holder = %r, object = %r, converted_prop_list = %r, new_converted_prop_list = %r' % (property_holder, object, converted_prop_list, new_converted_prop_list))
     # Set the properties of the class
     property_holder._properties = tuple(new_converted_prop_list)
     property_holder._categories = tuple(cat_list)
@@ -1245,7 +1310,8 @@ except:
 #####################################################
 
 from Base import Base as BaseClass
-from Accessor import Base, List, Object, Acquired, Content, AcquiredProperty, ContentProperty
+from Accessor import Base, List, Object, Acquired, Content,\
+                     AcquiredProperty, ContentProperty
 import types
 
 # Compile accessors
