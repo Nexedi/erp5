@@ -860,7 +860,7 @@ def initializeProduct( context,
   if len(tools) > 0:
     utils.ToolInit('%s Tool' % product_name,
                     tools=tools,
-                   # product_name=product_name,
+                    product_name=product_name,
                     icon='tool.png',
                     ).initialize( context )
 
