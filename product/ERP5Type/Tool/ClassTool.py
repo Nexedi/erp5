@@ -829,7 +829,7 @@ def initialize( context ):
 
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.DublinCore
-                      , PropertySheet.DocHelper
+                      , PropertySheet.DocumentationHelper
                       , )
 
     def _funcname_cmp_prepare(self, funcname):
@@ -838,9 +838,9 @@ def initialize( context ):
           break
       return '%s%s' % (funcname[pos:], funcname[:pos])
 
-    def __cmp__(self, dochelper):
+    def __cmp__(self, documentationhelper):
       my_title = self._funcname_cmp_prepare(self.getTitle())
-      his_title = self._funcname_cmp_prepare(dochelper.getTitle())
+      his_title = self._funcname_cmp_prepare(documentationhelper.getTitle())
       if my_title < his_title:
         return -1
       if my_title > his_title:
