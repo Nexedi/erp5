@@ -448,7 +448,8 @@ class TestERP5BankingMixin:
                                           price_currency_value = currency)
     # validate this bank account for payment
     bank_account.validate()
-
+    if amount == 0:
+      return bank_account
     # we need to put some money on this bank account
     if not hasattr(self, 'bank_account_inventory'):
       self.bank_account_inventory = self.bank_account_inventory_module.newContent(id='account_inventory',
@@ -458,11 +459,14 @@ class TestERP5BankingMixin:
                                                                                 stop_date=DateTime().Date())
 
     account_inventory_line_id = 'account_inventory_lien_%s' %(self.account_inventory_number,)
-    self.bank_account_inventory.newContent(id=account_inventory_line_id,
+    inventory = self.bank_account_inventory.newContent(id=account_inventory_line_id,
                                            portal_type='Bank Account Inventory Line',
                                            resource_value=currency,
                                            destination_payment_value=bank_account,
                                            inventory=amount)
+
+    # deliver the inventory
+    inventory.deliver()
     self.account_inventory_number += 1
     return bank_account
 
@@ -494,6 +498,7 @@ class TestERP5BankingMixin:
     # mark the check as issued
     check.confirm()
     return check
+
 
   def createCashInventory(self, source, destination, currency, line_list=[]):
     """
@@ -534,8 +539,10 @@ class TestERP5BankingMixin:
                                  line['variation_id'],
                                  line['variation_value'],
                                  line['quantity'],)
+    # deliver the inventory
+    inventory.deliver()
+    #self.workflow_tool.doActionFor(inventory, 'deliver_action', wf_id='inventory_workflow')
     return inventory_group
-
 
 
   def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
