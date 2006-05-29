@@ -503,6 +503,8 @@ class SimulationTool (BaseTool):
       Returns available inventory
       (current inventory - reserved)
       """
+    #XXX This code is wrong, look at
+    # zope/Products/ERP5/Extensions/InventoryBrain.py for a more complete one
       kw['simulation_state'] = tuple(
                     list(self.getPortalReservedInventoryStateList()) + \
                     list(self.getPortalCurrentInventoryStateList()))
