@@ -38,11 +38,11 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add Base18 Tools</name>
-  </permission>
-  <permission>
    <name>Add Browser Id Manager</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add CMF Action Icons Tools</name>
   </permission>
   <permission>
    <name>Add CMF Active Processs</name>
@@ -53,23 +53,31 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add CMF Calendar Tools</name>
+  </permission>
+  <permission>
    <name>Add CMF Core Tools</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add CMF Default Tools</name>
   </permission>
   <permission>
    <name>Add CMF Report Tools</name>
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add CMF Setup Tools</name>
+  </permission>
+  <permission>
    <name>Add CMF Sites</name>
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add CMFActivity Tools</name>
-   <role>Manager</role>
+   <name>Add CMF Unique Id Tools</name>
   </permission>
   <permission>
-   <name>Add CMFCalendar Tools</name>
+   <name>Add CMFActivity Tools</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -77,16 +85,11 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add CMFDefault Tools</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add CMFWiki Comment</name>
-   <role>Manager</role>
+   <name>Add Configured CMF Sites</name>
   </permission>
   <permission>
    <name>Add Content Type Registrys</name>
@@ -152,7 +155,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add ERP5Shop Tools</name>
+   <name>Add ERP5Subversion Tools</name>
   </permission>
   <permission>
    <name>Add ERP5SyncML Tools</name>
@@ -199,9 +202,6 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add MMM Shop Toolss</name>
-  </permission>
-  <permission>
    <name>Add MailHost objects</name>
    <role>Manager</role>
   </permission>
@@ -224,6 +224,9 @@
   <permission>
    <name>Add Pluggable Index</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Add Plugin Registrys</name>
   </permission>
   <permission>
    <name>Add Portal ZSyncer Tools</name>
@@ -281,6 +284,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Add Z MySQL Database Deferred Connections</name>
+  </permission>
+  <permission>
    <name>Add ZCatalogs</name>
    <role>Manager</role>
   </permission>
@@ -324,14 +330,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Add shop category</name>
-  </permission>
-  <permission>
    <name>Change Browser Id Manager</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Change CMFWiki Regulations</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -419,6 +418,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Change local roles</name>
+  </permission>
+  <permission>
    <name>Change permissions</name>
    <role>Manager</role>
   </permission>
@@ -435,14 +437,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Checkout shopping cart</name>
-  </permission>
-  <permission>
    <name>Copy or Move</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Create CMFWiki Page</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -463,13 +458,6 @@
   </permission>
   <permission>
    <name>Download ExtFile/ExtImage</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Download Product</name>
-  </permission>
-  <permission>
-   <name>Edit CMFWiki Page</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -521,6 +509,9 @@
    <role>Manager</role>
   </permission>
   <permission>
+   <name>Manage Groups</name>
+  </permission>
+  <permission>
    <name>Manage Transient Object Container</name>
    <role>Manager</role>
   </permission>
@@ -545,9 +536,6 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Manage currencies</name>
-  </permission>
-  <permission>
    <name>Manage languages</name>
    <role>Manager</role>
   </permission>
@@ -564,20 +552,7 @@
    <role>Manager</role>
   </permission>
   <permission>
-   <name>Manage shop</name>
-  </permission>
-  <permission>
-   <name>Manage shop catalog</name>
-  </permission>
-  <permission>
-   <name>Manage shop category</name>
-  </permission>
-  <permission>
    <name>Manage users</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Manage_messages</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -586,10 +561,6 @@
   </permission>
   <permission>
    <name>Modify portal content</name>
-   <role>Manager</role>
-  </permission>
-  <permission>
-   <name>Move CMFWiki Page</name>
    <role>Manager</role>
   </permission>
   <permission>
@@ -627,6 +598,9 @@
   <permission>
    <name>Search ZCatalog</name>
    <role>Manager</role>
+  </permission>
+  <permission>
+   <name>Search for principals</name>
   </permission>
   <permission>
    <name>Set own password</name>
