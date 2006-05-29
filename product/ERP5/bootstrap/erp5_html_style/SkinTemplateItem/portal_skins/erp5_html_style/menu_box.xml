@@ -170,10 +170,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n
               tal:attributes="src string:$portal_url/images/exec16.png"/> &nbsp;\n
           </td>\n
           <td width="100%"><tal:block metal:define-slot="buttons"/></td>\n
-          <td align="right" valign="center"\n
+          <!-- URL target is invalid for now. -->\n
+          <!--td align="right" valign="center"\n
            tal:define="form_id form/id|nothing">\n
             <a title="Help" tal:attributes="href python: here.Base_getHelpUrl(form_id=form_id)"><img src="images/userhelp.png" alt="Help"></a>\n
-          </td>\n
+          </td-->\n
           <td align="right" valign="center"\n
            tal:condition="here/portal_preferences/getPreferredHtmlStyleDevelopperMode">\n
             <a title="Inspect object" tal:attributes="href python: \'%s/Base_viewInspectionReport\' % (here.absolute_url(),)"><img src="images/inspect.png" alt="Inspect object"></a>\n

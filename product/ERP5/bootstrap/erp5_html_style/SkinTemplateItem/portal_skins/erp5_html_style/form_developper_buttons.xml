@@ -15,16 +15,7 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>vincent</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
+              <none/>
             </value>
         </item>
         <item>
@@ -56,13 +47,7 @@
         <item>
             <key> <string>_owner</string> </key>
             <value>
-              <tuple>
-                <list>
-                  <string>nexedi</string>
-                  <string>acl_users</string>
-                </list>
-                <string>vincent</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
@@ -88,18 +73,6 @@
                          manage python: \'manage\'">\n
     <tal:block metal:use-macro="context/form_developper_buttons/macros/edit_link"/>\n
   </tal:block>\n
-<!--  <tal:block tal:define="image python: \'editformrenderer.png\';\n
-                         info python: \'Edit this form\\\'s renderer\';\n
-                         object python: getattr(context, form.pt, None);\n
-                         manage python: \'manage_main\'">\n
-    <tal:block metal:use-macro="context/form_developper_buttons/macros/edit_link"/>\n
-  </tal:block>\n
-  <tal:block tal:define="image python: \'editlayout.png\';\n
-                         info python: \'Edit this layout\';\n
-                         object python: getattr(context, layout_id, None);\n
-                         manage python: \'manage_main\'">\n
-    <tal:block metal:use-macro="context/form_developper_buttons/macros/edit_link"/>\n
-  </tal:block>-->\n
   <tal:block tal:define="image python: \'editformaction.png\';\n
                          info python: \'Edit this form\\\'s action\';\n
                          object python: getattr(context, form.action, None);\n
