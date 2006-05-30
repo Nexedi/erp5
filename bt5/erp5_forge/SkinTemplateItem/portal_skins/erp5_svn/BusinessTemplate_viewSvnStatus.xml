@@ -159,7 +159,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br/>\n
 <script>\n
   // Menu Customization\n
   var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
-  MenuToolBar.Add("imgs/captionoff.png", "imgs/captionon.png", "Show Caption", "#", "winList[\'captionWindow\'].open();");\n
+  MenuToolBar.Add("imgs/captionoff.png", "imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
   MenuToolBar.Add("imgs/expandoff.png", "imgs/expandon.png", "Expand / Collapse", "#", "expandCollapse();");\n
   MenuToolBar.Add("imgs/diffoff.png", "imgs/diffon.png", "View Diff", "#", "viewDiff(0,document.main_form);");\n
   MenuToolBar.Add("imgs/execoff.png", "imgs/execon.png", "Commit Changes", "#", "commit(0,document.main_form);");\n

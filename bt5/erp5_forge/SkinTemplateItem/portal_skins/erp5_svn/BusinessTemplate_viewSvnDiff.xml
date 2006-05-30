@@ -61,12 +61,22 @@
 <input type=\'hidden\' name=\'modified\' tal:attributes="value python:context.REQUEST[\'modified\']"/>\n
 <!-- End Hidden -->\n
 <script  src="js/movableMenu.js"></script>\n
+<script  src="js/menuico.js"></script>\n
 <tal:js replace="structure \n
 here/BusinessTemplate_doCreateJavaScriptDiff">JavaScript here</tal:js>\n
 <tal:py replace="structure \n
 here/BusinessTemplate_doSvnDiff">diff here</tal:py>\n
-<center><button onclick="goBack()" value="Back" name="Back" type="button">Back</button>\n
-<button onclick="doCommit(this.form)" value="commit" name="commit Changes" type="button">Commit Changes</button></center>\n
+<center>\n
+<script>\n
+  // Menu Customization\n
+  var MenuToolBar=new CreateToolBarMenu("#dae6e6", "#ffffff", "#b1bbbb", "#6699ff", "font-family:verdana;font-size:11px;color:black;font-weight:bold", 16, 16)\n
+  MenuToolBar.Add("imgs/revertoff.png", "imgs/reverton.png", "Back", "#", "goBack()");\n
+  MenuToolBar.Add("imgs/captionoff.png", "imgs/captionon.png", "Show Legend", "#", "winList[\'captionWindow\'].open();");\n
+  MenuToolBar.Add("imgs/execoff.png", "imgs/execon.png", "Commit Changes", "#", "doCommit(document.main_form);");\n
+  // Menu Display\n
+  MenuToolBar.Display();\n
+</script>\n
+</center>\n
 \n
 <div id="captionWindow" class="window" style="right:20px;left:auto;top:180px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
   <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
