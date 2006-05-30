@@ -240,16 +240,16 @@ class DiffFile:
       <td style="background-color: grey"><b><center>%s</center></b></td>
     </tr>''' % (self.old_revision, self.new_revision))
     header_color = 'grey'
-    child_html_text = '''<tr height="18px"><td style="background-color: %s">
+    child_html_text = '''<tr height="18px"><td style="background-color: %(headcolor)s">
     &nbsp;</td><td style="background-color: black;" width="2"></td>
-    <td style="background-color: %s">&nbsp;</td></tr><tr height="18px">
-    <td style="background-color: rgb(68, 132, 255);"><b>Line %%s</b></td>
+    <td style="background-color: %(headcolor)s">&nbsp;</td></tr><tr height="18px">
+    <td style="background-color: rgb(68, 132, 255);"><b>Line %(oldline)s</b></td>
     <td style="background-color: black;" width="2"></td>
-    <td style="background-color: rgb(68, 132, 255);"><b>Line %%s</b></td>
-    </tr>''' % (header_color, header_color)
+    <td style="background-color: rgb(68, 132, 255);"><b>Line %(newline)s</b></td>
+    </tr>'''
     for child in self.children:
       # Adding line number of the modification
-      html_list.append( child_html_text % (child.old_line, child.new_line) )
+      html_list.append( child_html_text % {'headcolor':header_color, 'oldline':child.old_line, 'newline':child.new_line} )
       header_color = 'white'
       # Adding diff of the modification
       old_code_list = child.getOldCodeList()
