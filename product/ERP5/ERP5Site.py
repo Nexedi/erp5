@@ -37,6 +37,8 @@ from zLOG import LOG
 from string import join
 
 import os
+MARKER=[]
+
 
 # Site Creation DTML
 manage_addERP5SiteForm = Globals.HTMLFile('dtml/addERP5Site', globals())
@@ -694,7 +696,7 @@ class ERP5Site ( FolderMixIn, CMFSite ):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getDefaultModuleId')
-    def getDefaultModuleId(self, portal_type):
+    def getDefaultModuleId(self, portal_type, default=MARKER):
       """
         Return default module id where a object with portal_type can
         be created.
@@ -705,6 +707,8 @@ class ERP5Site ( FolderMixIn, CMFSite ):
       if not hasattr(portal_object, module_name):
         module_name += '_module'
         if not hasattr(portal_object, module_name):
+          if default is not MARKER:
+            return default
           LOG('ERP5Site, getDefaultModuleId', 0,
               'Unable to find default module for portal_type: %s' % \
                   portal_type)
@@ -1001,7 +1005,7 @@ class ERP5Generator(PortalGenerator):
           try:
             import Products.NuxUserGroups
             withnuxgroups = 1
-          except:
+          except ImportError:
             withnuxgroups = 0
         if ERP5Security is not None:
           # Use Pluggable Auth Service instead of the standard acl_users.
@@ -1142,5 +1146,5 @@ class ERP5Generator(PortalGenerator):
             template_tool.download(template, id=id)
             template_tool[id].install(**kw)
 
-# Patch the standard method
-CMFSite.getPhysicalPath = ERP5Site.getPhysicalPath
+
+
