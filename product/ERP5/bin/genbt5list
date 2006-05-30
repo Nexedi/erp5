@@ -36,6 +36,7 @@ import os
 import sys
 import tempfile
 import shutil
+import cgi
 
 property_list = ('title', 'version', 'description', 'license', 'dependency_list', 'copyright_list')
 
@@ -88,10 +89,12 @@ def generateInformation(fd):
         for property_id in property_id_list:
           property_value = property_dict[property_id]
           if type(property_value) == type(''):
-            os.write(fd, '    <%s>%s</%s>\n' % (property_id, property_value, property_id))
+            os.write(fd, '    <%s>%s</%s>\n' % (
+                  property_id, cgi.escape(property_value), property_id))
           else:
             for value in property_value:
-              os.write(fd, '    <%s>%s</%s>\n' % (property_id, value, property_id))
+              os.write(fd, '    <%s>%s</%s>\n' % (
+                    property_id, cgi.escape(value), property_id))
         os.write(fd, '  </template>\n')
         info('done\n')
       finally:
