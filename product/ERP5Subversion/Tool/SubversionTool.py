@@ -160,7 +160,7 @@ def colorizeTag(tag):
     color = '#0c4f0c'#dark green
   else:
     color = 'blue'
-  return '<font color="%s">%s</font>' % (color, text, )
+  return "<font color='%s'>%s</font>" % (color, text, )
     
 def colorize(text):
   """Return HTML Code with syntax hightlighting
