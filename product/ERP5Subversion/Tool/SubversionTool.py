@@ -270,6 +270,30 @@ class DiffFile:
         escape(new_line).replace(' ', NBSP).replace('\t', NBSP_TAB))
         )
     html_list.append('''</tbody></table><br/><br/>''')
+    html_list.append('''<center><table style="border: 1px solid gray;" class="auto">
+      <tbody>
+        <tr>
+          <td>
+            <b>Legend:</b><br/>
+            <table cellpadding="1" cellspacing="0">
+              <tbody>
+                <tr height="18px">
+                  <td style="text-align: center; background-color: rgb(253, 117, 74);">Removed from %s</td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr height="18px">
+                  <td style="text-align: center; background-color: rgb(253, 228, 6);" colspan="2" class="vc_diff_change">changed lines</td>
+                </tr>
+                <tr height="18px">
+                  <td>&nbsp;</td>
+                  <td style="text-align: center; background-color: rgb(83, 253, 74);" class="vc_diff_add">Added in %s</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table></center><br/>''' % (self.old_revision, self.new_revision))
     return '\n'.join(html_list)
       
 
