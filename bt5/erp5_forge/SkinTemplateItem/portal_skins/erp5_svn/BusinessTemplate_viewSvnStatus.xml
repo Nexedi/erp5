@@ -128,7 +128,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br/>\n
 </table>\n
 <div id="captionWindow" class="window" style="right:20px;left:auto;top:140px;width:120px;background-color:#dae6e6;border-color:#ebf8f8 #c0caca #c0caca #c0caca;">\n
   <div class="titleBar" style="background-color:#dae6e6;color:black;">\n
-    <span class="titleBarText">Caption -- SVN</span>\n
+    <span class="titleBarText">Legend -- SVN</span>\n
     <img class="titleBarButtons" alt="" src="imgs/altbuttons.gif" longdesc="imgs/altbuttonslow.gif" usemap="#sampleMap3" />\n
     <map id="sampleMap3" name="sampleMap3">\n
       <area shape="rect" coords="0,0,15,13"  href="" alt="" title="Minimize" onclick="this.parentWindow.minimize();return false;" />\n
@@ -137,7 +137,7 @@ here/BusinessTemplate_doCreateJavaScriptStatus">javascript here</tal:js><br/>\n
     </map>\n
   </div>\n
   <div class="clientArea" style="height:100px; background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;scrollbar-base-color:#dae6e6;">\n
-  <b><font color="black"><center>Caption</center></font></b><hr/>\n
+  <b><font color="black"><center>Legend</center></font></b><hr/>\n
   <p><font color="green">Added files</font><br/>\n
   <font color="orange">Modified files</font><br/>\n
   <font color="red">Removed files</font><br/>\n
