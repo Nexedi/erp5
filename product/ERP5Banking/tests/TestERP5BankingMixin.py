@@ -467,7 +467,7 @@ class TestERP5BankingMixin:
                                                                                 destination_value=self.testsite,
                                                                                 stop_date=DateTime().Date())
 
-    account_inventory_line_id = 'account_inventory_lien_%s' %(self.account_inventory_number,)
+    account_inventory_line_id = 'account_inventory_line_%s' %(self.account_inventory_number,)
     inventory = self.bank_account_inventory.newContent(id=account_inventory_line_id,
                                            portal_type='Bank Account Inventory Line',
                                            resource_value=currency,
@@ -514,7 +514,8 @@ class TestERP5BankingMixin:
     Create a cash inventory group
     """
     # we need to have a unique inventory group id by destination
-    inventory_group_id = 'inventory_group_%s' %(destination.getId())
+    inventory_group_id = 'inventory_group_%s_%s' %
+                      (destination.getParentValue().getId(),destination.getId())
     if not hasattr(self, inventory_group_id):
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
@@ -525,7 +526,7 @@ class TestERP5BankingMixin:
       inventory_group = getattr(self, inventory_group_id)
 
     # get/create the inventory based on currency
-    inventory_id = 'inventory_%s' %(currency.getId())
+    inventory_id = '%s_inventory_%s' %(inventory_group_id,currency.getId())
     if not hasattr(self, inventory_id):
       inventory = inventory_group.newContent(id=inventory_id,
                                              portal_type='Cash Inventory',
