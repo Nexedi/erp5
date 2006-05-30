@@ -1088,6 +1088,8 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     + os.sep)
     path = mktemp() + os.sep
     try:
+      # XXX: Big hack to make export work as expected.
+      get_transaction().commit()
       business_template.export(path=path, local=1)
       # svn del deleted files
       self.deleteOldFiles(svn_path, path)
@@ -1095,7 +1097,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       self.addNewFiles(svn_path, path)
       self.goToWorkingCopy(business_template)
     except (pysvn.ClientError, NotFound, AttributeError, \
-    AttributeError, Error), error:
+    Error), error:
       # Clean up
       removeAll(path)
       raise error
