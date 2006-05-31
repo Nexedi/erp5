@@ -723,7 +723,7 @@ class TestOrderMixin:
     """
     order = sequence.get('order')
     self.failUnless('Simulation Movement' in order.getPortalMovementTypeList())
-    self.failUnless('Sale Order Line' in order.getPortalMovementTypeList())
+    self.failUnless(self.order_line_portal_type in order.getPortalMovementTypeList())
 
   def stepCheckDeliveryBuilderPresence(self, sequence=None,
                                        sequence_list=None, **kw):
