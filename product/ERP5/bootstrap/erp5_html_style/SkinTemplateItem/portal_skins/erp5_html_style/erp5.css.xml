@@ -77,8 +77,8 @@ TH {\n
 }\n
 \n
 TD{\n
-/* vertical-align: middle;*/\n
- align: center;\n
+ /*vertical-align: middle;*/\n
+ /*text-align: center;*/\n
  }\n
 \n
 TD.top{\n
@@ -111,8 +111,8 @@ TABLE.px{\n
 \n
 .input_image{\n
  border:none;\n
- background-color=transparent;\n
- color=transparent;\n
+ background-color: transparent;\n
+ /*color: transparent;*/\n
  }\n
 \n
 \n
@@ -154,7 +154,7 @@ TABLE.px{\n
 \n
 .Step{\n
  color:  &dtml-default_font_color;;\n
- color-border:  &dtml-default_font_color;;\n
+ border-color:  &dtml-default_font_color;;\n
  border-style: solid;\n
  border-bottom-width: 0px;\n
  border-left-width: 1px;\n
@@ -225,13 +225,13 @@ TABLE.px{\n
  width: 98%;\n
  font-style: italic;\n
  background-color: &dtml-main_background_color;;\n
- border-color: dtml-main_border_color;;\n
+ border-color: &dtml-main_border_color;;\n
  border-style: solid;\n
  border-top-width: 1px;\n
  border-right-width: 1px;\n
  border-bottom-width: 1px;\n
  border-left-width: 1px;\n
- margin-right: 0,1em;\n
+ margin-right: 0.1em;\n
  margin-left: 5px;\n
  margin-top: 5px;\n
  margin-bottom: 5px;\n
@@ -270,13 +270,13 @@ color:  &dtml-default_font_color;;\n
  width: 98%;\n
  font-style: italic;\n
  background-color: &dtml-search_background_color;;\n
- border-color: dtml-main_border_color;;\n
+ border-color: &dtml-main_border_color;;\n
  border-style: solid;\n
  border-top-width: 1px;\n
  border-right-width: 1px;\n
  border-bottom-width: 1px;\n
  border-left-width: 1px;\n
- margin-right: 0,1em;\n
+ margin-right: 0.1em;\n
  margin-left: 5px;\n
  margin-top: 5px;\n
  margin-bottom: 5px;\n
@@ -349,7 +349,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.Data{\n
- font-size: 0,8em;\n
+ font-size: 0.8em;\n
  color:  &dtml-default_font_color;;\n
  background-color: #c1dad2;\n
  border-color:  &dtml-default_font_color;;\n
@@ -377,7 +377,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataA{\n
- font-size: 0,8em;\n
+ font-size: 0.8em;\n
  background-color: inherit;\n
  color: #000000;\n
  border-color:  &dtml-default_font_color;;\n
@@ -389,7 +389,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataB{\n
- font-size: 0,8em;\n
+ font-size: 0.8em;\n
  background-color: inherit;\n
  color: #000000;\n
  border-color:  &dtml-default_font_color;;\n
@@ -401,7 +401,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataAError{\n
- font-size: 0,8em;\n
+ font-size: 0.8em;\n
  background-color: #ffffff;\n
  color: red;\n
  border-color: red;\n
@@ -413,7 +413,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataBError{\n
- font-size: 0,8em;\n
+ font-size: 0.8em;\n
  background-color: inherit;\n
  color: red;\n
  border-color:  red;\n
@@ -499,15 +499,15 @@ td.Off{\n
 \n
 .ChartContent table{\n
  width: 100%;\n
- align: center;\n
+ /*text-align: center;*/\n
 }\n
 \n
 .ChartContent td{\n
- align: center;\n
+ /*text-align: center;*/\n
 }\n
 \n
 .ChartContent img{\n
- align: center;\n
+ /*text-align: center;*/\n
 }\n
 \n
 /*   _________________ Front Page _________________ */\n
