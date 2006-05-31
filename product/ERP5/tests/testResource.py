@@ -73,7 +73,7 @@ class TestResource(ERP5TypeTestCase):
       Install needed business template
     """
     # Trade is needeed for pricing
-    return ('erp5_base','erp5_pdm','erp5_trade','erp5_apparel')
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel', )
 
   def getTitle(self):
     return "Resource"
@@ -706,6 +706,7 @@ class TestResource(ERP5TypeTestCase):
         supply = supply_module.newContent(
                                      portal_type=self.supply_portal_type,
                                      title='FakeSupply%s' % i,
+                                     price_currency_value=currency,
                                      destination_value=node)
         self.logMessage("Creating fake supply line %s..." % i, tab=1)
         supply_line = supply.newContent(
