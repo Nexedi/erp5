@@ -58,7 +58,7 @@
 <font color="black">\n
 <br/>\n
 <center><h1>Working Copy Informations</h1></center><br/>\n
-    <center><table width="60%%" border="1">\n
+    <center><table width="60%" border="1">\n
     <tr height="18px"><td><b>Repository URL</b></td><td tal:content="python:dict[\'url\']">url</td></tr>\n
     <tr height="18px"><td><b>Repository UUID</b></td><td tal:content="python:dict[\'uuid\']">uuid</td></tr>\n
     <tr height="18px"><td><b>Revision</b></td><td tal:content="python:dict[\'revision\']">revision</td></tr>\n

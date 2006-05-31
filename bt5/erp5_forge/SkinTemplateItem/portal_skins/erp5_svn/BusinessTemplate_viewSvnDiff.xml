@@ -88,7 +88,7 @@ here/BusinessTemplate_doSvnDiff">diff here</tal:py>\n
       <area shape="rect" coords="34,0,49,13" href="" alt="" title="Close"    onclick="this.parentWindow.close();return false;" />\n
     </map>\n
   </div>\n
-  <div class="clientArea" style="height:80px; background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;scrollbar-base-color:#dae6e6;">\n
+  <div class="clientArea" style="height:80px; background-color:#fffdfd;color:#806040;border-color:#c0caca #c0caca #c0caca #c0caca;">\n
   <b><font color="black"><center>Legend</center></font></b><hr/>\n
   <center><table style="border: 1px solid gray;" width="80%" cellpadding="0" cellspacing="0">\n
         <tbody>\n
