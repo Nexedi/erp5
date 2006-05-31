@@ -65,7 +65,7 @@ except ImportError:
     pass
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
-  
+
 UID_BUFFER_SIZE = 300
 
 valid_method_meta_type_list = ('Z SQL Method', 'Script (Python)')
@@ -88,22 +88,22 @@ def manage_addSQLCatalog(self, id, title,
   if REQUEST is not None:
     return self.manage_main(self, REQUEST,update_menu=1)
 
-    
+
 class UidBuffer(TM):
   """Uid Buffer class caches a list of reserved uids in a transaction-safe way."""
-  
+
   def __init__(self):
     """Initialize some variables.
-    
+
       temporary_buffer is used to hold reserved uids created by non-committed transactions.
-      
+
       finished_buffer is used to hold reserved uids created by committed-transactions.
-      
+
       This distinction is important, because uids by non-committed transactions might become
       invalid afterwards, so they may not be used by other transactions."""
     self.temporary_buffer = {}
     self.finished_buffer = []
-    
+
   def _finish(self):
     """Move the uids in the temporary buffer to the finished buffer."""
     tid = get_ident()
@@ -112,7 +112,7 @@ class UidBuffer(TM):
       del self.temporary_buffer[tid]
     except KeyError:
       pass
-    
+
   def _abort(self):
     """Erase the uids in the temporary buffer."""
     tid = get_ident()
@@ -120,7 +120,7 @@ class UidBuffer(TM):
       del self.temporary_buffer[tid]
     except KeyError:
       pass
-      
+
   def __len__(self):
     tid = get_ident()
     l = len(self.finished_buffer)
@@ -129,7 +129,7 @@ class UidBuffer(TM):
     except KeyError:
       pass
     return l
-    
+
   def remove(self, value):
     self._register()
     for uid_list in self.temporary_buffer.values():
@@ -141,7 +141,7 @@ class UidBuffer(TM):
       self.finished_buffer.remove(value)
     except ValueError:
       pass
-      
+
   def pop(self):
     self._register()
     tid = get_ident()
@@ -150,7 +150,7 @@ class UidBuffer(TM):
     except (KeyError, IndexError):
       uid = self.finished_buffer.pop()
     return uid
-      
+
   def extend(self, iterable):
     self._register()
     tid = get_ident()
@@ -599,7 +599,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except ConflictError:
         raise
       except:
-        LOG('SQLCatalog', WARNING, 
+        LOG('SQLCatalog', WARNING,
             'could not clear catalog with %s' % method_name, error=sys.exc_info())
         pass
 
@@ -630,7 +630,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     except ConflictError:
       raise
     except:
-      LOG('SQLCatalog', WARNING, 
+      LOG('SQLCatalog', WARNING,
           'could not clear reserved catalog with %s' % \
               method_id, error=sys.exc_info())
       raise
@@ -689,7 +689,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """Return search result keys.
     """
     return self.sql_search_result_keys
-  
+
   def _getCatalogSchema(self, table=None):
     catalog_schema_dict = getattr(aq_base(self), '_v_catalog_schema_dict', {})
 
@@ -908,7 +908,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                      'Total time: %s<br>'
                      'Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
-  def manage_catalogClear(self, REQUEST=None, RESPONSE=None, 
+  def manage_catalogClear(self, REQUEST=None, RESPONSE=None,
                           URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
     self.clear()
@@ -1061,6 +1061,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               klass._reserved_uid_lock.release()
           elif catalog_path is not None:
             # An uid conflict happened... Why?
+            # can be due to path length
+            if len(path) > 255:
+              LOG('SQLCatalog', WARNING, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
+
             object.uid = self.newUid()
             LOG('SQLCatalog', WARNING,
                 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid))
@@ -1074,7 +1078,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     try:
       if not disable_cache:
         enableReadOnlyTransactionCache(self)
-      
+
       method_kw_dict = {}
       for method_name in method_id_list:
         kw = {}
@@ -1104,12 +1108,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             catalogged_object_list.append(object)
         else:
           catalogged_object_list = object_list
-  
+
         if len(catalogged_object_list) == 0:
           continue
-  
+
         method_kw_dict[method_name] = kw
-        
+
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
         method = getattr(self, method_name)
         if method.meta_type == "Z SQL Method":
@@ -1134,13 +1138,13 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   argument_cache[(object.uid, arg)] = value
               append(value)
             kw[arg] = value_list
-            
+
       for method_name in method_id_list:
         if method_name not in method_kw_dict:
           continue
         kw = method_kw_dict[method_name]
         method = getattr(self, method_name)
-        method = aq_base(method).__of__(site_root.portal_catalog) # Use method in 
+        method = aq_base(method).__of__(site_root.portal_catalog) # Use method in
                 # the context of portal_catalog
         # Alter/Create row
         try:
@@ -1200,7 +1204,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     method_name = self.sql_catalog_translation_list
     return self.catalogObjectList(object_list, method_id_list = (method_name,))
-    
+
   def deleteTranslationList(self):
     """Delete translations.
     """
@@ -1212,7 +1216,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       raise
     except:
       LOG('SQLCatalog', WARNING, 'could not delete translations', error=sys.exc_info())
-    
+
   def uniqueValuesFor(self, name):
     """ return unique values for FieldIndex name """
     method = getattr(self, self.sql_unique_values)
@@ -1352,7 +1356,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   def getSqlCatalogRelatedKeyList(self, **kw):
     """
     Return the list of related keys.
-    This method can be overidden in order to implement 
+    This method can be overidden in order to implement
     dynamic generation of some related keys.
     """
     # Do not generate dynamic related key for acceptable_keys
