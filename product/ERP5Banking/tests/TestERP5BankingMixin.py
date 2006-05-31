@@ -297,7 +297,7 @@ class TestERP5BankingMixin:
     self.variation_base_category = getattr(self.category_tool, 'variation')
     # add the category 1992 in variation
     self.variation_1992 = self.variation_base_category.newContent(id='1992', portal_type='Category')
-   # add the category 2003 in varitation
+    # add the category 2003 in varitation
     self.variation_2003 = self.variation_base_category.newContent(id='2003', portal_type='Category')
 
     # Create Resources Document (Banknotes & Coins)
@@ -588,8 +588,8 @@ class TestERP5BankingMixin:
     Create a cash inventory group
     """
     # we need to have a unique inventory group id by destination
-    inventory_group_id = 'inventory_group_%s_%s' %
-                      (destination.getParentValue().getId(),destination.getId())
+    inventory_group_id = 'inventory_group_%s_%s' % \
+                         (destination.getParentValue().getId(),destination.getId())
     if not hasattr(self, inventory_group_id):
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
