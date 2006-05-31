@@ -234,6 +234,8 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.container_1.getReference(), 'unit_test_1')
     self.assertEqual(self.container_1.getCashNumberRangeStart(), '0')
     self.assertEqual(self.container_1.getCashNumberRangeStop(), '100')
+    self.assertEqual(len(self.container_1.getAggregateValueList()), 1)
+    self.assertEqual(self.container_1.getAggregateValueList()[0], self.container_1)
     self.assertEqual(len(self.container_1.objectIds()), 1)
     # now get the line and check it
     self.container_line_1 = self.container_1.objectValues()[0]
@@ -268,6 +270,8 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.container_2.getReference(), 'unit_test_2')
     self.assertEqual(self.container_2.getCashNumberRangeStart(), '100')
     self.assertEqual(self.container_2.getCashNumberRangeStop(), '200')
+    self.assertEqual(len(self.container_2.getAggregateValueList()), 1)
+    self.assertEqual(self.container_2.getAggregateValueList()[0], self.container_2)
     self.assertEqual(len(self.container_2.objectIds()), 1)
     # now get the line and check it
     self.container_line_2 = self.container_2.objectValues()[0]
@@ -340,6 +344,17 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
 
+  def stepCheckContainer(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check cash container in item table
+    """
+    container_list = self.simulation_tool.getCurrentTrackingList(node=self.reception.getRelativeUrl())
+    self.assertEqual(len(container_list), 2)
+    # check we have cash container 1
+    container_object_list = [x.getObject() for x in container_list]
+    self.assertEqual(container_object_list[0], self.container_1)
+    self.assertEqual(container_object_list[1], self.container_2)
+
 
   ##################################
   ##  Tests
@@ -357,7 +372,7 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'CreateCashContainer Tic CheckCashDeliveryLine ' \
                     + 'CheckCashContainer1 CheckCashContainer2 ' \
                     + 'ConfirmMonetaryReception Tic CheckConfirmedInventory ' \
-                    + 'DeliverMonetaryReception Tic CheckInventory'
+                    + 'DeliverMonetaryReception Tic CheckInventory CheckContainer'
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
