@@ -28,6 +28,16 @@
 
 from DateTime import DateTime
 
+
+def isSameSet(a, b):
+  for i in a:
+    if not(i in b) : return 0
+  for i in b:
+    if not(i in a): return 0
+  if len(a) != len(b) : return 0
+  return 1
+
+
 class TestERP5BankingMixin:
   """
   Mixin class for unit test of banking operations
@@ -275,6 +285,7 @@ class TestERP5BankingMixin:
     self.cash_status_not_defined = self.cash_status_base_category.newContent(id='not_defined', portal_type='Category')
     self.cash_status_mutilated = self.cash_status_base_category.newContent(id='mutilated', portal_type='Category')
     self.cash_status_retired = self.cash_status_base_category.newContent(id='retired', portal_type='Category')
+    self.cash_status_new_not_emitted = self.cash_status_base_category.newContent(id='new_not_emitted', portal_type='Category')
 
     self.emission_letter_base_category = getattr(self.category_tool, 'emission_letter')
     # add the category k in emission letter that will be used fo banknotes and coins
@@ -286,7 +297,7 @@ class TestERP5BankingMixin:
     self.variation_base_category = getattr(self.category_tool, 'variation')
     # add the category 1992 in variation
     self.variation_1992 = self.variation_base_category.newContent(id='1992', portal_type='Category')
-    # add the category 2003 in varitation
+   # add the category 2003 in varitation
     self.variation_2003 = self.variation_base_category.newContent(id='2003', portal_type='Category')
 
     # Create Resources Document (Banknotes & Coins)
@@ -376,10 +387,10 @@ class TestERP5BankingMixin:
         else:
           for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 'encaisse_des_billets_recus_pour_ventilation',]:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-          if 'ventilation' in ss.getId():
-            for country in ['France', 'Spain']:
-              if country[0] != c.getCodification()[0]:
-                ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+            if 'ventilation' in ss.getId():
+              for country in ['France', 'Spain']:
+                if country[0] != c.getCodification()[0]:
+                  ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
 
   def openCounterDate(self, date=None, site=None):
@@ -507,6 +518,69 @@ class TestERP5BankingMixin:
     # mark the check as issued
     check.confirm()
     return check
+
+
+  def createCashContainer(self, document, container_portal_type, global_dict, line_list,):
+    """
+    Create a cash container
+    global_dict has keys :
+      emission_letter, variation, cash_status, resource
+    line_list is a list od dict with keys:
+      reference, range_start, range_stop, quantity
+    """
+    # Container Creation
+    base_list=('emission_letter', 'variation', 'cash_status')
+    category_list =  ('emission_letter/'+global_dict['emission_letter'], 'variation/'+global_dict['variation'], 'cash_status/'+global_dict['cash_status'] )
+    resource_total_quantity = 0
+    # create cash container
+    for line_dict in line_list:
+      movement_container = document.newContent(portal_type          = container_portal_type
+                                               , reindex_object     = 1
+                                               , reference                 = line_dict['reference']
+                                               , cash_number_range_start   = line_dict['range_start']
+                                               , cash_number_range_stop    = line_dict['range_stop']
+                                               )
+      # create a cash container line
+      container_line = movement_container.newContent(portal_type      = 'Container Line'
+                                                     , reindex_object = 1
+                                                     , resource_value = global_dict['resource']
+                                                     , quantity       = line_dict['quantity']
+                                                     )
+      container_line.setResourceValue(global_dict['resource'])
+      container_line.setVariationCategoryList(category_list)
+      container_line.updateCellRange(script_id='CashDetail_asCellRange',base_id="movement")
+      for key in container_line.getCellKeyList(base_id='movement'):
+        if isSameSet(key,category_list):
+          cell = container_line.newCell(*key)
+          cell.setCategoryList(category_list)
+          cell.setQuantity(line_dict['quantity'])
+          cell.setMappedValuePropertyList(['quantity','price'])
+          cell.setMembershipCriterionBaseCategoryList(base_list)
+          cell.setMembershipCriterionCategoryList(category_list)
+          cell.edit(force_update = 1,
+                    price = container_line.getResourceValue().getBasePrice())
+
+
+      resource_total_quantity += line_dict['quantity']
+    # create cash delivery movement
+    movement_line = document.newContent(id               = "movement"
+                                        , portal_type    = 'Cash Delivery Line'
+                                        , resource_value = global_dict['resource']
+                                        , quantity_unit_value = self.getCategoryTool().quantity_unit.unit
+                                        )
+    movement_line.setVariationBaseCategoryList(base_list)
+    movement_line.setVariationCategoryList(category_list)
+    movement_line.updateCellRange(script_id="CashDetail_asCellRange", base_id="movement")
+    for key in movement_line.getCellKeyList(base_id='movement'):
+      if isSameSet(key,category_list):
+        cell = movement_line.newCell(*key)
+        cell.setCategoryList(category_list)
+        cell.setQuantity(resource_total_quantity)
+        cell.setMappedValuePropertyList(['quantity','price'])
+        cell.setMembershipCriterionBaseCategoryList(base_list)
+        cell.setMembershipCriterionCategoryList(category_list)
+        cell.edit(force_update = 1,
+                  price = movement_line.getResourceValue().getBasePrice())
 
 
   def createCashInventory(self, source, destination, currency, line_list=[]):
