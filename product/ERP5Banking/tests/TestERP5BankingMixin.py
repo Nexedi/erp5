@@ -591,7 +591,7 @@ class TestERP5BankingMixin:
     """
     # we need to have a unique inventory group id by destination
     inventory_group_id = 'inventory_group_%s_%s' % \
-                         (destination.getParentValue().getId(),destination.getId())
+                         (destination.getParentValue().getUid(),destination.getId())
     if not hasattr(self, inventory_group_id):
       inventory_group =  self.cash_inventory_module.newContent(id=inventory_group_id,
                                                                portal_type='Cash Inventory Group',
