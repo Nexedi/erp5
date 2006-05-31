@@ -139,6 +139,14 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
 
 
+  def stepCheckInitialContainerInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check initial cash container on source
+    """
+    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(node=self.reception.getRelativeUrl())), 0)
+    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 0)
+
+
   def stepCreateMonetaryReception(self, sequence=None, sequence_list=None, **kwd):
     """
     Create a cash inventory document and check it
@@ -317,6 +325,14 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
 
 
+  def stepCheckConfirmedContainerInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check cash container in item table
+    """
+    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(node=self.reception.getRelativeUrl())), 0)
+    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 2)
+
+
   def stepDeliverMonetaryReception(self, sequence=None, sequence_list=None, **kw):
     """
     Deliver the monetary reception
@@ -337,14 +353,14 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 5)
 
 
-  def stepCheckInventory(self, sequence=None, sequence_list=None, **kwd):
+  def stepCheckFinalInventory(self, sequence=None, sequence_list=None, **kwd):
     """
     Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
     """
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 200.0)
 
-  def stepCheckContainer(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFinalContainerInventory(self, sequence=None, sequence_list=None, **kw):
     """
     Check cash container in item table
     """
@@ -354,7 +370,7 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     container_object_list = [x.getObject() for x in container_list]
     self.assertEqual(container_object_list[0], self.container_1)
     self.assertEqual(container_object_list[1], self.container_2)
-
+    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(node=self.reception.getRelativeUrl())), 2)
 
   ##################################
   ##  Tests
@@ -367,12 +383,12 @@ class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     # define the sequence
-    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory ' \
+    sequence_string = 'Tic CheckObjects Tic CheckInitialInventory CheckInitialContainerInventory ' \
                     + 'CreateMonetaryReception Tic ' \
                     + 'CreateCashContainer Tic CheckCashDeliveryLine ' \
                     + 'CheckCashContainer1 CheckCashContainer2 ' \
-                    + 'ConfirmMonetaryReception Tic CheckConfirmedInventory ' \
-                    + 'DeliverMonetaryReception Tic CheckInventory CheckContainer'
+                    + 'ConfirmMonetaryReception Tic CheckConfirmedInventory CheckConfirmedContainerInventory ' \
+                    + 'DeliverMonetaryReception Tic CheckFinalInventory CheckFinalContainerInventory'
     sequence_list.addSequenceString(sequence_string)
     # play the sequence
     sequence_list.play(self)
