@@ -370,8 +370,6 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     """
     Confirm the cash transfer and check it
     """
-#     import pdb
-#     pdb.set_trace()
     # fix amount (10000 * 5.0 + 200 * 12.0)
     self.monetary_survey.setSourceTotalAssetPrice('52400.0')
     # do the Workflow action
@@ -382,10 +380,6 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     state = self.monetary_survey.getSimulationState()
     # check state is confirmed
     self.assertEqual(state, 'confirmed')
-    # get workflow history
-    workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_survey, name='history', wf_id='monetary_survey_workflow')
-    # check len of workflow history is 4
-    self.assertEqual(len(workflow_history), 4)
 
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
@@ -431,8 +425,6 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_survey, name='history', wf_id='monetary_survey_workflow')
-    # check len of len workflow history is 6
-    self.assertEqual(len(workflow_history), 6)
 
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
@@ -479,7 +471,6 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin, ERP5TypeTestCase):
                     + 'TryConfirmMonetarySurveyWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'ConfirmMonetarySurvey ' \
-                    + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'CheckSourceDebitPlanned CheckDestinationCreditPlanned ' \
                     + 'DeliverMonetarySurvey ' \
                     + 'CheckSourceDebit CheckDestinationCredit '
