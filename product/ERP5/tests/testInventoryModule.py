@@ -55,7 +55,7 @@ from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
+class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   """
     Test business template erp5_trade 
   """
@@ -67,7 +67,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
   first_date_string = '2005/12/09' # First Inventory
   second_date_string = '2005/12/29' # Next Inventory
   view_stock_date = '2005/12/31' # The day where we are looking for stock
-  size_list = ['Child/32','Child/34'] 
+  size_list = ['Child/32','Child/34']
 
   def getTitle(self):
     return "Inventory Module"
@@ -78,13 +78,67 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
   def stepCommit(self,**kw):
     get_transaction().commit()
 
+  def stepCreateInitialMovements(self, sequence=None, **kw):
+    """Create movements before this inventory.
+    """
+    pplm = self.getPortal().purchase_packing_list_module
+    splm = self.getPortal().sale_packing_list_module
+
+    def deliverPackingList(pl):
+      """step through all steps of packing list workflow."""
+      pl.confirm()
+      pl.setReady()
+      pl.start()
+      pl.stop()
+      pl.deliver()
+      self.assertEquals(pl.getSimulationState(), 'delivered')
+
+    # we create content :
+    #   1 purchase packing list
+    #   1 sale packing list
+    #   1 internal packing list (actually sale with same source)
+    for month in range(1, 11):
+      ppl = pplm.newContent(
+                      portal_type='Purchase Packing List',
+                      source_value = sequence.get('organisation2'),
+                      destination_value = sequence.get('organisation1'),
+                      start_date=DateTime(2005, month, 1),
+                    )
+      ppl.newContent( portal_type='Purchase Packing List Line',
+                      resource_value=sequence.get('resource'),
+                      quantity=month*10) # dummy quantity, it will be
+                                         # replaced by inventory
+      deliverPackingList(ppl)
+
+      spl = splm.newContent(
+                      portal_type='Sale Packing List',
+                      source_value = sequence.get('organisation1'),
+                      destination_value = sequence.get('organisation2'),
+                      start_date=DateTime(2005, month, 1),
+                    )
+      spl.newContent( portal_type='Sale Packing List Line',
+                      resource_value=sequence.get('resource'),
+                      quantity=month*10)
+      deliverPackingList(spl)
+      
+      ipl = splm.newContent(
+                      portal_type='Sale Packing List',
+                      source_value = sequence.get('organisation1'),
+                      destination_value = sequence.get('organisation1'),
+                      start_date=DateTime(2005, month, 1),
+                    )
+      ipl.newContent( portal_type='Sale Packing List Line',
+                      resource_value=sequence.get('resource'),
+                      quantity=month*10)
+      deliverPackingList(ipl)
+      
   def createInventory(self, start_date=None,
                                        sequence=None,**kw):
     """
     We will put default values for an inventory
     """
     portal = self.getPortal()
-    organisation =  sequence.get('organisation')
+    organisation =  sequence.get('organisation1')
     inventory = self.getInventoryModule().newContent()
     inventory.edit(start_date=start_date,
                    destination_value=organisation)
@@ -135,7 +189,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
   def stepCheckFirstNotVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
-    node_uid = sequence.get('organisation').getUid()
+    node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
@@ -145,7 +199,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
   def stepCheckSecondNotVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
-    node_uid = sequence.get('organisation').getUid()
+    node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
     LOG('CheckSecondNotVariatedInventory',0, self.getSimulationTool().getInventory(node_uid=node_uid,
@@ -170,7 +224,9 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
     # Test with a simple inventory without cell
     sequence_string = 'CreateNotVariatedResource \
-                       CreateOrganisation \
+                       CreateOrganisation1 \
+                       CreateInitialMovements \
+                       Tic \
                        CreateFirstNotVariatedInventory \
                        Tic \
                        CheckFirstNotVariatedInventory \
@@ -245,7 +301,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
     """
     inventory = self.createNotVariatedInventory(sequence=sequence,start_date=start_date)
     resource = sequence.get('resource_list')[0]
-    organisation =  sequence.get('organisation')
+    organisation =  sequence.get('organisation1')
     inventory = self.getInventoryModule().newContent()
     inventory.edit(start_date=start_date,
                    destination_value=organisation)
@@ -257,7 +313,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
   def stepCheckFirstVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
-    node_uid = sequence.get('organisation').getUid()
+    node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
     total_quantity = 99 + 100
@@ -275,7 +331,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
   def stepCheckSecondVariatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
-    node_uid = sequence.get('organisation').getUid()
+    node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
     total_quantity = 89 + 90
@@ -302,7 +358,9 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
     # Test with a variated inventory
     sequence_string = 'CreateVariatedResource \
-                       CreateOrganisation \
+                       CreateOrganisation1 \
+                       CreateInitialMovements \
+                       Tic \
                        CreateFirstVariatedInventory \
                        Tic \
                        CheckFirstVariatedInventory \
@@ -353,7 +411,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
   def stepCheckFirstVariatedAggregatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
-    node_uid = sequence.get('organisation').getUid()
+    node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
     total_quantity = (99 + 100) * 2
@@ -402,7 +460,7 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
   def stepCheckSecondVariatedAggregatedInventory(self, start_date=None,quantity=None,
                                              sequence=None,**kw):
-    node_uid = sequence.get('organisation').getUid()
+    node_uid = sequence.get('organisation1').getUid()
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
     total_quantity = (89 + 90) * 2
@@ -439,7 +497,9 @@ class TestInventoryModule(TestOrderMixin,ERP5TypeTestCase):
 
     # Test with a variated inventory with some aggregate
     sequence_string = 'CreateVariatedResource \
-                       CreateOrganisation \
+                       CreateOrganisation1 \
+                       CreateInitialMovements \
+                       Tic \
                        CreateItem \
                        CreateItem \
                        CreateFirstVariatedAggregatedInventory \
