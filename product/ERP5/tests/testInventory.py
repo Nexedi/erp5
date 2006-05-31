@@ -1146,48 +1146,88 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     expected_list = []
     for i in range(1, 31):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': quantity })
     for i in range(31, 33):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':1, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 1,
+                             'inventory': quantity })
     for i in range(33, 34):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 2,
+                             'inventory': quantity })
     for i in range(33, 40):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 3,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': quantity })
     for i in range(40, 41):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 3,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 2,
+                             'inventory': quantity })
     for i in range(1, 24):
       quantity = (i + 0.) / 4
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': - quantity })
     for i in range(12, 18):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': - quantity })
     for i in range(12, 13):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':1, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 1,
+                             'inventory': - quantity })
     for i in [7.5, 5, 3]:
       quantity = (i + 0.)
-      expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 3,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': - quantity })
     for i in [18]:
       quantity = (i + 0.)
-      expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 3,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 2,
+                             'inventory': - quantity })
+
     for i in [ [2,0,0], [2,0,1], [2,0,2], [3,0,0], [3,0,2],
                [2,0,0], [2,0,1], [3,0,0], [3,0,2] ]:
-      expected_list.append({ 'node_relative_url': i[0], 'section_relative_url':i[1], 'resource_relative_url':i[2], 'inventory':0. }) #None })
+      expected_list.append({ 'node_relative_url': i[0],
+                             'section_relative_url': i[1],
+                             'resource_relative_url': i[2],
+                             'inventory':0. })
     
-    item_dict = {'node':organisation_list, 'section':organisation_list, 'resource':resource_list}
+    item_dict = { 'node': organisation_list,
+                  'section': organisation_list,
+                  'resource': resource_list }
     expected_l = expected_list[:]
     for expected in expected_l:
-      for attribute in [x for x in expected.keys() if x.endswith('_relative_url')]:
+      for attribute in [x for x in expected.keys()
+                          if x.endswith('_relative_url')]:
         attr_name = attribute.split('_')[0]
-        expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
-    self._testGetInventoryList(expected=expected_l, section=organisation_list[0].getRelativeUrl(), omit_simulation=1)
+        expected[attribute] = item_dict[attr_name]\
+                                  [expected[attribute]].getRelativeUrl()
+    self._testGetInventoryList(expected=expected_l,
+                               section=organisation_list[0].getRelativeUrl(),
+                               omit_simulation=1)
     
-    
-  def stepTestGetInventoryListOnNode(self, sequence=None, sequence_list=None, **kw):
+  def stepTestGetInventoryListOnNode(self, sequence=None,
+                                     sequence_list=None, **kw):
     """
       Test getInventoryList on a Node
     """
@@ -1198,32 +1238,60 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     expected_list = []
     for i in range(1, 31):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': quantity })
     for i in range(31, 33):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':1, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 1,
+                             'inventory': quantity })
     for i in range(33, 34):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 2,
+                             'inventory': quantity })
     for i in range(1, 24):
       quantity = (i + 0.) / 4
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': - quantity })
     for i in range(12, 18):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 0,
+                             'inventory': - quantity })
     for i in range(12, 13):
       quantity = (i + 0.) / 2
-      expected_list.append({ 'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':1, 'inventory':-quantity })
+      expected_list.append({ 'node_relative_url': 2,
+                             'section_relative_url': 0,
+                             'resource_relative_url': 1,
+                             'inventory': - quantity })
+
     for i in [ [2,0,0], [2,0,1], [2,0,2], [2,0,0], [2,0,1] ]:
-      expected_list.append({ 'node_relative_url': i[0], 'section_relative_url':i[1], 'resource_relative_url':i[2], 'inventory':0. })#None })
+      expected_list.append({ 'node_relative_url': i[0],
+                             'section_relative_url': i[1],
+                             'resource_relative_url': i[2],
+                             'inventory':0. })
     
-    item_dict = {'node':organisation_list, 'section':organisation_list, 'resource':resource_list}
+    item_dict = { 'node': organisation_list,
+                  'section': organisation_list,
+                  'resource': resource_list }
     expected_l = expected_list[:]
     for expected in expected_l:
-      for attribute in [x for x in expected.keys() if x.endswith('_relative_url')]:
+      for attribute in [x for x in expected.keys()
+                            if x.endswith('_relative_url')]:
         attr_name = attribute.split('_')[0]
-        expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
-    self._testGetInventoryList(expected=expected_l, node=organisation_list[2].getRelativeUrl(), omit_simulation=1)    
+        expected[attribute] = item_dict[attr_name]\
+                                [expected[attribute]].getRelativeUrl()
+    self._testGetInventoryList( expected=expected_l,
+                                node=organisation_list[2].getRelativeUrl(),
+                                omit_simulation=1)
 
     
   def stepTestGetInventoryListWithOmitInput(self, sequence=None, sequence_list=None, **kw):
