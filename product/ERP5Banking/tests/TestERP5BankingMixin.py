@@ -378,10 +378,7 @@ class TestERP5BankingMixin:
       caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
       for s in ['auxiliaire', 'reserve', 'externes', 'serre']:
         s = caveau.newContent(id='%s' %(s,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s,))
-        if s.getId() == 'auxiliaire':
-          for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
-            s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-        elif s.getId() == 'serre':
+        if s.getId() == 'serre':
           for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits']:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         else:
@@ -391,6 +388,9 @@ class TestERP5BankingMixin:
               for country in ['France', 'Spain']:
                 if country[0] != c.getCodification()[0]:
                   ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+          if s.getId() == 'auxiliaire':
+            for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
+              s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
 
 
   def openCounterDate(self, date=None, site=None):
@@ -520,13 +520,13 @@ class TestERP5BankingMixin:
     return check
 
 
-  def createCashContainer(self, document, container_portal_type, global_dict, line_list,):
+  def createCashContainer(self, document, container_portal_type, global_dict, line_list, delivery_line_type='Cash Delivery Line'):
     """
     Create a cash container
     global_dict has keys :
       emission_letter, variation, cash_status, resource
     line_list is a list od dict with keys:
-      reference, range_start, range_stop, quantity
+      reference, range_start, range_stop, quantity, aggregate
     """
     # Container Creation
     base_list=('emission_letter', 'variation', 'cash_status')
@@ -540,6 +540,8 @@ class TestERP5BankingMixin:
                                                , cash_number_range_start   = line_dict['range_start']
                                                , cash_number_range_stop    = line_dict['range_stop']
                                                )
+      if line_dict.has_key('aggregate'):
+        movement_container.setAggregateValueList([line_dict['aggregate'],])
       # create a cash container line
       container_line = movement_container.newContent(portal_type      = 'Container Line'
                                                      , reindex_object = 1
@@ -564,7 +566,7 @@ class TestERP5BankingMixin:
       resource_total_quantity += line_dict['quantity']
     # create cash delivery movement
     movement_line = document.newContent(id               = "movement"
-                                        , portal_type    = 'Cash Delivery Line'
+                                        , portal_type    = delivery_line_type
                                         , resource_value = global_dict['resource']
                                         , quantity_unit_value = self.getCategoryTool().quantity_unit.unit
                                         )
