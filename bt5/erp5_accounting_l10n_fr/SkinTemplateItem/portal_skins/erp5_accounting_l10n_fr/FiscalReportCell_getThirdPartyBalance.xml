@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.PythonScripts.PythonScript</string>
+          <string>PythonScript</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script adds accounts balance, only if they are creditors.\n
+  For accounts that can be expanded by third parties, we calcul the balance\n
+    per third parties to check if the given third party is creditor or not.\n
+  TODO: The "expansion by third party" code come from\n
+          AccountModule_getAccountListForTrialBalance script. Perhaps it\'s a\n
+          good idea to put it in an external generic script.\n
+"""\n
+\n
+request      = context.REQUEST\n
+getInventory = context.getPortalObject().portal_simulation.getInventoryAssetPrice\n
+\n
+include_debtor   = True\n
+include_creditor = True\n
+if debtor_only  : include_creditor = False\n
+if creditor_only: include_debtor   = False\n
+\n
+gap_base = request.get(\'gap_base\', kwd.get(\'gap_base\', \'gap/fr/pcg/\'))\n
+getURL   = lambda gap_id: context.GAPCategory_getURLFromId(gap_id, gap_base)\n
+\n
+kw = dict(kwd)\n
+kw[\'to_date\']          = kwd.get(\'at_date\', request[\'at_date\']) + 1\n
+kw[\'simulation_state\'] = kwd.get(\'simulation_state\', request.get(\'simulation_state\', [\'stopped\', \'delivered\']))\n
+kw[\'section_category\'] = kwd.get("section_category", "group/%s" % context.restrictedTraverse(request.get("organisation")).getGroup())\n
+kw[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
+\n
+\n
+# Find accounts that can be expanded according category membership\n
+acc_type = context.portal_categories.account_type\n
+rec_cat  = acc_type.asset.receivable\n
+pay_cat  = acc_type.liability.payable\n
+# We use strict_membership because we do not want VAT\n
+params = { \'portal_type\'      : \'Account\'\n
+         , \'strict_membership\': True\n
+         }\n
+accounts_to_expand_by_tp = rec_cat.getAccountTypeRelatedValueList(**params) + \\\n
+                           pay_cat.getAccountTypeRelatedValueList(**params)\n
+\n
+\n
+total_balance = 0.0\n
+for account_gap_number in accounts:\n
+  # We get all acounts strict member of this GAP category\n
+  gap = context.restrictedTraverse(\'portal_categories/\' + getURL(account_gap_number))\n
+\n
+  for account in gap.getGapRelatedValueList(portal_type=\'Account\'):\n
+    account_balance = 0.0\n
+\n
+    # This account should be analyzed per third party\n
+    if account in accounts_to_expand_by_tp:\n
+      # get all entities that are destination section related to this account.\n
+      third_party_list  = [o.getObject() for o in \\\n
+            context.Account_zDistinctSectionList( node_uid         = account.getUid()\n
+                                                , at_date          = request[\'at_date\']\n
+                                                , simulation_state = kw[\'simulation_state\']\n
+                                                )]\n
+      for tp in third_party_list:\n
+        tp_balance = getInventory( node_uid           = account.getUid()\n
+                                 , mirror_section_uid = tp.getUid()\n
+                                 , omit_simulation    = True\n
+                                 , **kw\n
+                                 )\n
+        if (tp_balance < 0 and include_creditor) or \\\n
+           (tp_balance > 0 and include_debtor):\n
+          account_balance += tp_balance\n
+\n
+    # Get the balance of the account\n
+    else:\n
+      account_balance = getInventory( node_uid = account.getUid()\n
+                                    , **kw\n
+                                    )\n
+\n
+    # Add account final balance to the total sum\n
+    if (account_balance < 0 and include_creditor) or \\\n
+       (account_balance > 0 and include_debtor):\n
+      total_balance += account_balance\n
+\n
+return total_balance\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_dav_writelocks</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting_l10n_fr/FiscalReportCell_getThirdPartyBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>accounts, debtor_only=False, creditor_only=False, **kwd</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>accounts</string>
+                            <string>debtor_only</string>
+                            <string>creditor_only</string>
+                            <string>kwd</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>getInventory</string>
+                            <string>True</string>
+                            <string>include_debtor</string>
+                            <string>include_creditor</string>
+                            <string>False</string>
+                            <string>gap_base</string>
+                            <string>getURL</string>
+                            <string>dict</string>
+                            <string>kw</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
+                            <string>acc_type</string>
+                            <string>rec_cat</string>
+                            <string>pay_cat</string>
+                            <string>params</string>
+                            <string>_apply_</string>
+                            <string>accounts_to_expand_by_tp</string>
+                            <string>total_balance</string>
+                            <string>_getiter_</string>
+                            <string>account_gap_number</string>
+                            <string>gap</string>
+                            <string>account</string>
+                            <string>account_balance</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>o</string>
+                            <string>third_party_list</string>
+                            <string>tp</string>
+                            <string>tp_balance</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>FiscalReportCell_getThirdPartyBalance</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_container</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
