@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
 
 
-class TestERP5MonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingMonetaryIssue(TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Monetary Issue
 

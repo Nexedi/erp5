@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
 
 
-class TestERP5MonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
+class TestERP5BankingMonetaryReception(TestERP5BankingMixin, ERP5TypeTestCase):
   """
     This class is a unit test to check the module of Cash Transfer
 
