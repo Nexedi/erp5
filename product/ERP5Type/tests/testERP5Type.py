@@ -126,9 +126,15 @@ class TestERP5Type(ERP5TypeTestCase):
       self.assertEquals(o.getTitle(), 'toto')
       self.assertEquals(str(o.getId()), str(-123))
 
-      o = newTempOrganisation(portal,'aa') 
+      # Try to edit with any property and then get it with getProperty
+      o = newTempOrganisation(portal,'a') 
       o.edit(tutu='toto')
       self.assertEquals(o.getProperty('tutu'), 'toto')
+
+      # Same thing with an integer
+      o = newTempOrganisation(portal,'b') 
+      o.edit(tata=123)
+      self.assertEquals(o.getProperty('tata'), 123)
 
     def test_04_CategoryAccessors(self):
       portal = self.getPortal()
