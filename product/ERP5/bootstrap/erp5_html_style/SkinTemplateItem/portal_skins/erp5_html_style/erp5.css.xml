@@ -231,7 +231,7 @@ TABLE.px{\n
  border-right-width: 1px;\n
  border-bottom-width: 1px;\n
  border-left-width: 1px;\n
- margin-right: 0.1em;\n
+ /*margin-right: 0.1em;*/\n
  margin-left: 5px;\n
  margin-top: 5px;\n
  margin-bottom: 5px;\n
@@ -276,7 +276,7 @@ color:  &dtml-default_font_color;;\n
  border-right-width: 1px;\n
  border-bottom-width: 1px;\n
  border-left-width: 1px;\n
- margin-right: 0.1em;\n
+ /*margin-right: 0.1em;*/\n
  margin-left: 5px;\n
  margin-top: 5px;\n
  margin-bottom: 5px;\n
@@ -349,7 +349,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.Data{\n
- font-size: 0.8em;\n
+ /*font-size: 0.8em;*/\n
  color:  &dtml-default_font_color;;\n
  background-color: #c1dad2;\n
  border-color:  &dtml-default_font_color;;\n
@@ -377,7 +377,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataA{\n
- font-size: 0.8em;\n
+ /*font-size: 0.8em;*/\n
  background-color: inherit;\n
  color: #000000;\n
  border-color:  &dtml-default_font_color;;\n
@@ -389,7 +389,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataB{\n
- font-size: 0.8em;\n
+ /*font-size: 0.8em;*/\n
  background-color: inherit;\n
  color: #000000;\n
  border-color:  &dtml-default_font_color;;\n
@@ -401,7 +401,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataAError{\n
- font-size: 0.8em;\n
+ /*font-size: 0.8em;*/\n
  background-color: #ffffff;\n
  color: red;\n
  border-color: red;\n
@@ -413,7 +413,7 @@ color:  &dtml-default_font_color;;\n
 }\n
 \n
 .ListContent td.DataBError{\n
- font-size: 0.8em;\n
+ /*font-size: 0.8em;*/\n
  background-color: inherit;\n
  color: red;\n
  border-color:  red;\n
