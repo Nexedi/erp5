@@ -52,9 +52,7 @@ from copy import copy
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from Products.Formulator.Form import BasicForm
 from Products.CMFCore.utils import getToolByName
-
 from Products.ERP5Type.Utils import getPath
-
 from Products.ERP5Type.Message import Message
 
 class PlanningBoxValidator(Validator.StringBaseValidator):
@@ -832,7 +830,7 @@ class PlanningBoxWidget(Widget.Widget):
 
     here = REQUEST['here']
 
-    pdb.set_trace()
+    #pdb.set_trace()
     # build structure
     # render_structure will call all method necessary to build the entire
     # structure relative to the planning
@@ -866,7 +864,7 @@ class PlanningBoxWidget(Widget.Widget):
     structure = REQUEST.get('structure')
 
 
-    pdb.set_trace()
+    #pdb.set_trace()
 
     # getting HTML rendering Page Template
     planning_html_method = getattr(REQUEST['here'],'planning_content')
