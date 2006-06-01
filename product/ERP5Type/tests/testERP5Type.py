@@ -126,6 +126,10 @@ class TestERP5Type(ERP5TypeTestCase):
       self.assertEquals(o.getTitle(), 'toto')
       self.assertEquals(str(o.getId()), str(-123))
 
+      o = newTempOrganisation(portal,'aa') 
+      o.edit(tutu='toto')
+      self.assertEquals(o.getProperty('tutu'), 'toto')
+
     def test_04_CategoryAccessors(self):
       portal = self.getPortal()
       region_category = self.getPortal().portal_categories.region
