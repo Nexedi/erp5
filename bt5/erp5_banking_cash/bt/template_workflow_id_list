@@ -3,4 +3,5 @@ classification_survey_workflow
 monetary_issue_workflow
 monetary_reception_workflow
 monetary_survey_workflow
+money_deposit_transfer_workflow
 usual_cash_transfer_workflow

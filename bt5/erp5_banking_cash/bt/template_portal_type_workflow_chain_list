@@ -12,5 +12,7 @@ Monetary Reception | edit_workflow
 Monetary Reception | monetary_reception_workflow
 Monetary Survey | edit_workflow
 Monetary Survey | monetary_survey_workflow
+Money Deposit Transfer | edit_workflow
+Money Deposit Transfer | money_deposit_transfer_workflow
 Usual Cash Transfer | edit_workflow
 Usual Cash Transfer | usual_cash_transfer_workflow

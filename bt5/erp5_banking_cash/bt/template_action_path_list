@@ -67,6 +67,16 @@ Monetary Survey | history
 Monetary Survey | metadata
 Monetary Survey | print
 Monetary Survey | view
+Money Deposit Transfer Module | list
+Money Deposit Transfer Module | list_ui
+Money Deposit Transfer Module | print_pdf
+Money Deposit Transfer Module | sort_on
+Money Deposit Transfer Module | view
+Money Deposit Transfer | fastinput
+Money Deposit Transfer | history
+Money Deposit Transfer | metadata
+Money Deposit Transfer | print_pdf
+Money Deposit Transfer | view
 Outgoing Cash Sorting Cell | metadata
 Outgoing Cash Sorting Cell | view
 Outgoing Cash Sorting Line | metadata

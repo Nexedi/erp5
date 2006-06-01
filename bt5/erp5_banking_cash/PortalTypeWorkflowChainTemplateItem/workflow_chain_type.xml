@@ -28,6 +28,10 @@
   <workflow>edit_workflow, monetary_survey_workflow</workflow>
  </chain>
  <chain>
+  <type>Money Deposit Transfer</type>
+  <workflow>edit_workflow, money_deposit_transfer_workflow</workflow>
+ </chain>
+ <chain>
   <type>Usual Cash Transfer</type>
   <workflow>edit_workflow, usual_cash_transfer_workflow</workflow>
  </chain>

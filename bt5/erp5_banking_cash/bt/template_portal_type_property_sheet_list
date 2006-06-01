@@ -9,6 +9,8 @@ Monetary Issue | Price
 Monetary Reception | CashContainer
 Monetary Survey | Amount
 Monetary Survey | Task
+Money Deposit Transfer | Amount
+Money Deposit Transfer | Price
 Outgoing Cash Sorting Cell | CashDeliveryLine
 Outgoing Cash Sorting Line | CashDeliveryLine
 Outgoing Classification Survey Cell | CashDeliveryLine

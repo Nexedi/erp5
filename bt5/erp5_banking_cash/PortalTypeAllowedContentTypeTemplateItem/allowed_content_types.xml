@@ -54,6 +54,12 @@
  <portal_type id="Monetary Survey Module">
   <item>Monetary Survey</item>
  </portal_type>
+ <portal_type id="Money Deposit Transfer">
+  <item>Cash Delivery Line</item>
+ </portal_type>
+ <portal_type id="Money Deposit Transfer Module">
+  <item>Money Deposit Transfer</item>
+ </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
   <item>Outgoing Cash Sorting Cell</item>
  </portal_type>

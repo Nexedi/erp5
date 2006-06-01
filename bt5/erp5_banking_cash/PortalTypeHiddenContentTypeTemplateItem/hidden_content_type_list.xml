@@ -40,6 +40,9 @@
  <portal_type id="Monetary Survey">
   <item>Cash Delivery Line</item>
  </portal_type>
+ <portal_type id="Money Deposit Transfer">
+  <item>Cash Delivery Line</item>
+ </portal_type>
  <portal_type id="Outgoing Cash Sorting Line">
   <item>Outgoing Cash Sorting Cell</item>
  </portal_type>
