@@ -70,6 +70,19 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+  This script is an alpha version of what should be a generic OpenOffice importer,\n
+    which is a collection of scripts and UI to import lots of objects to ERP5\n
+    from a spreadsheet. The idea is to let the user map each spreadsheet column with\n
+    one portal type property.\n
+\n
+  Other files related to this feature:\n
+    * openoffice-erp5-objects-template.sxc           -- A template that describe persons to help you create your own data source\n
+    * ERP5Site_importObjectFromOOoFastInput          -- The UI\n
+    * ERP5Site_getSpreadsheetColumnNameList          -- Utility script\n
+    * ERP5Site_getModulePortalTypeSortedPropertyList -- Utility script\n
+"""\n
+\n
 request  = context.REQUEST\n
 \n
 def getRequestKeys(rq):\n

@@ -1,3 +1,6 @@
+2006-06-01 Kevin
+* Add a description to explain the purpose of "Open Office Generic Importer".
+
 2006-05-23 aurel
 * add simulation_state column in item and fix Resource_zGetTrackingList
 
