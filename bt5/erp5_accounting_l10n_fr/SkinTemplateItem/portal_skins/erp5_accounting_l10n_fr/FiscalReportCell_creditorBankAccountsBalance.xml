@@ -68,48 +68,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  This script adds bank accounts balances, only if they are creditors\n
-"""\n
-\n
-request=context.REQUEST\n
-kw = dict(kwd)\n
-kw[\'simulation_state\'] = kwd.get(\'simulation_state\', request.get(\'simulation_state\', [\'stopped\', \'delivered\']))\n
-if kw.get("resource") :\n
-  kw["resource"]        = kwd[\'resource\']\n
-kw["section_category"]  = kwd.get("section_category", \n
-                            "group/%s"%context.restrictedTraverse(request.get("organisation")).getGroup())\n
-kw[\'at_date\'] = kwd.get(\'at_date\', request[\'at_date\'])\n
-kw[\'where_expression\'] = " section.portal_type = \'Organisation\' "\n
-\n
-\n
-def shortAccountNumberToFullGapCategory(accountNumber) :\n
-  """ translates a short account number (eg 280) to a full gap category url \n
-    (eg gap/fr/gap/2/28/280) """\n
-  accountNumber = accountNumber.strip()\n
-  gap = request.get("gap_base", "gap/fr/pcg/")\n
-  for i in range(len(accountNumber)) :\n
-    gap += accountNumber[:i+1]+"/"\n
-  return gap[:-1]\n
-\n
-sum = 0.0\n
-for account in accounts :\n
-  for bank in context.restrictedTraverse(request.get("organisation")).searchFolder(\n
-                                                                    portal_type=context.getPortalPaymentNodeTypeList()) : \n
-    bank = bank.getObject()\n
-    result = context.getPortalObject().portal_simulation.getInventoryAssetPrice( \n
-                                       payment_uid = bank.getUid(),\n
-                                       node_category = shortAccountNumberToFullGapCategory(account), \n
-                                       **kw )\n
-    if result < 0 : \n
-      sum += result\n
-\n
-return sum\n
-
-
-]]></string> </value>
+            <value> <string>context.log("Naming Convention Violation", "FiscalReportCell_creditorBankAccountsBalance should be renamed FiscalReportCell_getCreditorBankAccountBalance")\n
+return context.FiscalReportCell_getBankAccountBalance(accounts, creditor_only=True, **kw)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -129,7 +90,7 @@ return sum\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>accounts, **kwd</string> </value>
+            <value> <string>accounts, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,21 +117,11 @@ return sum\n
                         <value>
                           <tuple>
                             <string>accounts</string>
-                            <string>kwd</string>
+                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>dict</string>
-                            <string>kw</string>
-                            <string>_write_</string>
-                            <string>_getitem_</string>
-                            <string>shortAccountNumberToFullGapCategory</string>
-                            <string>sum</string>
-                            <string>_getiter_</string>
-                            <string>account</string>
-                            <string>bank</string>
                             <string>_apply_</string>
-                            <string>result</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
