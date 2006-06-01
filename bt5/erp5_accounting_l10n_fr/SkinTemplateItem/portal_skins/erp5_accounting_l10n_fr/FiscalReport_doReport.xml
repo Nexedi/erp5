@@ -80,7 +80,13 @@ return getattr(context, report).generatePDF(REQUEST=context.REQUEST, RESPONSE=co
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_skins/erp5_accounting_l10n_fr/FiscalReport_doReport</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_skins/erp5_accounting_l10n_fr/FiscalReport_doReport</string> </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
