@@ -26,15 +26,17 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
-from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 
-class Supply(Path,XMLObject):
+class Supply(Path, XMLObject):
+    """A Supply defines precise pricing and shipping conditions between
+    two trade parties for a limited selection of traded products,
+    components, services, etc. It can be used to represent price
+    catalogs, product referencing, pricing policy, etc.
+    """
     # CMF Type Definition
     meta_type = 'ERP5 Supply'
     portal_type = 'Supply'
