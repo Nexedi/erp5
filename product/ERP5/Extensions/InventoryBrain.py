@@ -162,10 +162,15 @@ class InventoryListBrain(ZSQLBrain):
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     # XXX FIXME can catch to many exceptions
     try:
-      if cname_id in ('getExplanationText','getExplanation', ):
+      if cname_id in ('getExplanationText', 'getExplanation', ):
         o = self.getObject()
         if o is not None:
-          explanation = o.getExplanationValue()
+          if not getattr(o, 'isDelivery', 0):
+            explanation = o.getExplanationValue()
+          else:
+            # Additional inventory movements are catalogged in stock table
+            # with the inventory's uid. Then they are their own explanation.
+            explanation = o
           if explanation is not None:
             return '%s/%s/view' % (
                     self.portal_url.getPortalObject().absolute_url(),
@@ -238,7 +243,12 @@ class InventoryListBrain(ZSQLBrain):
     if o is not None:
       N_ = lambda msg, **kw: o.Localizer.translate('ui', msg, **kw)
       # Get the delivery/order
-      delivery = o.getExplanationValue()
+      if not getattr(o, 'isDelivery', 0):
+        delivery = o.getExplanationValue()
+      else:
+        # Additional inventory movements are catalogged in stock table
+        # with the inventory's uid. Then they are their own explanation.
+        delivery = o
       if delivery is not None:
         mapping = {
           'delivery_portal_type' : delivery.getTranslatedPortalType(),

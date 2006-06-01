@@ -62,7 +62,8 @@ class Inventory(Delivery):
 
     security.declarePublic('alternateReindexObject')
     def alternateReindexObject(self, **kw):
-      """This method is called when an inventory object is included in a group of catalogged objects.
+      """This method is called when an inventory object is included in a
+      group of catalogged objects.
       """
       return self.immediateReindexObject(**kw)
 
