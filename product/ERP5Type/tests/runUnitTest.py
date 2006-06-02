@@ -94,9 +94,14 @@ def runUnitTestList(test_list) :
   products_home = os.path.join(instance_home, 'Products')
   from glob import glob
   product_test_list = glob(products_home + os.sep + '*' + os.sep + 'tests')
-  sys.path += product_test_list
+  sys.path.extend(product_test_list)
   sys.path.extend((real_tests_home, tests_home))
 
+  # Make sure that locally overridden python modules are used
+  sys.path.insert(0, os.path.join(real_instance_home, 'lib%spython' % os.sep))
+
+  # XXX Allowing to load modules from here is a wrong idea. use the above path
+  # instead.
   # Add tests_framework_home as first path element.
   # this allows to bypass psyco by creating a dummy psyco module
   # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
