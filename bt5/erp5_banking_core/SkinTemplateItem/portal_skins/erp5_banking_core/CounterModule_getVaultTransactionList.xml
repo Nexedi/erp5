@@ -70,6 +70,8 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempBase\n
 \n
+context.log(\'CounterModule_getVaultTransactionList vault:\',vault)\n
+\n
 def getTitleFromCategoryUrl(category):\n
   return context.portal_categories.getCategoryValue(category).getTitle()\n
 \n
@@ -98,7 +100,13 @@ for vault_inventory in vault_inventory_list:\n
   context.log(\'vault_inventory total_price\',vault_inventory.total_price)\n
   resource = (vault_inventory.resource_uid, vault_inventory.variation_text or \'\')\n
   if not vault_inventory_dict[vault_url].has_key(resource):\n
-    vault_inventory_dict[vault_url][resource] = {\'quantity\':vault_inventory.total_quantity, \'total_price\':vault_inventory.total_price}\n
+    total_quantity = vault_inventory.total_quantity\n
+    if total_quantity is None:\n
+      total_quantity = 0\n
+    total_price = vault_inventory.total_price\n
+    if total_price is None:\n
+      total_price = 0\n
+    vault_inventory_dict[vault_url][resource] = {\'quantity\':total_quantity, \'total_price\':total_price}\n
 \n
   resource_dict[resource] = 1\n
 \n
@@ -124,7 +132,7 @@ i = 0\n
 for resource in resource_dict.keys():\n
   variation_text = resource[1]\n
   tmp_dict = {\'resource_uid\':resource[0], \'variation_text\':variation_text}\n
-  for variation in variation_text.split(\'/n\'):\n
+  for variation in variation_text.split(\'\\n\'):\n
     if variation.startswith(\'cash_status\'):\n
       tmp_dict[\'cash_status\'] = variation\n
     elif variation.startswith(\'emission_letter\'):\n
@@ -136,6 +144,7 @@ for resource in resource_dict.keys():\n
   resource_value = context.portal_catalog.getObject(resource[0])\n
   tmp_dict[\'base_price\'] = resource_value.getBasePrice()\n
   tmp_dict[\'resource_title\'] = resource_value.getTitle()\n
+  tmp_dict[\'resource_portal_type\'] = resource_value.getPortalType()\n
   general_total_price = 0\n
   for vault in vault_dict.keys():\n
     try:\n
@@ -216,6 +225,8 @@ return repr([x for x in total_inventory_list])\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>getTitleFromCategoryUrl</string>
                             <string>getVariationTitleList</string>
                             <string>resource_dict</string>
@@ -225,14 +236,15 @@ return repr([x for x in total_inventory_list])\n
                             <string>_write_</string>
                             <string>inventory_kw</string>
                             <string>_apply_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>vault_inventory_list</string>
                             <string>len</string>
                             <string>_getiter_</string>
                             <string>vault_inventory</string>
                             <string>resource</string>
                             <string>_getitem_</string>
+                            <string>total_quantity</string>
+                            <string>None</string>
+                            <string>total_price</string>
                             <string>column_list</string>
                             <string>total_inventory_list</string>
                             <string>i</string>
