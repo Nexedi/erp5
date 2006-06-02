@@ -1,3 +1,6 @@
+2006-06-02 Kevin
+* Move OpenOffice Importer tool from erp5_core to erp5_base.
+
 2006-05-29 jerome
 * Set acquisition on price_currency category
 
