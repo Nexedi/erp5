@@ -365,7 +365,6 @@ class TestERP5BankingMixin:
           ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s.getId(),))
           for sss in ['encaisse_des_billets_et_monnaies',]:
             sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s.getId(),))
-
       # create sort room
       salle_de_tri = surface.newContent(id='salle_de_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_de_tri')
       for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation']:
@@ -382,12 +381,15 @@ class TestERP5BankingMixin:
           for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits']:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         else:
-          for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 'encaisse_des_billets_recus_pour_ventilation',]:
+          for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 
+                     'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
             if 'ventilation' in ss.getId():
               for country in ['France', 'Spain']:
                 if country[0] != c.getCodification()[0]:
                   ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
+            if ss.getId()=='encaisse_des_devises':
+              for 
           if s.getId() == 'auxiliaire':
             for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
               s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
