@@ -1,3 +1,7 @@
+2006-06-02 Kevin
+* Move OpenOffice Importer tool from erp5_core to erp5_base.
+* Update BT description.
+
 2006-06-01 Kevin
 * Add a description to explain the purpose of "Open Office Generic Importer".
 
