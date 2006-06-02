@@ -174,8 +174,8 @@ class XMLMatrix(Folder):
       """
       movement = {}  # We will put in this dictionnary the previous and new
                      # id of a given cell
-      new_index = PersistentMapping() # new_index defines the relation between keys
-                                      # and ids of cells
+      new_index = PersistentMapping() # new_index defines the relation
+                                      # between keys and ids of cells
 
       base_id= kwd.get('base_id', "cell")
       if not hasattr(aq_base(self), 'index'):
@@ -225,12 +225,15 @@ class XMLMatrix(Folder):
       object_id_list = []
       for object in self.objectValues():
         if object.id.find(base_id) == 0:
-          # We want to make sure we have only base_id, ex: foo_0_0 and not foo_bar_0_0
+          # We want to make sure we have only base_id, ex: foo_0_0 and
+          # not foo_bar_0_0
           if (object.id) > len(base_id):
             try:
               int(object.id[len(base_id)+1:].split('_')[0])
-              test = self._getOb(object.id) # If the object was created during this transaction,
-                                            # then we do not need to work on it
+              test = self._getOb(object.id) # If the object was created
+                                            # during this transaction,
+                                            # then we do not need to
+                                            # work on it
               object_id_list += [object.id]
             except ValueError, KeyError:
               pass
@@ -240,9 +243,7 @@ class XMLMatrix(Folder):
         object = self._getOb(object_id)
         object.isIndexable = 0 # block reindexing at this time
         object.id = new_name
-        #LOG("Set Object",0, str(new_name))
         self._setObject(new_name, aq_base(object))
-        #LOG("Del Object",0, str(object_id))
         self._delObject(object_id)
 
       for object_id in object_id_list:
@@ -281,29 +282,30 @@ class XMLMatrix(Folder):
           new_name = base_id + '_' + join(object_place,'_')
           o.id = new_name
           new_object_id_list.extend(new_name)
-          #LOG("Set2 Object",0, str(new_name))
           self._setObject(new_name, aq_base(o))
-          #LOG("Del2 Object",0, 'temp_' + str(object_id))
-          self._delObject('temp_' + object_id) # In all cases, we have to remove the temp object
+          self._delObject('temp_' + object_id) # In all cases, we have
+                                               # to remove the temp object
           o.isIndexable = 1 # reindexing is possible again
           if new_name != object_id:
             # Theses two lines are very important, if the object is renamed
             # then we must uncatalog the previous one
             o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
-          o.reindexObject() # we reindex in case position has changed - uid should be consistent
-          LOG('XMLMatrix', 0, 'reindex object uid %s' % repr(o.getUid()))
+          o.reindexObject() # we reindex in case position has changed
+                            # uid should be consistent
         else:
           o = self._getOb('temp_' + object_id)
           # In all cases, we have to remove the temp object
           LOG("Del2 Object",0, 'temp_' + str(object_id))
           LOG("Del2 Object",0, str(o.uid))
-          #ATTENTION -> if path is not good, it will not be able to uncatalog !!!!!!!
-          #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXXXXXXXXXx
+          #ATTENTION -> if path is not good, it will not be able to uncatalog !!!
+          #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXX
+
           if object_id not in new_object_id_list: # do not unindex a new object
             o.isIndexable = 1
             o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
             o.isIndexable = 0 # unindexed already forced
-          self._delObject('temp_' + object_id) # object will be removed from catalog automaticaly
+          self._delObject('temp_' + object_id) # object will be removed
+                                               # from catalog automaticaly
       # We don't need the old index any more, we
       # can set the new index
       self.index[base_id] = new_index[base_id]
@@ -350,7 +352,8 @@ class XMLMatrix(Folder):
       self.reindexObject()
 
     
-    security.declareProtected( Permissions.ModifyPortalContent, '_renameCellRange' )
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               '_renameCellRange' )
     def _renameCellRange(self, *kw, **kwd):
       """
           Rename a range for a matrix, this method can
@@ -360,8 +363,8 @@ class XMLMatrix(Folder):
 
       movement = {}  # We will put in this dictionnary the previous and new
                      # id of a given cell
-      new_index = PersistentMapping() # new_index defines the relation between keys
-                                      # and ids of cells
+      new_index = PersistentMapping() # new_index defines the relation
+                                      # between keys and ids of cells
 
       if not hasattr(self, 'index'):
         self.index = PersistentMapping()
@@ -446,7 +449,8 @@ class XMLMatrix(Folder):
             cell.reindexObject()
             #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'renameCellRange' )
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               'renameCellRange' )
     def renameCellRange(self, *kw, **kwd):
       """
           Update the matrix ranges using provided lists of indexes (kw).
@@ -517,7 +521,8 @@ class XMLMatrix(Folder):
       self.invokeFactory(type_name=type_name,id=id)
       return self.get(id)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellKeyList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellKeyList' )
     def getCellKeyList(self, base_id = 'cell'):
       """
         Returns a list of possible keys as tuples
@@ -536,11 +541,13 @@ class XMLMatrix(Folder):
         return ()
       return cartesianProduct(id_tuple)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellKeys' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellKeys' )
     getCellKeys = getCellKeyList
 
     # We should differenciate in future existing tuples from possible tuples
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellRangeKeyList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellRangeKeyList' )
     getCellRangeKeyList = getCellKeyList
 
     security.declareProtected( Permissions.AccessContentsInformation, 'keyToId' )
@@ -558,7 +565,8 @@ class XMLMatrix(Folder):
           return None
       return '_'.join(cell_id_list)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellIdList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellIdList' )
     def getCellIdList(self, base_id = 'cell'):
       """
         Returns a list of possible ids as tuples
@@ -576,17 +584,20 @@ class XMLMatrix(Folder):
 
       return result
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellIds' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellIds' )
     getCellIds = getCellIdList
 
     security.declareProtected( Permissions.AccessContentsInformation, 'cellIds' )
     cellIds = getCellIdList
 
     # We should differenciate in future all possible ids for existing ids
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellRangeIdList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellRangeIdList' )
     getCellRangeIdList = getCellIdList
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getCellValueList' )
     def getCellValueList(self, base_id = 'cell'):
       """
         Returns a list of cell values as tuples
@@ -598,10 +609,12 @@ class XMLMatrix(Folder):
           result += [o]
       return result
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'cellValues' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'cellValues' )
     cellValues = getCellValueList
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getMatrixList' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getMatrixList' )
     def getMatrixList(self):
       """
         Return possible base_id values
@@ -626,10 +639,12 @@ class XMLMatrix(Folder):
       if len(my_ids) > 0:
         self.manage_delObjects(ids=my_ids)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'delCells' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'delCells' )
     delCells = delMatrix
 
-    security.declareProtected( Permissions.AccessContentsInformation, '_checkConsistency' )
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               '_checkConsistency' )
     def _checkConsistency(self, fixit=0):
       """
         Constraint API.
