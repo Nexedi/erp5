@@ -292,6 +292,7 @@ if listbox is None:\n
 \n
 \n
 else :\n
+  # we want to update the listbox\n
   cash_status_list          = kw[\'cash_status_list\']\n
   emission_letter_list      = kw[\'emission_letter_list\']\n
   variation_list            = kw[\'variation_list\']\n
@@ -307,7 +308,7 @@ else :\n
     context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
     return context.asContext(context=None, portal_type=context.getPortalType() ,**kw ).CashDetail_fastInputForm(**kw)\n
 \n
-  # get the variation and the maximum line allowed for a variation\n
+  # get the maximum number of line allowed for a variation\n
   if column_base_category == \'cash_status\':\n
     columne_base_list = cash_status_list\n
     max_lines =len(emission_letter_list) * len(variation_list)\n
@@ -318,76 +319,50 @@ else :\n
     column_base_list = variation_list\n
     max_lines =len(cash_status_list) * len(emission_letter_list)\n
 \n
+  line_counter_dict = {}\n
+  # compute number of exisiting lines for a resource\n
+  for line in listbox:\n
+    resource_key = line[\'resource_id\']\n
+    if line_counter_dict.has_key(resource_key):\n
+      line_counter_dict[resource_key] = line_counter_dict[resource_key] + 1\n
+    else:\n
+      line_counter_dict[resource_key] = 1\n
+\n
   total_price = 0\n
   new_line_list = []\n
-  counter = 0\n
-\n
-  preview_listbox_line = None\n
-  number_line_to_add = 0\n
-  number_same_line = 0\n
-\n
-  listbox_line_count = len(listbox)\n
-  if listbox_line_count > 0:\n
-    listbox_line_count_plus_1 = listbox_line_count+1\n
-  else: # XXX when this can happen ?\n
-    listbox_line_count_plus_1 = listbox_line_count\n
-\n
-  last_row = False\n
-  context.log("listbox", listbox)\n
-  #   for x in listbox :\n
-  for i_listbox in xrange(0,listbox_line_count_plus_1) :    # Element of ListBox\n
-    if i_listbox < listbox_line_count:\n
-      listbox_line = listbox[i_listbox]\n
-      del listbox_line[\'listbox_key\']\n
-    else:\n
-      last_row = True\n
-\n
-    if preview_listbox_line is None :  # first line\n
-      preview_listbox_line = listbox_line.copy()\n
-    elif last_row or preview_listbox_line[\'resource_id\'] <> listbox_line[\'resource_id\']:\n
-      # last line or line of different resource\n
-      if number_line_to_add > (max_lines - number_same_line) :\n
-        number_line_to_add = max_lines - number_same_line\n
-      if number_line_to_add > 0:\n
-        counter = 1\n
-        preview_listbox_line[\'number_line_to_add\'] = 0\n
-        for w in column_base_list:\n
-          preview_listbox_line[\'column\'+str(counter)] = 0\n
-          preview_listbox_line[\'price\'] = 0\n
-          counter  += 1\n
-        for z in xrange(0,number_line_to_add) :\n
-          new_line_list.append(preview_listbox_line)\n
-#            raise \'KHA\',repr((a1,b1,c1, x[\'column4\'], preview_listbox_line[\'column4\'],montest[\'column4\']))\n
-      if last_row:\n
-        break\n
-\n
-      preview_listbox_line = listbox_line.copy()\n
-      number_same_line = 0;\n
-      number_line_to_add = 0\n
-    number_same_line +=  1\n
-    if max_lines > 1:\n
-      number_line_to_add += listbox_line[\'number_line_to_add\']\n
-      listbox_line[\'number_line_to_add\'] = 0\n
-    resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id = listbox_line[\'resource_id\'])\n
+  # browse line to determine new lines to add\n
+  for line in listbox:\n
+    # must get the resource\n
+    resource_id = line[\'resource_id\']\n
+    resource_list = context.portal_catalog(portal_type = (\'Banknote\',\'Coin\') ,id = resource_id)\n
     resource_price = resource_list[0].getObject().getBasePrice()\n
-    listbox_line[\'resource_translated_title\'] = resource_list[0].getObject().getTranslatedTitle()\n
-\n
+    line[\'resource_translated_title\'] = resource_list[0].getObject().getTranslatedTitle()\n
+    # get the number of lines to add\n
+    lines_to_add = line[\'number_line_to_add\']\n
+    line[\'number_line_to_add\'] = 0\n
+    # remove the key\n
+    del line[\'listbox_key\']\n
+    # create new line\n
+    for num in xrange(lines_to_add):\n
+      # make sure we don\'t have too many lines\n
+      if line_counter_dict[resource_id] <= max_lines:\n
+        line_counter_dict[resource_id] = line_counter_dict[resource_id] + 1\n
+        new_line = line.copy()\n
+        # set default quantity to 0\n
+        for column_nb in xrange(1, len(column_base_list) + 1):\n
+          new_line[\'column%s\' %(str(column_nb))] = 0\n
+        new_line[\'price\'] = 0\n
+        new_line_list.append(new_line)\n
+    # compute the price for existing line\n
     quantity = 0\n
-    counter = 1\n
-    for y in column_base_list:\n
-      cell_quantity = int(listbox_line[\'column\'+str(counter)] or 0)\n
-      quantity = quantity + cell_quantity\n
-      counter  += 1\n
-    listbox_line[\'price\'] = int(quantity * resource_price)\n
-#      raise \'KHA\',repr(( x ))\n
+    for column_nb in xrange(1, len(column_base_list) + 1):\n
+      quantity += line[\'column%s\' %(str(column_nb))]\n
+    line[\'price\'] = resource_price * quantity\n
+    total_price += line[\'price\']\n
+    # add current line\n
+    new_line_list.append(line)\n
 \n
-    total_price += int(quantity * resource_price)\n
-\n
-    new_line_list.append(listbox_line)\n
   listbox = new_line_list\n
-\n
-#   raise \'KHA\',repr(( listbox ))\n
-\n
   context.Base_updateDialogForm(  listbox=listbox\n
                                   , calculated_price=total_price\n
                                   , empty_line_number=0)\n
@@ -509,24 +484,18 @@ else :\n
                             <string>columne_base_list</string>
                             <string>max_lines</string>
                             <string>column_base_list</string>
+                            <string>line_counter_dict</string>
+                            <string>line</string>
+                            <string>resource_key</string>
                             <string>new_line_list</string>
-                            <string>preview_listbox_line</string>
-                            <string>number_line_to_add</string>
-                            <string>number_same_line</string>
-                            <string>listbox_line_count</string>
-                            <string>listbox_line_count_plus_1</string>
-                            <string>last_row</string>
-                            <string>xrange</string>
-                            <string>i_listbox</string>
-                            <string>listbox_line</string>
-                            <string>True</string>
-                            <string>w</string>
-                            <string>str</string>
-                            <string>z</string>
+                            <string>resource_id</string>
                             <string>resource_list</string>
-                            <string>y</string>
-                            <string>int</string>
-                            <string>cell_quantity</string>
+                            <string>lines_to_add</string>
+                            <string>xrange</string>
+                            <string>num</string>
+                            <string>new_line</string>
+                            <string>column_nb</string>
+                            <string>str</string>
                           </tuple>
                         </value>
                     </item>

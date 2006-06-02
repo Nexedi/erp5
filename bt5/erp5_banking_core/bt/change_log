@@ -1,3 +1,6 @@
+2006-06-02 aurel
+* finish the rewrite of fast input script
+
 2006-05-18 aurel
 * update Delivery_getVaultItemList to take new categories into account and fix   Baobab_getResourceVintageList
 

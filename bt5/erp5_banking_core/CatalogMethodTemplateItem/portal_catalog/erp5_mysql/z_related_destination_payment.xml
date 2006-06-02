@@ -15,16 +15,7 @@
         <item>
             <key> <string>__ac_local_roles__</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>alex</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
+              <none/>
             </value>
         </item>
         <item>
@@ -73,12 +64,7 @@
         <item>
             <key> <string>_owner</string> </key>
             <value>
-              <tuple>
-                <list>
-                  <string>acl_users</string>
-                </list>
-                <string>yo</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
