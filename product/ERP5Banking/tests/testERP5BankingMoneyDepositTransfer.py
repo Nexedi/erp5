@@ -98,8 +98,9 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
       need to be installed to run the test on.
     """
     return ('erp5_base'
-           , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
-           , 'erp5_banking_inventory'
+            , 'erp5_banking_core' # erp5_banking_core contains all generic methods for banking
+            , 'erp5_banking_inventory'
+            , 'erp5_banking_cash'
            )
 
   def getMoneyDepositTransferModule(self):
