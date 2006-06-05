@@ -94,6 +94,7 @@ Person Module | email_report
 Person Module | exchange
 Person Module | list_emails
 Person Module | list_ui
+Person Module | ooo_import
 Person Module | print
 Person Module | report
 Person Module | search
