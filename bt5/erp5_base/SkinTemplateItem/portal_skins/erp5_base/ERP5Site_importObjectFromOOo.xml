@@ -112,7 +112,8 @@ if len(listbox) == 0:\n
   spreadsheets = getSpreadsheet()\n
   # Put the result of OOo parsing in the request\n
   request.set(\'ooo_import_spreadsheet_data\', spreadsheets)\n
-\n
+  # Set a flag in the request to differentiate the two steps\n
+  request.set(\'OOOIMPORT_STEP_TWO\', True)\n
 \n
 # Second Step\n
 else:\n
@@ -253,6 +254,7 @@ return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
                             <string>None</string>
                             <string>len</string>
                             <string>spreadsheets</string>
+                            <string>True</string>
                             <string>mapping</string>
                             <string>listbox_ordered_lines</string>
                             <string>_getiter_</string>

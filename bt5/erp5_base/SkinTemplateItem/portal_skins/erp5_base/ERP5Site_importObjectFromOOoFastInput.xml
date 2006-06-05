@@ -107,6 +107,7 @@
                       <list>
                         <string>my_import_file</string>
                         <string>openoffice_template</string>
+                        <string>warning</string>
                       </list>
                     </value>
                 </item>

@@ -14,7 +14,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>openoffice_template</string> </value>
+            <value> <string>warning</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -203,7 +203,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-You can find an OpenOffice template at <a href="openoffice-erp5-objects-template.sxc">openoffice-erp5-objects-template.sxc</a>
+<span style="color: #f00">You must re-upload the OpenOffice Calc file to validate the mapping below.</span>
 
 ]]></string> </value>
                 </item>
@@ -225,7 +225,7 @@ You can find an OpenOffice template at <a href="openoffice-erp5-objects-template
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -249,7 +249,7 @@ You can find an OpenOffice template at <a href="openoffice-erp5-objects-template
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>OpenOffice Source File Example</string> </value>
+                    <value> <string>Warning</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -283,7 +283,7 @@ You can find an OpenOffice template at <a href="openoffice-erp5-objects-template
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not here.REQUEST.get(\'OOOIMPORT_STEP_TWO\', False)</string> </value>
+            <value> <string>python: here.REQUEST.get(\'OOOIMPORT_STEP_TWO\', False)</string> </value>
         </item>
       </dictionary>
     </pickle>
