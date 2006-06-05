@@ -1,3 +1,7 @@
+2006-06-05 Kevin
+* Add a dynamic warning message to the OOo Calc import tool to remind user to re-upload the file. This is a know limitation of the current implementation. A bug report has been written for this.
+* Add OOo Calc Import action on Person Module.
+
 2006-06-02 Kevin
 * Move OpenOffice Importer tool from erp5_core to erp5_base.
 
