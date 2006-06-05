@@ -82,7 +82,10 @@ class CopyContainer:
 
   def _updateInternalRelatedContent(self, local_self, path, new_id):
       """
-       Search for categories starting with path in local_self and its subobjects, and replaces the last common item in category paths by new_id.
+       Search for categories starting with path in local_self and its
+       subobjects, and replaces the last common item in category paths
+       by new_id.
+
        Example :
         category : "a/b/c/d/e"
         path : "a/b/c"
@@ -104,7 +107,8 @@ class CopyContainer:
 
   security.declareProtected( Permissions.ModifyPortalContent, 'manage_renameObject' )
   def manage_renameObject(self, id=None, new_id=None, REQUEST=None):
-      """manage renaming an object while keeping coherency for contained and linked to objects inside the renamed object
+      """manage renaming an object while keeping coherency for contained
+      and linked to objects inside the renamed object
 
       """
       ob=self.restrictedTraverse(id)
@@ -314,6 +318,26 @@ class CopyContainer:
       catalog = getToolByName(self, 'portal_catalog', None)
       if catalog is not None:
           catalog.moveObject(self, idxs=idxs)
+
+  def _notifyOfCopyTo(self, container, op=0):
+      """Overiden to track object cut and pastes, and update related
+      content accordingly.
+      The op variable is 0 for a copy, 1 for a move.
+      """
+      if op == 1: # move
+          self._v_category_url_before_move = self.getRelativeUrl()
+
+  def _postCopy(self, container, op=0):
+      # Called after the copy is finished to accomodate special cases.
+      # in our case, we want to notify the category system that our path
+      # changed, so that it updates related objects. 
+      if op == 1:
+          old_url = getattr(self, '_v_category_url_before_move', None)
+          if old_url is not None:
+              container.activate().updateRelatedContent(
+                            old_url,
+                            self.getRelativeUrl())
+                            
 
 #### Helper methods
 

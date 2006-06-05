@@ -156,6 +156,13 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionSyncValue(1)
       portal_categories[bc].setFallbackBaseCategoryList(['subordination'])
 
+  def beforeTearDown(self):
+    """Clean up."""
+    # categories
+    for bc in ('region', 'subordination', 'gender'):
+      bc_obj = self.getPortal().portal_categories[bc]
+      bc_obj.manage_delObjects()
+
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
@@ -374,18 +381,16 @@ class TestCMFCategory(ERP5TypeTestCase):
       LOG('Testing... ',0,'Category Renaming')
     
     portal = self.getPortal()
-    france = portal.portal_categories.resolveCategory('region/europe/west/france')
+    france = portal.portal_categories.resolveCategory(
+                                            'region/europe/west/france')
     self.assertNotEqual(france, None)
     
     p1 = self.getPersonModule()._getOb(self.id1)
-    p1.setRegion('europe/west/france') 
+    p1.setRegion('europe/west/france')
     get_transaction().commit()
-    self.tic() 
+    self.tic()
    
     west = portal.portal_categories.resolveCategory('region/europe/west')
-    # To be able to change the object id, we must first commit the transaction, 
-    # because in Zope we are not able to create an object and modify its id
-    # in the same transaction
     west.setId("ouest")
     get_transaction().commit()
     self.tic()
@@ -393,7 +398,68 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(west,
       portal.portal_categories.resolveCategory('region/europe/ouest'))
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
-    self.failUnless(p1 in west.getRegionRelatedValueList())    
+    self.failUnless(p1 in west.getRegionRelatedValueList())
+
+  def test_13b_RenameCategoryUsingCutAndPaste(self, quiet=0, run=run_all_test) :
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\n Test Category Renaming with cut n paste')
+      LOG('Testing... ',0,'Category Renaming')
+    
+    portal = self.getPortal()
+    france = portal.portal_categories.resolveCategory(
+                                            'region/europe/west/france')
+    self.assertNotEqual(france, None)
+    
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p1.setRegion('europe/west/france')
+    get_transaction().commit()
+    self.tic()
+   
+    europe = portal.portal_categories.resolveCategory('region/europe')
+    west = europe.west
+    cb_data = europe.manage_cutObjects(['west'])
+    portal.portal_categories.region.manage_pasteObjects(cb_data)
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEqual(west,
+      portal.portal_categories.resolveCategory('region/west'))
+    self.assertEqual(p1.getRegion(), 'west/france')
+    self.failUnless(p1 in west.getRegionRelatedValueList())
+    
+  def test_13c_RenameCategoryUsingCutAndPasteButNotCopy(
+                                        self, quiet=0, run=run_all_test) :
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\n Test Category Renaming with cut n paste, '
+                          'copy n paste doesnt change')
+      LOG('Testing... ',0,'Category Renaming')
+    
+    portal = self.getPortal()
+    france = portal.portal_categories.resolveCategory(
+                                    'region/europe/west/france')
+    self.assertNotEqual(france, None)
+    
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p1.setRegion('europe/west/france')
+    get_transaction().commit()
+    self.tic()
+   
+    europe = portal.portal_categories.resolveCategory('region/europe')
+    west = europe.west
+    cb_data = europe.manage_copyObjects(['west'])
+    portal.portal_categories.region.manage_pasteObjects(cb_data)
+    get_transaction().commit()
+    self.tic()
+    
+    self.assertEqual(west,
+      portal.portal_categories.resolveCategory('region/europe/west'))
+    self.assertEqual(p1.getRegion(), 'europe/west/france')
+    # we are not member of the copy
+    self.failUnless('west/france' not in p1.getRegionList())
+    self.failUnless(p1 in west.getRegionRelatedValueList())
+    
 
   def test_14_MultiplePortalTypes(self, quiet=0, run=run_all_test) :
     """ Checks that categories support different value per portal_type,

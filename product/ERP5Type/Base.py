@@ -997,20 +997,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     # Do not rename until everything flushed
     self.recursiveFlushActivity(invoke=1)
-    previous_relative_url = self.getRelativeUrl()
     tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
         self.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
-    new_relative_url = self.getRelativeUrl()
     if reindex:
-      self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
-    self.activate().updateRelatedContent(previous_relative_url, new_relative_url)
+      # Required if we wish that news ids appear instantly
+      self.flushActivity(invoke=1)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'updateRelatedContent' )
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'updateRelatedContent' )
   def updateRelatedContent(self, previous_category_url, new_category_url):
     """
         updateRelatedContent is implemented by portal_categories
     """
-    self._getCategoryTool().updateRelatedContent(self, previous_category_url, new_category_url)
+    self._getCategoryTool().updateRelatedContent(self,
+                                previous_category_url, new_category_url)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'edit')
   def edit(self, REQUEST=None, force_update=0, reindex_object=1, **kw):
