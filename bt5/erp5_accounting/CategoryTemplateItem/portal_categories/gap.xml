@@ -27,18 +27,7 @@
         <item>
             <key> <string>_local_properties</string> </key>
             <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>business_template_include_sub_categories</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>boolean</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -89,10 +78,6 @@
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>business_template_include_sub_categories</string> </key>
             <value> <int>0</int> </value>
         </item>
         <item>
