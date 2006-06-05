@@ -1,5 +1,6 @@
 2006-06-05 Kevin
 * Move Fiscal Report portal type actions to erp5_accounting_l10n_fr.
+* Add missing Account Type categories.
 
 2006-05-18 jerome
 * fix Purchase 'Details' view (source / destination inverted).
