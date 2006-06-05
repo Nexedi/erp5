@@ -1,6 +1,7 @@
 2006-06-05 Kevin
 * Move Fiscal Report portal type actions to erp5_accounting_l10n_fr.
 * Add missing Account Type categories.
+* Remove old business_template_include_sub_categories trick.
 
 2006-05-18 jerome
 * fix Purchase 'Details' view (source / destination inverted).
