@@ -288,7 +288,7 @@ if listbox is None:\n
                              , emission_letter_list = emission_letter_list\n
                              , variation_list = variation_list\n
                              , other_parameter = other_parameter_list\n
-                             ).CashDetail_fastInputForm(**kw)\n
+                             ).CashDetail_viewLineFastInputForm(**kw)\n
 \n
 \n
 else :\n
@@ -306,7 +306,7 @@ else :\n
   # we don\'t update anything in read only mode\n
   if read_only == "True":\n
     context.Base_updateDialogForm(listbox=listbox, empty_line_number=0)\n
-    return context.asContext(context=None, portal_type=context.getPortalType() ,**kw ).CashDetail_fastInputForm(**kw)\n
+    return context.asContext(context=None, portal_type=context.getPortalType() ,**kw ).CashDetail_viewLineFastInputForm(**kw)\n
 \n
   # get the maximum number of line allowed for a variation\n
   if column_base_category == \'cash_status\':\n
@@ -371,7 +371,7 @@ else :\n
                              , portal_type=context.getPortalType()\n
                              , calculated_price=total_price\n
                              ,**kw\n
-                             ).CashDetail_fastInputForm(**kw)\n
+                             ).CashDetail_viewLineFastInputForm(**kw)\n
 
 
 ]]></string> </value>
