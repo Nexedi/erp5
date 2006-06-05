@@ -388,8 +388,8 @@ class TestERP5BankingMixin:
               for country in ['France', 'Spain']:
                 if country[0] != c.getCodification()[0]:
                   ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
-            if ss.getId()=='encaisse_des_devises':
-              for 
+            #if ss.getId()=='encaisse_des_devises':
+            #  for 
           if s.getId() == 'auxiliaire':
             for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
               s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
