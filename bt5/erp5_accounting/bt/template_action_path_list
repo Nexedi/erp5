@@ -1,7 +1,6 @@
 Account Module | account_statement_report
 Account Module | bank_accounts_report
 Account Module | csv_export
-Account Module | fiscal_report
 Account Module | general_ledger_report
 Account Module | journal_report
 Account Module | jump_active_accounting_pref
@@ -37,7 +36,6 @@ Accounting Transaction Module | close_transactions
 Accounting Transaction Module | confirm_transactions
 Accounting Transaction Module | create_closing_transaction
 Accounting Transaction Module | csv_export
-Accounting Transaction Module | fiscal_report
 Accounting Transaction Module | general_ledger_report
 Accounting Transaction Module | journal_report
 Accounting Transaction Module | jump_active_accounting_pref
