@@ -1,3 +1,18 @@
+2006-06-05 Kevin
+* Move Fiscal Report portal type actions to erp5_accounting_l10n_fr.
+
+2006-05-18 jerome
+* fix Purchase 'Details' view (source / destination inverted).
+* Update Transaction views for consistency
+* quick fix Accounting Transaction Module sql method to display third party instead of destination section.
+
+2006-05-18 fab
+* Add
+Account_getFormattedTitle
+* Update
+InvoiceTransactionLine_getDestinationItemList and InvoiceTransactionLine_getSourceItemList
+to use it
+
 2006-05-16 jerome
 * Fix AccountingTransaction_is*CurrencyConvertible
 to return False if resource is not defined on the transaction
