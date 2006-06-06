@@ -2136,7 +2136,12 @@ class ModuleTemplateItem(BaseTemplateItem):
         xml_data += os.linesep+' <%s>' %(key,)
         permission_list = dict[key]
         for perm in permission_list:
-          xml_data += os.linesep+'  <permission>'
+          # the type of the permission defined if we use acquired or not
+          if type(perm[1]) == type([]):
+            ptype = "list"
+          else:
+            ptype = "tuple"
+          xml_data += os.linesep+"  <permission type='%s'>" %(ptype,)
           xml_data += os.linesep+'   <name>%s</name>' %(perm[0])
           role_list = list(perm[1])
           role_list.sort()
@@ -2201,6 +2206,7 @@ class ModuleTemplateItem(BaseTemplateItem):
         plist = []
         perm_list = elt.getElementsByTagName('permission')
         for perm in perm_list:
+          perm_type = perm.getAttribute('type').encode() or None
           name_elt = perm.getElementsByTagName('name')[0]
           name_node = name_elt.childNodes[0]
           name = name_node.data
@@ -2210,7 +2216,10 @@ class ModuleTemplateItem(BaseTemplateItem):
             role_node = role.childNodes[0]
             role = role_node.data
             rlist.append(str(role))
-          perm_tuple = (str(name), rlist)
+          if perm_type == "list" or perm_type is None:
+            perm_tuple = (str(name), list(rlist))
+          else:
+            perm_tuple = (str(name), tuple(rlist))
           plist.append(perm_tuple)
         dict[id] = plist
       else:
