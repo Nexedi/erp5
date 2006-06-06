@@ -81,6 +81,7 @@
                       <list>
                         <string>my_at_date</string>
                         <string>my_section</string>
+                        <string>my_transaction_details_level</string>
                       </list>
                     </value>
                 </item>
