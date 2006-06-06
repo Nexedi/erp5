@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -90,7 +92,6 @@ reversal = accounting_module.newContent (\n
 \n
 for line in context.objectValues(portal_type = context.getPortalAccountingMovementTypeList()) : \n
   reversal.newContent(\n
-    id = line.getId(),\n
     portal_type = line.getPortalType(),\n
     source = line.getSource(),\n
     destination = line.getDestination(),\n
