@@ -121,26 +121,32 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'getUids')
     getUids = getCategoryParentUidList
 
-    def updateRelatedContent(self, context, previous_category_url, new_category_url):
+    def updateRelatedContent(self, context,
+                             previous_category_url, new_category_url):
+      """See CMFCategory.CategoryTool.updateRelatedContent
+
+      This method also update all predicates membership
       """
-        TODO: make this method resist to very large updates (ie. long transaction)
-      """
-      CMFCategoryTool.updateRelatedContent(self,context,previous_category_url,new_category_url)
+      CMFCategoryTool.updateRelatedContent(self,
+                                           context,previous_category_url,
+                                           new_category_url)
 
       # We also need to udpate all predicates membership
-      domain_tool = getToolByName(context,'portal_domains')
-      portal_catalog = getToolByName(context,'portal_catalog')
+      domain_tool = getToolByName(context, 'portal_domains')
+      portal_catalog = getToolByName(context, 'portal_catalog')
       kw = {}
       kw['predicate_category.category_uid'] = context.getUid()
       object_list = portal_catalog(**kw)
       for predicate in [x.getObject() for x in object_list]:
         membership_list = []
         for category in predicate.getMembershipCriterionCategoryList():
-          new_category = self.updateRelatedCategory(category, previous_category_url, new_category_url)
+          new_category = self.updateRelatedCategory(category,
+                                                    previous_category_url,
+                                                    new_category_url)
           membership_list.append(new_category)
         predicate.setMembershipCriterionCategoryList(membership_list)
-      # We do not need to to things recursively since updateRelatedContent is already
-      # recursive.
+      # We do not need to to things recursively since
+      # updateRelatedContent is already recursive.
 
 InitializeClass( CategoryTool )
 

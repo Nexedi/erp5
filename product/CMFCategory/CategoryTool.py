@@ -1206,40 +1206,55 @@ class CategoryTool( UniqueObject, Folder, Base ):
             previous_category_url,'\g<start>/%s' % new_category_url, new_category)
       return new_category
 
-    def updateRelatedContent(self, context, previous_category_url, new_category_url):
+    def updateRelatedContent(self, context,
+                             previous_category_url, new_category_url):
+      """Updates related object when an object have moved.
+      
+          o context: the moved object
+          o previous_category_url: the related url of this object before
+            the move
+          o new_category_url: the related url of the object after the move
+
+      TODO: make this method resist to very large updates (ie. long transaction)
       """
-        TODO: make this method resist to very large updates (ie. long transaction)
-      """
-      LOG('CMFCategoryTool, context',0,context)
-      LOG('CMFCategoryTool, previous_category_url',0,previous_category_url)
-      LOG('CMFCategoryTool, new_category_url',0,new_category_url)
-      for brain in self.Base_zSearchRelatedObjectsByCategory(category_uid = context.getUid()):
+      for brain in self.Base_zSearchRelatedObjectsByCategory(
+                                              category_uid = context.getUid()):
         o = brain.getObject()
         if o is not None:
           category_list = []
-          LOG('CMFCategoryTool, previous category_list',0,self.getCategoryList(o))
           for category in self.getCategoryList(o):
-            new_category = self.updateRelatedCategory(category,previous_category_url,new_category_url)
+            new_category = self.updateRelatedCategory(category,
+                                                      previous_category_url,
+                                                      new_category_url)
             category_list += [new_category]
           self._setCategoryList(o, category_list)
-          LOG('CMFCategoryTool, new category_list',0,category_list)
+
           if hasattr(aq_base(o), 'notifyAfterUpdateRelatedContent'):
-            o.notifyAfterUpdateRelatedContent(previous_category_url, new_category_url)
+            o.notifyAfterUpdateRelatedContent(previous_category_url,
+                                              new_category_url)
+
         else:
-          LOG('WARNING updateRelatedContent',0,'%s does not exist' % brain.path)
+          LOG('CMFCategory', PROBLEM,
+              'updateRelatedContent: %s does not exist' % brain.path)
+
       aq_context = aq_base(context)
       # Update related recursively if required
       if hasattr(aq_context, 'listFolderContents'):
         for o in context.listFolderContents():
-          new_o_category_url = o.getRelativeUrl() # Relative Url is based on parent new_category_url
-                             # so we must replace new_category_url with previous_category_url to find
-          # the previous category_url for a
-          previous_o_category_url = self.updateRelatedCategory(new_o_category_url,new_category_url,previous_category_url)
-          #previous_o_category_url = re.sub('(?P<start>.*)/%s$' %
-          #     new_category_url,'\g<start>/%s' % previous_category_url, new_o_category_url)
-          self.updateRelatedContent(o, previous_o_category_url, new_o_category_url)
+          new_o_category_url = o.getRelativeUrl()
+          # Relative Url is based on parent new_category_url so we must
+          # replace new_category_url with previous_category_url to find
+          # the new category_url for the subobject
+          previous_o_category_url = self.updateRelatedCategory(
+                                                   new_o_category_url,
+                                                   new_category_url,
+                                                   previous_category_url)
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getRelatedValueList' )
+          self.updateRelatedContent(o, previous_o_category_url,
+                                    new_o_category_url)
+
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getRelatedValueList' )
     def getRelatedValueList(self, context, base_category_list=None,
                            spec=(), filter=None, base=1, **kw):
       """
