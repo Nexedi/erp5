@@ -95,7 +95,7 @@ base_category_list = (\'emission_letter\', \'cash_status\', \'variation\')\n
 per_resource_dict = {}\n
 \n
 # remove previous line\n
-old_line = [x.getObject() for x in context.searchFolder(portal_type=[\'Cash Delivery Line\',])]\n
+old_line = [x.getObject() for x in context.searchFolder(portal_type=[line_portal_type,])]\n
 if len(old_line)>0:\n
   for object_list in old_line:\n
     context.deleteContent(object_list.getId())\n
@@ -110,15 +110,33 @@ for line in listbox:\n
       # get variation for the cell\n
       if column_base_category == \'cash_status\':\n
         movement[\'cash_status\'] =  "cash_status/%s" %cash_status_list[counter-1]\n
-        movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
-        movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+        if line.has_key(\'emission_letter\'):\n
+          movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
+        else:\n
+          movement[\'emission_letter\'] = "emission_letter/not_defined" %line[\'emission_letter\']\n
+        if line.has_key(\'variation\'):\n
+          movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+        else:\n
+          movement[\'variation\'] = "variation/not_defined"\n
       elif column_base_category == \'emission_letter\':\n
-        movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
+        if line.has_key(\'cash_status\'):\n
+          movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
+        else:\n
+          movement[\'cash_status\'] =  "cash_status/not_defined"\n
         movement[\'emission_letter\'] = "emission_letter/%s" %emission_letter_list[counter-1]\n
-        movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+        if line.has_key(\'variation\'):\n
+          movement[\'variation\'] = "variation/%s" %line[\'variation\']\n
+        else:\n
+          movement[\'variation\'] = "variation/not_defined"\n
       else:\n
-        movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
-        movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
+        if line.has_key(\'cash_status\'):\n
+          movement[\'cash_status\'] =  "cash_status/%s" %line[\'cash_status\']\n
+        else:\n
+          movement[\'cash_status\'] =  "cash_status/not_defined"\n
+        if line.has_key(\'emission_letter\'):\n
+          movement[\'emission_letter\'] = "emission_letter/%s" %line[\'emission_letter\']\n
+        else:\n
+          movement[\'emission_letter\'] = "emission_letter/not_defined"\n
         movement[\'variation\'] = "variation/%s" %variation_list[counter-1]\n
       # generate a key based on variation\n
       # this will allow us to check if there is multiple line for the same resource + variation\n

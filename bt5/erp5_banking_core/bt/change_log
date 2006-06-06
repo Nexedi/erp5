@@ -1,3 +1,6 @@
+2006-06-06 aurel
+* fix delete of objects and bug when using currency with not all variation in fast input save script
+
 2006-06-05 aurel
 * complete rewrite of the script that save the fast input for delivery
 
