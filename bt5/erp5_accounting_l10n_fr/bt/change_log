@@ -1,3 +1,6 @@
+2006-06-06 Kevin
+* Update FiscalReportCell_doGetInventory to use GAPCategory_getURLFromId script.
+
 2006-06-05 Kevin
 * Move Fiscal Report portal type actions from erp5_accounting.
 
