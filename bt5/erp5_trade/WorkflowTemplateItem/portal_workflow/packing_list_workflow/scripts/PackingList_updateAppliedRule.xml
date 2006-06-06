@@ -14,7 +14,9 @@
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">O/INCg==</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -69,7 +71,7 @@
             <value> <string>packing_list = state_change[\'object\']\n
 \n
 activate_kw = {}\n
-related_order = context.getCausalityValue()\n
+related_order = packing_list.getCausalityValue()\n
 after_path_list = []\n
 if related_order is not None:\n
   after_path_list.append(related_order.getPath() + \'_firstUpdateAppliedRule\')\n
@@ -137,7 +139,6 @@ packing_list.activate(\n
                             <string>packing_list</string>
                             <string>activate_kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                             <string>related_order</string>
                             <string>after_path_list</string>
                             <string>None</string>
