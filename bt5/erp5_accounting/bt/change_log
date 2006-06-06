@@ -1,3 +1,6 @@
+2006-06-06 Kevin
+* Don't copy id when create a reversal transaction.
+
 2006-06-05 Kevin
 * Move Fiscal Report portal type actions to erp5_accounting_l10n_fr.
 * Add missing Account Type categories.
