@@ -18,10 +18,9 @@ from AccessControl.Permission import Permission
 from OFS.ObjectManager import ObjectManager
 from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from OFS.CopySupport import CopyError
-from OFS.CopySupport import eNotSupported
-from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path, absattr
+from OFS.CopySupport import eNotSupported, eNoItemsSpecified
+from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path
 from Products.ERP5Type import Permissions
-from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Globals import PersistentMapping, MessageDialog
@@ -334,10 +333,10 @@ class CopyContainer:
       if op == 1:
           old_url = getattr(self, '_v_category_url_before_move', None)
           if old_url is not None:
-              container.activate().updateRelatedContent(
-                            old_url,
-                            self.getRelativeUrl())
-                            
+              self.activate().updateRelatedContent(
+                                    old_url,
+                                    self.getRelativeUrl())
+
 
 #### Helper methods
 
