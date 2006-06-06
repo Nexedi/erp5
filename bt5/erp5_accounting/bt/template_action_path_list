@@ -76,6 +76,14 @@ Cash Register | metadata
 Cash Register | print_pdf
 Cash Register | transactions
 Cash Register | view
+Closing Transaction | create_reversal
+Closing Transaction | destination_asset
+Closing Transaction | details
+Closing Transaction | history
+Closing Transaction | metadata
+Closing Transaction | print
+Closing Transaction | source_asset
+Closing Transaction | view
 Invoice Cell | history
 Invoice Cell | list
 Invoice Cell | metadata
