@@ -70,79 +70,89 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   This scripts add the balance of every gap account in the list \'accounts\'\n
-  it use portal_simulation.getInventoryAssetPrice. \n
-  The following REQUEST keys are mandatory: \n
+  it use portal_simulation.getInventoryAssetPrice.\n
+  The following REQUEST keys are mandatory:\n
       at_date\n
 \n
-  those are optional: \n
+  those are optional:\n
       gap_base\n
       simulation_state\n
       section_category\n
 \n
-  those are ignored from the request and should explicitely passed as keywords args to this script: \n
+  those are ignored from the request and should explicitely passed as keywords args to this script:\n
       from_date\n
-  \n
+\n
   parameters keywords to this script overrides REQUEST keys\n
 """\n
+request = context.REQUEST\n
 \n
-def shortAccountNumberToFullGapCategory(accountNumber):\n
-  """\n
-    Translates a short account number (eg 280) to a full gap category url (eg gap/fr/gap/2/28/280).\n
-  """\n
-  accountNumber = accountNumber.strip()\n
-  gap = request.get("gap_base", "gap/fr/pcg/")\n
-  for i in range(len(accountNumber)) :\n
-    gap += accountNumber[:i+1]+"/"\n
-  return gap[:-1]\n
-\n
+gap_base = request.get("gap_base", "gap/fr/pcg/")\n
+getURL   = lambda gap_id: context.GAPCategory_getURLFromId(gap_id, gap_base)\n
 \n
 precision = context.Base_getPreferredPrecision()\n
 r_ = lambda x: context.Base_getRoundValue(x, precision)\n
 \n
-request = context.REQUEST\n
 section        = context.restrictedTraverse(request.get("organisation"))\n
 section_region = section.getRegion()\n
-params = {\n
-    \'omit_simulation\' : True\n
-  , \'simulation_state\': request.get("simulation_state", [\'stopped\', \'delivered\']) \n
-#  , \'simulation_state\': request.get("simulation_state", [\'delivered\']) \n
-  , \'section_uid\'     : section.getUid()\n
-  , \'at_date\'         : request[\'at_date\']\n
-  , \'where_expression\': " section.portal_type = \'Organisation\' "\n
-}\n
+\n
+# \'getInventory\' common parameters\n
+params = { \'omit_simulation\' : True\n
+         , \'simulation_state\': request.get("simulation_state", [\'stopped\', \'delivered\'])\n
+         , \'section_uid\'     : section.getUid()\n
+         , \'at_date\'         : request[\'at_date\']\n
+         , \'where_expression\': " section.portal_type = \'Organisation\' "\n
+         }\n
 params.update(kw)\n
 \n
+# \'net_balance\' is the sum of balance of all accounts found under the \'gap_id_list\' criterion\n
 net_balance = 0.0\n
+\n
 for gap_id in gap_id_list:\n
-  gap_path = shortAccountNumberToFullGapCategory(gap_id)\n
-  # checks the node category exists\n
+  gap_path = getURL(gap_id)\n
+\n
+  # Checks the node category exists\n
   if context.restrictedTraverse(\'portal_categories/%s\' % gap_path, None) is not None:\n
     params["node_category"] = gap_path\n
     new_balance = 0.0\n
+\n
     if not section_region_filtering:\n
       new_balance = context.portal_simulation.getInventoryAssetPrice(**params) or 0.0\n
+\n
     else:\n
+      # Use section\'s region membership to decide if a transaction is export or not\n
       transaction_list = context.portal_simulation.getInventoryList(**params) or []\n
-      # Sum transaction under region-related condition only\n
+\n
+      # Test each transaction\'s third party region against section\'s region\n
       for transaction in transaction_list:\n
-        # get the line\n
         transaction_line_path = transaction.path\n
         line = context.restrictedTraverse(transaction_line_path)\n
-        # get the third party\n
+\n
+        # Get the third party\n
         third_party = line.getDestinationSectionValue()\n
         if third_party in (None, \'\'):\n
-          # TODO: Should be a raise here with message translation.\n
-          context.log("Fiscal Report Error:", "\'%s\' need a third party." % (transaction_line_path))\n
+          # TODO: is this log should be replaced by \'raise\' ?\n
+          context.log( \'FiscalReportError\'\n
+                     , "\'%s\' need a third party." % (transaction_line_path)\n
+                     )\n
+          # Skip current transaction\n
           continue\n
-        # get the third party region\n
+\n
+        # Get the third party region\n
         region = third_party.getRegion()\n
         if region in (None, \'\'):\n
-          # TODO: Should be a raise here with message translation.\n
-          context.log("Fiscal Report Error:", "\'%s\' third party (aka \'%s\') need a region." % (transaction_line_path, third_party.getPath()))\n
+          # TODO: is this log should be replaced by \'raise\' ?\n
+          context.log( \'FiscalReportError\'\n
+                     , "\'%s\' third party (aka \'%s\') need a region." % ( transaction_line_path\n
+                                                                      , third_party.getPath()\n
+                                                                      )\n
+                     )\n
+          # Skip current transaction\n
           continue\n
-        # get the transaction line amount of money\n
+\n
+        # Get the transaction\'s balance\n
         if not region.startswith(section_region):\n
           new_balance = r_(r_(new_balance) + r_(transaction.total_price)) or 0.0\n
+\n
     # Update the general balance\n
     net_balance = r_(r_(net_balance) + r_(new_balance))\n
 \n
@@ -202,10 +212,11 @@ return r_(net_balance)\n
                             <string>gap_id_list</string>
                             <string>section_region_filtering</string>
                             <string>kw</string>
-                            <string>request</string>
-                            <string>shortAccountNumberToFullGapCategory</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>request</string>
+                            <string>gap_base</string>
+                            <string>getURL</string>
                             <string>precision</string>
                             <string>r_</string>
                             <string>section</string>
