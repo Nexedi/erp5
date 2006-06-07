@@ -68,23 +68,23 @@ class CashDeliveryLine(BaobabMixin, DeliveryLine):
                     )
 
   security.declareProtected(Permissions.View, 'getBaobabSource')
-  def getBaobabSource(self):
+  def getBaobabSource(self,**kw):
     """
       Returns a calculated source
     """
     script = self._getTypeBasedMethod('getBaobabSource')
     if script is not None:
-      return script(self)
+      return script(self,**kw)
     return self.aq_parent.getBaobabSource(**kw)
 
   security.declareProtected(Permissions.View, 'getBaobabDestination')
-  def getBaobabDestination(self):
+  def getBaobabDestination(self,**kw):
     """
       Returns a calculated destination
     """
     script = self._getTypeBasedMethod('getBaobabDestination')
     if script is not None:
-      return script(self)
+      return script(self,**kw)
     return self.aq_parent.getBaobabDestination(**kw)
 
   security.declareProtected(Permissions.View, 'getBaobabSourceVariationText')

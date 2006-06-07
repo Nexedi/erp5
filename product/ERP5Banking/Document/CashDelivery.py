@@ -61,21 +61,21 @@ class CashDelivery(BankingOperation):
                     )
 
   security.declareProtected(Permissions.View, 'getBaobabSource')
-  def getBaobabSource(self):
+  def getBaobabSource(self,**kw):
     """
       Returns a calculated source
     """
     script = self._getTypeBasedMethod('getBaobabSource')
     if script is not None:
-      return script(self)      
-    return self.getSource()
+      return script(self,**kw)      
+    return self.getSource(**kw)
 
   security.declareProtected(Permissions.View, 'getBaobabDestination')
-  def getBaobabDestination(self):
+  def getBaobabDestination(self,**kw):
     """
       Returns a calculated destination
     """
     script = self._getTypeBasedMethod('getBaobabDestination')
     if script is not None:
-      return script(self)
-    return self.getDestination()
+      return script(self,**kw)
+    return self.getDestination(**kw)
