@@ -60,3 +60,22 @@ class CashDelivery(BankingOperation):
                     , PropertySheet.ItemAggregation
                     )
 
+  security.declareProtected(Permissions.View, 'getBaobabSource')
+  def getBaobabSource(self):
+    """
+      Returns a calculated source
+    """
+    script = self._getTypeBasedMethod('getBaobabSource')
+    if script is not None:
+      return script(self)      
+    return self.getSource()
+
+  security.declareProtected(Permissions.View, 'getBaobabDestination')
+  def getBaobabDestination(self):
+    """
+      Returns a calculated destination
+    """
+    script = self._getTypeBasedMethod('getBaobabDestination')
+    if script is not None:
+      return script(self)
+    return self.getDestination()
