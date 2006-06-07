@@ -1,5 +1,11 @@
+2006-06-07 Kevin
+* Delete aggregation per regional zone (export/local) feature because its not enough flexible (for example, if you fix the region of a third party, you need to regenerate the Closing Balance).
+
 2006-06-06 Kevin
 * Don't copy id when create a reversal transaction.
+* Fix default warning message displaying in Account_getGapItemList.
+* Add Closing Transaction portal type.
+* Update Closing Transaction Creation script to support aggregation per regional zone (export/local) or third party.
 
 2006-06-05 Kevin
 * Move Fiscal Report portal type actions to erp5_accounting_l10n_fr.
