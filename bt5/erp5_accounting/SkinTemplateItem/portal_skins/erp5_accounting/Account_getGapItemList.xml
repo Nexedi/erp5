@@ -84,7 +84,7 @@ def sort(x,y):\n
 \n
 gap_root = context.portal_preferences.getPreferredAccountingTransactionGap() \n
 if gap_root is None:\n
-  return [(\'\', \'Set Preferred GAP In preferences !\')]\n
+  return [(\'Set Preferred GAP In preferences !\', \'\')]\n
 \n
 def getGapItemList(gap_root, portal_path): \n
   obj = context.portal_categories.resolveCategory(gap_root)\n
