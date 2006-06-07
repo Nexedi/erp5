@@ -366,9 +366,9 @@ class TestERP5BankingMixin:
           for sss in ['encaisse_des_billets_et_monnaies',]:
             sss =  ss.newContent(id='%s' %(sss,), portal_type='Category', codification='',  vault_type='site/surface/%s' %(s.getId(),))
       # create sort room
-      salle_de_tri = surface.newContent(id='salle_de_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_de_tri')
+      salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
       for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation']:
-        ss =  salle_de_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_de_tri')
+        ss =  salle_tri.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
         if 'ventilation' in ss.getId():
           for country in ['France', 'Spain']:
             if country[0] != c.getCodification()[0]:
@@ -488,7 +488,7 @@ class TestERP5BankingMixin:
                                            inventory=amount)
 
     # deliver the inventory
-    inventory.deliver()
+    #inventory.deliver()
     self.account_inventory_number += 1
     return bank_account
 
@@ -628,7 +628,7 @@ class TestERP5BankingMixin:
                                  line['variation_value'],
                                  line['quantity'],)
     # deliver the inventory
-    inventory.deliver()
+    #inventory.deliver()
     #self.workflow_tool.doActionFor(inventory, 'deliver_action', wf_id='inventory_workflow')
     return inventory_group
 
