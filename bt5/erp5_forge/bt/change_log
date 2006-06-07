@@ -1,3 +1,6 @@
+2006-06-07 Kevin
+* Check tested box if tested property is equal to 'True'.
+
 2006-05-30 chris
 * Added legend in diff page
 * Improved buttons in diff page
