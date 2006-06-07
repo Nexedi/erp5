@@ -898,6 +898,9 @@ def initializeProduct( context,
                            constructors = c.constructors,
                            icon = icon)
 
+class ConstraintNotFound(Exception): 
+  pass
+
 def createConstraintList(property_holder, constraint_definition):
   """
     This function creates constraint instances for a class
@@ -910,7 +913,7 @@ def createConstraintList(property_holder, constraint_definition):
   except AttributeError:
     LOG("ERP5Type", PROBLEM, "Can not find Constraint: %s" % \
                        constraint_definition['type'])
-    raise
+    raise ConstraintNotFound
   consistency_instance = consistency_class(**constraint_definition)
   property_holder.constraints += [consistency_instance]
 
