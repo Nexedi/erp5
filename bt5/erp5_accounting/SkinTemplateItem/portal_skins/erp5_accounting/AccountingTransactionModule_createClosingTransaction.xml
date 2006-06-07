@@ -96,8 +96,6 @@ section_value  = portal.restrictedTraverse(section)\n
 section_uid    = section_value.getUid()\n
 section_region = section_value.getRegion()\n
 resource       = section_value.getPriceCurrency()\n
-currency       = context.restrictedTraverse(resource)\n
-precision      = currency.getQuantityPrecision()\n
 \n
 # Create the transaction that will balance all accounts for the given date\n
 closing_transaction = accounting_module.newContent( portal_type        = \'Closing Transaction\'\n
@@ -114,19 +112,12 @@ result_balance = 0.0\n
 \n
 # Get The list of Account objects defined as income or expense type\n
 ac_type_cat = portal.portal_categories.account_type\n
-account_type_list = { \'income\' : ac_type_cat.income\n
-                    , \'expense\': ac_type_cat.expense\n
-                    }\n
-account_dict = {}\n
-for (ac_type, ac_cat) in account_type_list.items():\n
-  account_dict[ac_type] = ac_cat.getAccountTypeRelatedValueList(portal_type=\'Account\')\n
-\n
-# List of generic third party to apply on transaction lines to "link" a line with a region\n
-generic_3rd_party_dict = { \'local-income\'  : \'organisation_module/202\' # Clients divers\n
-                         , \'local-expense\' : \'organisation_module/213\' # Fournisseurs Divers France\n
-                         , \'export-income\' : \'organisation_module/596\' # Client a Recevoir Export\n
-                         , \'export-expense\': \'organisation_module/595\' # Fournisseurs Divers Export\n
-                         }\n
+account_type_list = [ ac_type_cat.income\n
+                    , ac_type_cat.expense\n
+                    ]\n
+account_list = []\n
+for ac_cat in account_type_list:\n
+  account_list += ac_cat.getAccountTypeRelatedValueList(portal_type=\'Account\')\n
 \n
 # \'getInventory\' common parameters\n
 params = { \'omit_simulation\' : True\n
@@ -137,153 +128,84 @@ params = { \'omit_simulation\' : True\n
          }\n
 \n
 # Get the balance of each account and create transaction lines\n
-for (account_type, account_list) in account_dict.items():\n
-  for account in account_list:\n
+for account in account_list:\n
 \n
-    # Update parameter for current account\n
-    params[\'node_uid\'] = account.getUid()\n
+  # Update parameter for current account\n
+  params[\'node_uid\'] = account.getUid()\n
 \n
-    # Get account full balance\n
-    account_balance = r_(sim_tool.getInventoryAssetPrice(**params)) or 0.0\n
+  # Get account full balance\n
+  account_balance = r_(sim_tool.getInventoryAssetPrice(**params)) or 0.0\n
 \n
-    # Use section\'s region membership to decide if a transaction\n
-    #   belong to export zone or local zone\n
-    if transaction_details_level == \'zone\':\n
-      transaction_list = sim_tool.getInventoryList(**params) or []\n
+  # Split transactions by third party\n
+  if transaction_details_level == \'third_party\':\n
 \n
-      # Split the balance to export and local balance\n
-      export_balance = 0.0\n
-      local_balance  = 0.0\n
+    # Get all entities that are destination section of this account\n
+    third_party_list  = [o.getObject() for o in context.Account_zDistinctSectionList(**params)]\n
 \n
-      # Test each transaction\'s third party region against section\'s region\n
-      for transaction in transaction_list:\n
-        transaction_line_path = transaction.path\n
-        line = context.restrictedTraverse(transaction_line_path)\n
+    third_parties_balance    = 0.0\n
+    no_third_parties_balance = 0.0\n
 \n
-        # Get the transaction\'s balance\n
-        transaction_balance = r_(transaction.total_price) or 0.0\n
+    # Create one transaction line for each third party\n
+    for tp in third_party_list:\n
+      # Get third party balance\n
+      tp_balance = r_(sim_tool.getInventoryAssetPrice( mirror_section_uid = tp.getUid()\n
+                                                      , **params\n
+                                                      )\n
+                      ) or 0.0\n
 \n
-        # Get the third party\n
-        third_party = line.getDestinationSectionValue()\n
-        if third_party in (None, \'\'):\n
-          # TODO: is this log should be replaced by \'raise\' ?\n
-          context.log( \'ClosingTransactionCreationError\'\n
-                    , "\'%s\' need a third party." % (transaction_line_path)\n
-                    )\n
-          # Count Transaction without third party as local\n
-          local_balance = r_(local_balance  + transaction_balance)\n
-          # Skip current transaction\n
-          continue\n
-\n
-        # Get the third party region\n
-        region = third_party.getRegion()\n
-        if region in (None, \'\'):\n
-          # TODO: is this log should be replaced by \'raise\' ?\n
-          context.log( \'ClosingTransactionCreationError\'\n
-                    , "\'%s\' third party (aka \'%s\') need a region." % ( transaction_line_path\n
-                                                                      , third_party.getPath()\n
-                                                                      )\n
-                    )\n
-          # Count Transaction without third party as local\n
-          local_balance = r_(local_balance  + transaction_balance)\n
-          # Skip current transaction\n
-          continue\n
-\n
-        # Save transaction\'s balance as export or local balance\n
-        if transaction_balance != 0.0:\n
-          if not region.startswith(section_region):\n
-            export_balance = r_(export_balance + transaction_balance)\n
-          else:\n
-            local_balance  = r_(local_balance  + transaction_balance)\n
-\n
-      # Check splitting consistency\n
-      if r_(export_balance + local_balance) != account_balance:\n
-        raise \'ClosingTransactionCreationError\', "%s balance splitting inconsistency: %s (export) + %s (import) != %s (account)" % (repr(account), export_balance, local_balance, account_balance)\n
-\n
-      # Create two Transaction line, one for each region zone\n
-      if export_balance != 0.0:\n
-        closing_transaction.newContent( portal_type         = \'Accounting Transaction Line\'\n
-                                      , source_value        = account\n
-                                      , quantity            = export_balance\n
-                                      , destination_section = generic_3rd_party_dict[\'export-\'+account_type]\n
-                                      )\n
-      if local_balance != 0.0:\n
-        closing_transaction.newContent( portal_type         = \'Accounting Transaction Line\'\n
-                                      , source_value        = account\n
-                                      , quantity            = local_balance\n
-                                      , destination_section = generic_3rd_party_dict[\'local-\'+account_type]\n
-                                      )\n
-\n
-    # Split transactions by third party\n
-    elif transaction_details_level == \'third_party\':\n
-\n
-      # Get all entities that are destination section of this account\n
-      third_party_list  = [o.getObject() for o in context.Account_zDistinctSectionList(**params)]\n
-\n
-      third_parties_balance    = 0.0\n
-      no_third_parties_balance = 0.0\n
-\n
-      # Create one transaction line for each third party\n
-      for tp in third_party_list:\n
-        # Get third party balance\n
-        tp_balance = r_(sim_tool.getInventoryAssetPrice( mirror_section_uid = tp.getUid()\n
-                                                       , **params\n
-                                                       )\n
-                       ) or 0.0\n
-\n
-        # Create the transaction line for this third party\n
-        closing_transaction.newContent( portal_type               = \'Accounting Transaction Line\'\n
-                                      , source_value              = account\n
-                                      , quantity                  = tp_balance\n
-                                      , destination_section_value = tp\n
-                                      )\n
-\n
-        # Add third party balance to check consistency\n
-        third_parties_balance = r_(third_parties_balance + tp_balance)\n
-\n
-      # Get all transaction without third party\n
-      transaction_list = sim_tool.getInventoryList(**params) or []\n
-\n
-      # Get each transaction\'s third party\n
-      for transaction in transaction_list:\n
-        transaction_line_path = transaction.path\n
-        line = context.restrictedTraverse(transaction_line_path)\n
-\n
-        # Get the transaction\'s balance\n
-        transaction_balance = r_(transaction.total_price) or 0.0\n
-\n
-        # Get the third party\n
-        third_party = line.getDestinationSectionValue()\n
-        if third_party in (None, \'\'):\n
-          # TODO: is this log should be replaced by \'raise\' ?\n
-          context.log( \'ClosingTransactionCreationError\'\n
-                    , "\'%s\' need a third party." % (transaction_line_path)\n
-                    )\n
-          # Count Transaction without third party as local\n
-          no_third_parties_balance = r_(no_third_parties_balance  + transaction_balance)\n
-          # Skip current transaction\n
-          continue\n
-\n
-      # Create a line for all transaction without any third party\n
-      if no_third_parties_balance != 0.0:\n
-        closing_transaction.newContent( portal_type  = \'Accounting Transaction Line\'\n
-                                      , source_value = account\n
-                                      , quantity     = no_third_parties_balance\n
-                                      )\n
-\n
-      # Check splitting consistency\n
-      if r_(third_parties_balance + no_third_parties_balance) != account_balance:\n
-        raise \'ClosingTransactionCreationError\', "%s balance splitting inconsistency: %s (third parties) + %s (no third parties) != %s (account)" % (repr(account), third_parties_balance, no_third_parties_balance, account_balance)\n
-\n
-    # Don\'t make any distinction within transactions\n
-    elif account_balance != 0.0:\n
-      closing_transaction.newContent( portal_type  = \'Accounting Transaction Line\'\n
-                                    , source_value = account\n
-                                    , quantity     = account_balance\n
+      # Create the transaction line for this third party\n
+      closing_transaction.newContent( portal_type               = \'Accounting Transaction Line\'\n
+                                    , source_value              = account\n
+                                    , quantity                  = tp_balance\n
+                                    , destination_section_value = tp\n
                                     )\n
 \n
-    # Update \'profit and loose\' sum\n
-    result_balance = r_(result_balance + account_balance)\n
+      # Add third party balance to check consistency\n
+      third_parties_balance = r_(third_parties_balance + tp_balance)\n
+\n
+    # Get all transaction without third party\n
+    transaction_list = sim_tool.getInventoryList(**params) or []\n
+\n
+    # Get each transaction\'s third party\n
+    for transaction in transaction_list:\n
+      transaction_line_path = transaction.path\n
+      line = context.restrictedTraverse(transaction_line_path)\n
+\n
+      # Get the transaction\'s balance\n
+      transaction_balance = r_(transaction.total_price) or 0.0\n
+\n
+      # Get the third party\n
+      third_party = line.getDestinationSectionValue()\n
+      if third_party in (None, \'\'):\n
+        # TODO: is this log should be replaced by \'raise\' ?\n
+        context.log( \'ClosingTransactionCreationError\'\n
+                  , "\'%s\' need a third party." % (transaction_line_path)\n
+                  )\n
+        # Count Transaction without third party as local\n
+        no_third_parties_balance = r_(no_third_parties_balance  + transaction_balance)\n
+        # Skip current transaction\n
+        continue\n
+\n
+    # Create a line for all transaction without any third party\n
+    if no_third_parties_balance != 0.0:\n
+      closing_transaction.newContent( portal_type  = \'Accounting Transaction Line\'\n
+                                    , source_value = account\n
+                                    , quantity     = no_third_parties_balance\n
+                                    )\n
+\n
+    # Check splitting consistency\n
+    if r_(third_parties_balance + no_third_parties_balance) != account_balance:\n
+      raise \'ClosingTransactionCreationError\', "%s balance splitting inconsistency: %s (third parties) + %s (no third parties) != %s (account)" % (repr(account), third_parties_balance, no_third_parties_balance, account_balance)\n
+\n
+  # Don\'t make any distinction within transactions\n
+  elif account_balance != 0.0:\n
+    closing_transaction.newContent( portal_type  = \'Accounting Transaction Line\'\n
+                                  , source_value = account\n
+                                  , quantity     = account_balance\n
+                                  )\n
+\n
+  # Update \'profit and loose\' sum\n
+  result_balance = r_(result_balance + account_balance)\n
 \n
 \n
 # Create a transaction line to balance the closing transaction.\n
@@ -318,7 +240,7 @@ context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section, at_date, transaction_details_level=\'details\'</string> </value>
+            <value> <string>section, at_date, transaction_details_level=\'third_party\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -363,35 +285,19 @@ context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
                             <string>section_uid</string>
                             <string>section_region</string>
                             <string>resource</string>
-                            <string>currency</string>
                             <string>closing_transaction</string>
                             <string>result_balance</string>
                             <string>ac_type_cat</string>
                             <string>account_type_list</string>
-                            <string>account_dict</string>
+                            <string>account_list</string>
                             <string>_getiter_</string>
-                            <string>ac_type</string>
                             <string>ac_cat</string>
-                            <string>_write_</string>
-                            <string>generic_3rd_party_dict</string>
                             <string>True</string>
                             <string>params</string>
-                            <string>account_type</string>
-                            <string>account_list</string>
                             <string>account</string>
+                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>account_balance</string>
-                            <string>transaction_list</string>
-                            <string>export_balance</string>
-                            <string>local_balance</string>
-                            <string>transaction</string>
-                            <string>transaction_line_path</string>
-                            <string>line</string>
-                            <string>transaction_balance</string>
-                            <string>third_party</string>
-                            <string>region</string>
-                            <string>repr</string>
-                            <string>_getitem_</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>o</string>
@@ -400,6 +306,13 @@ context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
                             <string>no_third_parties_balance</string>
                             <string>tp</string>
                             <string>tp_balance</string>
+                            <string>transaction_list</string>
+                            <string>transaction</string>
+                            <string>transaction_line_path</string>
+                            <string>line</string>
+                            <string>transaction_balance</string>
+                            <string>third_party</string>
+                            <string>repr</string>
                           </tuple>
                         </value>
                     </item>
@@ -412,7 +325,7 @@ context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" % (\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string>details</string>
+                            <string>third_party</string>
               </tuple>
             </value>
         </item>

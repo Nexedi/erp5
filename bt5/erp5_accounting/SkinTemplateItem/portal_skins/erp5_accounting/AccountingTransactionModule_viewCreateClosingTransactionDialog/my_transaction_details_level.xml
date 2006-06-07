@@ -191,7 +191,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>default</string> </value>
+                    <value> <string>third_party</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -226,21 +226,13 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Account - Aggregate Lines by Account (default)</string>
-                          <string>default</string>
+                          <string>Account - Aggregate Lines by Account</string>
+                          <string>account</string>
                         </tuple>
                         <tuple>
                           <string encoding="cdata"><![CDATA[
 
-Account > Zone - Aggregate Lines by Accounts, then Zone (Export / Local Region)
-
-]]></string>
-                          <string>zone</string>
-                        </tuple>
-                        <tuple>
-                          <string encoding="cdata"><![CDATA[
-
-Account > Third Party - Aggregate Lines by Accounts, then Third Party
+Account > Third Party - Aggregate Lines by Accounts, then Third Party (default)
 
 ]]></string>
                           <string>third_party</string>
