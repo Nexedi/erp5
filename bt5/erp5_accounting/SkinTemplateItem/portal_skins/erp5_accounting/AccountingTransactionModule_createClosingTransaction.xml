@@ -154,11 +154,12 @@ for account in account_list:\n
                       ) or 0.0\n
 \n
       # Create the transaction line for this third party\n
-      closing_transaction.newContent( portal_type               = \'Accounting Transaction Line\'\n
-                                    , source_value              = account\n
-                                    , quantity                  = tp_balance\n
-                                    , destination_section_value = tp\n
-                                    )\n
+      if tp_balance != 0.0:\n
+        closing_transaction.newContent( portal_type               = \'Accounting Transaction Line\'\n
+                                      , source_value              = account\n
+                                      , quantity                  = tp_balance\n
+                                      , destination_section_value = tp\n
+                                      )\n
 \n
       # Add third party balance to check consistency\n
       third_parties_balance = r_(third_parties_balance + tp_balance)\n
