@@ -1,3 +1,6 @@
+2006-06-08 Kevin
+* Don't create empty lines when the closing balance is generated.
+
 2006-06-07 Kevin
 * Delete aggregation per regional zone (export/local) feature because its not enough flexible (for example, if you fix the region of a third party, you need to regenerate the Closing Balance).
 
