@@ -61,6 +61,13 @@ class BankingOperation(BaobabMixin, AccountingTransaction):
                     , PropertySheet.ItemAggregation
                     , PropertySheet.Amount
                     )
+  
+  def manage_beforeDelete(self, item, container):
+    """
+    The right of deleting must be define by workflows
+    """
+    Delivery.manage_beforeDelete(self, item, container) 
+    
 
 
 ### Dynamic patch
