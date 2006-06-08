@@ -1684,7 +1684,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_list.play(self)
 
   # test of module
-  def test_05_BusinessTemplateWithModule(self, quiet=0, run_all_test):
+  def test_05_BusinessTemplateWithModule(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       message = 'Test Business Template With Module'
