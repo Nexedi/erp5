@@ -1,3 +1,12 @@
+2006-06-08 Kevin
+* Use Structure in view_master portal status message to introduce flexible links.
+
+2006-05-31 Chris
+* Fixed erp5.css
+
+2006-05-24 Chris
+* Switched cut and copy buttons
+
 2006-05-23 Kevin
 * Reduce report_view tag "soupness".
 
