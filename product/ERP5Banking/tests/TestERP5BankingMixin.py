@@ -381,7 +381,7 @@ class TestERP5BankingMixin:
           for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation','encaisse_des_billets_detruits']:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
         else:
-          for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes', 
+          for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes',
                      'encaisse_des_billets_recus_pour_ventilation','encaisse_des_devises']:
             ss =  s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
             if 'ventilation' in ss.getId():
@@ -389,7 +389,7 @@ class TestERP5BankingMixin:
                 if country[0] != c.getCodification()[0]:
                   ss.newContent(id='%s' %(country,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
             #if ss.getId()=='encaisse_des_devises':
-            #  for 
+            #  for
           if s.getId() == 'auxiliaire':
             for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits']:
               s.newContent(id='%s' %(ss,), portal_type='Category', codification='',  vault_type='site/caveau/%s' %(s.getId(),))
@@ -488,7 +488,7 @@ class TestERP5BankingMixin:
                                            inventory=amount)
 
     # deliver the inventory
-    #inventory.deliver()
+    inventory.deliver()
     self.account_inventory_number += 1
     return bank_account
 
@@ -628,8 +628,7 @@ class TestERP5BankingMixin:
                                  line['variation_value'],
                                  line['quantity'],)
     # deliver the inventory
-    #inventory.deliver()
-    #self.workflow_tool.doActionFor(inventory, 'deliver_action', wf_id='inventory_workflow')
+    inventory.deliver()
     return inventory_group
 
 
