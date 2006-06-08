@@ -63,6 +63,12 @@ class BankAccount:
      'type'        : 'string',
      'mode'        : 'w'
     },
+    {'id'          : 'overdraft_facility',
+     'description' : 'The bank account overdraft facility indicator',
+     'type'        : 'boolean',
+     'mode'        : 'w'
+    },
+
   )
 
   _categories = ( 'source', )
