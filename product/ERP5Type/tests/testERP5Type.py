@@ -240,6 +240,52 @@ class TestERP5Type(ERP5TypeTestCase):
       clearCache()
       self.assertEquals(cache2(), cached_var2)
 
+    def test_afterCloneScript(self):
+      """manage_afterClone can call a type based script."""
+      # setup the script for Person portal type
+      custom_skin = self.getPortal().portal_skins.custom
+      method_id = 'Person_afterClone'
+      if method_id in custom_skin.objectIds():
+        custom_skin.manage_delObjects([method_id])
+      
+      custom_skin.manage_addProduct['PythonScripts']\
+                    .manage_addPythonScript(id = method_id)
+      script = custom_skin[method_id]
+      script.ZPythonScript_edit('', "context.setTitle('reseted')")
+      self.getPortal().changeSkin(None)
+    
+      # copy / pasted person have their title reseted
+      folder = self.getPersonModule()
+      pers = folder.newContent(portal_type='Person',
+                              title='something', )
+      copy_data = folder.manage_copyObjects([pers.getId()])
+      new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
+      new_pers = folder[new_id]
+      self.assertEquals(new_pers.getTitle(), 'reseted')
+      
+      # we can even change subobjects in the script
+      if not hasattr(pers, 'default_address'):
+        pers.newContent(portal_type='Address', id='default_address')
+      pers.default_address.setTitle('address_title')
+      # modify script to update subobject title
+      script.ZPythonScript_edit('',
+          "context.default_address.setTitle('address_title_reseted')")
+      copy_data = folder.manage_copyObjects([pers.getId()])
+      new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
+      new_pers = folder[new_id]
+      self.assertEquals(new_pers.default_address.getTitle(),
+                        'address_title_reseted')
+      
+      # of course, other portal types are not affected
+      folder = self.getOrganisationModule()
+      orga = folder.newContent(portal_type='Organisation',
+                              title='something', )
+      copy_data = folder.manage_copyObjects([orga.getId()])
+      new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
+      new_orga = folder[new_id]
+      self.assertEquals(new_orga.getTitle(), 'something')
+      
+
 if __name__ == '__main__':
     framework()
 else:
