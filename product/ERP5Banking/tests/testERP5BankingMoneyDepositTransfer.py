@@ -143,7 +143,7 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
 
     line_list = [inventory_dict_line_1, inventory_dict_line_2]
     self.usual_cash = self.paris.surface.gros_versement.guichet_1.encaisse_des_billets_et_monnaies
-    self.tri = self.paris.surface.salle_de_tri.encaisse_des_billets_et_monnaies
+    self.tri = self.paris.surface.salle_tri.encaisse_des_billets_et_monnaies
     self.createCashInventory(source=None, destination=self.usual_cash, currency=self.currency_1,
                              line_list=line_list)
 
@@ -215,7 +215,7 @@ class TestERP5BankingMoneyDepositTransfer(TestERP5BankingMixin, ERP5TypeTestCase
     # check that its source is usual_cash
     self.assertEqual(self.money_deposit_transfer.getSource(), 'site/testsite/paris/surface/gros_versement/guichet_1/encaisse_des_billets_et_monnaies')
     # check that its destination is tri
-    self.assertEqual(self.money_deposit_transfer.getDestination(), 'site/testsite/paris/surface/salle_de_tri/encaisse_des_billets_et_monnaies')
+    self.assertEqual(self.money_deposit_transfer.getDestination(), 'site/testsite/paris/surface/salle_tri/encaisse_des_billets_et_monnaies')
 
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
